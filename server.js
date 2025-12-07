@@ -96,4 +96,133 @@ app.post('/api/git/pull', (req, res) => {
     });
 });
 
-app.listen(PORT, () => console.log(`Server v3.1 running on ${PORT}`));
+// Add new variable to test_data.json
+app.post('/api/variables/add', (req, res) => {
+    const { key, value } = req.body;
+    if (!key) return res.status(400).json({ error: 'Key required' });
+    const testDataPath = path.join(RESOURCES_PATH, 'test_data.json');
+    let testData = {};
+    try { testData = JSON.parse(fs.readFileSync(testDataPath, 'utf8')); } catch (e) { }
+    testData[key] = value || '';
+    fs.writeFile(testDataPath, JSON.stringify(testData, null, 4), (err) => {
+        if (err) return res.status(500).json({ error: 'Failed to save' });
+        res.json({ message: 'Variable added', key, value });
+    });
+});
+
+// Get all categories
+app.get('/api/categories', (req, res) => {
+    try {
+        const items = fs.readdirSync(LIBRARY_PATH);
+        const categories = items.filter(item => {
+            const stat = fs.statSync(path.join(LIBRARY_PATH, item));
+            return stat.isDirectory() && item !== '.git';
+        });
+        res.json({ categories });
+    } catch (err) { res.status(500).json({ error: 'Failed to get categories' }); }
+});
+
+// Create new category (folder)
+app.post('/api/categories/create', (req, res) => {
+    const { name } = req.body;
+    if (!name) return res.status(400).json({ error: 'Name required' });
+    const catPath = path.join(LIBRARY_PATH, name);
+    if (fs.existsSync(catPath)) return res.status(400).json({ error: 'Category exists' });
+    fs.mkdirSync(catPath, { recursive: true });
+    res.json({ message: 'Category created', name });
+});
+
+// Rename category (move folder)
+app.post('/api/categories/rename', (req, res) => {
+    const { oldName, newName } = req.body;
+    if (!oldName || !newName) return res.status(400).json({ error: 'Names required' });
+    const oldPath = path.join(LIBRARY_PATH, oldName);
+    const newPath = path.join(LIBRARY_PATH, newName);
+    if (!fs.existsSync(oldPath)) return res.status(404).json({ error: 'Category not found' });
+    if (fs.existsSync(newPath)) return res.status(400).json({ error: 'New name exists' });
+    fs.renameSync(oldPath, newPath);
+    res.json({ message: 'Category renamed', oldName, newName });
+});
+
+// Delete category (move files to Uncategorized, then remove folder)
+app.post('/api/categories/delete', (req, res) => {
+    const { name } = req.body;
+    if (!name) return res.status(400).json({ error: 'Name required' });
+    const catPath = path.join(LIBRARY_PATH, name);
+    if (!fs.existsSync(catPath)) return res.status(404).json({ error: 'Category not found' });
+
+    const uncatPath = path.join(LIBRARY_PATH, 'Uncategorized');
+    if (!fs.existsSync(uncatPath)) fs.mkdirSync(uncatPath, { recursive: true });
+
+    // Move all files to Uncategorized
+    const files = fs.readdirSync(catPath);
+    files.forEach(file => {
+        const oldFilePath = path.join(catPath, file);
+        const newFilePath = path.join(uncatPath, file);
+        if (fs.statSync(oldFilePath).isFile()) {
+            fs.renameSync(oldFilePath, newFilePath);
+        }
+    });
+
+    // Remove empty folder
+    try { fs.rmdirSync(catPath); } catch (e) { }
+    res.json({ message: 'Category deleted', name });
+});
+
+// Import template (single or batch)
+app.post('/api/files/import', (req, res) => {
+    const { files } = req.body; // Array of { filename, content, category, tags }
+    if (!files || !Array.isArray(files)) return res.status(400).json({ error: 'Files array required' });
+
+    const results = [];
+    files.forEach(file => {
+        const category = file.category || 'Uncategorized';
+        const filename = file.filename.endsWith('.html') ? file.filename : `${file.filename}.html`;
+        const filepath = path.join(category, filename);
+        const fullPath = path.join(LIBRARY_PATH, filepath);
+        const metaPath = fullPath.replace('.html', '.meta.json');
+        const folder = path.dirname(fullPath);
+
+        if (!fs.existsSync(folder)) fs.mkdirSync(folder, { recursive: true });
+
+        fs.writeFileSync(fullPath, file.content);
+
+        const meta = {
+            category,
+            tags: file.tags || [],
+            importedAt: new Date().toISOString(),
+            ...file.meta
+        };
+        fs.writeFileSync(metaPath, JSON.stringify(meta, null, 2));
+
+        results.push({ filepath, status: 'imported' });
+    });
+
+    res.json({ message: `Imported ${results.length} file(s)`, results });
+});
+
+// Export template(s) - returns file content with metadata
+app.post('/api/files/export', (req, res) => {
+    const { filepaths } = req.body; // Array of filepaths
+    if (!filepaths || !Array.isArray(filepaths)) return res.status(400).json({ error: 'Filepaths array required' });
+
+    const exports = [];
+    filepaths.forEach(filepath => {
+        const fullPath = path.join(LIBRARY_PATH, filepath);
+        const metaPath = fullPath.replace('.html', '.meta.json');
+
+        if (!fs.existsSync(fullPath)) return;
+
+        let content = '';
+        let meta = {};
+        try { content = fs.readFileSync(fullPath, 'utf8'); } catch (e) { }
+        try { meta = JSON.parse(fs.readFileSync(metaPath, 'utf8')); } catch (e) { }
+
+        const filename = path.basename(filepath);
+        exports.push({ filename, filepath, content, meta });
+    });
+
+    res.json({ exports });
+});
+
+app.listen(PORT, () => console.log(`Server v3.4 running on ${PORT}`));

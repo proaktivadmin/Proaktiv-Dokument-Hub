@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Editor from '@monaco-editor/react';
-import { Folder, FileCode, GitBranch, ChevronRight, ChevronDown, LayoutTemplate, Smartphone, Monitor, FileText, Download, AlertTriangle, GripVertical, Settings, Play, Save, Search, Command, Activity, Box, Type, Hash, Mail, Phone, User, MapPin, MoreHorizontal } from 'lucide-react';
+import { Folder, FileCode, GitBranch, ChevronRight, ChevronDown, LayoutTemplate, Smartphone, Monitor, FileText, Download, AlertTriangle, GripVertical, Settings, Play, Save, Search, Command, Activity, Box, Type, Hash, Mail, Phone, User, MapPin, MoreHorizontal, Code, Tag, Plus, Check, Pencil, Trash2, FolderPlus, X, Upload, FileUp, FileDown } from 'lucide-react';
 
 const API_URL = 'http://localhost:5000/api';
 const DEFAULT_META = { category: 'General', receiver: 'Systemstandard', output: 'PDF og e-post', assignmentType: '', phase: '', subject: 'Oppgjørsoppstilling [[eiendom.adresse]]', cssVersion: 'style.css', headerTemplate: '', footerTemplate: '', marginTop: 2, marginBottom: 2, marginLeft: 2, marginRight: 2 };
@@ -99,7 +99,13 @@ const DeviceSkin = ({ mode, children, subject, to }) => {
       </div>
     </div>
   );
-  return <div className="bg-white w-[210mm] min-h-[297mm] shadow-2xl mx-auto relative ring-1 ring-black/5 transition-all duration-500 ease-out hover:scale-[1.01]">{children}<div className="absolute top-[1123px] left-0 w-full border-b-2 border-red-300 border-dashed opacity-50"></div></div>;
+  // A4 mode - use auto height to show full document, min-height ensures at least one page visible
+  return (
+    <div className="bg-white w-[210mm] shadow-2xl mx-auto relative ring-1 ring-black/5 transition-all duration-500 ease-out">
+      <div className="min-h-[297mm]">{children}</div>
+      <div className="absolute top-[1123px] left-0 w-full border-b-2 border-red-300 border-dashed opacity-50 pointer-events-none"></div>
+    </div>
+  );
 };
 
 function App() {
@@ -114,15 +120,102 @@ function App() {
   const [leftTab, setLeftTab] = useState('files');
   const [rightTab, setRightTab] = useState('preview');
   const [viewMode, setViewMode] = useState('a4');
+  const [searchQuery, setSearchQuery] = useState('');
 
   // RESIZE STATE
   const [leftWidth, setLeftWidth] = useState(320);
   const [rightWidth, setRightWidth] = useState(500);
   const [resizing, setResizing] = useState(null); // 'left' | 'right' | null
 
+  // TEMPLATE MANAGEMENT
+  const [templateModal, setTemplateModal] = useState(null); // { type: 'rename' | 'delete', path: string, name: string }
+  const [templateInput, setTemplateInput] = useState('');
+
   // PREVIEW SCALING
   const previewContainerRef = useRef(null);
   const [scale, setScale] = useState(1);
+
+  // CATEGORY MANAGEMENT
+  const [categoryModal, setCategoryModal] = useState(null); // { type: 'create' | 'rename' | 'delete', category?: string }
+  const [categoryInput, setCategoryInput] = useState('');
+
+  const handleCategoryCreate = async () => {
+    if (!categoryInput.trim()) return;
+    await fetch(`${API_URL}/categories/create`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: categoryInput.trim() })
+    });
+    setCategoryModal(null); setCategoryInput(''); fetchInit();
+    setStatus('Category created'); setTimeout(() => setStatus(''), 2000);
+  };
+
+  const handleCategoryRename = async () => {
+    if (!categoryInput.trim() || !categoryModal?.category) return;
+    await fetch(`${API_URL}/categories/rename`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ oldName: categoryModal.category, newName: categoryInput.trim() })
+    });
+    setCategoryModal(null); setCategoryInput(''); fetchInit();
+    setStatus('Category renamed'); setTimeout(() => setStatus(''), 2000);
+  };
+
+  const handleCategoryDelete = async () => {
+    if (!categoryModal?.category) return;
+    await fetch(`${API_URL}/categories/delete`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: categoryModal.category })
+    });
+    setCategoryModal(null); fetchInit();
+    setStatus('Category deleted'); setTimeout(() => setStatus(''), 2000);
+  };
+
+  // IMPORT/EXPORT
+  const [importModal, setImportModal] = useState(false);
+  const [importFiles, setImportFiles] = useState([]); // Array of { name, content, category, tags }
+  const fileInputRef = useRef(null);
+
+  const handleFileSelect = async (e) => {
+    const files = Array.from(e.target.files);
+    const newFiles = await Promise.all(files.map(async (file) => {
+      const content = await file.text();
+      return { name: file.name, content, category: 'Uncategorized', tags: '' };
+    }));
+    setImportFiles([...importFiles, ...newFiles]);
+  };
+
+  const handleImport = async () => {
+    if (importFiles.length === 0) return;
+    const payload = importFiles.map(f => ({
+      filename: f.name,
+      content: f.content,
+      category: f.category,
+      tags: f.tags.split(',').map(t => t.trim()).filter(Boolean)
+    }));
+    await fetch(`${API_URL}/files/import`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ files: payload })
+    });
+    setImportModal(false); setImportFiles([]); fetchInit();
+    setStatus(`Imported ${payload.length} file(s)`); setTimeout(() => setStatus(''), 2000);
+  };
+
+  const handleExport = async () => {
+    if (!selectedPath) return;
+    const res = await fetch(`${API_URL}/files/export`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ filepaths: [selectedPath] })
+    });
+    const data = await res.json();
+    if (data.exports && data.exports.length > 0) {
+      const exp = data.exports[0];
+      const blob = new Blob([exp.content], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = exp.filename; a.click();
+      URL.revokeObjectURL(url);
+      setStatus('Exported'); setTimeout(() => setStatus(''), 2000);
+    }
+  };
 
   useEffect(() => {
     if (!previewContainerRef.current) return;
@@ -159,7 +252,11 @@ function App() {
   useEffect(() => {
     const handleMM = (e) => {
       if (resizing === 'left') setLeftWidth(Math.max(250, Math.min(600, e.clientX)));
-      if (resizing === 'right') setRightWidth(Math.max(300, Math.min(800, window.innerWidth - e.clientX)));
+      if (resizing === 'right') {
+        // Calculate available width and constrain rightWidth properly
+        const newWidth = window.innerWidth - e.clientX;
+        setRightWidth(Math.max(300, Math.min(600, newWidth)));
+      }
     };
     const handleMU = () => setResizing(null);
     if (resizing) { window.addEventListener('mousemove', handleMM); window.addEventListener('mouseup', handleMU); }
@@ -167,6 +264,58 @@ function App() {
   }, [resizing]);
 
   const fetchInit = async () => setInitData(await (await fetch(`${API_URL}/init`)).json());
+
+  // Template rename/delete handlers
+  const handleTemplateRename = async () => {
+    if (!templateInput.trim() || !templateModal?.path) return;
+    const oldPath = templateModal.path;
+    const parts = oldPath.split(/[/\\]/);
+    parts.pop();
+    const newPath = parts.length > 0 ? `${parts.join('/')}/${templateInput.trim()}.html` : `${templateInput.trim()}.html`;
+    // Read content, save to new path, delete old
+    const res = await fetch(`${API_URL}/files/read`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filepath: oldPath }) });
+    const data = await res.json();
+    await fetch(`${API_URL}/files/save`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filepath: newPath, content: data.content, meta: data.meta }) });
+    await fetch(`${API_URL}/files/delete`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filepath: oldPath }) });
+    setTemplateModal(null); setTemplateInput(''); fetchInit();
+    if (selectedPath === oldPath) setSelectedPath(newPath);
+    setStatus('Template renamed'); setTimeout(() => setStatus(''), 2000);
+  };
+
+  const handleTemplateDelete = async () => {
+    if (!templateModal?.path) return;
+    await fetch(`${API_URL}/files/delete`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filepath: templateModal.path }) });
+    if (selectedPath === templateModal.path) { setSelectedPath(null); setContent(''); }
+    setTemplateModal(null); fetchInit();
+    setStatus('Template deleted'); setTimeout(() => setStatus(''), 2000);
+  };
+
+  // Auto-add variable with demo value
+  const autoAddVariable = async (key) => {
+    // Generate demo value based on key name
+    let demoValue = 'Demo Value';
+    if (key.includes('navn')) demoValue = 'Ola Nordmann';
+    else if (key.includes('adresse') || key.includes('gatenavnognr')) demoValue = 'Storgata 1';
+    else if (key.includes('postnr')) demoValue = '0000';
+    else if (key.includes('poststed') || key.includes('sted')) demoValue = 'Oslo';
+    else if (key.includes('tlf') || key.includes('telefon')) demoValue = '900 00 000';
+    else if (key.includes('epost') || key.includes('email')) demoValue = 'demo@example.no';
+    else if (key.includes('pris') || key.includes('sum') || key.includes('belop')) demoValue = '100 000,-';
+    else if (key.includes('prosent')) demoValue = '2,5%';
+    else if (key.includes('dato')) demoValue = new Date().toLocaleDateString('nb-NO');
+    else if (key.includes('nr') || key.includes('nummer')) demoValue = '12345';
+    else if (key.includes('orgnr')) demoValue = '999 999 999';
+    else if (key.includes('tittel')) demoValue = 'Eiendomsmegler';
+    else if (key.includes('kommune')) demoValue = 'Oslo';
+    else if (key.includes('boligtype')) demoValue = 'Leilighet';
+
+    await fetch(`${API_URL}/variables/add`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key, value: demoValue })
+    });
+    fetchInit();
+    setStatus(`Added: ${key} = "${demoValue}"`); setTimeout(() => setStatus(''), 3000);
+  };
 
   const loadFile = async (filepath) => {
     const data = await (await fetch(`${API_URL}/files/read`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filepath }) })).json();
@@ -192,7 +341,11 @@ function App() {
 
   const fileTree = useMemo(() => {
     const tree = {};
+    const query = searchQuery.toLowerCase().trim();
     initData.files.forEach(path => {
+      // Filter by search query
+      if (query && !path.toLowerCase().includes(query)) return;
+
       const parts = path.split(/[/\\]/);
       let cat = parts.length > 1 ? parts[0] : 'Uncategorized';
       let fn = parts[parts.length - 1];
@@ -204,7 +357,7 @@ function App() {
       tree[cat][base].push({ path, ver });
     });
     return tree;
-  }, [initData.files]);
+  }, [initData.files, searchQuery]);
 
   const detectedTags = useMemo(() => (content.match(/\[\[(.*?)\]\]/g) || []).map(t => t.replace(/\[|\]/g, '')), [content]);
 
@@ -215,7 +368,8 @@ function App() {
       inj = inj.replaceAll(`[[${k}]]`, val); subj = subj.replaceAll(`[[${k}]]`, val);
     });
     const isEmail = viewMode !== 'a4';
-    return `<html><head><link rel="stylesheet" href="http://localhost:5000/resources/${meta.cssVersion}"><style>body{font-family:sans-serif;background:white;margin:0;}${isEmail ? 'body{padding:0}' : `body{padding:${meta.marginTop}cm ${meta.marginRight}cm ${meta.marginBottom}cm ${meta.marginLeft}cm}`}</style></head><body>${activeResources.header}${inj}${activeResources.footer}</body></html>`;
+    const marginStyles = isEmail ? 'padding:0;' : `padding:${meta.marginTop}cm ${meta.marginRight}cm ${meta.marginBottom}cm ${meta.marginLeft}cm;`;
+    return `<!DOCTYPE html><html style="height:100%;min-height:100%;"><head><link rel="stylesheet" href="http://localhost:5000/resources/${meta.cssVersion}"><style>html,body{min-height:100%;height:auto;}body{font-family:sans-serif;background:white;margin:0;${marginStyles}}</style></head><body>${activeResources.header}${inj}${activeResources.footer}</body></html>`;
   }, [content, meta, activeResources, variableOverrides, viewMode, initData.testData, detectedTags]);
 
   const getIconForTag = (tag) => {
@@ -259,43 +413,115 @@ function App() {
             </div>
 
             <div className="flex-1 overflow-y-auto p-3 space-y-4 custom-scrollbar">
-              {leftTab === 'files' ? Object.keys(fileTree).map(cat => (
-                <div key={cat}>
-                  <div onClick={() => setExpandedFolders(p => ({ ...p, [cat]: !p[cat] }))} className="flex items-center justify-between cursor-pointer group mb-2">
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest group-hover:text-cyan-400 transition-colors">{cat}</span>
-                    <ChevronDown size={12} className={`text-slate-600 transition-transform duration-300 ${expandedFolders[cat] ? 'rotate-180' : ''}`} />
-                  </div>
+              {leftTab === 'files' ? <>
+                {/* NEW CATEGORY BUTTON */}
+                <button
+                  onClick={() => { setCategoryModal({ type: 'create' }); setCategoryInput(''); }}
+                  className="w-full flex items-center justify-center gap-2 py-2 text-[10px] font-bold text-slate-500 hover:text-cyan-400 border border-dashed border-slate-700 hover:border-cyan-500/50 rounded-lg transition-all mb-2"
+                >
+                  <FolderPlus size={12} /> New Category
+                </button>
+                {/* IMPORT BUTTON */}
+                <button
+                  onClick={() => setImportModal(true)}
+                  className="w-full flex items-center justify-center gap-2 py-2 text-[10px] font-bold text-slate-500 hover:text-emerald-400 border border-dashed border-slate-700 hover:border-emerald-500/50 rounded-lg transition-all mb-2"
+                >
+                  <FileUp size={12} /> Import Templates
+                </button>
+                {Object.keys(fileTree).map(cat => (
+                  <div key={cat}>
+                    <div className="flex items-center justify-between cursor-pointer group mb-2">
+                      <div onClick={() => setExpandedFolders(p => ({ ...p, [cat]: !p[cat] }))} className="flex-1 flex items-center gap-1">
+                        <ChevronDown size={12} className={`text-slate-600 transition-transform duration-300 ${expandedFolders[cat] ? 'rotate-180' : ''}`} />
+                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest group-hover:text-cyan-400 transition-colors">{cat}</span>
+                      </div>
+                      {cat !== 'Uncategorized' && (
+                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            onClick={(e) => { e.stopPropagation(); setCategoryModal({ type: 'rename', category: cat }); setCategoryInput(cat); }}
+                            className="p-1 rounded hover:bg-white/10 text-slate-500 hover:text-cyan-400" title="Rename"
+                          ><Pencil size={10} /></button>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); setCategoryModal({ type: 'delete', category: cat }); }}
+                            className="p-1 rounded hover:bg-white/10 text-slate-500 hover:text-red-400" title="Delete"
+                          ><Trash2 size={10} /></button>
+                        </div>
+                      )}
+                    </div>
 
-                  {expandedFolders[cat] && <div className="space-y-1">
-                    {Object.keys(fileTree[cat]).map(base => (
-                      <div key={base} className="group/item">
-                        {fileTree[cat][base].sort((a, b) => b.ver - a.ver).map((f, i) => (
-                          <button key={f.path} onClick={() => loadFile(f.path)} className={`w-full text-left px-4 py-3 text-xs rounded-xl transition-all mb-1 relative overflow-hidden group/btn flex items-center justify-between border backdrop-blur-sm ${selectedPath === f.path ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-200' : 'bg-transparent border-transparent text-slate-400 hover:bg-white/5 hover:border-white/10 hover:text-slate-200 hover:shadow-lg hover:-translate-y-0.5'}`}>
-                            {selectedPath === f.path && <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.5)]"></div>}
-                            <div className="flex items-center gap-2">
-                              <FileText size={12} className={selectedPath === f.path ? 'text-cyan-400' : 'text-slate-600'} />
-                              <span>{base} <span className="opacity-50 text-[10px]">v{f.ver}</span></span>
+                    {expandedFolders[cat] && <div className="space-y-1">
+                      {Object.keys(fileTree[cat]).map(base => (
+                        <div key={base} className="group/item">
+                          {fileTree[cat][base].sort((a, b) => b.ver - a.ver).map((f, i) => (
+                            <div key={f.path} className="flex items-center gap-1 mb-1 group/file">
+                              <button onClick={() => loadFile(f.path)} className={`flex-1 text-left px-4 py-3 text-xs rounded-xl transition-all relative overflow-hidden group/btn flex items-center justify-between border backdrop-blur-sm ${selectedPath === f.path ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-200' : 'bg-transparent border-transparent text-slate-400 hover:bg-white/5 hover:border-white/10 hover:text-slate-200 hover:shadow-lg hover:-translate-y-0.5'}`}>
+                                {selectedPath === f.path && <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.5)]"></div>}
+                                <div className="flex items-center gap-2">
+                                  <FileText size={12} className={selectedPath === f.path ? 'text-cyan-400' : 'text-slate-600'} />
+                                  <span>{base} <span className="opacity-50 text-[10px]">v{f.ver}</span></span>
+                                </div>
+                                {i === 0 && <div className="w-1.5 h-1.5 rounded-full bg-cyan-500 shadow-[0_0_5px_rgba(6,182,212,0.5)]"></div>}
+                              </button>
+                              {/* Template Actions */}
+                              <div className="flex items-center gap-0.5 opacity-0 group-hover/file:opacity-100 transition-opacity">
+                                <button
+                                  onClick={() => { setTemplateModal({ type: 'rename', path: f.path, name: base }); setTemplateInput(base); }}
+                                  className="p-1.5 rounded hover:bg-white/10 text-slate-500 hover:text-cyan-400" title="Rename"
+                                ><Pencil size={10} /></button>
+                                <button
+                                  onClick={() => setTemplateModal({ type: 'delete', path: f.path, name: base })}
+                                  className="p-1.5 rounded hover:bg-white/10 text-slate-500 hover:text-red-400" title="Delete"
+                                ><Trash2 size={10} /></button>
+                              </div>
                             </div>
-                            {i === 0 && <div className="w-1.5 h-1.5 rounded-full bg-cyan-500 shadow-[0_0_5px_rgba(6,182,212,0.5)]"></div>}
+                          ))}
+                        </div>
+                      ))}
+                    </div>}
+                  </div>
+                ))}
+              </> : <div className="space-y-6">
+                {/* VARIABLES SECTION */}
+                <div className="mb-6">
+                  <div className="flex items-center gap-2 mb-4 px-1">
+                    <Tag size={12} className="text-cyan-400" />
+                    <span className="text-[10px] font-bold text-cyan-400 uppercase tracking-widest">Variables</span>
+                  </div>
+                  {initData.snippets.filter(grp => grp.category.startsWith('Tags:')).map((grp, i) => (
+                    <div key={i} className="mb-4">
+                      <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-1">{grp.category.replace('Tags: ', '')}</h3>
+                      <div className="grid grid-cols-1 gap-2">
+                        {grp.items.map(snip => (
+                          <button key={snip.label} onClick={() => insertSnippet(snip.code)} className="group glass-panel-hover border-transparent bg-white/5 p-3 rounded-xl text-left transition-all duration-300 hover:border-cyan-500/20">
+                            <div className="text-xs font-bold text-slate-300 group-hover:text-white mb-1 flex items-center gap-2"><Type size={12} className="text-cyan-400" /> {snip.label}</div>
+                            <div className="text-[10px] text-slate-500 group-hover:text-slate-400 truncate pl-5">{snip.desc}</div>
                           </button>
                         ))}
                       </div>
-                    ))}
-                  </div>}
+                    </div>
+                  ))}
                 </div>
-              )) : <div className="space-y-6">{initData.snippets.map((grp, i) => (
-                <div key={i}>
-                  <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-1">{grp.category}</h3>
-                  <div className="grid grid-cols-1 gap-2">
-                    {grp.items.map(snip => (
-                      <button key={snip.label} onClick={() => insertSnippet(snip.code)} className="group glass-panel-hover border-transparent bg-white/5 p-3 rounded-xl text-left transition-all duration-300">
-                        <div className="text-xs font-bold text-slate-300 group-hover:text-white mb-1 flex items-center gap-2"><Box size={12} className="text-purple-400" /> {snip.label}</div>
-                        <div className="text-[10px] text-slate-500 group-hover:text-slate-400 truncate pl-5">{snip.desc}</div>
-                      </button>
-                    ))}
+                {/* VITEC LOGIC SECTION */}
+                <div className="pt-4 border-t border-white/10">
+                  <div className="flex items-center gap-2 mb-4 px-1">
+                    <Code size={12} className="text-purple-400" />
+                    <span className="text-[10px] font-bold text-purple-400 uppercase tracking-widest">Vitec Logic & Layout</span>
                   </div>
+                  {initData.snippets.filter(grp => !grp.category.startsWith('Tags:')).map((grp, i) => (
+                    <div key={i} className="mb-4">
+                      <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-1">{grp.category}</h3>
+                      <div className="grid grid-cols-1 gap-2">
+                        {grp.items.map(snip => (
+                          <button key={snip.label} onClick={() => insertSnippet(snip.code)} className="group glass-panel-hover border-transparent bg-white/5 p-3 rounded-xl text-left transition-all duration-300 hover:border-purple-500/20">
+                            <div className="text-xs font-bold text-slate-300 group-hover:text-white mb-1 flex items-center gap-2"><Code size={12} className="text-purple-400" /> {snip.label}</div>
+                            <div className="text-[10px] text-slate-500 group-hover:text-slate-400 truncate pl-5">{snip.desc}</div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}</div>}
+              </div>}
             </div>
 
             {/* ACTION BAR */}
@@ -314,10 +540,18 @@ function App() {
           {/* COMMAND BAR */}
           <div className="glass-panel rounded-full px-4 py-2.5 flex items-center gap-3">
             <Search size={14} className="text-slate-500" />
-            <input type="text" placeholder="Search templates, commands, or files..." className="bg-transparent border-none outline-none text-xs text-slate-300 placeholder:text-slate-600 flex-1 w-full" />
-            <div className="flex gap-2">
-              <div className="px-1.5 py-0.5 rounded bg-white/5 border border-white/5 text-[9px] text-slate-500 font-mono">⌘K</div>
-            </div>
+            <input
+              type="text"
+              placeholder="Search templates..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="bg-transparent border-none outline-none text-xs text-slate-300 placeholder:text-slate-600 flex-1 w-full"
+            />
+            {searchQuery && (
+              <button onClick={() => setSearchQuery('')} className="text-slate-500 hover:text-white">
+                <X size={12} />
+              </button>
+            )}
           </div>
 
           {/* EDITOR PANEL */}
@@ -331,6 +565,7 @@ function App() {
                     <span className="text-slate-200 font-medium">{selectedPath.split('/').pop()}</span>
                   </div>
                   <div className="flex items-center gap-3">
+                    <button onClick={handleExport} className="text-[10px] text-slate-500 hover:text-emerald-400 flex items-center gap-1.5 transition-colors"><FileDown size={12} /> Export</button>
                     <div className="text-[10px] text-slate-600 flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div> Saved</div>
                   </div>
                 </div>
@@ -391,9 +626,21 @@ function App() {
 
           {/* PREVIEW AREA */}
           <div className="flex-1 glass-panel rounded-2xl overflow-hidden flex flex-col relative shadow-2xl">
-            <div ref={previewContainerRef} className="flex-1 bg-black/20 overflow-hidden flex justify-center p-8 relative">
+            <div ref={previewContainerRef} className="flex-1 bg-black/20 overflow-auto flex justify-center p-8 relative custom-scrollbar">
               <div style={{ transform: `scale(${scale})`, transformOrigin: 'top center' }} className="transition-transform duration-300 ease-out">
-                <DeviceSkin mode={viewMode} subject={meta.subject} to={initData.testData['kjøper.navn'] || 'Receiver'}><iframe title="preview" srcDoc={previewSource} className="w-full h-full border-none" sandbox="allow-scripts" /></DeviceSkin>
+                <DeviceSkin mode={viewMode} subject={meta.subject} to={initData.testData['kjøper.navn'] || 'Receiver'}>
+                  <iframe
+                    title="preview"
+                    srcDoc={previewSource}
+                    className="border-none bg-white"
+                    style={{
+                      width: viewMode === 'a4' ? '210mm' : '100%',
+                      height: viewMode === 'a4' ? '297mm' : '100%',
+                      minHeight: viewMode === 'a4' ? '297mm' : 'auto'
+                    }}
+                    sandbox="allow-scripts"
+                  />
+                </DeviceSkin>
               </div>
             </div>
 
@@ -406,17 +653,36 @@ function App() {
               <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
                 {rightTab === 'preview' ? <div className="space-y-4">
                   {detectedTags.length === 0 && <div className="text-center text-slate-500 py-8 text-sm flex flex-col items-center gap-2"><AlertTriangle className="opacity-20" size={24} /> No tags detected</div>}
-                  {detectedTags.map(key => (
-                    <GlassInput
-                      key={key}
-                      label={key}
-                      value={variableOverrides[key] || ''}
-                      onChange={(e) => setVariableOverrides({ ...variableOverrides, [key]: e.target.value })}
-                      placeholder={initData.testData[key] || 'No Data'}
-                      warning={!initData.testData[key]}
-                      icon={getIconForTag(key)}
-                    />
-                  ))}
+                  {detectedTags.map(key => {
+                    const isKnown = !!initData.testData[key];
+                    const currentValue = variableOverrides[key] || '';
+                    return (
+                      <div key={key} className="relative">
+                        <GlassInput
+                          label={key}
+                          value={currentValue}
+                          onChange={(e) => setVariableOverrides({ ...variableOverrides, [key]: e.target.value })}
+                          placeholder={initData.testData[key] || 'No Data'}
+                          warning={!isKnown}
+                          icon={getIconForTag(key)}
+                        />
+                        {!isKnown && (
+                          <button
+                            onClick={() => autoAddVariable(key)}
+                            className="absolute right-0 top-4 px-2 py-1 text-[9px] font-bold rounded-md bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 border border-orange-500/20 flex items-center gap-1 transition-all"
+                            title="Auto-add with demo value"
+                          >
+                            <Plus size={10} /> Auto-Add
+                          </button>
+                        )}
+                        {isKnown && (
+                          <div className="absolute right-0 top-6 text-emerald-400">
+                            <Check size={14} />
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
                   : <div className="space-y-5">
                     <GlassInput
@@ -454,12 +720,238 @@ function App() {
                         />
                       ))}
                     </div>
+                    {/* MARGIN CONTROLS */}
+                    <div className="pt-4 border-t border-white/5">
+                      <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Page Margins (cm)</div>
+                      <div className="grid grid-cols-4 gap-3">
+                        <GlassInput
+                          label="Top"
+                          value={meta.marginTop}
+                          onChange={e => setMeta({ ...meta, marginTop: parseFloat(e.target.value) || 0 })}
+                          icon={Box}
+                        />
+                        <GlassInput
+                          label="Right"
+                          value={meta.marginRight}
+                          onChange={e => setMeta({ ...meta, marginRight: parseFloat(e.target.value) || 0 })}
+                          icon={Box}
+                        />
+                        <GlassInput
+                          label="Bottom"
+                          value={meta.marginBottom}
+                          onChange={e => setMeta({ ...meta, marginBottom: parseFloat(e.target.value) || 0 })}
+                          icon={Box}
+                        />
+                        <GlassInput
+                          label="Left"
+                          value={meta.marginLeft}
+                          onChange={e => setMeta({ ...meta, marginLeft: parseFloat(e.target.value) || 0 })}
+                          icon={Box}
+                        />
+                      </div>
+                    </div>
                   </div>}
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* CATEGORY MODAL */}
+      {categoryModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center animate-fade-in-up">
+          <div className="glass-panel rounded-2xl p-6 w-96 shadow-2xl border border-white/20">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold text-white">
+                {categoryModal.type === 'create' && 'New Category'}
+                {categoryModal.type === 'rename' && 'Rename Category'}
+                {categoryModal.type === 'delete' && 'Delete Category'}
+              </h3>
+              <button onClick={() => setCategoryModal(null)} className="text-slate-400 hover:text-white p-1">
+                <X size={18} />
+              </button>
+            </div>
+
+            {categoryModal.type === 'delete' ? (
+              <div>
+                <p className="text-sm text-slate-400 mb-4">
+                  Are you sure you want to delete <span className="text-white font-medium">"{categoryModal.category}"</span>?
+                  All files will be moved to Uncategorized.
+                </p>
+                <div className="flex gap-3 justify-end">
+                  <button onClick={() => setCategoryModal(null)} className="px-4 py-2 text-sm text-slate-400 hover:text-white">Cancel</button>
+                  <button onClick={handleCategoryDelete} className="px-4 py-2 text-sm bg-red-500/20 text-red-400 hover:bg-red-500/30 rounded-lg border border-red-500/30">Delete</button>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <input
+                  type="text"
+                  value={categoryInput}
+                  onChange={(e) => setCategoryInput(e.target.value)}
+                  placeholder="Category name"
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-cyan-500/50 mb-4"
+                  autoFocus
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      categoryModal.type === 'create' ? handleCategoryCreate() : handleCategoryRename();
+                    }
+                  }}
+                />
+                <div className="flex gap-3 justify-end">
+                  <button onClick={() => setCategoryModal(null)} className="px-4 py-2 text-sm text-slate-400 hover:text-white">Cancel</button>
+                  <button
+                    onClick={categoryModal.type === 'create' ? handleCategoryCreate : handleCategoryRename}
+                    className="px-4 py-2 text-sm bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30 rounded-lg border border-cyan-500/30"
+                  >
+                    {categoryModal.type === 'create' ? 'Create' : 'Rename'}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* TEMPLATE MODAL */}
+      {templateModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center animate-fade-in-up">
+          <div className="glass-panel rounded-2xl p-6 w-96 shadow-2xl border border-white/20">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold text-white">
+                {templateModal.type === 'rename' && 'Rename Template'}
+                {templateModal.type === 'delete' && 'Delete Template'}
+              </h3>
+              <button onClick={() => setTemplateModal(null)} className="text-slate-400 hover:text-white p-1">
+                <X size={18} />
+              </button>
+            </div>
+
+            {templateModal.type === 'delete' ? (
+              <div>
+                <p className="text-sm text-slate-400 mb-4">
+                  Are you sure you want to delete <span className="text-white font-medium">"{templateModal.name}"</span>?
+                  This action cannot be undone.
+                </p>
+                <div className="flex gap-3 justify-end">
+                  <button onClick={() => setTemplateModal(null)} className="px-4 py-2 text-sm text-slate-400 hover:text-white">Cancel</button>
+                  <button onClick={handleTemplateDelete} className="px-4 py-2 text-sm bg-red-500/20 text-red-400 hover:bg-red-500/30 rounded-lg border border-red-500/30">Delete</button>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <input
+                  type="text"
+                  value={templateInput}
+                  onChange={(e) => setTemplateInput(e.target.value)}
+                  placeholder="Template name"
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-cyan-500/50 mb-4"
+                  autoFocus
+                  onKeyDown={(e) => { if (e.key === 'Enter') handleTemplateRename(); }}
+                />
+                <div className="flex gap-3 justify-end">
+                  <button onClick={() => setTemplateModal(null)} className="px-4 py-2 text-sm text-slate-400 hover:text-white">Cancel</button>
+                  <button onClick={handleTemplateRename} className="px-4 py-2 text-sm bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30 rounded-lg border border-cyan-500/30">Rename</button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* IMPORT MODAL */}
+      {importModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center animate-fade-in-up">
+          <div className="glass-panel rounded-2xl p-6 w-[500px] shadow-2xl border border-white/20 max-h-[80vh] flex flex-col">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold text-white flex items-center gap-2"><FileUp size={18} className="text-emerald-400" /> Import Templates</h3>
+              <button onClick={() => { setImportModal(false); setImportFiles([]); }} className="text-slate-400 hover:text-white p-1">
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* FILE DROP ZONE */}
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              className="border-2 border-dashed border-slate-700 hover:border-emerald-500/50 rounded-xl p-8 text-center cursor-pointer transition-all mb-4 hover:bg-white/5"
+            >
+              <Upload size={32} className="mx-auto text-slate-500 mb-3" />
+              <p className="text-sm text-slate-400 mb-1">Click to select or drop HTML files</p>
+              <p className="text-[10px] text-slate-600">Supports multiple files</p>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".html,.htm"
+                multiple
+                onChange={handleFileSelect}
+                className="hidden"
+              />
+            </div>
+
+            {/* FILE LIST */}
+            <div className="flex-1 overflow-y-auto space-y-3 mb-4 custom-scrollbar">
+              {importFiles.map((file, idx) => (
+                <div key={idx} className="bg-white/5 rounded-xl p-4 border border-white/10">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm font-medium text-white truncate flex-1">{file.name}</span>
+                    <button onClick={() => setImportFiles(importFiles.filter((_, i) => i !== idx))} className="text-slate-500 hover:text-red-400 p-1">
+                      <X size={14} />
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-[10px] text-slate-500 uppercase font-bold mb-1 block">Category</label>
+                      <select
+                        value={file.category}
+                        onChange={(e) => {
+                          const updated = [...importFiles];
+                          updated[idx].category = e.target.value;
+                          setImportFiles(updated);
+                        }}
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-cyan-500/50"
+                      >
+                        <option value="Uncategorized" className="bg-slate-900">Uncategorized</option>
+                        {Object.keys(fileTree).filter(k => k !== 'Uncategorized').map(cat => (
+                          <option key={cat} value={cat} className="bg-slate-900">{cat}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-[10px] text-slate-500 uppercase font-bold mb-1 block">Tags (comma separated)</label>
+                      <input
+                        type="text"
+                        value={file.tags}
+                        onChange={(e) => {
+                          const updated = [...importFiles];
+                          updated[idx].tags = e.target.value;
+                          setImportFiles(updated);
+                        }}
+                        placeholder="tag1, tag2"
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-cyan-500/50"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+              {importFiles.length === 0 && (
+                <div className="text-center py-8 text-slate-500 text-sm">No files selected</div>
+              )}
+            </div>
+
+            {/* ACTIONS */}
+            <div className="flex gap-3 justify-end">
+              <button onClick={() => { setImportModal(false); setImportFiles([]); }} className="px-4 py-2 text-sm text-slate-400 hover:text-white">Cancel</button>
+              <button
+                onClick={handleImport}
+                disabled={importFiles.length === 0}
+                className="px-4 py-2 text-sm bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 rounded-lg border border-emerald-500/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              >
+                <FileUp size={14} /> Import {importFiles.length > 0 && `(${importFiles.length})`}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
