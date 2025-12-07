@@ -1,0 +1,102 @@
+<!-- 
+=============================================================================
+SYSTEM:      Vitec Next
+MODUL:       Proaktiv Master Mal
+MALNAVN:     Parallellavklaring forkjøpsrett borettslag
+VERSJON:     3.0 (Gold Master)
+DATO:        27.11.2025
+FORFATTER:   Senior Developer / Proaktiv
+FRAMEWORK:   v3.0
+BESKRIVELSE: Brev til borettslag for å avklare forkjøpsrett parallelt med salg.
+=============================================================================
+-->
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&family=Playfair+Display:wght@400;700&display=swap');
+    #vitecTemplate { font-family: 'Open Sans', sans-serif; font-size: 10pt; color: #333; margin: 0; padding: 0; }
+    h1, h2, h3 { font-family: 'Playfair Display', serif; color: #272630; page-break-after: avoid; }
+    h1 { font-size: 22pt; text-transform: uppercase; border-bottom: 3px solid #bcab8a; padding-bottom: 10px; margin-bottom: 25px; }
+    h2 { font-size: 14pt; border-left: 5px solid #bcab8a; padding-left: 15px; margin-top: 30px; background-color: #f9f9f7; padding: 5px 0 5px 15px; }
+    a { color: #272630; font-weight: bold; text-decoration: underline; }
+
+    /* SJEKKBOKSER (v3.0 STANDARD) */
+    label.btn { display: inline-block !important; cursor: pointer; margin: 0 !important; padding: 0 !important; vertical-align: middle !important; line-height: 1 !important; }
+    #vitecTemplate input[type="checkbox"] { display: none !important; } 
+    .svg-toggle { display: inline-block !important; width: 14px !important; height: 14px !important; margin-right: 6px !important; vertical-align: middle !important; border: none !important; background-color: transparent !important; position: relative; top: -1px; }
+    .svg-toggle.checkbox { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect x='25' y='25' width='462' height='462' fill='none' stroke='%23272630' stroke-width='40'/%3E%3C/svg%3E"); }
+    .svg-toggle.checkbox.active, .btn.active > .svg-toggle.checkbox { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect x='25' y='25' width='462' height='462' fill='none' stroke='%23272630' stroke-width='40'/%3E%3Crect x='100' y='100' width='312' height='312' fill='%23272630'/%3E%3C/svg%3E"); }
+
+    /* HELPER CLASSES */
+    .info-label { font-weight: bold; color: #272630; width: 140px; vertical-align: top; }
+</style>
+<h1>Parallellavklaring forkj&oslash;psrett</h1>
+
+<p><strong>[[brl.navn]]</strong></p>
+
+<p>Vi har f&aring;tt i oppdrag &aring; selge f&oslash;lgende eiendom, og trenger i den forbindelse opplysninger:</p>
+<!-- INFO TABELL -->
+
+<table border="1" cellspacing="0" style="border-collapse:collapse; border:1px solid #eeeeee; padding:10px; width:100%">
+	<colgroup>
+		<col style="width: 140px;" />
+		<col style="width: auto;" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td class="info-label">Adresse:</td>
+			<td>[[eiendom.adresse]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Hjemmelshaver(e):</td>
+			<td>[[selger.navn]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Andelsnr:</td>
+			<td>[[eiendom.andelsnr]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Borettslag org.nr:</td>
+			<td>[[brl.orgnr]]</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="height:10px">&nbsp;</td>
+		</tr>
+		<tr>
+			<td class="info-label">Prisantydning:</td>
+			<td>Kr. [[eiendom.pris]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Visning:</td>
+			<td>[[eiendom.nestevisning.formaterttekst]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Arealer:</td>
+			<td>[[eiendom.bruksareal]] m&sup2;</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>Eventuelle sp&oslash;rsm&aring;l bes rettet til <strong>[[ansvarligmegler.navn]]</strong>.</p>
+
+<p>Vi ber om at det snarest mulig avklares hvorvidt noen &oslash;nsker &aring; benytte seg av sin forkj&oslash;psrett. Melding kan gis v&aring;rt kontor ved undertegnede straks fristen er utl&oslash;pt, slik at vi kan fortsette saksbehandlingen.</p>
+
+<p>Hvis vi ikke har oppgitt prisantydning, er denne pt. ikke fastsatt og vi ber om at andelen lyses ut uten prisantydning.</p>
+&nbsp;
+
+<div style="border-top:3px solid #bcab8a; padding-top:20px; page-break-inside:avoid">
+<p>Med vennlig hilsen<br />
+<strong>[[meglerkontor.navn]]</strong></p>
+
+<table>
+	<colgroup>
+		<col style="width: 100%;" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td>[[avsender.navn]]<br />
+			[[avsender.tittel]]<br />
+			Tlf: [[avsender.tlf]] | E-post: [[avsender.epost]]</td>
+		</tr>
+	</tbody>
+</table>
+</div>
+</div>

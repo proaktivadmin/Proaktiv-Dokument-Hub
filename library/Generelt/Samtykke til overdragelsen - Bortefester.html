@@ -1,0 +1,106 @@
+<!-- 
+=============================================================================
+SYSTEM:      Vitec Next
+MODUL:       Proaktiv Master Mal
+MALNAVN:     Samtykke til overdragelse - Bortfester
+VERSJON:     1.2 (Stable Release)
+DATO:        25.11.2025
+ENDRINGER:   
+    v1.2: FJERNET all 'vitec-if' logikk inne i løkker for å hindre krasj.
+          Printer nå navn og ID direkte uten å sjekke om de eksisterer først.
+    v1.1: Forsøk på bugfix (feilet).
+    v1.0: Initiell konvertering.
+=============================================================================
+-->
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">/* --- 1. RAMMEVERK & DESIGN --- */
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&family=Playfair+Display:wght@400;700&display=swap');
+
+    html, body { margin: 0; padding: 0; font-family: 'Open Sans', sans-serif; font-size: 10pt; color: #333; }
+    h1, h2 { font-family: 'Playfair Display', serif; color: #272630; page-break-after: avoid; }
+    h1 { font-size: 22pt; text-transform: uppercase; border-bottom: 3px solid #bcab8a; padding-bottom: 10px; margin-bottom: 25px; }
+    h2 { font-size: 14pt; border-left: 5px solid #bcab8a; padding-left: 15px; margin-top: 30px; background-color: #f9f9f7; padding: 5px 0 5px 15px; }
+    
+    /* Layout */
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    td { padding: 4px; vertical-align: top; }
+    .info-label { font-weight: bold; color: #272630; width: 160px; }
+    .sign-line { border-bottom: 1px solid #000; margin-top: 40px; margin-bottom: 5px; }
+</style>
+<!-- START DOKUMENT -->
+<h1>Tinglysing i eiendom</h1>
+
+<h2>Transport av festerett</h2>
+<!-- INFO TABELL -->
+
+<table>
+	<colgroup>
+		<col style="width: 30%;" />
+		<col style="width: 70%;" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td class="info-label">Adresse:</td>
+			<td>[[eiendom.adresse]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Oppdragsnr:</td>
+			<td>[[oppdrag.nr]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Hjemmel til feste:</td>
+			<td>[[selger.navn]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Matrikkel:</td>
+			<td>[[komplettmatrikkel]]</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>Med henvisning til festekontrakt tinglyst i ovennevnte eiendom, samtykkes herved i overdragelsen fra ovennevnte selger (fester) til f&oslash;lgende nye kj&oslash;per(e):</p>
+<!-- KJØPERE -->
+
+<table vitec-if="Model.kjopere.Count &gt; 0">
+	<colgroup>
+		<col style="width: 50%;" />
+		<col style="width: 50%;" />
+	</colgroup>
+	<thead>
+		<tr>
+			<th style="text-align:left; border-bottom: 1px solid #bcab8a; padding-bottom:5px;">Navn</th>
+			<th style="text-align:left; border-bottom: 1px solid #bcab8a; padding-bottom:5px;">F&oslash;dselsnr / Org.nr</th>
+		</tr>
+	</thead>
+	<tbody vitec-foreach="kjoper in Model.kjopere">
+		<tr>
+			<td style="padding-top:5px">[[*kjoper.navn]]</td>
+			<td style="padding-top:5px">[[*kjoper.idnummer]]</td>
+		</tr>
+	</tbody>
+</table>
+<br />
+<br />
+<!-- SIGNATUR -->
+<div style="page-break-inside:avoid">
+<p>[[meglerkontor.poststed]], den [[dagensdato]]</p>
+<!-- BORTFESTERE / GRUNNEIERE (SAFE MODE) --><!-- Vi bruker kun Count sjekk på toppen. Ingen logikk inne i løkken. -->
+
+<div vitec-if="Model.grunneiere.Count &gt; 0">
+<table style="width:100%">
+	<tbody vitec-foreach="grunneier in Model.grunneiere">
+		<tr>
+			<td>
+			<div class="sign-line">&nbsp;</div>
+			<!-- Her printer vi bare direkte. Enkelt og trygt. --><span>Bortfester: <strong>[[*grunneier.navn]]</strong></span> <span> (Fnr/Org: [[*grunneier.idnummer]])</span></td>
+		</tr>
+	</tbody>
+</table>
+</div>
+<!-- FALLBACK (Vises KUN hvis det er 0 grunneiere registrert) -->
+
+<div vitec-if="Model.grunneiere.Count == 0">
+<div class="sign-line">&nbsp;</div>
+Bortfester (Signatur)</div>
+</div>
+</div>
