@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Editor from '@monaco-editor/react';
-import { Folder, FileCode, GitBranch, ChevronRight, ChevronDown, LayoutTemplate, Smartphone, Monitor, FileText, Download, AlertTriangle, GripVertical, Settings, Play, Save, Search, Command, Activity, Box, Type, Hash, Mail, Phone, User, MapPin, MoreHorizontal, Code, Tag, Plus, Check, Pencil, Trash2, FolderPlus, X, Upload, FileUp, FileDown } from 'lucide-react';
+import { Folder, FileCode, GitBranch, ChevronRight, ChevronDown, LayoutTemplate, Smartphone, Monitor, FileText, Download, AlertTriangle, GripVertical, Settings, Play, Save, Search, Command, Activity, Box, Type, Hash, Mail, Phone, User, MapPin, MoreHorizontal, Code, Tag, Plus, Check, Pencil, Trash2, FolderPlus, X, Upload, FileUp, FileDown, Copy, Clock } from 'lucide-react';
 
 const API_URL = 'http://localhost:5000/api';
 const DEFAULT_META = { category: 'General', receiver: 'Systemstandard', output: 'PDF og e-post', assignmentType: '', phase: '', subject: 'Oppgjørsoppstilling [[eiendom.adresse]]', cssVersion: 'style.css', headerTemplate: '', footerTemplate: '', marginTop: 2, marginBottom: 2, marginLeft: 2, marginRight: 2 };
@@ -128,12 +128,18 @@ function App() {
   const [resizing, setResizing] = useState(null); // 'left' | 'right' | null
 
   // TEMPLATE MANAGEMENT
-  const [templateModal, setTemplateModal] = useState(null); // { type: 'rename' | 'delete', path: string, name: string }
+  const [templateModal, setTemplateModal] = useState(null); // { type: 'rename' | 'delete' | 'duplicate', path: string, name: string }
   const [templateInput, setTemplateInput] = useState('');
 
   // PREVIEW SCALING
   const previewContainerRef = useRef(null);
   const [scale, setScale] = useState(1);
+
+  // RECENT FILES (persist to localStorage)
+  const [recentFiles, setRecentFiles] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('htmlhub_recent') || '[]'); } catch { return []; }
+  });
+  const searchInputRef = useRef(null);
 
   // CATEGORY MANAGEMENT
   const [categoryModal, setCategoryModal] = useState(null); // { type: 'create' | 'rename' | 'delete', category?: string }
@@ -251,17 +257,67 @@ function App() {
 
   useEffect(() => {
     const handleMM = (e) => {
-      if (resizing === 'left') setLeftWidth(Math.max(250, Math.min(600, e.clientX)));
+      if (resizing === 'left') {
+        setLeftWidth(Math.max(250, Math.min(500, e.clientX)));
+      }
       if (resizing === 'right') {
-        // Calculate available width and constrain rightWidth properly
-        const newWidth = window.innerWidth - e.clientX;
-        setRightWidth(Math.max(300, Math.min(600, newWidth)));
+        // rightWidth = distance from mouse to right edge of window
+        // Smaller value = larger editor, larger value = larger preview
+        const newWidth = window.innerWidth - e.clientX - 16; // 16px for padding
+        setRightWidth(Math.max(280, Math.min(900, newWidth)));
       }
     };
     const handleMU = () => setResizing(null);
-    if (resizing) { window.addEventListener('mousemove', handleMM); window.addEventListener('mouseup', handleMU); }
-    return () => { window.removeEventListener('mousemove', handleMM); window.removeEventListener('mouseup', handleMU); };
+    if (resizing) {
+      window.addEventListener('mousemove', handleMM);
+      window.addEventListener('mouseup', handleMU);
+    }
+    return () => {
+      window.removeEventListener('mousemove', handleMM);
+      window.removeEventListener('mouseup', handleMU);
+    };
   }, [resizing]);
+
+  // KEYBOARD SHORTCUTS
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Ignore if typing in input/textarea
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+        if (e.key === 'Escape') { e.target.blur(); setSearchQuery(''); }
+        return;
+      }
+
+      if (e.ctrlKey && e.key === 's') {
+        e.preventDefault();
+        if (e.shiftKey) handleSave(true); // Ctrl+Shift+S = new version
+        else handleSave(false); // Ctrl+S = save
+      }
+      if (e.ctrlKey && e.key === 'f') {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+      if (e.ctrlKey && e.key === 'd' && selectedPath) {
+        e.preventDefault();
+        const parts = selectedPath.split(/[/\\]/);
+        const filename = parts[parts.length - 1].replace('.html', '');
+        setTemplateModal({ type: 'duplicate', path: selectedPath, name: filename });
+        setTemplateInput(filename + '-copy');
+      }
+      if (e.key === 'Escape') {
+        setCategoryModal(null);
+        setTemplateModal(null);
+        setImportModal(false);
+        setSearchQuery('');
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedPath]);
+
+  // Persist recent files to localStorage
+  useEffect(() => {
+    localStorage.setItem('htmlhub_recent', JSON.stringify(recentFiles));
+  }, [recentFiles]);
 
   const fetchInit = async () => setInitData(await (await fetch(`${API_URL}/init`)).json());
 
@@ -288,6 +344,21 @@ function App() {
     if (selectedPath === templateModal.path) { setSelectedPath(null); setContent(''); }
     setTemplateModal(null); fetchInit();
     setStatus('Template deleted'); setTimeout(() => setStatus(''), 2000);
+  };
+
+  const handleTemplateDuplicate = async () => {
+    if (!templateInput.trim() || !templateModal?.path) return;
+    const srcPath = templateModal.path;
+    const parts = srcPath.split(/[/\\]/);
+    parts.pop();
+    const newPath = parts.length > 0 ? `${parts.join('/')}/${templateInput.trim()}.html` : `${templateInput.trim()}.html`;
+    // Read source content, save to new path
+    const res = await fetch(`${API_URL}/files/read`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filepath: srcPath }) });
+    const data = await res.json();
+    await fetch(`${API_URL}/files/save`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filepath: newPath, content: data.content, meta: data.meta }) });
+    setTemplateModal(null); setTemplateInput(''); fetchInit();
+    setStatus('Template duplicated'); setTimeout(() => setStatus(''), 2000);
+    loadFile(newPath); // Load the new duplicate
   };
 
   // Auto-add variable with demo value
@@ -320,6 +391,11 @@ function App() {
   const loadFile = async (filepath) => {
     const data = await (await fetch(`${API_URL}/files/read`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filepath }) })).json();
     setSelectedPath(filepath); setContent(data.content); setMeta({ ...DEFAULT_META, ...data.meta }); setVariableOverrides({}); setRightTab('preview');
+    // Track in recent files (max 5, no duplicates)
+    setRecentFiles(prev => {
+      const filtered = prev.filter(p => p !== filepath);
+      return [filepath, ...filtered].slice(0, 5);
+    });
   };
 
   const handleSave = async (asNewVersion) => {
@@ -414,6 +490,29 @@ function App() {
 
             <div className="flex-1 overflow-y-auto p-3 space-y-4 custom-scrollbar">
               {leftTab === 'files' ? <>
+                {/* RECENT FILES */}
+                {recentFiles.length > 0 && (
+                  <div className="mb-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-1">
+                        <Clock size={10} className="text-amber-400" />
+                        <span className="text-[10px] font-bold text-amber-400 uppercase tracking-widest">Recent</span>
+                      </div>
+                      <button onClick={() => setRecentFiles([])} className="text-[9px] text-slate-600 hover:text-slate-400">Clear</button>
+                    </div>
+                    <div className="space-y-1">
+                      {recentFiles.filter(p => initData.files.includes(p)).map(p => {
+                        const name = p.split(/[/\\]/).pop();
+                        return (
+                          <button key={p} onClick={() => loadFile(p)} className={`w-full text-left px-3 py-2 text-xs rounded-lg transition-all flex items-center gap-2 ${selectedPath === p ? 'bg-amber-500/10 text-amber-300 border border-amber-500/20' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'}`}>
+                            <FileText size={10} className="text-amber-400/70" />
+                            <span className="truncate">{name}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
                 {/* NEW CATEGORY BUTTON */}
                 <button
                   onClick={() => { setCategoryModal({ type: 'create' }); setCategoryInput(''); }}
@@ -464,6 +563,10 @@ function App() {
                               </button>
                               {/* Template Actions */}
                               <div className="flex items-center gap-0.5 opacity-0 group-hover/file:opacity-100 transition-opacity">
+                                <button
+                                  onClick={() => { setTemplateModal({ type: 'duplicate', path: f.path, name: base }); setTemplateInput(base + '-copy'); }}
+                                  className="p-1.5 rounded hover:bg-white/10 text-slate-500 hover:text-emerald-400" title="Duplicate (Ctrl+D)"
+                                ><Copy size={10} /></button>
                                 <button
                                   onClick={() => { setTemplateModal({ type: 'rename', path: f.path, name: base }); setTemplateInput(base); }}
                                   className="p-1.5 rounded hover:bg-white/10 text-slate-500 hover:text-cyan-400" title="Rename"
@@ -541,8 +644,9 @@ function App() {
           <div className="glass-panel rounded-full px-4 py-2.5 flex items-center gap-3">
             <Search size={14} className="text-slate-500" />
             <input
+              ref={searchInputRef}
               type="text"
-              placeholder="Search templates..."
+              placeholder="Search templates... (Ctrl+F)"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="bg-transparent border-none outline-none text-xs text-slate-300 placeholder:text-slate-600 flex-1 w-full"
@@ -758,201 +862,214 @@ function App() {
       </div>
 
       {/* CATEGORY MODAL */}
-      {categoryModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center animate-fade-in-up">
-          <div className="glass-panel rounded-2xl p-6 w-96 shadow-2xl border border-white/20">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-white">
-                {categoryModal.type === 'create' && 'New Category'}
-                {categoryModal.type === 'rename' && 'Rename Category'}
-                {categoryModal.type === 'delete' && 'Delete Category'}
-              </h3>
-              <button onClick={() => setCategoryModal(null)} className="text-slate-400 hover:text-white p-1">
-                <X size={18} />
-              </button>
-            </div>
-
-            {categoryModal.type === 'delete' ? (
-              <div>
-                <p className="text-sm text-slate-400 mb-4">
-                  Are you sure you want to delete <span className="text-white font-medium">"{categoryModal.category}"</span>?
-                  All files will be moved to Uncategorized.
-                </p>
-                <div className="flex gap-3 justify-end">
-                  <button onClick={() => setCategoryModal(null)} className="px-4 py-2 text-sm text-slate-400 hover:text-white">Cancel</button>
-                  <button onClick={handleCategoryDelete} className="px-4 py-2 text-sm bg-red-500/20 text-red-400 hover:bg-red-500/30 rounded-lg border border-red-500/30">Delete</button>
-                </div>
+      {
+        categoryModal && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center animate-fade-in-up">
+            <div className="glass-panel rounded-2xl p-6 w-96 shadow-2xl border border-white/20">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-bold text-white">
+                  {categoryModal.type === 'create' && 'New Category'}
+                  {categoryModal.type === 'rename' && 'Rename Category'}
+                  {categoryModal.type === 'delete' && 'Delete Category'}
+                </h3>
+                <button onClick={() => setCategoryModal(null)} className="text-slate-400 hover:text-white p-1">
+                  <X size={18} />
+                </button>
               </div>
-            ) : (
-              <div>
-                <input
-                  type="text"
-                  value={categoryInput}
-                  onChange={(e) => setCategoryInput(e.target.value)}
-                  placeholder="Category name"
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-cyan-500/50 mb-4"
-                  autoFocus
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      categoryModal.type === 'create' ? handleCategoryCreate() : handleCategoryRename();
-                    }
-                  }}
-                />
-                <div className="flex gap-3 justify-end">
-                  <button onClick={() => setCategoryModal(null)} className="px-4 py-2 text-sm text-slate-400 hover:text-white">Cancel</button>
-                  <button
-                    onClick={categoryModal.type === 'create' ? handleCategoryCreate : handleCategoryRename}
-                    className="px-4 py-2 text-sm bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30 rounded-lg border border-cyan-500/30"
-                  >
-                    {categoryModal.type === 'create' ? 'Create' : 'Rename'}
-                  </button>
+
+              {categoryModal.type === 'delete' ? (
+                <div>
+                  <p className="text-sm text-slate-400 mb-4">
+                    Are you sure you want to delete <span className="text-white font-medium">"{categoryModal.category}"</span>?
+                    All files will be moved to Uncategorized.
+                  </p>
+                  <div className="flex gap-3 justify-end">
+                    <button onClick={() => setCategoryModal(null)} className="px-4 py-2 text-sm text-slate-400 hover:text-white">Cancel</button>
+                    <button onClick={handleCategoryDelete} className="px-4 py-2 text-sm bg-red-500/20 text-red-400 hover:bg-red-500/30 rounded-lg border border-red-500/30">Delete</button>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* TEMPLATE MODAL */}
-      {templateModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center animate-fade-in-up">
-          <div className="glass-panel rounded-2xl p-6 w-96 shadow-2xl border border-white/20">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-white">
-                {templateModal.type === 'rename' && 'Rename Template'}
-                {templateModal.type === 'delete' && 'Delete Template'}
-              </h3>
-              <button onClick={() => setTemplateModal(null)} className="text-slate-400 hover:text-white p-1">
-                <X size={18} />
-              </button>
-            </div>
-
-            {templateModal.type === 'delete' ? (
-              <div>
-                <p className="text-sm text-slate-400 mb-4">
-                  Are you sure you want to delete <span className="text-white font-medium">"{templateModal.name}"</span>?
-                  This action cannot be undone.
-                </p>
-                <div className="flex gap-3 justify-end">
-                  <button onClick={() => setTemplateModal(null)} className="px-4 py-2 text-sm text-slate-400 hover:text-white">Cancel</button>
-                  <button onClick={handleTemplateDelete} className="px-4 py-2 text-sm bg-red-500/20 text-red-400 hover:bg-red-500/30 rounded-lg border border-red-500/30">Delete</button>
-                </div>
-              </div>
-            ) : (
-              <div>
-                <input
-                  type="text"
-                  value={templateInput}
-                  onChange={(e) => setTemplateInput(e.target.value)}
-                  placeholder="Template name"
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-cyan-500/50 mb-4"
-                  autoFocus
-                  onKeyDown={(e) => { if (e.key === 'Enter') handleTemplateRename(); }}
-                />
-                <div className="flex gap-3 justify-end">
-                  <button onClick={() => setTemplateModal(null)} className="px-4 py-2 text-sm text-slate-400 hover:text-white">Cancel</button>
-                  <button onClick={handleTemplateRename} className="px-4 py-2 text-sm bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30 rounded-lg border border-cyan-500/30">Rename</button>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* IMPORT MODAL */}
-      {importModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center animate-fade-in-up">
-          <div className="glass-panel rounded-2xl p-6 w-[500px] shadow-2xl border border-white/20 max-h-[80vh] flex flex-col">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-white flex items-center gap-2"><FileUp size={18} className="text-emerald-400" /> Import Templates</h3>
-              <button onClick={() => { setImportModal(false); setImportFiles([]); }} className="text-slate-400 hover:text-white p-1">
-                <X size={18} />
-              </button>
-            </div>
-
-            {/* FILE DROP ZONE */}
-            <div
-              onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-slate-700 hover:border-emerald-500/50 rounded-xl p-8 text-center cursor-pointer transition-all mb-4 hover:bg-white/5"
-            >
-              <Upload size={32} className="mx-auto text-slate-500 mb-3" />
-              <p className="text-sm text-slate-400 mb-1">Click to select or drop HTML files</p>
-              <p className="text-[10px] text-slate-600">Supports multiple files</p>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".html,.htm"
-                multiple
-                onChange={handleFileSelect}
-                className="hidden"
-              />
-            </div>
-
-            {/* FILE LIST */}
-            <div className="flex-1 overflow-y-auto space-y-3 mb-4 custom-scrollbar">
-              {importFiles.map((file, idx) => (
-                <div key={idx} className="bg-white/5 rounded-xl p-4 border border-white/10">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-sm font-medium text-white truncate flex-1">{file.name}</span>
-                    <button onClick={() => setImportFiles(importFiles.filter((_, i) => i !== idx))} className="text-slate-500 hover:text-red-400 p-1">
-                      <X size={14} />
+              ) : (
+                <div>
+                  <input
+                    type="text"
+                    value={categoryInput}
+                    onChange={(e) => setCategoryInput(e.target.value)}
+                    placeholder="Category name"
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-cyan-500/50 mb-4"
+                    autoFocus
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        categoryModal.type === 'create' ? handleCategoryCreate() : handleCategoryRename();
+                      }
+                    }}
+                  />
+                  <div className="flex gap-3 justify-end">
+                    <button onClick={() => setCategoryModal(null)} className="px-4 py-2 text-sm text-slate-400 hover:text-white">Cancel</button>
+                    <button
+                      onClick={categoryModal.type === 'create' ? handleCategoryCreate : handleCategoryRename}
+                      className="px-4 py-2 text-sm bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30 rounded-lg border border-cyan-500/30"
+                    >
+                      {categoryModal.type === 'create' ? 'Create' : 'Rename'}
                     </button>
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="text-[10px] text-slate-500 uppercase font-bold mb-1 block">Category</label>
-                      <select
-                        value={file.category}
-                        onChange={(e) => {
-                          const updated = [...importFiles];
-                          updated[idx].category = e.target.value;
-                          setImportFiles(updated);
-                        }}
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-cyan-500/50"
-                      >
-                        <option value="Uncategorized" className="bg-slate-900">Uncategorized</option>
-                        {Object.keys(fileTree).filter(k => k !== 'Uncategorized').map(cat => (
-                          <option key={cat} value={cat} className="bg-slate-900">{cat}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="text-[10px] text-slate-500 uppercase font-bold mb-1 block">Tags (comma separated)</label>
-                      <input
-                        type="text"
-                        value={file.tags}
-                        onChange={(e) => {
-                          const updated = [...importFiles];
-                          updated[idx].tags = e.target.value;
-                          setImportFiles(updated);
-                        }}
-                        placeholder="tag1, tag2"
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-cyan-500/50"
-                      />
-                    </div>
-                  </div>
                 </div>
-              ))}
-              {importFiles.length === 0 && (
-                <div className="text-center py-8 text-slate-500 text-sm">No files selected</div>
               )}
             </div>
+          </div>
+        )
+      }
 
-            {/* ACTIONS */}
-            <div className="flex gap-3 justify-end">
-              <button onClick={() => { setImportModal(false); setImportFiles([]); }} className="px-4 py-2 text-sm text-slate-400 hover:text-white">Cancel</button>
-              <button
-                onClick={handleImport}
-                disabled={importFiles.length === 0}
-                className="px-4 py-2 text-sm bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 rounded-lg border border-emerald-500/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-              >
-                <FileUp size={14} /> Import {importFiles.length > 0 && `(${importFiles.length})`}
-              </button>
+      {/* TEMPLATE MODAL */}
+      {
+        templateModal && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center animate-fade-in-up">
+            <div className="glass-panel rounded-2xl p-6 w-96 shadow-2xl border border-white/20">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-bold text-white">
+                  {templateModal.type === 'rename' && 'Rename Template'}
+                  {templateModal.type === 'delete' && 'Delete Template'}
+                  {templateModal.type === 'duplicate' && 'Duplicate Template'}
+                </h3>
+                <button onClick={() => setTemplateModal(null)} className="text-slate-400 hover:text-white p-1">
+                  <X size={18} />
+                </button>
+              </div>
+
+              {templateModal.type === 'delete' ? (
+                <div>
+                  <p className="text-sm text-slate-400 mb-4">
+                    Are you sure you want to delete <span className="text-white font-medium">"{templateModal.name}"</span>?
+                    This action cannot be undone.
+                  </p>
+                  <div className="flex gap-3 justify-end">
+                    <button onClick={() => setTemplateModal(null)} className="px-4 py-2 text-sm text-slate-400 hover:text-white">Cancel</button>
+                    <button onClick={handleTemplateDelete} className="px-4 py-2 text-sm bg-red-500/20 text-red-400 hover:bg-red-500/30 rounded-lg border border-red-500/30">Delete</button>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <input
+                    type="text"
+                    value={templateInput}
+                    onChange={(e) => setTemplateInput(e.target.value)}
+                    placeholder={templateModal.type === 'duplicate' ? 'New template name' : 'Template name'}
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-cyan-500/50 mb-4"
+                    autoFocus
+                    onKeyDown={(e) => { if (e.key === 'Enter') templateModal.type === 'duplicate' ? handleTemplateDuplicate() : handleTemplateRename(); }}
+                  />
+                  <div className="flex gap-3 justify-end">
+                    <button onClick={() => setTemplateModal(null)} className="px-4 py-2 text-sm text-slate-400 hover:text-white">Cancel</button>
+                    <button
+                      onClick={templateModal.type === 'duplicate' ? handleTemplateDuplicate : handleTemplateRename}
+                      className={`px-4 py-2 text-sm rounded-lg border flex items-center gap-2 ${templateModal.type === 'duplicate' ? 'bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border-emerald-500/30' : 'bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30 border-cyan-500/30'}`}
+                    >
+                      {templateModal.type === 'duplicate' && <><Copy size={12} /> Duplicate</>}
+                      {templateModal.type === 'rename' && 'Rename'}
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-        </div>
-      )}
-    </div>
+        )
+      }
+
+      {/* IMPORT MODAL */}
+      {
+        importModal && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center animate-fade-in-up">
+            <div className="glass-panel rounded-2xl p-6 w-[500px] shadow-2xl border border-white/20 max-h-[80vh] flex flex-col">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-bold text-white flex items-center gap-2"><FileUp size={18} className="text-emerald-400" /> Import Templates</h3>
+                <button onClick={() => { setImportModal(false); setImportFiles([]); }} className="text-slate-400 hover:text-white p-1">
+                  <X size={18} />
+                </button>
+              </div>
+
+              {/* FILE DROP ZONE */}
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                className="border-2 border-dashed border-slate-700 hover:border-emerald-500/50 rounded-xl p-8 text-center cursor-pointer transition-all mb-4 hover:bg-white/5"
+              >
+                <Upload size={32} className="mx-auto text-slate-500 mb-3" />
+                <p className="text-sm text-slate-400 mb-1">Click to select or drop HTML files</p>
+                <p className="text-[10px] text-slate-600">Supports multiple files</p>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".html,.htm"
+                  multiple
+                  onChange={handleFileSelect}
+                  className="hidden"
+                />
+              </div>
+
+              {/* FILE LIST */}
+              <div className="flex-1 overflow-y-auto space-y-3 mb-4 custom-scrollbar">
+                {importFiles.map((file, idx) => (
+                  <div key={idx} className="bg-white/5 rounded-xl p-4 border border-white/10">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-sm font-medium text-white truncate flex-1">{file.name}</span>
+                      <button onClick={() => setImportFiles(importFiles.filter((_, i) => i !== idx))} className="text-slate-500 hover:text-red-400 p-1">
+                        <X size={14} />
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="text-[10px] text-slate-500 uppercase font-bold mb-1 block">Category</label>
+                        <select
+                          value={file.category}
+                          onChange={(e) => {
+                            const updated = [...importFiles];
+                            updated[idx].category = e.target.value;
+                            setImportFiles(updated);
+                          }}
+                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-cyan-500/50"
+                        >
+                          <option value="Uncategorized" className="bg-slate-900">Uncategorized</option>
+                          {Object.keys(fileTree).filter(k => k !== 'Uncategorized').map(cat => (
+                            <option key={cat} value={cat} className="bg-slate-900">{cat}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-slate-500 uppercase font-bold mb-1 block">Tags (comma separated)</label>
+                        <input
+                          type="text"
+                          value={file.tags}
+                          onChange={(e) => {
+                            const updated = [...importFiles];
+                            updated[idx].tags = e.target.value;
+                            setImportFiles(updated);
+                          }}
+                          placeholder="tag1, tag2"
+                          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-cyan-500/50"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {importFiles.length === 0 && (
+                  <div className="text-center py-8 text-slate-500 text-sm">No files selected</div>
+                )}
+              </div>
+
+              {/* ACTIONS */}
+              <div className="flex gap-3 justify-end">
+                <button onClick={() => { setImportModal(false); setImportFiles([]); }} className="px-4 py-2 text-sm text-slate-400 hover:text-white">Cancel</button>
+                <button
+                  onClick={handleImport}
+                  disabled={importFiles.length === 0}
+                  className="px-4 py-2 text-sm bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 rounded-lg border border-emerald-500/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                  <FileUp size={14} /> Import {importFiles.length > 0 && `(${importFiles.length})`}
+                </button>
+              </div>
+            </div>
+          </div>
+        )
+      }
+    </div >
   );
 }
 export default App;
