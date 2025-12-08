@@ -1,0 +1,9 @@
+Hei [kjøper.fornavn]!
+
+Takk for at du valgte Proaktiv som din eiendomsmegler for [eiendom.adresse].
+
+Vi bekrefter herved at kontrakten er signert og at overtakelse er satt til [oppgjør.overtakelsedato].
+
+Hilsen
+[megler.fornavn] [megler.etternavn]
+Proaktiv Eiendomsmegling

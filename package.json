@@ -1,7 +1,7 @@
 {
-    "name": "html-hub-server",
+    "name": "proaktiv-dokument-hub-server",
     "version": "1.0.0",
-    "description": "Backend for HTML Hub",
+    "description": "Backend for Proaktiv Dokument Hub",
     "main": "server.js",
     "scripts": {
         "start": "node server.js",
