@@ -21,7 +21,7 @@ const getFilesRecursively = (dir, fileList = []) => {
         const filePath = path.join(dir, file);
         if (fs.statSync(filePath).isDirectory()) {
             getFilesRecursively(filePath, fileList);
-        } else if (file.endsWith('.html') || file.endsWith('.txt')) {
+        } else if (file.endsWith('.html') || file.endsWith('.txt') || file.endsWith('.css')) {
             fileList.push(path.relative(LIBRARY_PATH, filePath));
         }
     });
@@ -30,15 +30,61 @@ const getFilesRecursively = (dir, fileList = []) => {
 
 app.get('/api/init', (req, res) => {
     try {
-        const files = getFilesRecursively(LIBRARY_PATH);
-        const resourceFiles = fs.readdirSync(RESOURCES_PATH);
-        const cssFiles = resourceFiles.filter(f => f.endsWith('.css'));
-        const htmlFiles = resourceFiles.filter(f => f.endsWith('.html'));
-        let testData = {}, snippets = [];
-        try { testData = JSON.parse(fs.readFileSync(path.join(RESOURCES_PATH, 'test_data.json'), 'utf8')); } catch (e) { }
-        try { snippets = JSON.parse(fs.readFileSync(path.join(RESOURCES_PATH, 'snippets.json'), 'utf8')); } catch (e) { }
-        res.json({ files, cssFiles, htmlFiles, testData, snippets });
-    } catch (err) { res.status(500).json({ error: 'Init failed' }); }
+        try {
+            const filePaths = getFilesRecursively(LIBRARY_PATH);
+
+            // GIT STATUS INTEGRATION
+            exec('git status --porcelain', { cwd: LIBRARY_PATH }, (err, stdout) => {
+                const gitStatusMap = {};
+                if (!err && stdout) {
+                    stdout.split('\n').forEach(line => {
+                        const trimmed = line.trim();
+                        if (!trimmed) return;
+                        // Status code is first 2 chars
+                        const code = line.substring(0, 2);
+                        const file = line.substring(3).trim();
+                        // Map generic statuses: ?? = untracked (green), M = modified (green), else clean (blue)
+                        // We only care if it's NOT clean.
+                        gitStatusMap[file] = 'modified';
+                    });
+                }
+
+                // Map files to objects with status
+                const files = filePaths.map(p => {
+                    // Determine git status
+                    // Windows paths might need normalization for matching git output which uses forward slashes
+                    const normalizedKey = p.replace(/\\/g, '/');
+                    const status = gitStatusMap[normalizedKey] ? 'modified' : 'clean';
+                    return { path: p, status };
+                });
+
+                const resourceFiles = fs.readdirSync(RESOURCES_PATH);
+
+                // CSS: Legacy resources + library/System/Styles
+                let cssFiles = resourceFiles.filter(f => f.endsWith('.css'));
+                const systemStylesPath = path.join(LIBRARY_PATH, 'System', 'Styles');
+                if (fs.existsSync(systemStylesPath)) {
+                    const sysStyles = fs.readdirSync(systemStylesPath).filter(f => f.endsWith('.css')).map(f => `System/Styles/${f}`);
+                    cssFiles = [...cssFiles, ...sysStyles];
+                }
+
+                // HTML (Headers/Footers): Legacy resources + Topptekst + Bunntekst
+                let htmlFiles = resourceFiles.filter(f => f.endsWith('.html'));
+                ['Topptekst', 'Bunntekst'].forEach(folder => {
+                    const folderPath = path.join(LIBRARY_PATH, folder);
+                    if (fs.existsSync(folderPath)) {
+                        const folderFiles = fs.readdirSync(folderPath).filter(f => f.endsWith('.html')).map(f => `${folder}/${f}`);
+                        htmlFiles = [...htmlFiles, ...folderFiles];
+                    }
+                });
+
+                let testData = {}, snippets = [];
+                try { testData = JSON.parse(fs.readFileSync(path.join(RESOURCES_PATH, 'test_data.json'), 'utf8')); } catch (e) { }
+                try { snippets = JSON.parse(fs.readFileSync(path.join(RESOURCES_PATH, 'snippets.json'), 'utf8')); } catch (e) { }
+                res.json({ files, cssFiles, htmlFiles, testData, snippets });
+            });
+        } catch (err) { console.error(err); res.status(500).json({ error: 'Init failed' }); }
+    } catch (err) { console.error(err); res.status(500).json({ error: 'Init failed' }); }
 });
 
 app.post('/api/files/read', (req, res) => {
@@ -54,7 +100,18 @@ app.post('/api/files/read', (req, res) => {
 
 app.post('/api/resources/read', (req, res) => {
     if (!req.body.filename) return res.json({ content: '' });
-    fs.readFile(path.join(RESOURCES_PATH, req.body.filename), 'utf8', (err, content) => {
+
+    // Check if it's a library file (starts with known system folders)
+    const isLibraryResource = ['System/', 'Topptekst/', 'Bunntekst/'].some(prefix => req.body.filename.startsWith(prefix));
+
+    let filePath;
+    if (isLibraryResource) {
+        filePath = path.join(LIBRARY_PATH, req.body.filename);
+    } else {
+        filePath = path.join(RESOURCES_PATH, req.body.filename);
+    }
+
+    fs.readFile(filePath, 'utf8', (err, content) => {
         res.json({ content: err ? '' : content });
     });
 });

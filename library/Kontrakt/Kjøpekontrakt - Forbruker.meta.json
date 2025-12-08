@@ -1,0 +1,16 @@
+{
+  "category": "Kontrakt",
+  "receiver": "Systemstandard",
+  "output": "PDF og e-post",
+  "assignmentType": "",
+  "phase": "",
+  "subject": "Ny mal",
+  "cssVersion": "System/Styles/vitec-style.css",
+  "headerTemplate": "Topptekst/Proaktiv Standard Topptekst - Header Brevmal V.1.0.html",
+  "footerTemplate": "Topptekst/Proaktiv Standard Topptekst - Header Brevmal V.1.0.html",
+  "marginTop": 2,
+  "marginBottom": 2,
+  "marginLeft": 2,
+  "marginRight": 2,
+  "createdAt": "2025-12-08T22:06:05.794Z"
+}

@@ -229,6 +229,7 @@ function App() {
   const [initData, setInitData] = useState({ files: [], cssFiles: [], htmlFiles: [], testData: {}, snippets: [] });
   const [selectedPath, setSelectedPath] = useState(null);
   const [content, setContent] = useState('');
+  const [savedContent, setSavedContent] = useState('');
   const [meta, setMeta] = useState(DEFAULT_META);
   const [activeResources, setActiveResources] = useState({ header: '', footer: '' });
   const [variableOverrides, setVariableOverrides] = useState({});
@@ -407,7 +408,12 @@ function App() {
     const loadRes = async () => {
       const hRes = await fetch(`${API_URL}/resources/read`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filename: meta.headerTemplate }) });
       const fRes = await fetch(`${API_URL}/resources/read`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filename: meta.footerTemplate }) });
-      setActiveResources({ header: (await hRes.json()).content, footer: (await fRes.json()).content });
+      const sRes = await fetch(`${API_URL}/resources/read`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filename: 'library/System/Vitec Stilark.html' }) });
+      setActiveResources({
+        header: (await hRes.json()).content,
+        footer: (await fRes.json()).content,
+        system: (await sRes.json()).content
+      });
     };
     if (selectedPath) loadRes();
   }, [meta.headerTemplate, meta.footerTemplate, selectedPath]);
@@ -588,7 +594,7 @@ function App() {
 
   const loadFile = async (filepath) => {
     const data = await (await fetch(`${API_URL}/files/read`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filepath }) })).json();
-    setSelectedPath(filepath); setContent(data.content); setMeta({ ...DEFAULT_META, ...data.meta }); setVariableOverrides({}); setRightTab('preview');
+    setSelectedPath(filepath); setContent(data.content); setSavedContent(data.content); setMeta({ ...DEFAULT_META, ...data.meta }); setVariableOverrides({}); setRightTab('preview');
     // Track in recent files (max 5, no duplicates)
     setRecentFiles(prev => {
       const filtered = prev.filter(p => p !== filepath);
@@ -607,7 +613,7 @@ function App() {
       savePath = parts.join('/') ? `${parts.join('/')}/${newName}` : newName;
     }
     await fetch(`${API_URL}/files/save`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filepath: savePath, content, meta }) });
-    setStatus('Saved'); fetchInit(); if (asNewVersion) setSelectedPath(savePath); setTimeout(() => setStatus(''), 2000);
+    setStatus('Saved'); fetchInit(); setSavedContent(content); if (asNewVersion) setSelectedPath(savePath); setTimeout(() => setStatus(''), 2000);
   };
 
   const insertSnippet = (code) => { editorRef.current.executeEdits("snippet", [{ range: editorRef.current.getSelection(), text: code }]); editorRef.current.focus(); };
@@ -616,7 +622,10 @@ function App() {
   const fileTree = useMemo(() => {
     const tree = {};
     const query = searchQuery.toLowerCase().trim();
-    initData.files.forEach(path => {
+    initData.files.forEach(f => {
+      const path = typeof f === 'object' ? f.path : f;
+      const status = typeof f === 'object' ? f.status : 'clean';
+
       // Filter by search query
       if (query && !path.toLowerCase().includes(query)) return;
 
@@ -628,7 +637,7 @@ function App() {
       let base = match ? match[1] : fn.replace('.html', '');
       let ver = match ? parseInt(match[2]) : 1;
       if (!tree[cat][base]) tree[cat][base] = [];
-      tree[cat][base].push({ path, ver });
+      tree[cat][base].push({ path, ver, status });
     });
     return tree;
   }, [initData.files, searchQuery]);
@@ -655,8 +664,10 @@ function App() {
     if (isSmsTemplate) {
       return (content.match(/\[([^\[\]]+)\]/g) || []).map(t => t.replace(/\[|\]/g, ''));
     }
-    return (content.match(/\[\[(.*?)\]\]/g) || []).map(t => t.replace(/\[|\]/g, ''));
-  }, [content, isSmsTemplate]);
+    const allText = `${content} ${activeResources.header || ''} ${activeResources.footer || ''}`;
+    const tags = (allText.match(/\[\[(.*?)\]\]/g) || []).map(t => t.replace(/\[|\]/g, ''));
+    return [...new Set(tags)]; // Unique tags
+  }, [content, isSmsTemplate, activeResources]);
 
   // SMS preview content with variable substitution
   const smsPreviewContent = useMemo(() => {
@@ -671,13 +682,35 @@ function App() {
 
   const previewSource = useMemo(() => {
     let inj = content; let subj = meta.subject;
-    [...detectedTags, ...((meta.subject.match(/\[\[(.*?)\]\]/g) || []).map(t => t.replace(/\[|\]/g, '')))].forEach(k => {
+    let head = activeResources.header || '';
+    let foot = activeResources.footer || '';
+
+    // Include tags from subject for replacement loop
+    const subjectTags = (meta.subject.match(/\[\[(.*?)\]\]/g) || []).map(t => t.replace(/\[|\]/g, ''));
+    const allTagsToProcess = [...new Set([...detectedTags, ...subjectTags])];
+
+    // Simulate Vitec Resource Injection
+    // Replace <span vitec-template="resource:Vitec Stilark">...</span> with the system variables/styles
+    // The regex handles variations in spacing and attributes
+    const resourceRegex = /<span[^>]*vitec-template="resource:Vitec Stilark"[^>]*>.*?<\/span>/gi;
+    if (activeResources.system) {
+      inj = inj.replace(resourceRegex, activeResources.system);
+      head = head.replace(resourceRegex, activeResources.system);
+      foot = foot.replace(resourceRegex, activeResources.system);
+    }
+
+    allTagsToProcess.forEach(k => {
       const val = variableOverrides[k] || initData.testData[k] || `[[${k}]]`;
-      inj = inj.replaceAll(`[[${k}]]`, val); subj = subj.replaceAll(`[[${k}]]`, val);
+      const pattern = `[[${k}]]`;
+      // ReplaceAll is safe here as val is string
+      inj = inj.replaceAll(pattern, val);
+      subj = subj.replaceAll(pattern, val);
+      head = head.replaceAll(pattern, val);
+      foot = foot.replaceAll(pattern, val);
     });
     const isEmail = viewMode !== 'a4';
     const marginStyles = isEmail ? 'padding:0;' : `padding:${meta.marginTop}cm ${meta.marginRight}cm ${meta.marginBottom}cm ${meta.marginLeft}cm;`;
-    return `<!DOCTYPE html><html style="height:100%;min-height:100%;"><head><link rel="stylesheet" href="http://localhost:5000/resources/${meta.cssVersion}"><style>html,body{min-height:100%;height:auto;}body{font-family:sans-serif;background:white;margin:0;${marginStyles}}</style></head><body>${activeResources.header}${inj}${activeResources.footer}</body></html>`;
+    return `<!DOCTYPE html><html style="height:100%;min-height:100%;"><head><link rel="stylesheet" href="http://localhost:5000/resources/${meta.cssVersion}"><style>html,body{min-height:100%;height:auto;}body{font-family:sans-serif;background:white;margin:0;${marginStyles}}</style></head><body>${head}${inj}${foot}</body></html>`;
   }, [content, meta, activeResources, variableOverrides, viewMode, initData.testData, detectedTags]);
 
   const getIconForTag = (tag) => {
@@ -778,7 +811,7 @@ function App() {
                       <button onClick={() => setRecentFiles([])} className="text-[9px] text-slate-600 hover:text-slate-400">Tøm</button>
                     </div>
                     <div className="space-y-1">
-                      {recentFiles.filter(p => initData.files.includes(p)).map(p => {
+                      {recentFiles.filter(p => initData.files.some(f => (typeof f === 'object' ? f.path : f) === p)).map(p => {
                         const name = p.split(/[/\\]/).pop();
                         return (
                           <button key={p} onClick={() => loadFile(p)} className={`w-full text-left px-3 py-2 text-xs rounded-lg transition-all flex items-center gap-2 ${selectedPath === p ? 'bg-amber-500/10 text-amber-300 border border-amber-500/20' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'}`}>
@@ -843,13 +876,27 @@ function App() {
                         <div key={base} className="group/item">
                           {fileTree[cat][base].sort((a, b) => b.ver - a.ver).map((f, i) => (
                             <div key={f.path} className="flex items-center gap-1 mb-1 group/file">
-                              <button onClick={() => loadFile(f.path)} className={`flex-1 text-left px-4 py-3 text-xs rounded-xl transition-all relative overflow-hidden group/btn flex items-center justify-between border backdrop-blur-sm ${selectedPath === f.path ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-200' : 'bg-transparent border-transparent text-slate-400 hover:bg-white/5 hover:border-white/10 hover:text-slate-200 hover:shadow-lg hover:-translate-y-0.5'}`}>
+                              <button onClick={() => loadFile(f.path)} className={`flex-1 text-left px-3 py-2.5 rounded-xl transition-all relative overflow-hidden group/btn grid grid-cols-[16px_1fr_auto] gap-3 items-center border backdrop-blur-sm ${selectedPath === f.path ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-200' : 'bg-transparent border-transparent text-slate-400 hover:bg-white/5 hover:border-white/10 hover:text-slate-200 hover:shadow-lg hover:-translate-y-0.5'}`}>
                                 {selectedPath === f.path && <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.5)]"></div>}
-                                <div className="flex items-center gap-2">
-                                  <FileText size={12} className={selectedPath === f.path ? 'text-cyan-400' : 'text-slate-600'} />
-                                  <span>{base} <span className="opacity-50 text-[10px]">v{f.ver}</span></span>
+                                <div className="flex justify-center">
+                                  <FileText size={14} className={selectedPath === f.path ? 'text-cyan-400' : 'text-slate-600'} />
                                 </div>
-                                {i === 0 && <div className="w-1.5 h-1.5 rounded-full bg-cyan-500 shadow-[0_0_5px_rgba(6,182,212,0.5)]"></div>}
+                                <div className="min-w-0 flex flex-col">
+                                  <span className="truncate text-xs font-medium leading-tight" title={base}>{base}</span>
+                                </div>
+                                {i === 0 && (() => {
+                                  const isDirty = selectedPath === f.path && content !== savedContent;
+                                  let dotClass = 'bg-cyan-500 shadow-[0_0_5px_rgba(6,182,212,0.5)]'; // Blue/Default
+                                  if (isDirty) dotClass = 'bg-red-500 shadow-[0_0_5px_rgba(239,68,68,0.5)]'; // Unsaved
+                                  else if (f.status === 'modified' || f.status === 'untracked') dotClass = 'bg-green-500 shadow-[0_0_5px_rgba(34,197,94,0.5)]'; // Saved but Git Modified
+
+                                  return (
+                                    <div className="flex items-center gap-2">
+                                      <span className={`text-[9px] px-1.5 py-0.5 rounded ${selectedPath === f.path ? 'bg-cyan-500/20 text-cyan-300' : 'bg-white/5 text-slate-500'}`}>v{f.ver}</span>
+                                      <div className={`w-2 h-2 rounded-full ${dotClass} transition-colors duration-300`} title={isDirty ? "Unsaved Changes" : f.status === 'modified' ? "Git Modified" : "Git Clean"}></div>
+                                    </div>
+                                  );
+                                })()}
                               </button>
                               {/* Template Actions */}
                               <div className="flex items-center gap-0.5 opacity-0 group-hover/file:opacity-100 transition-opacity">
@@ -987,6 +1034,7 @@ function App() {
                     }}
                     height="100%"
                     defaultLanguage="html"
+                    language={selectedPath && selectedPath.endsWith('.css') ? 'css' : 'html'}
                     theme="glass-theme"
                     value={content}
                     onChange={setContent}
