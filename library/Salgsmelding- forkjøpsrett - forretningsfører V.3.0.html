@@ -1,0 +1,241 @@
+<!-- 
+=============================================================================
+SYSTEM:      Vitec Next
+MODUL:       Proaktiv Master Mal
+MALNAVN:     Salgsmelding (forkjøpsrett) - forretningsfører (1)
+VERSJON:     3.0 (Gold Master)
+DATO:        27.11.2025
+FORFATTER:   Senior Developer / Proaktiv
+FRAMEWORK:   v3.0
+BESKRIVELSE: Standard salgsmelding for borettslag/aksjelag med forkjøpsrett.
+=============================================================================
+-->
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&family=Playfair+Display:wght@400;700&display=swap');
+    #vitecTemplate { font-family: 'Open Sans', sans-serif; font-size: 10pt; color: #333; margin: 0; padding: 0; }
+    h1, h2, h3 { font-family: 'Playfair Display', serif; color: #272630; page-break-after: avoid; }
+    h1 { font-size: 22pt; text-transform: uppercase; border-bottom: 3px solid #bcab8a; padding-bottom: 10px; margin-bottom: 25px; }
+    h2 { font-size: 14pt; border-left: 5px solid #bcab8a; padding-left: 15px; margin-top: 30px; background-color: #f9f9f7; padding: 5px 0 5px 15px; }
+    a { color: #272630; font-weight: bold; text-decoration: underline; }
+
+    label.btn { display: inline-block !important; cursor: pointer; margin: 0 !important; padding: 0 !important; vertical-align: middle !important; line-height: 1 !important; }
+    #vitecTemplate input[type="checkbox"] { display: none !important; } 
+    .svg-toggle { display: inline-block !important; width: 14px !important; height: 14px !important; margin-right: 6px !important; vertical-align: middle !important; border: none !important; background-color: transparent !important; position: relative; top: -1px; }
+    .svg-toggle.checkbox { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect x='25' y='25' width='462' height='462' fill='none' stroke='%23272630' stroke-width='40'/%3E%3C/svg%3E"); }
+    .svg-toggle.checkbox.active, .btn.active > .svg-toggle.checkbox { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect x='25' y='25' width='462' height='462' fill='none' stroke='%23272630' stroke-width='40'/%3E%3Crect x='100' y='100' width='312' height='312' fill='%23272630'/%3E%3C/svg%3E"); }
+
+    .info-label { font-weight: bold; color: #272630; width: 120px; vertical-align: top; }
+    .form-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .form-table td { border: 1px solid #999; padding: 6px; vertical-align: top; }
+    .v-middle td { vertical-align: middle !important; }
+</style>
+<h1>Salgsmelding og forkj&oslash;psrett</h1>
+
+<p><strong>OPPLYSNINGER FRA FORRETNINGSF&Oslash;RER [[brl.navn]]</strong></p>
+
+<p>Vi har f&aring;tt i oppdrag &aring; formidle salg av:</p>
+
+<table border="1" cellspacing="0" style="border-collapse:collapse; border:1px solid #eeeeee; padding:10px; width:100%">
+	<colgroup>
+		<col style="width: 150px;" />
+		<col style="width: auto;" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td class="info-label">Adresse:</td>
+			<td>[[eiendom.adresse]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Borettslag:</td>
+			<td>[[brl.navn]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Andelsnr:</td>
+			<td>[[eiendom.andelsnr]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Hjemmelshaver(e):</td>
+			<td>[[selger.navn]]</td>
+		</tr>
+	</tbody>
+</table>
+&nbsp;
+
+<p>Vi &oslash;nsker i den sammenheng &aring; f&aring; oversendt f&oslash;lgende opplysninger og dokumentasjon:</p>
+
+<ul>
+	<li>Siste &aring;rs regnskap med &aring;rsberetning og &aring;rsm&oslash;teprotokoll</li>
+	<li>L&aring;nevilk&aring;r for nedbetaling av fellesgjeld og beregning av m&aring;nedlig felleskostnad</li>
+	<li>Bereging av felleskostnader etter avdragsfri periode (hvis relevant)</li>
+	<li>Borettslagets vedtekter og husordensregler</li>
+	<li>Utfylt opplysningsskjema (nedenfor)</li>
+	<li>Restanser fra andelseier til borettslag</li>
+</ul>
+
+<p>Vi im&oslash;teser deres snarlige tilbakemelding slik at vi kan presentere korrekte opplysninger om eiendommen.</p>
+<!-- SVARSKJEMA -->
+
+<div style="page-break-before:always">&nbsp;</div>
+
+<h1>Opplysningsskjema for Forretningsf&oslash;rer</h1>
+
+<p>Vennligst fyll ut og returner til <strong>[[avsender.epost]]</strong></p>
+
+<h2>Andelsinformasjon</h2>
+
+<table class="form-table">
+	<colgroup>
+		<col style="width: 25%;" />
+		<col style="width: 15%;" />
+		<col style="width: 20%;" />
+		<col style="width: 40%;" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td>Andelsbrev</td>
+			<td>Nr:</td>
+			<td>P&aring;lydende kr:</td>
+			<td>Besitter av adk.dok:</td>
+		</tr>
+		<tr>
+			<td>Partialobligasjon</td>
+			<td>Nr:</td>
+			<td>P&aring;lydende kr:</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Noterte heftelser:</td>
+			<td colspan="3">&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>Fellesutgifter</h2>
+
+<table class="form-table">
+	<tbody>
+		<tr>
+			<td>Fellesutgifter kr/mnd:</td>
+			<td>Kr.</td>
+		</tr>
+		<tr>
+			<td>Utest&aring;ende pr. d.d:</td>
+			<td>Kr.</td>
+		</tr>
+		<tr>
+			<td>Fellesutgifter inkluderer:</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td><strong>Sikringsordning:</strong></td>
+			<td>Avtalen er inng&aring;tt med: ____________________</td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>Fellesgjeld</h2>
+
+<table class="form-table">
+	<tbody class="v-middle">
+		<tr>
+			<td style="width:50%">Har borettslaget fellesgjeld?</td>
+			<td><label aria-pressed="false" class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> Ja &nbsp; <label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> Nei</td>
+		</tr>
+		<tr>
+			<td>Total fellesgjeld pr dato:</td>
+			<td>Kr.</td>
+		</tr>
+		<tr>
+			<td>Andelens del av gjeld:</td>
+			<td>Kr.</td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>L&aring;nedetaljer</h2>
+
+<table class="form-table">
+	<thead>
+		<tr>
+			<th>L&aring;ngiver</th>
+			<th>Total saldo</th>
+			<th>Utbetalt</th>
+			<th>Innfrielse</th>
+			<th>Avdrag fra</th>
+			<th>Rente</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>Sp&oslash;rsm&aring;l om forkj&oslash;psrett</h2>
+
+<table class="form-table">
+	<tbody class="v-middle">
+		<tr>
+			<td style="width:70%">Tilrettelagt for individuell nedbetaling (IN)?</td>
+			<td><label aria-pressed="false" class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> Ja &nbsp; <label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> Nei</td>
+		</tr>
+		<tr>
+			<td>Praktiseres forkj&oslash;psrett?</td>
+			<td><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> Ja &nbsp; <label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> Nei</td>
+		</tr>
+		<tr>
+			<td>Antall dager for avklaring:</td>
+			<td>___________ dager</td>
+		</tr>
+		<tr>
+			<td>Kreves styregodkjennelse?</td>
+			<td><label aria-pressed="false" class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> Ja &nbsp; <label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> Nei</td>
+		</tr>
+		<tr>
+			<td>Er dyrehold tillatt?</td>
+			<td><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> Ja &nbsp; <label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> Nei &nbsp; <label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> S&oslash;knad</td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>Gebyrer</h2>
+
+<table class="form-table">
+	<tbody>
+		<tr>
+			<td>Eierskiftegebyr:</td>
+			<td>Kr.</td>
+		</tr>
+		<tr>
+			<td>Innhenting av opplysninger:</td>
+			<td>Kr.</td>
+		</tr>
+		<tr>
+			<td>Medlemsgebyr:</td>
+			<td>Kr.</td>
+		</tr>
+		<tr>
+			<td>Utlysning forkj&oslash;psrett:</td>
+			<td>Kr.</td>
+		</tr>
+		<tr class="v-middle">
+			<td colspan="2">Faktura p&aring; gebyret?<br />
+			<label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> Ja &nbsp; <label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> Nei (Konto: _______________)</td>
+		</tr>
+	</tbody>
+</table>
+</div>

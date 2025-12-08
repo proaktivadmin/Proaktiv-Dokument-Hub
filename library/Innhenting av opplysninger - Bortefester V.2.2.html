@@ -1,0 +1,139 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&family=Playfair+Display:wght@400;700&display=swap');
+    #vitecTemplate { font-family: 'Open Sans', sans-serif; font-size: 10pt; color: #333; margin: 0; padding: 0; }
+    h1, h2, h3 { font-family: 'Playfair Display', serif; color: #272630; page-break-after: avoid; }
+    h1 { font-size: 22pt; text-transform: uppercase; border-bottom: 3px solid #bcab8a; padding-bottom: 10px; margin-bottom: 25px; }
+    h2 { font-size: 14pt; border-left: 5px solid #bcab8a; padding-left: 15px; margin-top: 30px; background-color: #f9f9f7; padding: 5px 0 5px 15px; }
+    
+    label.btn { display: inline-block !important; cursor: pointer; margin: 0 !important; padding: 0 !important; vertical-align: middle !important; line-height: 1 !important; }
+    #vitecTemplate input[type="checkbox"] { display: none !important; } 
+    .svg-toggle { display: inline-block !important; width: 14px !important; height: 14px !important; margin-right: 6px !important; vertical-align: middle !important; border: none !important; background-color: transparent !important; position: relative; top: -1px; }
+    .svg-toggle.checkbox { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect x='25' y='25' width='462' height='462' fill='none' stroke='%23272630' stroke-width='40'/%3E%3C/svg%3E"); }
+    .svg-toggle.checkbox.active, .btn.active > .svg-toggle.checkbox { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect x='25' y='25' width='462' height='462' fill='none' stroke='%23272630' stroke-width='40'/%3E%3Crect x='100' y='100' width='312' height='312' fill='%23272630'/%3E%3C/svg%3E"); }
+
+    .form-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .form-table td { border: 1px solid #000; padding: 8px 5px; vertical-align: middle; }
+    .form-label { font-weight: bold; color: #272630; }
+    .check-cell { white-space: nowrap; vertical-align: middle; }
+</style>
+<h1>Innhenting av opplysninger</h1>
+
+<p>F&oslash;lgende eiendom er solgt, og i forbindelse med oppgj&oslash;ret trenger vi opplysninger:</p>
+
+<table border="1" cellspacing="0" style="border-collapse:collapse; border:1px solid #eeeeee; padding:10px; width:100%">
+	<colgroup>
+		<col style="width: 150px;" />
+		<col style="width: auto;" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td style="font-weight:bold; padding:5px">Adresse:</td>
+			<td style="padding:5px">[[eiendom.adresse]]</td>
+		</tr>
+		<tr>
+			<td style="font-weight:bold; padding:5px">Selger(e):</td>
+			<td style="padding:5px">[[selger.navn]]</td>
+		</tr>
+		<tr>
+			<td style="font-weight:bold; padding:5px">Kj&oslash;per(e):</td>
+			<td style="padding:5px">[[kjoper.navn]]</td>
+		</tr>
+		<tr>
+			<td style="font-weight:bold; padding:5px">Overtakelse:</td>
+			<td style="padding:5px">[[kontrakt.overtagelse.dato]]</td>
+		</tr>
+		<tr>
+			<td style="font-weight:bold; padding:5px">Matrikkel:</td>
+			<td style="padding:5px">[[komplettmatrikkel]]</td>
+		</tr>
+	</tbody>
+</table>
+&nbsp;
+
+<p>Vi henvender oss til grunneier for &aring; avklare forhold rundt festekontrakten.</p>
+
+<p>Vennligst fyll ut og returner til <strong>[[avsender.epost]]</strong></p>
+&nbsp;
+
+<table class="form-table">
+	<colgroup>
+		<col style="width: 40%;" />
+		<col style="width: 30%;" />
+		<col style="width: 30%;" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td class="form-label">&Aring;rlig festeavgift</td>
+			<td>Kr.</td>
+			<td>Forfallsdato:</td>
+		</tr>
+		<tr>
+			<td class="form-label">Restanse festeavgift</td>
+			<td colspan="2">Kr.</td>
+		</tr>
+		<tr>
+			<td class="form-label">Festeavgift ajour, betalt for &aring;r</td>
+			<td colspan="2">20____</td>
+		</tr>
+		<tr>
+			<td class="form-label">Neste regulering av festeavgift</td>
+			<td colspan="2">&nbsp;</td>
+		</tr>
+		<tr>
+			<td class="form-label">Festekontrakt utl&oslash;per dato</td>
+			<td colspan="2">&nbsp;</td>
+		</tr>
+		<tr>
+			<td class="form-label">Rett til fornyelse?</td>
+			<td class="check-cell" colspan="2"><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> Ja &nbsp;&nbsp; <label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> Nei</td>
+		</tr>
+		<tr>
+			<td class="form-label">Reguleres iht. konsumprisindeks?</td>
+			<td class="check-cell" colspan="2"><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> Ja &nbsp;&nbsp; <label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> Nei</td>
+		</tr>
+		<tr>
+			<td class="form-label">Kreves det samtykke fra bortfester p&aring; skj&oslash;tet?</td>
+			<td class="check-cell" colspan="2"><label aria-pressed="false" class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> Ja &nbsp;&nbsp; <label aria-pressed="false" class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> Nei</td>
+		</tr>
+		<tr>
+			<td class="form-label">Er det &oslash;nskelig &aring; benytte forkj&oslash;psretten?</td>
+			<td class="check-cell" colspan="2"><label aria-pressed="false" class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> Ja &nbsp;&nbsp; <label aria-pressed="false" class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> Nei</td>
+		</tr>
+		<tr>
+			<td class="form-label">Mulighet for innl&oslash;sing av festetomten?</td>
+			<td colspan="2">&nbsp;</td>
+		</tr>
+		<tr>
+			<td class="form-label">Eventuelle &oslash;vrige kjente forhold av betydning for eiendommen</td>
+			<td colspan="2" style="height:60px">&nbsp;</td>
+		</tr>
+		<tr>
+			<td class="form-label">Ved gebyr for overf&oslash;ring av festekontrakt, vennligst opplys gebyrets st&oslash;rrelse</td>
+			<td colspan="2">Kr.</td>
+		</tr>
+		<tr>
+			<td class="form-label">Kontonummer for innbetaling av gebyr:</td>
+			<td colspan="2">&nbsp;</td>
+		</tr>
+		<tr>
+			<td class="form-label">Har grunneiere BankID for e-signatur p&aring; skj&oslash;tet?</td>
+			<td class="check-cell" colspan="2"><label aria-pressed="false" class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> Ja &nbsp;&nbsp; <label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> Nei</td>
+		</tr>
+		<tr>
+			<td class="form-label" style="vertical-align:top">Mobil og e-post grunneiere (samtlige):</td>
+			<td colspan="2">Navn:<br />
+			<br />
+			Mobil:<br />
+			<br />
+			E-post:<br />
+			&nbsp;
+			<div style="border-top:1px dashed #cccccc; margin-bottom:10px; margin-left:0; margin-right:0; margin-top:10px">&nbsp;</div>
+			Navn:<br />
+			<br />
+			Mobil:<br />
+			<br />
+			E-post:</td>
+		</tr>
+	</tbody>
+</table>
+</div>

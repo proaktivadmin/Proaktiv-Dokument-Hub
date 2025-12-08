@@ -1,0 +1,78 @@
+<!-- 
+=============================================================================
+SYSTEM:      Vitec Next
+MODUL:       Proaktiv Master Mal
+MALNAVN:     Oversendelse av kontraktsutkast (Fysisk møte)
+VERSJON:     2.0 (Konvertering)
+DATO:        26.11.2025
+FORFATTER:   Senior Developer / Proaktiv
+FRAMEWORK:   v2.0
+BESKRIVELSE: Følgebrev for kontraktsutkast. Inneholder påminnelse om dato 
+             for kontraktsmøte.
+=============================================================================
+-->
+
+<div id="vitecTemplate">
+<!-- Laster Vitec standardstiler -->
+<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+
+<style type="text/css">
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&family=Playfair+Display:wght@400;700&display=swap');
+    /* Nullstill marginer for å unngå konflikt med Editor-rammen */
+    #vitecTemplate { font-family: 'Open Sans', sans-serif; font-size: 10pt; color: #333; margin: 0; padding: 0; }
+    
+    /* TYPOGRAFI */
+    h1, h2, h3 { font-family: 'Playfair Display', serif; color: #272630; page-break-after: avoid; }
+    h1 { font-size: 22pt; text-transform: uppercase; border-bottom: 3px solid #bcab8a; padding-bottom: 10px; margin-bottom: 25px; }
+    h2 { font-size: 14pt; border-left: 5px solid #bcab8a; padding-left: 15px; margin-top: 30px; background-color: #f9f9f7; padding: 5px 0 5px 15px; }
+    a { color: #272630; font-weight: bold; text-decoration: underline; }
+
+    /* STANDARD KLASSER FRA FRAMEWORK */
+    label.btn { display: inline-block !important; cursor: pointer; margin: 0 !important; padding: 0 !important; vertical-align: middle !important; line-height: 1 !important; }
+    .svg-toggle { display: inline-block !important; width: 16px !important; height: 16px !important; margin-right: 10px !important; vertical-align: text-bottom; border: none !important; background-color: transparent !important; content: " " !important; }
+    #vitecTemplate [data-toggle="buttons"] input { display: none !important; }
+    .svg-toggle.checkbox { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect x='25' y='25' width='462' height='462' fill='none' stroke='%23272630' stroke-width='40'/%3E%3C/svg%3E"); }
+</style>
+
+<!-- INNHOLD START -->
+
+<h1>Oversendelse av kontraktsutkast</h1>
+
+<p><strong>Hei,</strong></p>
+
+<p>Se vedlagte utkast til kjøpekontrakt med vedlegg.</p>
+
+<p>Vi ber deg gjennomgå kontrakten, og gi snarlig tilbakemelding på hvorvidt du godkjenner denne eller har kommentarer til utkastet.</p>
+
+<p>Vi benytter anledningen til å minne om kontraktsmøte den <strong>[[kontrakt.dato]]</strong> for å gjennomgå og undertegne alle nødvendige dokumenter.</p>
+
+<p>Ta kontakt med meg hvis du har noen spørsmål.</p>
+
+<br>
+<div style="page-break-inside: avoid; border-top: 3px solid #bcab8a; padding-top: 20px;">
+    <p>Med vennlig hilsen<br>
+    <strong>[[meglerkontor.navn]]</strong></p>
+    
+    <table>
+        <colgroup>
+            <col style="width: 100%;">
+        </colgroup>
+        <tbody>
+            <tr>
+                <td>
+                    [[ansvarligmegler.navn]]<br>
+                    [[ansvarligmegler.tittel]]
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<p style="font-size: 9pt; margin-top: 30px;">
+    <strong>Vedlegg:</strong><br>
+    Kontrakt<br>
+    Salgsoppgave<br>
+    Vedlegg til kontrakt
+</p>
+
+</div>
