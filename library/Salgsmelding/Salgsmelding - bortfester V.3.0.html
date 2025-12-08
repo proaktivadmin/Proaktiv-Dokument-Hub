@@ -1,0 +1,116 @@
+<!-- 
+=============================================================================
+SYSTEM:      Vitec Next
+MODUL:       Proaktiv Master Mal
+MALNAVN:     Salgsmelding - bortfester
+VERSJON:     3.0 (Gold Master)
+DATO:        27.11.2025
+FORFATTER:   Senior Developer / Proaktiv
+FRAMEWORK:   v3.0
+BESKRIVELSE: Melding til bortfester om salg, med forespørsel om godkjenning.
+=============================================================================
+-->
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&family=Playfair+Display:wght@400;700&display=swap');
+    #vitecTemplate { font-family: 'Open Sans', sans-serif; font-size: 10pt; color: #333; margin: 0; padding: 0; }
+    
+    h1, h2, h3 { font-family: 'Playfair Display', serif; color: #272630; page-break-after: avoid; }
+    h1 { font-size: 22pt; text-transform: uppercase; border-bottom: 3px solid #bcab8a; padding-bottom: 10px; margin-bottom: 25px; }
+    
+    label.btn { display: inline-block !important; cursor: pointer; margin: 0 !important; padding: 0 !important; vertical-align: middle !important; line-height: 1 !important; }
+    #vitecTemplate input[type="checkbox"] { display: none !important; } 
+    .svg-toggle { display: inline-block !important; width: 14px !important; height: 14px !important; margin-right: 6px !important; vertical-align: middle !important; border: none !important; background-color: transparent !important; position: relative; top: -1px; }
+    .svg-toggle.checkbox { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect x='25' y='25' width='462' height='462' fill='none' stroke='%23272630' stroke-width='40'/%3E%3C/svg%3E"); }
+    .svg-toggle.checkbox.active, .btn.active > .svg-toggle.checkbox { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect x='25' y='25' width='462' height='462' fill='none' stroke='%23272630' stroke-width='40'/%3E%3Crect x='100' y='100' width='312' height='312' fill='%23272630'/%3E%3C/svg%3E"); }
+
+    .info-label { font-weight: bold; color: #272630; width: 120px; vertical-align: top; }
+    .data-table { width: 100%; border-collapse: collapse; border: 1px solid #999; margin-bottom: 15px; }
+    .data-table th { background-color: #f9f9f7; padding: 5px; border: 1px solid #999; text-align: left; font-weight: bold; }
+    .data-table td { padding: 5px; border: 1px solid #999; vertical-align: top; }
+</style>
+<h1>Salgsmelding til bortfester</h1>
+
+<p><strong>Hei,</strong></p>
+
+<p>Vi viser til tidligere korrespondanse om salg av:</p>
+
+<table border="1" cellspacing="0" style="border-collapse:collapse; border:1px solid #eeeeee; margin-bottom:20px; padding:10px; width:100%">
+	<colgroup>
+		<col style="width: 120px;" />
+		<col style="width: auto;" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td class="info-label">Adresse:</td>
+			<td>[[eiendom.adresse]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Matrikkel:</td>
+			<td>[[komplettmatrikkel]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Arealer:</td>
+			<td>BRA [[eiendom.bruksareal]] / BRA-i [[eiendom.bruttoareal]]</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><strong>Vi orienterer med dette om at:</strong></p>
+<!-- Selger Tabell -->
+
+<table class="data-table">
+	<colgroup>
+		<col style="width: 50%;" />
+		<col style="width: 50%;" />
+	</colgroup>
+	<thead>
+		<tr>
+			<th>Selger(e)</th>
+			<th>Adresse i v&aring;rt system</th>
+		</tr>
+	</thead>
+	<tbody vitec-foreach="selger in Model.selgere">
+		<tr>
+			<td>[[*selger.navn]]</td>
+			<td>[[*selger.adresse]]<br />
+			[[*selger.postnr]] [[*selger.poststed]]</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>den <strong>[[akseptertbud.dato]]</strong> har akseptert kj&oslash;petilbud p&aring; kr. <strong>[[akseptertbud.belop]]</strong>, fra:</p>
+<!-- Kjøper Tabell -->
+
+<table class="data-table">
+	<thead>
+		<tr>
+			<th>Kj&oslash;per(e)</th>
+			<th>E-post</th>
+			<th>Tlf</th>
+			<th>Fnr/Org</th>
+		</tr>
+	</thead>
+	<tbody vitec-foreach="kjoper in Model.kjopere">
+		<tr>
+			<td>[[*kjoper.navn]]</td>
+			<td>[[*kjoper.emailadresse]]</td>
+			<td>[[*kjoper.tlf]]</td>
+			<td>[[*kjoper.idnummer]]</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><strong>Kj&oslash;pers n&aring;v&aelig;rende adresse:</strong><br />
+[[kjoper.adresse]]</p>
+
+<p><strong>Overtakelsesdato er satt til: [[kontrakt.overtagelse.dato]]</strong><br />
+Kj&oslash;per betaler felleskostnader fra f&oslash;rste forfallsdato etter denne dato. En ev. avregning gj&oslash;res opp partene i mellom.</p>
+
+<div style="border-left:4px solid #bcab8a; margin-bottom:20px; margin-left:0; margin-right:0; margin-top:20px; padding-left:15px">
+<p><strong>Vi s&oslash;ker med dette om styrets godkjenning og avklaring av forkj&oslash;psrett.</strong></p>
+</div>
+
+<p>For &aring; komme videre i saksbehandlingen ber vi om tilbakemelding p&aring; n&aring;r boligen blir utlyst, medlemmenes siste meldefrist, og raskt svar.</p>
+
+<p>Svar til: <strong>[[avsender.epost]]</strong></p>
+</div>

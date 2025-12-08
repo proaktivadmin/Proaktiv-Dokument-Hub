@@ -1,0 +1,101 @@
+<!-- 
+=============================================================================
+SYSTEM:      Vitec Next
+MODUL:       Proaktiv Master Mal
+MALNAVN:     Samtykke til overdragelse - Bortfester
+VERSJON:     3.0 (Gold Master)
+DATO:        27.11.2025
+FORFATTER:   Senior Developer / Proaktiv
+FRAMEWORK:   v3.0
+BESKRIVELSE: Skjema for signatur fra bortfester ved transport av festerett.
+             Bruker sikre løkker for Kjøpere og Bortfestere.
+=============================================================================
+-->
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&family=Playfair+Display:wght@400;700&display=swap');
+    #vitecTemplate { font-family: 'Open Sans', sans-serif; font-size: 10pt; color: #333; margin: 0; padding: 0; }
+    
+    h1, h2, h3 { font-family: 'Playfair Display', serif; color: #272630; page-break-after: avoid; }
+    h1 { font-size: 22pt; text-transform: uppercase; border-bottom: 3px solid #bcab8a; padding-bottom: 10px; margin-bottom: 25px; }
+    h2 { font-size: 14pt; border-left: 5px solid #bcab8a; padding-left: 15px; margin-top: 30px; background-color: #f9f9f7; padding: 5px 0 5px 15px; }
+    
+    label.btn { display: inline-block !important; cursor: pointer; margin: 0 !important; padding: 0 !important; vertical-align: middle !important; line-height: 1 !important; }
+    #vitecTemplate input[type="checkbox"] { display: none !important; } 
+    .svg-toggle { display: inline-block !important; width: 14px !important; height: 14px !important; margin-right: 6px !important; vertical-align: middle !important; border: none !important; background-color: transparent !important; position: relative; top: -1px; }
+    .svg-toggle.checkbox { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect x='25' y='25' width='462' height='462' fill='none' stroke='%23272630' stroke-width='40'/%3E%3C/svg%3E"); }
+    .svg-toggle.checkbox.active, .btn.active > .svg-toggle.checkbox { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect x='25' y='25' width='462' height='462' fill='none' stroke='%23272630' stroke-width='40'/%3E%3Crect x='100' y='100' width='312' height='312' fill='%23272630'/%3E%3C/svg%3E"); }
+
+    .info-label { font-weight: bold; color: #272630; width: 150px; vertical-align: top; }
+    .sign-line { border-bottom: 1px solid #000; margin-top: 40px; margin-bottom: 5px; }
+</style>
+<h1>Tinglysing i eiendom</h1>
+
+<h2>Transport av festerett</h2>
+
+<table border="1" cellspacing="0" style="border-collapse:collapse; border:1px solid #eeeeee; padding:10px; width:100%">
+	<colgroup>
+		<col style="width: 150px;" />
+		<col style="width: auto;" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td class="info-label">Adresse:</td>
+			<td>[[eiendom.adresse]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Oppdragsnr:</td>
+			<td>[[oppdrag.nr]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Hjemmel til feste:</td>
+			<td>[[selger.navn]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Matrikkel:</td>
+			<td>[[komplettmatrikkel]]</td>
+		</tr>
+	</tbody>
+</table>
+&nbsp;
+
+<p>Med henvisning til festekontrakt tinglyst i ovennevnte eiendom, samtykkes herved i overdragelsen fra ovennevnte selger (fester) til f&oslash;lgende nye kj&oslash;per(e):</p>
+<!-- Liste over kjøpere (Sikker loop) -->
+
+<table cellspacing="0" style="border-collapse:collapse; width:100%">
+	<colgroup>
+		<col style="width: 50%;" />
+		<col style="width: 50%;" />
+	</colgroup>
+	<thead>
+		<tr>
+			<th style="text-align:left; border-bottom: 1px solid #bcab8a; padding: 5px;">Navn</th>
+			<th style="text-align:left; border-bottom: 1px solid #bcab8a; padding: 5px;">F&oslash;dselsnr / Org.nr</th>
+		</tr>
+	</thead>
+	<tbody vitec-foreach="kjoper in Model.kjopere">
+		<tr>
+			<td style="padding:5px">[[*kjoper.navn]]</td>
+			<td style="padding:5px">[[*kjoper.idnummer]]</td>
+		</tr>
+	</tbody>
+</table>
+&nbsp;
+
+<div style="page-break-inside:avoid">
+<p><strong>Sted / Dato:</strong> _________________________________</p>
+<!-- Loop for Bortfestere (Grunneiere) -->
+
+<table style="margin-top:20px; width:100%">
+	<tbody vitec-foreach="grunneier in Model.grunneiere">
+		<tr>
+			<td style="padding-bottom:30px">
+			<div class="sign-line">&nbsp;</div>
+			Bortfester: <strong>[[*grunneier.navn]]</strong> (Fnr/Org: [[*grunneier.idnummer]])</td>
+		</tr>
+	</tbody>
+</table>
+<!-- Fallback kun for visning i editor hvis ingen bortfestere er valgt ennå -->
+
+<div style="border:1px dashed #cccccc; color:#cccccc; padding:10px" vitec-if="Model.grunneiere.Count == 0">[Ingen bortfestere registrert p&aring; oppdraget - Signaturfelt vil genereres automatisk n&aring;r bortfester legges til]</div>
+</div>
+</div>

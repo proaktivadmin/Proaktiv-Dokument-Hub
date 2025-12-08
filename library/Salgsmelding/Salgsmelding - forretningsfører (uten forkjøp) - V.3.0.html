@@ -1,0 +1,116 @@
+<!-- 
+=============================================================================
+SYSTEM:      Vitec Next
+MODUL:       Proaktiv Master Mal
+MALNAVN:     Salgsmelding - forretningsfører
+VERSJON:     3.0 (Gold Master)
+DATO:        27.11.2025
+FORFATTER:   Senior Developer / Proaktiv
+FRAMEWORK:   v3.0
+BESKRIVELSE: Melding om salg til forretningsfører med svarskjema.
+=============================================================================
+-->
+<div id="vitecTemplate"><!-- Laster Vitec standardstiler --><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&family=Playfair+Display:wght@400;700&display=swap');
+    #vitecTemplate { font-family: 'Open Sans', sans-serif; font-size: 10pt; color: #333; margin: 0; padding: 0; }
+    
+    /* TYPOGRAFI */
+    h1, h2, h3 { font-family: 'Playfair Display', serif; color: #272630; page-break-after: avoid; }
+    h1 { font-size: 22pt; text-transform: uppercase; border-bottom: 3px solid #bcab8a; padding-bottom: 10px; margin-bottom: 25px; }
+    h2 { font-size: 14pt; border-left: 5px solid #bcab8a; padding-left: 15px; margin-top: 30px; background-color: #f9f9f7; padding: 5px 0 5px 15px; }
+    a { color: #272630; font-weight: bold; text-decoration: underline; }
+
+    /* SJEKKBOKSER (v3.0 STANDARD) */
+    label.btn { display: inline-block !important; cursor: pointer; margin: 0 !important; padding: 0 !important; vertical-align: middle !important; line-height: 1 !important; }
+    #vitecTemplate input[type="checkbox"] { display: none !important; } 
+    .svg-toggle { display: inline-block !important; width: 14px !important; height: 14px !important; margin-right: 6px !important; vertical-align: middle !important; border: none !important; background-color: transparent !important; position: relative; top: -1px; }
+    .svg-toggle.checkbox { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect x='25' y='25' width='462' height='462' fill='none' stroke='%23272630' stroke-width='40'/%3E%3C/svg%3E"); }
+    .svg-toggle.checkbox.active, .btn.active > .svg-toggle.checkbox { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect x='25' y='25' width='462' height='462' fill='none' stroke='%23272630' stroke-width='40'/%3E%3Crect x='100' y='100' width='312' height='312' fill='%23272630'/%3E%3C/svg%3E"); }
+
+    /* HELPER CLASSES */
+    .info-label { font-weight: bold; color: #272630; width: 120px; vertical-align: top; }
+    .form-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .form-table td { border: 1px solid #999; padding: 6px; vertical-align: top; }
+    .v-middle td { vertical-align: middle !important; }
+</style>
+<!-- INNHOLD -->
+<h1>Salgsmelding til forretningsf&oslash;rer</h1>
+
+<p><strong>Hei,</strong></p>
+
+<p>Vi viser til tidligere korrespondanse om salg av:</p>
+
+<table border="1" cellspacing="0" style="border-collapse:collapse; border:1px solid #eeeeee; padding:10px; width:100%">
+	<colgroup>
+		<col style="width: 120px;" />
+		<col style="width: auto;" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td class="info-label">Adresse:</td>
+			<td>[[eiendom.adresse]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Matrikkel:</td>
+			<td>[[komplettmatrikkel]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Arealer:</td>
+			<td>BRA [[eiendom.bruksareal]] / BRA-i [[eiendom.bruttoareal]]</td>
+		</tr>
+	</tbody>
+</table>
+&nbsp;
+
+<p><strong>Vi orienterer med dette om at:</strong></p>
+
+<table border="1" cellspacing="0" style="border-collapse:collapse; border:1px solid #999999; width:100%">
+	<colgroup>
+		<col style="width: 50%;" />
+		<col style="width: 50%;" />
+	</colgroup>
+	<thead>
+		<tr style="background-color:#f9f9f7">
+			<th style="padding: 5px; border: 1px solid #999; text-align: left;">Selger(e)</th>
+			<th style="padding: 5px; border: 1px solid #999; text-align: left;">Adresse i v&aring;rt system</th>
+		</tr>
+	</thead>
+	<tbody vitec-foreach="selger in Model.selgere">
+		<tr>
+			<td style="border-color:#999999; border-style:solid; border-width:1px; padding:5px">[[*selger.navn]]</td>
+			<td style="border-color:#999999; border-style:solid; border-width:1px; padding:5px">[[*selger.adresse]]<br />
+			[[*selger.postnr]] [[*selger.poststed]]</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>den <strong>[[akseptertbud.dato]]</strong> har akseptert kj&oslash;petilbud p&aring; kr. <strong>[[akseptertbud.belop]]</strong> fra:</p>
+
+<table border="1" cellspacing="0" style="border-collapse:collapse; border:1px solid #999999; width:100%">
+	<thead>
+		<tr style="background-color:#f9f9f7">
+			<th style="padding: 5px; border: 1px solid #999; text-align: left;">Kj&oslash;per(e)</th>
+			<th style="padding: 5px; border: 1px solid #999; text-align: left;">E-post</th>
+			<th style="padding: 5px; border: 1px solid #999; text-align: left;">Tlf</th>
+			<th style="padding: 5px; border: 1px solid #999; text-align: left;">Fnr/Org</th>
+		</tr>
+	</thead>
+	<tbody vitec-foreach="kjoper in Model.kjopere">
+		<tr>
+			<td style="border-color:#999999; border-style:solid; border-width:1px; padding:5px">[[*kjoper.navn]]</td>
+			<td style="border-color:#999999; border-style:solid; border-width:1px; padding:5px">[[*kjoper.emailadresse]]</td>
+			<td style="border-color:#999999; border-style:solid; border-width:1px; padding:5px">[[*kjoper.tlf]]</td>
+			<td style="border-color:#999999; border-style:solid; border-width:1px; padding:5px">[[*kjoper.idnummer]]</td>
+		</tr>
+	</tbody>
+</table>
+&nbsp;
+
+<p><strong>Kj&oslash;pers n&aring;v&aelig;rende adresse:</strong><br />
+[[kjoper.adresse]]</p>
+
+<p><strong>Overtakelsesdato: [[kontrakt.overtagelse.dato]]</strong></p>
+
+<p>Kj&oslash;per betaler felleskostnader fra f&oslash;rste forfallsdato etter denne dato. En ev. avregning gj&oslash;res opp partene i mellom.</p>
+
+<p>Eventuelle spørsmål rettes til: <strong>[[ansvarligmegler.epost]]</strong></p>

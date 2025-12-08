@@ -1,0 +1,96 @@
+<!-- 
+=============================================================================
+SYSTEM:      Vitec Next
+MODUL:       Proaktiv Master Mal
+MALNAVN:     Informasjon etter kontraktsmøte - Selger
+VERSJON:     2.0 (Konvertering)
+DATO:        26.11.2025
+FORFATTER:   Senior Developer / Proaktiv
+FRAMEWORK:   v2.0
+BESKRIVELSE: Informasjonsbrev til selger om prosessen frem mot overtakelse.
+             Oppdatert med korrekte variabler for oppgjørsavdeling.
+=============================================================================
+-->
+
+<div id="vitecTemplate">
+<!-- Laster Vitec standardstiler -->
+<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+
+<style type="text/css">
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&family=Playfair+Display:wght@400;700&display=swap');
+    /* Nullstill marginer for å unngå konflikt med Editor-rammen */
+    #vitecTemplate { font-family: 'Open Sans', sans-serif; font-size: 10pt; color: #333; margin: 0; padding: 0; }
+    
+    /* TYPOGRAFI */
+    h1, h2, h3 { font-family: 'Playfair Display', serif; color: #272630; page-break-after: avoid; }
+    h1 { font-size: 22pt; text-transform: uppercase; border-bottom: 3px solid #bcab8a; padding-bottom: 10px; margin-bottom: 25px; }
+    h2 { font-size: 14pt; border-left: 5px solid #bcab8a; padding-left: 15px; margin-top: 30px; background-color: #f9f9f7; padding: 5px 0 5px 15px; }
+    a { color: #272630; font-weight: bold; text-decoration: underline; }
+
+    /* STANDARD KLASSER FRA FRAMEWORK (Inkludert for sikkerhet) */
+    label.btn { display: inline-block !important; cursor: pointer; margin: 0 !important; padding: 0 !important; vertical-align: middle !important; line-height: 1 !important; }
+    .svg-toggle { display: inline-block !important; width: 16px !important; height: 16px !important; margin-right: 10px !important; vertical-align: text-bottom; border: none !important; background-color: transparent !important; content: " " !important; }
+    #vitecTemplate [data-toggle="buttons"] input { display: none !important; }
+    .svg-toggle.checkbox { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect x='25' y='25' width='462' height='462' fill='none' stroke='%23272630' stroke-width='40'/%3E%3C/svg%3E"); }
+</style>
+
+<!-- INNHOLD START -->
+
+<h1>Informasjon etter kontraktsmøte (Selger)</h1>
+
+<p><strong>Hei.</strong></p>
+
+<p>Vedlagt ligger signert kjøpekontrakt.</p>
+
+<p>Frem til overtakelse er det mye som skal skje, så her kommer en oppsummering om neste steg i prosessen. Det er viktig at du leser dette informasjonsskrivet nøye og at alle nødvendige oppgaver blir utført i god tid, slik at ikke det oppstår forsinkelser og at overtakelse og oppgjør kan gjennomføres som avtalt.</p>
+
+<h2>Oppgaver som må utføres i god tid før overtakelsen</h2>
+
+<p><strong>Overføring av pant til ny eiendom</strong><br>
+Dersom du skal overføre eksisterende lån med pant i boligen din til ny eiendom, må det være ordnet nødvendig sikkerhet for en slik overføring i god tid før overtakelsen. Forsinkelser i oppgjøret som følge av slike overføringer, er selgers ansvar. Vær oppmerksom på at kjøper kan kreve ekstra renteutgifter i forbindelse med forsinkelsen.</p>
+
+<p><strong>Forsikring</strong><br>
+Selger kan si opp sin forsikring pr. overtakelsesdato, ettersom kjøper må tegne nye forsikringer fra samme dato. Det er viktig at partene samarbeider, slik at man ikke risikerer at eiendommen blir stående uforsikret i en periode. Det er selgers ansvar å holde eiendommen forsikret til og med overtakelsesdagen.</p>
+
+<h2>Gjennomføring av overtakelsen</h2>
+
+<p>Det er avtalt at selger og kjøper skal møtes på eiendommen den <strong>[[kontrakt.overtagelse.dato]] kl. [[kontrakt.overtagelse.klokkeslett]]</strong>. Skulle det være aktuelt å endre overtakelsesdatoen må vi informeres i god tid. Begge parter vil motta en SMS fra oss om at fullt oppgjør og pantedokument er mottatt så snart det er registrert på sak. For ordens skyld gjør vi oppmerksomme på at nøkler ikke må overleveres kjøper før partene har mottatt meldingen om at fullt oppgjør er innbetalt til meglers klientkonto.</p>
+
+<p>På overtakelsen skal eiendommen gjennomgås sammen med kjøper, og overtakelsesprotokoll må fylles ut – denne blir tilsendt på sms på morgenen overtakelsesdagen. Det skal bla. kontrolleres at boligen er i den stand som var opplyst om i salgsmaterialet og på visning, at alt tilbehør og løsøre som skal medfølge befinner seg på eiendommen og at eiendommen med tilhørende boder og garasje er tømt, ryddet og rengjort.</p>
+
+<p>I fellesskap skal dere lese av strømmåler(e) og notere opplysningene i overtakelsesprotokollen, slik at nettselskapet får med seg overdragelsen og det blir bestilt strømabonnement i kjøpers navn. Dersom kjøper ikke bestiller strøm gjennom vår overtakelsesprotokoll, må dette ordnes av partene selv. Vi anbefaler også å gå igjennom praktiske ting med kjøper, eksempelvis hvor man finner hovedstoppekran for vann, hovedsikringsskap m.v.</p>
+
+<p>Husk at løpende utgifter/inntekter for eiendommen skal avregnes mellom partene direkte på overtakelsen, og ikke gjøres av meglerforetaket. Husk også på å sende nødvendige flyttemeldinger.</p>
+
+<p>Når selger og kjøper har signert protokollen anses overtakelsen som gjennomført, så det er derfor viktig at eventuelle avtaler som gjøres på overtakelsen blir notert på overtakelsesprotokollen. Vi gjør oppmerksomme på at innlevering av overtakelsesprotokoll er selgers ansvar.</p>
+
+<h2>Tinglysing og oppgjør</h2>
+
+<p>Oppgjøret gjennomføres av vår oppgjørsavdeling, og vil igangsettes så snart vi har mottatt den signerte overtakelsesprotokollen.</p>
+
+<p><strong>Kontaktinformasjon oppgjør:</strong><br>
+Tlf: [[oppgjor.kontortlf]]<br>
+E-post: [[oppgjor.kontorepost]]</p>
+
+<p><strong>Adressen til oppgjørsavdelingen:</strong><br>
+[[oppgjor.kontornavn]]<br>
+[[oppgjor.postadresse]], [[oppgjor.postnr]] [[oppgjor.poststed]].</p>
+
+<p>Selger gjøres oppmerksom på at normal behandlingstid for oppgjør kan være inntil 2 uker etter overtakelse. Du vil godtgjøres rente av kjøpesummen etter overtakelse dersom rentene overskrider ½ rettsgebyr. Dersom det er forsinkelser i oppgjøret utenfor oppgjørsavdelingens kontroll, vil oppgjøret kunne ta lenger tid.</p>
+
+<p>Når hjemmelen er overført til ny eier vil det bli sendt ut en oppgjørsoppstilling som viser hvorledes salgssummen er disponert med hensyn til meglers vederlag og utlegg, innfrielse av eventuelle lån og utbetalinger.</p>
+
+<h2>Bruk av din eiendom i markedsføring</h2>
+<p>Vi gjør oppmerksom på at din eiendom kan bli benyttet i markedsføring av meglerforetaket, herunder bruk av bilder, adresse, prisantydning / salgssum. Partene holdes selvsagt anonyme. Dersom dette ikke er ønskelig, kan skriftlig beskjed om dette gis til megler.</p>
+
+<br>
+<div style="page-break-inside: avoid; border-top: 3px solid #bcab8a; padding-top: 20px;">
+    <p>Til slutt ønsker vi å takke deg for at du valgte Proaktiv som din eiendomsmegler. Vi ser på det som en stor tillitserklæring, og vi håper du er fornøyd med den jobben vi har gjort. Takk for et godt samarbeid så langt, og ikke nøl med å kontakte oss dersom det skulle være noe.</p>
+</div>
+
+<p style="font-size: 9pt; margin-top: 30px;">
+    <strong>Vedlegg:</strong><br>
+    Signert kjøpekontrakt
+</p>
+
+</div>

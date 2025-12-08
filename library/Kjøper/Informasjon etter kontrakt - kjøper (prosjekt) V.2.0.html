@@ -1,0 +1,93 @@
+<!-- 
+=============================================================================
+SYSTEM:      Vitec Next
+MODUL:       Proaktiv Master Mal
+MALNAVN:     Informasjon etter kontrakt - kjøper (prosjekt)
+VERSJON:     2.0 (Konvertering)
+DATO:        26.11.2025
+FORFATTER:   Senior Developer / Proaktiv
+FRAMEWORK:   v2.0
+BESKRIVELSE: Informasjonsbrev til kjøper av prosjektbolig.
+             Inneholder dynamisk logikk for entall/flertall (Du/Dere).
+=============================================================================
+-->
+<div id="vitecTemplate"><!-- Laster Vitec standardstiler --><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&family=Playfair+Display:wght@400;700&display=swap');
+    /* Nullstill marginer for å unngå konflikt med Editor-rammen */
+    #vitecTemplate { font-family: 'Open Sans', sans-serif; font-size: 10pt; color: #333; margin: 0; padding: 0; }
+    
+    /* TYPOGRAFI */
+    h1, h2, h3 { font-family: 'Playfair Display', serif; color: #272630; page-break-after: avoid; }
+    h1 { font-size: 22pt; text-transform: uppercase; border-bottom: 3px solid #bcab8a; padding-bottom: 10px; margin-bottom: 25px; }
+    h2 { font-size: 14pt; border-left: 5px solid #bcab8a; padding-left: 15px; margin-top: 30px; background-color: #f9f9f7; padding: 5px 0 5px 15px; }
+    a { color: #272630; font-weight: bold; text-decoration: underline; }
+
+    /* STANDARD KLASSER FRA FRAMEWORK */
+    label.btn { display: inline-block !important; cursor: pointer; margin: 0 !important; padding: 0 !important; vertical-align: middle !important; line-height: 1 !important; }
+    .svg-toggle { display: inline-block !important; width: 16px !important; height: 16px !important; margin-right: 10px !important; vertical-align: text-bottom; border: none !important; background-color: transparent !important; content: " " !important; }
+    #vitecTemplate [data-toggle="buttons"] input { display: none !important; }
+    .svg-toggle.checkbox { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect x='25' y='25' width='462' height='462' fill='none' stroke='%23272630' stroke-width='40'/%3E%3C/svg%3E"); }
+</style>
+<!-- INNHOLD START -->
+<h1>Informasjon etter kontraktsinng&aring;else (Prosjekt)</h1>
+
+<p><strong>Ad. kj&oslash;p av [[eiendom.adresse]]</strong></p>
+
+<p>Vi oversender herved signert kj&oslash;pekontrakt og &oslash;nsker &aring; bringe klarhet i noen sp&oslash;rsm&aring;l <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> <span vitec-if="!(Model.kjopere.Count &gt; 1)">du</span> kanskje m&aring;tte ha n&aring;, eller som dukker opp fremover i prosessen.</p>
+
+<h2>Innbetalinger og garantier</h2>
+
+<p><span vitec-if="Model.kjopere.Count &gt; 1">Dere</span> <span vitec-if="!(Model.kjopere.Count &gt; 1)">Du</span> vil f&aring; beskjed fra oss om n&aring;r dere skal betale inn eventuelle forskudd. Det vil ikke innkreves forskudd f&oslash;r selger har stilt garantier etter buofl. &sect;12. Det resterende av oppgj&oslash;ret forfaller til betaling 2 virkedager f&oslash;r overtakelsen.</p>
+
+<p><span vitec-if="Model.kjopere.Count &gt; 1">Dere</span> <span vitec-if="!(Model.kjopere.Count &gt; 1)">Du</span> vil godtgj&oslash;res rente av innbetalt forskudd og den &oslash;vrige oppgj&oslash;rssummen, dersom rentene overskrider &frac12; rettsgebyr. Renteberegningen skjer fra innbetaling og frem til overtakelse, der selger ikke stiller garanti etter &sect; 47.</p>
+
+<p>Hele oppgj&oslash;ret skal betales til <strong>[[meglerkontor.navn]]</strong> sitt klientkontonummer som er oppgitt i kj&oslash;pekontraktens &sect;3. Vi gir <em>aldri</em> betalingsinstrukser som avviker fra kj&oslash;pekontrakten.</p>
+
+<h2>Tilvalg, og planlegging av fremdrift</h2>
+
+<p>Utbygger vil ta kontakt med <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> <span vitec-if="!(Model.kjopere.Count &gt; 1)">deg</span> for &aring; avtale videre fremdrift, og gi en oversikt over n&aring;r tilvalg kan og m&aring; bestilles.</p>
+
+<h2>Kontakt banken allerede n&aring;</h2>
+
+<p><span vitec-if="Model.kjopere.Count &gt; 1">Deres</span> <span vitec-if="!(Model.kjopere.Count &gt; 1)">Din</span> l&aring;ngiver m&aring; f&aring; en kopi av kj&oslash;pekontrakten, s&aring; send over en kopi av denne allerede n&aring;. Det er n&oslash;dvendig slik at de kan sette i gang n&oslash;dvendige prosesser, og vite s&aring;nn ca. n&aring;r overtakelsen og oppgj&oslash;ret vil finne sted.</p>
+
+<p>Det er viktig at dere presiserer at den totale kj&oslash;pesummen er forel&oslash;pig, og at endelig kj&oslash;pesum kun vil v&aelig;re klar rett i forkant av overtakelsen, avhengig av de tilvalgene dere har valgt.</p>
+
+<p>Til orientering anbefaler vi alle v&aring;re kunder &aring; sjekke opp noen dager f&oslash;r overtakelse, at banken har alt klart for utbetaling, slik at overtakelsen kan gjennomf&oslash;res og eiendommen overtas til rett tid. Det er <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> <span vitec-if="!(Model.kjopere.Count &gt; 1)">du</span> selv som har ansvaret for at kj&oslash;pesummen blir innbetalt til oss pr. avtalt dato. Et eventuelt betalingsmislighold vil kunne f&oslash;re til etterskuddsbelastet morarentekrav fra selger.</p>
+
+<p>Oppgj&oslash;ret foretas av v&aring;r sentrale oppgj&oslash;rsavdeling og bankens pantedokument sendes direkte til:</p>
+
+<p><strong>[[oppgjor.kontornavn]]</strong><br />
+[[oppgjor.postadresse]]<br />
+[[oppgjor.postnr]] [[oppgjor.poststed]]<br />
+Tlf: [[oppgjor.kontortlf]] | E-post: [[oppgjor.kontorepost]]</p>
+
+<h2>Overtakelse</h2>
+
+<p>Overtakelsen gjennomf&oslash;res av kj&oslash;per og selger p&aring; eiendommen &ndash; normalt sett uten megler tilstede. Selger vil ha med n&oslash;dvendige dokumenter til overtakelsen, som dere i fellesskap fyller ut. Vi gj&oslash;r oppmerksomme p&aring; at innlevering av overtakelsesprotokoll er selgers ansvar.</p>
+
+<h2>Oppgj&oslash;r</h2>
+
+<p>N&aring;r oppgj&oslash;ret er gjennomf&oslash;rt, f&aring;r du en oppgj&oslash;rsoppstilling som viser hvorledes kj&oslash;pesummen er disponert med hensyn til hvilke innbetalinger megleren har mottatt og hvilke omkostninger som har p&aring;l&oslash;pt. Du vil p&aring; samme tid f&aring; en skannet kopi av det tinglyste skj&oslash;tet. Det originale skj&oslash;tet makuleres av Oppgj&oslash;rsavdelingen, og vil ikke bli tilsendt deg i posten. Det er fordi det tinglyste skj&oslash;tet ikke lenger er et verdipapir, da hjemmelsovergangen n&aring; er beh&oslash;rig registrert hos Statens Kartverk.</p>
+&nbsp;
+
+<div style="border-top:3px solid #bcab8a; padding-top:20px; page-break-inside:avoid">
+<p>Med vennlig hilsen<br />
+<strong>[[meglerkontor.navn]]</strong></p>
+
+<table>
+	<colgroup>
+		<col style="width: 100%;" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td>[[ansvarligmegler.navn]]<br />
+			[[ansvarligmegler.tittel]]</td>
+		</tr>
+	</tbody>
+</table>
+</div>
+
+<p style="font-size:9pt; margin-top:30px"><strong>Vedlegg:</strong><br />
+Kopi av signert kj&oslash;pekontrakt</p>
+</div>

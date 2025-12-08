@@ -1,0 +1,15 @@
+{
+  "category": "AML",
+  "receiver": "Kjøper",
+  "output": "Kun PDF",
+  "assignmentType": "",
+  "phase": "",
+  "subject": "Oppgjørsoppstilling for [[eiendom.adresse]]",
+  "cssVersion": "style.css",
+  "headerTemplate": "",
+  "footerTemplate": "",
+  "marginTop": 2,
+  "marginBottom": 2,
+  "marginLeft": 2,
+  "marginRight": 2
+}
