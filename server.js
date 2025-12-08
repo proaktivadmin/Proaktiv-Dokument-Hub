@@ -76,8 +76,9 @@ app.post('/api/files/create', (req, res) => {
     const { filename, category, content } = req.body;
     if (!filename) return res.status(400).json({ error: 'Filename required' });
 
-    const cat = category || 'Uncategorized';
-    const filepath = path.join(cat, filename);
+    const finalCategory = category || 'Uncategorized';
+    const isUncategorized = finalCategory === 'Uncategorized';
+    const filepath = isUncategorized ? filename : path.join(finalCategory, filename);
     const fullPath = path.join(LIBRARY_PATH, filepath);
     const metaPath = fullPath.replace('.html', '.meta.json');
     const folder = path.dirname(fullPath);
@@ -86,7 +87,7 @@ app.post('/api/files/create', (req, res) => {
 
     fs.writeFile(fullPath, content, () => {
         const meta = {
-            category: cat,
+            category: finalCategory,
             createdAt: new Date().toISOString(),
             subject: 'Ny mal'
         };
@@ -102,6 +103,52 @@ app.post('/api/files/delete', (req, res) => {
         const metaPath = fullPath.replace('.html', '.meta.json');
         if (fs.existsSync(metaPath)) fs.unlinkSync(metaPath);
         res.json({ message: 'Deleted' });
+    });
+});
+
+// Move file to new category
+app.post('/api/files/move', (req, res) => {
+    const { filepath, newCategory } = req.body;
+    if (!filepath || !newCategory) return res.status(400).json({ error: 'Filepath and newCategory required' });
+
+    const sourcePath = path.join(LIBRARY_PATH, filepath);
+    const fileName = path.basename(filepath);
+    const destFolder = newCategory === 'Uncategorized' ? LIBRARY_PATH : path.join(LIBRARY_PATH, newCategory);
+    const destPath = path.join(destFolder, fileName);
+
+    // Ensure destination does not exist
+    if (fs.existsSync(destPath)) return res.status(400).json({ error: 'File already exists in destination' });
+
+    // Validate paths
+    if (!sourcePath.startsWith(LIBRARY_PATH) || !destFolder.startsWith(LIBRARY_PATH)) {
+        return res.status(403).json({ error: 'Forbidden' });
+    }
+
+    // Ensure dest folder exists
+    if (!fs.existsSync(destFolder)) fs.mkdirSync(destFolder, { recursive: true });
+
+    // Move file
+    fs.rename(sourcePath, destPath, (err) => {
+        if (err) return res.status(500).json({ error: 'Move failed', details: err.message });
+
+        // Move meta file if exists
+        const sourceMeta = sourcePath.replace('.html', '.meta.json');
+        const destMeta = destPath.replace('.html', '.meta.json');
+
+        if (fs.existsSync(sourceMeta)) {
+            // Update category in meta
+            try {
+                const metaContent = JSON.parse(fs.readFileSync(sourceMeta, 'utf8'));
+                metaContent.category = newCategory;
+                fs.writeFileSync(destMeta, JSON.stringify(metaContent, null, 2));
+                fs.unlinkSync(sourceMeta);
+            } catch (e) {
+                // If meta read/write fails, just move it raw or ignore
+                fs.renameSync(sourceMeta, destMeta);
+            }
+        }
+
+        res.json({ message: 'Moved', from: filepath, to: path.join(newCategory, fileName) });
     });
 });
 
@@ -175,16 +222,23 @@ app.post('/api/categories/delete', (req, res) => {
     const catPath = path.join(LIBRARY_PATH, name);
     if (!fs.existsSync(catPath)) return res.status(404).json({ error: 'Category not found' });
 
-    const uncatPath = path.join(LIBRARY_PATH, 'Uncategorized');
-    if (!fs.existsSync(uncatPath)) fs.mkdirSync(uncatPath, { recursive: true });
-
-    // Move all files to Uncategorized
+    // Move all files to Root (Uncategorized)
     const files = fs.readdirSync(catPath);
     files.forEach(file => {
         const oldFilePath = path.join(catPath, file);
-        const newFilePath = path.join(uncatPath, file);
+        const newFilePath = path.join(LIBRARY_PATH, file);
         if (fs.statSync(oldFilePath).isFile()) {
-            fs.renameSync(oldFilePath, newFilePath);
+            // Avoid overwriting if file exists in root? 
+            // For now, let's append timestamp if exists or just rename (Windows might fail)
+            if (fs.existsSync(newFilePath)) {
+                const nameParts = file.split('.');
+                const ext = nameParts.pop();
+                const base = nameParts.join('.');
+                const newName = `${base}_${Date.now()}.${ext}`;
+                fs.renameSync(oldFilePath, path.join(LIBRARY_PATH, newName));
+            } else {
+                fs.renameSync(oldFilePath, newFilePath);
+            }
         }
     });
 
@@ -202,7 +256,8 @@ app.post('/api/files/import', (req, res) => {
     files.forEach(file => {
         const category = file.category || 'Uncategorized';
         const filename = file.filename.endsWith('.html') ? file.filename : `${file.filename}.html`;
-        const filepath = path.join(category, filename);
+        const isUncategorized = category === 'Uncategorized';
+        const filepath = isUncategorized ? filename : path.join(category, filename);
         const fullPath = path.join(LIBRARY_PATH, filepath);
         const metaPath = fullPath.replace('.html', '.meta.json');
         const folder = path.dirname(fullPath);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Editor from '@monaco-editor/react';
-import { Folder, FileCode, GitBranch, ChevronRight, ChevronDown, LayoutTemplate, Smartphone, Monitor, FileText, Download, AlertTriangle, GripVertical, Settings, Play, Save, Search, Command, Activity, Box, Type, Hash, Mail, Phone, User, MapPin, MoreHorizontal, Code, Tag, Plus, Check, Pencil, Trash2, FolderPlus, X, Upload, FileUp, FileDown, Copy, Clock, RotateCcw, Keyboard, FilePlus, ArrowLeftRight, MessageSquare } from 'lucide-react';
+import { Folder, FileCode, GitBranch, ChevronRight, ChevronDown, LayoutTemplate, Smartphone, Monitor, FileText, Download, AlertTriangle, GripVertical, Settings, Play, Save, Search, Command, Activity, Box, Type, Hash, Mail, Phone, User, MapPin, MoreHorizontal, Code, Tag, Plus, Check, Pencil, Trash2, FolderPlus, X, Upload, FileUp, FileDown, Copy, Clock, RotateCcw, Keyboard, FilePlus, ArrowLeftRight, MessageSquare, FolderInput } from 'lucide-react';
 import ProaktivLogo from './assets/logo_white.svg';
 
 const API_URL = 'http://localhost:5000/api';
@@ -246,24 +246,28 @@ function App() {
   const [rightWidth, setRightWidth] = useState(600);
   const [resizing, setResizing] = useState(null); // 'left' | 'right' | null
 
-  // TEMPLATE MANAGEMENT
-  const [templateModal, setTemplateModal] = useState(null); // { type: 'rename' | 'delete' | 'duplicate', path: string, name: string }
-  const [templateInput, setTemplateInput] = useState('');
-  const [templateCategory, setTemplateCategory] = useState('Uncategorized');
-
   // PREVIEW SCALING
   const previewContainerRef = useRef(null);
   const [scale, setScale] = useState(1);
+  const searchInputRef = useRef(null);
 
   // RECENT FILES (persist to localStorage)
   const [recentFiles, setRecentFiles] = useState(() => {
     try { return JSON.parse(localStorage.getItem('htmlhub_recent') || '[]'); } catch { return []; }
   });
-  const searchInputRef = useRef(null);
 
   // CATEGORY MANAGEMENT
   const [categoryModal, setCategoryModal] = useState(null); // { type: 'create' | 'rename' | 'delete', category?: string }
   const [categoryInput, setCategoryInput] = useState('');
+
+  // TEMPLATE MANAGEMENT
+  const [templateModal, setTemplateModal] = useState(null); // { type: 'create' | 'rename' | 'delete' | 'duplicate', path?: string, name?: string }
+  const [templateInput, setTemplateInput] = useState('');
+  const [templateCategory, setTemplateCategory] = useState('Uncategorized');
+
+  // MOVE FILE MANAGEMENT
+  const [moveModal, setMoveModal] = useState(null); // { path: string, filename: string }
+  const [moveCategoryInput, setMoveCategoryInput] = useState('');
 
   // SETTINGS MENU
   const [settingsMenu, setSettingsMenu] = useState(false);
@@ -513,6 +517,46 @@ function App() {
     setTemplateModal(null); setTemplateInput(''); fetchInit();
     setStatus('Template duplicated'); setTimeout(() => setStatus(''), 2000);
     loadFile(newPath); // Load the new duplicate
+  };
+
+  const handleFileMove = async () => {
+    if (!moveCategoryInput.trim() || !moveModal?.path) return;
+    try {
+      const parts = moveModal.path.split(/[/\\]/);
+      const filename = parts[parts.length - 1];
+      const newCategory = moveCategoryInput.trim();
+
+      const res = await fetch(`${API_URL}/files/move`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          filepath: moveModal.path,
+          newCategory: newCategory
+        })
+      });
+
+      if (res.ok) {
+        // If the currently selected file is being moved, update the selection to the new path
+        if (selectedPath === moveModal.path) {
+          const newPath = newCategory === 'Uncategorized'
+            ? filename
+            : `${newCategory}/${filename}`;
+          setSelectedPath(newPath);
+        }
+
+        setMoveModal(null);
+        setMoveCategoryInput('');
+        fetchInit();
+        setStatus(`File moved to ${newCategory}`);
+      } else {
+        const err = await res.json();
+        setStatus(`Error: ${err.error || 'Failed to move file'}`);
+      }
+    } catch (e) {
+      console.error(e);
+      setStatus('Error moving file');
+    }
+    setTimeout(() => setStatus(''), 3000);
   };
 
   // Auto-add variable with demo value
@@ -809,6 +853,10 @@ function App() {
                               </button>
                               {/* Template Actions */}
                               <div className="flex items-center gap-0.5 opacity-0 group-hover/file:opacity-100 transition-opacity">
+                                <button
+                                  onClick={() => { setMoveModal({ path: f.path, filename: base }); setMoveCategoryInput(''); }}
+                                  className="p-1.5 rounded hover:bg-white/10 text-slate-500 hover:text-amber-400" title="Flytt til kategori"
+                                ><FolderInput size={10} /></button>
                                 <button
                                   onClick={() => { setTemplateModal({ type: 'duplicate', path: f.path, name: base }); setTemplateInput(base + '-copy'); }}
                                   className="p-1.5 rounded hover:bg-white/10 text-slate-500 hover:text-emerald-400" title="Duplicate (Ctrl+D)"
@@ -1283,6 +1331,63 @@ function App() {
                   </div>
                 </div>
               )}
+            </div>
+          </div>
+        )
+      }
+
+      {/* MOVE MODAL */}
+      {
+        moveModal && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center animate-fade-in-up">
+            <div className="glass-panel rounded-2xl p-6 w-96 shadow-2xl border border-white/20">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                  <FolderInput size={18} className="text-amber-400" /> Flytt fil
+                </h3>
+                <button onClick={() => setMoveModal(null)} className="text-slate-400 hover:text-white p-1">
+                  <X size={18} />
+                </button>
+              </div>
+
+              <div>
+                <p className="text-sm text-slate-400 mb-4">
+                  Flytt <span className="text-white font-medium">"{moveModal.filename}"</span> til en ny eller eksisterende kategori.
+                </p>
+                <div className="mb-6">
+                  <label className="text-[10px] text-slate-500 uppercase font-bold mb-1 block">Kategori</label>
+                  <input
+                    list="categories"
+                    type="text"
+                    value={moveCategoryInput}
+                    onChange={(e) => setMoveCategoryInput(e.target.value)}
+                    placeholder="Velg eller skriv ny kategori..."
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-cyan-500/50"
+                    autoFocus
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleFileMove();
+                    }}
+                  />
+                  <datalist id="categories">
+                    <option value="Uncategorized" />
+                    {Object.keys(fileTree).filter(k => k !== 'Uncategorized').map(cat => (
+                      <option key={cat} value={cat} />
+                    ))}
+                  </datalist>
+                  <p className="text-[10px] text-slate-500 mt-2">
+                    Skriv navnet på en ny kategori for å opprette den automatisk.
+                  </p>
+                </div>
+                <div className="flex gap-3 justify-end">
+                  <button onClick={() => setMoveModal(null)} className="px-4 py-2 text-sm text-slate-400 hover:text-white">Avbryt</button>
+                  <button
+                    onClick={handleFileMove}
+                    className="px-4 py-2 text-sm bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 rounded-lg border border-amber-500/30 font-medium"
+                  >
+                    Flytt fil
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         )
