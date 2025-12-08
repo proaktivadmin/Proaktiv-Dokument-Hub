@@ -1,6 +1,6 @@
-# HTML Hub - Installation Guide
+# Proaktiv Dokument Hub - Installation Guide
 
-Welcome to your HTML Hub! Before we can get everything running, we need to install a couple of essential tools.
+Welcome to Proaktiv Dokument Hub! Before we can get everything running, we need to install a couple of essential tools.
 
 ## 1. Install Node.js
 Node.js is the engine that runs our server and build tools.

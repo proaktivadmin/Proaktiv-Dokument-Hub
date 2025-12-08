@@ -11,7 +11,7 @@ export default function GitControls() {
             const res = await fetch('http://localhost:3000/api/git/sync', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: 'Update from HTML Hub' })
+                body: JSON.stringify({ message: 'Update from Proaktiv Dokument Hub' })
             })
             const data = await res.json()
             if (data.error) throw new Error(data.error)

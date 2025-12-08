@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Editor from '@monaco-editor/react';
-import { Folder, FileCode, GitBranch, ChevronRight, ChevronDown, LayoutTemplate, Smartphone, Monitor, FileText, Download, AlertTriangle, GripVertical, Settings, Play, Save, Search, Command, Activity, Box, Type, Hash, Mail, Phone, User, MapPin, MoreHorizontal, Code, Tag, Plus, Check, Pencil, Trash2, FolderPlus, X, Upload, FileUp, FileDown, Copy, Clock } from 'lucide-react';
+import { Folder, FileCode, GitBranch, ChevronRight, ChevronDown, LayoutTemplate, Smartphone, Monitor, FileText, Download, AlertTriangle, GripVertical, Settings, Play, Save, Search, Command, Activity, Box, Type, Hash, Mail, Phone, User, MapPin, MoreHorizontal, Code, Tag, Plus, Check, Pencil, Trash2, FolderPlus, X, Upload, FileUp, FileDown, Copy, Clock, RotateCcw, Keyboard, FilePlus, ArrowLeftRight, MessageSquare } from 'lucide-react';
+import ProaktivLogo from './assets/logo_white.svg';
 
 const API_URL = 'http://localhost:5000/api';
 const DEFAULT_META = { category: 'General', receiver: 'Systemstandard', output: 'PDF og e-post', assignmentType: '', phase: '', subject: 'Oppgjørsoppstilling [[eiendom.adresse]]', cssVersion: 'style.css', headerTemplate: '', footerTemplate: '', marginTop: 2, marginBottom: 2, marginLeft: 2, marginRight: 2 };
@@ -63,34 +64,149 @@ const GlassSelect = ({ label, icon: Icon, value, onChange, options, placeholder 
 
 const Resizer = ({ onMouseDown }) => (
   <div
-    className="w-4 flex items-center justify-center cursor-col-resize group hover:scale-110 transition-transform"
+    className="w-6 flex items-center justify-center cursor-col-resize group hover:scale-110 transition-transform h-full"
     onMouseDown={onMouseDown}
   >
-    <div className="w-1 h-8 rounded-full bg-white/10 group-hover:bg-cyan-400/50 transition-colors"></div>
+    <div className="w-1.5 h-16 rounded-full bg-white/10 group-hover:bg-cyan-400/50 transition-colors"></div>
   </div>
 );
 
-const DeviceSkin = ({ mode, children, subject, to }) => {
+const DeviceSkin = ({ mode, children, subject, to, smsContent }) => {
+  // iMessage SMS Skin
+  if (mode === 'sms') {
+    // Parse SMS content for display with variables highlighted
+    const renderSmsContent = () => {
+      if (!smsContent) return <span className="text-gray-400 italic">Ingen melding...</span>;
+
+      // If content has HTML tags, render as HTML
+      if (smsContent.includes('<') && smsContent.includes('>')) {
+        // Highlighting variables in HTML mode is complex, so we'll just colorize the text content via CSS or simpler substitution if needed.
+        // For now, let's inject the HTML but try to style brackets.
+        let html = smsContent;
+        // Highlight variables [var] by wrapping them in span
+        html = html.replace(/\[([^\[\]]+)\]/g, '<span class="text-blue-500 font-medium">[$1]</span>');
+        html = html.replace(/\[\[(.*?)\]\]/g, '<span class="text-blue-500 font-medium">[[$1]]</span>');
+
+        return <div dangerouslySetInnerHTML={{ __html: html }} className="sms-html-content" />;
+      }
+
+      // Plain text fallback
+      const parts = smsContent.split(/(\[[^\]]+\])/g);
+      return parts.map((part, i) =>
+        part.startsWith('[') && part.endsWith(']')
+          ? <span key={i} className="text-blue-500 font-medium">{part}</span>
+          : part
+      );
+    };
+
+    return (
+      <div className="relative mx-auto border-gray-900 bg-gray-900 border-[12px] rounded-[3rem] h-[680px] w-[340px] shadow-2xl ring-1 ring-white/10 transition-all duration-500 ease-out hover:scale-[1.02]">
+        {/* Dynamic Island */}
+        <div className="absolute top-2 left-1/2 -translate-x-1/2 w-28 h-7 bg-black rounded-full z-20"></div>
+        <div className="rounded-[2.4rem] overflow-hidden w-full h-full bg-[#f2f2f7] flex flex-col relative z-10">
+          {/* iMessage Header */}
+          <div className="bg-[#f2f2f7] pt-12 pb-3 px-4 border-b border-gray-300/50">
+            <div className="flex items-center justify-between">
+              <div className="text-blue-500 text-sm flex items-center gap-1">
+                <ChevronDown size={16} className="rotate-90" />
+                <span>Meldinger</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-400 to-gray-500 flex items-center justify-center text-white font-bold text-sm">
+                  {to?.charAt(0) || 'M'}
+                </div>
+                <span className="text-xs text-black font-medium mt-1">{to || 'Mottaker'}</span>
+              </div>
+              <div className="w-6"></div>
+            </div>
+          </div>
+          {/* Messages Area */}
+          <div className="flex-1 overflow-auto p-4 space-y-2">
+            {/* Outgoing message (blue bubble) */}
+            <div className="flex justify-end">
+              <div className="bg-[#007AFF] text-white px-4 py-2.5 rounded-2xl rounded-br-md max-w-[85%] text-sm leading-relaxed shadow-sm">
+                {renderSmsContent()}
+              </div>
+            </div>
+          </div>
+          {/* Input Bar */}
+          <div className="bg-[#f2f2f7] border-t border-gray-300/50 p-2 flex items-center gap-2 pb-8">
+            <div className="flex-1 bg-white rounded-full px-4 py-2 text-sm text-gray-400 border border-gray-300">
+              iMessage
+            </div>
+            <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
+              <ChevronDown size={16} className="text-white -rotate-90" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Mobile Outlook (New Outlook iOS App)
   if (mode === 'mobile') return (
     <div className="relative mx-auto border-gray-900 bg-gray-900 border-[12px] rounded-[3rem] h-[680px] w-[340px] shadow-2xl ring-1 ring-white/10 transition-all duration-500 ease-out hover:scale-[1.02]">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-black rounded-b-2xl z-20"></div>
+      {/* Dynamic Island */}
+      <div className="absolute top-2 left-1/2 -translate-x-1/2 w-28 h-7 bg-black rounded-full z-20"></div>
       <div className="rounded-[2.4rem] overflow-hidden w-full h-full bg-white flex flex-col relative z-10">
-        <div className="bg-[#f2f2f7]/90 backdrop-blur-md px-5 py-4 border-b border-gray-300/50 pt-10">
-          <div className="text-black font-bold text-sm truncate tracking-tight">From: Adrian</div>
-          <div className="text-gray-500 text-xs truncate">Subject: {subject}</div>
+        {/* Outlook Header */}
+        <div className="bg-[#0078d4] pt-12 pb-3 px-4">
+          <div className="flex items-center justify-between text-white">
+            <ChevronDown size={20} className="rotate-90" />
+            <span className="font-semibold">Outlook</span>
+            <div className="w-5"></div>
+          </div>
+        </div>
+        {/* Email Header */}
+        <div className="bg-white border-b border-gray-200 p-4 space-y-2">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#0078d4] to-[#00bcf2] flex items-center justify-center text-white font-bold text-sm">P</div>
+            <div className="flex-1">
+              <div className="font-semibold text-gray-900 text-sm">Proaktiv</div>
+              <div className="text-xs text-gray-500">Til: {to || 'Mottaker'}</div>
+            </div>
+            <div className="text-xs text-gray-400">Nå</div>
+          </div>
+          <div className="font-medium text-gray-900 text-base">{subject}</div>
         </div>
         <div className="flex-1 overflow-auto bg-white">{children}</div>
       </div>
     </div>
   );
+
+  // Desktop Outlook (New Outlook Web)
   if (mode === 'desktop') return (
     <div className="w-[960px] h-[680px] bg-white rounded-xl shadow-2xl flex flex-col overflow-hidden border border-slate-200/50 mx-auto ring-1 ring-black/5 transition-all duration-500 ease-out hover:scale-[1.01]">
-      <div className="bg-[#0078d4] h-10 flex items-center px-4 text-white text-xs font-bold shadow-sm justify-between shrink-0">
-        <span>Outlook</span>
-        <div className="flex gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-white/20"></div><div className="w-2.5 h-2.5 rounded-full bg-white/20"></div></div>
+      {/* Top toolbar */}
+      <div className="bg-[#f3f2f1] h-12 flex items-center px-4 border-b border-gray-200 shrink-0">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded bg-[#0078d4] flex items-center justify-center">
+            <Mail size={16} className="text-white" />
+          </div>
+          <span className="font-semibold text-gray-800">Outlook</span>
+        </div>
+        <div className="flex-1"></div>
+        <div className="flex gap-1">
+          <div className="w-3 h-3 rounded-full bg-gray-300"></div>
+          <div className="w-3 h-3 rounded-full bg-gray-300"></div>
+          <div className="w-3 h-3 rounded-full bg-gray-300"></div>
+        </div>
       </div>
-      <div className="bg-[#f8f9fa] border-b border-gray-200 p-4 space-y-2 shrink-0">
-        <div className="flex gap-3 text-sm text-gray-700 items-center"><span className="w-12 text-right text-gray-500 text-xs uppercase tracking-wider font-semibold">Subject</span> <span className="font-medium bg-white px-3 py-1 rounded border border-gray-200 flex-1 shadow-sm">{subject}</span></div>
+      {/* Email header */}
+      <div className="bg-white border-b border-gray-200 p-5 space-y-3 shrink-0">
+        <div className="flex items-start gap-4">
+          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#0078d4] to-[#00bcf2] flex items-center justify-center text-white font-bold text-lg shrink-0">P</div>
+          <div className="flex-1">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="font-semibold text-gray-900 text-base">Proaktiv</div>
+                <div className="text-sm text-gray-500">Til: {to || 'Mottaker'}</div>
+              </div>
+              <div className="text-sm text-gray-400">Akkurat nå</div>
+            </div>
+            <div className="font-medium text-gray-900 text-lg mt-2">{subject}</div>
+          </div>
+        </div>
       </div>
       <div className="flex-1 relative bg-white">
         <div className="absolute inset-0 overflow-auto custom-scrollbar">
@@ -99,7 +215,8 @@ const DeviceSkin = ({ mode, children, subject, to }) => {
       </div>
     </div>
   );
-  // A4 mode - use auto height to show full document, min-height ensures at least one page visible
+
+  // A4 mode - print document
   return (
     <div className="bg-white w-[210mm] shadow-2xl mx-auto relative ring-1 ring-black/5 transition-all duration-500 ease-out">
       <div className="min-h-[297mm]">{children}</div>
@@ -119,17 +236,20 @@ function App() {
   const [status, setStatus] = useState('');
   const [leftTab, setLeftTab] = useState('files');
   const [rightTab, setRightTab] = useState('preview');
+  const [panelExpanded, setPanelExpanded] = useState(false); // Settings panel collapsed by default
   const [viewMode, setViewMode] = useState('a4');
   const [searchQuery, setSearchQuery] = useState('');
+  const [previewFirst, setPreviewFirst] = useState(false); // Layout: false = editor first, true = preview first
 
   // RESIZE STATE
   const [leftWidth, setLeftWidth] = useState(320);
-  const [rightWidth, setRightWidth] = useState(500);
+  const [rightWidth, setRightWidth] = useState(600);
   const [resizing, setResizing] = useState(null); // 'left' | 'right' | null
 
   // TEMPLATE MANAGEMENT
   const [templateModal, setTemplateModal] = useState(null); // { type: 'rename' | 'delete' | 'duplicate', path: string, name: string }
   const [templateInput, setTemplateInput] = useState('');
+  const [templateCategory, setTemplateCategory] = useState('Uncategorized');
 
   // PREVIEW SCALING
   const previewContainerRef = useRef(null);
@@ -144,6 +264,22 @@ function App() {
   // CATEGORY MANAGEMENT
   const [categoryModal, setCategoryModal] = useState(null); // { type: 'create' | 'rename' | 'delete', category?: string }
   const [categoryInput, setCategoryInput] = useState('');
+
+  // SETTINGS MENU
+  const [settingsMenu, setSettingsMenu] = useState(false);
+  const [shortcutsModal, setShortcutsModal] = useState(false);
+  const settingsMenuRef = useRef(null);
+
+  // Close settings menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (settingsMenuRef.current && !settingsMenuRef.current.contains(e.target)) {
+        setSettingsMenu(false);
+      }
+    };
+    if (settingsMenu) document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [settingsMenu]);
 
   const handleCategoryCreate = async () => {
     if (!categoryInput.trim()) return;
@@ -172,7 +308,23 @@ function App() {
       body: JSON.stringify({ name: categoryModal.category })
     });
     setCategoryModal(null); fetchInit();
-    setStatus('Category deleted'); setTimeout(() => setStatus(''), 2000);
+    setStatus('Kategori slettet'); setTimeout(() => setStatus(''), 2000);
+  };
+
+  // TEMPLATE CREATE
+  const handleTemplateCreate = async () => {
+    if (!templateInput.trim()) return;
+    const templateName = templateInput.trim().endsWith('.html') ? templateInput.trim() : `${templateInput.trim()}.html`;
+    await fetch(`${API_URL}/files/create`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        filename: templateName,
+        category: templateCategory,
+        content: `<!DOCTYPE html>\n<html>\n<head>\n  <meta charset="UTF-8">\n  <title>${templateInput.trim()}</title>\n</head>\n<body>\n  <h1>${templateInput.trim()}</h1>\n  <p>Ny mal opprettet.</p>\n</body>\n</html>`
+      })
+    });
+    setTemplateModal(null); setTemplateInput(''); fetchInit();
+    setStatus('Mal opprettet'); setTimeout(() => setStatus(''), 2000);
   };
 
   // IMPORT/EXPORT
@@ -229,10 +381,11 @@ function App() {
     const observer = new ResizeObserver((entries) => {
       for (const entry of entries) {
         const width = entry.contentRect.width;
-        const padding = 40;
+        const padding = 8; // Minimal padding for scale calculation
         let contentWidth = 840; // A4 default
         if (viewMode === 'mobile') contentWidth = 380;
         if (viewMode === 'desktop') contentWidth = 1000;
+        if (viewMode === 'sms') contentWidth = 380;
 
         const s = Math.min(1, (width - padding) / contentWidth);
         setScale(s);
@@ -264,7 +417,7 @@ function App() {
         // rightWidth = distance from mouse to right edge of window
         // Smaller value = larger editor, larger value = larger preview
         const newWidth = window.innerWidth - e.clientX - 16; // 16px for padding
-        setRightWidth(Math.max(280, Math.min(900, newWidth)));
+        setRightWidth(Math.max(350, Math.min(1400, newWidth)));
       }
     };
     const handleMU = () => setResizing(null);
@@ -350,8 +503,9 @@ function App() {
     if (!templateInput.trim() || !templateModal?.path) return;
     const srcPath = templateModal.path;
     const parts = srcPath.split(/[/\\]/);
-    parts.pop();
-    const newPath = parts.length > 0 ? `${parts.join('/')}/${templateInput.trim()}.html` : `${templateInput.trim()}.html`;
+    parts.pop(); // remove filename
+    const folderPath = parts.join('/'); // Get the folder path
+    const newPath = folderPath ? `${folderPath}/${templateInput.trim()}.html` : `${templateInput.trim()}.html`;
     // Read source content, save to new path
     const res = await fetch(`${API_URL}/files/read`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filepath: srcPath }) });
     const data = await res.json();
@@ -435,7 +589,41 @@ function App() {
     return tree;
   }, [initData.files, searchQuery]);
 
-  const detectedTags = useMemo(() => (content.match(/\[\[(.*?)\]\]/g) || []).map(t => t.replace(/\[|\]/g, '')), [content]);
+  // Detect if current file is an SMS template
+  const isSmsTemplate = useMemo(() => {
+    if (!selectedPath) return false;
+    // Check if file is in an SMS folder (case-insensitive)
+    const normalizedPath = selectedPath.toLowerCase().replace(/\\/g, '/');
+    return normalizedPath.startsWith('sms/') || normalizedPath.includes('/sms/');
+  }, [selectedPath]);
+
+  // Auto-switch viewMode when template type changes
+  useEffect(() => {
+    if (isSmsTemplate) {
+      setViewMode('sms');
+    } else if (viewMode === 'sms') {
+      setViewMode('a4');
+    }
+  }, [isSmsTemplate]);
+
+  // Detect tags - double brackets [[var]] for HTML, single brackets [var] for SMS
+  const detectedTags = useMemo(() => {
+    if (isSmsTemplate) {
+      return (content.match(/\[([^\[\]]+)\]/g) || []).map(t => t.replace(/\[|\]/g, ''));
+    }
+    return (content.match(/\[\[(.*?)\]\]/g) || []).map(t => t.replace(/\[|\]/g, ''));
+  }, [content, isSmsTemplate]);
+
+  // SMS preview content with variable substitution
+  const smsPreviewContent = useMemo(() => {
+    if (!isSmsTemplate) return '';
+    let result = content;
+    detectedTags.forEach(k => {
+      const val = variableOverrides[k] || initData.testData[k] || `[${k}]`;
+      result = result.replaceAll(`[${k}]`, val);
+    });
+    return result;
+  }, [content, isSmsTemplate, detectedTags, variableOverrides, initData.testData]);
 
   const previewSource = useMemo(() => {
     let inj = content; let subj = meta.subject;
@@ -461,31 +649,76 @@ function App() {
     <div className="flex h-screen w-screen overflow-hidden relative font-sans text-slate-200 select-none">
       <div className="aurora-bg"></div>
 
+      {/* RESIZE OVERLAY - prevents iframe from stealing mouse events during resize */}
+      {resizing && <div className="fixed inset-0 z-50 cursor-col-resize" />}
+
       {/* FLOATING LAYOUT CONTAINER */}
       <div className="relative z-10 flex w-full h-full p-4 gap-2">
 
         {/* LEFT ISLAND: NAVIGATION & FILES */}
         <div className="flex flex-col gap-4 shrink-0 animate-fade-in-up" style={{ width: leftWidth, animationDelay: '0.1s' }}>
           {/* BRAND HEADER */}
-          <div className="glass-panel rounded-2xl p-4 flex items-center justify-between group cursor-default transition-all hover:border-white/20">
+          <div className="glass-panel rounded-2xl h-14 px-4 flex items-center justify-between group cursor-default transition-all hover:border-white/20 relative z-20" ref={settingsMenuRef}>
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg shadow-lg shadow-cyan-500/20 group-hover:shadow-cyan-500/40 transition-all duration-500">
-                <LayoutTemplate className="text-white" size={18} />
-              </div>
-              <div>
-                <h1 className="font-bold text-base tracking-tight text-white">HTML Hub</h1>
-                <div className="text-[9px] font-medium text-cyan-400 tracking-widest uppercase opacity-80">Premium</div>
-              </div>
+              <img src={ProaktivLogo} alt="Proaktiv" className="h-6 opacity-90 group-hover:opacity-100 transition-opacity" />
+              <div className="h-5 w-px bg-white/20"></div>
+              <div className="text-[10px] font-medium text-cyan-400 tracking-widest uppercase opacity-80">Dokument Hub</div>
             </div>
-            <MoreHorizontal size={16} className="text-slate-500 hover:text-white cursor-pointer" />
+            <button onClick={() => setSettingsMenu(!settingsMenu)} className="text-slate-500 hover:text-white cursor-pointer p-1 rounded-lg hover:bg-white/10 transition-all">
+              <MoreHorizontal size={16} />
+            </button>
+
+            {/* DROPDOWN MENU */}
+            {settingsMenu && (
+              <div className="absolute top-full right-0 mt-2 w-56 bg-slate-900 rounded-xl border border-white/20 shadow-2xl z-50 overflow-hidden animate-fade-in-up" style={{ pointerEvents: 'auto' }}>
+                <div className="p-1.5 bg-slate-900">
+                  <button
+                    onClick={() => { setCategoryModal({ type: 'create' }); setCategoryInput(''); setSettingsMenu(false); }}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-300 hover:bg-white/10 hover:text-white rounded-lg transition-all"
+                  >
+                    <FolderPlus size={14} className="text-cyan-400" />
+                    <span>Ny kategori</span>
+                  </button>
+                  <button
+                    onClick={() => { setTemplateModal({ type: 'create' }); setTemplateInput(''); setTemplateCategory('Uncategorized'); setSettingsMenu(false); }}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-300 hover:bg-white/10 hover:text-white rounded-lg transition-all"
+                  >
+                    <FilePlus size={14} className="text-emerald-400" />
+                    <span>Ny mal</span>
+                  </button>
+                  <div className="h-px bg-white/10 my-1"></div>
+                  <button
+                    onClick={() => { fetchInit(); setSettingsMenu(false); setStatus('Oppdatert'); setTimeout(() => setStatus(''), 2000); }}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-300 hover:bg-white/10 hover:text-white rounded-lg transition-all"
+                  >
+                    <RotateCcw size={14} className="text-amber-400" />
+                    <span>Oppdater filliste</span>
+                  </button>
+                  <button
+                    onClick={() => { setImportModal(true); setSettingsMenu(false); }}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-300 hover:bg-white/10 hover:text-white rounded-lg transition-all"
+                  >
+                    <FileUp size={14} className="text-purple-400" />
+                    <span>Importer maler</span>
+                  </button>
+                  <div className="h-px bg-white/10 my-1"></div>
+                  <button
+                    onClick={() => { setShortcutsModal(true); setSettingsMenu(false); }}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-300 hover:bg-white/10 hover:text-white rounded-lg transition-all"
+                  >
+                    <Keyboard size={14} className="text-slate-400" />
+                    <span>Hurtigtaster</span>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* FILE EXPLORER */}
-          <div className="flex-1 glass-panel rounded-2xl flex flex-col overflow-hidden relative">
-            {/* TABS */}
+          <div className="flex-1 glass-panel rounded-2xl flex flex-col overflow-hidden z-10">
             <div className="flex p-1.5 gap-1 border-b border-white/5">
-              <button onClick={() => setLeftTab('files')} className={`flex-1 py-2 text-[10px] font-bold rounded-lg transition-all duration-300 ${leftTab === 'files' ? 'bg-white/10 text-white shadow-inner' : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'}`}>FILES</button>
-              <button onClick={() => setLeftTab('snippets')} className={`flex-1 py-2 text-[10px] font-bold rounded-lg transition-all duration-300 ${leftTab === 'snippets' ? 'bg-white/10 text-white shadow-inner' : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'}`}>SNIPPETS</button>
+              <button onClick={() => setLeftTab('files')} className={`flex-1 py-2 text-[10px] font-bold rounded-lg transition-all duration-300 ${leftTab === 'files' ? 'bg-white/10 text-white shadow-inner' : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'}`}>FILER</button>
+              <button onClick={() => setLeftTab('snippets')} className={`flex-1 py-2 text-[10px] font-bold rounded-lg transition-all duration-300 ${leftTab === 'snippets' ? 'bg-white/10 text-white shadow-inner' : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'}`}>KODEBLOKKER</button>
             </div>
 
             <div className="flex-1 overflow-y-auto p-3 space-y-4 custom-scrollbar">
@@ -496,9 +729,9 @@ function App() {
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-1">
                         <Clock size={10} className="text-amber-400" />
-                        <span className="text-[10px] font-bold text-amber-400 uppercase tracking-widest">Recent</span>
+                        <span className="text-[10px] font-bold text-amber-400 uppercase tracking-widest">Nylige</span>
                       </div>
-                      <button onClick={() => setRecentFiles([])} className="text-[9px] text-slate-600 hover:text-slate-400">Clear</button>
+                      <button onClick={() => setRecentFiles([])} className="text-[9px] text-slate-600 hover:text-slate-400">Tøm</button>
                     </div>
                     <div className="space-y-1">
                       {recentFiles.filter(p => initData.files.includes(p)).map(p => {
@@ -513,20 +746,33 @@ function App() {
                     </div>
                   </div>
                 )}
-                {/* NEW CATEGORY BUTTON */}
-                <button
-                  onClick={() => { setCategoryModal({ type: 'create' }); setCategoryInput(''); }}
-                  className="w-full flex items-center justify-center gap-2 py-2 text-[10px] font-bold text-slate-500 hover:text-cyan-400 border border-dashed border-slate-700 hover:border-cyan-500/50 rounded-lg transition-all mb-2"
-                >
-                  <FolderPlus size={12} /> New Category
-                </button>
-                {/* IMPORT BUTTON */}
-                <button
-                  onClick={() => setImportModal(true)}
-                  className="w-full flex items-center justify-center gap-2 py-2 text-[10px] font-bold text-slate-500 hover:text-emerald-400 border border-dashed border-slate-700 hover:border-emerald-500/50 rounded-lg transition-all mb-2"
-                >
-                  <FileUp size={12} /> Import Templates
-                </button>
+                {/* QUICK ACTIONS ROW */}
+                <div className="flex gap-1.5 mb-3">
+                  <button
+                    onClick={() => { setCategoryModal({ type: 'create' }); setCategoryInput(''); }}
+                    className="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-[9px] font-medium text-slate-500 hover:text-cyan-400 bg-white/5 hover:bg-cyan-500/10 border border-white/5 hover:border-cyan-500/30 rounded-lg transition-all"
+                    title="Ny kategori"
+                  >
+                    <FolderPlus size={11} />
+                    <span>Kategori</span>
+                  </button>
+                  <button
+                    onClick={() => { setTemplateModal({ type: 'create' }); setTemplateInput(''); setTemplateCategory('Uncategorized'); }}
+                    className="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-[9px] font-medium text-slate-500 hover:text-emerald-400 bg-white/5 hover:bg-emerald-500/10 border border-white/5 hover:border-emerald-500/30 rounded-lg transition-all"
+                    title="Ny mal"
+                  >
+                    <FilePlus size={11} />
+                    <span>Mal</span>
+                  </button>
+                  <button
+                    onClick={() => setImportModal(true)}
+                    className="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-[9px] font-medium text-slate-500 hover:text-purple-400 bg-white/5 hover:bg-purple-500/10 border border-white/5 hover:border-purple-500/30 rounded-lg transition-all"
+                    title="Importer maler"
+                  >
+                    <FileUp size={11} />
+                    <span>Import</span>
+                  </button>
+                </div>
                 {Object.keys(fileTree).map(cat => (
                   <div key={cat}>
                     <div className="flex items-center justify-between cursor-pointer group mb-2">
@@ -638,228 +884,273 @@ function App() {
         {/* LEFT RESIZER */}
         <Resizer onMouseDown={() => setResizing('left')} />
 
-        {/* CENTER ISLAND: EDITOR */}
-        <div className="flex-1 flex flex-col gap-4 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-          {/* COMMAND BAR */}
-          <div className="glass-panel rounded-full px-4 py-2.5 flex items-center gap-3">
-            <Search size={14} className="text-slate-500" />
-            <input
-              ref={searchInputRef}
-              type="text"
-              placeholder="Search templates... (Ctrl+F)"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-transparent border-none outline-none text-xs text-slate-300 placeholder:text-slate-600 flex-1 w-full"
-            />
-            {searchQuery && (
-              <button onClick={() => setSearchQuery('')} className="text-slate-500 hover:text-white">
-                <X size={12} />
-              </button>
-            )}
-          </div>
+        {/* SWAPPABLE EDITOR/PREVIEW CONTAINER */}
+        <div className={`flex-1 flex gap-2 min-w-0 overflow-hidden ${previewFirst ? 'flex-row-reverse' : ''} transition-all`}>
 
-          {/* EDITOR PANEL */}
-          <div className="flex-1 glass-panel rounded-2xl overflow-hidden relative flex flex-col shadow-2xl">
-            {selectedPath ?
-              <>
-                <div className="h-10 border-b border-white/5 flex items-center justify-between px-4 bg-white/[0.02]">
-                  <div className="flex items-center gap-2 text-xs text-slate-400">
-                    <FileCode size={14} className="text-cyan-400" />
-                    <span className="opacity-50">{selectedPath.split('/').slice(0, -1).join(' / ')} /</span>
-                    <span className="text-slate-200 font-medium">{selectedPath.split('/').pop()}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <button onClick={handleExport} className="text-[10px] text-slate-500 hover:text-emerald-400 flex items-center gap-1.5 transition-colors"><FileDown size={12} /> Export</button>
-                    <div className="text-[10px] text-slate-600 flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div> Saved</div>
-                  </div>
-                </div>
-                <Editor
-                  onMount={(editor, monaco) => {
-                    editorRef.current = editor;
-                    monaco.editor.defineTheme('glass-theme', {
-                      base: 'vs-dark',
-                      inherit: true,
-                      rules: [{ background: '00000000' }],
-                      colors: {
-                        'editor.background': '#00000000',
-                        'minimap.background': '#00000000',
-                        'editorGutter.background': '#00000000'
-                      }
-                    });
-                    monaco.editor.setTheme('glass-theme');
-                  }}
-                  height="100%"
-                  defaultLanguage="html"
-                  theme="glass-theme"
-                  value={content}
-                  onChange={setContent}
-                  options={{ minimap: { enabled: false }, fontSize: 14, fontFamily: "JetBrains Mono", padding: { top: 24, bottom: 24 }, wordWrap: 'on', scrollBeyondLastLine: false, lineNumbers: 'on', renderLineHighlight: 'all', smoothScrolling: true, cursorBlinking: 'smooth', cursorSmoothCaretAnimation: 'on' }}
-                />
-              </>
-              : <div className="flex-1 flex flex-col items-center justify-center text-slate-600 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/5 to-purple-500/5"></div>
-                <div className="w-32 h-32 bg-gradient-to-br from-cyan-500/10 to-purple-600/10 rounded-full flex items-center justify-center mb-8 animate-float blur-xl absolute"></div>
-                <div className="w-24 h-24 bg-white/5 rounded-3xl flex items-center justify-center mb-6 backdrop-blur-md border border-white/10 shadow-2xl relative z-10">
-                  <LayoutTemplate size={40} className="text-slate-400" />
-                </div>
-                <p className="text-xl font-medium text-slate-400 relative z-10">Select a template</p>
-                <p className="text-sm text-slate-600 mt-2 relative z-10">Choose a file from the sidebar to start editing</p>
-              </div>}
-
-            {status && <div className="absolute bottom-6 right-6 bg-emerald-500 text-white px-5 py-2.5 rounded-full text-xs font-bold shadow-lg shadow-emerald-500/20 backdrop-blur-md animate-fade-in-up flex items-center gap-2"><Activity size={14} className="animate-spin" /> {status}</div>}
-          </div>
-        </div>
-
-        {/* RIGHT RESIZER */}
-        <Resizer onMouseDown={() => setResizing('right')} />
-
-        {/* RIGHT ISLAND: PREVIEW & TOOLS */}
-        <div className="flex flex-col gap-4 shrink-0 animate-fade-in-up" style={{ width: rightWidth, animationDelay: '0.3s' }}>
-          {/* TOOLBAR */}
-          <div className="glass-panel rounded-2xl p-2 flex items-center justify-between">
-            <div className="flex items-center gap-1 bg-black/20 p-1 rounded-xl border border-white/5">
-              <button onClick={() => setViewMode('a4')} className={`p-2 rounded-lg transition-all duration-300 ${viewMode === 'a4' ? 'bg-slate-700 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'}`}><FileText size={14} /></button>
-              <button onClick={() => setViewMode('desktop')} className={`p-2 rounded-lg transition-all duration-300 ${viewMode === 'desktop' ? 'bg-slate-700 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'}`}><Monitor size={14} /></button>
-              <button onClick={() => setViewMode('mobile')} className={`p-2 rounded-lg transition-all duration-300 ${viewMode === 'mobile' ? 'bg-slate-700 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'}`}><Smartphone size={14} /></button>
+          {/* CENTER ISLAND: EDITOR */}
+          <div className={`${previewFirst ? '' : 'flex-1'} flex flex-col gap-4 min-w-0 overflow-hidden animate-fade-in-up`} style={{ animationDelay: '0.2s', width: previewFirst ? rightWidth : undefined }}>
+            {/* COMMAND BAR */}
+            <div className="glass-panel rounded-2xl h-14 px-4 flex items-center gap-3">
+              <Search size={14} className="text-slate-500" />
+              <input
+                ref={searchInputRef}
+                type="text"
+                placeholder="Søk etter maler... (Ctrl+F)"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="bg-transparent border-none outline-none text-xs text-slate-300 placeholder:text-slate-600 flex-1 w-full"
+              />
+              {searchQuery && (
+                <button onClick={() => setSearchQuery('')} className="text-slate-500 hover:text-white">
+                  <X size={12} />
+                </button>
+              )}
             </div>
-            <div className="flex gap-2">
-              <button onClick={() => handleSave(false)} className="text-[10px] font-bold bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/20 px-3 py-1.5 rounded-lg transition-all flex items-center gap-2 hover:shadow-lg hover:shadow-cyan-500/10"><Save size={12} /> Save</button>
-              <button onClick={() => handleSave(true)} className="text-[10px] font-bold bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 border border-purple-500/20 px-3 py-1.5 rounded-lg transition-all flex items-center gap-2 hover:shadow-lg hover:shadow-purple-500/10"><GitBranch size={12} /> +Ver</button>
-            </div>
-          </div>
 
-          {/* PREVIEW AREA */}
-          <div className="flex-1 glass-panel rounded-2xl overflow-hidden flex flex-col relative shadow-2xl">
-            <div ref={previewContainerRef} className="flex-1 bg-black/20 overflow-auto flex justify-center p-8 relative custom-scrollbar">
-              <div style={{ transform: `scale(${scale})`, transformOrigin: 'top center' }} className="transition-transform duration-300 ease-out">
-                <DeviceSkin mode={viewMode} subject={meta.subject} to={initData.testData['kjøper.navn'] || 'Receiver'}>
-                  <iframe
-                    title="preview"
-                    srcDoc={previewSource}
-                    className="border-none bg-white"
-                    style={{
-                      width: viewMode === 'a4' ? '210mm' : '100%',
-                      height: viewMode === 'a4' ? '297mm' : '100%',
-                      minHeight: viewMode === 'a4' ? '297mm' : 'auto'
+            {/* EDITOR PANEL */}
+            <div className="flex-1 glass-panel rounded-2xl overflow-hidden relative flex flex-col shadow-2xl">
+              {selectedPath ?
+                <>
+                  <div className="h-10 border-b border-white/5 flex items-center justify-between px-4 bg-white/[0.02]">
+                    <div className="flex items-center gap-2 text-xs text-slate-400">
+                      <FileCode size={14} className="text-cyan-400" />
+                      <span className="opacity-50">{selectedPath.split('/').slice(0, -1).join(' / ')} /</span>
+                      <span className="text-slate-200 font-medium">{selectedPath.split('/').pop()}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <button onClick={handleExport} className="text-[10px] text-slate-500 hover:text-emerald-400 flex items-center gap-1.5 transition-colors"><FileDown size={12} /> Eksporter</button>
+                      <div className="text-[10px] text-slate-600 flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div> Lagret</div>
+                    </div>
+                  </div>
+                  <Editor
+                    onMount={(editor, monaco) => {
+                      editorRef.current = editor;
+                      monaco.editor.defineTheme('glass-theme', {
+                        base: 'vs-dark',
+                        inherit: true,
+                        rules: [{ background: '00000000' }],
+                        colors: {
+                          'editor.background': '#00000000',
+                          'minimap.background': '#00000000',
+                          'editorGutter.background': '#00000000'
+                        }
+                      });
+                      monaco.editor.setTheme('glass-theme');
                     }}
-                    sandbox="allow-scripts"
+                    height="100%"
+                    defaultLanguage="html"
+                    theme="glass-theme"
+                    value={content}
+                    onChange={setContent}
+                    options={{ minimap: { enabled: false }, fontSize: 14, fontFamily: "JetBrains Mono", padding: { top: 24, bottom: 24 }, wordWrap: 'on', scrollBeyondLastLine: false, lineNumbers: 'on', renderLineHighlight: 'all', smoothScrolling: true, cursorBlinking: 'smooth', cursorSmoothCaretAnimation: 'on' }}
                   />
-                </DeviceSkin>
+                </>
+                : <div className="flex-1 flex flex-col items-center justify-center text-slate-600 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/5 to-purple-500/5"></div>
+                  <div className="w-32 h-32 bg-gradient-to-br from-cyan-500/10 to-purple-600/10 rounded-full flex items-center justify-center mb-8 animate-float blur-xl absolute"></div>
+                  <div className="w-24 h-24 bg-white/5 rounded-3xl flex items-center justify-center mb-6 backdrop-blur-md border border-white/10 shadow-2xl relative z-10">
+                    <LayoutTemplate size={40} className="text-slate-400" />
+                  </div>
+                  <p className="text-xl font-medium text-slate-400 relative z-10">Velg en mal</p>
+                  <p className="text-sm text-slate-600 mt-2 relative z-10">Velg en fil fra sidemenyen for å begynne redigering</p>
+                </div>}
+
+              {status && <div className="absolute bottom-6 right-6 bg-emerald-500 text-white px-5 py-2.5 rounded-full text-xs font-bold shadow-lg shadow-emerald-500/20 backdrop-blur-md animate-fade-in-up flex items-center gap-2"><Activity size={14} className="animate-spin" /> {status}</div>}
+            </div>
+          </div>
+
+          {/* RESIZER */}
+          <Resizer onMouseDown={() => setResizing('right')} />
+
+          {/* RIGHT ISLAND: PREVIEW & TOOLS */}
+          <div className={`${previewFirst ? 'flex-1' : ''} flex flex-col gap-4 shrink-0 min-w-0 overflow-hidden animate-fade-in-up`} style={{ width: previewFirst ? undefined : rightWidth, animationDelay: '0.3s' }}>
+            {/* TOOLBAR */}
+            <div className="glass-panel rounded-2xl h-14 px-3 flex items-center justify-between">
+              <div className="flex items-center gap-1 bg-black/20 p-1 rounded-xl border border-white/5">
+                {isSmsTemplate ? (
+                  /* SMS MODE - Only show SMS button */
+                  <button onClick={() => setViewMode('sms')} className={`p-2 rounded-lg transition-all duration-300 ${viewMode === 'sms' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'}`} title="SMS Forhåndsvisning">
+                    <MessageSquare size={14} />
+                  </button>
+                ) : (
+                  /* HTML MODE - Show email/document view modes */
+                  <>
+                    <button onClick={() => setViewMode('a4')} className={`p-2 rounded-lg transition-all duration-300 ${viewMode === 'a4' ? 'bg-slate-700 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'}`}><FileText size={14} /></button>
+                    <button onClick={() => setViewMode('desktop')} className={`p-2 rounded-lg transition-all duration-300 ${viewMode === 'desktop' ? 'bg-slate-700 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'}`}><Monitor size={14} /></button>
+                    <button onClick={() => setViewMode('mobile')} className={`p-2 rounded-lg transition-all duration-300 ${viewMode === 'mobile' ? 'bg-slate-700 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'}`}><Smartphone size={14} /></button>
+                  </>
+                )}
+              </div>
+              <button
+                onClick={() => setPreviewFirst(!previewFirst)}
+                className={`p-2 rounded-lg transition-all duration-300 ${previewFirst ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'text-slate-500 hover:text-slate-300 bg-white/5 border border-white/5 hover:border-white/20'}`}
+                title={previewFirst ? 'Rediger i hovedvindu' : 'Forhåndsvis i hovedvindu'}
+              >
+                <ArrowLeftRight size={14} />
+              </button>
+              <div className="flex gap-2">
+                <button onClick={() => handleSave(false)} className="text-[10px] font-bold bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/20 px-3 py-1.5 rounded-lg transition-all flex items-center gap-2 hover:shadow-lg hover:shadow-cyan-500/10"><Save size={12} /> Lagre</button>
+                <button onClick={() => handleSave(true)} className="text-[10px] font-bold bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 border border-purple-500/20 px-3 py-1.5 rounded-lg transition-all flex items-center gap-2 hover:shadow-lg hover:shadow-purple-500/10"><GitBranch size={12} /> +Ver</button>
               </div>
             </div>
 
-            {/* SETTINGS PANEL */}
-            <div className="bg-slate-900/80 backdrop-blur-xl border-t border-white/5 max-h-[40%] flex flex-col">
-              <div className="flex border-b border-white/5">
-                <button onClick={() => setRightTab('preview')} className={`flex-1 py-3 text-[10px] font-bold tracking-wide transition-all ${rightTab === 'preview' ? 'text-cyan-400 border-b-2 border-cyan-400 bg-white/5' : 'text-slate-500 hover:text-slate-300'}`}>SIMULATOR</button>
-                <button onClick={() => setRightTab('settings')} className={`flex-1 py-3 text-[10px] font-bold tracking-wide transition-all ${rightTab === 'settings' ? 'text-purple-400 border-b-2 border-purple-400 bg-white/5' : 'text-slate-500 hover:text-slate-300'}`}>SETTINGS</button>
-              </div>
-              <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
-                {rightTab === 'preview' ? <div className="space-y-4">
-                  {detectedTags.length === 0 && <div className="text-center text-slate-500 py-8 text-sm flex flex-col items-center gap-2"><AlertTriangle className="opacity-20" size={24} /> No tags detected</div>}
-                  {detectedTags.map(key => {
-                    const isKnown = !!initData.testData[key];
-                    const currentValue = variableOverrides[key] || '';
-                    return (
-                      <div key={key} className="relative">
-                        <GlassInput
-                          label={key}
-                          value={currentValue}
-                          onChange={(e) => setVariableOverrides({ ...variableOverrides, [key]: e.target.value })}
-                          placeholder={initData.testData[key] || 'No Data'}
-                          warning={!isKnown}
-                          icon={getIconForTag(key)}
-                        />
-                        {!isKnown && (
-                          <button
-                            onClick={() => autoAddVariable(key)}
-                            className="absolute right-0 top-4 px-2 py-1 text-[9px] font-bold rounded-md bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 border border-orange-500/20 flex items-center gap-1 transition-all"
-                            title="Auto-add with demo value"
-                          >
-                            <Plus size={10} /> Auto-Add
-                          </button>
-                        )}
-                        {isKnown && (
-                          <div className="absolute right-0 top-6 text-emerald-400">
-                            <Check size={14} />
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
+            {/* PREVIEW AREA */}
+            <div className="flex-1 glass-panel rounded-2xl overflow-hidden flex flex-col relative shadow-2xl">
+              <div ref={previewContainerRef} className="flex-1 bg-black/20 overflow-y-auto overflow-x-hidden flex justify-center py-3 px-1 relative custom-scrollbar">
+                <div style={{ transform: `scale(${scale})`, transformOrigin: 'top center' }} className="transition-transform duration-300 ease-out">
+                  {isSmsTemplate ? (
+                    /* SMS Preview with iMessage skin */
+                    <DeviceSkin mode="sms" to={initData.testData['kjøper.navn'] || 'Mottaker'} smsContent={content}>
+                      {/* iMessage content is handled inside DeviceSkin */}
+                    </DeviceSkin>
+                  ) : (
+                    /* HTML Preview with email/document skins */
+                    <DeviceSkin mode={viewMode} subject={meta.subject} to={initData.testData['kjøper.navn'] || 'Receiver'}>
+                      <iframe
+                        title="preview"
+                        srcDoc={previewSource}
+                        className="border-none bg-white"
+                        style={{
+                          width: viewMode === 'a4' ? '210mm' : '100%',
+                          height: viewMode === 'a4' ? '297mm' : '100%',
+                          minHeight: viewMode === 'a4' ? '297mm' : 'auto'
+                        }}
+                        sandbox="allow-scripts"
+                      />
+                    </DeviceSkin>
+                  )}
                 </div>
-                  : <div className="space-y-5">
-                    <GlassInput
-                      label="Subject Line"
-                      value={meta.subject}
-                      onChange={e => setMeta({ ...meta, subject: e.target.value })}
-                      icon={Type}
-                    />
-                    <div className="grid grid-cols-2 gap-4">
-                      <GlassSelect
-                        label="Receiver"
-                        value={meta.receiver}
-                        onChange={e => setMeta({ ...meta, receiver: e.target.value })}
-                        options={['Systemstandard', 'Selger', 'Kjøper']}
-                        icon={User}
-                      />
-                      <GlassSelect
-                        label="Output"
-                        value={meta.output}
-                        onChange={e => setMeta({ ...meta, output: e.target.value })}
-                        options={['PDF og e-post', 'Kun PDF', 'Kun e-post']}
-                        icon={Mail}
-                      />
+              </div>
+
+              {/* COLLAPSIBLE SETTINGS PANEL */}
+              <div className={`bg-slate-900/90 backdrop-blur-xl border-t border-white/10 transition-all duration-300 ${panelExpanded ? 'max-h-[40%]' : 'max-h-10'} flex flex-col overflow-hidden`}>
+                <div className="flex border-b border-white/5 shrink-0">
+                  <button
+                    onClick={() => { setRightTab('preview'); setPanelExpanded(!panelExpanded || rightTab !== 'preview'); }}
+                    className={`flex-1 py-2.5 text-[9px] font-bold tracking-wider transition-all flex items-center justify-center gap-1.5 ${rightTab === 'preview' && panelExpanded ? 'text-cyan-400 bg-white/5' : 'text-slate-500 hover:text-slate-300'}`}
+                  >
+                    <ChevronDown size={10} className={`transition-transform ${panelExpanded && rightTab === 'preview' ? 'rotate-180' : ''}`} />
+                    SIMULATOR
+                  </button>
+                  <button
+                    onClick={() => { setRightTab('settings'); setPanelExpanded(!panelExpanded || rightTab !== 'settings'); }}
+                    className={`flex-1 py-2.5 text-[9px] font-bold tracking-wider transition-all flex items-center justify-center gap-1.5 ${rightTab === 'settings' && panelExpanded ? 'text-purple-400 bg-white/5' : 'text-slate-500 hover:text-slate-300'}`}
+                  >
+                    <ChevronDown size={10} className={`transition-transform ${panelExpanded && rightTab === 'settings' ? 'rotate-180' : ''}`} />
+                    INNSTILLINGER
+                  </button>
+                </div>
+                {panelExpanded && (
+                  <div className="flex-1 overflow-y-auto p-4 custom-scrollbar animate-fade-in-up">
+                    {rightTab === 'preview' ? <div className="space-y-3">
+                      {detectedTags.length === 0 && <div className="text-center text-slate-500 py-4 text-xs flex flex-col items-center gap-2"><AlertTriangle className="opacity-20" size={20} /> Ingen variabler funnet</div>}
+                      {detectedTags.map(key => {
+                        const isKnown = !!initData.testData[key];
+                        const currentValue = variableOverrides[key] || '';
+                        return (
+                          <div key={key} className="relative">
+                            <GlassInput
+                              label={key}
+                              value={currentValue}
+                              onChange={(e) => setVariableOverrides({ ...variableOverrides, [key]: e.target.value })}
+                              placeholder={initData.testData[key] || 'Ingen data'}
+                              warning={!isKnown}
+                              icon={getIconForTag(key)}
+                            />
+                            {!isKnown && (
+                              <button
+                                onClick={() => autoAddVariable(key)}
+                                className="absolute right-0 top-3 px-2 py-1 text-[8px] font-bold rounded-md bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 border border-orange-500/20 flex items-center gap-1 transition-all"
+                                title="Legg til med demoverdi"
+                              >
+                                <Plus size={8} /> Legg til
+                              </button>
+                            )}
+                            {isKnown && (
+                              <div className="absolute right-0 top-5 text-emerald-400">
+                                <Check size={12} />
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
-                    <div className="grid grid-cols-3 gap-3 pt-2 border-t border-white/5">
-                      {['cssVersion', 'headerTemplate', 'footerTemplate'].map(k => (
-                        <GlassSelect
-                          key={k}
-                          label={k.replace('Template', '')}
-                          value={meta[k]}
-                          onChange={e => setMeta({ ...meta, [k]: e.target.value })}
-                          options={k === 'cssVersion' ? initData.cssFiles : initData.htmlFiles}
-                          placeholder="(None)"
-                          icon={FileCode}
-                        />
-                      ))}
-                    </div>
-                    {/* MARGIN CONTROLS */}
-                    <div className="pt-4 border-t border-white/5">
-                      <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Page Margins (cm)</div>
-                      <div className="grid grid-cols-4 gap-3">
+                      : <div className="space-y-4">
                         <GlassInput
-                          label="Top"
-                          value={meta.marginTop}
-                          onChange={e => setMeta({ ...meta, marginTop: parseFloat(e.target.value) || 0 })}
-                          icon={Box}
+                          label="Emnelinje"
+                          value={meta.subject}
+                          onChange={e => setMeta({ ...meta, subject: e.target.value })}
+                          icon={Type}
                         />
-                        <GlassInput
-                          label="Right"
-                          value={meta.marginRight}
-                          onChange={e => setMeta({ ...meta, marginRight: parseFloat(e.target.value) || 0 })}
-                          icon={Box}
-                        />
-                        <GlassInput
-                          label="Bottom"
-                          value={meta.marginBottom}
-                          onChange={e => setMeta({ ...meta, marginBottom: parseFloat(e.target.value) || 0 })}
-                          icon={Box}
-                        />
-                        <GlassInput
-                          label="Left"
-                          value={meta.marginLeft}
-                          onChange={e => setMeta({ ...meta, marginLeft: parseFloat(e.target.value) || 0 })}
-                          icon={Box}
-                        />
-                      </div>
-                    </div>
-                  </div>}
+                        <div className="grid grid-cols-2 gap-3">
+                          <GlassSelect
+                            label="Mottaker"
+                            value={meta.receiver}
+                            onChange={e => setMeta({ ...meta, receiver: e.target.value })}
+                            options={['Systemstandard', 'Selger', 'Kjøper']}
+                            icon={User}
+                          />
+                          <GlassSelect
+                            label="Utdata"
+                            value={meta.output}
+                            onChange={e => setMeta({ ...meta, output: e.target.value })}
+                            options={['PDF og e-post', 'Kun PDF', 'Kun e-post']}
+                            icon={Mail}
+                          />
+                        </div>
+                        <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/5">
+                          {['cssVersion', 'headerTemplate', 'footerTemplate'].map(k => (
+                            <GlassSelect
+                              key={k}
+                              label={k.replace('Template', '')}
+                              value={meta[k]}
+                              onChange={e => setMeta({ ...meta, [k]: e.target.value })}
+                              options={k === 'cssVersion' ? initData.cssFiles : initData.htmlFiles}
+                              placeholder="(Ingen)"
+                              icon={FileCode}
+                            />
+                          ))}
+                        </div>
+                        {/* MARGIN CONTROLS */}
+                        <div className="pt-3 border-t border-white/5">
+                          <div className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-2">Sidemarger (cm)</div>
+                          <div className="grid grid-cols-4 gap-2">
+                            <GlassInput
+                              label="Topp"
+                              value={meta.marginTop}
+                              onChange={e => setMeta({ ...meta, marginTop: parseFloat(e.target.value) || 0 })}
+                              icon={Box}
+                            />
+                            <GlassInput
+                              label="Høyre"
+                              value={meta.marginRight}
+                              onChange={e => setMeta({ ...meta, marginRight: parseFloat(e.target.value) || 0 })}
+                              icon={Box}
+                            />
+                            <GlassInput
+                              label="Bunn"
+                              value={meta.marginBottom}
+                              onChange={e => setMeta({ ...meta, marginBottom: parseFloat(e.target.value) || 0 })}
+                              icon={Box}
+                            />
+                            <GlassInput
+                              label="Venstre"
+                              value={meta.marginLeft}
+                              onChange={e => setMeta({ ...meta, marginLeft: parseFloat(e.target.value) || 0 })}
+                              icon={Box}
+                            />
+                          </div>
+                        </div>
+                      </div>}
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </div>
+        {/* END SWAPPABLE CONTAINER */}
       </div>
+      {/* END FLOATING LAYOUT CONTAINER */}
 
       {/* CATEGORY MODAL */}
       {
@@ -868,9 +1159,9 @@ function App() {
             <div className="glass-panel rounded-2xl p-6 w-96 shadow-2xl border border-white/20">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold text-white">
-                  {categoryModal.type === 'create' && 'New Category'}
-                  {categoryModal.type === 'rename' && 'Rename Category'}
-                  {categoryModal.type === 'delete' && 'Delete Category'}
+                  {categoryModal.type === 'create' && 'Ny kategori'}
+                  {categoryModal.type === 'rename' && 'Gi kategori nytt navn'}
+                  {categoryModal.type === 'delete' && 'Slett kategori'}
                 </h3>
                 <button onClick={() => setCategoryModal(null)} className="text-slate-400 hover:text-white p-1">
                   <X size={18} />
@@ -880,12 +1171,12 @@ function App() {
               {categoryModal.type === 'delete' ? (
                 <div>
                   <p className="text-sm text-slate-400 mb-4">
-                    Are you sure you want to delete <span className="text-white font-medium">"{categoryModal.category}"</span>?
-                    All files will be moved to Uncategorized.
+                    Er du sikker på at du vil slette <span className="text-white font-medium">"{categoryModal.category}"</span>?
+                    Alle filer flyttes til Ukategorisert.
                   </p>
                   <div className="flex gap-3 justify-end">
-                    <button onClick={() => setCategoryModal(null)} className="px-4 py-2 text-sm text-slate-400 hover:text-white">Cancel</button>
-                    <button onClick={handleCategoryDelete} className="px-4 py-2 text-sm bg-red-500/20 text-red-400 hover:bg-red-500/30 rounded-lg border border-red-500/30">Delete</button>
+                    <button onClick={() => setCategoryModal(null)} className="px-4 py-2 text-sm text-slate-400 hover:text-white">Avbryt</button>
+                    <button onClick={handleCategoryDelete} className="px-4 py-2 text-sm bg-red-500/20 text-red-400 hover:bg-red-500/30 rounded-lg border border-red-500/30">Slett</button>
                   </div>
                 </div>
               ) : (
@@ -894,7 +1185,7 @@ function App() {
                     type="text"
                     value={categoryInput}
                     onChange={(e) => setCategoryInput(e.target.value)}
-                    placeholder="Category name"
+                    placeholder="Kategorinavn"
                     className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-cyan-500/50 mb-4"
                     autoFocus
                     onKeyDown={(e) => {
@@ -904,12 +1195,12 @@ function App() {
                     }}
                   />
                   <div className="flex gap-3 justify-end">
-                    <button onClick={() => setCategoryModal(null)} className="px-4 py-2 text-sm text-slate-400 hover:text-white">Cancel</button>
+                    <button onClick={() => setCategoryModal(null)} className="px-4 py-2 text-sm text-slate-400 hover:text-white">Avbryt</button>
                     <button
                       onClick={categoryModal.type === 'create' ? handleCategoryCreate : handleCategoryRename}
                       className="px-4 py-2 text-sm bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30 rounded-lg border border-cyan-500/30"
                     >
-                      {categoryModal.type === 'create' ? 'Create' : 'Rename'}
+                      {categoryModal.type === 'create' ? 'Opprett' : 'Gi nytt navn'}
                     </button>
                   </div>
                 </div>
@@ -926,9 +1217,10 @@ function App() {
             <div className="glass-panel rounded-2xl p-6 w-96 shadow-2xl border border-white/20">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold text-white">
-                  {templateModal.type === 'rename' && 'Rename Template'}
-                  {templateModal.type === 'delete' && 'Delete Template'}
-                  {templateModal.type === 'duplicate' && 'Duplicate Template'}
+                  {templateModal.type === 'create' && 'Ny mal'}
+                  {templateModal.type === 'rename' && 'Gi mal nytt navn'}
+                  {templateModal.type === 'delete' && 'Slett mal'}
+                  {templateModal.type === 'duplicate' && 'Dupliser mal'}
                 </h3>
                 <button onClick={() => setTemplateModal(null)} className="text-slate-400 hover:text-white p-1">
                   <X size={18} />
@@ -938,12 +1230,12 @@ function App() {
               {templateModal.type === 'delete' ? (
                 <div>
                   <p className="text-sm text-slate-400 mb-4">
-                    Are you sure you want to delete <span className="text-white font-medium">"{templateModal.name}"</span>?
-                    This action cannot be undone.
+                    Er du sikker på at du vil slette <span className="text-white font-medium">"{templateModal.name}"</span>?
+                    Denne handlingen kan ikke angres.
                   </p>
                   <div className="flex gap-3 justify-end">
-                    <button onClick={() => setTemplateModal(null)} className="px-4 py-2 text-sm text-slate-400 hover:text-white">Cancel</button>
-                    <button onClick={handleTemplateDelete} className="px-4 py-2 text-sm bg-red-500/20 text-red-400 hover:bg-red-500/30 rounded-lg border border-red-500/30">Delete</button>
+                    <button onClick={() => setTemplateModal(null)} className="px-4 py-2 text-sm text-slate-400 hover:text-white">Avbryt</button>
+                    <button onClick={handleTemplateDelete} className="px-4 py-2 text-sm bg-red-500/20 text-red-400 hover:bg-red-500/30 rounded-lg border border-red-500/30">Slett</button>
                   </div>
                 </div>
               ) : (
@@ -952,19 +1244,41 @@ function App() {
                     type="text"
                     value={templateInput}
                     onChange={(e) => setTemplateInput(e.target.value)}
-                    placeholder={templateModal.type === 'duplicate' ? 'New template name' : 'Template name'}
+                    placeholder={templateModal.type === 'create' ? 'Malnavn (f.eks. min-mal.html)' : templateModal.type === 'duplicate' ? 'Nytt malnavn' : 'Malnavn'}
                     className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-cyan-500/50 mb-4"
                     autoFocus
-                    onKeyDown={(e) => { if (e.key === 'Enter') templateModal.type === 'duplicate' ? handleTemplateDuplicate() : handleTemplateRename(); }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        if (templateModal.type === 'create') handleTemplateCreate();
+                        else if (templateModal.type === 'duplicate') handleTemplateDuplicate();
+                        else handleTemplateRename();
+                      }
+                    }}
                   />
+                  {templateModal.type === 'create' && (
+                    <div className="mb-4">
+                      <label className="text-[10px] text-slate-500 uppercase font-bold mb-1 block">Kategori</label>
+                      <select
+                        value={templateCategory}
+                        onChange={(e) => setTemplateCategory(e.target.value)}
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-cyan-500/50"
+                      >
+                        <option value="Uncategorized" className="bg-slate-900">Ukategorisert</option>
+                        {Object.keys(fileTree).filter(k => k !== 'Uncategorized').map(cat => (
+                          <option key={cat} value={cat} className="bg-slate-900">{cat}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
                   <div className="flex gap-3 justify-end">
-                    <button onClick={() => setTemplateModal(null)} className="px-4 py-2 text-sm text-slate-400 hover:text-white">Cancel</button>
+                    <button onClick={() => setTemplateModal(null)} className="px-4 py-2 text-sm text-slate-400 hover:text-white">Avbryt</button>
                     <button
-                      onClick={templateModal.type === 'duplicate' ? handleTemplateDuplicate : handleTemplateRename}
-                      className={`px-4 py-2 text-sm rounded-lg border flex items-center gap-2 ${templateModal.type === 'duplicate' ? 'bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border-emerald-500/30' : 'bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30 border-cyan-500/30'}`}
+                      onClick={templateModal.type === 'create' ? handleTemplateCreate : templateModal.type === 'duplicate' ? handleTemplateDuplicate : handleTemplateRename}
+                      className={`px-4 py-2 text-sm rounded-lg border flex items-center gap-2 ${templateModal.type === 'create' ? 'bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border-emerald-500/30' : templateModal.type === 'duplicate' ? 'bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border-emerald-500/30' : 'bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30 border-cyan-500/30'}`}
                     >
-                      {templateModal.type === 'duplicate' && <><Copy size={12} /> Duplicate</>}
-                      {templateModal.type === 'rename' && 'Rename'}
+                      {templateModal.type === 'create' && <><FilePlus size={12} /> Opprett</>}
+                      {templateModal.type === 'duplicate' && <><Copy size={12} /> Dupliser</>}
+                      {templateModal.type === 'rename' && 'Gi nytt navn'}
                     </button>
                   </div>
                 </div>
@@ -980,7 +1294,7 @@ function App() {
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center animate-fade-in-up">
             <div className="glass-panel rounded-2xl p-6 w-[500px] shadow-2xl border border-white/20 max-h-[80vh] flex flex-col">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-white flex items-center gap-2"><FileUp size={18} className="text-emerald-400" /> Import Templates</h3>
+                <h3 className="text-lg font-bold text-white flex items-center gap-2"><FileUp size={18} className="text-emerald-400" /> Importer maler</h3>
                 <button onClick={() => { setImportModal(false); setImportFiles([]); }} className="text-slate-400 hover:text-white p-1">
                   <X size={18} />
                 </button>
@@ -992,8 +1306,8 @@ function App() {
                 className="border-2 border-dashed border-slate-700 hover:border-emerald-500/50 rounded-xl p-8 text-center cursor-pointer transition-all mb-4 hover:bg-white/5"
               >
                 <Upload size={32} className="mx-auto text-slate-500 mb-3" />
-                <p className="text-sm text-slate-400 mb-1">Click to select or drop HTML files</p>
-                <p className="text-[10px] text-slate-600">Supports multiple files</p>
+                <p className="text-sm text-slate-400 mb-1">Klikk for å velge, eller slipp HTML-filer her</p>
+                <p className="text-[10px] text-slate-600">Støtter flere filer</p>
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -1016,7 +1330,7 @@ function App() {
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="text-[10px] text-slate-500 uppercase font-bold mb-1 block">Category</label>
+                        <label className="text-[10px] text-slate-500 uppercase font-bold mb-1 block">Kategori</label>
                         <select
                           value={file.category}
                           onChange={(e) => {
@@ -1026,14 +1340,14 @@ function App() {
                           }}
                           className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-cyan-500/50"
                         >
-                          <option value="Uncategorized" className="bg-slate-900">Uncategorized</option>
+                          <option value="Uncategorized" className="bg-slate-900">Ukategorisert</option>
                           {Object.keys(fileTree).filter(k => k !== 'Uncategorized').map(cat => (
                             <option key={cat} value={cat} className="bg-slate-900">{cat}</option>
                           ))}
                         </select>
                       </div>
                       <div>
-                        <label className="text-[10px] text-slate-500 uppercase font-bold mb-1 block">Tags (comma separated)</label>
+                        <label className="text-[10px] text-slate-500 uppercase font-bold mb-1 block">Merkelapper (kommaseparert)</label>
                         <input
                           type="text"
                           value={file.tags}
@@ -1050,19 +1364,66 @@ function App() {
                   </div>
                 ))}
                 {importFiles.length === 0 && (
-                  <div className="text-center py-8 text-slate-500 text-sm">No files selected</div>
+                  <div className="text-center py-8 text-slate-500 text-sm">Ingen filer valgt</div>
                 )}
               </div>
 
               {/* ACTIONS */}
               <div className="flex gap-3 justify-end">
-                <button onClick={() => { setImportModal(false); setImportFiles([]); }} className="px-4 py-2 text-sm text-slate-400 hover:text-white">Cancel</button>
+                <button onClick={() => { setImportModal(false); setImportFiles([]); }} className="px-4 py-2 text-sm text-slate-400 hover:text-white">Avbryt</button>
                 <button
                   onClick={handleImport}
                   disabled={importFiles.length === 0}
                   className="px-4 py-2 text-sm bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 rounded-lg border border-emerald-500/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                 >
-                  <FileUp size={14} /> Import {importFiles.length > 0 && `(${importFiles.length})`}
+                  <FileUp size={14} /> Importer {importFiles.length > 0 && `(${importFiles.length})`}
+                </button>
+              </div>
+            </div>
+          </div>
+        )
+      }
+
+      {/* KEYBOARD SHORTCUTS MODAL */}
+      {
+        shortcutsModal && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center animate-fade-in-up">
+            <div className="glass-panel rounded-2xl p-6 w-[400px] shadow-2xl border border-white/20">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                  <Keyboard size={18} className="text-purple-400" /> Hurtigtaster
+                </h3>
+                <button onClick={() => setShortcutsModal(false)} className="text-slate-400 hover:text-white p-1">
+                  <X size={18} />
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex items-center justify-between py-2 border-b border-white/10">
+                  <span className="text-sm text-slate-300">Lagre mal</span>
+                  <kbd className="px-2 py-1 bg-slate-800 rounded text-xs text-slate-400 font-mono">Ctrl+S</kbd>
+                </div>
+                <div className="flex items-center justify-between py-2 border-b border-white/10">
+                  <span className="text-sm text-slate-300">Lagre som ny versjon</span>
+                  <kbd className="px-2 py-1 bg-slate-800 rounded text-xs text-slate-400 font-mono">Ctrl+Shift+S</kbd>
+                </div>
+                <div className="flex items-center justify-between py-2 border-b border-white/10">
+                  <span className="text-sm text-slate-300">Søk etter maler</span>
+                  <kbd className="px-2 py-1 bg-slate-800 rounded text-xs text-slate-400 font-mono">Ctrl+F</kbd>
+                </div>
+                <div className="flex items-center justify-between py-2 border-b border-white/10">
+                  <span className="text-sm text-slate-300">Dupliser valgt mal</span>
+                  <kbd className="px-2 py-1 bg-slate-800 rounded text-xs text-slate-400 font-mono">Ctrl+D</kbd>
+                </div>
+                <div className="flex items-center justify-between py-2">
+                  <span className="text-sm text-slate-300">Lukk modal / Tøm søk</span>
+                  <kbd className="px-2 py-1 bg-slate-800 rounded text-xs text-slate-400 font-mono">Escape</kbd>
+                </div>
+              </div>
+
+              <div className="mt-6 flex justify-end">
+                <button onClick={() => setShortcutsModal(false)} className="px-4 py-2 text-sm bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 rounded-lg border border-purple-500/30">
+                  Lukk
                 </button>
               </div>
             </div>

@@ -5,7 +5,7 @@ const cors = require('cors');
 const { exec } = require('child_process');
 const app = express();
 const PORT = 5000;
-const LIBRARY_PATH = path.join(__dirname, '../company-portal/library');
+const LIBRARY_PATH = path.join(__dirname, 'library');
 const RESOURCES_PATH = path.join(__dirname, '../company-portal/resources');
 
 app.use(cors());
@@ -21,7 +21,7 @@ const getFilesRecursively = (dir, fileList = []) => {
         const filePath = path.join(dir, file);
         if (fs.statSync(filePath).isDirectory()) {
             getFilesRecursively(filePath, fileList);
-        } else if (file.endsWith('.html')) {
+        } else if (file.endsWith('.html') || file.endsWith('.txt')) {
             fileList.push(path.relative(LIBRARY_PATH, filePath));
         }
     });
@@ -68,6 +68,30 @@ app.post('/api/files/save', (req, res) => {
     fs.writeFile(fullPath, content, () => {
         if (meta) fs.writeFile(metaPath, JSON.stringify(meta, null, 2), () => { });
         res.json({ message: 'Saved', filepath });
+    });
+});
+
+// Create new file with category
+app.post('/api/files/create', (req, res) => {
+    const { filename, category, content } = req.body;
+    if (!filename) return res.status(400).json({ error: 'Filename required' });
+
+    const cat = category || 'Uncategorized';
+    const filepath = path.join(cat, filename);
+    const fullPath = path.join(LIBRARY_PATH, filepath);
+    const metaPath = fullPath.replace('.html', '.meta.json');
+    const folder = path.dirname(fullPath);
+
+    if (!fs.existsSync(folder)) fs.mkdirSync(folder, { recursive: true });
+
+    fs.writeFile(fullPath, content, () => {
+        const meta = {
+            category: cat,
+            createdAt: new Date().toISOString(),
+            subject: 'Ny mal'
+        };
+        fs.writeFile(metaPath, JSON.stringify(meta, null, 2), () => { });
+        res.json({ message: 'Created', filepath });
     });
 });
 

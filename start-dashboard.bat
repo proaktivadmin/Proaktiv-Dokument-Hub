@@ -1,19 +1,19 @@
 @echo off
 echo ======================================
-echo   Starting HTML Hub Dashboard
+echo   Starting Proaktiv Dokument Hub
 echo ======================================
 echo.
 
 :: Start the backend server in a new window
 echo Starting backend server...
-start "HTML Hub Backend" cmd /k "npm run dev"
+start "Proaktiv Dokument Hub Backend" cmd /k "npm run dev"
 
 :: Wait a moment for backend to initialize
 timeout /t 2 /nobreak > nul
 
 :: Start the frontend Vite dev server
 echo Starting frontend...
-start "HTML Hub Frontend" cmd /k "cd client && npm run dev"
+start "Proaktiv Dokument Hub Frontend" cmd /k "cd client && npm run dev"
 
 echo.
 echo ======================================
