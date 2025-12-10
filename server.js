@@ -21,6 +21,7 @@ app.use(cors());
 app.use(express.json());
 app.use('/resources', express.static(RESOURCES_PATH));
 app.use('/resources/library', express.static(LIBRARY_PATH));
+app.use(express.static(path.join(__dirname, 'client/dist')));
 
 [LIBRARY_PATH, RESOURCES_PATH].forEach(dir => { if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true }); });
 
