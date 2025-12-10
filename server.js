@@ -6,9 +6,9 @@ const { exec } = require('child_process');
 const sanitizer = require('./sanitizer');
 
 const app = express();
-const PORT = 5000;
-const LIBRARY_PATH = path.join(__dirname, 'library');
-const RESOURCES_PATH = path.join(__dirname, '../company-portal/resources');
+const PORT = process.env.PORT || 5000;
+const LIBRARY_PATH = process.env.LIBRARY_PATH || path.join(__dirname, 'library');
+const RESOURCES_PATH = process.env.RESOURCES_PATH || path.join(__dirname, '../company-portal/resources');
 const LEGACY_IMPORT_PATH = path.join(LIBRARY_PATH, 'Legacy_Import');
 const READY_EXPORT_PATH = path.join(LIBRARY_PATH, 'Ready_For_Export');
 
