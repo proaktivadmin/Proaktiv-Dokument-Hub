@@ -3,7 +3,7 @@
 **READ THIS FIRST.**
 This file is the **living status report** of the project.
 *   **Incoming Agent:** Read this to orient yourself.
-*   **Outgoing Agent:** You **MUST** update this file before you leave.
+*   **Outgoing Agent:** You **MUST** update this file, Commit, and **Push to Origin** before you leave.
 
 ## 1. State of the World (Last Updated: 2025-12-10)
 *   **Project:** Proaktiv Dokument Hub (Localhost React/Node app).

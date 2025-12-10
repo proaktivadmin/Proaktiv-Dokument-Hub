@@ -54,6 +54,8 @@ To ensure no "brain notes" (implementation plans, task lists, walkthroughs) are 
 2.  **Naming Convention:** Use `v{n}_[artifact_name].md` (e.g., `v1_task.md`).
 3.  **Update Handoff:** You MUST update `AI_HANDOFF.md` with the current "State of the World" and "Next Actions" before signing off.
 4.  **Git Commit:** All archives and the updated `AI_HANDOFF.md` must be included in the final commit.
+5.  **Git Push:** You MUST push the commit to `origin` (`git push origin main`) to ensure cloud backup.
+6.  **Notify User:** Confirm that both commit and push were successful.
 
 ## Deployment Strategy
 - **Current:** Local Host.
