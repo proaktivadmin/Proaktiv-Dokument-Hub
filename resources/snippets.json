@@ -1,0 +1,147 @@
+[
+    {
+        "category": "Tags: Selger",
+        "items": [
+            {
+                "label": "Navn (Full)",
+                "desc": "Navn uten fullmektig",
+                "code": "[[selger.navnutenfullmektigogkontaktperson]]"
+            },
+            {
+                "label": "Adresse",
+                "desc": "Gate og nr",
+                "code": "[[selger.hovedgatenavnognr]]"
+            },
+            {
+                "label": "Poststed",
+                "desc": "Postnr og sted",
+                "code": "[[selger.hovedpostnr]] [[selger.hovedpoststed]]"
+            },
+            {
+                "label": "E-post",
+                "desc": "Email adresse",
+                "code": "[[selger.emailadresse]]"
+            },
+            {
+                "label": "Telefon",
+                "desc": "Hovedtelefon",
+                "code": "[[selger.hovedtlf]]"
+            },
+            {
+                "label": "Fødselsnr",
+                "desc": "ID nummer",
+                "code": "[[selger.idnummer]]"
+            }
+        ]
+    },
+    {
+        "category": "Tags: Eiendom",
+        "items": [
+            {
+                "label": "Adresse",
+                "desc": "Gatenavn og nr",
+                "code": "[[eiendom.gatenavnognr]]"
+            },
+            {
+                "label": "Poststed",
+                "desc": "Postnr og sted",
+                "code": "[[eiendom.postnr]] [[eiendom.poststed]]"
+            },
+            {
+                "label": "Matrikkel",
+                "desc": "Komplett matrikkel",
+                "code": "[[komplettmatrikkelutvidet]]"
+            },
+            {
+                "label": "Boligtype",
+                "desc": "Type bolig",
+                "code": "[[eiendom.boligtype]]"
+            }
+        ]
+    },
+    {
+        "category": "Tags: Megler/Kontor",
+        "items": [
+            {
+                "label": "Ansvarlig Navn",
+                "desc": "Megler navn",
+                "code": "[[ansvarligmegler.navn]]"
+            },
+            {
+                "label": "Ansvarlig Tittel",
+                "desc": "Megler tittel",
+                "code": "[[ansvarligmegler.tittel]]"
+            },
+            {
+                "label": "Kontor Navn",
+                "desc": "Markedsføringsnavn",
+                "code": "[[meglerkontor.markedsforingsnavn]]"
+            },
+            {
+                "label": "Kontor Adresse",
+                "desc": "Besøksadresse",
+                "code": "[[meglerkontor.besoksadresse]]"
+            },
+            {
+                "label": "Oppgjør Navn",
+                "desc": "Oppgjørsavdeling",
+                "code": "[[oppgjor.kontornavn]]"
+            }
+        ]
+    },
+    {
+        "category": "Tags: Økonomi",
+        "items": [
+            {
+                "label": "Prisantydning",
+                "desc": "Pris",
+                "code": "[[eiendom.pris]]"
+            },
+            {
+                "label": "Provisjon %",
+                "desc": "Sats",
+                "code": "[[oppdrag.provisjonprosent]]"
+            },
+            {
+                "label": "Samlet Sum",
+                "desc": "Selger samlet sum",
+                "code": "[[oppdrag.selgersamletsum]]"
+            },
+            {
+                "label": "Utlegg Sum",
+                "desc": "Sum utlegg",
+                "code": "[[oppdrag.selgerutleggsum]]"
+            }
+        ]
+    },
+    {
+        "category": "Vitec Logic",
+        "items": [
+            {
+                "label": "If / Else",
+                "desc": "Conditional block",
+                "code": "<vitec:if test=\"[[variable]]\">\n    <!-- True -->\n<vitec:else />\n    <!-- False -->\n</vitec:if>"
+            },
+            {
+                "label": "Loop List",
+                "desc": "Iterate over items",
+                "code": "<vitec:foreach items=\"[[list]]\" var=\"item\">\n    <p>[[item.name]]</p>\n</vitec:foreach>"
+            }
+        ]
+    },
+    {
+        "category": "Layout",
+        "items": [
+            {
+                "label": "2 Columns",
+                "desc": "Grid layout",
+                "code": "<div style=\"display: grid; grid-template-columns: 1fr 1fr; gap: 20px;\">\n    <div>Left</div>\n    <div>Right</div>\n</div>"
+            },
+            {
+                "label": "Data Table",
+                "desc": "Standard border table",
+                "code": "<table style=\"width: 100%; border-collapse: collapse;\">\n    <tr>\n        <th style=\"border-bottom: 1px solid #000; text-align: left;\">Header</th>\n        <th style=\"border-bottom: 1px solid #000; text-align: left;\">Value</th>\n    </tr>\n</table>"
+            }
+        ]
+    }
+]
