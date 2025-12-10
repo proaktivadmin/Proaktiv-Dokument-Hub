@@ -3,14 +3,24 @@ const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
 const { exec } = require('child_process');
+const sanitizer = require('./sanitizer');
+
 const app = express();
 const PORT = 5000;
 const LIBRARY_PATH = path.join(__dirname, 'library');
 const RESOURCES_PATH = path.join(__dirname, '../company-portal/resources');
+const LEGACY_IMPORT_PATH = path.join(LIBRARY_PATH, 'Legacy_Import');
+const READY_EXPORT_PATH = path.join(LIBRARY_PATH, 'Ready_For_Export');
+
+// Ensure migration directories exist
+[LEGACY_IMPORT_PATH, READY_EXPORT_PATH].forEach(dir => {
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+});
 
 app.use(cors());
 app.use(express.json());
 app.use('/resources', express.static(RESOURCES_PATH));
+app.use('/resources/library', express.static(LIBRARY_PATH));
 
 [LIBRARY_PATH, RESOURCES_PATH].forEach(dir => { if (!fs.existsSync(dir)) fs.mkdirSync(dir); });
 
@@ -361,4 +371,55 @@ app.post('/api/files/export', (req, res) => {
     res.json({ exports });
 });
 
-app.listen(PORT, () => console.log(`Server v3.4 running on ${PORT}`));
+// NEW: Save bundled export to local disk (easier for user to find)
+app.post('/api/export/save-to-disk', (req, res) => {
+    const { filename, content } = req.body;
+    if (!filename || !content) return res.status(400).json({ error: 'Filename and content required' });
+
+    const EXPORT_DIR = path.join(__dirname, 'exports');
+    if (!fs.existsSync(EXPORT_DIR)) fs.mkdirSync(EXPORT_DIR);
+
+    const filePath = path.join(EXPORT_DIR, filename);
+
+    fs.writeFile(filePath, content, (err) => {
+        if (err) return res.status(500).json({ error: 'Failed to write file' });
+        res.json({ message: 'Saved to exports', path: filePath });
+    });
+});
+
+// --- SANITIZER ENDPOINTS ---
+
+app.post('/api/sanitize/preview', (req, res) => {
+    const { content } = req.body;
+    if (!content) return res.status(400).send('No content provided');
+    try {
+        const sanitized = sanitizer.sanitizeTemplate(content);
+        res.json({ sanitized });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.post('/api/sanitize/batch', (req, res) => {
+    try {
+        const files = fs.readdirSync(LEGACY_IMPORT_PATH);
+        const results = [];
+
+        files.forEach(file => {
+            if (file.endsWith('.html') || file.endsWith('.txt')) {
+                const inputPath = path.join(LEGACY_IMPORT_PATH, file);
+                const result = sanitizer.processFile(inputPath, READY_EXPORT_PATH);
+                results.push(result);
+            }
+        });
+
+        res.json({
+            message: `Processed ${files.length} files.`,
+            results
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.listen(PORT, () => console.log(`Server v3.5 running on ${PORT}`));

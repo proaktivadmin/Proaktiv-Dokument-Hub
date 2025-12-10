@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Editor from '@monaco-editor/react';
 import { Folder, FileCode, GitBranch, ChevronRight, ChevronDown, LayoutTemplate, Smartphone, Monitor, FileText, Download, AlertTriangle, GripVertical, Settings, Play, Save, Search, Command, Activity, Box, Type, Hash, Mail, Phone, User, MapPin, MoreHorizontal, Code, Tag, Plus, Check, Pencil, Trash2, FolderPlus, X, Upload, FileUp, FileDown, Copy, Clock, RotateCcw, Keyboard, FilePlus, ArrowLeftRight, MessageSquare, FolderInput } from 'lucide-react';
 import ProaktivLogo from './assets/logo_white.svg';
+import MigrationView from './MigrationView';
 
 const API_URL = 'http://localhost:5000/api';
 const DEFAULT_META = { category: 'General', receiver: 'Systemstandard', output: 'PDF og e-post', assignmentType: '', phase: '', subject: 'Oppgjørsoppstilling [[eiendom.adresse]]', cssVersion: 'style.css', headerTemplate: '', footerTemplate: '', marginTop: 2, marginBottom: 2, marginLeft: 2, marginRight: 2 };
@@ -51,7 +52,12 @@ const GlassSelect = ({ label, icon: Icon, value, onChange, options, placeholder 
           className="bg-transparent border-none outline-none text-sm text-slate-200 w-full py-2 font-medium appearance-none cursor-pointer relative z-10"
         >
           {placeholder && <option value="" className="bg-slate-900">{placeholder}</option>}
-          {options.map(opt => <option key={opt} value={opt} className="bg-slate-900 text-slate-200">{opt}</option>)}
+          {options.map(opt => {
+            const isObj = typeof opt === 'object';
+            const val = isObj ? opt.value : opt;
+            const lab = isObj ? opt.label : opt;
+            return <option key={val} value={val} className="bg-slate-900 text-slate-200">{lab}</option>;
+          })}
         </select>
         <ChevronDown size={14} className="absolute right-0 text-slate-600 pointer-events-none" />
       </div>
@@ -241,6 +247,8 @@ function App() {
   const [viewMode, setViewMode] = useState('a4');
   const [searchQuery, setSearchQuery] = useState('');
   const [previewFirst, setPreviewFirst] = useState(false); // Layout: false = editor first, true = preview first
+  const [activeTheme, setActiveTheme] = useState('theme-proaktiv.css'); // Default theme
+  const [mainView, setMainView] = useState('editor'); // 'editor' | 'migration'
 
   // RESIZE STATE
   const [leftWidth, setLeftWidth] = useState(320);
@@ -377,6 +385,72 @@ function App() {
       a.href = url; a.download = exp.filename; a.click();
       URL.revokeObjectURL(url);
       setStatus('Exported'); setTimeout(() => setStatus(''), 2000);
+    }
+  };
+
+  const handleExportForVitec = async () => {
+    if (!selectedPath) return;
+    setStatus('Bundling...');
+
+    // 1. Read the current content (template HTML)
+    let finalHtml = content;
+
+    // 2. Fetch all CSS/Theme files to bundle
+    // We need vitec-structure.css + theme-base.css + CURRENT activeTheme
+    try {
+      const cssFilesToBundle = ['vitec-structure.css', 'theme-base.css', activeTheme];
+      let bundledCss = '';
+
+      for (const cssFile of cssFilesToBundle) {
+        const res = await fetch(`${API_URL}/resources/read`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ filename: `library/System/styles/${cssFile}` })
+        });
+        const data = await res.json();
+        if (data && data.content) {
+          bundledCss += `\n/* --- ${cssFile} --- */\n${data.content}\n`;
+        }
+      }
+
+      // 3. Replace @import or placeholder with Inline CSS
+      // We look for the <style> block containing imports or just append to head
+      const styleBlockRegex = /<style type="text\/css">\s*@import url\('styles\/.*?\.css'\);[\s\S]*?<\/style>/i;
+
+      if (styleBlockRegex.test(finalHtml)) {
+        finalHtml = finalHtml.replace(styleBlockRegex, `<style type="text/css">\n${bundledCss}\n</style>`);
+      } else {
+        // Fallback: Inject before </head>
+        finalHtml = finalHtml.replace('</head>', `<style type="text/css">\n${bundledCss}\n</style>\n</head>`);
+      }
+
+      // 4. Save to Disk (Server Side) instead of Browser Download
+      const filename = selectedPath.split(/[/\\]/).pop().replace('.html', '_vitec_bundled.html');
+
+      try {
+        const saveRes = await fetch(`${API_URL}/export/save-to-disk`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ filename, content: finalHtml })
+        });
+
+        if (saveRes.ok) {
+          const saveData = await saveRes.json();
+          setStatus(`Saved to exports/${filename}`);
+          setTimeout(() => setStatus(''), 5000);
+        } else {
+          const errData = await saveRes.json();
+          console.error('Save failed:', errData);
+          setStatus('Export Failed');
+        }
+      } catch (err) {
+        console.error('Save request failed:', err);
+        setStatus('Export Failed');
+      }
+
+    } catch (e) {
+      console.error('Bundling failed:', e);
+      setStatus('Bundling Failed');
     }
   };
 
@@ -595,6 +669,7 @@ function App() {
   const loadFile = async (filepath) => {
     const data = await (await fetch(`${API_URL}/files/read`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filepath }) })).json();
     setSelectedPath(filepath); setContent(data.content); setSavedContent(data.content); setMeta({ ...DEFAULT_META, ...data.meta }); setVariableOverrides({}); setRightTab('preview');
+    setMainView('editor');
     // Track in recent files (max 5, no duplicates)
     setRecentFiles(prev => {
       const filtered = prev.filter(p => p !== filepath);
@@ -710,8 +785,18 @@ function App() {
     });
     const isEmail = viewMode !== 'a4';
     const marginStyles = isEmail ? 'padding:0;' : `padding:${meta.marginTop}cm ${meta.marginRight}cm ${meta.marginBottom}cm ${meta.marginLeft}cm;`;
-    return `<!DOCTYPE html><html style="height:100%;min-height:100%;"><head><link rel="stylesheet" href="http://localhost:5000/resources/${meta.cssVersion}"><style>html,body{min-height:100%;height:auto;}body{font-family:sans-serif;background:white;margin:0;${marginStyles}}</style></head><body>${head}${inj}${foot}</body></html>`;
-  }, [content, meta, activeResources, variableOverrides, viewMode, initData.testData, detectedTags]);
+
+    // Inject selected theme styles dynamically for Preview (checking local dev server)
+    // Add timestamp to prevent caching when switching themes
+    const ts = Date.now();
+    const themeLinks = `
+      <link rel="stylesheet" href="http://localhost:5000/resources/library/System/styles/vitec-structure.css?t=${ts}">
+      <link rel="stylesheet" href="http://localhost:5000/resources/library/System/styles/theme-base.css?t=${ts}">
+      <link rel="stylesheet" href="http://localhost:5000/resources/library/System/styles/${activeTheme}?t=${ts}">
+    `;
+
+    return `<!DOCTYPE html><html style="height:100%;min-height:100%;"><head>${themeLinks}<style>html,body{min-height:100%;height:auto;}body{font-family:sans-serif;background:white;margin:0;${marginStyles}}</style></head><body>${head}${inj}${foot}</body></html>`;
+  }, [content, meta, activeResources, variableOverrides, viewMode, initData.testData, detectedTags, activeTheme]);
 
   const getIconForTag = (tag) => {
     if (tag.includes('navn')) return User;
@@ -778,6 +863,14 @@ function App() {
                     <FileUp size={14} className="text-purple-400" />
                     <span>Importer maler</span>
                   </button>
+                  <button
+                    onClick={() => { handleExportForVitec(); setSettingsMenu(false); }}
+                    disabled={!selectedPath}
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-all ${!selectedPath ? 'text-slate-600 cursor-not-allowed' : 'text-slate-300 hover:bg-white/10 hover:text-white'}`}
+                  >
+                    <Download size={14} className={!selectedPath ? 'text-slate-600' : 'text-cyan-400'} />
+                    <span className="whitespace-nowrap">Eksporter til Vitec Next</span>
+                  </button>
                   <div className="h-px bg-white/10 my-1"></div>
                   <button
                     onClick={() => { setShortcutsModal(true); setSettingsMenu(false); }}
@@ -785,6 +878,13 @@ function App() {
                   >
                     <Keyboard size={14} className="text-slate-400" />
                     <span>Hurtigtaster</span>
+                  </button>
+                  <button
+                    onClick={() => { setMainView('migration'); setSettingsMenu(false); }}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-300 hover:bg-white/10 hover:text-white rounded-lg transition-all"
+                  >
+                    <Activity size={14} className="text-orange-400" />
+                    <span>Migration Factory</span>
                   </button>
                 </div>
               </div>
@@ -979,272 +1079,292 @@ function App() {
         {/* LEFT RESIZER */}
         <Resizer onMouseDown={() => setResizing('left')} />
 
-        {/* SWAPPABLE EDITOR/PREVIEW CONTAINER */}
-        <div className={`flex-1 flex gap-2 min-w-0 overflow-hidden ${previewFirst ? 'flex-row-reverse' : ''} transition-all`}>
-
-          {/* CENTER ISLAND: EDITOR */}
-          <div className={`${previewFirst ? '' : 'flex-1'} flex flex-col gap-4 min-w-0 overflow-hidden animate-fade-in-up`} style={{ animationDelay: '0.2s', width: previewFirst ? rightWidth : undefined }}>
-            {/* COMMAND BAR */}
-            <div className="glass-panel rounded-2xl h-14 px-4 flex items-center gap-3">
-              <Search size={14} className="text-slate-500" />
-              <input
-                ref={searchInputRef}
-                type="text"
-                placeholder="Søk etter maler... (Ctrl+F)"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="bg-transparent border-none outline-none text-xs text-slate-300 placeholder:text-slate-600 flex-1 w-full"
-              />
-              {searchQuery && (
-                <button onClick={() => setSearchQuery('')} className="text-slate-500 hover:text-white">
-                  <X size={12} />
-                </button>
-              )}
-            </div>
-
-            {/* EDITOR PANEL */}
-            <div className="flex-1 glass-panel rounded-2xl overflow-hidden relative flex flex-col shadow-2xl">
-              {selectedPath ?
-                <>
-                  <div className="h-10 border-b border-white/5 flex items-center justify-between px-4 bg-white/[0.02]">
-                    <div className="flex items-center gap-2 text-xs text-slate-400">
-                      <FileCode size={14} className="text-cyan-400" />
-                      <span className="opacity-50">{selectedPath.split('/').slice(0, -1).join(' / ')} /</span>
-                      <span className="text-slate-200 font-medium">{selectedPath.split('/').pop()}</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <button onClick={handleExport} className="text-[10px] text-slate-500 hover:text-emerald-400 flex items-center gap-1.5 transition-colors"><FileDown size={12} /> Eksporter</button>
-                      <div className="text-[10px] text-slate-600 flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div> Lagret</div>
-                    </div>
-                  </div>
-                  <Editor
-                    onMount={(editor, monaco) => {
-                      editorRef.current = editor;
-                      monaco.editor.defineTheme('glass-theme', {
-                        base: 'vs-dark',
-                        inherit: true,
-                        rules: [{ background: '00000000' }],
-                        colors: {
-                          'editor.background': '#00000000',
-                          'minimap.background': '#00000000',
-                          'editorGutter.background': '#00000000'
-                        }
-                      });
-                      monaco.editor.setTheme('glass-theme');
-                    }}
-                    height="100%"
-                    defaultLanguage="html"
-                    language={selectedPath && selectedPath.endsWith('.css') ? 'css' : 'html'}
-                    theme="glass-theme"
-                    value={content}
-                    onChange={setContent}
-                    options={{ minimap: { enabled: false }, fontSize: 14, fontFamily: "JetBrains Mono", padding: { top: 24, bottom: 24 }, wordWrap: 'on', scrollBeyondLastLine: false, lineNumbers: 'on', renderLineHighlight: 'all', smoothScrolling: true, cursorBlinking: 'smooth', cursorSmoothCaretAnimation: 'on' }}
-                  />
-                </>
-                : <div className="flex-1 flex flex-col items-center justify-center text-slate-600 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/5 to-purple-500/5"></div>
-                  <div className="w-32 h-32 bg-gradient-to-br from-cyan-500/10 to-purple-600/10 rounded-full flex items-center justify-center mb-8 animate-float blur-xl absolute"></div>
-                  <div className="w-24 h-24 bg-white/5 rounded-3xl flex items-center justify-center mb-6 backdrop-blur-md border border-white/10 shadow-2xl relative z-10">
-                    <LayoutTemplate size={40} className="text-slate-400" />
-                  </div>
-                  <p className="text-xl font-medium text-slate-400 relative z-10">Velg en mal</p>
-                  <p className="text-sm text-slate-600 mt-2 relative z-10">Velg en fil fra sidemenyen for å begynne redigering</p>
-                </div>}
-
-              {status && <div className="absolute bottom-6 right-6 bg-emerald-500 text-white px-5 py-2.5 rounded-full text-xs font-bold shadow-lg shadow-emerald-500/20 backdrop-blur-md animate-fade-in-up flex items-center gap-2"><Activity size={14} className="animate-spin" /> {status}</div>}
-            </div>
+        {/* SWAPPABLE EDITOR/PREVIEW CONTAINER OR MIGRATION VIEW */}
+        {mainView === 'migration' ? (
+          <div className="flex-1 glass-panel rounded-2xl overflow-hidden shadow-2xl animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+            <MigrationView />
           </div>
+        ) : (
+          <div className={`flex-1 flex gap-2 min-w-0 overflow-hidden ${previewFirst ? 'flex-row-reverse' : ''} transition-all`}>
 
-          {/* RESIZER */}
-          <Resizer onMouseDown={() => setResizing('right')} />
-
-          {/* RIGHT ISLAND: PREVIEW & TOOLS */}
-          <div className={`${previewFirst ? 'flex-1' : ''} flex flex-col gap-4 shrink-0 min-w-0 overflow-hidden animate-fade-in-up`} style={{ width: previewFirst ? undefined : rightWidth, animationDelay: '0.3s' }}>
-            {/* TOOLBAR */}
-            <div className="glass-panel rounded-2xl h-14 px-3 flex items-center justify-between">
-              <div className="flex items-center gap-1 bg-black/20 p-1 rounded-xl border border-white/5">
-                {isSmsTemplate ? (
-                  /* SMS MODE - Only show SMS button */
-                  <button onClick={() => setViewMode('sms')} className={`p-2 rounded-lg transition-all duration-300 ${viewMode === 'sms' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'}`} title="SMS Forhåndsvisning">
-                    <MessageSquare size={14} />
+            {/* CENTER ISLAND: EDITOR */}
+            <div className={`${previewFirst ? '' : 'flex-1'} flex flex-col gap-4 min-w-0 overflow-hidden animate-fade-in-up`} style={{ animationDelay: '0.2s', width: previewFirst ? rightWidth : undefined }}>
+              {/* COMMAND BAR */}
+              <div className="glass-panel rounded-2xl h-14 px-4 flex items-center gap-3">
+                <Search size={14} className="text-slate-500" />
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  placeholder="Søk etter maler... (Ctrl+F)"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="bg-transparent border-none outline-none text-xs text-slate-300 placeholder:text-slate-600 flex-1 w-full"
+                />
+                {searchQuery && (
+                  <button onClick={() => setSearchQuery('')} className="text-slate-500 hover:text-white">
+                    <X size={12} />
                   </button>
-                ) : (
-                  /* HTML MODE - Show email/document view modes */
-                  <>
-                    <button onClick={() => setViewMode('a4')} className={`p-2 rounded-lg transition-all duration-300 ${viewMode === 'a4' ? 'bg-slate-700 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'}`}><FileText size={14} /></button>
-                    <button onClick={() => setViewMode('desktop')} className={`p-2 rounded-lg transition-all duration-300 ${viewMode === 'desktop' ? 'bg-slate-700 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'}`}><Monitor size={14} /></button>
-                    <button onClick={() => setViewMode('mobile')} className={`p-2 rounded-lg transition-all duration-300 ${viewMode === 'mobile' ? 'bg-slate-700 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'}`}><Smartphone size={14} /></button>
-                  </>
                 )}
               </div>
-              <button
-                onClick={() => setPreviewFirst(!previewFirst)}
-                className={`p-2 rounded-lg transition-all duration-300 ${previewFirst ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'text-slate-500 hover:text-slate-300 bg-white/5 border border-white/5 hover:border-white/20'}`}
-                title={previewFirst ? 'Rediger i hovedvindu' : 'Forhåndsvis i hovedvindu'}
-              >
-                <ArrowLeftRight size={14} />
-              </button>
-              <div className="flex gap-2">
-                <button onClick={() => handleSave(false)} className="text-[10px] font-bold bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/20 px-3 py-1.5 rounded-lg transition-all flex items-center gap-2 hover:shadow-lg hover:shadow-cyan-500/10"><Save size={12} /> Lagre</button>
-                <button onClick={() => handleSave(true)} className="text-[10px] font-bold bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 border border-purple-500/20 px-3 py-1.5 rounded-lg transition-all flex items-center gap-2 hover:shadow-lg hover:shadow-purple-500/10"><GitBranch size={12} /> +Ver</button>
+
+              {/* EDITOR PANEL */}
+              <div className="flex-1 glass-panel rounded-2xl overflow-hidden relative flex flex-col shadow-2xl">
+                {selectedPath ?
+                  <>
+                    <div className="h-10 border-b border-white/5 flex items-center justify-between px-4 bg-white/[0.02]">
+                      <div className="flex items-center gap-2 text-xs text-slate-400">
+                        <FileCode size={14} className="text-cyan-400" />
+                        <span className="opacity-50">{selectedPath.split('/').slice(0, -1).join(' / ')} /</span>
+                        <span className="text-slate-200 font-medium">{selectedPath.split('/').pop()}</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <button onClick={handleExport} className="text-[10px] text-slate-500 hover:text-emerald-400 flex items-center gap-1.5 transition-colors"><FileDown size={12} /> Eksporter</button>
+                        <div className="text-[10px] text-slate-600 flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div> Lagret</div>
+                      </div>
+                    </div>
+                    <Editor
+                      onMount={(editor, monaco) => {
+                        editorRef.current = editor;
+                        monaco.editor.defineTheme('glass-theme', {
+                          base: 'vs-dark',
+                          inherit: true,
+                          rules: [{ background: '00000000' }],
+                          colors: {
+                            'editor.background': '#00000000',
+                            'minimap.background': '#00000000',
+                            'editorGutter.background': '#00000000'
+                          }
+                        });
+                        monaco.editor.setTheme('glass-theme');
+                      }}
+                      height="100%"
+                      defaultLanguage="html"
+                      language={selectedPath && selectedPath.endsWith('.css') ? 'css' : 'html'}
+                      theme="glass-theme"
+                      value={content}
+                      onChange={setContent}
+                      options={{ minimap: { enabled: false }, fontSize: 14, fontFamily: "JetBrains Mono", padding: { top: 24, bottom: 24 }, wordWrap: 'on', scrollBeyondLastLine: false, lineNumbers: 'on', renderLineHighlight: 'all', smoothScrolling: true, cursorBlinking: 'smooth', cursorSmoothCaretAnimation: 'on' }}
+                    />
+                  </>
+                  : <div className="flex-1 flex flex-col items-center justify-center text-slate-600 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/5 to-purple-500/5"></div>
+                    <div className="w-32 h-32 bg-gradient-to-br from-cyan-500/10 to-purple-600/10 rounded-full flex items-center justify-center mb-8 animate-float blur-xl absolute"></div>
+                    <div className="w-24 h-24 bg-white/5 rounded-3xl flex items-center justify-center mb-6 backdrop-blur-md border border-white/10 shadow-2xl relative z-10">
+                      <LayoutTemplate size={40} className="text-slate-400" />
+                    </div>
+                    <p className="text-xl font-medium text-slate-400 relative z-10">Velg en mal</p>
+                    <p className="text-sm text-slate-600 mt-2 relative z-10">Velg en fil fra sidemenyen for å begynne redigering</p>
+                  </div>}
+
+                {status && <div className="absolute bottom-6 right-6 bg-emerald-500 text-white px-5 py-2.5 rounded-full text-xs font-bold shadow-lg shadow-emerald-500/20 backdrop-blur-md animate-fade-in-up flex items-center gap-2"><Activity size={14} className="animate-spin" /> {status}</div>}
               </div>
             </div>
 
-            {/* PREVIEW AREA */}
-            <div className="flex-1 glass-panel rounded-2xl overflow-hidden flex flex-col relative shadow-2xl">
-              <div ref={previewContainerRef} className="flex-1 bg-black/20 overflow-y-auto overflow-x-hidden flex justify-center py-3 px-1 relative custom-scrollbar">
-                <div style={{ transform: `scale(${scale})`, transformOrigin: 'top center' }} className="transition-transform duration-300 ease-out">
+            {/* RESIZER */}
+            <Resizer onMouseDown={() => setResizing('right')} />
+
+            {/* RIGHT ISLAND: PREVIEW & TOOLS */}
+            <div className={`${previewFirst ? 'flex-1' : ''} flex flex-col gap-4 shrink-0 min-w-0 overflow-hidden animate-fade-in-up`} style={{ width: previewFirst ? undefined : rightWidth, animationDelay: '0.3s' }}>
+              {/* TOOLBAR */}
+              <div className="glass-panel rounded-2xl h-14 px-3 flex items-center justify-between">
+                <div className="flex items-center gap-1 bg-black/20 p-1 rounded-xl border border-white/5">
                   {isSmsTemplate ? (
-                    /* SMS Preview with iMessage skin */
-                    <DeviceSkin mode="sms" to={initData.testData['kjøper.navn'] || 'Mottaker'} smsContent={content}>
-                      {/* iMessage content is handled inside DeviceSkin */}
-                    </DeviceSkin>
+                    /* SMS MODE - Only show SMS button */
+                    <button onClick={() => setViewMode('sms')} className={`p-2 rounded-lg transition-all duration-300 ${viewMode === 'sms' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'}`} title="SMS Forhåndsvisning">
+                      <MessageSquare size={14} />
+                    </button>
                   ) : (
-                    /* HTML Preview with email/document skins */
-                    <DeviceSkin mode={viewMode} subject={meta.subject} to={initData.testData['kjøper.navn'] || 'Receiver'}>
-                      <iframe
-                        title="preview"
-                        srcDoc={previewSource}
-                        className="border-none bg-white"
-                        style={{
-                          width: viewMode === 'a4' ? '210mm' : '100%',
-                          height: viewMode === 'a4' ? '297mm' : '100%',
-                          minHeight: viewMode === 'a4' ? '297mm' : 'auto'
-                        }}
-                        sandbox="allow-scripts"
-                      />
-                    </DeviceSkin>
+                    /* HTML MODE - Show email/document view modes */
+                    <>
+                      <button onClick={() => setViewMode('a4')} className={`p-2 rounded-lg transition-all duration-300 ${viewMode === 'a4' ? 'bg-slate-700 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'}`}><FileText size={14} /></button>
+                      <button onClick={() => setViewMode('desktop')} className={`p-2 rounded-lg transition-all duration-300 ${viewMode === 'desktop' ? 'bg-slate-700 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'}`}><Monitor size={14} /></button>
+                      <button onClick={() => setViewMode('mobile')} className={`p-2 rounded-lg transition-all duration-300 ${viewMode === 'mobile' ? 'bg-slate-700 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'}`}><Smartphone size={14} /></button>
+                    </>
+                  )}
+                </div>
+                <button
+                  onClick={() => setPreviewFirst(!previewFirst)}
+                  className={`p-2 rounded-lg transition-all duration-300 ${previewFirst ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'text-slate-500 hover:text-slate-300 bg-white/5 border border-white/5 hover:border-white/20'}`}
+                  title={previewFirst ? 'Rediger i hovedvindu' : 'Forhåndsvis i hovedvindu'}
+                >
+                  <ArrowLeftRight size={14} />
+                </button>
+                <div className="flex gap-2">
+                  <button onClick={() => handleSave(false)} className="text-[10px] font-bold bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/20 px-3 py-1.5 rounded-lg transition-all flex items-center gap-2 hover:shadow-lg hover:shadow-cyan-500/10"><Save size={12} /> Lagre</button>
+                  <button onClick={() => handleSave(true)} className="text-[10px] font-bold bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 border border-purple-500/20 px-3 py-1.5 rounded-lg transition-all flex items-center gap-2 hover:shadow-lg hover:shadow-purple-500/10"><GitBranch size={12} /> +Ver</button>
+                </div>
+              </div>
+
+              {/* PREVIEW AREA */}
+              <div className="flex-1 glass-panel rounded-2xl overflow-hidden flex flex-col relative shadow-2xl">
+                <div ref={previewContainerRef} className="flex-1 bg-black/20 overflow-y-auto overflow-x-hidden flex justify-center py-3 px-1 relative custom-scrollbar">
+                  <div style={{ transform: `scale(${scale})`, transformOrigin: 'top center' }} className="transition-transform duration-300 ease-out">
+                    {isSmsTemplate ? (
+                      /* SMS Preview with iMessage skin */
+                      <DeviceSkin mode="sms" to={initData.testData['kjøper.navn'] || 'Mottaker'} smsContent={content}>
+                        {/* iMessage content is handled inside DeviceSkin */}
+                      </DeviceSkin>
+                    ) : (
+                      /* HTML Preview with email/document skins */
+                      <DeviceSkin mode={viewMode} subject={meta.subject} to={initData.testData['kjøper.navn'] || 'Receiver'}>
+                        <iframe
+                          title="preview"
+                          srcDoc={previewSource}
+                          className="border-none bg-white"
+                          style={{
+                            width: viewMode === 'a4' ? '210mm' : '100%',
+                            height: viewMode === 'a4' ? '297mm' : '100%',
+                            minHeight: viewMode === 'a4' ? '297mm' : 'auto'
+                          }}
+                          sandbox="allow-scripts"
+                        />
+                      </DeviceSkin>
+                    )}
+                  </div>
+                </div>
+
+                {/* COLLAPSIBLE SETTINGS PANEL */}
+                <div className={`bg-slate-900/90 backdrop-blur-xl border-t border-white/10 transition-all duration-300 ${panelExpanded ? 'max-h-[40%]' : 'max-h-10'} flex flex-col overflow-hidden`}>
+                  <div className="flex border-b border-white/5 shrink-0">
+                    <button
+                      onClick={() => { setRightTab('preview'); setPanelExpanded(!panelExpanded || rightTab !== 'preview'); }}
+                      className={`flex-1 py-2.5 text-[9px] font-bold tracking-wider transition-all flex items-center justify-center gap-1.5 ${rightTab === 'preview' && panelExpanded ? 'text-cyan-400 bg-white/5' : 'text-slate-500 hover:text-slate-300'}`}
+                    >
+                      <ChevronDown size={10} className={`transition-transform ${panelExpanded && rightTab === 'preview' ? 'rotate-180' : ''}`} />
+                      SIMULATOR
+                    </button>
+                    <button
+                      onClick={() => { setRightTab('settings'); setPanelExpanded(!panelExpanded || rightTab !== 'settings'); }}
+                      className={`flex-1 py-2.5 text-[9px] font-bold tracking-wider transition-all flex items-center justify-center gap-1.5 ${rightTab === 'settings' && panelExpanded ? 'text-purple-400 bg-white/5' : 'text-slate-500 hover:text-slate-300'}`}
+                    >
+                      <ChevronDown size={10} className={`transition-transform ${panelExpanded && rightTab === 'settings' ? 'rotate-180' : ''}`} />
+                      INNSTILLINGER
+                    </button>
+                  </div>
+                  {panelExpanded && (
+                    <div className="flex-1 overflow-y-auto p-4 custom-scrollbar animate-fade-in-up">
+                      {rightTab === 'preview' ? <div className="space-y-3">
+                        {detectedTags.length === 0 && <div className="text-center text-slate-500 py-4 text-xs flex flex-col items-center gap-2"><AlertTriangle className="opacity-20" size={20} /> Ingen variabler funnet</div>}
+                        {detectedTags.map(key => {
+                          const isKnown = !!initData.testData[key];
+                          const currentValue = variableOverrides[key] || '';
+                          return (
+                            <div key={key} className="relative">
+                              <GlassInput
+                                label={key}
+                                value={currentValue}
+                                onChange={(e) => setVariableOverrides({ ...variableOverrides, [key]: e.target.value })}
+                                placeholder={initData.testData[key] || 'Ingen data'}
+                                warning={!isKnown}
+                                icon={getIconForTag(key)}
+                              />
+                              {!isKnown && (
+                                <button
+                                  onClick={() => autoAddVariable(key)}
+                                  className="absolute right-0 top-3 px-2 py-1 text-[8px] font-bold rounded-md bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 border border-orange-500/20 flex items-center gap-1 transition-all"
+                                  title="Legg til med demoverdi"
+                                >
+                                  <Plus size={8} /> Legg til
+                                </button>
+                              )}
+                              {isKnown && (
+                                <div className="absolute right-0 top-5 text-emerald-400">
+                                  <Check size={12} />
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                        : <div className="space-y-4">
+                          <GlassInput
+                            label="Emnelinje"
+                            value={meta.subject}
+                            onChange={e => setMeta({ ...meta, subject: e.target.value })}
+                            icon={Type}
+                          />
+                          <div className="grid grid-cols-2 gap-3">
+                            <GlassSelect
+                              label="Mottaker"
+                              value={meta.receiver}
+                              onChange={e => setMeta({ ...meta, receiver: e.target.value })}
+                              options={['Systemstandard', 'Selger', 'Kjøper']}
+                              icon={User}
+                            />
+                            <GlassSelect
+                              label="Utdata"
+                              value={meta.output}
+                              onChange={e => setMeta({ ...meta, output: e.target.value })}
+                              options={['PDF og e-post', 'Kun PDF', 'Kun e-post']}
+                              icon={Mail}
+                            />
+                          </div>
+
+                          {/* THEME SELECTOR - NEW */}
+                          <div className="pt-2">
+                            <GlassSelect
+                              label="Designtema (Vitec Stilark)"
+                              icon={LayoutTemplate}
+                              value={activeTheme}
+                              onChange={(e) => setActiveTheme(e.target.value)}
+                              options={[
+                                { label: 'Proaktiv (Premium Navy/Gold)', value: 'theme-proaktiv.css' },
+                                { label: 'Standard Vitec (Blue)', value: 'theme-base.css' }
+                              ]}
+                            />
+                          </div>
+
+                          <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/5">
+                            {['cssVersion', 'headerTemplate', 'footerTemplate'].map(k => (
+                              <GlassSelect
+                                key={k}
+                                label={k.replace('Template', '')}
+                                value={meta[k]}
+                                onChange={e => setMeta({ ...meta, [k]: e.target.value })}
+                                options={k === 'cssVersion' ? initData.cssFiles : initData.htmlFiles}
+                                placeholder="(Ingen)"
+                                icon={FileCode}
+                              />
+                            ))}
+                          </div>
+                          {/* MARGIN CONTROLS */}
+                          <div className="pt-3 border-t border-white/5">
+                            <div className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-2">Sidemarger (cm)</div>
+                            <div className="grid grid-cols-4 gap-2">
+                              <GlassInput
+                                label="Topp"
+                                value={meta.marginTop}
+                                onChange={e => setMeta({ ...meta, marginTop: parseFloat(e.target.value) || 0 })}
+                                icon={Box}
+                              />
+                              <GlassInput
+                                label="Høyre"
+                                value={meta.marginRight}
+                                onChange={e => setMeta({ ...meta, marginRight: parseFloat(e.target.value) || 0 })}
+                                icon={Box}
+                              />
+                              <GlassInput
+                                label="Bunn"
+                                value={meta.marginBottom}
+                                onChange={e => setMeta({ ...meta, marginBottom: parseFloat(e.target.value) || 0 })}
+                                icon={Box}
+                              />
+                              <GlassInput
+                                label="Venstre"
+                                value={meta.marginLeft}
+                                onChange={e => setMeta({ ...meta, marginLeft: parseFloat(e.target.value) || 0 })}
+                                icon={Box}
+                              />
+                            </div>
+                          </div>
+                        </div>}
+                    </div>
                   )}
                 </div>
               </div>
-
-              {/* COLLAPSIBLE SETTINGS PANEL */}
-              <div className={`bg-slate-900/90 backdrop-blur-xl border-t border-white/10 transition-all duration-300 ${panelExpanded ? 'max-h-[40%]' : 'max-h-10'} flex flex-col overflow-hidden`}>
-                <div className="flex border-b border-white/5 shrink-0">
-                  <button
-                    onClick={() => { setRightTab('preview'); setPanelExpanded(!panelExpanded || rightTab !== 'preview'); }}
-                    className={`flex-1 py-2.5 text-[9px] font-bold tracking-wider transition-all flex items-center justify-center gap-1.5 ${rightTab === 'preview' && panelExpanded ? 'text-cyan-400 bg-white/5' : 'text-slate-500 hover:text-slate-300'}`}
-                  >
-                    <ChevronDown size={10} className={`transition-transform ${panelExpanded && rightTab === 'preview' ? 'rotate-180' : ''}`} />
-                    SIMULATOR
-                  </button>
-                  <button
-                    onClick={() => { setRightTab('settings'); setPanelExpanded(!panelExpanded || rightTab !== 'settings'); }}
-                    className={`flex-1 py-2.5 text-[9px] font-bold tracking-wider transition-all flex items-center justify-center gap-1.5 ${rightTab === 'settings' && panelExpanded ? 'text-purple-400 bg-white/5' : 'text-slate-500 hover:text-slate-300'}`}
-                  >
-                    <ChevronDown size={10} className={`transition-transform ${panelExpanded && rightTab === 'settings' ? 'rotate-180' : ''}`} />
-                    INNSTILLINGER
-                  </button>
-                </div>
-                {panelExpanded && (
-                  <div className="flex-1 overflow-y-auto p-4 custom-scrollbar animate-fade-in-up">
-                    {rightTab === 'preview' ? <div className="space-y-3">
-                      {detectedTags.length === 0 && <div className="text-center text-slate-500 py-4 text-xs flex flex-col items-center gap-2"><AlertTriangle className="opacity-20" size={20} /> Ingen variabler funnet</div>}
-                      {detectedTags.map(key => {
-                        const isKnown = !!initData.testData[key];
-                        const currentValue = variableOverrides[key] || '';
-                        return (
-                          <div key={key} className="relative">
-                            <GlassInput
-                              label={key}
-                              value={currentValue}
-                              onChange={(e) => setVariableOverrides({ ...variableOverrides, [key]: e.target.value })}
-                              placeholder={initData.testData[key] || 'Ingen data'}
-                              warning={!isKnown}
-                              icon={getIconForTag(key)}
-                            />
-                            {!isKnown && (
-                              <button
-                                onClick={() => autoAddVariable(key)}
-                                className="absolute right-0 top-3 px-2 py-1 text-[8px] font-bold rounded-md bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 border border-orange-500/20 flex items-center gap-1 transition-all"
-                                title="Legg til med demoverdi"
-                              >
-                                <Plus size={8} /> Legg til
-                              </button>
-                            )}
-                            {isKnown && (
-                              <div className="absolute right-0 top-5 text-emerald-400">
-                                <Check size={12} />
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                      : <div className="space-y-4">
-                        <GlassInput
-                          label="Emnelinje"
-                          value={meta.subject}
-                          onChange={e => setMeta({ ...meta, subject: e.target.value })}
-                          icon={Type}
-                        />
-                        <div className="grid grid-cols-2 gap-3">
-                          <GlassSelect
-                            label="Mottaker"
-                            value={meta.receiver}
-                            onChange={e => setMeta({ ...meta, receiver: e.target.value })}
-                            options={['Systemstandard', 'Selger', 'Kjøper']}
-                            icon={User}
-                          />
-                          <GlassSelect
-                            label="Utdata"
-                            value={meta.output}
-                            onChange={e => setMeta({ ...meta, output: e.target.value })}
-                            options={['PDF og e-post', 'Kun PDF', 'Kun e-post']}
-                            icon={Mail}
-                          />
-                        </div>
-                        <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/5">
-                          {['cssVersion', 'headerTemplate', 'footerTemplate'].map(k => (
-                            <GlassSelect
-                              key={k}
-                              label={k.replace('Template', '')}
-                              value={meta[k]}
-                              onChange={e => setMeta({ ...meta, [k]: e.target.value })}
-                              options={k === 'cssVersion' ? initData.cssFiles : initData.htmlFiles}
-                              placeholder="(Ingen)"
-                              icon={FileCode}
-                            />
-                          ))}
-                        </div>
-                        {/* MARGIN CONTROLS */}
-                        <div className="pt-3 border-t border-white/5">
-                          <div className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-2">Sidemarger (cm)</div>
-                          <div className="grid grid-cols-4 gap-2">
-                            <GlassInput
-                              label="Topp"
-                              value={meta.marginTop}
-                              onChange={e => setMeta({ ...meta, marginTop: parseFloat(e.target.value) || 0 })}
-                              icon={Box}
-                            />
-                            <GlassInput
-                              label="Høyre"
-                              value={meta.marginRight}
-                              onChange={e => setMeta({ ...meta, marginRight: parseFloat(e.target.value) || 0 })}
-                              icon={Box}
-                            />
-                            <GlassInput
-                              label="Bunn"
-                              value={meta.marginBottom}
-                              onChange={e => setMeta({ ...meta, marginBottom: parseFloat(e.target.value) || 0 })}
-                              icon={Box}
-                            />
-                            <GlassInput
-                              label="Venstre"
-                              value={meta.marginLeft}
-                              onChange={e => setMeta({ ...meta, marginLeft: parseFloat(e.target.value) || 0 })}
-                              icon={Box}
-                            />
-                          </div>
-                        </div>
-                      </div>}
-                  </div>
-                )}
-              </div>
             </div>
           </div>
-        </div>
-        {/* END SWAPPABLE CONTAINER */}
+        )}
       </div>
       {/* END FLOATING LAYOUT CONTAINER */}
 

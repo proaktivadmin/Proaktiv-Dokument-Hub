@@ -1,0 +1,148 @@
+/* vitec-structure.css */
+/* Core Layout & Resets - UNTOUCHED BY THEMES */
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+/* Vitec Variables List Table Structure */
+#vitecTemplate table.vitec-variables-list {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#vitecTemplate table.vitec-variables-list th {
+    text-align: left;
+    padding: 0 5px;
+}
+
+#vitecTemplate table.vitec-variables-list td {
+    padding: 0;
+    vertical-align: top;
+    word-wrap: break-word;
+    /* Border color handled by theme */
+    border-top: 1px solid var(--border-color, #ededed); 
+}
+
+#vitecTemplate table.vitec-variables-list tr:first-child td {
+    border-top: none;
+}
+
+/* Headers within the list */
+#vitecTemplate table.vitec-variables-list td h3 {
+    margin: 1em 0 0 0;
+    padding: 0;
+    font-size: var(--font-size-h3, 16pt);
+    color: var(--color-primary, darkblue);
+}
+
+#vitecTemplate table.vitec-variables-list td h3 > small {
+    font-weight: normal;
+    white-space: nowrap;
+    margin-left: 20px;
+    font-size: 0.8em;
+}
+
+#vitecTemplate > table.vitec-variables-list td {
+    padding: var(--spacing-sm, 5px);
+}
+
+/* RESET: Prevent global borders on generic tables within Vitec Template */
+#vitecTemplate table:not(.vitec-variables-list):not(.form-table) td,
+#vitecTemplate table:not(.vitec-variables-list):not(.form-table) th {
+    border: none !important;
+}
+
+/* Images & Figures */
+#vitecTemplate figure {
+    text-align: center;
+    display: inline-block;
+    margin: 0;
+}
+
+#vitecTemplate figure img:not(.scaled-image) {
+    max-width: 3cm;
+    max-height: 3cm;
+}
+
+#vitecTemplate figure figcaption {
+    font-size: smaller;
+    display: block;
+}
+
+#vitecTemplate .scaled-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    object-position: center center;
+    border-radius: var(--border-radius-circle, 50%);
+}
+
+/* Form Tables (if used) */
+#vitecTemplate .form-table {
+    border-top: solid 1px var(--color-text, #000);
+}
+
+#vitecTemplate .form-table td {
+    border: solid 1px var(--color-text, #000);
+}
+
+#vitecTemplate .form-table td p {
+    margin: 0;
+    padding: 0;
+}
+
+/* Data Labels (for inputs) */
+#vitecTemplate table td[data-label] {
+    padding: 16px 2px 5px 4px;
+    position: relative;
+}
+
+#vitecTemplate table td[data-label]:before {
+    content: attr(data-label);
+    text-align: left;
+    font-size: 9pt;
+    line-height: 8pt;
+    display: block;
+    position: absolute;
+    top: 5px;
+    color: var(--color-text-secondary, #666);
+}
+
+/* Version Toggles & Interactive Elements */
+#vitecTemplate #versionToggleButton {
+    display: none;
+}
+
+#vitecTemplate label[for=versionToggleButton] {
+    cursor: pointer;
+}
+
+/* SVG Toggles (Checkbox/Radio) */
+.svg-toggle {
+    display: inline-block !important;
+    width: 22px;
+    height: 22px;
+    margin: 0 5px;
+    vertical-align: bottom;
+    background-repeat: no-repeat;
+    background-size: 22px 22px;
+    background-position: center center;
+}
+
+/* Version Highlights */
+#vitecTemplate [data-version]:after {
+    content: attr(data-version);
+    display: table-cell;
+    white-space: nowrap;
+    float: right;
+    padding: 1px 4px;
+    color: #fff;
+    font-size: 13px;
+    margin: 4px;
+    background-color: rgb(4 98 175 / 0.6); /* Default blue-ish */
+    border-radius: 3px;
+}

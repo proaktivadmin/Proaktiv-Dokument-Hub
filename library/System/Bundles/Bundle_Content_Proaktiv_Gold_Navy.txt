@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html style="margin: 0; padding: 0; height: 100%;">
+<head>
+    <meta charset="UTF-8">
+    <title>Aksept av oppdrag</title>
+</head>
+<body style="margin: 0; padding: 0; height: 100%;">
+
+    <!-- 
+        VITEC TEMPLATE RESOURCE INJECTION 
+        This span tells Vitec which System Template to load styles from.
+        IMPORTANT: Update 'resource:...' to match the EXACT NAME of your System Template in Vitec Next.
+    -->
+    <span class="vitec-resource" vitec-template="resource:Vitec Stilark Premium Gold Navy"></span>
+
+    <!-- CONTENT WRAPPER -->
+    <div id="vitecTemplate" class="proaktiv-theme">
+
+        <!-- HEADER -->
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 40px;">
+            <tr>
+                <td style="vertical-align: top;">
+                    <!-- LOGO -->
+                    <div class="proaktiv-logo-gold"></div>
+                </td>
+                <td style="text-align: right; vertical-align: top;">
+                    <div class="proaktiv-lily-icon"></div>
+                </td>
+            </tr>
+        </table>
+
+        <!-- MAIN TITLE -->
+        <h1>Aksept av oppdrag</h1>
+        
+        <!-- INTRO TEXT -->
+        <p>
+            Velkommen til Proaktiv Eiendomsmegling. Vi takker for tilliten ved valg av megler.
+            Dette dokumentet bekrefter oppdraget og inneholder viktig informasjon om salgsprosessen.
+        </p>
+
+        <!-- SUBHEADING -->
+        <h2>Informasjon om Megler</h2>
+
+        <!-- DYNAMIC CONTENT (Simulated) -->
+        <div class="proaktiv-video-card-light" style="margin-bottom: 30px;">
+            <p><strong>Ansvarlig Megler:</strong> [Megler Navn]</p>
+            <p><strong>Telefon:</strong> [Megler Tlf]</p>
+            <div class="proaktiv-divider-bronse"></div>
+            <p style="font-style: italic;">"Vi leverer kvalitet i alle ledd."</p>
+        </div>
+
+        <!-- QUOTE -->
+        <div class="proaktiv-quote" style="margin: 40px 0;">
+            Eiendomsmegling handlar om forvaltning av verdiar, men like mykje om å ivareta menneske.
+        </div>
+
+        <!-- LIST SECTION -->
+        <table class="vitec-variables-list">
+            <tr>
+                <td>
+                    <h3>Salgsobjekt</h3>
+                    <p>[Adresse], [Postnr] [Sted]</p>
+                    <p>Gnr. [Gnr] Bnr. [Bnr]</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h3>Oppdragstype</h3>
+                    <p>Salg av bolig / fritidseiendom</p>
+                </td>
+            </tr>
+        </table>
+
+        <!-- SIGNATURE BLOCK -->
+        <div class="proaktiv-signature-block">
+            <p>Med vennlig hilsen,</p>
+            <p><strong>Proaktiv Eiendomsmegling</strong></p>
+        </div>
+
+        <!-- WATERMARK -->
+        <div class="proaktiv-lily-watermark"></div>
+
+    </div>
+
+</body>
+</html>

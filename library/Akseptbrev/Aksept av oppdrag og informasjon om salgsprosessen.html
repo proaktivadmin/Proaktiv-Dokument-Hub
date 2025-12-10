@@ -3,106 +3,122 @@
 SYSTEM:      Vitec Next
 MODUL:       Proaktiv Master Mal
 MALNAVN:     Aksept av oppdrag og informasjon om salgsprosessen
-TYPE:        Konvertering fra Legacy HTML
-DATO:        25.11.2025
+TYPE:        Refactored Native HTML
+DATO:        10.12.2025
 FORFATTER:   Senior Developer / Proaktiv
-FRAMEWORK:   v1.3
+FRAMEWORK:   v2.0 (Gold Standard)
 BESKRIVELSE: Informasjonsbrev til kunde ved oppdragsinngåelse.
              Tekstblokker er strukturert med H2-overskrifter.
              Flettekoder er oppdatert til Vitec Next syntaks.
 =============================================================================
 -->
-<div id="vitecTemplate"><!-- Laster Vitec standardstiler (Må ligge her) --><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
-<style type="text/css">/* --- 1. GENERELT OPPSETT --- */
-    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&family=Playfair+Display:wght@400;700&display=swap');
+<div id="vitecTemplate"><!-- Laster Vitec standardstiler (Må ligge her) --><span
+        vitec-template="resource:Vitec Stilark">&nbsp;</span>
 
-    html, body { margin: 0; padding: 0; font-family: 'Open Sans', sans-serif; font-size: 10pt; color: #333; }
-    h1, h2, h3 { font-family: 'Playfair Display', serif; color: #272630; page-break-after: avoid; }
-    h1 { font-size: 22pt; text-transform: uppercase; border-bottom: 3px solid #bcab8a; padding-bottom: 10px; margin-bottom: 25px; }
-    h2 { font-size: 14pt; border-left: 5px solid #bcab8a; padding-left: 15px; margin-top: 30px; background-color: #f9f9f7; padding: 5px 0 5px 15px; }
-    
-    /* SJEKKBOKSER (MÅ VÆRE NØYAKTIG SLIK FOR Å UNNGÅ EDITOR-KRASJ) */
-    label.btn { display: inline-block !important; cursor: pointer; margin: 0 !important; padding: 0 !important; vertical-align: middle !important; line-height: 1 !important; }
-    .svg-toggle { display: inline-block !important; width: 16px !important; height: 16px !important; margin-right: 10px !important; vertical-align: text-bottom; border: none !important; background-color: transparent !important; content: " " !important; }
-    #vitecTemplate [data-toggle="buttons"] input { display: none !important; }
-    
-    /* Custom SVGs (Proaktiv Firkant - IKKE Hake) */
-    .svg-toggle.checkbox { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect x='25' y='25' width='462' height='462' fill='none' stroke='%23272630' stroke-width='40'/%3E%3C/svg%3E"); }
-    .svg-toggle.checkbox.active, .btn.active > .svg-toggle.checkbox { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect x='25' y='25' width='462' height='462' fill='none' stroke='%23272630' stroke-width='40'/%3E%3Crect x='100' y='100' width='312' height='312' fill='%23272630'/%3E%3C/svg%3E"); }
+    <!-- START DOKUMENTINNHOLD HER -->
+    <h1>Aksept av oppdrag</h1>
 
-    /* ØKONOMI TABELLER */
-    .economy-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    .economy-table th { background-color: #272630 !important; color: #bcab8a !important; font-weight: bold; padding: 8px 5px; text-align: left; border-bottom: 2px solid #bcab8a; }
-    .economy-table td { padding: 6px 5px; border-bottom: 1px solid #bcab8a; vertical-align: top; }
-    .economy-table th:last-child, .economy-table td:last-child { text-align: right !important; white-space: nowrap; }
-    
-    /* Link Styling */
-    a { color: #272630; text-decoration: underline; }
-</style>
-<!-- START DOKUMENTINNHOLD HER -->
-<h1>Aksept av oppdrag</h1>
+    <p><strong>Hei,</strong></p>
 
-<p><strong>Hei,</strong></p>
+    <p>Det vises til mottatt signert oppdragsavtale for salg av <strong>[[eiendom.adresse]]</strong>.<br />
+        Vi har med dette inng&aring;tt en avtale om salg av din eiendom. Vedlagt f&oslash;lger oppdragsavtalen.</p>
 
-<p>Det vises til mottatt signert oppdragsavtale for salg av <strong>[[eiendom.adresse]]</strong>.<br />
-Vi har med dette inng&aring;tt en avtale om salg av din eiendom. Vedlagt f&oslash;lger oppdragsavtalen.</p>
+    <p>Du vil n&aring; f&aring; l&oslash;pende informasjon om neste steg gjennom prosessen. Samtidig vil det oversendes
+        deg dokumenter for utfylling og eksterne leverand&oslash;rer vil ta kontakt med deg i henhold til avtale.
+        N&aring;r all dokumentasjon er innhentet vil du f&aring; presentert et utkast til salgsoppgave og &oslash;vrig
+        markedsf&oslash;ringsmateriell. Dersom du har sp&oslash;rsm&aring;l kan du selvf&oslash;lgelig ta kontakt med
+        meg.</p>
 
-<p>Du vil n&aring; f&aring; l&oslash;pende informasjon om neste steg gjennom prosessen. Samtidig vil det oversendes deg dokumenter for utfylling og eksterne leverand&oslash;rer vil ta kontakt med deg i henhold til avtale. N&aring;r all dokumentasjon er innhentet vil du f&aring; presentert et utkast til salgsoppgave og &oslash;vrig markedsf&oslash;ringsmateriell. Dersom du har sp&oslash;rsm&aring;l kan du selvf&oslash;lgelig ta kontakt med meg.</p>
+    <p>Her kommer litt mer utdypende informasjon:</p>
 
-<p>Her kommer litt mer utdypende informasjon:</p>
+    <h2>Kundekontroll</h2>
 
-<h2>Kundekontroll</h2>
+    <p>Som eiendomsmegler er vi p&aring;lagt &aring; foreta en kundekontroll relatert til hvitvasking av alle
+        oppdragsgivere. Du vil motta en e-post hvor du m&aring; besvare noen sp&oslash;rsm&aring;l omkring
+        form&aring;let med salget.</p>
 
-<p>Som eiendomsmegler er vi p&aring;lagt &aring; foreta en kundekontroll relatert til hvitvasking av alle oppdragsgivere. Du vil motta en e-post hvor du m&aring; besvare noen sp&oslash;rsm&aring;l omkring form&aring;let med salget.</p>
+    <h2>Tilstandsrapport</h2>
 
-<h2>Tilstandsrapport</h2>
+    <p>Vi vil til avtalt tid rekvirere bygningssakkyndig/takstmann som vil gjennomf&oslash;re en befaring av din bolig.
+    </p>
 
-<p>Vi vil til avtalt tid rekvirere bygningssakkyndig/takstmann som vil gjennomf&oslash;re en befaring av din bolig.</p>
+    <h2>Fotografering/bilder</h2>
 
-<h2>Fotografering/bilder</h2>
+    <p>Det er viktig &aring; f&aring; fine bilder av boligen og det skal vi og fotograf f&aring; til i samarbeid med
+        deg. Vi rekvirerer fotografen og du vil f&aring; r&aring;d om hvordan boligen vil kunne fremst&aring; best, slik
+        at bildene blir optimale.</p>
 
-<p>Det er viktig &aring; f&aring; fine bilder av boligen og det skal vi og fotograf f&aring; til i samarbeid med deg. Vi rekvirerer fotografen og du vil f&aring; r&aring;d om hvordan boligen vil kunne fremst&aring; best, slik at bildene blir optimale.</p>
+    <h2>Krav til energimerking av bolig</h2>
 
-<h2>Krav til energimerking av bolig</h2>
+    <p>Ved salg av boligeiendom er det et myndighetskrav at den skal v&aelig;re energimerket &ndash; dette m&aring;
+        gj&oslash;res p&aring; <a href="https://www.enova.no/energimerking/bolig/"
+            target="_blank">https://www.enova.no/energimerking/bolig/</a>. N&aring;r du logger inn f&aring;r du en
+        oversikt over boliger du eier, og kan enkelt energimerke disse. Rapporten m&aring; sendes til megler p&aring;
+        e-post.</p>
 
-<p>Ved salg av boligeiendom er det et myndighetskrav at den skal v&aelig;re energimerket &ndash; dette m&aring; gj&oslash;res p&aring; <a href="https://www.enova.no/energimerking/bolig/" target="_blank">https://www.enova.no/energimerking/bolig/</a>. N&aring;r du logger inn f&aring;r du en oversikt over boliger du eier, og kan enkelt energimerke disse. Rapporten m&aring; sendes til megler p&aring; e-post.</p>
+    <h2>Utfylling av egenerkl&aelig;ring og tegning av boligselgerforsikring</h2>
 
-<h2>Utfylling av egenerkl&aelig;ring og tegning av boligselgerforsikring</h2>
+    <p>Det vil i l&oslash;pet av kort tid sendes ut elektronisk egenerkl&aelig;ringsskjema p&aring; e-post. Dette fylles
+        ut digitalt og signeres med Bank-ID, og blir levert direkte til v&aring;rt meglersystem. Det er viktig at
+        skjemaet er ferdig utfylt og signert, f&oslash;r takstmannen kommer for &aring; unders&oslash;ke boligen.</p>
 
-<p>Det vil i l&oslash;pet av kort tid sendes ut elektronisk egenerkl&aelig;ringsskjema p&aring; e-post. Dette fylles ut digitalt og signeres med Bank-ID, og blir levert direkte til v&aring;rt meglersystem. Det er viktig at skjemaet er ferdig utfylt og signert, f&oslash;r takstmannen kommer for &aring; unders&oslash;ke boligen.</p>
+    <p>I skjemaet m&aring; det ogs&aring; tas stilling til tegning av boligselgerforsikring. Vi anbefaler alltid
+        v&aring;re selgere &aring; tegne denne ansvarsforsikringen, og det vil ved en eventuell klage/reklamasjon fra
+        kj&oslash;per v&aelig;re forsikringsselskapet som behandler denne p&aring; vegne av deg som selger. Vi formidler
+        boligselgerforsikring gjennom <strong>[[forsikring.selskap]]</strong>.</p>
 
-<p>I skjemaet m&aring; det ogs&aring; tas stilling til tegning av boligselgerforsikring. Vi anbefaler alltid v&aring;re selgere &aring; tegne denne ansvarsforsikringen, og det vil ved en eventuell klage/reklamasjon fra kj&oslash;per v&aelig;re forsikringsselskapet som behandler denne p&aring; vegne av deg som selger. Vi formidler boligselgerforsikring gjennom <strong>[[forsikring.selskap]]</strong>.</p>
+    <h2>Selgers opplysningsplikt</h2>
 
-<h2>Selgers opplysningsplikt</h2>
+    <p>Etter avhendingsloven er selger ansvarlig for skjulte feil eller mangelfulle/feil opplysninger i hele 5 &aring;r
+        etter salget, og det er derfor viktig &aring; gi interessentene alle opplysninger av betydning i salgsoppgaven.
+        Interessentene skal f&aring; all informasjon som &quot;kj&oslash;per har grunn til &aring; regne med &aring;
+        f&aring;&quot; f&oslash;r det inngis bud.</p>
 
-<p>Etter avhendingsloven er selger ansvarlig for skjulte feil eller mangelfulle/feil opplysninger i hele 5 &aring;r etter salget, og det er derfor viktig &aring; gi interessentene alle opplysninger av betydning i salgsoppgaven. Interessentene skal f&aring; all informasjon som &quot;kj&oslash;per har grunn til &aring; regne med &aring; f&aring;&quot; f&oslash;r det inngis bud.</p>
+    <p>Skulle det v&aelig;re opplysninger om eiendommen som dere er kjent med, men som megler ikke har f&aring;tt,
+        oppfordrer vi til &aring; ta kontakt. Dette kan v&aelig;re opplysninger om mangler ved eiendommen, mottatte
+        nabovarsler eller andre spesielle forhold vedr&oslash;rende eiendommen som kan ha betydning for kj&oslash;per.
+    </p>
 
-<p>Skulle det v&aelig;re opplysninger om eiendommen som dere er kjent med, men som megler ikke har f&aring;tt, oppfordrer vi til &aring; ta kontakt. Dette kan v&aelig;re opplysninger om mangler ved eiendommen, mottatte nabovarsler eller andre spesielle forhold vedr&oslash;rende eiendommen som kan ha betydning for kj&oslash;per.</p>
+    <h2>Korrektur og godkjenning av markedsmateriell</h2>
 
-<h2>Korrektur og godkjenning av markedsmateriell</h2>
+    <p>Markedsmateriell som skal brukes i forbindelse med boligsalget vil bli oversendt for korrektur, og krever
+        skriftlig godkjennelse fra deg f&oslash;r det blir benyttet. Vi setter stor pris p&aring; en snarlig
+        tilbakemelding ved oversendelse. Som selger innest&aring;r du for at opplysningene er korrekte, og i de
+        tilfeller det blir gitt uriktige eller manglende opplysninger kan du bli gjort ansvarlig. Les derfor n&oslash;ye
+        igjennom.</p>
 
-<p>Markedsmateriell som skal brukes i forbindelse med boligsalget vil bli oversendt for korrektur, og krever skriftlig godkjennelse fra deg f&oslash;r det blir benyttet. Vi setter stor pris p&aring; en snarlig tilbakemelding ved oversendelse. Som selger innest&aring;r du for at opplysningene er korrekte, og i de tilfeller det blir gitt uriktige eller manglende opplysninger kan du bli gjort ansvarlig. Les derfor n&oslash;ye igjennom.</p>
+    <h2>Viktig informasjon</h2>
 
-<h2>Viktig informasjon</h2>
+    <p>I henhold til bransjenorm for markedsf&oslash;ring av boliger skal ikke prisantydning settes lavere enn hva
+        selger p&aring; markedsf&oslash;ringstidspunktet er villig til &aring; selge for, samt at prisantydningen ikke
+        skal v&aelig;re lavere enn det meglers objektive vurdering skulle tilsi. Meglers prisantydning vil fremkomme i
+        salgsoppgave som sendes deg for korrektur. Ved godkjennelse av salgsoppgaven, godkjennes ogs&aring;
+        prisantydning som minste aktuelle salgspris.</p>
 
-<p>I henhold til bransjenorm for markedsf&oslash;ring av boliger skal ikke prisantydning settes lavere enn hva selger p&aring; markedsf&oslash;ringstidspunktet er villig til &aring; selge for, samt at prisantydningen ikke skal v&aelig;re lavere enn det meglers objektive vurdering skulle tilsi. Meglers prisantydning vil fremkomme i salgsoppgave som sendes deg for korrektur. Ved godkjennelse av salgsoppgaven, godkjennes ogs&aring; prisantydning som minste aktuelle salgspris.</p>
+    <p>Megler kan ikke videreformidle bud som har kortere akseptfrist enn kl. 12.00 f&oslash;rste virkedag etter siste
+        annonserte visning. Alle avslag, motbud eller aksept av bud, m&aring; foreligge skriftlig f&oslash;r megler kan
+        videreformidle dette til budgiver. Det er derfor viktig at vi har l&oslash;pende kontakt under budrunden, slik
+        at skriftlighet kan foreligge p&aring; kort varsel.</p>
 
-<p>Megler kan ikke videreformidle bud som har kortere akseptfrist enn kl. 12.00 f&oslash;rste virkedag etter siste annonserte visning. Alle avslag, motbud eller aksept av bud, m&aring; foreligge skriftlig f&oslash;r megler kan videreformidle dette til budgiver. Det er derfor viktig at vi har l&oslash;pende kontakt under budrunden, slik at skriftlighet kan foreligge p&aring; kort varsel.</p>
+    <p>Vi erfarer dessverre at enkelte interessenter fors&oslash;ker &aring; omg&aring; budreglene ved &aring; gi bud
+        direkte til selger, og da ofte med kort akseptfrist. V&aelig;r oppmerksom p&aring; at det er forbundet med
+        risiko &aring; inng&aring; bindende avtale uten at megler har sjekket finansiering, uten at kj&oslash;per har
+        f&aring;tt fullstendig salgsoppgave, eller at du ikke oppn&aring;r markedspris.</p>
+    &nbsp;
 
-<p>Vi erfarer dessverre at enkelte interessenter fors&oslash;ker &aring; omg&aring; budreglene ved &aring; gi bud direkte til selger, og da ofte med kort akseptfrist. V&aelig;r oppmerksom p&aring; at det er forbundet med risiko &aring; inng&aring; bindende avtale uten at megler har sjekket finansiering, uten at kj&oslash;per har f&aring;tt fullstendig salgsoppgave, eller at du ikke oppn&aring;r markedspris.</p>
-&nbsp;
+    <div class="proaktiv-signature-block">
+        <p>Vi ser frem til et godt samarbeid og en trygg salgsprosess, og vi vil gj&oslash;re v&aring;rt ytterste for at
+            du blir forn&oslash;yd. Ta gjerne kontakt ved sp&oslash;rsm&aring;l.</p>
 
-<div style="border-top:3px solid #bcab8a; padding-top:20px; page-break-inside:avoid">
-<p>Vi ser frem til et godt samarbeid og en trygg salgsprosess, og vi vil gj&oslash;re v&aring;rt ytterste for at du blir forn&oslash;yd. Ta gjerne kontakt ved sp&oslash;rsm&aring;l.</p>
+        <p>Med vennlig hilsen<br />
+            <strong>[[meglerkontor.navn]]</strong><br />
+            <br />
+            [[ansvarligmegler.navn]]<br />
+            [[ansvarligmegler.tittel]]
+        </p>
+    </div>
 
-<p>Med vennlig hilsen<br />
-<strong>[[meglerkontor.navn]]</strong><br />
-<br />
-[[ansvarligmegler.navn]]<br />
-[[ansvarligmegler.tittel]]</p>
-</div>
-
-<p style="font-size:9pt; margin-top:30px"><strong>Vedlegg:</strong><br />
-Oppdragsavtale<br />
-Oversikt over l&oslash;s&oslash;re og tilbeh&oslash;r</p>
+    <p style="font-size:9pt; margin-top:30px"><strong>Vedlegg:</strong><br />
+        Oppdragsavtale<br />
+        Oversikt over l&oslash;s&oslash;re og tilbeh&oslash;r</p>
 </div>

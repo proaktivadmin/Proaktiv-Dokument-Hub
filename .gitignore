@@ -1,3 +1,14 @@
 node_modules
 .DS_Store
 .env
+
+# Library Data (Do not commit client files)
+library/Legacy_Import/*
+!library/Legacy_Import/.gitkeep
+library/Ready_For_Export/*
+!library/Ready_For_Export/.gitkeep
+library/Akseptbrev/*
+library/Oppdragsavtale/*
+
+# Keep the System folder (Styles & Master Templates)
+!library/System/
