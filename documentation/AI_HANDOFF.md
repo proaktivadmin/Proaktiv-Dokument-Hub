@@ -21,7 +21,12 @@ You do not need to read every file. Read these three in order:
 *   ❌ **Do NOT Edit `server.js` Paths:** The mount points are critical for Azure function.
 *   ❌ **Do NOT Overwrite `System/Styles`:** This is the CSS source of truth.
 
-## 4. Next Actions
+## 4. Operational Protocols (MANDATORY)
+*   **Atomic Git Ops:** Always `commit` and `push` in one sequence. Do not leave unpushed commits.
+*   **Commit Quality:** EVERY commit must have a **Title** (feat/fix/docs) AND a **Body** description.
+*   **Docs Sync:** Never change code without updating the relevant documentation (`README`, `ROADMAP`, or `HANDOFF`). They must go hand-in-hand.
+
+## 5. Next Actions
 Check `ROADMAP.md`. The immediate priorities are:
 1.  Monitor the Azure deployment stability.
 2.  Plan the **Entra ID** implementation (Security).
