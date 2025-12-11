@@ -26,10 +26,10 @@
     *   **A4 Print:** Standard print layout.
 *   **SMS Support:** Dedicated support for `.txt` and `.html` SMS templates in the `SMS` category, with automatic variable highlighting.
 
-### ⚙️ Backend Integration
-*   **Local File System:** Directly reads and writes to your local template library.
-*   **Git Integration:** Built-in "Push" and "Pull" buttons to sync changes with GitHub.
-*   **Auto-Discovery:** Automatically detects new categories and files.
+### ☁️ Cloud Architecture & Persistence
+*   **Azure Hosted:** Deployed on Azure App Service (Linux).
+*   **Persistent Library:** Templates are stored in an Azure File Share (`library`), separated from application code.
+*   **Direct Saving:** Edits are saved immediately to the cloud storage. No Git Push required.
 
 ## 🚀 Getting Started
 
