@@ -1071,11 +1071,7 @@ function App() {
               </div>}
             </div>
 
-            {/* ACTION BAR */}
-            <div className="p-3 border-t border-white/5 flex gap-2 bg-black/20 backdrop-blur-sm">
-              <button onClick={() => gitAction('pull')} className="flex-1 bg-slate-800/50 hover:bg-slate-700/80 text-slate-300 text-[10px] font-bold py-2.5 rounded-lg flex gap-2 justify-center items-center transition-all border border-white/5 hover:border-white/20 group"><Download size={12} className="group-hover:-translate-y-0.5 transition-transform" /> Pull</button>
-              <button onClick={() => gitAction('push')} className="flex-1 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white text-[10px] font-bold py-2.5 rounded-lg flex gap-2 justify-center items-center transition-all shadow-lg shadow-cyan-900/20 hover:shadow-cyan-500/30 group"><GitBranch size={12} className="group-hover:rotate-12 transition-transform" /> Push</button>
-            </div>
+
           </div>
         </div>
 
