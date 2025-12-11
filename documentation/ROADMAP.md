@@ -18,17 +18,17 @@ The Proaktiv Dokument Hub is now fully operational as a local development enviro
 - [x] **Deployment Planning:** Analyzed Firebase vs. Azure; selected Azure for future implementation.
 
 ## Current Status
-🟢 **Ready for Production Use (Local)**
-The system is stable. You can begin the mass migration of the 100-300 templates using the Migration Factory on your local machine.
+🟢 **Production (Azure Cloud)**
+The system is deployed and live on Azure App Service.
+- **URL:** [https://proaktiv-dokument-hub-eqa2d7hthcf7c9ej.norwayeast-01.azurewebsites.net/](https://proaktiv-dokument-hub-eqa2d7hthcf7c9ej.norwayeast-01.azurewebsites.net/)
+- **Infrastructure:** Azure App Service (Linux) + Azure Files.
 
 ## Future Plans & Priorities
 
-### Priority 1: Cloud Deployment (Azure)
-**Goal:** Move the hub from "Localhost" to a secure corporate URL.
-1.  Set up Azure Resource Group & Storage Account.
-2.  Deploy `server.js` to Azure App Service.
-3.  Configure **Azure Files Mount** to persist the `library/` folder.
-4.  Enable **Entra ID (Azure AD)** for secure, single-sign-on access.
+### Priority 1: Enterprise Security
+**Goal:** Lock down the public URL.
+1.  Enable **Entra ID (Azure AD)** for employee-only access.
+2.  Disable SCM Basic Auth after verifying deployment pipelines.
 
 ### Priority 2: Automation & Intelligence
 **Goal:** Reduce manual verification steps.
@@ -40,6 +40,6 @@ The system is stable. You can begin the mass migration of the 100-300 templates 
 1.  Implement "Hall of Fame" leaderboards.
 2.  Add dynamic background effects (Weather/Time of Day).
 
-## Known Issues / Risks
-- **Filesystem Reliance:** The app is strictly tied to the filesystem. Do not attempt to deploy to serverless environments (Firebase/Vercel) without a major refactor.
-- **Vitec Preview:** The local preview is 95% accurate, but PDF output from Vitec should always be the final source of truth.
+## Known Issues / Constraints
+- **Azure Mount Latency:** Changes saved to the mounted drive are usually instant but can occasionally require a page refresh.
+- **Vitec Preview:** The web preview is 95% accurate, but PDF output from Vitec is the final source of truth.
