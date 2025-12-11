@@ -4,7 +4,7 @@ import { Folder, FileCode, GitBranch, ChevronRight, ChevronDown, LayoutTemplate,
 import ProaktivLogo from './assets/logo_white.svg';
 import MigrationView from './MigrationView';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = import.meta.env.PROD ? '/api' : 'http://localhost:5000/api';
 const DEFAULT_META = { category: 'General', receiver: 'Systemstandard', output: 'PDF og e-post', assignmentType: '', phase: '', subject: 'Oppgjørsoppstilling [[eiendom.adresse]]', cssVersion: 'style.css', headerTemplate: '', footerTemplate: '', marginTop: 2, marginBottom: 2, marginLeft: 2, marginRight: 2 };
 
 // --- PREMIUM COMPONENTS ---
@@ -704,6 +704,9 @@ function App() {
       // Filter by search query
       if (query && !path.toLowerCase().includes(query)) return;
 
+      // Hide System folder from sidebar (as requested)
+      if (path.startsWith('System/')) return;
+
       const parts = path.split(/[/\\]/);
       let cat = parts.length > 1 ? parts[0] : 'Uncategorized';
       let fn = parts[parts.length - 1];
@@ -790,9 +793,9 @@ function App() {
     // Add timestamp to prevent caching when switching themes
     const ts = Date.now();
     const themeLinks = `
-      <link rel="stylesheet" href="http://localhost:5000/resources/library/System/styles/vitec-structure.css?t=${ts}">
-      <link rel="stylesheet" href="http://localhost:5000/resources/library/System/styles/theme-base.css?t=${ts}">
-      <link rel="stylesheet" href="http://localhost:5000/resources/library/System/styles/${activeTheme}?t=${ts}">
+      <link rel="stylesheet" href="/resources/library/System/styles/vitec-structure.css?t=${ts}">
+      <link rel="stylesheet" href="/resources/library/System/styles/theme-base.css?t=${ts}">
+      <link rel="stylesheet" href="/resources/library/System/styles/${activeTheme}?t=${ts}">
     `;
 
     return `<!DOCTYPE html><html style="height:100%;min-height:100%;"><head>${themeLinks}<style>html,body{min-height:100%;height:auto;}body{font-family:sans-serif;background:white;margin:0;${marginStyles}}</style></head><body>${head}${inj}${foot}</body></html>`;
