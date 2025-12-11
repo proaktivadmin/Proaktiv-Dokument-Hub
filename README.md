@@ -31,32 +31,31 @@
 *   **Persistent Library:** Templates are stored in an Azure File Share (`library`), separated from application code.
 *   **Direct Saving:** Edits are saved immediately to the cloud storage. No Git Push required.
 
-## 🚀 Getting Started
+## 🚀 User Access (Production)
+The application is live on Azure. No installation is required for general use.
+*   **Live App:** [https://proaktiv-dokument-hub-eqa2d7hthcf7c9ej.norwayeast-01.azurewebsites.net/](https://proaktiv-dokument-hub-eqa2d7hthcf7c9ej.norwayeast-01.azurewebsites.net/)
+
+## 👨‍💻 Developer Setup (Localhost)
+Follow these steps ONLY if you are a developer extending the application's logic.
 
 ### Prerequisites
 *   Node.js (v16+)
 *   Git
 
 ### Installation
-
 1.  Clone the repository:
     ```bash
     git clone https://github.com/your-repo/proaktiv-dokument-hub.git
     cd proaktiv-dokument-hub
     ```
 
-2.  Install dependencies for both Client and Server:
+2.  Install dependencies:
     ```bash
-    # Install server dependencies
-    npm install
-
-    # Install client dependencies
-    cd client
-    npm install
+    npm install         # Server deps
+    cd client && npm i  # Client deps
     ```
 
-### Running the App
-
+### Running Locally
 You can run the full dashboard (Frontend + Backend) with a single command:
 
 ```bash
