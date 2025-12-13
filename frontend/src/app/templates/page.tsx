@@ -1,15 +1,42 @@
 "use client";
 
 import { useState } from "react";
-import { FileText, Search, Clock, Download, MoreHorizontal, Trash2 } from "lucide-react";
+import {
+  FileText,
+  Search,
+  Clock,
+  Download,
+  MoreHorizontal,
+  Trash2,
+  Pencil,
+} from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { EditTemplateDialog } from "@/components/templates/EditTemplateDialog";
 import { useTemplates } from "@/hooks/useTemplates";
 import { templateApi } from "@/lib/api";
 import { formatDistanceToNow } from "date-fns";
 import { nb } from "date-fns/locale";
+import type { Template } from "@/types";
 
 function TemplateTableSkeleton() {
   return (
@@ -33,6 +60,15 @@ export default function TemplatesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
 
+  // Edit dialog state
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [templateToEdit, setTemplateToEdit] = useState<Template | null>(null);
+
+  // Delete confirmation state
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [templateToDelete, setTemplateToDelete] = useState<Template | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const { templates, pagination, isLoading, error, refetch } = useTemplates({
     search: searchQuery || undefined,
     status: statusFilter,
@@ -43,17 +79,50 @@ export default function TemplatesPage() {
     refetch();
   };
 
-  const handleDelete = async (templateId: string) => {
-    if (!confirm("Er du sikker på at du vil slette denne malen?")) {
-      return;
-    }
+  const handleEditClick = (template: Template) => {
+    setTemplateToEdit(template);
+    setEditDialogOpen(true);
+  };
 
+  const handleEditSuccess = () => {
+    refetch();
+    setTemplateToEdit(null);
+  };
+
+  const handleDeleteClick = (template: Template) => {
+    setTemplateToDelete(template);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!templateToDelete) return;
+
+    setIsDeleting(true);
     try {
-      await templateApi.delete(templateId);
+      await templateApi.delete(templateToDelete.id);
       refetch();
+      setDeleteDialogOpen(false);
+      setTemplateToDelete(null);
     } catch (error) {
       console.error("Failed to delete template:", error);
-      alert("Kunne ikke slette malen. Prøv igjen.");
+      // Keep dialog open so user can see error or retry
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleDownload = async (template: Template) => {
+    try {
+      const { download_url, file_name } = await templateApi.getDownloadUrl(template.id);
+      // For mock URLs, just show an alert. For real URLs, open in new tab.
+      if (download_url.startsWith("mock://")) {
+        alert(`Nedlasting er ikke tilgjengelig ennå. Fil: ${file_name}`);
+      } else {
+        window.open(download_url, "_blank");
+      }
+    } catch (error) {
+      console.error("Failed to get download URL:", error);
+      alert("Kunne ikke laste ned filen. Prøv igjen.");
     }
   };
 
@@ -214,18 +283,33 @@ export default function TemplatesPage() {
                       {formatDate(template.updated_at)}
                     </div>
 
-                    <div className="col-span-1 flex justify-end gap-1">
-                      <Button variant="ghost" size="icon" title="Last ned">
-                        <Download className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        title="Slett"
-                        onClick={() => handleDelete(template.id)}
-                      >
-                        <Trash2 className="h-4 w-4 text-red-500" />
-                      </Button>
+                    <div className="col-span-1 flex justify-end">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <MoreHorizontal className="h-4 w-4" />
+                            <span className="sr-only">Åpne meny</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => handleDownload(template)}>
+                            <Download className="mr-2 h-4 w-4" />
+                            Last ned
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleEditClick(template)}>
+                            <Pencil className="mr-2 h-4 w-4" />
+                            Rediger
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            onClick={() => handleDeleteClick(template)}
+                            className="text-red-600 focus:text-red-600 focus:bg-red-50"
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Slett
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                   </div>
                 ))}
@@ -255,6 +339,38 @@ export default function TemplatesPage() {
           )}
         </div>
       </main>
+
+      {/* Edit Dialog */}
+      <EditTemplateDialog
+        template={templateToEdit}
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        onSuccess={handleEditSuccess}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Er du sikker?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Du er i ferd med å slette malen{" "}
+              <span className="font-semibold">&quot;{templateToDelete?.title}&quot;</span>.
+              Denne handlingen kan ikke angres.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Avbryt</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              disabled={isDeleting}
+              className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
+            >
+              {isDeleting ? "Sletter..." : "Ja, slett malen"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

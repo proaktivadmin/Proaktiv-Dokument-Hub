@@ -51,7 +51,8 @@ class AuditService:
             details=details or {}
         )
         db.add(audit_log)
-        await db.commit()
+        # Note: get_db() handles commit automatically after request
+        await db.flush()
         await db.refresh(audit_log)
         
         logger.debug(f"Audit: {action} {entity_type}:{entity_id} by {user_email}")

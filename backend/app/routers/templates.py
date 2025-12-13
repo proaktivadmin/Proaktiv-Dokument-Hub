@@ -4,11 +4,12 @@ Template API Routes
 Handles all template CRUD operations with database integration.
 """
 
-from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Query, Depends
+from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Query, Depends, Body
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional, List
 from uuid import UUID
-from datetime import datetime
+from datetime import datetime, timezone
+from pydantic import BaseModel, Field
 
 from app.database import get_db
 from app.services.template_service import TemplateService
@@ -16,6 +17,14 @@ from app.services.audit_service import AuditService
 from app.config import get_mock_user
 
 router = APIRouter()
+
+
+# Pydantic schemas for request bodies
+class TemplateUpdateRequest(BaseModel):
+    """Request body for updating a template."""
+    title: Optional[str] = Field(None, max_length=255, description="Template title")
+    description: Optional[str] = Field(None, max_length=2000, description="Template description")
+    status: Optional[str] = Field(None, pattern="^(draft|published|archived)$", description="Template status")
 
 
 def get_current_user():
@@ -170,10 +179,8 @@ async def create_template(
 @router.put("/{template_id}")
 async def update_template(
     template_id: UUID,
+    body: TemplateUpdateRequest,
     db: AsyncSession = Depends(get_db),
-    title: Optional[str] = None,
-    description: Optional[str] = None,
-    status: Optional[str] = None,
     user: dict = Depends(get_current_user)
 ):
     """Update template metadata."""
@@ -182,14 +189,14 @@ async def update_template(
         raise HTTPException(status_code=404, detail="Template not found")
     
     updates = {}
-    if title is not None:
-        updates["title"] = title
-    if description is not None:
-        updates["description"] = description
-    if status is not None:
-        updates["status"] = status
-        if status == "published":
-            updates["published_at"] = datetime.utcnow()
+    if body.title is not None:
+        updates["title"] = body.title
+    if body.description is not None:
+        updates["description"] = body.description
+    if body.status is not None:
+        updates["status"] = body.status
+        if body.status == "published":
+            updates["published_at"] = datetime.now(timezone.utc)
     
     template = await TemplateService.update(
         db,
@@ -265,6 +272,6 @@ async def download_template(
     return {
         "download_url": template.azure_blob_url,
         "file_name": template.file_name,
-        "expires_at": datetime.utcnow().isoformat()
+        "expires_at": datetime.now(timezone.utc).isoformat()
     }
 

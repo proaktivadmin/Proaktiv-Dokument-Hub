@@ -96,7 +96,8 @@ class TagService:
         db.add(tag)
         
         try:
-            await db.commit()
+            # Use flush to detect IntegrityError before final commit
+            await db.flush()
             await db.refresh(tag)
             logger.info(f"Created tag: {tag.id} - {tag.name}")
             return tag
@@ -126,7 +127,8 @@ class TagService:
                 setattr(tag, key, value)
         
         try:
-            await db.commit()
+            # Use flush to detect IntegrityError before final commit
+            await db.flush()
             await db.refresh(tag)
             logger.info(f"Updated tag: {tag.id}")
             return tag
@@ -144,6 +146,7 @@ class TagService:
             tag: Tag to delete
         """
         await db.delete(tag)
-        await db.commit()
+        # Note: get_db() handles commit automatically after request
+        await db.flush()
         logger.info(f"Deleted tag: {tag.id}")
 

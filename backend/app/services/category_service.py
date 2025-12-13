@@ -112,7 +112,8 @@ class CategoryService:
         db.add(category)
         
         try:
-            await db.commit()
+            # Use flush to detect IntegrityError before final commit
+            await db.flush()
             await db.refresh(category)
             logger.info(f"Created category: {category.id} - {category.name}")
             return category
@@ -142,7 +143,8 @@ class CategoryService:
                 setattr(category, key, value)
         
         try:
-            await db.commit()
+            # Use flush to detect IntegrityError before final commit
+            await db.flush()
             await db.refresh(category)
             logger.info(f"Updated category: {category.id}")
             return category
@@ -160,7 +162,8 @@ class CategoryService:
             category: Category to delete
         """
         await db.delete(category)
-        await db.commit()
+        # Note: get_db() handles commit automatically after request
+        await db.flush()
         logger.info(f"Deleted category: {category.id}")
     
     @staticmethod
@@ -185,7 +188,8 @@ class CategoryService:
                 category.sort_order = index
                 categories.append(category)
         
-        await db.commit()
+        # Note: get_db() handles commit automatically after request
+        await db.flush()
         logger.info(f"Reordered {len(categories)} categories")
         return categories
 

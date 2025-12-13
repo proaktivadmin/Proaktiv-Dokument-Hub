@@ -3,6 +3,8 @@ import type {
   TemplateListResponse,
   UploadTemplatePayload,
   UploadTemplateResponse,
+  UpdateTemplatePayload,
+  UpdateTemplateResponse,
   Category,
   DashboardStats,
 } from "@/types";
@@ -162,6 +164,28 @@ export const templateApi = {
   },
 
   /**
+   * Update template metadata
+   */
+  async update(
+    templateId: string,
+    payload: UpdateTemplatePayload
+  ): Promise<UpdateTemplateResponse> {
+    try {
+      console.log("[API] Updating template:", { templateId, payload });
+
+      const { data } = await api.put<UpdateTemplateResponse>(
+        `/templates/${templateId}`,
+        payload
+      );
+
+      console.log("[API] Update successful:", data);
+      return data;
+    } catch (error) {
+      handleError(error, "templateApi.update");
+    }
+  },
+
+  /**
    * Delete a template by ID
    */
   async delete(templateId: string): Promise<void> {
@@ -169,6 +193,22 @@ export const templateApi = {
       await api.delete(`/templates/${templateId}`);
     } catch (error) {
       handleError(error, "templateApi.delete");
+    }
+  },
+
+  /**
+   * Get download URL for a template
+   */
+  async getDownloadUrl(
+    templateId: string
+  ): Promise<{ download_url: string; file_name: string }> {
+    try {
+      const { data } = await api.get<{ download_url: string; file_name: string }>(
+        `/templates/${templateId}/download`
+      );
+      return data;
+    } catch (error) {
+      handleError(error, "templateApi.getDownloadUrl");
     }
   },
 };

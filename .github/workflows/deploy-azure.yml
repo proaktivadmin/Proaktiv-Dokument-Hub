@@ -130,6 +130,18 @@ jobs:
               --location ${{ env.LOCATION }} \
               --tags environment=prod project=dokumenthub
 
+      - name: Generate Secret Key (if not provided)
+        id: secret-key
+        run: |
+          if [ -n "${{ secrets.SECRET_KEY }}" ]; then
+            echo "secret_key=${{ secrets.SECRET_KEY }}" >> $GITHUB_OUTPUT
+          else
+            # Generate a secure random 64-character hex string
+            GENERATED_KEY=$(openssl rand -hex 32)
+            echo "secret_key=$GENERATED_KEY" >> $GITHUB_OUTPUT
+            echo "⚠️ Generated temporary SECRET_KEY. Set a permanent one in GitHub Secrets!" >> $GITHUB_STEP_SUMMARY
+          fi
+
       - name: Deploy Bicep template
         uses: azure/arm-deploy@v2
         with:
@@ -144,6 +156,7 @@ jobs:
             storageAccountName=${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}
             storageAccountKey=${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}
             azureStorageConnectionString=${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+            secretKey=${{ steps.secret-key.outputs.secret_key }}
             fileShareName=database-vol
           failOnStdErr: false
 

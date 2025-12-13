@@ -31,6 +31,10 @@ param storageAccountKey string
 @secure()
 param azureStorageConnectionString string
 
+@description('Application secret key for JWT/session signing')
+@secure()
+param secretKey string
+
 @description('File share name for SQLite database')
 param fileShareName string = 'database-vol'
 
@@ -128,6 +132,10 @@ resource backendApp 'Microsoft.App/containerApps@2023-05-01' = {
           name: 'storage-account-key'
           value: storageAccountKey
         }
+        {
+          name: 'secret-key'
+          value: secretKey
+        }
       ]
     }
     template: {
@@ -147,6 +155,10 @@ resource backendApp 'Microsoft.App/containerApps@2023-05-01' = {
             {
               name: 'AZURE_STORAGE_CONNECTION_STRING'
               secretRef: 'azure-storage-connection-string'
+            }
+            {
+              name: 'SECRET_KEY'
+              secretRef: 'secret-key'
             }
             {
               name: 'APP_ENV'

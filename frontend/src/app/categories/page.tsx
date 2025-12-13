@@ -1,7 +1,47 @@
 "use client";
 
 import { useState } from "react";
-import { FolderTree, Plus, Pencil, Trash2, GripVertical } from "lucide-react";
+import {
+  FolderTree,
+  Plus,
+  Pencil,
+  Trash2,
+  GripVertical,
+  Folder,
+  FileText,
+  FileSpreadsheet,
+  File,
+  Files,
+  FileCheck,
+  FileCheck2,
+  FilePlus,
+  FileQuestion,
+  Home,
+  Users,
+  Building,
+  Building2,
+  Mail,
+  Send,
+  MessageSquare,
+  MessageCircle,
+  Shield,
+  ShieldCheck,
+  Scale,
+  Info,
+  InfoIcon,
+  Megaphone,
+  Type,
+  Briefcase,
+  Receipt,
+  CreditCard,
+  Landmark,
+  Gavel,
+  BookOpen,
+  ClipboardList,
+  AlertCircle,
+  CheckCircle,
+  type LucideIcon,
+} from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,7 +56,71 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useCategories } from "@/hooks/useCategories";
-import { categoryApi } from "@/lib/api";
+
+// Icon mapping for dynamic icon rendering - comprehensive list
+const iconMap: Record<string, LucideIcon> = {
+  // Folders
+  Folder,
+  FolderTree,
+  // Files
+  File,
+  Files,
+  FileText,
+  FileSpreadsheet,
+  FileCheck,
+  FileCheck2,
+  FilePlus,
+  FileQuestion,
+  // Buildings & Places
+  Home,
+  Building,
+  Building2,
+  Landmark,
+  // People
+  Users,
+  // Communication
+  Mail,
+  Send,
+  MessageSquare,
+  MessageCircle,
+  Megaphone,
+  // Legal & Business
+  Shield,
+  ShieldCheck,
+  Scale,
+  Gavel,
+  Briefcase,
+  // Finance
+  Receipt,
+  CreditCard,
+  // Info & Status
+  Info,
+  InfoIcon,
+  AlertCircle,
+  CheckCircle,
+  // Text
+  Type,
+  BookOpen,
+  ClipboardList,
+};
+
+// Helper function to get icon component from string name
+function getCategoryIcon(iconName: string | null | undefined): LucideIcon {
+  if (!iconName) return Folder;
+  
+  // Check if it's a lucide icon name
+  const Icon = iconMap[iconName];
+  if (Icon) return Icon;
+  
+  // Default fallback
+  return Folder;
+}
+
+// Helper to check if icon is an emoji (starts with non-ASCII)
+function isEmoji(str: string | null | undefined): boolean {
+  if (!str) return false;
+  return /^[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/u.test(str);
+}
 
 // Extend categoryApi with create and delete methods inline for this page
 const extendedCategoryApi = {
@@ -49,9 +153,12 @@ function CategorySkeleton() {
     <div className="space-y-3">
       {[1, 2, 3, 4].map((i) => (
         <div key={i} className="flex items-center gap-4 p-4 border rounded-lg">
-          <Skeleton className="h-6 w-6" />
-          <Skeleton className="h-5 w-32" />
-          <Skeleton className="h-4 w-48 ml-auto" />
+          <Skeleton className="h-5 w-5" />
+          <Skeleton className="h-10 w-10 rounded-md" />
+          <div className="flex-1 space-y-2">
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-3 w-48" />
+          </div>
         </div>
       ))}
     </div>
@@ -150,43 +257,69 @@ export default function CategoriesPage() {
             </div>
           ) : (
             <div className="divide-y">
-              {categories.map((category, index) => (
-                <div
-                  key={category.id}
-                  className="flex items-center gap-4 p-4 hover:bg-slate-50 transition-colors"
-                >
-                  <GripVertical className="h-5 w-5 text-slate-300 cursor-grab" />
+              {categories.map((category, index) => {
+                const IconComponent = getCategoryIcon(category.icon);
+                const showEmoji = isEmoji(category.icon);
 
-                  <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-xl">
-                    {category.icon || "📁"}
-                  </div>
+                return (
+                  <div
+                    key={category.id}
+                    className="flex items-center gap-4 p-4 hover:bg-slate-50 transition-colors group"
+                  >
+                    {/* Drag Handle */}
+                    <div className="cursor-grab active:cursor-grabbing">
+                      <GripVertical className="h-5 w-5 text-slate-300 group-hover:text-slate-400 transition-colors" />
+                    </div>
 
-                  <div className="flex-1">
-                    <p className="font-medium">{category.name}</p>
-                    {category.description && (
-                      <p className="text-sm text-slate-500">{category.description}</p>
-                    )}
-                  </div>
+                    {/* Icon Container */}
+                    <div className="flex-shrink-0 p-2.5 bg-primary/10 rounded-md">
+                      {showEmoji ? (
+                        <span className="text-xl leading-none">{category.icon}</span>
+                      ) : (
+                        <IconComponent className="h-5 w-5 text-primary" />
+                      )}
+                    </div>
 
-                  <div className="text-sm text-slate-500">
-                    Rekkefølge: {category.sort_order ?? index + 1}
-                  </div>
+                    {/* Category Info */}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-slate-900">{category.name}</p>
+                      {category.description && (
+                        <p className="text-sm text-muted-foreground truncate">
+                          {category.description}
+                        </p>
+                      )}
+                    </div>
 
-                  <div className="flex gap-1">
-                    <Button variant="ghost" size="icon" title="Rediger">
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      title="Slett"
-                      onClick={() => handleDeleteCategory(category.id, category.name)}
-                    >
-                      <Trash2 className="h-4 w-4 text-red-500" />
-                    </Button>
+                    {/* Sort Order Badge */}
+                    <div className="hidden sm:block">
+                      <span className="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded">
+                        #{category.sort_order ?? index + 1}
+                      </span>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        title="Rediger"
+                        className="h-8 w-8 text-slate-500 hover:text-slate-700"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        title="Slett"
+                        className="h-8 w-8 text-slate-500 hover:text-red-600"
+                        onClick={() => handleDeleteCategory(category.id, category.name)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
@@ -225,11 +358,13 @@ export default function CategoriesPage() {
             <div className="space-y-2">
               <Label htmlFor="category-icon">
                 Ikon{" "}
-                <span className="text-muted-foreground font-normal">(emoji, valgfritt)</span>
+                <span className="text-muted-foreground font-normal">
+                  (emoji eller: FileText, Folder, Home, Users, Building, Mail)
+                </span>
               </Label>
               <Input
                 id="category-icon"
-                placeholder="F.eks. 📄"
+                placeholder="F.eks. 📄 eller FileText"
                 value={newCategoryIcon}
                 onChange={(e) => setNewCategoryIcon(e.target.value)}
                 disabled={isCreating}

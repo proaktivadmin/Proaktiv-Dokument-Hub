@@ -178,7 +178,8 @@ class TemplateService:
             template.categories = list(result.scalars().all())
         
         db.add(template)
-        await db.commit()
+        # Note: get_db() handles commit automatically after request
+        await db.flush()  # Flush to get the ID without committing
         await db.refresh(template)
         
         logger.info(f"Created template: {template.id} - {template.title}")
@@ -227,7 +228,8 @@ class TemplateService:
             result = await db.execute(cats_query)
             template.categories = list(result.scalars().all())
         
-        await db.commit()
+        # Note: get_db() handles commit automatically after request
+        await db.flush()
         await db.refresh(template)
         
         logger.info(f"Updated template: {template.id}")
@@ -243,7 +245,8 @@ class TemplateService:
             template: Template to delete
         """
         template.status = "archived"
-        await db.commit()
+        # Note: get_db() handles commit automatically after request
+        await db.flush()
         logger.info(f"Archived template: {template.id}")
     
     @staticmethod
@@ -256,6 +259,7 @@ class TemplateService:
             template: Template to delete
         """
         await db.delete(template)
-        await db.commit()
+        # Note: get_db() handles commit automatically after request
+        await db.flush()
         logger.info(f"Permanently deleted template: {template.id}")
 

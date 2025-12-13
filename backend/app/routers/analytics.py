@@ -7,7 +7,7 @@ Dashboard statistics and metrics.
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from app.database import get_db
 from app.models.template import Template
@@ -35,7 +35,7 @@ async def get_dashboard_stats(db: AsyncSession = Depends(get_db)):
     archived = await db.scalar(archived_query) or 0
     
     # Count downloads in last 30 days
-    thirty_days_ago = datetime.utcnow() - timedelta(days=30)
+    thirty_days_ago = datetime.now(timezone.utc) - timedelta(days=30)
     downloads_query = (
         select(func.count(AuditLog.id))
         .where(AuditLog.action == "downloaded")

@@ -60,6 +60,19 @@ export interface UploadTemplateResponse {
   created_at: string | null;
 }
 
+export interface UpdateTemplatePayload {
+  title?: string;
+  description?: string;
+  status?: TemplateStatus;
+}
+
+export interface UpdateTemplateResponse {
+  id: string;
+  title: string;
+  status: TemplateStatus;
+  updated_at: string | null;
+}
+
 /**
  * Dashboard Stats
  */

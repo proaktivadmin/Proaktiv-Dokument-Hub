@@ -28,6 +28,9 @@
     },
     "azureStorageConnectionString": {
       "value": "SET_VIA_GITHUB_SECRETS"
+    },
+    "secretKey": {
+      "value": "SET_VIA_GITHUB_SECRETS"
     }
   }
 }
