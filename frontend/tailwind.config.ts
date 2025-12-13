@@ -18,6 +18,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        serif: ['var(--font-serif)', 'Playfair Display', 'Georgia', 'serif'],
       },
       colors: {
         border: 'hsl(var(--border))',
@@ -53,17 +54,23 @@ const config: Config = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        // Proaktiv Brand Colors (from legacy theme)
         proaktiv: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
+          navy: '#272630',      // Primary navy/charcoal
+          bronze: '#bcab8a',    // Accent bronze/gold
+          cream: '#f9f9f7',     // Light background
+          text: '#333333',      // Body text
+          // Extended palette
+          50: '#faf9f7',
+          100: '#f5f3ef',
+          200: '#e8e4dc',
+          300: '#d4cec2',
+          400: '#bcab8a',       // Bronze
+          500: '#9a8a6e',
+          600: '#7a6d56',
+          700: '#5c5241',
+          800: '#3d362b',
+          900: '#272630',       // Navy
         },
       },
       borderRadius: {

@@ -1,5 +1,5 @@
 # API Routers
-from app.routers import templates, tags, categories, analytics, health
+from app.routers import templates, tags, categories, analytics, health, sanitizer
 
-__all__ = ["templates", "tags", "categories", "analytics", "health"]
+__all__ = ["templates", "tags", "categories", "analytics", "health", "sanitizer"]
 

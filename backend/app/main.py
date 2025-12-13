@@ -11,7 +11,7 @@ import logging
 
 from app.config import settings
 from app.database import init_db, close_db
-from app.routers import templates, tags, categories, analytics, health
+from app.routers import templates, tags, categories, analytics, health, sanitizer
 
 # Configure logging
 logging.basicConfig(
@@ -61,6 +61,7 @@ app.include_router(templates.router, prefix="/api/templates", tags=["Templates"]
 app.include_router(tags.router, prefix="/api/tags", tags=["Tags"])
 app.include_router(categories.router, prefix="/api/categories", tags=["Categories"])
 app.include_router(analytics.router, prefix="/api/analytics", tags=["Analytics"])
+app.include_router(sanitizer.router, tags=["Sanitizer"])
 
 
 @app.get("/")

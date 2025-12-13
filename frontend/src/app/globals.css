@@ -4,48 +4,75 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* ================================================================
+       Proaktiv Brand Theme
+       Navy: #272630 | Bronze: #bcab8a | Cream: #f9f9f7 | Text: #333
+       ================================================================ */
+    
+    --background: 60 14% 98%;           /* Cream-white background */
+    --foreground: 247 11% 17%;          /* Navy text */
+    
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 247 11% 17%;     /* Navy */
+    
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 199 89% 48%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 199 89% 48%;
+    --popover-foreground: 247 11% 17%;  /* Navy */
+    
+    --primary: 247 11% 17%;             /* Navy - #272630 */
+    --primary-foreground: 60 14% 97%;   /* Cream */
+    
+    --secondary: 38 28% 64%;            /* Bronze - #bcab8a */
+    --secondary-foreground: 247 11% 17%; /* Navy */
+    
+    --muted: 40 20% 94%;                /* Light warm gray */
+    --muted-foreground: 0 0% 35%;       /* Dark gray text */
+    
+    --accent: 38 28% 64%;               /* Bronze accent */
+    --accent-foreground: 247 11% 17%;   /* Navy */
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 38 15% 85%;               /* Warm border */
+    --input: 38 15% 85%;
+    --ring: 38 28% 64%;                 /* Bronze ring */
+    
     --radius: 0.5rem;
+    
+    /* Proaktiv-specific variables */
+    --proaktiv-navy: 247 11% 17%;
+    --proaktiv-bronze: 38 28% 64%;
+    --proaktiv-cream: 60 14% 97%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 199 89% 48%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 199 89% 48%;
+    --background: 247 15% 10%;          /* Dark navy */
+    --foreground: 60 14% 95%;           /* Light cream */
+    
+    --card: 247 12% 14%;
+    --card-foreground: 60 14% 95%;
+    
+    --popover: 247 12% 14%;
+    --popover-foreground: 60 14% 95%;
+    
+    --primary: 38 28% 64%;              /* Bronze in dark mode */
+    --primary-foreground: 247 11% 17%;
+    
+    --secondary: 247 11% 25%;
+    --secondary-foreground: 60 14% 95%;
+    
+    --muted: 247 10% 20%;
+    --muted-foreground: 40 10% 65%;
+    
+    --accent: 38 28% 55%;
+    --accent-foreground: 60 14% 97%;
+    
+    --destructive: 0 62% 40%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 247 10% 25%;
+    --input: 247 10% 25%;
+    --ring: 38 28% 55%;
   }
 }
 
@@ -53,8 +80,27 @@
   * {
     @apply border-border;
   }
+  
   body {
     @apply bg-background text-foreground;
+  }
+  
+  /* Heading typography - use Playfair Display serif */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+  
+  /* Specific heading styles matching legacy */
+  h1 {
+    @apply text-3xl font-bold tracking-tight;
+  }
+  
+  h2 {
+    @apply text-2xl font-semibold;
+  }
+  
+  h3 {
+    @apply text-xl font-semibold;
   }
 }
 
