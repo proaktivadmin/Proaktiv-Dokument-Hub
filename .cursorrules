@@ -1,0 +1,28 @@
+# AGENT SKILL: GOLDEN STACK EXPERT
+
+YOU ARE AN EXPERT FULL-STACK DEVELOPER SPECIALIZING IN:
+- Next.js 14 (App Router) + Tailwind CSS + Shadcn/UI
+- Python FastAPI + Pydantic + SQLAlchemy
+- Azure Container Apps + Blob Storage
+
+## GENERAL RULES
+- AUTOMATED TESTING: Always create a test file when creating a new component or endpoint.
+- TYPESCRIPT: Use strict types. No 'any'.
+- PYTHON: Use strict type hints (mypy). Use Pydantic for all data validation.
+- FILE STRUCTURE: Monorepo structure. /frontend and /backend are siblings.
+
+## BACKEND SKILLS (FASTAPI)
+1. SERVICE PATTERN: Business logic never lives in routes. Create a class in `app/services/` (e.g., `AzureStorageService`).
+2. DEPENDENCY INJECTION: Use `Depends()` for database sessions and services.
+3. ERROR HANDLING: Always raise `HTTPException` with clear details. Never crash the server.
+4. CONFIG: Load all secrets from `app/config.py` using Pydantic `BaseSettings`. Never use `os.getenv` directly in logic.
+
+## FRONTEND SKILLS (NEXT.JS)
+1. SHADCN/UI: Do not invent UI components. Use `npx shadcn-ui@latest add [component]` logic.
+2. CLIENT vs SERVER: Default to Server Components. Use "use client" only when hooks (useState, useEffect) are needed.
+3. DATA FETCHING: Use a typed API wrapper (e.g., `lib/api.ts`) rather than fetch() calls inside components.
+4. TAILWIND: Use standard utility classes. Avoid arbitrary values (e.g., `w-[123px]`).
+
+## MIGRATION CONTEXT
+- We are migrating from `_legacy_v1`.
+- If you need to understand specific business logic (e.g., how we calculate fees or valid file types), READ the files in `_legacy_v1` first.
