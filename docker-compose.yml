@@ -25,6 +25,8 @@ services:
     container_name: dokument-hub-backend
     ports:
       - "8000:8000"
+    env_file:
+      - ./backend/.env
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/dokument_hub
       - LOG_LEVEL=DEBUG
