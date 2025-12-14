@@ -66,6 +66,9 @@ class Template(Base):
     page_count: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     language: Mapped[str] = mapped_column(String(10), default="nb-NO")
     
+    # HTML content storage (for HTML templates)
+    content: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    
     # Array and JSON fields
     vitec_merge_fields: Mapped[Optional[List[str]]] = mapped_column(
         ARRAY(Text), 

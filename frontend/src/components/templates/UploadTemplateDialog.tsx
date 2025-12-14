@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,9 +35,10 @@ const ALLOWED_FILE_TYPES = {
   "application/pdf": [".pdf"],
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"],
   "application/vnd.ms-excel": [".xls"],
+  "text/html": [".html", ".htm"],
 };
 
-const ALLOWED_EXTENSIONS = ["docx", "doc", "pdf", "xlsx", "xls"];
+const ALLOWED_EXTENSIONS = ["docx", "doc", "pdf", "xlsx", "xls", "html", "htm"];
 
 const uploadFormSchema = z.object({
   title: z
@@ -68,6 +69,7 @@ export function UploadTemplateDialog({
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoriesLoading, setCategoriesLoading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
     register,
@@ -111,7 +113,7 @@ export function UploadTemplateDialog({
     setFileError(null);
 
     if (rejectedFiles.length > 0) {
-      setFileError("Ugyldig filtype. Tillatte formater: docx, doc, pdf, xlsx, xls");
+      setFileError("Ugyldig filtype. Tillatte formater: html, docx, doc, pdf, xlsx, xls");
       return;
     }
 
@@ -127,7 +129,7 @@ export function UploadTemplateDialog({
       });
 
       if (!extension || !ALLOWED_EXTENSIONS.includes(extension)) {
-        setFileError("Ugyldig filtype. Tillatte formater: docx, doc, pdf, xlsx, xls");
+        setFileError("Ugyldig filtype. Tillatte formater: html, docx, doc, pdf, xlsx, xls");
         return;
       }
 
@@ -135,16 +137,28 @@ export function UploadTemplateDialog({
     }
   }, []);
 
-  const { getRootProps, getInputProps, isDragActive, open: openFilePicker } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: ALLOWED_FILE_TYPES,
     maxFiles: 1,
     multiple: false,
-    // Fix for click-to-select not working in some browsers
     useFsAccessApi: false,
-    noClick: false,
+    noClick: true, // We handle click manually for better compatibility
     noKeyboard: false,
   });
+
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      onDrop(Array.from(files), []);
+    }
+    // Reset input so same file can be selected again
+    e.target.value = "";
+  };
+
+  const handleOpenFilePicker = () => {
+    fileInputRef.current?.click();
+  };
 
   const removeFile = () => {
     setFile(null);
@@ -206,8 +220,8 @@ export function UploadTemplateDialog({
         <DialogHeader>
           <DialogTitle>Last opp mal</DialogTitle>
           <DialogDescription>
-            Last opp en ny dokumentmal til biblioteket. Støttede formater: Word,
-            PDF og Excel.
+            Last opp en ny dokumentmal til biblioteket. Støttede formater: HTML,
+            Word, PDF og Excel.
           </DialogDescription>
         </DialogHeader>
 
@@ -218,6 +232,7 @@ export function UploadTemplateDialog({
             {!file ? (
               <div
                 {...getRootProps()}
+                onClick={handleOpenFilePicker}
                 className={`
                   border-2 border-dashed rounded-lg p-8 text-center cursor-pointer
                   transition-colors
@@ -229,6 +244,15 @@ export function UploadTemplateDialog({
                   ${fileError ? "border-destructive" : ""}
                 `}
               >
+                {/* Hidden file input for manual click handling */}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".html,.htm,.docx,.doc,.pdf,.xlsx,.xls"
+                  onChange={handleFileInputChange}
+                  style={{ display: "none" }}
+                />
+                {/* Keep dropzone input for drag-and-drop */}
                 <input {...getInputProps()} />
                 <Upload className="mx-auto h-10 w-10 text-muted-foreground mb-3" />
                 <p className="text-sm text-muted-foreground mb-1">
@@ -236,8 +260,8 @@ export function UploadTemplateDialog({
                     ? "Slipp filen her..."
                     : "Dra og slipp en fil her, eller klikk for å velge"}
                 </p>
-                <p className="text-xs text-muted-foreground">
-                  Støttede formater: .docx, .doc, .pdf, .xlsx, .xls
+                <p className="text-xs text-muted-foreground mt-2">
+                  Støttede formater: .html, .docx, .doc, .pdf, .xlsx, .xls
                 </p>
               </div>
             ) : (
@@ -319,16 +343,17 @@ export function UploadTemplateDialog({
                 <SelectValue placeholder={categoriesLoading ? "Laster..." : "Velg kategori"} />
               </SelectTrigger>
               <SelectContent>
-                {categories.map((category) => (
-                  <SelectItem key={category.id} value={category.id}>
-                    {category.icon && <span className="mr-2">{category.icon}</span>}
-                    {category.name}
-                  </SelectItem>
-                ))}
-                {categories.length === 0 && !categoriesLoading && (
-                  <SelectItem value="" disabled>
+                {categories.length === 0 && !categoriesLoading ? (
+                  <div className="px-2 py-4 text-sm text-muted-foreground text-center">
                     Ingen kategorier funnet
-                  </SelectItem>
+                  </div>
+                ) : (
+                  categories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      {category.icon && <span className="mr-2">{category.icon}</span>}
+                      {category.name}
+                    </SelectItem>
+                  ))
                 )}
               </SelectContent>
             </Select>

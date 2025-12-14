@@ -211,4 +211,23 @@ export const templateApi = {
       handleError(error, "templateApi.getDownloadUrl");
     }
   },
+
+  /**
+   * Get template content for preview (HTML templates only)
+   */
+  async getContent(
+    templateId: string
+  ): Promise<{ id: string; title: string; file_type: string; content: string }> {
+    try {
+      const { data } = await api.get<{
+        id: string;
+        title: string;
+        file_type: string;
+        content: string;
+      }>(`/templates/${templateId}/content`);
+      return data;
+    } catch (error) {
+      handleError(error, "templateApi.getContent");
+    }
+  },
 };

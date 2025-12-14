@@ -9,6 +9,7 @@ import {
   MoreHorizontal,
   Trash2,
   Pencil,
+  Eye,
 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Input } from "@/components/ui/input";
@@ -32,6 +33,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { EditTemplateDialog } from "@/components/templates/EditTemplateDialog";
+import { PreviewDialog } from "@/components/templates/PreviewDialog";
 import { useTemplates } from "@/hooks/useTemplates";
 import { templateApi } from "@/lib/api";
 import { formatDistanceToNow } from "date-fns";
@@ -69,6 +71,10 @@ export default function TemplatesPage() {
   const [templateToDelete, setTemplateToDelete] = useState<Template | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // Preview dialog state
+  const [previewDialogOpen, setPreviewDialogOpen] = useState(false);
+  const [templateToPreview, setTemplateToPreview] = useState<Template | null>(null);
+
   const { templates, pagination, isLoading, error, refetch } = useTemplates({
     search: searchQuery || undefined,
     status: statusFilter,
@@ -92,6 +98,11 @@ export default function TemplatesPage() {
   const handleDeleteClick = (template: Template) => {
     setTemplateToDelete(template);
     setDeleteDialogOpen(true);
+  };
+
+  const handlePreviewClick = (template: Template) => {
+    setTemplateToPreview(template);
+    setPreviewDialogOpen(true);
   };
 
   const handleDeleteConfirm = async () => {
@@ -148,8 +159,14 @@ export default function TemplatesPage() {
       doc: "bg-blue-100 text-blue-700",
       xlsx: "bg-green-100 text-green-700",
       xls: "bg-green-100 text-green-700",
+      html: "bg-orange-100 text-orange-700",
+      htm: "bg-orange-100 text-orange-700",
     };
     return colors[fileType] || "bg-slate-100 text-slate-700";
+  };
+
+  const canPreview = (fileType: string) => {
+    return fileType === "html" || fileType === "htm";
   };
 
   const statusFilters = [
@@ -292,6 +309,12 @@ export default function TemplatesPage() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
+                          {canPreview(template.file_type) && (
+                            <DropdownMenuItem onClick={() => handlePreviewClick(template)}>
+                              <Eye className="mr-2 h-4 w-4" />
+                              Forhåndsvis
+                            </DropdownMenuItem>
+                          )}
                           <DropdownMenuItem onClick={() => handleDownload(template)}>
                             <Download className="mr-2 h-4 w-4" />
                             Last ned
@@ -346,6 +369,13 @@ export default function TemplatesPage() {
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
         onSuccess={handleEditSuccess}
+      />
+
+      {/* Preview Dialog */}
+      <PreviewDialog
+        template={templateToPreview}
+        open={previewDialogOpen}
+        onOpenChange={setPreviewDialogOpen}
       />
 
       {/* Delete Confirmation Dialog */}

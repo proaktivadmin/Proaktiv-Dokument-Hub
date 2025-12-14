@@ -127,7 +127,7 @@ async def create_template(
 ):
     """Upload a new template."""
     # Validate file type
-    allowed_types = ["docx", "doc", "pdf", "xlsx", "xls"]
+    allowed_types = ["docx", "doc", "pdf", "xlsx", "xls", "html", "htm"]
     file_ext = file.filename.split(".")[-1].lower() if "." in file.filename else ""
     
     if file_ext not in allowed_types:
@@ -139,6 +139,14 @@ async def create_template(
     # Read file
     file_content = await file.read()
     file_size = len(file_content)
+    
+    # For HTML files, decode and store the content directly
+    html_content = None
+    if file_ext in ["html", "htm"]:
+        try:
+            html_content = file_content.decode("utf-8")
+        except UnicodeDecodeError:
+            html_content = file_content.decode("latin-1")
     
     # TODO: Upload to Azure Blob Storage
     # For now, use a mock URL
@@ -154,7 +162,8 @@ async def create_template(
         file_size_bytes=file_size,
         azure_blob_url=blob_url,
         created_by=user["email"],
-        status=status
+        status=status,
+        content=html_content
     )
     
     # Audit log
@@ -273,5 +282,42 @@ async def download_template(
         "download_url": template.azure_blob_url,
         "file_name": template.file_name,
         "expires_at": datetime.now(timezone.utc).isoformat()
+    }
+
+
+@router.get("/{template_id}/content")
+async def get_template_content(
+    template_id: UUID,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Get the raw HTML content of a template.
+    
+    For HTML templates, returns the stored content directly.
+    For other file types, returns an error (preview not supported).
+    """
+    template = await TemplateService.get_by_id(db, template_id)
+    if not template:
+        raise HTTPException(status_code=404, detail="Template not found")
+    
+    # Check if this is an HTML template
+    if template.file_type not in ["html", "htm"]:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Preview not supported for file type: {template.file_type}. Only HTML templates can be previewed."
+        )
+    
+    # Check if content exists
+    if not template.content:
+        raise HTTPException(
+            status_code=404,
+            detail="Template content not found. The template may need to be re-uploaded."
+        )
+    
+    return {
+        "id": str(template.id),
+        "title": template.title,
+        "file_type": template.file_type,
+        "content": template.content
     }
 

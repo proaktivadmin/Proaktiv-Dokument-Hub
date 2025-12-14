@@ -132,7 +132,8 @@ class TemplateService:
         description: Optional[str] = None,
         status: str = "draft",
         tag_ids: Optional[List[UUID]] = None,
-        category_ids: Optional[List[UUID]] = None
+        category_ids: Optional[List[UUID]] = None,
+        content: Optional[str] = None
     ) -> Template:
         """
         Create a new template.
@@ -163,6 +164,7 @@ class TemplateService:
             status=status,
             created_by=created_by,
             updated_by=created_by,
+            content=content,
         )
         
         # Add tags
