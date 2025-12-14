@@ -35,6 +35,7 @@ services:
       - ./backend/app:/app/app
       - ./backend/alembic:/app/alembic
       - ./backend/scripts:/app/scripts
+      - ./library:/app/library
     depends_on:
       db:
         condition: service_healthy
