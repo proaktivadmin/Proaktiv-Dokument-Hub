@@ -4,7 +4,7 @@ Azure Blob Storage Service
 Handles file uploads, downloads, and management in Azure Blob Storage.
 """
 
-from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
+from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient, ContentSettings
 from azure.core.exceptions import AzureError, ResourceNotFoundError
 from typing import Optional, BinaryIO, List, Dict, Any
 from datetime import datetime, timedelta
@@ -193,7 +193,7 @@ class AzureStorageService:
             blob_client.upload_blob(
                 file_data,
                 overwrite=True,
-                content_settings={"content_type": content_type},
+                content_settings=ContentSettings(content_type=content_type),
                 metadata=metadata
             )
             

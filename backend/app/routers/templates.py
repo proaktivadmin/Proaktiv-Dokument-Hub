@@ -14,7 +14,12 @@ from pydantic import BaseModel, Field
 from app.database import get_db
 from app.services.template_service import TemplateService
 from app.services.audit_service import AuditService
+from app.services.azure_storage_service import get_azure_storage_service
 from app.config import get_mock_user
+import io
+import logging
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -148,9 +153,32 @@ async def create_template(
         except UnicodeDecodeError:
             html_content = file_content.decode("latin-1")
     
-    # TODO: Upload to Azure Blob Storage
-    # For now, use a mock URL
-    blob_url = f"mock://templates/{file.filename}"
+    # Upload to Azure Blob Storage
+    storage_service = get_azure_storage_service()
+    blob_url = None
+    
+    if storage_service.is_configured:
+        # Generate unique blob name with timestamp to avoid collisions
+        from datetime import datetime
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        blob_name = f"{timestamp}_{file.filename}"
+        
+        # Upload to Azure
+        blob_url = await storage_service.upload_file(
+            file_data=io.BytesIO(file_content),
+            blob_name=blob_name,
+            content_type=file.content_type
+        )
+        
+        if blob_url:
+            logger.info(f"Uploaded to Azure: {blob_url}")
+        else:
+            logger.warning(f"Azure upload failed for {file.filename}, using mock URL")
+    
+    # Fallback to mock URL if Azure not configured or upload failed
+    if not blob_url:
+        blob_url = f"mock://templates/{file.filename}"
+        logger.info(f"Using mock URL: {blob_url}")
     
     # Create template
     template = await TemplateService.create(
