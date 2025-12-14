@@ -38,6 +38,7 @@ services:
       - ./backend/alembic:/app/alembic
       - ./backend/scripts:/app/scripts
       - ./library:/app/library
+      - ./_legacy_v1/library:/app/_legacy_v1/library
     depends_on:
       db:
         condition: service_healthy
