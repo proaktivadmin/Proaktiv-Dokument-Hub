@@ -22,14 +22,14 @@
 - Template Detail Sheet (Slide-out panel with preview, metadata, actions).
 - Smart Sanitizer (Detects if HTML needs cleaning, skips valid templates).
 - Legacy Migration (43 templates imported from `_legacy_v1/library` to Azure).
+- **Proaktiv Premium UI** (Navy/Bronze/Beige brand identity, serif typography).
 - Client Management (Create/List).
 - Invoice Management (Basic CRUD).
 
 ## 🚧 IN PROGRESS / TODO
-1. **Visual Polish:** Refactoring UI to match "Proaktiv Premium" (Navy/Bronze/Beige).
-2. **Preview Enhancements:** A4 page simulation, Mobile/iMessage preview modes.
-3. **Category Management:** Associate templates with categories in UI.
-4. **Download Functionality:** Enable file download from Azure Blob Storage.
+1. **Preview Enhancements:** A4 page simulation, Mobile/iMessage preview modes.
+2. **Category Management:** Associate templates with categories in UI.
+3. **Download Functionality:** Enable file download from Azure Blob Storage.
 
 ## ⚠️ KNOWN ISSUES / CONSTRAINTS
 - **CORS:** Frontend runs on varying ports (3000/3001), Backend whitelist must match.
