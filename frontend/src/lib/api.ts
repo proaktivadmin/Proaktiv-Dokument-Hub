@@ -135,6 +135,11 @@ export const templateApi = {
         formData.append("category_id", payload.category_id);
       }
 
+      // auto_sanitize defaults to true, so only append if explicitly set
+      if (payload.auto_sanitize !== undefined) {
+        formData.append("auto_sanitize", String(payload.auto_sanitize));
+      }
+
       // Debug logging
       console.log("[API] Uploading template:", {
         fileName: payload.file.name,
@@ -144,6 +149,7 @@ export const templateApi = {
         description: payload.description,
         status: payload.status,
         category_id: payload.category_id,
+        auto_sanitize: payload.auto_sanitize,
       });
 
       const { data } = await api.post<UploadTemplateResponse>(

@@ -15,6 +15,7 @@ from app.database import get_db
 from app.services.template_service import TemplateService
 from app.services.audit_service import AuditService
 from app.services.azure_storage_service import get_azure_storage_service
+from app.services.sanitizer_service import get_sanitizer_service
 from app.config import get_mock_user
 import io
 import logging
@@ -128,9 +129,16 @@ async def create_template(
     title: str = Form(...),
     description: Optional[str] = Form(None),
     status: str = Form("draft"),
+    auto_sanitize: bool = Form(True),
     user: dict = Depends(get_current_user)
 ):
-    """Upload a new template."""
+    """
+    Upload a new template.
+    
+    Args:
+        auto_sanitize: If True (default), HTML files will be sanitized for Vitec compatibility.
+                       Set to False for system templates that should not be modified.
+    """
     # Validate file type
     allowed_types = ["docx", "doc", "pdf", "xlsx", "xls", "html", "htm"]
     file_ext = file.filename.split(".")[-1].lower() if "." in file.filename else ""
@@ -145,13 +153,19 @@ async def create_template(
     file_content = await file.read()
     file_size = len(file_content)
     
-    # For HTML files, decode and store the content directly
+    # For HTML files, decode and optionally sanitize the content
     html_content = None
     if file_ext in ["html", "htm"]:
         try:
             html_content = file_content.decode("utf-8")
         except UnicodeDecodeError:
             html_content = file_content.decode("latin-1")
+        
+        # Sanitize HTML if requested
+        if auto_sanitize:
+            sanitizer = get_sanitizer_service()
+            html_content = sanitizer.sanitize(html_content)
+            logger.info(f"Sanitized HTML content for template: {title}")
     
     # Upload to Azure Blob Storage
     storage_service = get_azure_storage_service()

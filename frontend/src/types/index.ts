@@ -50,6 +50,7 @@ export interface UploadTemplatePayload {
   description?: string;
   status?: TemplateStatus;
   category_id?: string;
+  auto_sanitize?: boolean;
 }
 
 export interface UploadTemplateResponse {

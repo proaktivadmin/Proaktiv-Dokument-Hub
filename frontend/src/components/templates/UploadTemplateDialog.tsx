@@ -5,7 +5,7 @@ import { useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Upload, FileText, X, Loader2 } from "lucide-react";
+import { Upload, FileText, X, Loader2, Info } from "lucide-react";
 
 import {
   Dialog,
@@ -26,6 +26,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { templateApi, categoryApi } from "@/lib/api";
 import type { TemplateStatus, Category } from "@/types";
 
@@ -69,7 +76,12 @@ export function UploadTemplateDialog({
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoriesLoading, setCategoriesLoading] = useState(false);
+  const [autoSanitize, setAutoSanitize] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // Check if selected file is HTML
+  const isHtmlFile = file?.name?.toLowerCase().endsWith('.html') || 
+                     file?.name?.toLowerCase().endsWith('.htm');
 
   const {
     register,
@@ -163,6 +175,7 @@ export function UploadTemplateDialog({
   const removeFile = () => {
     setFile(null);
     setFileError(null);
+    setAutoSanitize(true); // Reset to default when file is removed
   };
 
   const handleClose = () => {
@@ -170,6 +183,7 @@ export function UploadTemplateDialog({
       setFile(null);
       setFileError(null);
       setUploadError(null);
+      setAutoSanitize(true); // Reset to default
       reset();
       onOpenChange(false);
     }
@@ -191,6 +205,7 @@ export function UploadTemplateDialog({
         description: data.description || undefined,
         status: data.status as TemplateStatus,
         category_id: data.category_id || undefined,
+        auto_sanitize: isHtmlFile ? autoSanitize : undefined,
       });
 
       // Reset form and close dialog on success
@@ -385,6 +400,48 @@ export function UploadTemplateDialog({
               </label>
             </div>
           </div>
+
+          {/* HTML Sanitization Checkbox - Only shown for HTML files */}
+          {isHtmlFile && (
+            <div className="space-y-2 p-3 bg-muted/50 rounded-lg border">
+              <div className="flex items-center gap-3">
+                <Checkbox
+                  id="auto_sanitize"
+                  checked={autoSanitize}
+                  onCheckedChange={(checked) => setAutoSanitize(checked === true)}
+                  disabled={isUploading}
+                />
+                <div className="flex items-center gap-2">
+                  <Label 
+                    htmlFor="auto_sanitize" 
+                    className="text-sm font-medium cursor-pointer"
+                  >
+                    Sanitize HTML for Vitec
+                  </Label>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent className="max-w-xs">
+                        <p>
+                          Renser HTML-koden for å sikre kompatibilitet med Vitec Next. 
+                          Fjerner gamle inline-stiler og legger til standard wrapper.
+                          <br /><br />
+                          <strong>Deaktiver</strong> for system-maler som allerede er korrekt formatert.
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              </div>
+              {!autoSanitize && (
+                <p className="text-xs text-amber-600 ml-7">
+                  ⚠️ HTML-filen vil ikke bli renset. Kun for avanserte brukere.
+                </p>
+              )}
+            </div>
+          )}
 
           {/* Upload Error */}
           {uploadError && (

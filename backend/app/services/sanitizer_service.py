@@ -5,8 +5,11 @@ Ported from legacy sanitizer.js to Python using BeautifulSoup.
 """
 
 import re
-from typing import Optional
+import logging
+from typing import Optional, Tuple
 from bs4 import BeautifulSoup, Comment
+
+logger = logging.getLogger(__name__)
 
 
 class SanitizerService:
@@ -35,6 +38,14 @@ class SanitizerService:
     
     # Attributes to strip from all elements
     DANGEROUS_ATTRIBUTES = ['onclick', 'onload', 'onerror', 'onmouseover']
+    
+    # System template markers - if these are found, skip sanitization
+    SYSTEM_MARKERS = [
+        'vitec-stilark',        # System stylesheet
+        'vitec-structure',      # Structure CSS
+        'theme-proaktiv',       # Theme CSS
+        'vitec-system-template', # Explicit system marker
+    ]
 
     def __init__(self, theme_class: str = "proaktiv-theme"):
         """
@@ -45,9 +56,53 @@ class SanitizerService:
         """
         self.theme_class = theme_class
 
+    def _is_already_valid(self, soup: BeautifulSoup) -> Tuple[bool, str]:
+        """
+        Check if the HTML content is already valid and should not be sanitized.
+        
+        Returns:
+            Tuple of (is_valid, reason)
+        """
+        # Check 1: Already wrapped in #vitecTemplate with correct theme class
+        vitec_wrapper = soup.find(id="vitecTemplate")
+        if vitec_wrapper:
+            classes = vitec_wrapper.get("class", [])
+            if isinstance(classes, str):
+                classes = classes.split()
+            
+            # If it has the theme class, it's already been processed
+            if self.theme_class in classes:
+                return True, "Already wrapped in #vitecTemplate with theme class"
+        
+        # Check 2: Contains system template markers (comments or classes)
+        # Look for HTML comments indicating system template
+        for comment in soup.find_all(string=lambda text: isinstance(text, Comment)):
+            comment_text = str(comment).lower()
+            for marker in self.SYSTEM_MARKERS:
+                if marker in comment_text:
+                    return True, f"Contains system marker: {marker}"
+        
+        # Check 3: Contains specific Vitec system classes
+        for marker in self.SYSTEM_MARKERS:
+            if soup.find(class_=lambda x: x and marker in str(x).lower()):
+                return True, f"Contains system class: {marker}"
+        
+        # Check 4: Has vitec-template attribute pointing to premium stylesheet
+        resource_elements = soup.find_all(attrs={"vitec-template": True})
+        for el in resource_elements:
+            resource_val = el.get("vitec-template", "")
+            if "Premium" in resource_val or "Gold" in resource_val:
+                return True, "Already using premium Vitec stylesheet"
+        
+        return False, ""
+
     def sanitize(self, html: str, update_resource: bool = True) -> str:
         """
         Sanitize an HTML template string.
+        
+        Smart sanitization: Automatically detects if content is already valid
+        (wrapped in #vitecTemplate with theme class, or contains system markers)
+        and returns it untouched to avoid double-wrapping or breaking system templates.
         
         Args:
             html: The raw HTML content to sanitize.
@@ -61,6 +116,13 @@ class SanitizerService:
         
         # Parse the HTML
         soup = BeautifulSoup(html, 'lxml')
+        
+        # Smart detection: Check if content is already valid
+        is_valid, reason = self._is_already_valid(soup)
+        if is_valid:
+            logger.info(f"Skipping sanitization: {reason}")
+            # Return original content (extract it properly to avoid lxml wrappers)
+            return self._extract_content(soup)
         
         # Step 1: Update resource pointers
         if update_resource:
