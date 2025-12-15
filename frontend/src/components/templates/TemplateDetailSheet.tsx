@@ -120,13 +120,13 @@ export function TemplateDetailSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-2xl flex flex-col p-0 gap-0">
-        <SheetHeader className="px-6 py-4 border-b shrink-0">
-          <SheetTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5 text-muted-foreground" />
+      <SheetContent className="w-full sm:max-w-2xl flex flex-col p-0 gap-0 bg-white">
+        <SheetHeader className="px-6 py-4 border-b border-[#E5E5E5] shrink-0 bg-[#E9E7DC]">
+          <SheetTitle className="flex items-center gap-2 text-[#272630]">
+            <FileText className="h-5 w-5 text-[#BCAB8A]" />
             {template.title}
           </SheetTitle>
-          <SheetDescription className="flex items-center gap-2">
+          <SheetDescription className="flex items-center gap-2 text-[#272630]/60">
             {template.file_name}
             {getStatusBadge(template.status)}
           </SheetDescription>
@@ -142,13 +142,13 @@ export function TemplateDetailSheet({
               error={error || undefined}
             />
           ) : (
-            <div className="flex items-center justify-center h-full bg-muted">
+            <div className="flex items-center justify-center h-full bg-[#F5F5F0]">
               <div className="text-center p-8">
-                <FileText className="h-16 w-16 mx-auto mb-4 text-muted-foreground opacity-50" />
-                <p className="text-muted-foreground font-medium mb-2">
+                <FileText className="h-16 w-16 mx-auto mb-4 text-[#272630]/30" />
+                <p className="text-[#272630]/60 font-medium mb-2">
                   Forhåndsvisning ikke tilgjengelig
                 </p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-[#272630]/50">
                   Kun HTML-maler kan forhåndsvises.
                 </p>
               </div>
@@ -157,32 +157,31 @@ export function TemplateDetailSheet({
         </div>
 
         {/* Metadata Section */}
-        <div className="border-t px-6 py-4 bg-muted/30 shrink-0">
-          <div className="grid grid-cols-2 gap-4 text-sm">
+        <div className="border-t border-[#E5E5E5] px-6 py-4 bg-[#F5F5F0] shrink-0">
+          <div className="grid grid-cols-2 gap-4 text-sm font-sans">
             <div className="flex items-center gap-2">
-              <HardDrive className="h-4 w-4 text-muted-foreground" />
-              <span className="text-muted-foreground">Størrelse:</span>
-              <span className="font-medium">
+              <HardDrive className="h-4 w-4 text-[#BCAB8A]" />
+              <span className="text-[#272630]/50">Størrelse:</span>
+              <span className="font-medium text-[#272630]">
                 {formatFileSize(template.file_size_bytes)}
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-muted-foreground" />
-              <span className="text-muted-foreground">Oppdatert:</span>
-              <span className="font-medium">
+              <Calendar className="h-4 w-4 text-[#BCAB8A]" />
+              <span className="text-[#272630]/50">Oppdatert:</span>
+              <span className="font-medium text-[#272630]">
                 {formatDate(template.updated_at)}
               </span>
             </div>
             {template.categories.length > 0 && (
               <div className="flex items-center gap-2 col-span-2">
-                <FolderOpen className="h-4 w-4 text-muted-foreground" />
-                <span className="text-muted-foreground">Kategorier:</span>
+                <FolderOpen className="h-4 w-4 text-[#BCAB8A]" />
+                <span className="text-[#272630]/50">Kategorier:</span>
                 <div className="flex gap-1 flex-wrap">
                   {template.categories.map((cat) => (
                     <Badge
                       key={cat.id}
-                      variant="secondary"
-                      className="text-xs"
+                      className="text-xs bg-[#E9E7DC] text-[#272630] hover:bg-[#E9E7DC]"
                     >
                       {cat.icon && <span className="mr-1">{cat.icon}</span>}
                       {cat.name}
@@ -193,8 +192,8 @@ export function TemplateDetailSheet({
             )}
             {template.tags.length > 0 && (
               <div className="flex items-center gap-2 col-span-2">
-                <Tag className="h-4 w-4 text-muted-foreground" />
-                <span className="text-muted-foreground">Tags:</span>
+                <Tag className="h-4 w-4 text-[#BCAB8A]" />
+                <span className="text-[#272630]/50">Tags:</span>
                 <div className="flex gap-1 flex-wrap">
                   {template.tags.map((tag) => (
                     <Badge
@@ -210,14 +209,14 @@ export function TemplateDetailSheet({
             )}
           </div>
           {template.description && (
-            <p className="mt-3 text-sm text-muted-foreground">
+            <p className="mt-3 text-sm text-[#272630]/60">
               {template.description}
             </p>
           )}
         </div>
 
         {/* Footer Actions */}
-        <SheetFooter className="border-t px-6 py-4 shrink-0">
+        <SheetFooter className="border-t border-[#E5E5E5] px-6 py-4 shrink-0 bg-white">
           <div className="flex gap-2 w-full">
             <Button
               variant="outline"
@@ -228,7 +227,7 @@ export function TemplateDetailSheet({
               Last ned
             </Button>
             <Button
-              className="flex-1 bg-secondary text-secondary-foreground hover:bg-secondary/90"
+              className="flex-1"
               onClick={() => onEdit?.(template)}
             >
               <Pencil className="h-4 w-4 mr-2" />

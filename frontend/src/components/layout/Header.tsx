@@ -29,13 +29,13 @@ export function Header({ onUploadSuccess }: HeaderProps) {
 
   return (
     <>
-      <header className="border-b bg-card/80 backdrop-blur-sm sticky top-0 z-50">
+      <header className="border-b border-[#E5E5E5] bg-[#E9E7DC] sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
+              <div className="w-10 h-10 rounded-md bg-[#272630] flex items-center justify-center">
                 <svg
-                  className="w-6 h-6 text-primary-foreground"
+                  className="w-6 h-6 text-white"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -49,14 +49,14 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                 </svg>
               </div>
               <div>
-                <h1 className="text-xl font-semibold text-foreground">
+                <h1 className="text-xl font-semibold text-[#272630]">
                   Proaktiv Dokument Hub
                 </h1>
-                <p className="text-sm text-muted-foreground">Master Template Library</p>
+                <p className="text-sm text-[#272630]/60">Master Template Library</p>
               </div>
             </Link>
 
-            <nav className="flex items-center gap-2">
+            <nav className="flex items-center gap-1">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = pathname === item.href;
@@ -66,10 +66,10 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      "px-4 py-2 text-sm font-medium rounded-lg transition-colors inline-flex items-center gap-2",
+                      "px-4 py-2 text-sm font-medium rounded-md transition-colors inline-flex items-center gap-2",
                       isActive
-                        ? "bg-muted text-foreground"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                        ? "bg-white/60 text-[#272630]"
+                        : "text-[#272630]/70 hover:text-[#272630] hover:bg-white/40"
                     )}
                   >
                     <Icon className="h-4 w-4" />
@@ -80,7 +80,7 @@ export function Header({ onUploadSuccess }: HeaderProps) {
 
               <Button
                 onClick={() => setUploadDialogOpen(true)}
-                className="ml-2 bg-secondary text-secondary-foreground hover:bg-secondary/90"
+                className="ml-3 bg-[#272630] text-white hover:bg-[#272630]/90 rounded-md"
               >
                 <Upload className="h-4 w-4 mr-2" />
                 Last opp

@@ -265,20 +265,20 @@ export default function TemplatesPage() {
         </Breadcrumb>
 
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-foreground">Maler</h2>
-          <p className="text-muted-foreground">Administrer alle dokumentmaler</p>
+          <h2 className="text-2xl font-bold text-[#272630]">Maler</h2>
+          <p className="text-[#272630]/60 font-sans">Administrer alle dokumentmaler</p>
         </div>
 
         {/* Active Category Filter */}
         {selectedCategory && (
           <div className="flex items-center gap-2 mb-4">
-            <span className="text-sm text-muted-foreground">Filtrert etter kategori:</span>
-            <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-secondary text-secondary-foreground text-sm font-medium">
+            <span className="text-sm text-[#272630]/60 font-sans">Filtrert etter kategori:</span>
+            <div className="inline-flex items-center gap-1 px-3 py-1 rounded-md bg-[#BCAB8A] text-white text-sm font-medium">
               {selectedCategory.icon && <span>{selectedCategory.icon}</span>}
               {selectedCategory.name}
               <button
                 onClick={clearCategoryFilter}
-                className="ml-1 hover:bg-secondary-foreground/10 rounded-full p-0.5"
+                className="ml-1 hover:bg-white/20 rounded-full p-0.5"
               >
                 <X className="h-3 w-3" />
               </button>
@@ -287,7 +287,7 @@ export default function TemplatesPage() {
         )}
 
         {/* Filters */}
-        <div className="bg-card rounded-lg p-4 shadow-sm border mb-6">
+        <div className="bg-white rounded-md p-4 border border-[#E5E5E5] mb-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -315,7 +315,7 @@ export default function TemplatesPage() {
         </div>
 
         {/* Templates List */}
-        <div className="bg-card rounded-lg shadow-sm border">
+        <div className="bg-white rounded-md border border-[#E5E5E5]">
           {isLoading ? (
             <div className="p-4">
               <TemplateTableSkeleton />
@@ -328,10 +328,10 @@ export default function TemplatesPage() {
               </Button>
             </div>
           ) : templates.length === 0 ? (
-            <div className="p-12 text-center text-muted-foreground">
+            <div className="p-12 text-center text-[#272630]/50">
               <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p className="text-lg font-medium">Ingen maler funnet</p>
-              <p className="text-sm">
+              <p className="text-lg font-medium font-serif">Ingen maler funnet</p>
+              <p className="text-sm font-sans">
                 {searchQuery
                   ? "Prøv et annet søkeord"
                   : 'Klikk "Last opp" for å legge til din første mal.'}
@@ -340,7 +340,7 @@ export default function TemplatesPage() {
           ) : (
             <>
               {/* Table Header */}
-              <div className="grid grid-cols-12 gap-4 p-4 border-b bg-muted text-sm font-medium text-muted-foreground">
+              <div className="grid grid-cols-12 gap-4 p-4 border-b border-[#E5E5E5] bg-[#F5F5F0] text-sm font-medium text-[#272630]/70 font-sans">
                 <div className="col-span-5">Mal</div>
                 <div className="col-span-2">Type</div>
                 <div className="col-span-2">Status</div>
@@ -349,20 +349,20 @@ export default function TemplatesPage() {
               </div>
 
               {/* Table Body */}
-              <div className="divide-y">
+              <div className="divide-y divide-[#E5E5E5]">
                 {templates.map((template) => (
                   <div
                     key={template.id}
                     onClick={() => handleRowClick(template)}
-                    className="grid grid-cols-12 gap-4 p-4 items-center cursor-pointer hover:bg-muted/50 transition-colors"
+                    className="grid grid-cols-12 gap-4 p-4 items-center cursor-pointer hover:bg-[#F5F5F0] transition-colors"
                   >
                     <div className="col-span-5 flex items-center gap-3">
-                      <div className={`p-2 rounded ${getFileTypeColor(template.file_type)}`}>
+                      <div className={`p-2 rounded-md ${getFileTypeColor(template.file_type)}`}>
                         <FileText className="h-5 w-5" />
                       </div>
                       <div className="min-w-0">
-                        <p className="font-medium truncate">{template.title}</p>
-                        <p className="text-sm text-muted-foreground truncate">
+                        <p className="font-medium text-[#272630] truncate">{template.title}</p>
+                        <p className="text-sm text-[#272630]/50 font-sans truncate">
                           {template.file_name} • {formatFileSize(template.file_size_bytes)}
                         </p>
                       </div>
@@ -380,12 +380,12 @@ export default function TemplatesPage() {
 
                     <div className="col-span-2">
                       <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        className={`px-2 py-1 rounded-md text-xs font-medium font-sans ${
                           template.status === "published"
-                            ? "bg-green-100 text-green-700"
+                            ? "bg-green-50 text-green-700 border border-green-200"
                             : template.status === "draft"
-                            ? "bg-amber-100 text-amber-700"
-                            : "bg-muted text-muted-foreground"
+                            ? "bg-amber-50 text-amber-700 border border-amber-200"
+                            : "bg-[#F5F5F0] text-[#272630]/60"
                         }`}
                       >
                         {template.status === "published"
@@ -396,8 +396,8 @@ export default function TemplatesPage() {
                       </span>
                     </div>
 
-                    <div className="col-span-2 flex items-center gap-1 text-sm text-muted-foreground">
-                      <Clock className="h-4 w-4" />
+                    <div className="col-span-2 flex items-center gap-1 text-sm text-[#272630]/50 font-sans">
+                      <Clock className="h-4 w-4 text-[#BCAB8A]" />
                       {formatDate(template.updated_at)}
                     </div>
 
@@ -441,8 +441,8 @@ export default function TemplatesPage() {
 
               {/* Pagination */}
               {pagination && pagination.total_pages > 1 && (
-                <div className="p-4 border-t flex items-center justify-between">
-                  <p className="text-sm text-muted-foreground">
+                <div className="p-4 border-t border-[#E5E5E5] flex items-center justify-between">
+                  <p className="text-sm text-[#272630]/50 font-sans">
                     Viser {templates.length} av {pagination.total} maler
                   </p>
                   <div className="flex gap-2">
