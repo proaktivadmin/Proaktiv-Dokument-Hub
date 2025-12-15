@@ -5,133 +5,14 @@ import { Maximize2, Minimize2, Code, Eye, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 /**
- * Proaktiv/Vitec Preview CSS
- * Combined styles for rendering HTML templates in the preview iframe.
+ * TemplatePreview Component
+ * 
+ * Renders HTML templates in an isolated iframe with the full Vitec/Proaktiv
+ * styling loaded from an external CSS file.
+ * 
+ * The CSS file (/vitec-theme.css) is loaded via a link tag inside the iframe,
+ * ensuring complete style isolation from the main application.
  */
-const PREVIEW_STYLES = `
-/* Base Reset */
-html, body {
-  margin: 0;
-  padding: 0;
-  background: #f5f5f5;
-  min-height: 100%;
-}
-
-/* Proaktiv Design Tokens */
-:root {
-  --color-primary: #272630;
-  --color-pg-bronse: #bcab8a;
-  --color-pg-beige: #e9e7dc;
-  --color-text: #1d1d1d;
-  --font-family-base: 'Arial', 'Helvetica', sans-serif;
-  --font-family-serif: 'Georgia', 'Times New Roman', serif;
-  --font-size-base: 10pt;
-}
-
-body {
-  font-family: var(--font-family-base);
-  font-size: var(--font-size-base);
-  color: var(--color-text);
-  line-height: 1.5;
-}
-
-/* A4 Container Styling */
-#vitecTemplate {
-  max-width: 210mm;
-  margin: 20px auto;
-  padding: 20mm 15mm;
-  background: white;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  min-height: 297mm;
-  box-sizing: border-box;
-}
-
-/* Typography */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-family-serif);
-  color: var(--color-primary);
-  margin-top: 0;
-}
-
-h1 {
-  font-size: 22pt;
-  text-transform: uppercase;
-  border-bottom: 3px solid var(--color-pg-bronse);
-  padding-bottom: 10px;
-  margin-bottom: 25px;
-}
-
-h2 {
-  font-size: 14pt;
-  border-left: 5px solid var(--color-pg-bronse);
-  padding: 5px 0 5px 15px;
-  margin-top: 30px;
-  margin-bottom: 15px;
-  background-color: #f9f9f7;
-}
-
-h3 {
-  font-size: 12pt;
-  margin-top: 20px;
-}
-
-p {
-  margin-bottom: 1em;
-}
-
-a {
-  color: var(--color-primary);
-  text-decoration: underline;
-}
-
-strong, b {
-  font-weight: 700;
-}
-
-/* Tables */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-  margin-bottom: 20px;
-}
-
-table.vitec-variables-list {
-  table-layout: fixed;
-}
-
-table.vitec-variables-list td {
-  padding: 5px;
-  vertical-align: top;
-  border-top: 1px solid #ededed;
-}
-
-table.vitec-variables-list tr:first-child td {
-  border-top: none;
-}
-
-/* Signature Block */
-.proaktiv-signature-block {
-  border-top: 3px solid var(--color-pg-bronse);
-  padding-top: 20px;
-  margin-top: 40px;
-}
-
-/* Hide Vitec resource references */
-[vitec-template] {
-  display: none !important;
-}
-
-/* Merge field highlighting */
-.merge-field-highlight {
-  background-color: #fff3cd;
-  border: 1px dashed #ffc107;
-  padding: 0 4px;
-  border-radius: 3px;
-  font-family: monospace;
-  font-size: 0.9em;
-}
-`;
 
 interface TemplatePreviewProps {
   content: string;
@@ -163,6 +44,7 @@ export function TemplatePreview({
 
   /**
    * Build the complete HTML document for the iframe
+   * Uses an external stylesheet for full Vitec/Proaktiv styling
    */
   const buildPreviewDocument = (): string => {
     const processedContent = highlightMergeFields(content);
@@ -173,9 +55,9 @@ export function TemplatePreview({
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${title || "Template Preview"}</title>
-  <style>${PREVIEW_STYLES}</style>
+  <link rel="stylesheet" href="/vitec-theme.css" />
 </head>
-<body class="proaktiv-theme vitec-preview-mode">
+<body class="vitec-preview-mode">
   ${processedContent}
 </body>
 </html>`;
@@ -296,6 +178,3 @@ export function TemplatePreview({
     </div>
   );
 }
-
-
-
