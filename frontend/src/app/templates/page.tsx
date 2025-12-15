@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   FileText,
   Search,
@@ -10,6 +11,7 @@ import {
   Trash2,
   Pencil,
   Eye,
+  X,
 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Input } from "@/components/ui/input";
@@ -32,12 +34,23 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { EditTemplateDialog } from "@/components/templates/EditTemplateDialog";
 import { PreviewDialog } from "@/components/templates/PreviewDialog";
+import { TemplateDetailSheet } from "@/components/templates/TemplateDetailSheet";
 import { useTemplates } from "@/hooks/useTemplates";
+import { useCategories } from "@/hooks/useCategories";
 import { templateApi } from "@/lib/api";
 import { formatDistanceToNow } from "date-fns";
 import { nb } from "date-fns/locale";
+import Link from "next/link";
 import type { Template } from "@/types";
 
 function TemplateTableSkeleton() {
@@ -59,8 +72,21 @@ function TemplateTableSkeleton() {
 }
 
 export default function TemplatesPage() {
+  const searchParams = useSearchParams();
+  const categoryFromUrl = searchParams.get("category");
+  
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
+  const [categoryFilter, setCategoryFilter] = useState<string | undefined>(undefined);
+
+  // Sync category filter with URL params
+  useEffect(() => {
+    setCategoryFilter(categoryFromUrl || undefined);
+  }, [categoryFromUrl]);
+
+  // Fetch categories for display
+  const { categories } = useCategories();
+  const selectedCategory = categories.find((c) => c.id === categoryFilter);
 
   // Edit dialog state
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -75,11 +101,22 @@ export default function TemplatesPage() {
   const [previewDialogOpen, setPreviewDialogOpen] = useState(false);
   const [templateToPreview, setTemplateToPreview] = useState<Template | null>(null);
 
+  // Detail sheet state (for row click)
+  const [detailSheetOpen, setDetailSheetOpen] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
+
   const { templates, pagination, isLoading, error, refetch } = useTemplates({
     search: searchQuery || undefined,
     status: statusFilter,
+    category_id: categoryFilter,
     per_page: 20,
   });
+
+  const clearCategoryFilter = () => {
+    setCategoryFilter(undefined);
+    // Update URL without category param
+    window.history.replaceState({}, "", "/templates");
+  };
 
   const handleUploadSuccess = () => {
     refetch();
@@ -103,6 +140,20 @@ export default function TemplatesPage() {
   const handlePreviewClick = (template: Template) => {
     setTemplateToPreview(template);
     setPreviewDialogOpen(true);
+  };
+
+  const handleRowClick = (template: Template) => {
+    setSelectedTemplate(template);
+    setDetailSheetOpen(true);
+  };
+
+  const handleSheetEdit = (template: Template) => {
+    setDetailSheetOpen(false);
+    handleEditClick(template);
+  };
+
+  const handleSheetDownload = (template: Template) => {
+    handleDownload(template);
   };
 
   const handleDeleteConfirm = async () => {
@@ -162,7 +213,7 @@ export default function TemplatesPage() {
       html: "bg-orange-100 text-orange-700",
       htm: "bg-orange-100 text-orange-700",
     };
-    return colors[fileType] || "bg-slate-100 text-slate-700";
+    return colors[fileType] || "bg-muted text-muted-foreground";
   };
 
   const canPreview = (fileType: string) => {
@@ -177,20 +228,69 @@ export default function TemplatesPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="min-h-screen bg-background">
       <Header onUploadSuccess={handleUploadSuccess} />
 
       <main className="container mx-auto px-6 py-8">
+        {/* Breadcrumb Navigation */}
+        <Breadcrumb className="mb-4">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/">Dashboard</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              {selectedCategory ? (
+                <BreadcrumbLink asChild>
+                  <Link href="/templates">Maler</Link>
+                </BreadcrumbLink>
+              ) : (
+                <BreadcrumbPage>Maler</BreadcrumbPage>
+              )}
+            </BreadcrumbItem>
+            {selectedCategory && (
+              <>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>
+                    {selectedCategory.icon && <span className="mr-1">{selectedCategory.icon}</span>}
+                    {selectedCategory.name}
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+              </>
+            )}
+          </BreadcrumbList>
+        </Breadcrumb>
+
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-slate-900">Maler</h2>
-          <p className="text-slate-500">Administrer alle dokumentmaler</p>
+          <h2 className="text-2xl font-bold text-foreground">Maler</h2>
+          <p className="text-muted-foreground">Administrer alle dokumentmaler</p>
         </div>
 
+        {/* Active Category Filter */}
+        {selectedCategory && (
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-sm text-muted-foreground">Filtrert etter kategori:</span>
+            <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-secondary text-secondary-foreground text-sm font-medium">
+              {selectedCategory.icon && <span>{selectedCategory.icon}</span>}
+              {selectedCategory.name}
+              <button
+                onClick={clearCategoryFilter}
+                className="ml-1 hover:bg-secondary-foreground/10 rounded-full p-0.5"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Filters */}
-        <div className="bg-white rounded-lg p-4 shadow-sm border mb-6">
+        <div className="bg-card rounded-lg p-4 shadow-sm border mb-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Søk i maler..."
                 value={searchQuery}
@@ -215,7 +315,7 @@ export default function TemplatesPage() {
         </div>
 
         {/* Templates List */}
-        <div className="bg-white rounded-lg shadow-sm border">
+        <div className="bg-card rounded-lg shadow-sm border">
           {isLoading ? (
             <div className="p-4">
               <TemplateTableSkeleton />
@@ -228,7 +328,7 @@ export default function TemplatesPage() {
               </Button>
             </div>
           ) : templates.length === 0 ? (
-            <div className="p-12 text-center text-slate-500">
+            <div className="p-12 text-center text-muted-foreground">
               <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
               <p className="text-lg font-medium">Ingen maler funnet</p>
               <p className="text-sm">
@@ -240,7 +340,7 @@ export default function TemplatesPage() {
           ) : (
             <>
               {/* Table Header */}
-              <div className="grid grid-cols-12 gap-4 p-4 border-b bg-slate-50 text-sm font-medium text-slate-600">
+              <div className="grid grid-cols-12 gap-4 p-4 border-b bg-muted text-sm font-medium text-muted-foreground">
                 <div className="col-span-5">Mal</div>
                 <div className="col-span-2">Type</div>
                 <div className="col-span-2">Status</div>
@@ -253,7 +353,8 @@ export default function TemplatesPage() {
                 {templates.map((template) => (
                   <div
                     key={template.id}
-                    className="grid grid-cols-12 gap-4 p-4 items-center hover:bg-slate-50 transition-colors"
+                    onClick={() => handleRowClick(template)}
+                    className="grid grid-cols-12 gap-4 p-4 items-center cursor-pointer hover:bg-muted/50 transition-colors"
                   >
                     <div className="col-span-5 flex items-center gap-3">
                       <div className={`p-2 rounded ${getFileTypeColor(template.file_type)}`}>
@@ -261,7 +362,7 @@ export default function TemplatesPage() {
                       </div>
                       <div className="min-w-0">
                         <p className="font-medium truncate">{template.title}</p>
-                        <p className="text-sm text-slate-500 truncate">
+                        <p className="text-sm text-muted-foreground truncate">
                           {template.file_name} • {formatFileSize(template.file_size_bytes)}
                         </p>
                       </div>
@@ -284,7 +385,7 @@ export default function TemplatesPage() {
                             ? "bg-green-100 text-green-700"
                             : template.status === "draft"
                             ? "bg-amber-100 text-amber-700"
-                            : "bg-slate-100 text-slate-700"
+                            : "bg-muted text-muted-foreground"
                         }`}
                       >
                         {template.status === "published"
@@ -295,12 +396,12 @@ export default function TemplatesPage() {
                       </span>
                     </div>
 
-                    <div className="col-span-2 flex items-center gap-1 text-sm text-slate-500">
+                    <div className="col-span-2 flex items-center gap-1 text-sm text-muted-foreground">
                       <Clock className="h-4 w-4" />
                       {formatDate(template.updated_at)}
                     </div>
 
-                    <div className="col-span-1 flex justify-end">
+                    <div className="col-span-1 flex justify-end" onClick={(e) => e.stopPropagation()}>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="icon">
@@ -341,7 +442,7 @@ export default function TemplatesPage() {
               {/* Pagination */}
               {pagination && pagination.total_pages > 1 && (
                 <div className="p-4 border-t flex items-center justify-between">
-                  <p className="text-sm text-slate-500">
+                  <p className="text-sm text-muted-foreground">
                     Viser {templates.length} av {pagination.total} maler
                   </p>
                   <div className="flex gap-2">
@@ -401,6 +502,15 @@ export default function TemplatesPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Template Detail Sheet */}
+      <TemplateDetailSheet
+        template={selectedTemplate}
+        open={detailSheetOpen}
+        onOpenChange={setDetailSheetOpen}
+        onEdit={handleSheetEdit}
+        onDownload={handleSheetDownload}
+      />
     </div>
   );
 }

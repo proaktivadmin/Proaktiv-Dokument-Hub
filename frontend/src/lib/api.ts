@@ -99,6 +99,7 @@ export const templateApi = {
   async list(params?: {
     status?: string;
     search?: string;
+    category_id?: string;
     page?: number;
     per_page?: number;
     sort_by?: string;

@@ -30,6 +30,7 @@ class TemplateService:
         status: Optional[str] = None,
         search: Optional[str] = None,
         tag_ids: Optional[List[UUID]] = None,
+        category_id: Optional[UUID] = None,
         category_ids: Optional[List[UUID]] = None,
         page: int = 1,
         per_page: int = 20,
@@ -44,7 +45,8 @@ class TemplateService:
             status: Filter by status (draft, published, archived)
             search: Search in title/description
             tag_ids: Filter by tag IDs
-            category_ids: Filter by category IDs
+            category_id: Filter by a single category ID
+            category_ids: Filter by multiple category IDs
             page: Page number (1-indexed)
             per_page: Items per page
             sort_by: Field to sort by
@@ -75,7 +77,10 @@ class TemplateService:
         if tag_ids:
             query = query.join(Template.tags).where(Tag.id.in_(tag_ids))
         
-        if category_ids:
+        # Handle single category_id or multiple category_ids
+        if category_id:
+            query = query.join(Template.categories).where(Category.id == category_id)
+        elif category_ids:
             query = query.join(Template.categories).where(Category.id.in_(category_ids))
         
         # Count total

@@ -43,16 +43,29 @@ async def list_templates(
     db: AsyncSession = Depends(get_db),
     status: Optional[str] = Query(None, description="Filter by status"),
     search: Optional[str] = Query(None, description="Search in title/description"),
+    category_id: Optional[str] = Query(None, description="Filter by category UUID"),
     page: int = Query(1, ge=1),
     per_page: int = Query(20, ge=1, le=100),
     sort_by: str = Query("updated_at"),
     sort_order: str = Query("desc"),
 ):
     """List all templates with filtering and pagination."""
+    # Validate category_id is a valid UUID if provided
+    validated_category_id: Optional[UUID] = None
+    if category_id:
+        try:
+            validated_category_id = UUID(category_id)
+        except ValueError:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Invalid category_id format: '{category_id}' is not a valid UUID"
+            )
+    
     templates, total = await TemplateService.get_list(
         db,
         status=status,
         search=search,
+        category_id=validated_category_id,
         page=page,
         per_page=per_page,
         sort_by=sort_by,

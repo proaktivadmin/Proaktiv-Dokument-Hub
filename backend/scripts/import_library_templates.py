@@ -24,7 +24,7 @@ import os
 import sys
 from pathlib import Path
 from datetime import datetime, timezone
-from typing import Optional, Dict, Set
+from typing import Optional, Dict, Set, List, Tuple, Generator
 import logging
 
 # Add parent directory to path for imports
@@ -48,7 +48,21 @@ DEFAULT_SOURCE_PATH = Path("/app/library")
 LEGACY_SOURCE_PATH = Path("/app/_legacy_v1/library")
 
 # File extensions to process
-SUPPORTED_EXTENSIONS = {'.html', '.htm'}
+SUPPORTED_EXTENSIONS = {'.html', '.htm', '.docx', '.doc', '.pdf', '.xlsx', '.xls'}
+
+# HTML extensions (for sanitization logic)
+HTML_EXTENSIONS = {'.html', '.htm'}
+
+# MIME type mapping for Azure upload
+MIME_TYPES = {
+    '.html': 'text/html',
+    '.htm': 'text/html',
+    '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    '.doc': 'application/msword',
+    '.pdf': 'application/pdf',
+    '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    '.xls': 'application/vnd.ms-excel',
+}
 
 # Folders to skip (system/config folders)
 SKIP_FOLDERS = {'System', 'Bundles', 'assets', '__pycache__'}
@@ -121,8 +135,25 @@ class LibraryImporter:
             # Load existing templates to avoid duplicates
             await self._load_existing_templates(session)
             
-            # Walk through the source directory
-            await self._process_directory(session, self.source_path)
+            # Collect all files first for progress tracking
+            all_files = list(self._collect_files(self.source_path))
+            total_files = len(all_files)
+            logger.info(f"Found {total_files} files to process")
+            
+            # Process categories first (from the collected files)
+            categories_needed = set(cat for _, cat in all_files if cat)
+            for category_name in sorted(categories_needed):
+                await self._get_or_create_category(session, category_name)
+            
+            # Process all files with progress counter
+            for idx, (file_path, category_name) in enumerate(all_files, 1):
+                progress_info = f"[{idx}/{total_files}]"
+                await self._import_template(
+                    session,
+                    file_path=file_path,
+                    category_name=category_name,
+                    progress_info=progress_info
+                )
             
             # Commit all changes
             if not self.dry_run:
@@ -131,48 +162,37 @@ class LibraryImporter:
         # Print summary
         self._print_summary()
     
+    def _collect_files(
+        self,
+        directory: Path,
+        parent_category_name: Optional[str] = None
+    ) -> Generator[Tuple[Path, Optional[str]], None, None]:
+        """
+        Recursively collect all template files.
+        
+        Yields:
+            Tuple of (file_path, category_name)
+        """
+        for item in sorted(directory.iterdir()):
+            # Skip hidden files, Office lock files (~$), and system folders
+            if item.name.startswith('.') or item.name.startswith('~') or item.name in SKIP_FOLDERS:
+                continue
+            
+            if item.is_dir():
+                # This is a category folder - recurse into it
+                category_name = item.name
+                yield from self._collect_files(item, category_name)
+                
+            elif item.is_file() and item.suffix.lower() in SUPPORTED_EXTENSIONS:
+                # This is a template file
+                yield (item, parent_category_name)
+    
     async def _load_existing_templates(self, session):
         """Load existing template filenames to avoid duplicates."""
         from sqlalchemy import text
         result = await session.execute(text("SELECT file_name FROM templates"))
         self.existing_files = {row[0] for row in result.fetchall()}
         logger.info(f"Found {len(self.existing_files)} existing templates in database")
-    
-    async def _process_directory(
-        self,
-        session,
-        directory: Path,
-        parent_category_name: Optional[str] = None
-    ):
-        """
-        Recursively process a directory.
-        
-        Args:
-            session: Database session
-            directory: Directory to process
-            parent_category_name: Name of parent category (folder name)
-        """
-        for item in sorted(directory.iterdir()):
-            if item.name.startswith('.') or item.name in SKIP_FOLDERS:
-                continue
-            
-            if item.is_dir():
-                # This is a category folder
-                category_name = item.name
-                
-                # Get or create the category
-                category = await self._get_or_create_category(session, category_name)
-                
-                # Process files in this category folder
-                await self._process_directory(session, item, category_name)
-                
-            elif item.is_file() and item.suffix.lower() in SUPPORTED_EXTENSIONS:
-                # This is a template file
-                await self._import_template(
-                    session,
-                    file_path=item,
-                    category_name=parent_category_name
-                )
     
     async def _get_or_create_category(self, session, name: str):
         """
@@ -230,7 +250,8 @@ class LibraryImporter:
         self,
         session,
         file_path: Path,
-        category_name: Optional[str] = None
+        category_name: Optional[str] = None,
+        progress_info: Optional[str] = None
     ):
         """
         Import a single template file.
@@ -239,8 +260,11 @@ class LibraryImporter:
             session: Database session
             file_path: Path to the template file
             category_name: Name of the category to associate
+            progress_info: Optional progress string (e.g., "[5/100]")
         """
         file_name = file_path.name
+        file_ext = file_path.suffix.lower()
+        is_html = file_ext in HTML_EXTENSIONS
         
         # Check for duplicates
         if file_name in self.existing_files:
@@ -248,26 +272,32 @@ class LibraryImporter:
             self.stats['templates_skipped'] += 1
             return
         
+        # Read file content based on type
+        file_bytes: bytes
+        db_content: Optional[str] = None
+        
         try:
-            # Read file content
-            content = file_path.read_text(encoding='utf-8')
             file_size = file_path.stat().st_size
             
-        except UnicodeDecodeError:
-            try:
-                content = file_path.read_text(encoding='latin-1')
-                file_size = file_path.stat().st_size
-            except Exception as e:
-                logger.error(f"Failed to read {file_name}: {e}")
-                self.stats['templates_failed'] += 1
-                return
+            if is_html:
+                # HTML: Read as text with encoding fallback, then sanitize
+                try:
+                    text_content = file_path.read_text(encoding='utf-8')
+                except UnicodeDecodeError:
+                    text_content = file_path.read_text(encoding='latin-1')
+                
+                # Sanitize the HTML content
+                db_content = self.sanitizer.sanitize(text_content)
+                file_bytes = db_content.encode('utf-8')
+            else:
+                # Binary files (docx, pdf, xlsx): Read as bytes, no sanitization
+                file_bytes = file_path.read_bytes()
+                db_content = None  # Binary files don't store content in DB
+                
         except Exception as e:
             logger.error(f"Failed to read {file_name}: {e}")
             self.stats['templates_failed'] += 1
             return
-        
-        # Sanitize the HTML content
-        sanitized_content = self.sanitizer.sanitize(content)
         
         # Generate title from filename
         title = file_path.stem  # Remove extension
@@ -276,9 +306,13 @@ class LibraryImporter:
         rel_path = file_path.relative_to(self.source_path)
         description = f"Imported from library/{rel_path}"
         
+        # Get MIME type for Azure upload
+        content_type = MIME_TYPES.get(file_ext, 'application/octet-stream')
+        
         if self.dry_run:
             category_str = f" -> [{category_name}]" if category_name else ""
-            logger.info(f"[DRY RUN] Would import: {file_name}{category_str}")
+            progress_str = f"{progress_info} " if progress_info else ""
+            logger.info(f"[DRY RUN] {progress_str}Would import: {file_name}{category_str}")
             self.stats['templates_imported'] += 1
             return
         
@@ -289,9 +323,9 @@ class LibraryImporter:
             blob_name = f"legacy/{timestamp}_{file_name}"
             
             blob_url = await self.storage_service.upload_file(
-                file_data=io.BytesIO(sanitized_content.encode('utf-8')),
+                file_data=io.BytesIO(file_bytes),
                 blob_name=blob_name,
-                content_type='text/html'
+                content_type=content_type
             )
             
             if blob_url:
@@ -315,17 +349,18 @@ class LibraryImporter:
                 title=title,
                 description=description,
                 file_name=file_name,
-                file_type=file_path.suffix.lstrip('.').lower(),
+                file_type=file_ext.lstrip('.'),
                 file_size_bytes=file_size,
                 azure_blob_url=blob_url,
                 created_by="import@system",
                 status="published",
                 category_ids=category_ids,
-                content=sanitized_content
+                content=db_content  # None for binary files
             )
             
             category_str = f" -> [{category_name}]" if category_name else ""
-            logger.info(f"Imported: {file_name}{category_str}")
+            progress_str = f"{progress_info} " if progress_info else ""
+            logger.info(f"{progress_str}Imported: {file_name}{category_str}")
             self.stats['templates_imported'] += 1
             
             # Add to existing files set to prevent re-import in same run

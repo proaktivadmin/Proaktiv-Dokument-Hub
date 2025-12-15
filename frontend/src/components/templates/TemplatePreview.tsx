@@ -81,10 +81,10 @@ export function TemplatePreview({
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-96 bg-slate-50 rounded-lg border">
+      <div className="flex items-center justify-center h-96 bg-muted rounded-lg border">
         <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin text-sky-600 mx-auto mb-3" />
-          <p className="text-slate-500">Laster forhåndsvisning...</p>
+          <Loader2 className="h-8 w-8 animate-spin text-secondary mx-auto mb-3" />
+          <p className="text-muted-foreground">Laster forhåndsvisning...</p>
         </div>
       </div>
     );
@@ -103,22 +103,22 @@ export function TemplatePreview({
 
   if (!content) {
     return (
-      <div className="flex items-center justify-center h-96 bg-slate-50 rounded-lg border">
-        <p className="text-slate-500">Ingen innhold å vise</p>
+      <div className="flex items-center justify-center h-96 bg-muted rounded-lg border">
+        <p className="text-muted-foreground">Ingen innhold å vise</p>
       </div>
     );
   }
 
   const containerClass = isFullscreen
-    ? "fixed inset-0 z-50 bg-white flex flex-col"
+    ? "fixed inset-0 z-50 bg-background flex flex-col"
     : "flex flex-col h-full";
 
   return (
     <div className={containerClass}>
       {/* Toolbar */}
-      <div className="flex items-center justify-between px-4 py-2 bg-slate-100 border-b shrink-0">
+      <div className="flex items-center justify-between px-4 py-2 bg-muted border-b shrink-0">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-slate-600">
+          <span className="text-sm font-medium text-muted-foreground">
             {title || "Forhåndsvisning"}
           </span>
           <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">
@@ -160,16 +160,16 @@ export function TemplatePreview({
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 overflow-auto bg-slate-200">
+      <div className="flex-1 overflow-auto bg-muted">
         {showSource ? (
-          <pre className="p-4 bg-slate-900 text-slate-100 text-sm font-mono overflow-auto h-full">
+          <pre className="p-4 bg-primary text-primary-foreground text-sm font-mono overflow-auto h-full">
             <code>{content}</code>
           </pre>
         ) : (
           <iframe
             ref={iframeRef}
             title="Template Preview"
-            className="w-full h-full border-0 bg-slate-200"
+            className="w-full h-full border-0 bg-muted"
             sandbox="allow-same-origin"
             style={{ minHeight: isFullscreen ? "100%" : "600px" }}
           />
