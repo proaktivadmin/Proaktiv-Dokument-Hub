@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import {
   FileText,
@@ -71,7 +71,7 @@ function TemplateTableSkeleton() {
   );
 }
 
-export default function TemplatesPage() {
+function TemplatesPageContent() {
   const searchParams = useSearchParams();
   const categoryFromUrl = searchParams.get("category");
   
@@ -512,5 +512,18 @@ export default function TemplatesPage() {
         onDownload={handleSheetDownload}
       />
     </div>
+  );
+}
+
+// Wrapper with Suspense boundary for useSearchParams
+export default function TemplatesPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-pulse text-muted-foreground">Laster maler...</div>
+      </div>
+    }>
+      <TemplatesPageContent />
+    </Suspense>
   );
 }
