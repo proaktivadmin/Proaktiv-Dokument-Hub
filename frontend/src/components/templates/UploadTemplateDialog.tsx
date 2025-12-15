@@ -5,7 +5,7 @@ import { useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Upload, FileText, X, Loader2, Info } from "lucide-react";
+import { Upload, FileText, X, Loader2 } from "lucide-react";
 
 import {
   Dialog,
@@ -27,12 +27,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { templateApi, categoryApi } from "@/lib/api";
 import type { TemplateStatus, Category } from "@/types";
 
@@ -404,35 +398,25 @@ export function UploadTemplateDialog({
           {/* HTML Sanitization Checkbox - Only shown for HTML files */}
           {isHtmlFile && (
             <div className="space-y-2 p-3 bg-muted/50 rounded-lg border">
-              <div className="flex items-center gap-3">
+              <div className="flex items-start gap-3">
                 <Checkbox
                   id="auto_sanitize"
                   checked={autoSanitize}
                   onCheckedChange={(checked) => setAutoSanitize(checked === true)}
                   disabled={isUploading}
+                  className="mt-0.5"
                 />
-                <div className="flex items-center gap-2">
+                <div className="flex-1">
                   <Label 
                     htmlFor="auto_sanitize" 
                     className="text-sm font-medium cursor-pointer"
                   >
                     Sanitize HTML for Vitec
                   </Label>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Info className="h-4 w-4 text-muted-foreground cursor-help" />
-                      </TooltipTrigger>
-                      <TooltipContent className="max-w-xs">
-                        <p>
-                          Renser HTML-koden for å sikre kompatibilitet med Vitec Next. 
-                          Fjerner gamle inline-stiler og legger til standard wrapper.
-                          <br /><br />
-                          <strong>Deaktiver</strong> for system-maler som allerede er korrekt formatert.
-                        </p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Renser HTML-koden for Vitec Next-kompatibilitet. 
+                    Deaktiver for system-maler som allerede er korrekt formatert.
+                  </p>
                 </div>
               </div>
               {!autoSanitize && (
