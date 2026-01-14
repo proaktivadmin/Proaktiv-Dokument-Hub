@@ -1,0 +1,210 @@
+/**
+ * Vitec Preview Styles
+ * ============================================================================
+ * Essential print and preview rules for Vitec Next document templates.
+ * Use this stylesheet in iframe previews to render templates accurately.
+ * 
+ * Based on legacy Proaktiv styling conventions.
+ * ============================================================================
+ */
+
+/* ============================================================================
+   1. BASE DOCUMENT STYLES
+   ============================================================================ */
+
+.proaktiv-theme {
+  font-family: 'Open Sans', 'Inter', system-ui, sans-serif;
+  font-size: 10pt;
+  color: #333333;
+  line-height: 1.5;
+  background-color: #ffffff;
+}
+
+/* ============================================================================
+   2. TYPOGRAPHY
+   ============================================================================ */
+
+.proaktiv-theme h1,
+.proaktiv-theme h2,
+.proaktiv-theme h3,
+.proaktiv-theme h4,
+.proaktiv-theme h5,
+.proaktiv-theme h6 {
+  font-family: 'Playfair Display', Georgia, serif;
+  color: #272630;
+  page-break-after: avoid;
+  margin-top: 0;
+}
+
+.proaktiv-theme h1 {
+  font-size: 22pt;
+  text-transform: uppercase;
+  border-bottom: 3px solid #bcab8a;
+  padding-bottom: 10px;
+  margin-bottom: 25px;
+}
+
+.proaktiv-theme h2 {
+  font-size: 14pt;
+  border-left: 5px solid #bcab8a;
+  padding-left: 15px;
+  margin-top: 30px;
+  background-color: #f9f9f7;
+  padding: 5px 0 5px 15px;
+}
+
+.proaktiv-theme h3 {
+  font-size: 12pt;
+  margin-top: 20px;
+}
+
+.proaktiv-theme p {
+  margin-bottom: 1em;
+}
+
+.proaktiv-theme a {
+  color: #272630;
+  text-decoration: underline;
+}
+
+.proaktiv-theme strong,
+.proaktiv-theme b {
+  font-weight: 700;
+}
+
+/* ============================================================================
+   3. TABLES
+   ============================================================================ */
+
+.proaktiv-theme table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.proaktiv-theme .economy-table th {
+  background-color: #272630 !important;
+  color: #bcab8a !important;
+  font-weight: bold;
+  padding: 8px 5px;
+  text-align: left;
+  border-bottom: 2px solid #bcab8a;
+}
+
+.proaktiv-theme .economy-table td {
+  padding: 6px 5px;
+  border-bottom: 1px solid #bcab8a;
+  vertical-align: top;
+}
+
+.proaktiv-theme .economy-table th:last-child,
+.proaktiv-theme .economy-table td:last-child {
+  text-align: right !important;
+  white-space: nowrap;
+}
+
+/* ============================================================================
+   4. SIGNATURE BLOCK
+   ============================================================================ */
+
+.proaktiv-theme .proaktiv-signature-block {
+  border-top: 3px solid #bcab8a;
+  padding-top: 20px;
+  margin-top: 40px;
+  page-break-inside: avoid;
+}
+
+/* ============================================================================
+   5. CHECKBOXES (Vitec Interactive)
+   ============================================================================ */
+
+.proaktiv-theme label.btn {
+  display: inline-block !important;
+  cursor: pointer;
+  margin: 0 !important;
+  padding: 0 !important;
+  vertical-align: middle !important;
+  line-height: 1 !important;
+}
+
+.proaktiv-theme .svg-toggle {
+  display: inline-block !important;
+  width: 16px !important;
+  height: 16px !important;
+  margin-right: 10px !important;
+  vertical-align: text-bottom;
+  border: none !important;
+  background-color: transparent !important;
+}
+
+.proaktiv-theme .svg-toggle.checkbox {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect x='25' y='25' width='462' height='462' fill='none' stroke='%23272630' stroke-width='40'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.proaktiv-theme .svg-toggle.checkbox.active,
+.proaktiv-theme .btn.active > .svg-toggle.checkbox {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect x='25' y='25' width='462' height='462' fill='none' stroke='%23272630' stroke-width='40'/%3E%3Crect x='100' y='100' width='312' height='312' fill='%23272630'/%3E%3C/svg%3E");
+}
+
+/* ============================================================================
+   6. PRINT STYLES
+   ============================================================================ */
+
+@media print {
+  .proaktiv-theme {
+    font-size: 10pt;
+    background: white !important;
+    color: black !important;
+  }
+
+  .proaktiv-theme h1,
+  .proaktiv-theme h2,
+  .proaktiv-theme h3 {
+    page-break-after: avoid;
+  }
+
+  .proaktiv-theme table,
+  .proaktiv-theme figure,
+  .proaktiv-theme img {
+    page-break-inside: avoid;
+  }
+
+  .proaktiv-theme .proaktiv-signature-block {
+    page-break-inside: avoid;
+  }
+
+  /* A4 page sizing */
+  @page {
+    size: A4;
+    margin: 20mm 15mm;
+  }
+}
+
+/* ============================================================================
+   7. VITEC RESOURCE SPAN (Hide utility elements)
+   ============================================================================ */
+
+.proaktiv-theme [vitec-template] {
+  display: none !important;
+}
+
+/* ============================================================================
+   8. PREVIEW CONTAINER (For iframe embedding)
+   ============================================================================ */
+
+#vitecTemplate {
+  max-width: 210mm; /* A4 width */
+  margin: 0 auto;
+  padding: 20mm 15mm;
+  background: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  min-height: 297mm; /* A4 height */
+}
+
+/* Preview mode indicator */
+.vitec-preview-mode #vitecTemplate {
+  border: 1px dashed #bcab8a;
+}

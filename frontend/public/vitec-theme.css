@@ -517,7 +517,186 @@ a {
 }
 
 /* ============================================================================
-   7. PRINT STYLES
+   7. PAGE BREAK VISUALIZATION (A4 Preview Mode)
+   ============================================================================ */
+
+/**
+ * A4 Page Break Visualization
+ * 
+ * When .show-page-breaks is applied to body, the content is displayed
+ * with visual page breaks matching A4 paper dimensions:
+ * - A4 size: 210mm x 297mm
+ * - Margins: 20mm top/bottom, 15mm left/right
+ * - Content area: 180mm x 257mm (approximately 1003px at 96dpi)
+ * 
+ * Page breaks are shown as dashed lines with page numbers.
+ */
+
+.show-page-breaks {
+    --a4-width: 210mm;
+    --a4-height: 297mm;
+    --a4-margin-top: 20mm;
+    --a4-margin-bottom: 20mm;
+    --a4-margin-sides: 15mm;
+    --a4-content-height: 257mm; /* 297 - 20 - 20 = 257mm */
+    --page-break-color: #ef4444;
+    --page-break-bg: rgba(239, 68, 68, 0.05);
+    
+    background: 
+        repeating-linear-gradient(
+            to bottom,
+            transparent 0,
+            transparent calc(var(--a4-content-height) - 2px),
+            var(--page-break-bg) calc(var(--a4-content-height) - 2px),
+            var(--page-break-bg) var(--a4-content-height)
+        ),
+        linear-gradient(to bottom, #f5f5f5 0%, #f5f5f5 100%);
+    background-size: 100% var(--a4-content-height);
+    background-position: 0 0;
+}
+
+/* Page break indicator line - positioned using pseudo-elements on body */
+.show-page-breaks::before {
+    content: "📄 Sideskift-visning aktiv — Røde linjer markerer A4-sidegrenser (257mm innholdsområde)";
+    display: block;
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-bottom: 2px solid #f59e0b;
+    padding: 8px 16px;
+    font-size: 11px;
+    font-weight: 500;
+    color: #92400e;
+    z-index: 1000;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Style the page break container */
+.show-page-breaks #vitecTemplate,
+.show-page-breaks > table,
+.show-page-breaks > div {
+    position: relative;
+}
+
+/* Add page break markers at regular intervals */
+.show-page-breaks #vitecTemplate::after,
+.show-page-breaks > table::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 100%;
+    top: 0;
+    pointer-events: none;
+    background: 
+        repeating-linear-gradient(
+            to bottom,
+            transparent 0,
+            transparent calc(var(--a4-content-height) - 1px),
+            var(--page-break-color) calc(var(--a4-content-height) - 1px),
+            var(--page-break-color) var(--a4-content-height),
+            transparent var(--a4-content-height)
+        );
+    background-size: 100% var(--a4-content-height);
+    z-index: 999;
+}
+
+/* Highlight explicit page break elements */
+.show-page-breaks [style*="page-break-before"],
+.show-page-breaks [style*="page-break-after"],
+.show-page-breaks .page-break,
+.show-page-breaks .pagebreak {
+    position: relative;
+}
+
+.show-page-breaks [style*="page-break-before"]::before,
+.show-page-breaks .page-break::before,
+.show-page-breaks .pagebreak::before {
+    content: "⚡ Tvunget sideskift (page-break-before)";
+    display: block;
+    background: linear-gradient(90deg, #10b981, #059669);
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 4px 12px;
+    margin: 8px 0;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.show-page-breaks [style*="page-break-after"]::after {
+    content: "⚡ Tvunget sideskift etter (page-break-after)";
+    display: block;
+    background: linear-gradient(90deg, #8b5cf6, #7c3aed);
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 4px 12px;
+    margin: 8px 0;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Highlight elements that avoid page breaks */
+.show-page-breaks [style*="page-break-inside: avoid"],
+.show-page-breaks .proaktiv-signature-block {
+    outline: 2px dashed #3b82f6;
+    outline-offset: 2px;
+    position: relative;
+}
+
+.show-page-breaks [style*="page-break-inside: avoid"]::before,
+.show-page-breaks .proaktiv-signature-block::before {
+    content: "🔒 Holdes samlet";
+    position: absolute;
+    top: -10px;
+    right: 4px;
+    background: #3b82f6;
+    color: white;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    z-index: 10;
+}
+
+/* Page number indicators at each break */
+.show-page-breaks #vitecTemplate {
+    counter-reset: page-counter;
+}
+
+/* Visual ruler on the left side showing page heights */
+.show-page-breaks {
+    position: relative;
+    padding-left: 40px !important;
+}
+
+.show-page-breaks::after {
+    content: "";
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 36px;
+    background: 
+        repeating-linear-gradient(
+            to bottom,
+            #f8fafc 0,
+            #f8fafc calc(var(--a4-content-height) - 20px),
+            #e2e8f0 calc(var(--a4-content-height) - 20px),
+            #e2e8f0 var(--a4-content-height)
+        );
+    background-size: 100% var(--a4-content-height);
+    border-right: 1px solid #cbd5e1;
+    z-index: 998;
+}
+
+/* ============================================================================
+   8. PRINT STYLES
    ============================================================================ */
 
 @media print {
@@ -544,6 +723,13 @@ a {
 
     .proaktiv-signature-block {
         page-break-inside: avoid;
+    }
+
+    /* Hide page break visualization in print */
+    .show-page-breaks::before,
+    .show-page-breaks::after,
+    .show-page-breaks #vitecTemplate::after {
+        display: none !important;
     }
 
     @page {

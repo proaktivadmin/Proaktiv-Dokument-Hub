@@ -4,80 +4,26 @@
 
 @layer base {
   :root {
-    /* ================================================================
-       Proaktiv Premium Brand Theme
-       Navy (Primary):   #272630
-       Beige (Warmth):   #E9E7DC
-       Bronze (Accent):  #BCAB8A
-       Paper (BG):       #FDFCFB
-       ================================================================ */
-    
-    --background: 30 33% 99%;           /* Paper - #FDFCFB */
-    --foreground: 250 11% 17%;          /* Navy - #272630 */
-    
-    --card: 0 0% 100%;                  /* Pure white cards */
-    --card-foreground: 250 11% 17%;     /* Navy */
-    
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 250 11% 17%;  /* Navy */
-    
-    --primary: 250 11% 17%;             /* Navy - #272630 */
-    --primary-foreground: 0 0% 100%;    /* White text on Navy */
-    
-    --secondary: 43 22% 89%;            /* Beige - #E9E7DC */
-    --secondary-foreground: 250 11% 17%; /* Navy */
-    
-    --muted: 43 22% 89%;                /* Beige - #E9E7DC */
-    --muted-foreground: 250 8% 40%;     /* Muted Navy */
-    
-    --accent: 39 29% 64%;               /* Bronze - #BCAB8A */
-    --accent-foreground: 250 11% 17%;   /* Navy */
-    
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-    
-    --border: 0 0% 90%;                 /* Subtle gray border #E5E5E5 */
-    --input: 0 0% 90%;
-    --ring: 39 29% 64%;                 /* Bronze ring */
-    
-    --radius: 0.375rem;                 /* rounded-md */
-    
-    /* Proaktiv Premium specific variables */
-    --proaktiv-navy: 250 11% 17%;       /* #272630 */
-    --proaktiv-beige: 43 22% 89%;       /* #E9E7DC */
-    --proaktiv-bronze: 39 29% 64%;      /* #BCAB8A */
-    --proaktiv-paper: 30 33% 99%;       /* #FDFCFB */
-    --proaktiv-ghost: 40 20% 97%;       /* #F5F5F0 - ghost hover */
-  }
-
-  .dark {
-    --background: 250 15% 10%;          /* Dark navy */
-    --foreground: 43 22% 95%;           /* Light beige */
-    
-    --card: 250 12% 14%;
-    --card-foreground: 43 22% 95%;
-    
-    --popover: 250 12% 14%;
-    --popover-foreground: 43 22% 95%;
-    
-    --primary: 39 29% 64%;              /* Bronze in dark mode */
-    --primary-foreground: 250 11% 17%;
-    
-    --secondary: 250 11% 25%;
-    --secondary-foreground: 43 22% 95%;
-    
-    --muted: 250 10% 20%;
-    --muted-foreground: 40 10% 65%;
-    
-    --accent: 39 29% 55%;
-    --accent-foreground: 43 22% 97%;
-    
-    --destructive: 0 62% 40%;
-    --destructive-foreground: 0 0% 100%;
-    
-    --border: 250 10% 25%;
-    --input: 250 10% 25%;
-    --ring: 39 29% 55%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 199 89% 48%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 199 89% 48%;
+    --radius: 0.5rem;
   }
 }
 
@@ -85,64 +31,7 @@
   * {
     @apply border-border;
   }
-  
   body {
-    @apply bg-background text-foreground antialiased;
-  }
-  
-  /* Heading typography - Playfair Display serif for elegance */
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-serif text-foreground;
-  }
-  
-  h1 {
-    @apply text-3xl font-bold tracking-tight;
-  }
-  
-  h2 {
-    @apply text-2xl font-semibold;
-  }
-  
-  h3 {
-    @apply text-xl font-semibold;
-  }
-  
-  /* Data elements use sans-serif for clarity */
-  table, input, textarea, select, button {
-    @apply font-sans;
+    @apply bg-background text-foreground;
   }
 }
-
-/* Proaktiv Premium utility classes */
-@layer utilities {
-  .font-display {
-    font-family: var(--font-serif), 'Playfair Display', Georgia, serif;
-  }
-  
-  .text-navy {
-    color: hsl(var(--proaktiv-navy));
-  }
-  
-  .text-bronze {
-    color: hsl(var(--proaktiv-bronze));
-  }
-  
-  .bg-beige {
-    background-color: hsl(var(--proaktiv-beige));
-  }
-  
-  .bg-paper {
-    background-color: hsl(var(--proaktiv-paper));
-  }
-  
-  /* Subtle luxury shadow */
-  .shadow-subtle {
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
-  }
-  
-  /* Premium border style */
-  .border-subtle {
-    border: 1px solid #E5E5E5;
-  }
-}
-

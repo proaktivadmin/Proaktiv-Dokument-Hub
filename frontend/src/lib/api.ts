@@ -238,3 +238,11 @@ export const templateApi = {
     }
   },
 };
+
+/**
+ * V2 API Clients - Re-export from dedicated files
+ */
+export { mergeFieldsApi } from "./api/merge-fields";
+export { codePatternsApi } from "./api/code-patterns";
+export { layoutPartialsApi } from "./api/layout-partials";
+export { templateAnalysisApi } from "./api/template-analysis";

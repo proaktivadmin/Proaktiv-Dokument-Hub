@@ -16,6 +16,8 @@ from app.services.template_service import TemplateService
 from app.services.audit_service import AuditService
 from app.services.azure_storage_service import get_azure_storage_service
 from app.services.sanitizer_service import get_sanitizer_service
+from app.services.template_analyzer_service import TemplateAnalyzerService
+from app.schemas.template_metadata import TemplateAnalysisResult
 from app.config import get_mock_user
 import io
 import logging
@@ -375,4 +377,19 @@ async def get_template_content(
         "file_type": template.file_type,
         "content": template.content
     }
+
+
+@router.get("/{template_id}/analyze", response_model=TemplateAnalysisResult)
+async def analyze_template(
+    template_id: UUID,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Analyze a template for merge fields, conditions, and loops.
+    
+    Returns all Vitec-specific patterns found in the template HTML,
+    along with a list of unknown fields not in the merge_fields registry.
+    """
+    result = await TemplateAnalyzerService.analyze(db, template_id)
+    return TemplateAnalysisResult(**result)
 

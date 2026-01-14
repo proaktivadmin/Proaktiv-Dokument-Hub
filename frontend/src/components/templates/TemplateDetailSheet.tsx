@@ -2,16 +2,19 @@
 
 import { useEffect, useState } from "react";
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-  SheetFooter,
-} from "@/components/ui/sheet";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TemplatePreview } from "./TemplatePreview";
+import { TemplateSettingsPanel, type TemplateSettings } from "./TemplateSettingsPanel";
+import { SimulatorPanel } from "./SimulatorPanel";
+import { CodeEditor } from "@/components/editor/CodeEditor";
 import { templateApi } from "@/lib/api";
 import {
   Download,
@@ -21,6 +24,10 @@ import {
   HardDrive,
   Tag,
   FolderOpen,
+  Eye,
+  Settings,
+  Play,
+  Code,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { nb } from "date-fns/locale";
@@ -41,16 +48,24 @@ export function TemplateDetailSheet({
   onEdit,
   onDownload,
 }: TemplateDetailSheetProps) {
-  const [content, setContent] = useState<string>("");
+  const [originalContent, setOriginalContent] = useState<string>("");
+  const [processedContent, setProcessedContent] = useState<string | null>(null);
+  const [testDataEnabled, setTestDataEnabled] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState("preview");
+  
+  // Derived content: show processed if test data enabled, otherwise original
+  const content = testDataEnabled && processedContent ? processedContent : originalContent;
 
-  // Load content when sheet opens with an HTML template
+  // Load content when dialog opens with an HTML template
   useEffect(() => {
     if (open && template && canPreview(template.file_type)) {
       loadContent(template.id);
     } else {
-      setContent("");
+      setOriginalContent("");
+      setProcessedContent(null);
+      setTestDataEnabled(false);
       setError(null);
     }
   }, [open, template]);
@@ -61,7 +76,9 @@ export function TemplateDetailSheet({
 
     try {
       const response = await templateApi.getContent(templateId);
-      setContent(response.content);
+      setOriginalContent(response.content);
+      setProcessedContent(null);
+      setTestDataEnabled(false);
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Kunne ikke laste innhold";
@@ -119,123 +136,196 @@ export function TemplateDetailSheet({
   if (!template) return null;
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-2xl flex flex-col p-0 gap-0 bg-white">
-        <SheetHeader className="px-6 py-4 border-b border-[#E5E5E5] shrink-0 bg-[#E9E7DC]">
-          <SheetTitle className="flex items-center gap-2 text-[#272630]">
-            <FileText className="h-5 w-5 text-[#BCAB8A]" />
-            {template.title}
-          </SheetTitle>
-          <SheetDescription className="flex items-center gap-2 text-[#272630]/60">
-            {template.file_name}
-            {getStatusBadge(template.status)}
-          </SheetDescription>
-        </SheetHeader>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-5xl h-[85vh] flex flex-col p-0 gap-0">
+        {/* Header */}
+        <DialogHeader className="px-6 py-4 border-b shrink-0">
+          <div className="flex items-center justify-between">
+            <div>
+              <DialogTitle className="flex items-center gap-2 text-lg">
+                <FileText className="h-5 w-5 text-primary" />
+                {template.title}
+              </DialogTitle>
+              <DialogDescription className="flex items-center gap-2 mt-1">
+                {template.file_name}
+                {getStatusBadge(template.status)}
+              </DialogDescription>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onDownload?.(template)}
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Last ned
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => onEdit?.(template)}
+              >
+                <Pencil className="h-4 w-4 mr-2" />
+                Rediger
+              </Button>
+            </div>
+          </div>
+        </DialogHeader>
 
-        {/* Preview Area */}
-        <div className="flex-1 overflow-hidden">
-          {canPreview(template.file_type) ? (
-            <TemplatePreview
-              content={content}
-              title={template.title}
-              isLoading={isLoading}
-              error={error || undefined}
-            />
-          ) : (
-            <div className="flex items-center justify-center h-full bg-[#F5F5F0]">
-              <div className="text-center p-8">
-                <FileText className="h-16 w-16 mx-auto mb-4 text-[#272630]/30" />
-                <p className="text-[#272630]/60 font-medium mb-2">
-                  Forhåndsvisning ikke tilgjengelig
-                </p>
-                <p className="text-sm text-[#272630]/50">
-                  Kun HTML-maler kan forhåndsvises.
-                </p>
+        {/* Tabs for different views */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden">
+          <div className="border-b px-6">
+            <TabsList className="h-10">
+              <TabsTrigger value="preview" className="gap-2">
+                <Eye className="h-4 w-4" />
+                Forhåndsvisning
+              </TabsTrigger>
+              <TabsTrigger value="code" className="gap-2">
+                <Code className="h-4 w-4" />
+                Kode
+              </TabsTrigger>
+              <TabsTrigger value="settings" className="gap-2">
+                <Settings className="h-4 w-4" />
+                Innstillinger
+              </TabsTrigger>
+              <TabsTrigger value="simulator" className="gap-2">
+                <Play className="h-4 w-4" />
+                Simulator
+              </TabsTrigger>
+            </TabsList>
+          </div>
+
+          {/* Preview Tab */}
+          <TabsContent value="preview" className="flex-1 m-0 overflow-hidden">
+            {canPreview(template.file_type) ? (
+              <TemplatePreview
+                content={content}
+                title={template.title}
+                isLoading={isLoading}
+                error={error || undefined}
+                testDataEnabled={testDataEnabled}
+                hasProcessedData={!!processedContent}
+                onToggleTestData={() => setTestDataEnabled(!testDataEnabled)}
+              />
+            ) : (
+              <div className="flex items-center justify-center h-full bg-gray-50">
+                <div className="text-center p-8">
+                  <FileText className="h-16 w-16 mx-auto mb-4 text-gray-300" />
+                  <p className="text-gray-600 font-medium mb-2">
+                    Forhåndsvisning ikke tilgjengelig
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Kun HTML-maler kan forhåndsvises.
+                  </p>
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </TabsContent>
 
-        {/* Metadata Section */}
-        <div className="border-t border-[#E5E5E5] px-6 py-4 bg-[#F5F5F0] shrink-0">
-          <div className="grid grid-cols-2 gap-4 text-sm font-sans">
-            <div className="flex items-center gap-2">
-              <HardDrive className="h-4 w-4 text-[#BCAB8A]" />
-              <span className="text-[#272630]/50">Størrelse:</span>
-              <span className="font-medium text-[#272630]">
-                {formatFileSize(template.file_size_bytes)}
-              </span>
+          {/* Code Tab - Monaco Editor */}
+          <TabsContent value="code" className="flex-1 m-0 overflow-hidden">
+            {isLoading ? (
+              <div className="h-full flex items-center justify-center bg-gray-900 text-gray-400">
+                Laster kode...
+              </div>
+            ) : error ? (
+              <div className="h-full flex items-center justify-center bg-gray-900 text-red-400">
+                {error}
+              </div>
+            ) : originalContent ? (
+              <CodeEditor
+                value={originalContent}
+                onChange={(newContent) => {
+                  setOriginalContent(newContent);
+                  // Clear processed content since original changed
+                  setProcessedContent(null);
+                  setTestDataEnabled(false);
+                }}
+                language="html"
+                theme="vs-dark"
+                onSave={async (value) => {
+                  // TODO: Implement save to backend
+                  console.log("Save triggered:", value.length, "chars");
+                }}
+              />
+            ) : (
+              <div className="h-full flex items-center justify-center bg-gray-900 text-gray-400">
+                Ingen kode tilgjengelig
+              </div>
+            )}
+          </TabsContent>
+
+          {/* Settings Tab */}
+          <TabsContent value="settings" className="flex-1 m-0 overflow-auto p-6">
+            <div className="max-w-xl mx-auto">
+              <TemplateSettingsPanel
+                templateId={template.id}
+                onSave={async (settings: TemplateSettings) => {
+                  // TODO: Implement settings save via API
+                  console.log("Saving settings:", settings);
+                }}
+              />
             </div>
-            <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-[#BCAB8A]" />
-              <span className="text-[#272630]/50">Oppdatert:</span>
-              <span className="font-medium text-[#272630]">
-                {formatDate(template.updated_at)}
-              </span>
+          </TabsContent>
+
+          {/* Simulator Tab */}
+          <TabsContent value="simulator" className="flex-1 m-0 overflow-hidden">
+            <SimulatorPanel
+              content={originalContent}
+              onApplyTestData={(processed) => {
+                // Store the processed content
+                setProcessedContent(processed);
+                // Enable test data mode
+                setTestDataEnabled(true);
+                // Switch to preview tab to show result
+                setActiveTab("preview");
+              }}
+            />
+          </TabsContent>
+        </Tabs>
+
+        {/* Metadata Footer */}
+        <div className="border-t px-6 py-3 bg-gray-50 shrink-0">
+          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+            <div className="flex items-center gap-1">
+              <HardDrive className="h-4 w-4 text-gray-400" />
+              {formatFileSize(template.file_size_bytes)}
+            </div>
+            <div className="flex items-center gap-1">
+              <Calendar className="h-4 w-4 text-gray-400" />
+              {formatDate(template.updated_at)}
             </div>
             {template.categories.length > 0 && (
-              <div className="flex items-center gap-2 col-span-2">
-                <FolderOpen className="h-4 w-4 text-[#BCAB8A]" />
-                <span className="text-[#272630]/50">Kategorier:</span>
-                <div className="flex gap-1 flex-wrap">
-                  {template.categories.map((cat) => (
-                    <Badge
-                      key={cat.id}
-                      className="text-xs bg-[#E9E7DC] text-[#272630] hover:bg-[#E9E7DC]"
-                    >
-                      {cat.icon && <span className="mr-1">{cat.icon}</span>}
-                      {cat.name}
-                    </Badge>
-                  ))}
-                </div>
+              <div className="flex items-center gap-1">
+                <FolderOpen className="h-4 w-4 text-gray-400" />
+                {template.categories.map((cat) => (
+                  <Badge
+                    key={cat.id}
+                    variant="secondary"
+                    className="text-xs"
+                  >
+                    {cat.icon && <span className="mr-1">{cat.icon}</span>}
+                    {cat.name}
+                  </Badge>
+                ))}
               </div>
             )}
             {template.tags.length > 0 && (
-              <div className="flex items-center gap-2 col-span-2">
-                <Tag className="h-4 w-4 text-[#BCAB8A]" />
-                <span className="text-[#272630]/50">Tags:</span>
-                <div className="flex gap-1 flex-wrap">
-                  {template.tags.map((tag) => (
-                    <Badge
-                      key={tag.id}
-                      style={{ backgroundColor: tag.color }}
-                      className="text-xs text-white"
-                    >
-                      {tag.name}
-                    </Badge>
-                  ))}
-                </div>
+              <div className="flex items-center gap-1">
+                <Tag className="h-4 w-4 text-gray-400" />
+                {template.tags.map((tag) => (
+                  <Badge
+                    key={tag.id}
+                    style={{ backgroundColor: tag.color }}
+                    className="text-xs text-white"
+                  >
+                    {tag.name}
+                  </Badge>
+                ))}
               </div>
             )}
           </div>
-          {template.description && (
-            <p className="mt-3 text-sm text-[#272630]/60">
-              {template.description}
-            </p>
-          )}
         </div>
-
-        {/* Footer Actions */}
-        <SheetFooter className="border-t border-[#E5E5E5] px-6 py-4 shrink-0 bg-white">
-          <div className="flex gap-2 w-full">
-            <Button
-              variant="outline"
-              className="flex-1"
-              onClick={() => onDownload?.(template)}
-            >
-              <Download className="h-4 w-4 mr-2" />
-              Last ned
-            </Button>
-            <Button
-              className="flex-1"
-              onClick={() => onEdit?.(template)}
-            >
-              <Pencil className="h-4 w-4 mr-2" />
-              Rediger
-            </Button>
-          </div>
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   );
 }

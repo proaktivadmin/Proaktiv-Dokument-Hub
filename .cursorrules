@@ -26,3 +26,55 @@ YOU ARE AN EXPERT FULL-STACK DEVELOPER SPECIALIZING IN:
 ## MIGRATION CONTEXT
 - We are migrating from `_legacy_v1`.
 - If you need to understand specific business logic (e.g., how we calculate fees or valid file types), READ the files in `_legacy_v1` first.
+
+## V2 ARCHITECTURE PATTERNS
+
+### Document-First Paradigm
+- Preview is the PRIMARY view, code is SECONDARY
+- Use ElementInspector for code viewing, not Monaco by default
+- All template views should render the document first
+
+### Shelf Layout Pattern
+- Use ShelfLibrary for template collections
+- Group by: channel (default), phase, receiver, category
+- Dim non-matching cards on filter (opacity: 0.3), don't hide
+
+### Flettekode System
+- All merge field operations through MergeFieldService
+- Patterns: [[field.name]] for merge, vitec-if for conditions
+- Auto-discovery extracts from existing templates
+
+### Component Naming
+- Viewer components: *Frame.tsx (A4Frame, SMSFrame)
+- Library components: *Library.tsx, *Card.tsx
+- Inspector: ElementInspector.tsx
+
+### Key Directories
+- Agent Prompts: `.cursor/agents/`
+- Specs (Agent Output): `.cursor/specs/`
+- Plans: `.cursor/plans/`
+- Active Context: `.cursor/active_context.md`
+
+## BACKEND PATTERNS (V2)
+
+### Database
+- UUID for all primary keys (match existing pattern)
+- JSONB for array/object fields (phases, departments, etc.)
+- All timestamps with timezone (TIMESTAMPTZ)
+
+### Service Layer
+- All service methods must be async
+- Business logic never in routers, always in services
+- Use `Depends()` for DI (db sessions, services)
+- Error handling with HTTPException
+
+### New Tables (V2)
+- `merge_fields` - Flettekode registry
+- `code_patterns` - Reusable HTML snippets
+- `layout_partials` - Headers/footers
+
+### API Patterns
+- `/api/merge-fields` - Flettekode CRUD + discovery
+- `/api/code-patterns` - Pattern library
+- `/api/layout-partials` - Header/footer management
+- `/api/templates/{id}/analyze` - Template analysis

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Maximize2, Minimize2, Code, Eye, Loader2 } from "lucide-react";
+import { Maximize2, Minimize2, Code, Eye, Loader2, FlaskConical, FlaskConicalOff, FileText, Scissors } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 /**
@@ -12,6 +12,12 @@ import { Button } from "@/components/ui/button";
  * 
  * The CSS file (/vitec-theme.css) is loaded via a link tag inside the iframe,
  * ensuring complete style isolation from the main application.
+ * 
+ * Features:
+ * - A4 page break visualization for print layout planning
+ * - Test data toggle for previewing with sample values
+ * - Source code view toggle
+ * - Fullscreen mode
  */
 
 interface TemplatePreviewProps {
@@ -19,6 +25,12 @@ interface TemplatePreviewProps {
   title?: string;
   isLoading?: boolean;
   error?: string;
+  /** Whether test data mode is enabled */
+  testDataEnabled?: boolean;
+  /** Callback to toggle test data mode */
+  onToggleTestData?: () => void;
+  /** Whether processed test data is available */
+  hasProcessedData?: boolean;
 }
 
 export function TemplatePreview({
@@ -26,10 +38,14 @@ export function TemplatePreview({
   title,
   isLoading = false,
   error,
+  testDataEnabled = false,
+  onToggleTestData,
+  hasProcessedData = false,
 }: TemplatePreviewProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showSource, setShowSource] = useState(false);
+  const [showPageBreaks, setShowPageBreaks] = useState(false);
 
   /**
    * Highlight merge fields in the content
@@ -48,6 +64,7 @@ export function TemplatePreview({
    */
   const buildPreviewDocument = (): string => {
     const processedContent = highlightMergeFields(content);
+    const pageBreakClass = showPageBreaks ? "show-page-breaks" : "";
     
     return `<!DOCTYPE html>
 <html lang="no">
@@ -57,13 +74,13 @@ export function TemplatePreview({
   <title>${title || "Template Preview"}</title>
   <link rel="stylesheet" href="/vitec-theme.css" />
 </head>
-<body class="vitec-preview-mode">
+<body class="vitec-preview-mode ${pageBreakClass}">
   ${processedContent}
 </body>
 </html>`;
   };
 
-  // Update iframe content when content changes
+  // Update iframe content when content changes or page break mode toggles
   useEffect(() => {
     if (iframeRef.current && content && !showSource) {
       const doc = iframeRef.current.contentDocument;
@@ -73,7 +90,7 @@ export function TemplatePreview({
         doc.close();
       }
     }
-  }, [content, showSource]);
+  }, [content, showSource, showPageBreaks]);
 
   const toggleFullscreen = () => {
     setIsFullscreen(!isFullscreen);
@@ -124,8 +141,62 @@ export function TemplatePreview({
           <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">
             HTML
           </span>
+          {testDataEnabled && (
+            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded flex items-center gap-1">
+              <FlaskConical className="h-3 w-3" />
+              Testdata
+            </span>
+          )}
+          {showPageBreaks && (
+            <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded flex items-center gap-1">
+              <Scissors className="h-3 w-3" />
+              A4 Sideskift
+            </span>
+          )}
         </div>
         <div className="flex items-center gap-2">
+          {/* Test Data Toggle */}
+          {onToggleTestData && hasProcessedData && (
+            <Button
+              variant={testDataEnabled ? "default" : "outline"}
+              size="sm"
+              onClick={onToggleTestData}
+              title={testDataEnabled ? "Vis originalt innhold" : "Vis med testdata"}
+              className={testDataEnabled ? "bg-blue-600 hover:bg-blue-700" : ""}
+            >
+              {testDataEnabled ? (
+                <>
+                  <FlaskConicalOff className="h-4 w-4 mr-1" />
+                  Original
+                </>
+              ) : (
+                <>
+                  <FlaskConical className="h-4 w-4 mr-1" />
+                  Testdata
+                </>
+              )}
+            </Button>
+          )}
+          {/* Page Break Toggle */}
+          <Button
+            variant={showPageBreaks ? "default" : "outline"}
+            size="sm"
+            onClick={() => setShowPageBreaks(!showPageBreaks)}
+            title={showPageBreaks ? "Skjul sideskift" : "Vis A4-sideskift"}
+            className={showPageBreaks ? "bg-amber-600 hover:bg-amber-700" : ""}
+          >
+            {showPageBreaks ? (
+              <>
+                <FileText className="h-4 w-4 mr-1" />
+                Skjul A4
+              </>
+            ) : (
+              <>
+                <Scissors className="h-4 w-4 mr-1" />
+                Vis A4
+              </>
+            )}
+          </Button>
           <Button
             variant="ghost"
             size="sm"

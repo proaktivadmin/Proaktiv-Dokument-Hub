@@ -12,6 +12,8 @@ import {
   Pencil,
   Eye,
   X,
+  LayoutGrid,
+  List,
 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Input } from "@/components/ui/input";
@@ -52,6 +54,7 @@ import { formatDistanceToNow } from "date-fns";
 import { nb } from "date-fns/locale";
 import Link from "next/link";
 import type { Template } from "@/types";
+import { ShelfLibrary } from "@/components/shelf";
 
 function TemplateTableSkeleton() {
   return (
@@ -71,10 +74,13 @@ function TemplateTableSkeleton() {
   );
 }
 
+type ViewMode = "table" | "shelf";
+
 function TemplatesPageContent() {
   const searchParams = useSearchParams();
   const categoryFromUrl = searchParams.get("category");
   
+  const [viewMode, setViewMode] = useState<ViewMode>("shelf");
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
   const [categoryFilter, setCategoryFilter] = useState<string | undefined>(undefined);
@@ -264,9 +270,33 @@ function TemplatesPageContent() {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-[#272630]">Maler</h2>
-          <p className="text-[#272630]/60 font-sans">Administrer alle dokumentmaler</p>
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h2 className="text-2xl font-bold text-[#272630]">Maler</h2>
+            <p className="text-[#272630]/60 font-sans">Administrer alle dokumentmaler</p>
+          </div>
+          
+          {/* View mode toggle */}
+          <div className="flex items-center gap-1 p-1 bg-gray-100 rounded-lg">
+            <Button
+              variant={viewMode === "table" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setViewMode("table")}
+              className="gap-2"
+            >
+              <List className="h-4 w-4" />
+              Liste
+            </Button>
+            <Button
+              variant={viewMode === "shelf" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setViewMode("shelf")}
+              className="gap-2"
+            >
+              <LayoutGrid className="h-4 w-4" />
+              Hylle
+            </Button>
+          </div>
         </div>
 
         {/* Active Category Filter */}
@@ -286,6 +316,21 @@ function TemplatesPageContent() {
           </div>
         )}
 
+        {/* Shelf View */}
+        {viewMode === "shelf" && (
+          <div className="bg-white rounded-md p-6 border" style={{ minHeight: "60vh" }}>
+            <ShelfLibrary
+              onTemplateSelect={(template) => handleRowClick(template as unknown as Template)}
+              onTemplatePreview={(template) => handlePreviewClick(template as unknown as Template)}
+              onTemplateEdit={(template) => handleEditClick(template as unknown as Template)}
+              onTemplateDelete={(template) => handleDeleteClick(template as unknown as Template)}
+            />
+          </div>
+        )}
+
+        {/* Table View */}
+        {viewMode === "table" && (
+          <>
         {/* Filters */}
         <div className="bg-white rounded-md p-4 border border-[#E5E5E5] mb-6">
           <div className="flex flex-col md:flex-row gap-4">
@@ -462,6 +507,8 @@ function TemplatesPageContent() {
             </>
           )}
         </div>
+          </>
+        )}
       </main>
 
       {/* Edit Dialog */}

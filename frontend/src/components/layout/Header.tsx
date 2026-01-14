@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Upload, FileText, FolderTree, LayoutDashboard } from "lucide-react";
+import { Upload, FileText, FolderTree, LayoutDashboard, Sparkles, Code2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UploadTemplateDialog } from "@/components/templates/UploadTemplateDialog";
 import { cn } from "@/lib/utils";
@@ -25,6 +25,8 @@ export function Header({ onUploadSuccess }: HeaderProps) {
     { href: "/", label: "Dashboard", icon: LayoutDashboard },
     { href: "/templates", label: "Maler", icon: FileText },
     { href: "/categories", label: "Kategorier", icon: FolderTree },
+    { href: "/flettekoder", label: "Flettekoder", icon: Code2 },
+    { href: "/sanitizer", label: "Sanitizer", icon: Sparkles },
   ];
 
   return (
