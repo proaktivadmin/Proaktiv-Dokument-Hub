@@ -144,7 +144,16 @@ async def init_db() -> None:
     
     # Import models to ensure they're registered with Base
     from app.models import Base
-    from app.models import template, category, tag  # noqa: F401
+    # Import ALL models so Base.metadata.create_all() creates all tables
+    from app.models import (  # noqa: F401
+        template,
+        category,
+        tag,
+        audit_log,
+        merge_field,
+        code_pattern,
+        layout_partial,
+    )
     
     try:
         async with async_engine.connect() as conn:
