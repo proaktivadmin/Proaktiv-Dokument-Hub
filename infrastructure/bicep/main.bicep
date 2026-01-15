@@ -1,7 +1,8 @@
 // ============================================================================
 // Proaktiv Dokument Hub - Azure Container Apps Infrastructure
 // ============================================================================
-// Lowest-cost deployment using SQLite on Azure File Share
+// Simplified single-user deployment - SQLite in container (ephemeral)
+// Template files stored in Azure Blob Storage (persistent)
 // ============================================================================
 
 @description('The location for all resources')
@@ -20,13 +21,6 @@ param backendImage string
 @description('Container image for frontend')
 param frontendImage string
 
-@description('Azure Storage Account name for file share')
-param storageAccountName string
-
-@description('Azure Storage Account key')
-@secure()
-param storageAccountKey string
-
 @description('Azure Storage connection string for blob storage')
 @secure()
 param azureStorageConnectionString string
@@ -35,8 +29,16 @@ param azureStorageConnectionString string
 @secure()
 param secretKey string
 
-@description('File share name for SQLite database')
-param fileShareName string = 'database-vol'
+// Legacy params - kept for backward compatibility but not used
+@description('Azure Storage Account name (legacy - not used)')
+param storageAccountName string = ''
+
+@description('Azure Storage Account key (legacy - not used)')
+@secure()
+param storageAccountKey string = ''
+
+@description('File share name (legacy - not used)')
+param fileShareName string = ''
 
 // ============================================================================
 // Variables
@@ -82,23 +84,6 @@ resource containerAppEnv 'Microsoft.App/managedEnvironments@2023-05-01' = {
 }
 
 // ============================================================================
-// Storage Mount for SQLite Database
-// ============================================================================
-
-resource storageMount 'Microsoft.App/managedEnvironments/storages@2023-05-01' = {
-  parent: containerAppEnv
-  name: 'database-storage'
-  properties: {
-    azureFile: {
-      accountName: storageAccountName
-      accountKey: storageAccountKey
-      shareName: fileShareName
-      accessMode: 'ReadWrite'
-    }
-  }
-}
-
-// ============================================================================
 // Backend Container App (FastAPI)
 // ============================================================================
 
@@ -129,10 +114,6 @@ resource backendApp 'Microsoft.App/containerApps@2023-05-01' = {
           value: azureStorageConnectionString
         }
         {
-          name: 'storage-account-key'
-          value: storageAccountKey
-        }
-        {
           name: 'secret-key'
           value: secretKey
         }
@@ -149,8 +130,10 @@ resource backendApp 'Microsoft.App/containerApps@2023-05-01' = {
           }
           env: [
             {
+              // SQLite in container - ephemeral but simple
+              // Template files are in Azure Blob Storage (persistent)
               name: 'DATABASE_URL'
-              value: 'sqlite:////data/prod.db'
+              value: 'sqlite:///./app.db'
             }
             {
               name: 'AZURE_STORAGE_CONNECTION_STRING'
@@ -173,12 +156,6 @@ resource backendApp 'Microsoft.App/containerApps@2023-05-01' = {
               value: environment == 'prod' ? 'false' : 'true'
             }
           ]
-          volumeMounts: [
-            {
-              volumeName: 'database-volume'
-              mountPath: '/data'
-            }
-          ]
           probes: [
             {
               type: 'liveness'
@@ -186,7 +163,7 @@ resource backendApp 'Microsoft.App/containerApps@2023-05-01' = {
                 path: '/api/health'
                 port: 8000
               }
-              initialDelaySeconds: 10
+              initialDelaySeconds: 15
               periodSeconds: 30
             }
             {
@@ -195,32 +172,15 @@ resource backendApp 'Microsoft.App/containerApps@2023-05-01' = {
                 path: '/api/health'
                 port: 8000
               }
-              initialDelaySeconds: 5
+              initialDelaySeconds: 10
               periodSeconds: 10
             }
           ]
         }
       ]
-      volumes: [
-        {
-          name: 'database-volume'
-          storageName: storageMount.name
-          storageType: 'AzureFile'
-        }
-      ]
       scale: {
         minReplicas: 1
-        maxReplicas: 3
-        rules: [
-          {
-            name: 'http-rule'
-            http: {
-              metadata: {
-                concurrentRequests: '50'
-              }
-            }
-          }
-        ]
+        maxReplicas: 1  // Single user, no need for scaling
       }
     }
   }
@@ -268,7 +228,7 @@ resource frontendApp 'Microsoft.App/containerApps@2023-05-01' = {
                 path: '/'
                 port: 3000
               }
-              initialDelaySeconds: 10
+              initialDelaySeconds: 15
               periodSeconds: 30
             }
             {
@@ -277,7 +237,7 @@ resource frontendApp 'Microsoft.App/containerApps@2023-05-01' = {
                 path: '/'
                 port: 3000
               }
-              initialDelaySeconds: 5
+              initialDelaySeconds: 10
               periodSeconds: 10
             }
           ]
@@ -285,17 +245,7 @@ resource frontendApp 'Microsoft.App/containerApps@2023-05-01' = {
       ]
       scale: {
         minReplicas: 1
-        maxReplicas: 3
-        rules: [
-          {
-            name: 'http-rule'
-            http: {
-              metadata: {
-                concurrentRequests: '100'
-              }
-            }
-          }
-        ]
+        maxReplicas: 1  // Single user, no need for scaling
       }
     }
   }
