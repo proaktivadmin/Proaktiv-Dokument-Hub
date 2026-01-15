@@ -179,6 +179,26 @@ resource backendApp 'Microsoft.App/containerApps@2023-05-01' = {
               mountPath: '/data'
             }
           ]
+          probes: [
+            {
+              type: 'liveness'
+              httpGet: {
+                path: '/api/health'
+                port: 8000
+              }
+              initialDelaySeconds: 10
+              periodSeconds: 30
+            }
+            {
+              type: 'readiness'
+              httpGet: {
+                path: '/api/health'
+                port: 8000
+              }
+              initialDelaySeconds: 5
+              periodSeconds: 10
+            }
+          ]
         }
       ]
       volumes: [
@@ -189,7 +209,7 @@ resource backendApp 'Microsoft.App/containerApps@2023-05-01' = {
         }
       ]
       scale: {
-        minReplicas: 0
+        minReplicas: 1
         maxReplicas: 3
         rules: [
           {
@@ -233,7 +253,7 @@ resource frontendApp 'Microsoft.App/containerApps@2023-05-01' = {
           }
           env: [
             {
-              name: 'NEXT_PUBLIC_API_URL'
+              name: 'BACKEND_URL'
               value: 'https://${backendApp.properties.configuration.ingress.fqdn}'
             }
             {
@@ -241,10 +261,30 @@ resource frontendApp 'Microsoft.App/containerApps@2023-05-01' = {
               value: 'production'
             }
           ]
+          probes: [
+            {
+              type: 'liveness'
+              httpGet: {
+                path: '/'
+                port: 3000
+              }
+              initialDelaySeconds: 10
+              periodSeconds: 30
+            }
+            {
+              type: 'readiness'
+              httpGet: {
+                path: '/'
+                port: 3000
+              }
+              initialDelaySeconds: 5
+              periodSeconds: 10
+            }
+          ]
         }
       ]
       scale: {
-        minReplicas: 0
+        minReplicas: 1
         maxReplicas: 3
         rules: [
           {

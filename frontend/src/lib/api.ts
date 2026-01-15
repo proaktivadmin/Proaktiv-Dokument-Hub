@@ -9,7 +9,9 @@ import type {
   DashboardStats,
 } from "@/types";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+// Use relative URLs - requests go through Next.js rewrites to the backend
+// This allows BACKEND_URL to be set at runtime instead of build time
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
 const api = axios.create({
   baseURL: `${API_BASE_URL}/api`,

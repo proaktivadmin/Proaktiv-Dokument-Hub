@@ -5,7 +5,8 @@
 import axios from "axios";
 import type { TemplateAnalysisResult } from "@/types/v2";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+// Use relative URLs - requests go through Next.js rewrites to the backend
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
 const api = axios.create({
   baseURL: `${API_BASE_URL}/api`,
