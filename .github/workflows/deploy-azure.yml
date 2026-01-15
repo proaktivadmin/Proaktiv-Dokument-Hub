@@ -155,6 +155,11 @@ jobs:
             echo "⚠️ Generated temporary SECRET_KEY. Set a permanent one in GitHub Secrets!" >> $GITHUB_STEP_SUMMARY
           fi
 
+      # Force new revision by adding timestamp
+      - name: Generate deployment timestamp
+        id: timestamp
+        run: echo "ts=$(date +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT
+
       - name: Deploy Bicep template
         uses: azure/arm-deploy@v2
         with:
