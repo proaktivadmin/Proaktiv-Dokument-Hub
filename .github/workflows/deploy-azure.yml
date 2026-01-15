@@ -166,11 +166,8 @@ jobs:
             baseName=dokumenthub
             backendImage=${{ env.REGISTRY }}/${{ needs.build.outputs.backend_name }}:${{ needs.build.outputs.short_sha }}
             frontendImage=${{ env.REGISTRY }}/${{ needs.build.outputs.frontend_name }}:${{ needs.build.outputs.short_sha }}
-            storageAccountName=${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}
-            storageAccountKey=${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}
             azureStorageConnectionString=${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
             secretKey=${{ steps.secret-key.outputs.secret_key }}
-            fileShareName=database-vol
           failOnStdErr: false
 
       - name: Get deployment outputs

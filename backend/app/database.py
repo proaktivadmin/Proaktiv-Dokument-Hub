@@ -141,6 +141,11 @@ async def init_db() -> None:
     For SQLite, also creates tables if they don't exist.
     """
     from sqlalchemy import text
+    
+    # Import models to ensure they're registered with Base
+    from app.models import Base
+    from app.models import template, category, tag  # noqa: F401
+    
     try:
         async with async_engine.connect() as conn:
             # Test connection
@@ -148,6 +153,14 @@ async def init_db() -> None:
         
         db_type = "SQLite" if is_sqlite(settings.DATABASE_URL) else "PostgreSQL"
         logger.info(f"Database connection established successfully ({db_type})")
+        
+        # For SQLite (ephemeral), automatically create all tables on startup
+        if is_sqlite(settings.DATABASE_URL):
+            logger.info("SQLite detected - creating tables if they don't exist...")
+            async with async_engine.begin() as conn:
+                await conn.run_sync(Base.metadata.create_all)
+            logger.info("Database tables created/verified successfully")
+            
     except Exception as e:
         logger.error(f"Failed to connect to database: {e}")
         raise

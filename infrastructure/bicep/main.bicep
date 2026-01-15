@@ -29,17 +29,6 @@ param azureStorageConnectionString string
 @secure()
 param secretKey string
 
-// Legacy params - kept for backward compatibility but not used
-@description('Azure Storage Account name (legacy - not used)')
-param storageAccountName string = ''
-
-@description('Azure Storage Account key (legacy - not used)')
-@secure()
-param storageAccountKey string = ''
-
-@description('File share name (legacy - not used)')
-param fileShareName string = ''
-
 // ============================================================================
 // Variables
 // ============================================================================
