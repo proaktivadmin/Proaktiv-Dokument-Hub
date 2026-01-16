@@ -248,3 +248,5 @@ export { mergeFieldsApi } from "./api/merge-fields";
 export { codePatternsApi } from "./api/code-patterns";
 export { layoutPartialsApi } from "./api/layout-partials";
 export { templateAnalysisApi } from "./api/template-analysis";
+export { templateSettingsApi } from "./api/template-settings";
+export { dashboardApi } from "./api/dashboard";

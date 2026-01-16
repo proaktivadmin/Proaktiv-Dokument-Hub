@@ -3,7 +3,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { templateSettingsApi } from '@/lib/api';
+import { templateSettingsApi } from '@/lib/api/template-settings';
 import type { UpdateTemplateSettingsResponse } from '@/types/v2';
 
 interface UseTemplateSettingsReturn {

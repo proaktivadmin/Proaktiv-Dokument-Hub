@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { dashboardApi } from "@/lib/api";
+import { dashboardApi } from "@/lib/api/dashboard";
 import type { DashboardStatsV2 } from "@/types/v2";
 
 interface UseDashboardStatsReturn {

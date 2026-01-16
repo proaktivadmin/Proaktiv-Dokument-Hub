@@ -113,20 +113,20 @@ export default function Dashboard() {
             <>
               <div className="bg-[#272630] text-white rounded-md p-6">
                 <p className="text-white/70 text-sm font-sans">Totalt maler</p>
-                <p className="text-4xl font-serif font-bold mt-2">{stats?.total_templates ?? 0}</p>
+                <p className="text-4xl font-serif font-bold mt-2">{stats?.total ?? 0}</p>
               </div>
 
               <div className="bg-white rounded-md p-6 border border-[#E5E5E5]">
                 <p className="text-[#272630]/60 text-sm font-sans">Publiserte</p>
                 <p className="text-4xl font-serif font-bold text-[#272630] mt-2">
-                  {stats?.published_templates ?? 0}
+                  {stats?.published ?? 0}
                 </p>
               </div>
 
               <div className="bg-white rounded-md p-6 border border-[#E5E5E5]">
                 <p className="text-[#272630]/60 text-sm font-sans">Utkast</p>
                 <p className="text-4xl font-serif font-bold text-[#272630] mt-2">
-                  {stats?.draft_templates ?? 0}
+                  {stats?.draft ?? 0}
                 </p>
               </div>
 
@@ -136,7 +136,7 @@ export default function Dashboard() {
                   Nedlastinger (30d)
                 </div>
                 <p className="text-4xl font-serif font-bold text-[#272630] mt-2">
-                  {stats?.total_downloads_30d ?? 0}
+                  {stats?.downloads ?? 0}
                 </p>
               </div>
             </>
@@ -258,7 +258,7 @@ export default function Dashboard() {
             <div className="space-y-2">
               {stats.recent_uploads.map((upload) => (
                 <div
-                  key={upload.template_id}
+                  key={upload.id}
                   className="flex items-center gap-3 text-sm text-[#272630]/60"
                 >
                   <div className="w-2 h-2 rounded-full bg-[#BCAB8A]" />

@@ -3,54 +3,16 @@
  * Extends existing types with new backend API support
  */
 
-import type { Template } from './index';
+// Re-export all V2 types from subfolder
+export * from './v2/merge-fields';
+export * from './v2/code-patterns';
+export * from './v2/layout-partials';
+export * from './v2/template-metadata';
+export * from './v2/shelf-library';
 
 // ============================================================================
-// TEMPLATE CONTENT & SETTINGS
+// TEMPLATE CONTENT API (V2.7 specific)
 // ============================================================================
-
-/**
- * Extended template type with V2.7 Vitec metadata fields
- */
-export interface TemplateWithMetadata extends Template {
-  // Channel and Type
-  channel: TemplateChannel;
-  template_type: TemplateType;
-  
-  // Receiver
-  receiver_type?: ReceiverType;
-  receiver?: Receiver;
-  extra_receivers: string[];
-  
-  // Filtering/Categorization
-  phases: Phase[];
-  assignment_types: string[];
-  ownership_types: OwnershipType[];
-  departments: string[];
-  
-  // Email
-  email_subject?: string;
-  
-  // Layout References
-  header_template_id?: string;
-  footer_template_id?: string;
-  
-  // Margins (in cm)
-  margin_top?: number;
-  margin_bottom?: number;
-  margin_left?: number;
-  margin_right?: number;
-  
-  // Thumbnail
-  preview_thumbnail_url?: string;
-}
-
-export type TemplateChannel = 'pdf' | 'email' | 'sms' | 'pdf_email';
-export type TemplateType = 'Objekt/Kontakt' | 'System';
-export type ReceiverType = 'Egne/kundetilpasset' | 'Systemstandard';
-export type Receiver = 'Selger' | 'Kjøper' | 'Megler' | 'Bank' | 'Forretningsfører';
-export type Phase = 'Oppdrag' | 'Markedsføring' | 'Visning' | 'Budrunde' | 'Kontrakt' | 'Oppgjør';
-export type OwnershipType = 'Bolig' | 'Aksje' | 'Tomt' | 'Næring' | 'Hytte';
 
 /**
  * Request payload for saving template content
@@ -76,14 +38,14 @@ export interface SaveTemplateContentResponse {
  * Request payload for updating template settings
  */
 export interface UpdateTemplateSettingsRequest {
-  channel?: TemplateChannel;
-  template_type?: TemplateType;
-  receiver_type?: ReceiverType;
-  receiver?: Receiver;
+  channel?: string;
+  template_type?: string;
+  receiver_type?: string;
+  receiver?: string;
   extra_receivers?: string[];
-  phases?: Phase[];
+  phases?: string[];
   assignment_types?: string[];
-  ownership_types?: OwnershipType[];
+  ownership_types?: string[];
   departments?: string[];
   email_subject?: string;
   header_template_id?: string;
@@ -97,7 +59,24 @@ export interface UpdateTemplateSettingsRequest {
 /**
  * Response from updating template settings
  */
-export interface UpdateTemplateSettingsResponse extends TemplateWithMetadata {
+export interface UpdateTemplateSettingsResponse {
+  id: string;
+  channel?: string;
+  template_type?: string;
+  receiver_type?: string;
+  receiver?: string;
+  extra_receivers?: string[];
+  phases?: string[];
+  assignment_types?: string[];
+  ownership_types?: string[];
+  departments?: string[];
+  email_subject?: string;
+  header_template_id?: string;
+  footer_template_id?: string;
+  margin_top?: number;
+  margin_bottom?: number;
+  margin_left?: number;
+  margin_right?: number;
   updated_at: string;
 }
 
@@ -130,32 +109,4 @@ export interface RecentUploadV2 {
   id: string;
   title: string;
   created_at: string;
-}
-
-// ============================================================================
-// SHELF GROUPING
-// ============================================================================
-
-/**
- * Shelf grouping configuration
- */
-export type ShelfGroupBy = 'channel' | 'category' | 'status' | 'phase';
-
-/**
- * Grouped templates for shelf display
- */
-export interface ShelfGroup {
-  id: string;
-  label: string;
-  icon?: React.ReactNode;
-  templates: TemplateWithMetadata[];
-  isCollapsed: boolean;
-}
-
-/**
- * Result of grouping templates
- */
-export interface GroupedTemplates {
-  groups: ShelfGroup[];
-  totalCount: number;
 }

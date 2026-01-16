@@ -2,7 +2,7 @@
  * Hook for grouping templates by various criteria
  */
 
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import type { TemplateWithMetadata, ShelfGroupBy, GroupedTemplates } from '@/types/v2';
 import { FileText, Mail, MessageSquare, FolderOpen, CheckCircle, Clock } from 'lucide-react';
 
@@ -24,8 +24,9 @@ export function useGroupedTemplates(
           label = getChannelLabel(template.channel);
           break;
         case 'category':
-          key = template.categories[0]?.id || 'uncategorized';
-          label = template.categories[0]?.name || 'Ukategorisert';
+          // Use template_type as category fallback
+          key = template.template_type || 'uncategorized';
+          label = template.template_type || 'Ukategorisert';
           break;
         case 'status':
           key = template.status;
@@ -47,17 +48,19 @@ export function useGroupedTemplates(
     });
 
     // Convert to ShelfGroup array
-    const shelfGroups = Array.from(groups.entries()).map(([id, templates]) => ({
+    const shelves = Array.from(groups.entries()).map(([id, groupTemplates]) => ({
       id,
       label: getLabelForGroup(id, groupBy),
-      icon: getIconForGroup(id, groupBy),
-      templates,
+      groupValue: id,
+      templates: groupTemplates,
+      count: groupTemplates.length,
       isCollapsed: false,
     }));
 
     return {
-      groups: shelfGroups,
-      totalCount: templates.length,
+      groupBy,
+      shelves,
+      totalTemplates: templates.length,
     };
   }, [templates, groupBy]);
 }

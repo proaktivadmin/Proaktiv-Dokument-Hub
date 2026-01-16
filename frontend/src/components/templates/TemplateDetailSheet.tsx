@@ -16,7 +16,7 @@ import { TemplateSettingsPanel, type TemplateSettings } from "./TemplateSettings
 import { SimulatorPanel } from "./SimulatorPanel";
 import { CodeEditor } from "@/components/editor/CodeEditor";
 import { templateApi } from "@/lib/api";
-import { templateSettingsApi } from "@/lib/api";
+import { templateSettingsApi } from "@/lib/api/template-settings";
 import { useToast } from "@/hooks/use-toast";
 import {
   Download,
@@ -290,7 +290,18 @@ export function TemplateDetailSheet({
                 onSave={async (settings: TemplateSettings) => {
                   setIsSavingSettings(true);
                   try {
-                    await templateSettingsApi.updateSettings(template.id, settings);
+                    // Convert null to undefined for API compatibility
+                    await templateSettingsApi.updateSettings(template.id, {
+                      channel: settings.channel,
+                      receiver: settings.receiver ?? undefined,
+                      email_subject: settings.emailSubject ?? undefined,
+                      header_template_id: settings.headerTemplateId ?? undefined,
+                      footer_template_id: settings.footerTemplateId ?? undefined,
+                      margin_top: settings.marginTop,
+                      margin_bottom: settings.marginBottom,
+                      margin_left: settings.marginLeft,
+                      margin_right: settings.marginRight,
+                    });
                     
                     toast({
                       title: "Innstillinger lagret",

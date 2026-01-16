@@ -7,7 +7,7 @@ import type { TemplateWithMetadata, TemplateChannel, TransactionPhase, Receiver,
 /**
  * Grouping options for shelf layout
  */
-export type ShelfGroupBy = 'channel' | 'phase' | 'receiver' | 'category' | 'ownership_type';
+export type ShelfGroupBy = 'channel' | 'phase' | 'receiver' | 'category' | 'ownership_type' | 'status';
 
 /**
  * A single shelf (swimlane) containing grouped templates
