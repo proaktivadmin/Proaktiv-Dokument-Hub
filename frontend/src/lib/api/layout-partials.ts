@@ -2,6 +2,7 @@
  * Layout Partials API Client
  */
 
+import axios from "axios";
 import type {
   LayoutPartial,
   LayoutPartialCreate,
