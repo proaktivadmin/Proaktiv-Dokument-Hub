@@ -90,5 +90,42 @@ async def get_debug_logs():
         return {"logs": logs, "log_path": log_path, "exists": os.path.exists(log_path)}
     except Exception as e:
         return {"error": str(e), "log_path": log_path}
+
+
+@router.get("/api/health/db-tables")
+async def check_db_tables(db: AsyncSession = Depends(get_db)):
+    """Check which tables exist in the database."""
+    from app.config import settings
+    import os
+    
+    result = {
+        "database_url": settings.DATABASE_URL[:50] if settings.DATABASE_URL else "None",
+        "is_sqlite": settings.DATABASE_URL.startswith("sqlite") if settings.DATABASE_URL else False,
+        "tables": [],
+        "cwd": os.getcwd(),
+        "db_file_exists": None,
+        "error": None
+    }
+    
+    try:
+        if result["is_sqlite"]:
+            # Check if SQLite file exists
+            db_path = settings.DATABASE_URL.replace("sqlite:///", "")
+            result["db_path"] = db_path
+            result["db_file_exists"] = os.path.exists(db_path)
+            
+            # Query SQLite for tables
+            tables_result = await db.execute(text("SELECT name FROM sqlite_master WHERE type='table'"))
+            result["tables"] = [row[0] for row in tables_result.fetchall()]
+        else:
+            # PostgreSQL
+            tables_result = await db.execute(text("SELECT tablename FROM pg_tables WHERE schemaname = 'public'"))
+            result["tables"] = [row[0] for row in tables_result.fetchall()]
+    except Exception as e:
+        result["error"] = str(e)
+        import traceback
+        result["traceback"] = traceback.format_exc()
+    
+    return result
 # #endregion
 
