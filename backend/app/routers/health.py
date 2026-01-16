@@ -70,3 +70,25 @@ async def liveness_check():
     """Kubernetes liveness probe."""
     return {"status": "alive"}
 
+
+# #region agent log
+@router.get("/api/health/debug-logs")
+async def get_debug_logs():
+    """Get debug logs for Azure deployment debugging."""
+    import os
+    log_path = "/app/.cursor/debug.log"
+    logs = []
+    try:
+        if os.path.exists(log_path):
+            with open(log_path, "r") as f:
+                import json
+                for line in f:
+                    try:
+                        logs.append(json.loads(line.strip()))
+                    except:
+                        logs.append({"raw": line.strip()})
+        return {"logs": logs, "log_path": log_path, "exists": os.path.exists(log_path)}
+    except Exception as e:
+        return {"error": str(e), "log_path": log_path}
+# #endregion
+
