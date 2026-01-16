@@ -52,6 +52,9 @@ app.add_middleware(
         "http://localhost:3001",
         "http://frontend:3000",
         "https://dokumenthub.proaktiv.no",
+        # Azure Container Apps URLs
+        "https://dokumenthub-web.greenmushroom-2067e5c8.norwayeast.azurecontainerapps.io",
+        "https://dokumenthub-api.greenmushroom-2067e5c8.norwayeast.azurecontainerapps.io",
     ],
     allow_credentials=True,
     allow_methods=["*"],
