@@ -59,9 +59,6 @@ default_origins = [
     # Railway URLs
     "https://blissful-quietude-production.up.railway.app",
     "https://proaktiv-dokument-hub-production.up.railway.app",
-    # Azure Container Apps URLs (legacy)
-    "https://dokumenthub-web.greenmushroom-2067e5c8.norwayeast.azurecontainerapps.io",
-    "https://dokumenthub-api.greenmushroom-2067e5c8.norwayeast.azurecontainerapps.io",
 ]
 
 # Merge allowed origins
