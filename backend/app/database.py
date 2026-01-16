@@ -5,10 +5,6 @@ Provides async SQLAlchemy engine and session factory for database operations.
 Supports both PostgreSQL (production) and SQLite (development/low-cost).
 """
 
-# #region agent log
-print("[DEBUG][database.py] Module import started", flush=True)
-# #endregion
-
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
@@ -16,13 +12,7 @@ from typing import AsyncGenerator
 import logging
 import os
 
-# #region agent log
-print("[DEBUG][database.py] About to import settings from app.config", flush=True)
-# #endregion
 from app.config import settings
-# #region agent log
-print(f"[DEBUG][database.py] Settings imported. DATABASE_URL starts with: {settings.DATABASE_URL[:30] if settings.DATABASE_URL else 'EMPTY'}...", flush=True)
-# #endregion
 
 logger = logging.getLogger(__name__)
 
@@ -79,10 +69,6 @@ def ensure_sqlite_directory(url: str) -> None:
 # Ensure SQLite directory exists before creating engines
 ensure_sqlite_directory(settings.DATABASE_URL)
 
-# #region agent log
-print(f"[DEBUG][database.py] Creating database engines. is_sqlite={is_sqlite(settings.DATABASE_URL)}", flush=True)
-# #endregion
-
 # Engine configuration based on database type
 if is_sqlite(settings.DATABASE_URL):
     # SQLite configuration - simpler, no connection pooling
@@ -114,10 +100,6 @@ else:
     )
 
 
-# #region agent log
-print("[DEBUG][database.py] Engines created successfully. Creating session factory...", flush=True)
-# #endregion
-
 # Async session factory
 async_session_factory = async_sessionmaker(
     async_engine,
@@ -126,10 +108,6 @@ async_session_factory = async_sessionmaker(
     autocommit=False,
     autoflush=False,
 )
-
-# #region agent log
-print("[DEBUG][database.py] Module initialization complete!", flush=True)
-# #endregion
 
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:

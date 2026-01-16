@@ -1,41 +1,19 @@
 #!/bin/bash
 set -e
 
-echo "[DEBUG][start-prod.sh] ========== STARTUP SCRIPT STARTED =========="
-echo "[DEBUG][start-prod.sh] PWD: $(pwd)"
-echo "[DEBUG][start-prod.sh] PORT: ${PORT:-NOT SET}"
-echo "[DEBUG][start-prod.sh] PLATFORM: ${PLATFORM:-NOT SET}"
-echo "[DEBUG][start-prod.sh] RAILWAY_PROJECT_ID: ${RAILWAY_PROJECT_ID:-NOT SET}"
-echo "[DEBUG][start-prod.sh] APP_ENV: ${APP_ENV:-NOT SET}"
-echo "[DEBUG][start-prod.sh] SECRET_KEY set: $(if [ -n "$SECRET_KEY" ]; then echo 'YES'; else echo 'NO'; fi)"
-echo "[DEBUG][start-prod.sh] DATABASE_URL set: $(if [ -n "$DATABASE_URL" ]; then echo 'YES'; else echo 'NO'; fi)"
 echo "🚀 Starting Proaktiv Dokument Hub Backend..."
 
 # Check if we're on Railway (multiple detection methods)
 if [[ "$PLATFORM" == "railway" ]] || [[ -n "$RAILWAY_PROJECT_ID" ]] || [[ -n "$RAILWAY_SERVICE_ID" ]] || [[ -n "$RAILWAY_ENVIRONMENT_ID" ]]; then
-    echo "[DEBUG][start-prod.sh] Railway platform detected!"
     echo "🚂 Railway platform detected - using fast startup"
     cd /app
     
     # Run Alembic migrations
-    echo "[DEBUG][start-prod.sh] About to run Alembic migrations..."
     echo "📦 Running database migrations..."
-    alembic upgrade head 2>&1 || {
-        echo "[DEBUG][start-prod.sh] ERROR: Alembic migration FAILED with exit code $?"
-        exit 1
-    }
-    echo "[DEBUG][start-prod.sh] Alembic migrations completed successfully"
+    alembic upgrade head
     echo "✅ Migrations complete!"
     
-    # Test Python imports before starting uvicorn
-    echo "[DEBUG][start-prod.sh] Testing Python imports..."
-    python -c "print('[DEBUG][python-test] Testing import app.main...'); from app.main import app; print('[DEBUG][python-test] Import successful!')" 2>&1 || {
-        echo "[DEBUG][start-prod.sh] ERROR: Python import test FAILED"
-        exit 1
-    }
-    
     # Start the application immediately
-    echo "[DEBUG][start-prod.sh] About to start Uvicorn..."
     echo "🌐 Starting FastAPI server on port ${PORT:-8000}..."
     exec uvicorn app.main:app --host 0.0.0.0 --port "${PORT:-8000}" "$@"
 fi
