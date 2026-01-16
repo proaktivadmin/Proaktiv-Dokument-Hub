@@ -13,6 +13,7 @@ import logging
 
 from app.database import get_db
 from app.models.template import Template
+from app.services.azure_storage_service import get_azure_storage_service
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 logger = logging.getLogger(__name__)
@@ -124,6 +125,98 @@ async def get_template_content_stats(
         "with_content": with_content,
         "without_content": without_content,
         "percentage_complete": round((with_content / total * 100), 1) if total > 0 else 0
+    }
+
+
+@router.post("/sync-from-azure")
+async def sync_templates_from_azure(
+    db: AsyncSession = Depends(get_db)
+) -> dict:
+    """
+    Sync templates from Azure Blob Storage to the database.
+    
+    This endpoint:
+    1. Lists all blobs in the templates container
+    2. For each blob not already in the database, creates a template entry
+    3. Downloads and stores HTML content for HTML templates
+    
+    Use this to populate the database after a fresh deployment.
+    """
+    storage = get_azure_storage_service()
+    
+    if not storage.is_configured:
+        raise HTTPException(
+            status_code=503,
+            detail="Azure Storage not configured"
+        )
+    
+    # List all blobs in templates container
+    blobs = await storage.list_blobs()
+    
+    created = 0
+    skipped = 0
+    errors = []
+    
+    for blob in blobs:
+        blob_name = blob["name"]
+        
+        # Check if template already exists by file_name
+        existing = await db.execute(
+            select(Template).where(Template.file_name == blob_name)
+        )
+        if existing.scalar_one_or_none():
+            skipped += 1
+            continue
+        
+        try:
+            # Determine file type
+            file_ext = blob_name.split(".")[-1].lower() if "." in blob_name else "unknown"
+            
+            # Create title from filename
+            title = Path(blob_name).stem.replace("_", " ").replace("-", " ").title()
+            
+            # Download content for HTML files
+            content = None
+            if file_ext in ["html", "htm"]:
+                content_bytes = await storage.download_file(blob_name)
+                if content_bytes:
+                    try:
+                        content = content_bytes.decode("utf-8")
+                    except UnicodeDecodeError:
+                        content = content_bytes.decode("latin-1")
+            
+            # Create template entry
+            template = Template(
+                title=title,
+                file_name=blob_name,
+                file_type=file_ext,
+                file_size_bytes=blob["size"] or 0,
+                azure_blob_url=f"https://{storage.client.account_name}.blob.core.windows.net/templates/{blob_name}",
+                azure_blob_container="templates",
+                status="published",
+                created_by="system@proaktiv.no",
+                updated_by="system@proaktiv.no",
+                content=content,
+            )
+            
+            db.add(template)
+            created += 1
+            logger.info(f"Synced template: {blob_name}")
+            
+        except Exception as e:
+            error_msg = f"{blob_name}: {str(e)}"
+            errors.append(error_msg)
+            logger.error(f"Sync error: {error_msg}")
+    
+    await db.commit()
+    
+    logger.info(f"Sync complete: {created} created, {skipped} skipped, {len(errors)} errors")
+    
+    return {
+        "created": created,
+        "skipped": skipped,
+        "errors": errors,
+        "total_blobs": len(blobs)
     }
 
 
