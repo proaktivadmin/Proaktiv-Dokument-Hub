@@ -141,25 +141,6 @@ async def init_db() -> None:
     For SQLite, also creates tables if they don't exist.
     """
     from sqlalchemy import text
-    import json
-    import traceback
-    
-    # #region agent log
-    def _debug_log(location: str, message: str, data: dict = None):
-        log_path = "/app/.cursor/debug.log"
-        try:
-            import os
-            os.makedirs(os.path.dirname(log_path), exist_ok=True)
-            with open(log_path, "a") as f:
-                f.write(json.dumps({"location": location, "message": message, "data": data or {}, "hypothesisId": "INIT_DB"}) + "\n")
-        except:
-            pass
-        logger.info(f"[DEBUG] {location}: {message} - {data}")
-    # #endregion
-    
-    # #region agent log
-    _debug_log("database.py:init_db", "Entry", {"DATABASE_URL": settings.DATABASE_URL[:50] if settings.DATABASE_URL else "None"})
-    # #endregion
     
     # Import models to ensure they're registered with Base
     from app.models import Base
@@ -174,10 +155,6 @@ async def init_db() -> None:
         layout_partial,
     )
     
-    # #region agent log
-    _debug_log("database.py:init_db", "Models imported", {"tables": list(Base.metadata.tables.keys())})
-    # #endregion
-    
     try:
         async with async_engine.connect() as conn:
             # Test connection
@@ -185,27 +162,15 @@ async def init_db() -> None:
         
         db_type = "SQLite" if is_sqlite(settings.DATABASE_URL) else "PostgreSQL"
         logger.info(f"Database connection established successfully ({db_type})")
-        # #region agent log
-        _debug_log("database.py:init_db", "Connection established", {"db_type": db_type})
-        # #endregion
         
         # For SQLite (ephemeral), automatically create all tables on startup
         if is_sqlite(settings.DATABASE_URL):
             logger.info("SQLite detected - creating tables if they don't exist...")
-            # #region agent log
-            _debug_log("database.py:init_db", "Creating SQLite tables", {})
-            # #endregion
             async with async_engine.begin() as conn:
                 await conn.run_sync(Base.metadata.create_all)
             logger.info("Database tables created/verified successfully")
-            # #region agent log
-            _debug_log("database.py:init_db", "Tables created successfully", {"tables": list(Base.metadata.tables.keys())})
-            # #endregion
             
     except Exception as e:
-        # #region agent log
-        _debug_log("database.py:init_db", "EXCEPTION", {"error": str(e), "traceback": traceback.format_exc()})
-        # #endregion
         logger.error(f"Failed to connect to database: {e}")
         raise
 
