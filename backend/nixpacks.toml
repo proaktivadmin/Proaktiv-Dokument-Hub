@@ -11,4 +11,4 @@ cmds = ["pip install -r requirements.txt"]
 cmds = ["echo 'No build step needed'"]
 
 [start]
-cmd = "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+cmd = "echo 'Starting Alembic...' && alembic upgrade head --verbose && echo 'Starting Uvicorn...' && uvicorn app.main:app --host 0.0.0.0 --port $PORT --log-level info"
