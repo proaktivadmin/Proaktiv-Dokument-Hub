@@ -115,11 +115,14 @@ class TemplateService:
         Returns:
             Template or None if not found
         """
+        # Convert UUID to string for SQLite compatibility
+        template_id_str = str(template_id)
+        
         query = select(Template).options(
             selectinload(Template.tags),
             selectinload(Template.categories),
             selectinload(Template.versions)
-        ).where(Template.id == template_id)
+        ).where(Template.id == template_id_str)
         
         result = await db.execute(query)
         return result.scalar_one_or_none()

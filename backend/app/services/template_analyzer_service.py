@@ -54,9 +54,10 @@ class TemplateAnalyzerService:
         Raises:
             HTTPException: If template not found or not HTML
         """
-        # Get template
+        # Get template (convert UUID to string for SQLite compatibility)
+        template_id_str = str(template_id)
         result = await db.execute(
-            select(Template).where(Template.id == template_id)
+            select(Template).where(Template.id == template_id_str)
         )
         template = result.scalar_one_or_none()
         
