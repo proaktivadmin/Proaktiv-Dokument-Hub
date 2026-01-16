@@ -3,11 +3,26 @@ set -e
 
 echo "🚀 Starting Proaktiv Dokument Hub Backend..."
 
-# Skip PostgreSQL wait in SQLite mode or Railway (Railway's Postgres is always ready)
+# Railway fast-path: Just run Alembic and start server
+if [[ "$PLATFORM" == "railway" ]] || [[ "$RAILWAY_ENVIRONMENT" != "" ]]; then
+    echo "🚂 Railway platform detected - using fast startup"
+    cd /app
+    
+    # Run Alembic migrations
+    echo "📦 Running database migrations..."
+    alembic upgrade head
+    echo "✅ Migrations complete!"
+    
+    # Start the application immediately
+    echo "🌐 Starting FastAPI server on port ${PORT:-8000}..."
+    exec uvicorn app.main:app --host 0.0.0.0 --port "${PORT:-8000}" "$@"
+fi
+
+# Non-Railway path (Azure, local Docker, etc.)
+
+# Skip PostgreSQL wait in SQLite mode
 if [[ "$DATABASE_URL" == sqlite* ]]; then
     echo "📦 SQLite mode detected - skipping database wait"
-elif [[ "$PLATFORM" == "railway" ]] || [[ "$RAILWAY_ENVIRONMENT" != "" ]]; then
-    echo "🚂 Railway platform detected - Postgres is ready"
 else
     echo "⏳ Waiting for PostgreSQL database..."
     while ! nc -z ${DB_HOST:-db} ${DB_PORT:-5432}; do
@@ -54,12 +69,9 @@ async def check_and_seed():
 asyncio.run(check_and_seed())
 "
 
-# Sync templates from Azure Blob Storage (skip on Railway - templates stored in DB)
-if [[ "$PLATFORM" == "railway" ]] || [[ "$RAILWAY_ENVIRONMENT" != "" ]]; then
-    echo "🚂 Railway platform detected - skipping Azure sync (templates in DB)"
-else
-    echo "☁️ Syncing templates from Azure Storage..."
-    python -c "
+# Sync templates from Azure Blob Storage
+echo "☁️ Syncing templates from Azure Storage..."
+python -c "
 import asyncio
 import sys
 import warnings
@@ -132,7 +144,6 @@ async def sync_templates():
 
 asyncio.run(sync_templates())
 "
-fi
 
 # Start the application
 echo "🌐 Starting FastAPI server on port ${PORT:-8000}..."
