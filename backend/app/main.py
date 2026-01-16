@@ -2,6 +2,8 @@
 Proaktiv Dokument Hub - FastAPI Backend
 
 Main application entry point with database integration.
+
+Build: 2026-01-16-v2 - Force container restart
 """
 
 from fastapi import FastAPI
