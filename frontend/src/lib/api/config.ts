@@ -3,17 +3,21 @@
  * 
  * Handles dynamic API URL detection for both development and production.
  * 
- * IMPORTANT: This must work both during SSR (no window) and client-side hydration.
+ * Supports:
+ * - Local development (localhost:3000 → localhost:8000 via Next.js rewrites)
+ * - Vercel + Railway (relative URLs, Next.js rewrites to BACKEND_URL)
+ * - Azure Container Apps (legacy, auto-detection)
  */
 
 import axios, { AxiosInstance } from 'axios';
 
 /**
  * Get the API base URL based on the environment.
- * - In development (localhost): use relative URLs (Next.js rewrites)
- * - In production (Azure): call the backend API directly
  * 
- * NOTE: This function returns "" during SSR, but client-side it returns the correct URL.
+ * Priority:
+ * 1. NEXT_PUBLIC_API_URL environment variable (if set)
+ * 2. Azure Container Apps auto-detection (legacy support)
+ * 3. Empty string (use relative URLs with Next.js rewrites)
  */
 export function getApiBaseUrl(): string {
   // If explicitly set, use it
@@ -21,19 +25,21 @@ export function getApiBaseUrl(): string {
     return process.env.NEXT_PUBLIC_API_URL;
   }
   
-  // Client-side detection for Azure Container Apps
+  // Client-side detection for Azure Container Apps (legacy support)
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
     
-    // Azure Container Apps pattern: dokumenthub-web.*.azurecontainerapps.io
+    // Azure Container Apps pattern (kept for backward compatibility)
     if (hostname.includes('azurecontainerapps.io')) {
-      // Replace 'web' with 'api' in the hostname
       const apiHostname = hostname.replace('dokumenthub-web', 'dokumenthub-api');
       return `https://${apiHostname}`;
     }
+    
+    // Railway + Vercel: use relative URLs (Next.js handles rewrites)
+    // No special detection needed - rewrites handle it
   }
   
-  // Default: use relative URLs (for localhost with Next.js rewrites)
+  // Default: use relative URLs (works with Next.js rewrites)
   return "";
 }
 
