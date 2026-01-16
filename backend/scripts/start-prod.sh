@@ -3,9 +3,11 @@ set -e
 
 echo "🚀 Starting Proaktiv Dokument Hub Backend..."
 
-# Skip PostgreSQL wait in SQLite mode
+# Skip PostgreSQL wait in SQLite mode or Railway (Railway's Postgres is always ready)
 if [[ "$DATABASE_URL" == sqlite* ]]; then
     echo "📦 SQLite mode detected - skipping database wait"
+elif [[ "$PLATFORM" == "railway" ]] || [[ "$RAILWAY_ENVIRONMENT" != "" ]]; then
+    echo "🚂 Railway platform detected - Postgres is ready"
 else
     echo "⏳ Waiting for PostgreSQL database..."
     while ! nc -z ${DB_HOST:-db} ${DB_PORT:-5432}; do
@@ -129,5 +131,5 @@ asyncio.run(sync_templates())
 "
 
 # Start the application
-echo "🌐 Starting FastAPI server..."
-exec uvicorn app.main:app --host 0.0.0.0 --port 8000 "$@"
+echo "🌐 Starting FastAPI server on port ${PORT:-8000}..."
+exec uvicorn app.main:app --host 0.0.0.0 --port "${PORT:-8000}" "$@"
