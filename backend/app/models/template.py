@@ -3,13 +3,14 @@ Template and TemplateVersion SQLAlchemy Models
 """
 
 from sqlalchemy import (
-    Column, String, Text, BigInteger, Integer, DateTime, ForeignKey, Table, Index
+    Column, String, Text, BigInteger, Integer, DateTime, ForeignKey, Table, Index, Numeric
 )
 from sqlalchemy.dialects.postgresql import UUID, ARRAY, JSONB
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from sqlalchemy.sql import func
 from datetime import datetime
 from typing import Optional, List
+from decimal import Decimal
 import uuid
 
 from app.models.base import Base
@@ -81,6 +82,71 @@ class Template(Base):
         nullable=True,
         default=dict
     )
+    
+    # Vitec Metadata Fields (V2.7)
+    channel: Mapped[str] = mapped_column(String(20), default="pdf_email")
+    template_type: Mapped[str] = mapped_column(String(50), default="Objekt/Kontakt")
+    receiver_type: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    receiver: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    extra_receivers: Mapped[Optional[List[str]]] = mapped_column(
+        JSONB,
+        nullable=True,
+        default=list
+    )
+    phases: Mapped[Optional[List[str]]] = mapped_column(
+        JSONB,
+        nullable=True,
+        default=list
+    )
+    assignment_types: Mapped[Optional[List[str]]] = mapped_column(
+        JSONB,
+        nullable=True,
+        default=list
+    )
+    ownership_types: Mapped[Optional[List[str]]] = mapped_column(
+        JSONB,
+        nullable=True,
+        default=list
+    )
+    departments: Mapped[Optional[List[str]]] = mapped_column(
+        JSONB,
+        nullable=True,
+        default=list
+    )
+    email_subject: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    
+    # Layout References
+    header_template_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("layout_partials.id", ondelete="SET NULL"),
+        nullable=True
+    )
+    footer_template_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("layout_partials.id", ondelete="SET NULL"),
+        nullable=True
+    )
+    
+    # Margins (in cm)
+    margin_top: Mapped[Optional[Decimal]] = mapped_column(
+        Numeric(4, 2),
+        default=Decimal("1.5")
+    )
+    margin_bottom: Mapped[Optional[Decimal]] = mapped_column(
+        Numeric(4, 2),
+        default=Decimal("1.0")
+    )
+    margin_left: Mapped[Optional[Decimal]] = mapped_column(
+        Numeric(4, 2),
+        default=Decimal("1.0")
+    )
+    margin_right: Mapped[Optional[Decimal]] = mapped_column(
+        Numeric(4, 2),
+        default=Decimal("1.2")
+    )
+    
+    # Thumbnail
+    preview_thumbnail_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(

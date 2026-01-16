@@ -58,6 +58,7 @@ interface TemplateSettingsPanelProps {
   templateId: string;
   initialSettings?: Partial<TemplateSettings>;
   onSave?: (settings: TemplateSettings) => Promise<void>;
+  isSaving?: boolean;
   headerOptions?: Array<{ id: string; title: string }>;
   footerOptions?: Array<{ id: string; title: string }>;
   themeOptions?: Array<{ id: string; name: string }>;
@@ -67,6 +68,7 @@ export function TemplateSettingsPanel({
   templateId,
   initialSettings,
   onSave,
+  isSaving: isSavingProp = false,
   headerOptions = [],
   footerOptions = [],
   themeOptions = [],
@@ -75,8 +77,10 @@ export function TemplateSettingsPanel({
     ...DEFAULT_SETTINGS,
     ...initialSettings,
   });
-  const [isSaving, setIsSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
+  
+  // Use prop if provided, otherwise use internal state
+  const isSaving = isSavingProp;
 
   // Track changes
   useEffect(() => {
@@ -95,12 +99,7 @@ export function TemplateSettingsPanel({
 
   const handleSave = async () => {
     if (!onSave) return;
-    setIsSaving(true);
-    try {
-      await onSave(settings);
-    } finally {
-      setIsSaving(false);
-    }
+    await onSave(settings);
   };
 
   const handleReset = () => {

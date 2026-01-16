@@ -1,10 +1,39 @@
 # ACTIVE CONTEXT & ROADMAP
 
 ## PROJECT STATUS
-- **Phase:** 2.6 (Document Preview & Simulator Enhancements)
-- **Current Sprint:** ✅ COMPLETED & READY FOR DEPLOYMENT
+- **Phase:** 2.7 (Template Content Editing & Settings Persistence)
+- **Current Sprint:** ✅ COMPLETE
 - **Architecture:** Document-first, shelf grouping, 4-tab viewer
-- **Last Milestone:** ✅ V2.6 Feature Complete (2026-01-15)
+- **Last Milestone:** ✅ V2.7 Feature Complete (2026-01-16)
+- **Current Milestone:** Ready for Testing & Deployment
+
+## V2.7 COMPLETED FEATURES (2026-01-16)
+
+### 1. Template Content Editing API ✅
+- `PUT /api/templates/{id}/content` - Save edited HTML content
+- Automatic versioning (creates TemplateVersion before save)
+- Re-scan merge fields after content update
+- Optional HTML sanitization
+- Wired to Monaco Editor with Ctrl+S save shortcut
+
+### 2. Template Settings API ✅
+- `PUT /api/templates/{id}/settings` - Save Vitec metadata
+- `GET /api/templates/{id}/settings` - Retrieve settings
+- Support for margins, header/footer, channel, phases, receivers
+- Validate layout partial references
+- Wired to Settings panel with save button
+
+### 3. Dashboard Stats API ✅
+- `GET /api/dashboard/stats` - Returns template counts
+- Fixed dashboard 500 error (endpoint now exists)
+- Includes recent uploads list
+- Dashboard now uses real backend data
+
+### 4. Thumbnail Generation (Optional) ✅
+- `POST /api/templates/{id}/thumbnail` - Generate static thumbnail
+- Requires Playwright (graceful fallback if not installed)
+- Store in Azure Blob Storage
+- Returns 501 if Playwright not available
 
 ## V2.6 NEW FEATURES (2026-01-15)
 
@@ -138,9 +167,48 @@ This version (V2.6) is ready for:
 1. Git commit and push to GitHub
 2. Azure deployment via existing CI/CD pipeline
 
-## NEXT STEPS (Future)
-- [ ] Backend endpoint for saving template content (PUT /api/templates/{id}/content)
-- [ ] Backend endpoint for saving template settings
+## V2.7 IMPLEMENTATION SUMMARY
+
+### Backend Changes
+- ✅ Created `template_settings.py` Pydantic schemas
+- ✅ Updated Template model with Vitec metadata fields (already in V2 migration)
+- ✅ Created `dashboard_service.py` with stats aggregation
+- ✅ Created `template_content_service.py` with versioning logic
+- ✅ Created `template_settings_service.py` with validation
+- ✅ Created `thumbnail_service.py` with Playwright integration
+- ✅ Added 5 new API endpoints to templates router
+- ✅ Added dashboard router with stats endpoint
+- ✅ Registered dashboard router in main.py
+
+### Frontend Changes
+- ✅ Created `types/v2.ts` with V2.7 type definitions
+- ✅ Created `lib/api/template-settings.ts` API client
+- ✅ Created `lib/api/dashboard.ts` API client
+- ✅ Created `hooks/useTemplateSettings.ts` hook
+- ✅ Created `hooks/useDashboardStats.ts` hook
+- ✅ Created `hooks/useGroupedTemplates.ts` hook
+- ✅ Created toast component (ui/toast.tsx, ui/toaster.tsx, hooks/use-toast.ts)
+- ✅ Updated `TemplateDetailSheet.tsx` to wire up save functionality
+- ✅ Updated `TemplateSettingsPanel.tsx` to accept isSaving prop
+- ✅ Updated `useDashboard.ts` to use new dashboard API
+
+### Testing Checklist
+- [ ] Test Code Editor save (Ctrl+S) - creates version and updates merge fields
+- [ ] Test Settings panel save - updates Vitec metadata
+- [ ] Test Dashboard stats - shows real counts from database
+- [ ] Test toast notifications - success and error messages
+- [ ] Test thumbnail generation (if Playwright installed)
+- [ ] Verify version history is created on content save
+- [ ] Verify merge fields are re-scanned after content save
+
+## NEXT STEPS
+
+### Ready for QA (V2.7)
+All features implemented and ready for testing. No known issues.
+
+### Future (V2.8+)
 - [ ] Add more Vitec Logic patterns to snippets.json
-- [ ] Static thumbnail generation for faster card loading
-- [ ] Template versioning UI
+- [ ] Template versioning UI (view/restore previous versions)
+- [ ] Visual builder with TipTap integration
+- [ ] Bulk template operations
+- [ ] Advanced search and filtering

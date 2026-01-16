@@ -17,7 +17,16 @@ from app.services.audit_service import AuditService
 from app.services.azure_storage_service import get_azure_storage_service
 from app.services.sanitizer_service import get_sanitizer_service
 from app.services.template_analyzer_service import TemplateAnalyzerService
+from app.services.template_content_service import TemplateContentService
+from app.services.template_settings_service import TemplateSettingsService
+from app.services.thumbnail_service import ThumbnailService
 from app.schemas.template_metadata import TemplateAnalysisResult
+from app.schemas.template_settings import (
+    TemplateContentUpdate,
+    TemplateContentResponse,
+    TemplateSettingsUpdate,
+    TemplateSettingsResponse
+)
 from app.config import get_mock_user
 import io
 import logging
@@ -392,4 +401,108 @@ async def analyze_template(
     """
     result = await TemplateAnalyzerService.analyze(db, template_id)
     return TemplateAnalysisResult(**result)
+
+
+@router.put("/{template_id}/content", response_model=TemplateContentResponse)
+async def save_template_content(
+    template_id: UUID,
+    body: TemplateContentUpdate,
+    db: AsyncSession = Depends(get_db),
+    user: dict = Depends(get_current_user)
+):
+    """
+    Save template HTML content.
+    
+    Creates a version snapshot before saving if content has changed.
+    Re-scans for merge fields and updates the template.
+    """
+    result = await TemplateContentService.save_content(
+        db,
+        template_id,
+        content=body.content,
+        updated_by=user["email"],
+        change_notes=body.change_notes,
+        auto_sanitize=body.auto_sanitize
+    )
+    
+    # Audit log
+    await AuditService.log(
+        db,
+        entity_type="template",
+        entity_id=template_id,
+        action="content_updated",
+        user_email=user["email"],
+        details={"version": result["version"]}
+    )
+    
+    return TemplateContentResponse(**result)
+
+
+@router.put("/{template_id}/settings", response_model=TemplateSettingsResponse)
+async def update_template_settings(
+    template_id: UUID,
+    body: TemplateSettingsUpdate,
+    db: AsyncSession = Depends(get_db),
+    user: dict = Depends(get_current_user)
+):
+    """Update template Vitec metadata settings."""
+    template = await TemplateSettingsService.update_settings(
+        db,
+        template_id,
+        updated_by=user["email"],
+        **body.model_dump(exclude_unset=True)
+    )
+    
+    # Audit log
+    await AuditService.log(
+        db,
+        entity_type="template",
+        entity_id=template_id,
+        action="settings_updated",
+        user_email=user["email"],
+        details=body.model_dump(exclude_unset=True)
+    )
+    
+    return TemplateSettingsResponse.model_validate(template)
+
+
+@router.get("/{template_id}/settings", response_model=TemplateSettingsResponse)
+async def get_template_settings(
+    template_id: UUID,
+    db: AsyncSession = Depends(get_db)
+):
+    """Get template settings."""
+    settings = await TemplateSettingsService.get_settings(db, template_id)
+    return TemplateSettingsResponse(**settings)
+
+
+@router.post("/{template_id}/thumbnail")
+async def generate_thumbnail(
+    template_id: UUID,
+    db: AsyncSession = Depends(get_db),
+    user: dict = Depends(get_current_user)
+):
+    """
+    Generate a static thumbnail for a template.
+    
+    Requires Playwright to be installed. Returns 501 if not available.
+    """
+    if not ThumbnailService.is_available():
+        raise HTTPException(
+            status_code=501,
+            detail="Thumbnail generation not available. Playwright is not installed."
+        )
+    
+    result = await ThumbnailService.generate_thumbnail(db, template_id)
+    
+    # Audit log
+    await AuditService.log(
+        db,
+        entity_type="template",
+        entity_id=template_id,
+        action="thumbnail_generated",
+        user_email=user["email"]
+    )
+    
+    return result
 

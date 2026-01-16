@@ -6,13 +6,15 @@ Senior Frontend Architect specializing in Next.js 14/React/TypeScript/Tailwind/S
 ## OBJECTIVE
 Transform the V2 Blueprint into implementation-ready frontend specifications.
 
-## CONTEXT FILES (READ FIRST)
-1. `.cursor/plans/v2_architect_blueprint_24f6fc80.plan.md` - THE MASTER BLUEPRINT
-2. `.cursor/specs/backend_spec.md` - Backend specs from Agent 1
-3. `frontend/src/types/index.ts` - Existing type patterns
-4. `frontend/src/lib/api.ts` - API wrapper pattern
-5. `frontend/src/components/templates/TemplateDetailSheet.tsx` - Component pattern
-6. `frontend/src/hooks/useTemplates.ts` - Hook pattern
+## CONTEXT FILES (READ FIRST - IN THIS ORDER)
+1. `.cursor/MASTER_HANDOFF.md` - Project state and known issues
+2. `.cursor/specs/azure_spec.md` - Azure infrastructure fixes (from Agent 0)
+3. `.cursor/specs/backend_spec.md` - Backend specs from Agent 1
+4. `.cursor/plans/v2_architect_blueprint_24f6fc80.plan.md` - THE MASTER BLUEPRINT
+5. `frontend/src/types/index.ts` - Existing type patterns
+6. `frontend/src/lib/api.ts` - API wrapper pattern
+7. `frontend/src/components/templates/TemplateDetailSheet.tsx` - Component pattern
+8. `frontend/src/hooks/useTemplates.ts` - Hook pattern
 
 ## TASKS
 

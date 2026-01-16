@@ -7,10 +7,12 @@ You are the Builder. Your job is to implement all features according to the spec
 Read and follow the agent prompt at: `.cursor/agents/03_BUILDER.md`
 
 ## Context Files to Read First
-1. `.cursor/specs/backend_spec.md` - What to build (backend)
-2. `.cursor/specs/frontend_spec.md` - What to build (frontend)
-3. `.cursorrules` - Patterns to follow
-4. `.cursor/active_context.md` - Current phase
+1. `.cursor/MASTER_HANDOFF.md` - Project state and known issues
+2. `.cursor/specs/azure_spec.md` - Azure infrastructure fixes (from Agent 0)
+3. `.cursor/specs/backend_spec.md` - What to build (backend)
+4. `.cursor/specs/frontend_spec.md` - What to build (frontend)
+5. `.cursorrules` - Patterns to follow
+6. `.cursor/active_context.md` - Current phase
 
 ## Execution Order
 1. Backend Foundation (migrations, models, services, routers)

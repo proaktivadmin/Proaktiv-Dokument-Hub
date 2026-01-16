@@ -12,7 +12,7 @@ import logging
 from app.config import settings
 from app.database import init_db, close_db
 from app.routers import templates, tags, categories, analytics, health, sanitizer
-from app.routers import merge_fields, code_patterns, layout_partials
+from app.routers import merge_fields, code_patterns, layout_partials, dashboard
 
 # Configure logging
 logging.basicConfig(
@@ -68,6 +68,7 @@ app.include_router(sanitizer.router, tags=["Sanitizer"])
 app.include_router(merge_fields.router, prefix="/api", tags=["Merge Fields"])
 app.include_router(code_patterns.router, prefix="/api", tags=["Code Patterns"])
 app.include_router(layout_partials.router, prefix="/api", tags=["Layout Partials"])
+app.include_router(dashboard.router, prefix="/api", tags=["Dashboard"])
 
 
 @app.get("/")

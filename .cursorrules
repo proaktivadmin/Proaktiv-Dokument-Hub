@@ -61,20 +61,32 @@ YOU ARE AN EXPERT FULL-STACK DEVELOPER SPECIALIZING IN:
 - UUID for all primary keys (match existing pattern)
 - JSONB for array/object fields (phases, departments, etc.)
 - All timestamps with timezone (TIMESTAMPTZ)
+- Decimal for margins (4,2 precision)
 
 ### Service Layer
 - All service methods must be async
 - Business logic never in routers, always in services
 - Use `Depends()` for DI (db sessions, services)
 - Error handling with HTTPException
+- Use `flush()` instead of `commit()` (session auto-commits)
 
-### New Tables (V2)
+### Template Operations (V2.7)
+- Content saves trigger TemplateVersion creation
+- Content updates re-scan merge fields automatically
+- Settings updates do NOT create versions
+- Sanitization is optional via `auto_sanitize` flag
+
+### Existing Tables
 - `merge_fields` - Flettekode registry
 - `code_patterns` - Reusable HTML snippets
 - `layout_partials` - Headers/footers
+- `template_versions` - Version history
 
 ### API Patterns
 - `/api/merge-fields` - Flettekode CRUD + discovery
 - `/api/code-patterns` - Pattern library
 - `/api/layout-partials` - Header/footer management
 - `/api/templates/{id}/analyze` - Template analysis
+- `/api/templates/{id}/content` - Save HTML content (V2.7)
+- `/api/templates/{id}/settings` - Save metadata (V2.7)
+- `/api/dashboard/stats` - Dashboard statistics (V2.7)

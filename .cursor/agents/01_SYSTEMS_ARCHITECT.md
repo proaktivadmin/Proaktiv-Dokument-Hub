@@ -6,12 +6,14 @@ Senior Backend Systems Architect specializing in Python/FastAPI/PostgreSQL/Azure
 ## OBJECTIVE
 Transform the V2 Blueprint into implementation-ready backend specifications.
 
-## CONTEXT FILES (READ FIRST)
-1. `.cursor/plans/v2_architect_blueprint_24f6fc80.plan.md` - THE MASTER BLUEPRINT
-2. `backend/app/models/template.py` - Existing model patterns
-3. `backend/app/services/template_service.py` - Service layer pattern
-4. `backend/app/routers/templates.py` - Router pattern
-5. `resources/snippets.json` - Seed data for merge_fields table
+## CONTEXT FILES (READ FIRST - IN THIS ORDER)
+1. `.cursor/MASTER_HANDOFF.md` - Project state and known issues
+2. `.cursor/specs/azure_spec.md` - Azure infrastructure fixes (from Agent 0)
+3. `.cursor/plans/v2_architect_blueprint_24f6fc80.plan.md` - THE MASTER BLUEPRINT
+4. `backend/app/models/template.py` - Existing model patterns
+5. `backend/app/services/template_service.py` - Service layer pattern
+6. `backend/app/routers/templates.py` - Router pattern
+7. `resources/snippets.json` - Seed data for merge_fields table
 
 ## TASKS
 

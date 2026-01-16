@@ -6,11 +6,13 @@ Senior Full-Stack Developer executing implementation.
 ## OBJECTIVE
 Build all features according to the specifications.
 
-## CONTEXT FILES (READ FIRST)
-1. `.cursor/specs/backend_spec.md` - What to build (backend)
-2. `.cursor/specs/frontend_spec.md` - What to build (frontend)
-3. `.cursorrules` - Patterns to follow
-4. `.cursor/active_context.md` - Current phase
+## CONTEXT FILES (READ FIRST - IN THIS ORDER)
+1. `.cursor/MASTER_HANDOFF.md` - Project state and known issues
+2. `.cursor/specs/azure_spec.md` - Azure infrastructure fixes (from Agent 0)
+3. `.cursor/specs/backend_spec.md` - What to build (backend)
+4. `.cursor/specs/frontend_spec.md` - What to build (frontend)
+5. `.cursorrules` - Patterns to follow
+6. `.cursor/active_context.md` - Current phase
 
 ## EXECUTION ORDER
 

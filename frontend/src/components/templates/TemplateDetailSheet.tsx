@@ -16,6 +16,8 @@ import { TemplateSettingsPanel, type TemplateSettings } from "./TemplateSettings
 import { SimulatorPanel } from "./SimulatorPanel";
 import { CodeEditor } from "@/components/editor/CodeEditor";
 import { templateApi } from "@/lib/api";
+import { templateSettingsApi } from "@/lib/api";
+import { useToast } from "@/hooks/use-toast";
 import {
   Download,
   Pencil,
@@ -54,6 +56,9 @@ export function TemplateDetailSheet({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("preview");
+  const [isSavingContent, setIsSavingContent] = useState(false);
+  const [isSavingSettings, setIsSavingSettings] = useState(false);
+  const { toast } = useToast();
   
   // Derived content: show processed if test data enabled, otherwise original
   const content = testDataEnabled && processedContent ? processedContent : originalContent;
@@ -243,8 +248,31 @@ export function TemplateDetailSheet({
                 language="html"
                 theme="vs-dark"
                 onSave={async (value) => {
-                  // TODO: Implement save to backend
-                  console.log("Save triggered:", value.length, "chars");
+                  if (!template) return;
+                  
+                  setIsSavingContent(true);
+                  try {
+                    const result = await templateSettingsApi.saveContent(template.id, {
+                      content: value,
+                      auto_sanitize: true,
+                    });
+                    
+                    toast({
+                      title: "Innhold lagret",
+                      description: `Versjon ${result.version} opprettet. ${result.merge_fields_detected} flettekoder funnet.`,
+                    });
+                    
+                    // Reload content to get updated version
+                    await loadContent(template.id);
+                  } catch (error) {
+                    toast({
+                      title: "Feil ved lagring",
+                      description: error instanceof Error ? error.message : "Kunne ikke lagre innhold",
+                      variant: "destructive",
+                    });
+                  } finally {
+                    setIsSavingContent(false);
+                  }
                 }}
               />
             ) : (
@@ -260,9 +288,25 @@ export function TemplateDetailSheet({
               <TemplateSettingsPanel
                 templateId={template.id}
                 onSave={async (settings: TemplateSettings) => {
-                  // TODO: Implement settings save via API
-                  console.log("Saving settings:", settings);
+                  setIsSavingSettings(true);
+                  try {
+                    await templateSettingsApi.updateSettings(template.id, settings);
+                    
+                    toast({
+                      title: "Innstillinger lagret",
+                      description: "Malinnstillingene er oppdatert.",
+                    });
+                  } catch (error) {
+                    toast({
+                      title: "Feil ved lagring",
+                      description: error instanceof Error ? error.message : "Kunne ikke lagre innstillinger",
+                      variant: "destructive",
+                    });
+                  } finally {
+                    setIsSavingSettings(false);
+                  }
                 }}
+                isSaving={isSavingSettings}
               />
             </div>
           </TabsContent>

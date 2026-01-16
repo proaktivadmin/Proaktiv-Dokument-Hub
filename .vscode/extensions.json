@@ -1,0 +1,36 @@
+{
+  "recommendations": [
+    // Essential for TypeScript/React
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "bradlc.vscode-tailwindcss",
+    "mattpocock.ts-error-translator",
+    
+    // Essential for Python/FastAPI
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "charliermarsh.ruff",
+    
+    // Full-Stack Development
+    "rangav.vscode-thunder-client",
+    "ms-azuretools.vscode-docker",
+    "cweijan.vscode-database-client2",
+    
+    // HTML/Template Work
+    "ecmel.vscode-html-css",
+    "formulahendry.auto-rename-tag",
+    
+    // Code Quality
+    "usernamehm.errorlens",
+    
+    // Git Enhancement
+    "eamodio.gitlens",
+    
+    // Performance Monitoring
+    "wix.vscode-import-cost",
+    
+    // AI Agent Helpers
+    "aaron-bond.better-comments",
+    "Gruntfuggly.todo-tree"
+  ]
+}
