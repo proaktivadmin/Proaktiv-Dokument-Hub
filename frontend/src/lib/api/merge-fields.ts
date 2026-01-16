@@ -2,7 +2,6 @@
  * Merge Fields API Client
  */
 
-import axios from "axios";
 import type {
   MergeField,
   MergeFieldCreate,
@@ -11,11 +10,9 @@ import type {
   MergeFieldDiscoveryResult,
   MergeFieldDataType,
 } from "@/types/v2";
-import { getApiBaseUrl } from "./config";
+import { apiClient } from "./config";
 
-const api = axios.create({
-  baseURL: `${getApiBaseUrl()}/api`,
-});
+const api = apiClient;
 
 export interface MergeFieldListParams {
   category?: string;

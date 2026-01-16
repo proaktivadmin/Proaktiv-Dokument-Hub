@@ -2,13 +2,10 @@
  * Template Analysis API Client
  */
 
-import axios from "axios";
 import type { TemplateAnalysisResult } from "@/types/v2";
-import { getApiBaseUrl } from "./config";
+import { apiClient } from "./config";
 
-const api = axios.create({
-  baseURL: `${getApiBaseUrl()}/api`,
-});
+const api = apiClient;
 
 export const templateAnalysisApi = {
   /**

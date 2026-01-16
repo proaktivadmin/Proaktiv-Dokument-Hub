@@ -2,12 +2,18 @@
  * API Configuration
  * 
  * Handles dynamic API URL detection for both development and production.
+ * 
+ * IMPORTANT: This must work both during SSR (no window) and client-side hydration.
  */
+
+import axios, { AxiosInstance } from 'axios';
 
 /**
  * Get the API base URL based on the environment.
  * - In development (localhost): use relative URLs (Next.js rewrites)
  * - In production (Azure): call the backend API directly
+ * 
+ * NOTE: This function returns "" during SSR, but client-side it returns the correct URL.
  */
 export function getApiBaseUrl(): string {
   // If explicitly set, use it
@@ -31,15 +37,31 @@ export function getApiBaseUrl(): string {
   return "";
 }
 
-// Cached value for the API base URL
-let cachedApiBaseUrl: string | null = null;
-
 /**
- * Get the API base URL with caching
+ * Create an axios instance with dynamic base URL support.
+ * Uses a request interceptor to set the correct base URL on each request,
+ * which is necessary because the module loads during SSR when window is undefined.
  */
-export function getCachedApiBaseUrl(): string {
-  if (cachedApiBaseUrl === null) {
-    cachedApiBaseUrl = getApiBaseUrl();
-  }
-  return cachedApiBaseUrl;
+export function createApiClient(): AxiosInstance {
+  const api = axios.create();
+  
+  // Add request interceptor to set base URL dynamically
+  api.interceptors.request.use((config) => {
+    // Get the current base URL (will be correct on client-side)
+    const baseUrl = getApiBaseUrl();
+    
+    // Only modify if URL doesn't already have a host
+    if (config.url && !config.url.startsWith('http')) {
+      // Ensure URL starts with /api
+      const apiPath = config.url.startsWith('/api') ? config.url : `/api${config.url.startsWith('/') ? '' : '/'}${config.url}`;
+      config.url = `${baseUrl}${apiPath}`;
+    }
+    
+    return config;
+  });
+  
+  return api;
 }
+
+// Shared API client instance with dynamic URL support
+export const apiClient = createApiClient();

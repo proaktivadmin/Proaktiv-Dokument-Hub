@@ -3,7 +3,6 @@
  * Handles content editing and settings persistence
  */
 
-import axios from 'axios';
 import type {
   SaveTemplateContentRequest,
   SaveTemplateContentResponse,
@@ -11,11 +10,9 @@ import type {
   UpdateTemplateSettingsResponse,
   GenerateThumbnailResponse,
 } from '@/types/v2';
-import { getApiBaseUrl } from './config';
+import { apiClient } from './config';
 
-const api = axios.create({
-  baseURL: `${getApiBaseUrl()}/api`,
-});
+const api = apiClient;
 
 export const templateSettingsApi = {
   /**

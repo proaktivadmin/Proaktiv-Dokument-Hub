@@ -2,7 +2,6 @@
  * Layout Partials API Client
  */
 
-import axios from "axios";
 import type {
   LayoutPartial,
   LayoutPartialCreate,
@@ -12,11 +11,9 @@ import type {
   LayoutPartialType,
   LayoutPartialContext,
 } from "@/types/v2";
-import { getApiBaseUrl } from "./config";
+import { apiClient } from "./config";
 
-const api = axios.create({
-  baseURL: `${getApiBaseUrl()}/api`,
-});
+const api = apiClient;
 
 export interface LayoutPartialListParams {
   type?: LayoutPartialType;

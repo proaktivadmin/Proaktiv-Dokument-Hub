@@ -2,18 +2,15 @@
  * Code Patterns API Client
  */
 
-import axios from "axios";
 import type {
   CodePattern,
   CodePatternCreate,
   CodePatternUpdate,
   CodePatternListResponse,
 } from "@/types/v2";
-import { getApiBaseUrl } from "./config";
+import { apiClient } from "./config";
 
-const api = axios.create({
-  baseURL: `${getApiBaseUrl()}/api`,
-});
+const api = apiClient;
 
 export interface CodePatternListParams {
   category?: string;

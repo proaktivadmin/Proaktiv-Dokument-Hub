@@ -3,13 +3,10 @@
  * Fetches real-time statistics from backend
  */
 
-import axios from 'axios';
 import type { DashboardStatsV2 } from '@/types/v2';
-import { getApiBaseUrl } from './config';
+import { apiClient } from './config';
 
-const api = axios.create({
-  baseURL: `${getApiBaseUrl()}/api`,
-});
+const api = apiClient;
 
 export const dashboardApi = {
   /**

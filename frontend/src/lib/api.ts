@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import type {
   TemplateListResponse,
   UploadTemplatePayload,
@@ -8,14 +8,10 @@ import type {
   Category,
   DashboardStats,
 } from "@/types";
+import { apiClient } from "./api/config";
 
-// Use relative URLs - requests go through Next.js rewrites to the backend
-// This allows BACKEND_URL to be set at runtime instead of build time
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
-
-const api = axios.create({
-  baseURL: `${API_BASE_URL}/api`,
-});
+// Use the shared API client with dynamic URL support
+const api = apiClient;
 
 /**
  * Handle API errors with detailed logging
