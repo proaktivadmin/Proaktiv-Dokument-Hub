@@ -2,19 +2,20 @@
 const nextConfig = {
   output: 'standalone',
   
-  env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
+  // API proxy rewrites - allows runtime BACKEND_URL configuration
+  // Works with both Railway (production) and localhost (development)
+  async rewrites() {
+    const backendUrl = process.env.BACKEND_URL || 'http://localhost:8000';
+    return [
+      {
+        source: '/api/:path*',
+        destination: `${backendUrl}/api/:path*`,
+      },
+    ];
   },
   
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '*.blob.core.windows.net',
-      },
-    ],
-  },
+  // Note: Azure Blob Storage patterns removed.
+  // Template content is now stored in the database and served via API.
 };
 
 module.exports = nextConfig;
-

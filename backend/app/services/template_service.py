@@ -30,6 +30,7 @@ class TemplateService:
         status: Optional[str] = None,
         search: Optional[str] = None,
         tag_ids: Optional[List[UUID]] = None,
+        category_id: Optional[UUID] = None,
         category_ids: Optional[List[UUID]] = None,
         page: int = 1,
         per_page: int = 20,
@@ -44,7 +45,8 @@ class TemplateService:
             status: Filter by status (draft, published, archived)
             search: Search in title/description
             tag_ids: Filter by tag IDs
-            category_ids: Filter by category IDs
+            category_id: Filter by a single category ID
+            category_ids: Filter by multiple category IDs
             page: Page number (1-indexed)
             per_page: Items per page
             sort_by: Field to sort by
@@ -75,7 +77,10 @@ class TemplateService:
         if tag_ids:
             query = query.join(Template.tags).where(Tag.id.in_(tag_ids))
         
-        if category_ids:
+        # Handle single category_id or multiple category_ids
+        if category_id:
+            query = query.join(Template.categories).where(Category.id == category_id)
+        elif category_ids:
             query = query.join(Template.categories).where(Category.id.in_(category_ids))
         
         # Count total
@@ -110,11 +115,14 @@ class TemplateService:
         Returns:
             Template or None if not found
         """
+        # Convert UUID to string for SQLite compatibility
+        template_id_str = str(template_id)
+        
         query = select(Template).options(
             selectinload(Template.tags),
             selectinload(Template.categories),
             selectinload(Template.versions)
-        ).where(Template.id == template_id)
+        ).where(Template.id == template_id_str)
         
         result = await db.execute(query)
         return result.scalar_one_or_none()
@@ -132,7 +140,8 @@ class TemplateService:
         description: Optional[str] = None,
         status: str = "draft",
         tag_ids: Optional[List[UUID]] = None,
-        category_ids: Optional[List[UUID]] = None
+        category_ids: Optional[List[UUID]] = None,
+        content: Optional[str] = None
     ) -> Template:
         """
         Create a new template.
@@ -163,6 +172,7 @@ class TemplateService:
             status=status,
             created_by=created_by,
             updated_by=created_by,
+            content=content,
         )
         
         # Add tags
@@ -178,7 +188,8 @@ class TemplateService:
             template.categories = list(result.scalars().all())
         
         db.add(template)
-        await db.commit()
+        # Note: get_db() handles commit automatically after request
+        await db.flush()  # Flush to get the ID without committing
         await db.refresh(template)
         
         logger.info(f"Created template: {template.id} - {template.title}")
@@ -227,7 +238,8 @@ class TemplateService:
             result = await db.execute(cats_query)
             template.categories = list(result.scalars().all())
         
-        await db.commit()
+        # Note: get_db() handles commit automatically after request
+        await db.flush()
         await db.refresh(template)
         
         logger.info(f"Updated template: {template.id}")
@@ -243,7 +255,8 @@ class TemplateService:
             template: Template to delete
         """
         template.status = "archived"
-        await db.commit()
+        # Note: get_db() handles commit automatically after request
+        await db.flush()
         logger.info(f"Archived template: {template.id}")
     
     @staticmethod
@@ -256,6 +269,7 @@ class TemplateService:
             template: Template to delete
         """
         await db.delete(template)
-        await db.commit()
+        # Note: get_db() handles commit automatically after request
+        await db.flush()
         logger.info(f"Permanently deleted template: {template.id}")
 

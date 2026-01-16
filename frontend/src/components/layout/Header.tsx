@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Upload, FileText, FolderTree, LayoutDashboard } from "lucide-react";
+import { Upload, FileText, FolderTree, LayoutDashboard, Sparkles, Code2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UploadTemplateDialog } from "@/components/templates/UploadTemplateDialog";
 import { cn } from "@/lib/utils";
@@ -25,15 +25,17 @@ export function Header({ onUploadSuccess }: HeaderProps) {
     { href: "/", label: "Dashboard", icon: LayoutDashboard },
     { href: "/templates", label: "Maler", icon: FileText },
     { href: "/categories", label: "Kategorier", icon: FolderTree },
+    { href: "/flettekoder", label: "Flettekoder", icon: Code2 },
+    { href: "/sanitizer", label: "Sanitizer", icon: Sparkles },
   ];
 
   return (
     <>
-      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+      <header className="border-b border-[#E5E5E5] bg-[#E9E7DC] sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-sky-500 to-sky-700 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-md bg-[#272630] flex items-center justify-center">
                 <svg
                   className="w-6 h-6 text-white"
                   fill="none"
@@ -49,14 +51,14 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                 </svg>
               </div>
               <div>
-                <h1 className="text-xl font-semibold text-slate-900">
+                <h1 className="text-xl font-semibold text-[#272630]">
                   Proaktiv Dokument Hub
                 </h1>
-                <p className="text-sm text-slate-500">Master Template Library</p>
+                <p className="text-sm text-[#272630]/60">Master Template Library</p>
               </div>
             </Link>
 
-            <nav className="flex items-center gap-2">
+            <nav className="flex items-center gap-1">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = pathname === item.href;
@@ -66,10 +68,10 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      "px-4 py-2 text-sm font-medium rounded-lg transition-colors inline-flex items-center gap-2",
+                      "px-4 py-2 text-sm font-medium rounded-md transition-colors inline-flex items-center gap-2",
                       isActive
-                        ? "bg-slate-100 text-slate-900"
-                        : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                        ? "bg-white/60 text-[#272630]"
+                        : "text-[#272630]/70 hover:text-[#272630] hover:bg-white/40"
                     )}
                   >
                     <Icon className="h-4 w-4" />
@@ -80,7 +82,7 @@ export function Header({ onUploadSuccess }: HeaderProps) {
 
               <Button
                 onClick={() => setUploadDialogOpen(true)}
-                className="ml-2 bg-sky-600 hover:bg-sky-700"
+                className="ml-3 bg-[#272630] text-white hover:bg-[#272630]/90 rounded-md"
               >
                 <Upload className="h-4 w-4 mr-2" />
                 Last opp

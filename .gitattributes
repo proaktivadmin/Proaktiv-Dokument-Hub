@@ -1,0 +1,25 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Shell scripts must always use LF line endings
+*.sh text eol=lf
+
+# Batch files use CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Docker files
+Dockerfile text eol=lf
+docker-compose*.yml text eol=lf
+
+# Keep binary files as-is
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary

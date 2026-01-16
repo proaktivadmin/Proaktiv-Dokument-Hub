@@ -5,19 +5,25 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#BCAB8A] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        // Primary: Solid Navy with white text
+        default: "bg-[#272630] text-white hover:bg-[#272630]/90",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        // Outline: White background with Navy border
         outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+          "border border-[#272630] bg-white text-[#272630] hover:bg-[#F5F5F0]",
+        // Secondary: Beige background
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+          "bg-[#E9E7DC] text-[#272630] hover:bg-[#E9E7DC]/80",
+        // Ghost: Subtle beige on hover
+        ghost: "hover:bg-[#F5F5F0] hover:text-[#272630]",
+        link: "text-[#272630] underline-offset-4 hover:underline",
+        // Bronze accent button
+        accent: "bg-[#BCAB8A] text-white hover:bg-[#BCAB8A]/90",
       },
       size: {
         default: "h-10 px-4 py-2",

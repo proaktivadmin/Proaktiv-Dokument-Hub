@@ -50,6 +50,7 @@ export interface UploadTemplatePayload {
   description?: string;
   status?: TemplateStatus;
   category_id?: string;
+  auto_sanitize?: boolean;
 }
 
 export interface UploadTemplateResponse {
@@ -58,6 +59,19 @@ export interface UploadTemplateResponse {
   file_name: string;
   status: TemplateStatus;
   created_at: string | null;
+}
+
+export interface UpdateTemplatePayload {
+  title?: string;
+  description?: string;
+  status?: TemplateStatus;
+}
+
+export interface UpdateTemplateResponse {
+  id: string;
+  title: string;
+  status: TemplateStatus;
+  updated_at: string | null;
 }
 
 /**

@@ -22,12 +22,28 @@ config = context.config
 
 # Override sqlalchemy.url from our settings
 def get_database_url() -> str:
-    """Get database URL, ensuring it uses psycopg2 for sync operations."""
+    """Get database URL, ensuring it uses sync drivers for Alembic."""
     url = settings.DATABASE_URL
-    # Alembic needs sync driver, not asyncpg
+    # Alembic needs sync drivers
     if "+asyncpg" in url:
         url = url.replace("+asyncpg", "")
+    if "+aiosqlite" in url:
+        url = url.replace("+aiosqlite", "")
     return url
+
+
+def ensure_sqlite_directory(url: str) -> None:
+    """Ensure SQLite database directory exists."""
+    if url.startswith("sqlite"):
+        path = url.replace("sqlite:///", "").replace("sqlite://", "")
+        if path.startswith("/"):
+            directory = os.path.dirname(path)
+            if directory and not os.path.exists(directory):
+                os.makedirs(directory, exist_ok=True)
+
+
+# Ensure directory exists for SQLite
+ensure_sqlite_directory(settings.DATABASE_URL)
 
 config.set_main_option("sqlalchemy.url", get_database_url())
 
@@ -37,6 +53,11 @@ if config.config_file_name is not None:
 
 # Add your model's MetaData object here for 'autogenerate' support
 target_metadata = Base.metadata
+
+
+def is_sqlite(url: str) -> bool:
+    """Check if URL is for SQLite database."""
+    return url.startswith("sqlite")
 
 
 def run_migrations_offline() -> None:
@@ -58,6 +79,7 @@ def run_migrations_offline() -> None:
         dialect_opts={"paramstyle": "named"},
         compare_type=True,
         compare_server_default=True,
+        render_as_batch=is_sqlite(url),  # SQLite requires batch mode
     )
 
     with context.begin_transaction():
@@ -78,11 +100,13 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
+        url = config.get_main_option("sqlalchemy.url")
         context.configure(
             connection=connection,
             target_metadata=target_metadata,
             compare_type=True,
             compare_server_default=True,
+            render_as_batch=is_sqlite(url),  # SQLite requires batch mode
         )
 
         with context.begin_transaction():

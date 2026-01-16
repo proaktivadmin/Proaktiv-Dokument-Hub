@@ -6,11 +6,16 @@ Uses Pydantic BaseSettings for validation and type coercion.
 """
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import field_validator
 from functools import lru_cache
-from typing import Optional, List
+from typing import Optional
 import logging
+import warnings
 
 logger = logging.getLogger(__name__)
+
+# Default development secret key - NEVER use in production
+_DEV_SECRET_KEY = "dev_secret_key_change_in_production"
 
 
 class Settings(BaseSettings):
@@ -34,7 +39,7 @@ class Settings(BaseSettings):
     APP_ENV: str = "development"
     LOG_LEVEL: str = "INFO"
     DEBUG: bool = False
-    SECRET_KEY: str = "dev_secret_key_change_in_production"
+    SECRET_KEY: str = ""  # Will be validated below
     
     # CORS
     ALLOWED_ORIGINS: str = '["http://localhost:3000"]'
@@ -42,13 +47,18 @@ class Settings(BaseSettings):
     # Database
     DATABASE_URL: str = "postgresql://postgres:postgres@db:5432/dokument_hub"
     
-    # Azure Storage
+    # Platform indicator (railway, vercel, azure)
+    PLATFORM: str = "railway"
+    
+    # Azure Storage (DEPRECATED - kept for backward compatibility)
+    # Template content is now stored in the database.
+    # These variables are only used if PLATFORM is "azure" for rollback.
     AZURE_STORAGE_CONNECTION_STRING: str = ""
     AZURE_STORAGE_CONTAINER_NAME: str = "templates"
     AZURE_CONTAINER_NAME: str = "templates"  # Alias
     AZURE_STORAGE_PREVIEWS_CONTAINER: str = "previews"
     
-    # Azure Key Vault (Phase 2)
+    # Azure Key Vault (DEPRECATED)
     KEY_VAULT_URL: str = ""
     
     # Redis Cache (Optional)
@@ -63,6 +73,53 @@ class Settings(BaseSettings):
     VITEC_INSTALLATION_ID: str = ""
     VITEC_ENVIRONMENT: str = "qa"
     VITEC_ACCESS_KEY: str = ""
+
+    @field_validator("SECRET_KEY", mode="before")
+    @classmethod
+    def validate_secret_key(cls, v: str, info) -> str:
+        """
+        Validate SECRET_KEY based on environment.
+        
+        - In production: Raise error if missing or using default
+        - In development: Use default key with warning
+        """
+        # Get APP_ENV from the values dict or use default
+        # Note: info.data contains already validated fields
+        app_env = "development"  # Default
+        
+        if not v or v == _DEV_SECRET_KEY:
+            # Check if we're in production by looking at common production indicators
+            # This is validated before APP_ENV is available, so we check env directly
+            import os
+            env = os.getenv("APP_ENV", "development")
+            
+            if env in ("production", "prod", "staging"):
+                raise ValueError(
+                    "SECRET_KEY must be set to a secure value in production! "
+                    "Set the SECRET_KEY environment variable to a random string (32+ chars)."
+                )
+            else:
+                # Development environment - use default with warning
+                if not v:
+                    warnings.warn(
+                        "SECRET_KEY not set. Using insecure default for development. "
+                        "Set SECRET_KEY in production!",
+                        UserWarning,
+                        stacklevel=2
+                    )
+                    return _DEV_SECRET_KEY
+                return v
+        
+        # Warn if key is too short
+        if len(v) < 32:
+            warnings.warn(
+                f"SECRET_KEY is only {len(v)} characters. "
+                "Recommended: 32+ characters for security.",
+                UserWarning,
+                stacklevel=2
+            )
+        
+        return v
 
 
 @lru_cache()

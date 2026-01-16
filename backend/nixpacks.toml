@@ -1,0 +1,14 @@
+# Nixpacks configuration for Railway
+# This file tells Railway how to build and run the Python app
+
+[phases.setup]
+nixPkgs = ["python311", "postgresql"]
+
+[phases.install]
+cmds = ["pip install -r requirements.txt"]
+
+[phases.build]
+cmds = ["echo 'No build step needed'"]
+
+[start]
+cmd = "echo 'Starting Alembic...' && alembic upgrade head --verbose && echo 'Starting Uvicorn...' && uvicorn app.main:app --host 0.0.0.0 --port $PORT --log-level info"

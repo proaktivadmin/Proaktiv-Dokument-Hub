@@ -1,18 +1,18 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { analyticsApi } from "@/lib/api";
-import type { DashboardStats } from "@/types";
+import { dashboardApi } from "@/lib/api/dashboard";
+import type { DashboardStatsV2 } from "@/types/v2";
 
 interface UseDashboardStatsReturn {
-  stats: DashboardStats | null;
+  stats: DashboardStatsV2 | null;
   isLoading: boolean;
   error: string | null;
   refetch: () => void;
 }
 
 export function useDashboardStats(): UseDashboardStatsReturn {
-  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [stats, setStats] = useState<DashboardStatsV2 | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,7 +21,7 @@ export function useDashboardStats(): UseDashboardStatsReturn {
     setError(null);
 
     try {
-      const data = await analyticsApi.getDashboardStats();
+      const data = await dashboardApi.getStats();
       setStats(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load dashboard stats");

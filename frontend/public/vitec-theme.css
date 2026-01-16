@@ -1,0 +1,740 @@
+/**
+ * Vitec Theme - Complete Stylesheet for Document Preview
+ * ============================================================================
+ * This file merges all legacy Vitec/Proaktiv styles for accurate document
+ * rendering in the preview iframe.
+ * 
+ * Source files:
+ *   - vitec-style.css (base typography)
+ *   - vitec-structure.css (layout & structure)
+ *   - theme-base.css (default design tokens)
+ *   - theme-proaktiv.css (Proaktiv brand overrides)
+ * 
+ * IMPORTANT: This file is ONLY loaded inside the preview iframe.
+ *            It should NEVER be imported in the main application.
+ * ============================================================================
+ */
+
+/* ============================================================================
+   1. VITEC STYLE - Base Typography
+   ============================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+html, body {
+    margin: 0;
+    padding: 0;
+    font-size: 10pt;
+    line-height: normal;
+    font-family: 'Open sans', sans-serif;
+}
+
+#vitecTemplate * {
+    font-variant-ligatures: none;
+}
+
+#editDocumentTemplate #vitec-stilark:after {
+    display: block;
+    padding: 1cm 1cm 1.5cm 1cm;
+    content: "Se kildekode";
+    font-size: 26pt;
+    font-weight: 400;
+    font-family: 'Open sans', sans-serif;
+    color: rgba(124, 124, 124, 0.7);
+}
+
+#vitecTemplate p,
+#vitecTemplate th p,
+#vitecTemplate td p {
+    font-size: 10pt;
+    line-height: normal;
+    font-family: 'Open sans', sans-serif;
+    margin: 1em 0;
+    padding-bottom: 0;
+}
+
+#vitecTemplate h1,
+#vitecTemplate h2,
+#vitecTemplate h3,
+#vitecTemplate h4,
+#vitecTemplate h5 {
+    font-family: 'Open sans', sans-serif;
+}
+
+#vitecTemplate table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+#vitecTemplate table th,
+#vitecTemplate table td {
+    vertical-align: top;
+    font-size: 10pt;
+    line-height: normal;
+    font-family: 'Open sans', sans-serif;
+}
+
+#vitecTemplate table th {
+    text-align: left;
+}
+
+#vitecTemplate strong {
+    font-size: 10pt;
+    line-height: normal;
+    font-family: 'Open sans', sans-serif;
+    font-weight: 700;
+}
+
+#vitecTemplate ul li,
+#vitecTemplate ol li {
+    font-size: 10pt;
+    line-height: normal;
+    font-family: 'Open sans', sans-serif;
+}
+
+#vitecTemplate div {
+    font-size: 10pt;
+    line-height: normal;
+    font-family: 'Open sans', sans-serif;
+}
+
+/* Don't override font sizes set with CK Editor */
+#vitecTemplate span > strong {
+    font-size: inherit;
+}
+
+/* ============================================================================
+   2. VITEC STRUCTURE - Core Layout & Resets
+   ============================================================================ */
+
+/* Vitec Variables List Table Structure */
+#vitecTemplate table.vitec-variables-list {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#vitecTemplate table.vitec-variables-list th {
+    text-align: left;
+    padding: 0 5px;
+}
+
+#vitecTemplate table.vitec-variables-list td {
+    padding: 0;
+    vertical-align: top;
+    word-wrap: break-word;
+    border-top: 1px solid var(--border-color, #ededed);
+}
+
+#vitecTemplate table.vitec-variables-list tr:first-child td {
+    border-top: none;
+}
+
+/* Headers within the list */
+#vitecTemplate table.vitec-variables-list td h3 {
+    margin: 1em 0 0 0;
+    padding: 0;
+    font-size: var(--font-size-h3, 16pt);
+    color: var(--color-primary, darkblue);
+}
+
+#vitecTemplate table.vitec-variables-list td h3 > small {
+    font-weight: normal;
+    white-space: nowrap;
+    margin-left: 20px;
+    font-size: 0.8em;
+}
+
+#vitecTemplate > table.vitec-variables-list td {
+    padding: var(--spacing-sm, 5px);
+}
+
+/* RESET: Prevent global borders on generic tables within Vitec Template */
+#vitecTemplate table:not(.vitec-variables-list):not(.form-table) td,
+#vitecTemplate table:not(.vitec-variables-list):not(.form-table) th {
+    border: none !important;
+}
+
+/* Images & Figures */
+#vitecTemplate figure {
+    text-align: center;
+    display: inline-block;
+    margin: 0;
+}
+
+#vitecTemplate figure img:not(.scaled-image) {
+    max-width: 3cm;
+    max-height: 3cm;
+}
+
+#vitecTemplate figure figcaption {
+    font-size: smaller;
+    display: block;
+}
+
+#vitecTemplate .scaled-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    object-position: center center;
+    border-radius: var(--border-radius-circle, 50%);
+}
+
+/* Form Tables (if used) */
+#vitecTemplate .form-table {
+    border-top: solid 1px var(--color-text, #000);
+}
+
+#vitecTemplate .form-table td {
+    border: solid 1px var(--color-text, #000);
+}
+
+#vitecTemplate .form-table td p {
+    margin: 0;
+    padding: 0;
+}
+
+/* Data Labels (for inputs) */
+#vitecTemplate table td[data-label] {
+    padding: 16px 2px 5px 4px;
+    position: relative;
+}
+
+#vitecTemplate table td[data-label]:before {
+    content: attr(data-label);
+    text-align: left;
+    font-size: 9pt;
+    line-height: 8pt;
+    display: block;
+    position: absolute;
+    top: 5px;
+    color: var(--color-text-secondary, #666);
+}
+
+/* Version Toggles & Interactive Elements */
+#vitecTemplate #versionToggleButton {
+    display: none;
+}
+
+#vitecTemplate label[for=versionToggleButton] {
+    cursor: pointer;
+}
+
+/* SVG Toggles (Checkbox/Radio) */
+.svg-toggle {
+    display: inline-block !important;
+    width: 22px;
+    height: 22px;
+    margin: 0 5px;
+    vertical-align: bottom;
+    background-repeat: no-repeat;
+    background-size: 22px 22px;
+    background-position: center center;
+}
+
+/* Version Highlights */
+#vitecTemplate [data-version]:after {
+    content: attr(data-version);
+    display: table-cell;
+    white-space: nowrap;
+    float: right;
+    padding: 1px 4px;
+    color: #fff;
+    font-size: 13px;
+    margin: 4px;
+    background-color: rgb(4 98 175 / 0.6);
+    border-radius: 3px;
+}
+
+/* ============================================================================
+   3. THEME BASE - Default Design Tokens
+   ============================================================================ */
+
+:root {
+    /* Colors - Proaktiv Brand (overrides base) */
+    --color-primary: #272630;
+    --color-primary-light: #3E3D4A;
+
+    --color-pg-beige: #e9e7dc;
+    --color-pg-gronn: #a4b5a8;
+    --color-pg-bronse: #bcab8a;
+
+    --color-accent-gold: var(--color-pg-bronse);
+    --color-bg-beige: var(--color-pg-beige);
+
+    --color-text: #1d1d1d;
+    --color-text-secondary: #5e6d82;
+
+    --color-bg-page: #ffffff;
+    --color-bg-secondary: var(--color-pg-beige);
+
+    --border-color: #D6D4CD;
+    --border-color-dark: #272630;
+
+    /* Typography */
+    --font-family-base: 'Arial', 'Helvetica', sans-serif;
+    --font-family-serif: 'Playfair Display', 'Times New Roman', serif;
+
+    --font-size-base: 10pt;
+    --font-size-h1: 24pt;
+    --font-size-h3: 14pt;
+
+    /* Spacing */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 32px;
+    --spacing-xl: 48px;
+
+    /* Shape - Sharp & Boxy (Proaktiv style) */
+    --border-radius-sm: 0px;
+    --border-radius-circle: 0px;
+}
+
+body {
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-base);
+    color: var(--color-text);
+    background-color: var(--color-bg-page);
+}
+
+/* ============================================================================
+   4. THEME PROAKTIV - Brand Overrides
+   ============================================================================ */
+
+/* Make headers uppercase/tracking for premium feel */
+#vitecTemplate table.vitec-variables-list td h3 {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    font-size: 11pt;
+    font-family: var(--font-family-base);
+    border-bottom: 2px solid var(--color-primary);
+    padding-bottom: 4px;
+    margin-bottom: 12px;
+    display: inline-block;
+}
+
+#vitecTemplate table.vitec-variables-list td h3>small {
+    display: none;
+}
+
+/* Quote Construction (Gold Quote Mark) */
+.proaktiv-quote {
+    font-family: var(--font-family-serif);
+    font-size: 16pt;
+    font-style: italic;
+    color: var(--color-primary);
+    position: relative;
+    padding-left: 20px;
+}
+
+.proaktiv-quote::before {
+    content: '"';
+    font-family: var(--font-family-serif);
+    font-size: 60pt;
+    color: var(--color-pg-bronse);
+    position: absolute;
+    top: -20px;
+    left: -10px;
+    z-index: -1;
+    opacity: 0.5;
+}
+
+/* Dividers */
+.proaktiv-divider-bronse {
+    border-bottom: 1px solid var(--color-pg-bronse);
+    width: 50px;
+    margin: 10px 0;
+}
+
+/* The Lily - Brand Icon */
+.proaktiv-lily-icon {
+    display: inline-block;
+    width: 40px;
+    height: 48px;
+    background-image: url('/assets/proaktiv-lily-black.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.8;
+}
+
+.proaktiv-lily-watermark {
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+    width: 60px;
+    height: 72px;
+    background-image: url('/assets/proaktiv-lily-black.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.1;
+}
+
+/* Logos */
+.proaktiv-logo-gold {
+    width: 200px;
+    background-image: url('/assets/proaktiv-logo-gold.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 50px;
+    display: block;
+}
+
+.proaktiv-logo-black {
+    width: 200px;
+    background-image: url('/assets/proaktiv-logo-black.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 50px;
+    display: block;
+}
+
+/* Video Overlay Style (Corner Accents / L-Bracket) */
+.proaktiv-video-card-dark {
+    background-color: var(--color-primary);
+    color: white;
+    padding: var(--spacing-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+.proaktiv-video-card-dark::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-top: 4px solid #D6D4CD;
+    border-right: 4px solid #D6D4CD;
+    z-index: 10;
+}
+
+.proaktiv-video-card-light {
+    background-color: var(--color-pg-beige);
+    color: var(--color-primary);
+    padding: var(--spacing-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+.proaktiv-video-card-light::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-top: 4px solid white;
+    border-right: 4px solid white;
+    z-index: 10;
+}
+
+/* Global Element Styles (Applied to #vitecTemplate) */
+#vitecTemplate h1,
+h1 {
+    font-family: var(--font-family-serif);
+    font-size: var(--font-size-h1);
+    font-weight: 700;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    border-bottom: 3px solid var(--color-pg-bronse);
+    padding-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+    page-break-after: avoid;
+}
+
+#vitecTemplate h2,
+h2 {
+    font-family: var(--font-family-serif);
+    font-size: var(--font-size-h3);
+    color: var(--color-primary);
+    background-color: var(--color-bg-secondary);
+    border-left: 5px solid var(--color-pg-bronse);
+    padding: var(--spacing-sm) 0 var(--spacing-sm) var(--spacing-md);
+    margin-top: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+    page-break-after: avoid;
+}
+
+#vitecTemplate p,
+p {
+    margin-bottom: var(--spacing-md);
+    line-height: 1.5;
+}
+
+#vitecTemplate a,
+a {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
+/* Utility Helper for Signature Blocks */
+.proaktiv-signature-block {
+    border-top: 3px solid var(--color-pg-bronse);
+    padding-top: var(--spacing-lg);
+    page-break-inside: avoid;
+    margin-top: var(--spacing-xl);
+}
+
+/* ============================================================================
+   5. PREVIEW CONTAINER - For iframe embedding
+   ============================================================================ */
+
+#vitecTemplate {
+    max-width: 210mm;
+    margin: 20px auto;
+    padding: 20mm 15mm;
+    background: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    min-height: 297mm;
+    box-sizing: border-box;
+}
+
+/* Preview mode indicator */
+.vitec-preview-mode #vitecTemplate {
+    border: 1px dashed var(--color-pg-bronse);
+}
+
+/* Hide Vitec resource references */
+[vitec-template] {
+    display: none !important;
+}
+
+/* ============================================================================
+   6. MERGE FIELD HIGHLIGHTING
+   ============================================================================ */
+
+.merge-field-highlight {
+    background-color: #fff3cd;
+    border: 1px dashed #ffc107;
+    padding: 0 4px;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 0.9em;
+}
+
+/* ============================================================================
+   7. PAGE BREAK VISUALIZATION (A4 Preview Mode)
+   ============================================================================ */
+
+/**
+ * A4 Page Break Visualization
+ * 
+ * When .show-page-breaks is applied to body, the content is displayed
+ * with visual page breaks matching A4 paper dimensions:
+ * - A4 size: 210mm x 297mm
+ * - Margins: 20mm top/bottom, 15mm left/right
+ * - Content area: 180mm x 257mm (approximately 1003px at 96dpi)
+ * 
+ * Page breaks are shown as dashed lines with page numbers.
+ */
+
+.show-page-breaks {
+    --a4-width: 210mm;
+    --a4-height: 297mm;
+    --a4-margin-top: 20mm;
+    --a4-margin-bottom: 20mm;
+    --a4-margin-sides: 15mm;
+    --a4-content-height: 257mm; /* 297 - 20 - 20 = 257mm */
+    --page-break-color: #ef4444;
+    --page-break-bg: rgba(239, 68, 68, 0.05);
+    
+    background: 
+        repeating-linear-gradient(
+            to bottom,
+            transparent 0,
+            transparent calc(var(--a4-content-height) - 2px),
+            var(--page-break-bg) calc(var(--a4-content-height) - 2px),
+            var(--page-break-bg) var(--a4-content-height)
+        ),
+        linear-gradient(to bottom, #f5f5f5 0%, #f5f5f5 100%);
+    background-size: 100% var(--a4-content-height);
+    background-position: 0 0;
+}
+
+/* Page break indicator line - positioned using pseudo-elements on body */
+.show-page-breaks::before {
+    content: "📄 Sideskift-visning aktiv — Røde linjer markerer A4-sidegrenser (257mm innholdsområde)";
+    display: block;
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-bottom: 2px solid #f59e0b;
+    padding: 8px 16px;
+    font-size: 11px;
+    font-weight: 500;
+    color: #92400e;
+    z-index: 1000;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Style the page break container */
+.show-page-breaks #vitecTemplate,
+.show-page-breaks > table,
+.show-page-breaks > div {
+    position: relative;
+}
+
+/* Add page break markers at regular intervals */
+.show-page-breaks #vitecTemplate::after,
+.show-page-breaks > table::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 100%;
+    top: 0;
+    pointer-events: none;
+    background: 
+        repeating-linear-gradient(
+            to bottom,
+            transparent 0,
+            transparent calc(var(--a4-content-height) - 1px),
+            var(--page-break-color) calc(var(--a4-content-height) - 1px),
+            var(--page-break-color) var(--a4-content-height),
+            transparent var(--a4-content-height)
+        );
+    background-size: 100% var(--a4-content-height);
+    z-index: 999;
+}
+
+/* Highlight explicit page break elements */
+.show-page-breaks [style*="page-break-before"],
+.show-page-breaks [style*="page-break-after"],
+.show-page-breaks .page-break,
+.show-page-breaks .pagebreak {
+    position: relative;
+}
+
+.show-page-breaks [style*="page-break-before"]::before,
+.show-page-breaks .page-break::before,
+.show-page-breaks .pagebreak::before {
+    content: "⚡ Tvunget sideskift (page-break-before)";
+    display: block;
+    background: linear-gradient(90deg, #10b981, #059669);
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 4px 12px;
+    margin: 8px 0;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.show-page-breaks [style*="page-break-after"]::after {
+    content: "⚡ Tvunget sideskift etter (page-break-after)";
+    display: block;
+    background: linear-gradient(90deg, #8b5cf6, #7c3aed);
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 4px 12px;
+    margin: 8px 0;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Highlight elements that avoid page breaks */
+.show-page-breaks [style*="page-break-inside: avoid"],
+.show-page-breaks .proaktiv-signature-block {
+    outline: 2px dashed #3b82f6;
+    outline-offset: 2px;
+    position: relative;
+}
+
+.show-page-breaks [style*="page-break-inside: avoid"]::before,
+.show-page-breaks .proaktiv-signature-block::before {
+    content: "🔒 Holdes samlet";
+    position: absolute;
+    top: -10px;
+    right: 4px;
+    background: #3b82f6;
+    color: white;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    z-index: 10;
+}
+
+/* Page number indicators at each break */
+.show-page-breaks #vitecTemplate {
+    counter-reset: page-counter;
+}
+
+/* Visual ruler on the left side showing page heights */
+.show-page-breaks {
+    position: relative;
+    padding-left: 40px !important;
+}
+
+.show-page-breaks::after {
+    content: "";
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 36px;
+    background: 
+        repeating-linear-gradient(
+            to bottom,
+            #f8fafc 0,
+            #f8fafc calc(var(--a4-content-height) - 20px),
+            #e2e8f0 calc(var(--a4-content-height) - 20px),
+            #e2e8f0 var(--a4-content-height)
+        );
+    background-size: 100% var(--a4-content-height);
+    border-right: 1px solid #cbd5e1;
+    z-index: 998;
+}
+
+/* ============================================================================
+   8. PRINT STYLES
+   ============================================================================ */
+
+@media print {
+    body {
+        font-size: 10pt;
+        background: white !important;
+        color: black !important;
+    }
+
+    #vitecTemplate {
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+        max-width: none;
+    }
+
+    h1, h2, h3 {
+        page-break-after: avoid;
+    }
+
+    table, figure, img {
+        page-break-inside: avoid;
+    }
+
+    .proaktiv-signature-block {
+        page-break-inside: avoid;
+    }
+
+    /* Hide page break visualization in print */
+    .show-page-breaks::before,
+    .show-page-breaks::after,
+    .show-page-breaks #vitecTemplate::after {
+        display: none !important;
+    }
+
+    @page {
+        size: A4;
+        margin: 20mm 15mm;
+    }
+}
+

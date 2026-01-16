@@ -7,6 +7,7 @@ import type { Template, TemplateListResponse } from "@/types";
 interface UseTemplatesParams {
   status?: string;
   search?: string;
+  category_id?: string;
   page?: number;
   per_page?: number;
   sort_by?: string;
@@ -41,7 +42,7 @@ export function useTemplates(params: UseTemplatesParams = {}): UseTemplatesRetur
     } finally {
       setIsLoading(false);
     }
-  }, [params.status, params.search, params.page, params.per_page, params.sort_by, params.sort_order]);
+  }, [params.status, params.search, params.category_id, params.page, params.per_page, params.sort_by, params.sort_order]);
 
   useEffect(() => {
     fetchTemplates();

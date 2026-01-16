@@ -12,9 +12,9 @@ import Link from "next/link";
 
 function StatCardSkeleton() {
   return (
-    <div className="bg-white rounded-lg p-6 shadow-sm border">
+    <div className="bg-white rounded-md p-6 border border-[#E5E5E5]">
       <Skeleton className="h-4 w-24 mb-2" />
-      <Skeleton className="h-8 w-16" />
+      <Skeleton className="h-10 w-16" />
     </div>
   );
 }
@@ -23,8 +23,8 @@ function TemplateListSkeleton() {
   return (
     <div className="space-y-3">
       {[1, 2, 3, 4, 5].map((i) => (
-        <div key={i} className="flex items-center gap-3 p-3 border rounded-lg">
-          <Skeleton className="h-10 w-10 rounded" />
+        <div key={i} className="flex items-center gap-3 p-3 border border-[#E5E5E5] rounded-md">
+          <Skeleton className="h-10 w-10 rounded-md" />
           <div className="flex-1">
             <Skeleton className="h-4 w-48 mb-1" />
             <Skeleton className="h-3 w-24" />
@@ -39,7 +39,7 @@ function CategorySkeleton() {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       {[1, 2, 3, 4].map((i) => (
-        <div key={i} className="p-4 rounded-lg bg-slate-50">
+        <div key={i} className="p-4 rounded-md bg-[#F5F5F0]">
           <Skeleton className="h-5 w-24 mb-2" />
           <Skeleton className="h-8 w-12 mb-1" />
           <Skeleton className="h-3 w-16" />
@@ -76,17 +76,17 @@ export default function Dashboard() {
       xlsx: "text-green-500",
       xls: "text-green-500",
     };
-    return colors[fileType] || "text-slate-500";
+    return colors[fileType] || "text-muted-foreground";
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="min-h-screen bg-background">
       <Header onUploadSuccess={handleUploadSuccess} />
 
       <main className="container mx-auto px-6 py-8">
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-slate-900">Dashboard</h2>
-          <p className="text-slate-500">Oversikt over alle maler og aktivitet</p>
+          <h2 className="text-2xl font-bold text-foreground">Dashboard</h2>
+          <p className="text-muted-foreground">Oversikt over alle maler og aktivitet</p>
         </div>
 
         {/* Error State */}
@@ -101,9 +101,9 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {statsLoading ? (
             <>
-              <div className="bg-gradient-to-br from-sky-500 to-sky-600 text-white rounded-lg p-6 shadow-lg">
-                <Skeleton className="h-4 w-24 mb-2 bg-sky-400/50" />
-                <Skeleton className="h-8 w-16 bg-sky-400/50" />
+              <div className="bg-[#272630] text-white rounded-md p-6 border border-[#E5E5E5]">
+                <Skeleton className="h-4 w-24 mb-2 bg-white/20" />
+                <Skeleton className="h-10 w-16 bg-white/20" />
               </div>
               <StatCardSkeleton />
               <StatCardSkeleton />
@@ -111,32 +111,32 @@ export default function Dashboard() {
             </>
           ) : (
             <>
-              <div className="bg-gradient-to-br from-sky-500 to-sky-600 text-white rounded-lg p-6 shadow-lg">
-                <p className="text-sky-100 text-sm">Totalt maler</p>
-                <p className="text-3xl font-bold mt-1">{stats?.total_templates ?? 0}</p>
+              <div className="bg-[#272630] text-white rounded-md p-6">
+                <p className="text-white/70 text-sm font-sans">Totalt maler</p>
+                <p className="text-4xl font-serif font-bold mt-2">{stats?.total ?? 0}</p>
               </div>
 
-              <div className="bg-white rounded-lg p-6 shadow-sm border">
-                <p className="text-slate-500 text-sm">Publiserte</p>
-                <p className="text-3xl font-bold text-green-600 mt-1">
-                  {stats?.published_templates ?? 0}
+              <div className="bg-white rounded-md p-6 border border-[#E5E5E5]">
+                <p className="text-[#272630]/60 text-sm font-sans">Publiserte</p>
+                <p className="text-4xl font-serif font-bold text-[#272630] mt-2">
+                  {stats?.published ?? 0}
                 </p>
               </div>
 
-              <div className="bg-white rounded-lg p-6 shadow-sm border">
-                <p className="text-slate-500 text-sm">Utkast</p>
-                <p className="text-3xl font-bold text-amber-600 mt-1">
-                  {stats?.draft_templates ?? 0}
+              <div className="bg-white rounded-md p-6 border border-[#E5E5E5]">
+                <p className="text-[#272630]/60 text-sm font-sans">Utkast</p>
+                <p className="text-4xl font-serif font-bold text-[#272630] mt-2">
+                  {stats?.draft ?? 0}
                 </p>
               </div>
 
-              <div className="bg-white rounded-lg p-6 shadow-sm border">
-                <div className="flex items-center gap-2 text-slate-500 text-sm">
-                  <Download className="h-4 w-4" />
+              <div className="bg-white rounded-md p-6 border border-[#E5E5E5]">
+                <div className="flex items-center gap-2 text-[#272630]/60 text-sm font-sans">
+                  <Download className="h-4 w-4 text-[#BCAB8A]" />
                   Nedlastinger (30d)
                 </div>
-                <p className="text-3xl font-bold text-slate-900 mt-1">
-                  {stats?.total_downloads_30d ?? 0}
+                <p className="text-4xl font-serif font-bold text-[#272630] mt-2">
+                  {stats?.downloads ?? 0}
                 </p>
               </div>
             </>
@@ -145,12 +145,12 @@ export default function Dashboard() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Recent Templates */}
-          <div className="lg:col-span-2 bg-white rounded-lg p-6 shadow-sm border">
+          <div className="lg:col-span-2 bg-white rounded-md p-6 border border-[#E5E5E5]">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Nylig opplastet</h3>
+              <h3 className="text-lg font-semibold text-[#272630]">Nylig opplastet</h3>
               <Link
                 href="/templates"
-                className="text-sm text-sky-600 hover:text-sky-700 font-medium"
+                className="text-sm text-[#BCAB8A] hover:text-[#BCAB8A]/80 font-medium"
               >
                 Se alle →
               </Link>
@@ -159,7 +159,7 @@ export default function Dashboard() {
             {templatesLoading ? (
               <TemplateListSkeleton />
             ) : recentTemplates.length === 0 ? (
-              <div className="text-center py-8 text-slate-500">
+              <div className="text-center py-8 text-muted-foreground">
                 <FileText className="h-12 w-12 mx-auto mb-3 opacity-50" />
                 <p>Ingen maler lastet opp ennå.</p>
                 <p className="text-sm">Klikk "Last opp" for å legge til din første mal.</p>
@@ -169,10 +169,10 @@ export default function Dashboard() {
                 {recentTemplates.map((template) => (
                   <div
                     key={template.id}
-                    className="flex items-center gap-3 p-3 border rounded-lg hover:bg-slate-50 transition-colors"
+                    className="flex items-center gap-3 p-3 border rounded-lg hover:bg-muted transition-colors"
                   >
                     <div
-                      className={`p-2 rounded bg-slate-100 ${getFileTypeIcon(
+                      className={`p-2 rounded bg-muted ${getFileTypeIcon(
                         template.file_type
                       )}`}
                     >
@@ -180,7 +180,7 @@ export default function Dashboard() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-medium truncate">{template.title}</p>
-                      <div className="flex items-center gap-2 text-sm text-slate-500">
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <span className="uppercase">{template.file_type}</span>
                         <span>•</span>
                         <span
@@ -189,7 +189,7 @@ export default function Dashboard() {
                               ? "bg-green-100 text-green-700"
                               : template.status === "draft"
                               ? "bg-amber-100 text-amber-700"
-                              : "bg-slate-100 text-slate-700"
+                              : "bg-muted text-muted-foreground"
                           }`}
                         >
                           {template.status === "published"
@@ -200,7 +200,7 @@ export default function Dashboard() {
                         </span>
                       </div>
                     </div>
-                    <div className="text-sm text-slate-500 flex items-center gap-1">
+                    <div className="text-sm text-muted-foreground flex items-center gap-1">
                       <Clock className="h-4 w-4" />
                       {formatDate(template.created_at)}
                     </div>
@@ -211,12 +211,12 @@ export default function Dashboard() {
           </div>
 
           {/* Categories */}
-          <div className="bg-white rounded-lg p-6 shadow-sm border">
+          <div className="bg-white rounded-md p-6 border border-[#E5E5E5]">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Kategorier</h3>
+              <h3 className="text-lg font-semibold text-[#272630]">Kategorier</h3>
               <Link
                 href="/categories"
-                className="text-sm text-sky-600 hover:text-sky-700 font-medium"
+                className="text-sm text-[#BCAB8A] hover:text-[#BCAB8A]/80 font-medium"
               >
                 Administrer →
               </Link>
@@ -225,13 +225,13 @@ export default function Dashboard() {
             {categoriesLoading ? (
               <div className="space-y-3">
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="p-3 rounded-lg bg-slate-50">
+                  <div key={i} className="p-3 rounded-md bg-[#F5F5F0]">
                     <Skeleton className="h-4 w-24" />
                   </div>
                 ))}
               </div>
             ) : categories.length === 0 ? (
-              <div className="text-center py-6 text-slate-500">
+              <div className="text-center py-6 text-[#272630]/50">
                 <p>Ingen kategorier opprettet.</p>
               </div>
             ) : (
@@ -240,10 +240,10 @@ export default function Dashboard() {
                   <Link
                     key={category.id}
                     href={`/templates?category=${category.id}`}
-                    className="flex items-center gap-3 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors"
+                    className="flex items-center gap-3 p-3 rounded-md bg-[#F5F5F0] hover:bg-[#E9E7DC] transition-colors"
                   >
                     {category.icon && <span className="text-lg">{category.icon}</span>}
-                    <span className="font-medium">{category.name}</span>
+                    <span className="font-medium text-[#272630]">{category.name}</span>
                   </Link>
                 ))}
               </div>
@@ -253,18 +253,18 @@ export default function Dashboard() {
 
         {/* Recent Activity from Dashboard Stats */}
         {!statsLoading && stats?.recent_uploads && stats.recent_uploads.length > 0 && (
-          <div className="mt-8 bg-white rounded-lg p-6 shadow-sm border">
-            <h3 className="text-lg font-semibold mb-4">Nylig aktivitet</h3>
+          <div className="mt-8 bg-white rounded-md p-6 border border-[#E5E5E5]">
+            <h3 className="text-lg font-semibold text-[#272630] mb-4">Nylig aktivitet</h3>
             <div className="space-y-2">
               {stats.recent_uploads.map((upload) => (
                 <div
-                  key={upload.template_id}
-                  className="flex items-center gap-3 text-sm text-slate-600"
+                  key={upload.id}
+                  className="flex items-center gap-3 text-sm text-[#272630]/60"
                 >
-                  <div className="w-2 h-2 rounded-full bg-green-500" />
-                  <span className="font-medium text-slate-900">{upload.title}</span>
-                  <span className="text-slate-400">ble lastet opp</span>
-                  <span className="ml-auto text-slate-500">
+                  <div className="w-2 h-2 rounded-full bg-[#BCAB8A]" />
+                  <span className="font-medium text-[#272630]">{upload.title}</span>
+                  <span className="text-[#272630]/50">ble lastet opp</span>
+                  <span className="ml-auto text-[#272630]/50">
                     {formatDate(upload.created_at)}
                   </span>
                 </div>

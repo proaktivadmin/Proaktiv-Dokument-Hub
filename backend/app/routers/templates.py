@@ -4,18 +4,44 @@ Template API Routes
 Handles all template CRUD operations with database integration.
 """
 
-from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Query, Depends
+from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Query, Depends, Body
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional, List
 from uuid import UUID
-from datetime import datetime
+from datetime import datetime, timezone
+from pydantic import BaseModel, Field
 
 from app.database import get_db
 from app.services.template_service import TemplateService
 from app.services.audit_service import AuditService
+from app.services.azure_storage_service import get_azure_storage_service
+from app.services.sanitizer_service import get_sanitizer_service
+from app.services.template_analyzer_service import TemplateAnalyzerService
+from app.services.template_content_service import TemplateContentService
+from app.services.template_settings_service import TemplateSettingsService
+from app.services.thumbnail_service import ThumbnailService
+from app.schemas.template_metadata import TemplateAnalysisResult
+from app.schemas.template_settings import (
+    TemplateContentUpdate,
+    TemplateContentResponse,
+    TemplateSettingsUpdate,
+    TemplateSettingsResponse
+)
 from app.config import get_mock_user
+import io
+import logging
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
+
+
+# Pydantic schemas for request bodies
+class TemplateUpdateRequest(BaseModel):
+    """Request body for updating a template."""
+    title: Optional[str] = Field(None, max_length=255, description="Template title")
+    description: Optional[str] = Field(None, max_length=2000, description="Template description")
+    status: Optional[str] = Field(None, pattern="^(draft|published|archived)$", description="Template status")
 
 
 def get_current_user():
@@ -28,16 +54,29 @@ async def list_templates(
     db: AsyncSession = Depends(get_db),
     status: Optional[str] = Query(None, description="Filter by status"),
     search: Optional[str] = Query(None, description="Search in title/description"),
+    category_id: Optional[str] = Query(None, description="Filter by category UUID"),
     page: int = Query(1, ge=1),
     per_page: int = Query(20, ge=1, le=100),
     sort_by: str = Query("updated_at"),
     sort_order: str = Query("desc"),
 ):
     """List all templates with filtering and pagination."""
+    # Validate category_id is a valid UUID if provided
+    validated_category_id: Optional[UUID] = None
+    if category_id:
+        try:
+            validated_category_id = UUID(category_id)
+        except ValueError:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Invalid category_id format: '{category_id}' is not a valid UUID"
+            )
+    
     templates, total = await TemplateService.get_list(
         db,
         status=status,
         search=search,
+        category_id=validated_category_id,
         page=page,
         per_page=per_page,
         sort_by=sort_by,
@@ -114,11 +153,18 @@ async def create_template(
     title: str = Form(...),
     description: Optional[str] = Form(None),
     status: str = Form("draft"),
+    auto_sanitize: bool = Form(True),
     user: dict = Depends(get_current_user)
 ):
-    """Upload a new template."""
+    """
+    Upload a new template.
+    
+    Args:
+        auto_sanitize: If True (default), HTML files will be sanitized for Vitec compatibility.
+                       Set to False for system templates that should not be modified.
+    """
     # Validate file type
-    allowed_types = ["docx", "doc", "pdf", "xlsx", "xls"]
+    allowed_types = ["docx", "doc", "pdf", "xlsx", "xls", "html", "htm"]
     file_ext = file.filename.split(".")[-1].lower() if "." in file.filename else ""
     
     if file_ext not in allowed_types:
@@ -131,9 +177,46 @@ async def create_template(
     file_content = await file.read()
     file_size = len(file_content)
     
-    # TODO: Upload to Azure Blob Storage
-    # For now, use a mock URL
-    blob_url = f"mock://templates/{file.filename}"
+    # For HTML files, decode and optionally sanitize the content
+    html_content = None
+    if file_ext in ["html", "htm"]:
+        try:
+            html_content = file_content.decode("utf-8")
+        except UnicodeDecodeError:
+            html_content = file_content.decode("latin-1")
+        
+        # Sanitize HTML if requested
+        if auto_sanitize:
+            sanitizer = get_sanitizer_service()
+            html_content = sanitizer.sanitize(html_content)
+            logger.info(f"Sanitized HTML content for template: {title}")
+    
+    # Upload to Azure Blob Storage
+    storage_service = get_azure_storage_service()
+    blob_url = None
+    
+    if storage_service.is_configured:
+        # Generate unique blob name with timestamp to avoid collisions
+        from datetime import datetime
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        blob_name = f"{timestamp}_{file.filename}"
+        
+        # Upload to Azure
+        blob_url = await storage_service.upload_file(
+            file_data=io.BytesIO(file_content),
+            blob_name=blob_name,
+            content_type=file.content_type
+        )
+        
+        if blob_url:
+            logger.info(f"Uploaded to Azure: {blob_url}")
+        else:
+            logger.warning(f"Azure upload failed for {file.filename}, using mock URL")
+    
+    # Fallback to mock URL if Azure not configured or upload failed
+    if not blob_url:
+        blob_url = f"mock://templates/{file.filename}"
+        logger.info(f"Using mock URL: {blob_url}")
     
     # Create template
     template = await TemplateService.create(
@@ -145,7 +228,8 @@ async def create_template(
         file_size_bytes=file_size,
         azure_blob_url=blob_url,
         created_by=user["email"],
-        status=status
+        status=status,
+        content=html_content
     )
     
     # Audit log
@@ -170,10 +254,8 @@ async def create_template(
 @router.put("/{template_id}")
 async def update_template(
     template_id: UUID,
+    body: TemplateUpdateRequest,
     db: AsyncSession = Depends(get_db),
-    title: Optional[str] = None,
-    description: Optional[str] = None,
-    status: Optional[str] = None,
     user: dict = Depends(get_current_user)
 ):
     """Update template metadata."""
@@ -182,14 +264,14 @@ async def update_template(
         raise HTTPException(status_code=404, detail="Template not found")
     
     updates = {}
-    if title is not None:
-        updates["title"] = title
-    if description is not None:
-        updates["description"] = description
-    if status is not None:
-        updates["status"] = status
-        if status == "published":
-            updates["published_at"] = datetime.utcnow()
+    if body.title is not None:
+        updates["title"] = body.title
+    if body.description is not None:
+        updates["description"] = body.description
+    if body.status is not None:
+        updates["status"] = body.status
+        if body.status == "published":
+            updates["published_at"] = datetime.now(timezone.utc)
     
     template = await TemplateService.update(
         db,
@@ -265,6 +347,162 @@ async def download_template(
     return {
         "download_url": template.azure_blob_url,
         "file_name": template.file_name,
-        "expires_at": datetime.utcnow().isoformat()
+        "expires_at": datetime.now(timezone.utc).isoformat()
     }
+
+
+@router.get("/{template_id}/content")
+async def get_template_content(
+    template_id: UUID,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Get the raw HTML content of a template.
+    
+    For HTML templates, returns the stored content directly.
+    For other file types, returns an error (preview not supported).
+    """
+    template = await TemplateService.get_by_id(db, template_id)
+    if not template:
+        raise HTTPException(status_code=404, detail="Template not found")
+    
+    # Check if this is an HTML template
+    if template.file_type not in ["html", "htm"]:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Preview not supported for file type: {template.file_type}. Only HTML templates can be previewed."
+        )
+    
+    # Check if content exists
+    if not template.content:
+        raise HTTPException(
+            status_code=404,
+            detail="Template content not found. The template may need to be re-uploaded."
+        )
+    
+    return {
+        "id": str(template.id),
+        "title": template.title,
+        "file_type": template.file_type,
+        "content": template.content
+    }
+
+
+@router.get("/{template_id}/analyze", response_model=TemplateAnalysisResult)
+async def analyze_template(
+    template_id: UUID,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Analyze a template for merge fields, conditions, and loops.
+    
+    Returns all Vitec-specific patterns found in the template HTML,
+    along with a list of unknown fields not in the merge_fields registry.
+    """
+    result = await TemplateAnalyzerService.analyze(db, template_id)
+    return TemplateAnalysisResult(**result)
+
+
+@router.put("/{template_id}/content", response_model=TemplateContentResponse)
+async def save_template_content(
+    template_id: UUID,
+    body: TemplateContentUpdate,
+    db: AsyncSession = Depends(get_db),
+    user: dict = Depends(get_current_user)
+):
+    """
+    Save template HTML content.
+    
+    Creates a version snapshot before saving if content has changed.
+    Re-scans for merge fields and updates the template.
+    """
+    result = await TemplateContentService.save_content(
+        db,
+        template_id,
+        content=body.content,
+        updated_by=user["email"],
+        change_notes=body.change_notes,
+        auto_sanitize=body.auto_sanitize
+    )
+    
+    # Audit log
+    await AuditService.log(
+        db,
+        entity_type="template",
+        entity_id=template_id,
+        action="content_updated",
+        user_email=user["email"],
+        details={"version": result["version"]}
+    )
+    
+    return TemplateContentResponse(**result)
+
+
+@router.put("/{template_id}/settings", response_model=TemplateSettingsResponse)
+async def update_template_settings(
+    template_id: UUID,
+    body: TemplateSettingsUpdate,
+    db: AsyncSession = Depends(get_db),
+    user: dict = Depends(get_current_user)
+):
+    """Update template Vitec metadata settings."""
+    template = await TemplateSettingsService.update_settings(
+        db,
+        template_id,
+        updated_by=user["email"],
+        **body.model_dump(exclude_unset=True)
+    )
+    
+    # Audit log
+    await AuditService.log(
+        db,
+        entity_type="template",
+        entity_id=template_id,
+        action="settings_updated",
+        user_email=user["email"],
+        details=body.model_dump(exclude_unset=True)
+    )
+    
+    return TemplateSettingsResponse.model_validate(template)
+
+
+@router.get("/{template_id}/settings", response_model=TemplateSettingsResponse)
+async def get_template_settings(
+    template_id: UUID,
+    db: AsyncSession = Depends(get_db)
+):
+    """Get template settings."""
+    settings = await TemplateSettingsService.get_settings(db, template_id)
+    return TemplateSettingsResponse(**settings)
+
+
+@router.post("/{template_id}/thumbnail")
+async def generate_thumbnail(
+    template_id: UUID,
+    db: AsyncSession = Depends(get_db),
+    user: dict = Depends(get_current_user)
+):
+    """
+    Generate a static thumbnail for a template.
+    
+    Requires Playwright to be installed. Returns 501 if not available.
+    """
+    if not ThumbnailService.is_available():
+        raise HTTPException(
+            status_code=501,
+            detail="Thumbnail generation not available. Playwright is not installed."
+        )
+    
+    result = await ThumbnailService.generate_thumbnail(db, template_id)
+    
+    # Audit log
+    await AuditService.log(
+        db,
+        entity_type="template",
+        entity_id=template_id,
+        action="thumbnail_generated",
+        user_email=user["email"]
+    )
+    
+    return result
 

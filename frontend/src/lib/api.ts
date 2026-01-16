@@ -1,17 +1,17 @@
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import type {
   TemplateListResponse,
   UploadTemplatePayload,
   UploadTemplateResponse,
+  UpdateTemplatePayload,
+  UpdateTemplateResponse,
   Category,
   DashboardStats,
 } from "@/types";
+import { apiClient } from "./api/config";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-
-const api = axios.create({
-  baseURL: `${API_BASE_URL}/api`,
-});
+// Use the shared API client with dynamic URL support
+const api = apiClient;
 
 /**
  * Handle API errors with detailed logging
@@ -97,6 +97,7 @@ export const templateApi = {
   async list(params?: {
     status?: string;
     search?: string;
+    category_id?: string;
     page?: number;
     per_page?: number;
     sort_by?: string;
@@ -133,6 +134,11 @@ export const templateApi = {
         formData.append("category_id", payload.category_id);
       }
 
+      // auto_sanitize defaults to true, so only append if explicitly set
+      if (payload.auto_sanitize !== undefined) {
+        formData.append("auto_sanitize", String(payload.auto_sanitize));
+      }
+
       // Debug logging
       console.log("[API] Uploading template:", {
         fileName: payload.file.name,
@@ -142,6 +148,7 @@ export const templateApi = {
         description: payload.description,
         status: payload.status,
         category_id: payload.category_id,
+        auto_sanitize: payload.auto_sanitize,
       });
 
       const { data } = await api.post<UploadTemplateResponse>(
@@ -162,6 +169,28 @@ export const templateApi = {
   },
 
   /**
+   * Update template metadata
+   */
+  async update(
+    templateId: string,
+    payload: UpdateTemplatePayload
+  ): Promise<UpdateTemplateResponse> {
+    try {
+      console.log("[API] Updating template:", { templateId, payload });
+
+      const { data } = await api.put<UpdateTemplateResponse>(
+        `/templates/${templateId}`,
+        payload
+      );
+
+      console.log("[API] Update successful:", data);
+      return data;
+    } catch (error) {
+      handleError(error, "templateApi.update");
+    }
+  },
+
+  /**
    * Delete a template by ID
    */
   async delete(templateId: string): Promise<void> {
@@ -171,4 +200,49 @@ export const templateApi = {
       handleError(error, "templateApi.delete");
     }
   },
+
+  /**
+   * Get download URL for a template
+   */
+  async getDownloadUrl(
+    templateId: string
+  ): Promise<{ download_url: string; file_name: string }> {
+    try {
+      const { data } = await api.get<{ download_url: string; file_name: string }>(
+        `/templates/${templateId}/download`
+      );
+      return data;
+    } catch (error) {
+      handleError(error, "templateApi.getDownloadUrl");
+    }
+  },
+
+  /**
+   * Get template content for preview (HTML templates only)
+   */
+  async getContent(
+    templateId: string
+  ): Promise<{ id: string; title: string; file_type: string; content: string }> {
+    try {
+      const { data } = await api.get<{
+        id: string;
+        title: string;
+        file_type: string;
+        content: string;
+      }>(`/templates/${templateId}/content`);
+      return data;
+    } catch (error) {
+      handleError(error, "templateApi.getContent");
+    }
+  },
 };
+
+/**
+ * V2 API Clients - Re-export from dedicated files
+ */
+export { mergeFieldsApi } from "./api/merge-fields";
+export { codePatternsApi } from "./api/code-patterns";
+export { layoutPartialsApi } from "./api/layout-partials";
+export { templateAnalysisApi } from "./api/template-analysis";
+export { templateSettingsApi } from "./api/template-settings";
+export { dashboardApi } from "./api/dashboard";

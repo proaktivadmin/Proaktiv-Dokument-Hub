@@ -9,6 +9,7 @@ from datetime import datetime
 
 from app.config import settings
 from app.database import get_db
+from app.services.azure_storage_service import get_azure_storage_service
 
 router = APIRouter()
 
@@ -26,16 +27,35 @@ async def health_check(db: AsyncSession = Depends(get_db)):
     except Exception:
         db_status = "disconnected"
     
+    # Check Azure Storage
+    storage_service = get_azure_storage_service()
+    storage_status = "configured" if storage_service.is_configured else "not_configured"
+    
     return {
         "status": "healthy" if db_status == "connected" else "degraded",
         "timestamp": datetime.utcnow().isoformat(),
         "services": {
             "database": db_status,
-            "storage": "mock" if not settings.AZURE_STORAGE_CONNECTION_STRING else "connected",
+            "storage": storage_status,
             "vitec_api": "not_configured",
             "redis": "not_configured"
         },
         "version": settings.APP_VERSION
+    }
+
+
+@router.get("/api/health/azure-storage")
+async def azure_storage_check():
+    """
+    Detailed Azure Storage connection test.
+    Returns connection status, account info, and available containers.
+    """
+    storage_service = get_azure_storage_service()
+    result = await storage_service.test_connection()
+    
+    return {
+        "timestamp": datetime.utcnow().isoformat(),
+        **result
     }
 
 
