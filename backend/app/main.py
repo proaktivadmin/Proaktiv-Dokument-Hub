@@ -3,18 +3,37 @@ Proaktiv Dokument Hub - FastAPI Backend
 
 Main application entry point with database integration.
 
-Build: 2026-01-16-v2 - Force container restart
+Build: 2026-01-16-v3 - DEBUG instrumentation for Railway
 """
+
+# #region agent log
+print("[DEBUG][main.py] ========== MAIN.PY IMPORT STARTED ==========", flush=True)
+# #endregion
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import logging
 
+# #region agent log
+print("[DEBUG][main.py] Standard imports done. Importing app.config...", flush=True)
+# #endregion
 from app.config import settings
+# #region agent log
+print("[DEBUG][main.py] app.config imported. Importing app.database...", flush=True)
+# #endregion
 from app.database import init_db, close_db
+# #region agent log
+print("[DEBUG][main.py] app.database imported. Importing routers (batch 1)...", flush=True)
+# #endregion
 from app.routers import templates, tags, categories, analytics, health, sanitizer
+# #region agent log
+print("[DEBUG][main.py] Routers batch 1 imported. Importing routers (batch 2)...", flush=True)
+# #endregion
 from app.routers import merge_fields, code_patterns, layout_partials, dashboard, admin
+# #region agent log
+print("[DEBUG][main.py] All routers imported successfully!", flush=True)
+# #endregion
 
 # Configure logging
 logging.basicConfig(
@@ -27,15 +46,34 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan events."""
+    # #region agent log
+    print("[DEBUG][main.py] LIFESPAN: Startup event triggered", flush=True)
+    # #endregion
     logger.info(f"Starting {settings.APP_NAME} v{settings.APP_VERSION}")
     try:
+        # #region agent log
+        print("[DEBUG][main.py] LIFESPAN: Calling init_db()...", flush=True)
+        # #endregion
         await init_db()
+        # #region agent log
+        print("[DEBUG][main.py] LIFESPAN: init_db() completed successfully", flush=True)
+        # #endregion
     except Exception as e:
+        # #region agent log
+        print(f"[DEBUG][main.py] LIFESPAN: init_db() FAILED: {type(e).__name__}: {e}", flush=True)
+        # #endregion
         logger.warning(f"Database init check failed: {e}")
+    # #region agent log
+    print("[DEBUG][main.py] LIFESPAN: Yielding control - app is now RUNNING", flush=True)
+    # #endregion
     yield
     await close_db()
     logger.info("Shutting down application")
 
+
+# #region agent log
+print("[DEBUG][main.py] Creating FastAPI app instance...", flush=True)
+# #endregion
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -43,6 +81,10 @@ app = FastAPI(
     description="Centralized Master Template Library API",
     lifespan=lifespan,
 )
+
+# #region agent log
+print("[DEBUG][main.py] FastAPI app instance created", flush=True)
+# #endregion
 
 # CORS Configuration
 # Parse allowed origins from environment or use defaults
@@ -89,6 +131,10 @@ app.include_router(layout_partials.router, prefix="/api", tags=["Layout Partials
 app.include_router(dashboard.router, prefix="/api", tags=["Dashboard"])
 app.include_router(admin.router, tags=["Admin"])
 
+
+# #region agent log
+print("[DEBUG][main.py] ========== MAIN.PY IMPORT COMPLETE ==========", flush=True)
+# #endregion
 
 @app.get("/")
 async def root():

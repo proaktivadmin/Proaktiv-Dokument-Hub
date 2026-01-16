@@ -5,12 +5,25 @@ Loads settings from environment variables with sensible defaults.
 Uses Pydantic BaseSettings for validation and type coercion.
 """
 
+# #region agent log
+print("[DEBUG][config.py] Module import started", flush=True)
+# #endregion
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import field_validator
 from functools import lru_cache
 from typing import Optional
 import logging
 import warnings
+import os
+
+# #region agent log
+print(f"[DEBUG][config.py] APP_ENV from os.environ: {os.getenv('APP_ENV', 'NOT SET')}", flush=True)
+print(f"[DEBUG][config.py] SECRET_KEY present: {bool(os.getenv('SECRET_KEY'))}", flush=True)
+print(f"[DEBUG][config.py] DATABASE_URL present: {bool(os.getenv('DATABASE_URL'))}", flush=True)
+print(f"[DEBUG][config.py] PLATFORM: {os.getenv('PLATFORM', 'NOT SET')}", flush=True)
+print(f"[DEBUG][config.py] RAILWAY_PROJECT_ID: {os.getenv('RAILWAY_PROJECT_ID', 'NOT SET')}", flush=True)
+# #endregion
 
 logger = logging.getLogger(__name__)
 
@@ -129,11 +142,30 @@ def get_settings() -> Settings:
     
     Settings are loaded once and cached for the lifetime of the application.
     """
-    return Settings()
+    # #region agent log
+    print("[DEBUG][config.py] get_settings() called - creating Settings instance...", flush=True)
+    # #endregion
+    try:
+        s = Settings()
+        # #region agent log
+        print(f"[DEBUG][config.py] Settings created successfully! APP_ENV={s.APP_ENV}", flush=True)
+        # #endregion
+        return s
+    except Exception as e:
+        # #region agent log
+        print(f"[DEBUG][config.py] ERROR creating Settings: {type(e).__name__}: {e}", flush=True)
+        # #endregion
+        raise
 
 
 # Global settings instance
+# #region agent log
+print("[DEBUG][config.py] About to call get_settings() for global 'settings' instance", flush=True)
+# #endregion
 settings = get_settings()
+# #region agent log
+print("[DEBUG][config.py] Global 'settings' instance created successfully", flush=True)
+# #endregion
 
 
 def get_mock_user() -> dict:
