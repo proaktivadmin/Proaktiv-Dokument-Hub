@@ -5,14 +5,13 @@ Represents a Vitec merge field in the Flettekode system.
 """
 
 from sqlalchemy import String, Text, Integer, Boolean, DateTime, Index
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 from sqlalchemy.orm import Mapped, mapped_column
 from datetime import datetime
 from typing import Optional
 import uuid
 
-from app.models.base import Base
+from app.models.base import Base, GUID
 
 
 class MergeField(Base):
@@ -27,9 +26,9 @@ class MergeField(Base):
     
     # Primary key
     id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID,
         primary_key=True,
-        default=uuid.uuid4
+        default=lambda: str(uuid.uuid4())
     )
     
     # Field identification

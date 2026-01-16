@@ -3,14 +3,13 @@ AuditLog SQLAlchemy Model
 """
 
 from sqlalchemy import String, DateTime, Index
-from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql import func
 from datetime import datetime
 from typing import Optional
 import uuid
 
-from app.models.base import Base
+from app.models.base import Base, GUID, JSONType
 
 
 class AuditLog(Base):
@@ -25,9 +24,9 @@ class AuditLog(Base):
     
     # Primary key
     id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), 
+        GUID, 
         primary_key=True, 
-        default=uuid.uuid4
+        default=lambda: str(uuid.uuid4())
     )
     
     # Required fields
@@ -37,7 +36,7 @@ class AuditLog(Base):
     )  # 'template', 'tag', 'category'
     
     entity_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), 
+        GUID, 
         nullable=False
     )
     
@@ -53,7 +52,7 @@ class AuditLog(Base):
     
     # Optional fields
     details: Mapped[Optional[dict]] = mapped_column(
-        JSONB, 
+        JSONType, 
         nullable=True,
         default=dict
     )  # Additional context (e.g., previous values, IP address)

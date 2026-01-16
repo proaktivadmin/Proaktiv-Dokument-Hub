@@ -5,14 +5,13 @@ Represents reusable HTML/Vitec code snippets for template building.
 """
 
 from sqlalchemy import String, Text, Integer, DateTime, Index
-from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.sql import func
 from sqlalchemy.orm import Mapped, mapped_column
 from datetime import datetime
 from typing import Optional, List
 import uuid
 
-from app.models.base import Base
+from app.models.base import Base, GUID, JSONType
 
 
 class CodePattern(Base):
@@ -27,9 +26,9 @@ class CodePattern(Base):
     
     # Primary key
     id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID,
         primary_key=True,
-        default=uuid.uuid4
+        default=lambda: str(uuid.uuid4())
     )
     
     # Pattern identification
@@ -40,7 +39,7 @@ class CodePattern(Base):
     # Content
     html_code: Mapped[str] = mapped_column(Text, nullable=False)
     variables_used: Mapped[Optional[List[str]]] = mapped_column(
-        JSONB,
+        JSONType,
         nullable=True,
         default=list
     )

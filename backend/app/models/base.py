@@ -1,9 +1,13 @@
 """
 SQLAlchemy Base Model Configuration
+
+Provides cross-database compatible type aliases for PostgreSQL and SQLite.
 """
 
 from sqlalchemy.orm import DeclarativeBase, declared_attr
-from sqlalchemy import MetaData
+from sqlalchemy import MetaData, JSON, String, Text
+from sqlalchemy.dialects import postgresql
+import uuid as uuid_module
 
 # Naming convention for constraints (helps with Alembic migrations)
 convention = {
@@ -15,6 +19,13 @@ convention = {
 }
 
 metadata = MetaData(naming_convention=convention)
+
+
+# Cross-database compatible types
+# These use PostgreSQL-optimized types on PostgreSQL, but fall back to compatible types on SQLite
+GUID = String(36).with_variant(postgresql.UUID(as_uuid=True), "postgresql")
+JSONType = JSON().with_variant(postgresql.JSONB(), "postgresql")
+ArrayType = JSON  # Store arrays as JSON (works on all databases)
 
 
 class Base(DeclarativeBase):

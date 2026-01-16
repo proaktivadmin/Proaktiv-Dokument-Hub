@@ -3,14 +3,13 @@ Category SQLAlchemy Model
 """
 
 from sqlalchemy import String, Text, Integer, DateTime, Index
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from sqlalchemy.sql import func
 from datetime import datetime
 from typing import Optional, List, TYPE_CHECKING
 import uuid
 
-from app.models.base import Base
+from app.models.base import Base, GUID
 
 if TYPE_CHECKING:
     from app.models.template import Template
@@ -28,9 +27,9 @@ class Category(Base):
     
     # Primary key
     id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), 
+        GUID, 
         primary_key=True, 
-        default=uuid.uuid4
+        default=lambda: str(uuid.uuid4())
     )
     
     # Required fields

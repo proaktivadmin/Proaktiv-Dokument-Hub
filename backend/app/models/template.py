@@ -5,7 +5,6 @@ Template and TemplateVersion SQLAlchemy Models
 from sqlalchemy import (
     Column, String, Text, BigInteger, Integer, DateTime, ForeignKey, Table, Index, Numeric
 )
-from sqlalchemy.dialects.postgresql import UUID, ARRAY, JSONB
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from sqlalchemy.sql import func
 from datetime import datetime
@@ -13,23 +12,23 @@ from typing import Optional, List
 from decimal import Decimal
 import uuid
 
-from app.models.base import Base
+from app.models.base import Base, GUID, JSONType
 
 
 # Junction table: Template <-> Tag (many-to-many)
 template_tags = Table(
     "template_tags",
     Base.metadata,
-    Column("template_id", UUID(as_uuid=True), ForeignKey("templates.id", ondelete="CASCADE"), primary_key=True),
-    Column("tag_id", UUID(as_uuid=True), ForeignKey("tags.id", ondelete="CASCADE"), primary_key=True),
+    Column("template_id", GUID, ForeignKey("templates.id", ondelete="CASCADE"), primary_key=True),
+    Column("tag_id", GUID, ForeignKey("tags.id", ondelete="CASCADE"), primary_key=True),
 )
 
 # Junction table: Template <-> Category (many-to-many)
 template_categories = Table(
     "template_categories",
     Base.metadata,
-    Column("template_id", UUID(as_uuid=True), ForeignKey("templates.id", ondelete="CASCADE"), primary_key=True),
-    Column("category_id", UUID(as_uuid=True), ForeignKey("categories.id", ondelete="CASCADE"), primary_key=True),
+    Column("template_id", GUID, ForeignKey("templates.id", ondelete="CASCADE"), primary_key=True),
+    Column("category_id", GUID, ForeignKey("categories.id", ondelete="CASCADE"), primary_key=True),
 )
 
 
@@ -44,9 +43,9 @@ class Template(Base):
     
     # Primary key
     id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), 
+        GUID, 
         primary_key=True, 
-        default=uuid.uuid4
+        default=lambda: str(uuid.uuid4())
     )
     
     # Required fields
@@ -70,15 +69,15 @@ class Template(Base):
     # HTML content storage (for HTML templates)
     content: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     
-    # Array and JSON fields
+    # Array and JSON fields (using cross-database compatible types)
     vitec_merge_fields: Mapped[Optional[List[str]]] = mapped_column(
-        ARRAY(Text), 
+        JSONType, 
         nullable=True,
         default=list
     )
     metadata_json: Mapped[Optional[dict]] = mapped_column(
         "metadata",
-        JSONB, 
+        JSONType, 
         nullable=True,
         default=dict
     )
@@ -89,27 +88,27 @@ class Template(Base):
     receiver_type: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
     receiver: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
     extra_receivers: Mapped[Optional[List[str]]] = mapped_column(
-        JSONB,
+        JSONType,
         nullable=True,
         default=list
     )
     phases: Mapped[Optional[List[str]]] = mapped_column(
-        JSONB,
+        JSONType,
         nullable=True,
         default=list
     )
     assignment_types: Mapped[Optional[List[str]]] = mapped_column(
-        JSONB,
+        JSONType,
         nullable=True,
         default=list
     )
     ownership_types: Mapped[Optional[List[str]]] = mapped_column(
-        JSONB,
+        JSONType,
         nullable=True,
         default=list
     )
     departments: Mapped[Optional[List[str]]] = mapped_column(
-        JSONB,
+        JSONType,
         nullable=True,
         default=list
     )
@@ -117,12 +116,12 @@ class Template(Base):
     
     # Layout References
     header_template_id: Mapped[Optional[uuid.UUID]] = mapped_column(
-        UUID(as_uuid=True),
+        GUID,
         ForeignKey("layout_partials.id", ondelete="SET NULL"),
         nullable=True
     )
     footer_template_id: Mapped[Optional[uuid.UUID]] = mapped_column(
-        UUID(as_uuid=True),
+        GUID,
         ForeignKey("layout_partials.id", ondelete="SET NULL"),
         nullable=True
     )
@@ -206,14 +205,14 @@ class TemplateVersion(Base):
     
     # Primary key
     id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), 
+        GUID, 
         primary_key=True, 
-        default=uuid.uuid4
+        default=lambda: str(uuid.uuid4())
     )
     
     # Foreign key
     template_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID,
         ForeignKey("templates.id", ondelete="CASCADE"),
         nullable=False
     )

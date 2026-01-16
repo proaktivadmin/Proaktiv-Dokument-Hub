@@ -5,13 +5,12 @@ Represents reusable header and footer templates.
 """
 
 from sqlalchemy import String, Text, Boolean, DateTime, Index, CheckConstraint
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 from sqlalchemy.orm import Mapped, mapped_column
 from datetime import datetime
 import uuid
 
-from app.models.base import Base
+from app.models.base import Base, GUID
 
 
 class LayoutPartial(Base):
@@ -26,9 +25,9 @@ class LayoutPartial(Base):
     
     # Primary key
     id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        GUID,
         primary_key=True,
-        default=uuid.uuid4
+        default=lambda: str(uuid.uuid4())
     )
     
     # Partial identification
