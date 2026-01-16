@@ -3,8 +3,8 @@ set -e
 
 echo "🚀 Starting Proaktiv Dokument Hub Backend..."
 
-# Railway fast-path: Just run Alembic and start server
-if [[ "$PLATFORM" == "railway" ]] || [[ "$RAILWAY_ENVIRONMENT" != "" ]]; then
+# Check if we're on Railway (multiple detection methods)
+if [[ "$PLATFORM" == "railway" ]] || [[ -n "$RAILWAY_PROJECT_ID" ]] || [[ -n "$RAILWAY_SERVICE_ID" ]] || [[ -n "$RAILWAY_ENVIRONMENT_ID" ]]; then
     echo "🚂 Railway platform detected - using fast startup"
     cd /app
     
@@ -20,9 +20,11 @@ fi
 
 # Non-Railway path (Azure, local Docker, etc.)
 
-# Skip PostgreSQL wait in SQLite mode
+# Skip PostgreSQL wait in SQLite mode or Docker Compose (Postgres already connected)
 if [[ "$DATABASE_URL" == sqlite* ]]; then
     echo "📦 SQLite mode detected - skipping database wait"
+elif [[ -n "$POSTGRES_DB" ]]; then
+    echo "🐘 Docker Compose detected - Postgres is ready via docker network"
 else
     echo "⏳ Waiting for PostgreSQL database..."
     while ! nc -z ${DB_HOST:-db} ${DB_PORT:-5432}; do
