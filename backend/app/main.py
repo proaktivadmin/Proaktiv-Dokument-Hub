@@ -14,7 +14,7 @@ import logging
 from app.config import settings
 from app.database import init_db, close_db
 from app.routers import templates, tags, categories, analytics, health, sanitizer
-from app.routers import merge_fields, code_patterns, layout_partials, dashboard
+from app.routers import merge_fields, code_patterns, layout_partials, dashboard, admin
 
 # Configure logging
 logging.basicConfig(
@@ -45,17 +45,30 @@ app = FastAPI(
 )
 
 # CORS Configuration
+# Parse allowed origins from environment or use defaults
+import json
+try:
+    allowed_origins = json.loads(settings.ALLOWED_ORIGINS)
+except (json.JSONDecodeError, TypeError):
+    allowed_origins = ["http://localhost:3000"]
+
+# Add common development and deployment origins
+default_origins = [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "http://frontend:3000",
+    "https://dokumenthub.proaktiv.no",
+    # Azure Container Apps URLs (legacy)
+    "https://dokumenthub-web.greenmushroom-2067e5c8.norwayeast.azurecontainerapps.io",
+    "https://dokumenthub-api.greenmushroom-2067e5c8.norwayeast.azurecontainerapps.io",
+]
+
+# Merge allowed origins
+all_origins = list(set(allowed_origins + default_origins))
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://localhost:3001",
-        "http://frontend:3000",
-        "https://dokumenthub.proaktiv.no",
-        # Azure Container Apps URLs
-        "https://dokumenthub-web.greenmushroom-2067e5c8.norwayeast.azurecontainerapps.io",
-        "https://dokumenthub-api.greenmushroom-2067e5c8.norwayeast.azurecontainerapps.io",
-    ],
+    allow_origins=all_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -74,6 +87,7 @@ app.include_router(merge_fields.router, prefix="/api", tags=["Merge Fields"])
 app.include_router(code_patterns.router, prefix="/api", tags=["Code Patterns"])
 app.include_router(layout_partials.router, prefix="/api", tags=["Layout Partials"])
 app.include_router(dashboard.router, prefix="/api", tags=["Dashboard"])
+app.include_router(admin.router, tags=["Admin"])
 
 
 @app.get("/")

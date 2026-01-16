@@ -47,13 +47,18 @@ class Settings(BaseSettings):
     # Database
     DATABASE_URL: str = "postgresql://postgres:postgres@db:5432/dokument_hub"
     
-    # Azure Storage
+    # Platform indicator (railway, vercel, azure)
+    PLATFORM: str = "railway"
+    
+    # Azure Storage (DEPRECATED - kept for backward compatibility)
+    # Template content is now stored in the database.
+    # These variables are only used if PLATFORM is "azure" for rollback.
     AZURE_STORAGE_CONNECTION_STRING: str = ""
     AZURE_STORAGE_CONTAINER_NAME: str = "templates"
     AZURE_CONTAINER_NAME: str = "templates"  # Alias
     AZURE_STORAGE_PREVIEWS_CONTAINER: str = "previews"
     
-    # Azure Key Vault (Phase 2)
+    # Azure Key Vault (DEPRECATED)
     KEY_VAULT_URL: str = ""
     
     # Redis Cache (Optional)

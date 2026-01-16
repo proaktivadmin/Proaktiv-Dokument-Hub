@@ -1,8 +1,25 @@
 """
 Azure Blob Storage Service
 
+DEPRECATED: Template content is now stored directly in the database.
+This service is kept for backward compatibility and potential rollback to Azure.
+
+For new code, use TemplateContentService instead:
+    from app.services.template_content_service import TemplateContentService
+
 Handles file uploads, downloads, and management in Azure Blob Storage.
 """
+
+import warnings
+
+# Emit deprecation warning when module is imported
+warnings.warn(
+    "azure_storage_service is deprecated. "
+    "Template content is now stored in the database. "
+    "Use TemplateContentService for template content operations.",
+    DeprecationWarning,
+    stacklevel=2
+)
 
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient, ContentSettings
 from azure.core.exceptions import AzureError, ResourceNotFoundError
