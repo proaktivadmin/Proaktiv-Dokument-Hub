@@ -54,9 +54,12 @@ async def check_and_seed():
 asyncio.run(check_and_seed())
 "
 
-# Sync templates from Azure Blob Storage
-echo "☁️ Syncing templates from Azure Storage..."
-python -c "
+# Sync templates from Azure Blob Storage (skip on Railway - templates stored in DB)
+if [[ "$PLATFORM" == "railway" ]] || [[ "$RAILWAY_ENVIRONMENT" != "" ]]; then
+    echo "🚂 Railway platform detected - skipping Azure sync (templates in DB)"
+else
+    echo "☁️ Syncing templates from Azure Storage..."
+    python -c "
 import asyncio
 import sys
 import warnings
@@ -129,6 +132,7 @@ async def sync_templates():
 
 asyncio.run(sync_templates())
 "
+fi
 
 # Start the application
 echo "🌐 Starting FastAPI server on port ${PORT:-8000}..."
