@@ -11,11 +11,10 @@ import type {
   UpdateTemplateSettingsResponse,
   GenerateThumbnailResponse,
 } from '@/types/v2';
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
+import { getApiBaseUrl } from './config';
 
 const api = axios.create({
-  baseURL: `${API_BASE_URL}/api`,
+  baseURL: `${getApiBaseUrl()}/api`,
 });
 
 export const templateSettingsApi = {

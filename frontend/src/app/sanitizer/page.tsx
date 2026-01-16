@@ -22,8 +22,9 @@ import { Separator } from "@/components/ui/separator";
 import { TemplatePreview } from "@/components/templates/TemplatePreview";
 import { useTemplates } from "@/hooks/useTemplates";
 import { templateApi } from "@/lib/api";
+import { getApiBaseUrl } from "@/lib/api/config";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_URL = getApiBaseUrl() || "http://localhost:8000";
 
 interface ValidationResult {
   has_vitec_wrapper: boolean;

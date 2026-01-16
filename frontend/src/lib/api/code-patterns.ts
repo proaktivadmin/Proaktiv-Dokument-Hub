@@ -9,12 +9,10 @@ import type {
   CodePatternUpdate,
   CodePatternListResponse,
 } from "@/types/v2";
-
-// Use relative URLs - requests go through Next.js rewrites to the backend
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
+import { getApiBaseUrl } from "./config";
 
 const api = axios.create({
-  baseURL: `${API_BASE_URL}/api`,
+  baseURL: `${getApiBaseUrl()}/api`,
 });
 
 export interface CodePatternListParams {
