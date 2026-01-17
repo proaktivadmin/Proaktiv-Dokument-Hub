@@ -15,7 +15,7 @@ from app.routers.auth import verify_session_token
 # Routes that don't require authentication
 PUBLIC_ROUTES = [
     "/api/auth/login",
-    "/api/auth/logout", 
+    "/api/auth/logout",
     "/api/auth/status",
     "/api/auth/check",
     "/api/health",
@@ -24,6 +24,10 @@ PUBLIC_ROUTES = [
     "/redoc",
     "/openapi.json",
     "/",
+    # Sanitizer endpoints - stateless HTML transformation, no sensitive data
+    "/api/sanitize/preview",
+    "/api/sanitize/validate",
+    "/api/sanitize/strip-styles",
 ]
 
 # CORS headers to add to 401 responses
