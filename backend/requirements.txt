@@ -28,5 +28,4 @@ python-jose[cryptography]==3.3.0
 beautifulsoup4==4.12.3
 lxml==5.1.0
 
-# WebDAV Client
-webdavclient3==3.14.6
+# Note: WebDAV uses httpx with DigestAuth (no separate webdav library needed)

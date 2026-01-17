@@ -3,26 +3,21 @@ WebDAV Storage Service
 
 Provides access to network storage via WebDAV protocol.
 Supports browsing, downloading, uploading, and file management operations.
+
+Uses httpx with Digest authentication for servers that require it.
 """
 
 import logging
 from typing import Optional, List, Dict, Any
 from dataclasses import dataclass
 from datetime import datetime
-from functools import lru_cache
-import asyncio
-from concurrent.futures import ThreadPoolExecutor
+import xml.etree.ElementTree as ET
 
-from webdav3.client import Client
-from webdav3.exceptions import WebDavException
+import httpx
 
 from app.config import settings
 
 logger = logging.getLogger(__name__)
-
-# Thread pool for running sync WebDAV operations
-_executor = ThreadPoolExecutor(max_workers=4)
-
 
 @dataclass
 class StorageItem:
@@ -49,13 +44,14 @@ class WebDAVService:
     """
     Service for interacting with WebDAV network storage.
     
-    All operations are wrapped to run in a thread pool since
-    webdavclient3 is synchronous.
+    Uses httpx with Digest authentication for compatibility with
+    servers that require it (like IIS-based WebDAV).
     """
     
     def __init__(self):
-        self._client: Optional[Client] = None
         self._configured = False
+        self._base_url = ""
+        self._auth: Optional[httpx.DigestAuth] = None
         self._initialize()
     
     def _initialize(self):
@@ -69,14 +65,10 @@ class WebDAVService:
             return
         
         try:
-            options = {
-                "webdav_hostname": settings.WEBDAV_URL,
-                "webdav_login": settings.WEBDAV_USERNAME,
-                "webdav_password": settings.WEBDAV_PASSWORD,
-            }
-            self._client = Client(options)
+            self._base_url = settings.WEBDAV_URL.rstrip("/")
+            self._auth = httpx.DigestAuth(settings.WEBDAV_USERNAME, settings.WEBDAV_PASSWORD)
             self._configured = True
-            logger.info(f"WebDAV client configured for: {settings.WEBDAV_URL}")
+            logger.info(f"WebDAV client configured for: {settings.WEBDAV_URL} (Digest auth)")
         except Exception as e:
             logger.error(f"Failed to initialize WebDAV client: {e}")
             self._configured = False
@@ -84,12 +76,116 @@ class WebDAVService:
     @property
     def is_configured(self) -> bool:
         """Check if WebDAV is properly configured."""
-        return self._configured and self._client is not None
+        return self._configured and self._auth is not None
     
-    async def _run_sync(self, func, *args, **kwargs):
-        """Run a synchronous function in the thread pool."""
-        loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(_executor, lambda: func(*args, **kwargs))
+    def _get_client(self) -> httpx.AsyncClient:
+        """Get an async HTTP client with digest auth."""
+        return httpx.AsyncClient(
+            auth=self._auth,
+            timeout=30.0,
+            follow_redirects=True
+        )
+    
+    def _parse_propfind_response(self, xml_text: str, base_path: str) -> List[StorageItem]:
+        """Parse WebDAV PROPFIND XML response into StorageItem list."""
+        items = []
+        
+        try:
+            # Parse XML
+            root = ET.fromstring(xml_text)
+            
+            # WebDAV namespace
+            ns = {
+                'd': 'DAV:',
+            }
+            
+            # Find all response elements
+            for response in root.findall('.//d:response', ns):
+                href_elem = response.find('d:href', ns)
+                if href_elem is None:
+                    continue
+                
+                href = href_elem.text or ""
+                
+                # Get properties
+                propstat = response.find('d:propstat', ns)
+                if propstat is None:
+                    continue
+                
+                prop = propstat.find('d:prop', ns)
+                if prop is None:
+                    continue
+                
+                # Check if directory
+                resourcetype = prop.find('d:resourcetype', ns)
+                is_dir = resourcetype is not None and resourcetype.find('d:collection', ns) is not None
+                
+                # Get display name or extract from href
+                displayname = prop.find('d:displayname', ns)
+                if displayname is not None and displayname.text:
+                    name = displayname.text
+                else:
+                    # Extract name from href
+                    name = href.rstrip('/').split('/')[-1]
+                    # URL decode
+                    from urllib.parse import unquote
+                    name = unquote(name)
+                
+                # Skip if no name or it's the current directory
+                if not name:
+                    continue
+                
+                # Get size
+                size = 0
+                content_length = prop.find('d:getcontentlength', ns)
+                if content_length is not None and content_length.text:
+                    try:
+                        size = int(content_length.text)
+                    except ValueError:
+                        pass
+                
+                # Get modified date
+                modified = None
+                lastmodified = prop.find('d:getlastmodified', ns)
+                if lastmodified is not None and lastmodified.text:
+                    try:
+                        from email.utils import parsedate_to_datetime
+                        modified = parsedate_to_datetime(lastmodified.text)
+                    except Exception:
+                        pass
+                
+                # Get content type
+                content_type = None
+                contenttype = prop.find('d:getcontenttype', ns)
+                if contenttype is not None:
+                    content_type = contenttype.text
+                
+                # Build path
+                from urllib.parse import unquote, urlparse
+                parsed_href = urlparse(href)
+                item_path = unquote(parsed_href.path) if parsed_href.path else href
+                
+                # Skip the current directory itself
+                clean_base = base_path.rstrip('/')
+                clean_item = item_path.rstrip('/')
+                if clean_item == clean_base or clean_item == '':
+                    continue
+                
+                items.append(StorageItem(
+                    name=name,
+                    path=item_path,
+                    is_directory=is_dir,
+                    size=size,
+                    modified=modified,
+                    content_type=content_type,
+                ))
+                
+        except ET.ParseError as e:
+            logger.error(f"Failed to parse PROPFIND response: {e}")
+        
+        # Sort: directories first, then by name
+        items.sort(key=lambda x: (not x.is_directory, x.name.lower()))
+        return items
     
     async def check_connection(self) -> bool:
         """Test the WebDAV connection."""
@@ -97,13 +193,16 @@ class WebDAVService:
             return False
         
         try:
-            await self._run_sync(self._client.check)
-            return True
-        except WebDavException as e:
-            logger.error(f"WebDAV connection check failed: {e}")
-            return False
+            async with self._get_client() as client:
+                # Try a simple PROPFIND on root
+                response = await client.request(
+                    "PROPFIND",
+                    f"{self._base_url}/",
+                    headers={"Depth": "0"},
+                )
+                return response.status_code in (200, 207)
         except Exception as e:
-            logger.error(f"Unexpected error checking WebDAV connection: {e}")
+            logger.error(f"WebDAV connection check failed: {e}")
             return False
     
     async def list_directory(self, path: str = "/") -> List[StorageItem]:
@@ -123,76 +222,34 @@ class WebDAVService:
         if not path.startswith("/"):
             path = "/" + path
         
+        # Ensure path ends with / for directory listing
+        if not path.endswith("/"):
+            path = path + "/"
+        
         try:
-            # Ensure path ends with / for directory listing
-            if not path.endswith("/"):
-                path = path + "/"
-            
-            # Get list of items - try with get_info first, fallback to simple list
-            try:
-                items = await self._run_sync(self._client.list, path, get_info=True)
-            except Exception as e:
-                logger.warning(f"get_info=True failed, trying simple list: {e}")
-                items = await self._run_sync(self._client.list, path)
-            
-            logger.info(f"WebDAV list returned {len(items) if items else 0} items for path: {path}")
-            logger.info(f"Raw items: {items}")
-            
-            result = []
-            for item in items:
-                # Skip the current directory entry
-                if isinstance(item, dict):
-                    name = item.get("name", "")
-                    item_path = item.get("path", "")
-                else:
-                    # Sometimes returns just strings
-                    name = str(item)
-                    item_path = f"{path.rstrip('/')}/{item}"
+            async with self._get_client() as client:
+                url = f"{self._base_url}{path}"
+                logger.info(f"PROPFIND request to: {url}")
                 
-                # Skip parent directory references and current directory
-                if not name or name == "." or name == ".." or name == "/":
-                    continue
+                response = await client.request(
+                    "PROPFIND",
+                    url,
+                    headers={"Depth": "1"},
+                )
                 
-                # Skip if the item path is the same as the requested path (current dir)
-                clean_path = path.rstrip("/")
-                clean_item_path = item_path.rstrip("/")
-                if clean_item_path == clean_path or clean_item_path == "":
-                    continue
+                logger.info(f"PROPFIND response status: {response.status_code}")
                 
-                # Determine if directory (ends with /)
-                is_dir = name.endswith("/") or item_path.endswith("/")
-                name = name.rstrip("/")
-                item_path = item_path.rstrip("/")
+                if response.status_code not in (200, 207):
+                    logger.error(f"PROPFIND failed with status {response.status_code}: {response.text[:500]}")
+                    raise RuntimeError(f"Failed to list directory: HTTP {response.status_code}")
                 
-                # Get additional info if available
-                size = 0
-                modified = None
-                content_type = None
+                # Parse the XML response
+                items = self._parse_propfind_response(response.text, path)
+                logger.info(f"Parsed {len(items)} items from PROPFIND response")
                 
-                if isinstance(item, dict):
-                    size = int(item.get("size", 0) or 0)
-                    modified_str = item.get("modified")
-                    if modified_str:
-                        try:
-                            modified = datetime.fromisoformat(modified_str.replace("Z", "+00:00"))
-                        except (ValueError, AttributeError):
-                            pass
-                    content_type = item.get("content_type")
+                return items
                 
-                result.append(StorageItem(
-                    name=name,
-                    path=item_path,
-                    is_directory=is_dir,
-                    size=size,
-                    modified=modified,
-                    content_type=content_type,
-                ))
-            
-            # Sort: directories first, then by name
-            result.sort(key=lambda x: (not x.is_directory, x.name.lower()))
-            return result
-            
-        except WebDavException as e:
+        except httpx.HTTPError as e:
             logger.error(f"Failed to list directory {path}: {e}")
             raise RuntimeError(f"Failed to list directory: {e}")
     
@@ -210,31 +267,21 @@ class WebDAVService:
             raise RuntimeError("WebDAV not configured")
         
         try:
-            info = await self._run_sync(self._client.info, path)
-            
-            if not info:
-                return None
-            
-            name = path.rstrip("/").split("/")[-1]
-            is_dir = info.get("isdir", False) or path.endswith("/")
-            
-            modified = None
-            modified_str = info.get("modified")
-            if modified_str:
-                try:
-                    modified = datetime.fromisoformat(modified_str.replace("Z", "+00:00"))
-                except (ValueError, AttributeError):
-                    pass
-            
-            return StorageItem(
-                name=name,
-                path=path,
-                is_directory=is_dir,
-                size=int(info.get("size", 0) or 0),
-                modified=modified,
-                content_type=info.get("content_type"),
-            )
-        except WebDavException as e:
+            async with self._get_client() as client:
+                url = f"{self._base_url}{path}"
+                response = await client.request(
+                    "PROPFIND",
+                    url,
+                    headers={"Depth": "0"},
+                )
+                
+                if response.status_code not in (200, 207):
+                    return None
+                
+                items = self._parse_propfind_response(response.text, path)
+                return items[0] if items else None
+                
+        except Exception as e:
             logger.error(f"Failed to get info for {path}: {e}")
             return None
     
@@ -252,21 +299,20 @@ class WebDAVService:
             raise RuntimeError("WebDAV not configured")
         
         try:
-            # webdavclient3 requires downloading to a buffer or file
-            import io
-            buffer = io.BytesIO()
-            
-            def download():
-                self._client.download_from(buffer, path)
-                return buffer.getvalue()
-            
-            return await self._run_sync(download)
-            
-        except WebDavException as e:
+            async with self._get_client() as client:
+                url = f"{self._base_url}{path}"
+                response = await client.get(url)
+                
+                if response.status_code != 200:
+                    raise RuntimeError(f"Download failed: HTTP {response.status_code}")
+                
+                return response.content
+                
+        except httpx.HTTPError as e:
             logger.error(f"Failed to download {path}: {e}")
             raise RuntimeError(f"Failed to download file: {e}")
     
-    async def upload_file(self, path: str, content: bytes, content_type: str = None) -> bool:
+    async def upload_file(self, path: str, content: bytes, content_type: Optional[str] = None) -> bool:
         """
         Upload a file to storage.
         
@@ -282,14 +328,21 @@ class WebDAVService:
             raise RuntimeError("WebDAV not configured")
         
         try:
-            import io
-            buffer = io.BytesIO(content)
-            
-            await self._run_sync(self._client.upload_to, buffer, path)
-            logger.info(f"Uploaded file to {path}")
-            return True
-            
-        except WebDavException as e:
+            async with self._get_client() as client:
+                url = f"{self._base_url}{path}"
+                headers = {}
+                if content_type:
+                    headers["Content-Type"] = content_type
+                
+                response = await client.put(url, content=content, headers=headers)
+                
+                if response.status_code not in (200, 201, 204):
+                    raise RuntimeError(f"Upload failed: HTTP {response.status_code}")
+                
+                logger.info(f"Uploaded file to {path}")
+                return True
+                
+        except httpx.HTTPError as e:
             logger.error(f"Failed to upload to {path}: {e}")
             raise RuntimeError(f"Failed to upload file: {e}")
     
@@ -307,11 +360,17 @@ class WebDAVService:
             raise RuntimeError("WebDAV not configured")
         
         try:
-            await self._run_sync(self._client.mkdir, path)
-            logger.info(f"Created directory: {path}")
-            return True
-            
-        except WebDavException as e:
+            async with self._get_client() as client:
+                url = f"{self._base_url}{path}"
+                response = await client.request("MKCOL", url)
+                
+                if response.status_code not in (200, 201):
+                    raise RuntimeError(f"MKCOL failed: HTTP {response.status_code}")
+                
+                logger.info(f"Created directory: {path}")
+                return True
+                
+        except httpx.HTTPError as e:
             logger.error(f"Failed to create directory {path}: {e}")
             raise RuntimeError(f"Failed to create directory: {e}")
     
@@ -329,11 +388,17 @@ class WebDAVService:
             raise RuntimeError("WebDAV not configured")
         
         try:
-            await self._run_sync(self._client.clean, path)
-            logger.info(f"Deleted: {path}")
-            return True
-            
-        except WebDavException as e:
+            async with self._get_client() as client:
+                url = f"{self._base_url}{path}"
+                response = await client.delete(url)
+                
+                if response.status_code not in (200, 204):
+                    raise RuntimeError(f"DELETE failed: HTTP {response.status_code}")
+                
+                logger.info(f"Deleted: {path}")
+                return True
+                
+        except httpx.HTTPError as e:
             logger.error(f"Failed to delete {path}: {e}")
             raise RuntimeError(f"Failed to delete: {e}")
     
@@ -352,11 +417,23 @@ class WebDAVService:
             raise RuntimeError("WebDAV not configured")
         
         try:
-            await self._run_sync(self._client.move, source, destination)
-            logger.info(f"Moved {source} to {destination}")
-            return True
-            
-        except WebDavException as e:
+            async with self._get_client() as client:
+                src_url = f"{self._base_url}{source}"
+                dest_url = f"{self._base_url}{destination}"
+                
+                response = await client.request(
+                    "MOVE",
+                    src_url,
+                    headers={"Destination": dest_url}
+                )
+                
+                if response.status_code not in (200, 201, 204):
+                    raise RuntimeError(f"MOVE failed: HTTP {response.status_code}")
+                
+                logger.info(f"Moved {source} to {destination}")
+                return True
+                
+        except httpx.HTTPError as e:
             logger.error(f"Failed to move {source} to {destination}: {e}")
             raise RuntimeError(f"Failed to move: {e}")
     
@@ -375,11 +452,23 @@ class WebDAVService:
             raise RuntimeError("WebDAV not configured")
         
         try:
-            await self._run_sync(self._client.copy, source, destination)
-            logger.info(f"Copied {source} to {destination}")
-            return True
-            
-        except WebDavException as e:
+            async with self._get_client() as client:
+                src_url = f"{self._base_url}{source}"
+                dest_url = f"{self._base_url}{destination}"
+                
+                response = await client.request(
+                    "COPY",
+                    src_url,
+                    headers={"Destination": dest_url}
+                )
+                
+                if response.status_code not in (200, 201, 204):
+                    raise RuntimeError(f"COPY failed: HTTP {response.status_code}")
+                
+                logger.info(f"Copied {source} to {destination}")
+                return True
+                
+        except httpx.HTTPError as e:
             logger.error(f"Failed to copy {source} to {destination}: {e}")
             raise RuntimeError(f"Failed to copy: {e}")
     
@@ -397,8 +486,15 @@ class WebDAVService:
             raise RuntimeError("WebDAV not configured")
         
         try:
-            return await self._run_sync(self._client.check, path)
-        except WebDavException:
+            async with self._get_client() as client:
+                url = f"{self._base_url}{path}"
+                response = await client.request(
+                    "PROPFIND",
+                    url,
+                    headers={"Depth": "0"}
+                )
+                return response.status_code in (200, 207)
+        except Exception:
             return False
 
 
