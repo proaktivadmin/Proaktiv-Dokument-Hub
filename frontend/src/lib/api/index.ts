@@ -1,4 +1,4 @@
-﻿/**
+/**
  * V2 API Clients - Barrel Export
  */
 
@@ -9,6 +9,9 @@ export { templateAnalysisApi } from "./template-analysis";
 export { templateSettingsApi } from "./template-settings";
 export { dashboardApi } from "./dashboard";
 export { storageApi } from "./storage";
+
+// Re-export from main api.ts for backwards compatibility
+export { categoryApi, templateApi, analyticsApi } from "../api";
 
 // Re-export types for convenience
 export type { MergeFieldListParams } from "./merge-fields";

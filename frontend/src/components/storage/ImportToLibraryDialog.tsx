@@ -22,7 +22,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { storageApi, categoryApi, type StorageItem, type Category } from "@/lib/api";
+import { storageApi, categoryApi, type StorageItem } from "@/lib/api";
+import type { Category } from "@/types";
 
 interface ImportToLibraryDialogProps {
   open: boolean;
