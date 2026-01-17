@@ -5,9 +5,8 @@
  */
 
 import { useState } from "react";
-import { ArrowLeft, Variable, GitBranch, Layout, Wand2 } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Variable, GitBranch, Layout, Wand2 } from "lucide-react";
+import { Header } from "@/components/layout/Header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FlettekodeLibrary } from "@/components/flettekoder";
 import { VitecLogicSection } from "@/components/flettekoder/VitecLogicSection";
@@ -23,20 +22,7 @@ export default function FlettekodePage() {
 
   return (
     <div className="flex flex-col h-screen bg-background">
-      {/* Header */}
-      <header className="flex items-center gap-4 px-6 py-4 border-b bg-white">
-        <Link href="/">
-          <Button variant="ghost" size="icon">
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-        </Link>
-        <div>
-          <h1 className="text-xl font-semibold">Flettekoder</h1>
-          <p className="text-sm text-muted-foreground">
-            Søk og kopier Vitec flettekoder og kodemønstre
-          </p>
-        </div>
-      </header>
+      <Header />
 
       {/* Main content with tabs */}
       <main className="flex-1 overflow-hidden flex flex-col">

@@ -6,8 +6,8 @@
  */
 
 import { useState, useEffect } from "react";
-import { ArrowLeft, Wand2, Save, RotateCcw, Check, AlertTriangle } from "lucide-react";
-import Link from "next/link";
+import { Wand2, Save, RotateCcw, Check, AlertTriangle } from "lucide-react";
+import { Header } from "@/components/layout/Header";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
@@ -188,20 +188,7 @@ export default function SanitizerPage() {
 
   return (
     <div className="flex flex-col h-screen bg-background">
-      {/* Header */}
-      <header className="flex items-center gap-4 px-6 py-4 border-b bg-white">
-        <Link href="/">
-          <Button variant="ghost" size="icon">
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-        </Link>
-        <div className="flex-1">
-          <h1 className="text-xl font-semibold">Sanitizer</h1>
-          <p className="text-sm text-muted-foreground">
-            Rens inline CSS fra maler og standardiser stilen
-          </p>
-        </div>
-      </header>
+      <Header />
 
       {/* Controls */}
       <div className="border-b bg-gray-50 px-6 py-4">
