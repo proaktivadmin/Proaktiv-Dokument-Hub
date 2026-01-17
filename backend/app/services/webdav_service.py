@@ -387,12 +387,12 @@ class WebDAVService:
         
         try:
             async with self._get_client() as client:
-                # Try PROPFIND on the exact path (with trailing slash for directories)
+                # Build URL - use base_url for the host
                 url = f"{self._base_url}{clean_path}/"
                 logger.info(f"PROPFIND request to: {url}")
                 
                 # #region agent log
-                logger.info(f"[DEBUG-H7] PROPFIND attempt: url={url}, clean_path={clean_path}")
+                logger.info(f"[DEBUG-H8] PROPFIND attempt: url={url}")
                 # #endregion
                 
                 response = await client.request(
@@ -403,33 +403,34 @@ class WebDAVService:
                 
                 logger.info(f"PROPFIND response status: {response.status_code}")
                 
-                # Handle redirect - try the redirect location with PROPFIND
+                # If HTTPS fails with redirect, try HTTP (some WebDAV servers only work over HTTP)
                 if response.status_code in (301, 302, 303, 307, 308):
                     location = response.headers.get("Location", "")
                     logger.warning(f"PROPFIND got redirect to: {location}")
                     
                     # #region agent log
-                    logger.info(f"[DEBUG-H7] Redirect: from={url}, to={location}")
+                    logger.info(f"[DEBUG-H8] Got redirect, trying HTTP fallback")
                     # #endregion
                     
-                    if location:
-                        # Try PROPFIND on redirect location (ensure trailing slash)
-                        redirect_url = location if location.endswith('/') else location + '/'
+                    # Try HTTP version of the URL
+                    http_url = url.replace("https://", "http://")
+                    if http_url != url:
+                        logger.info(f"Trying HTTP fallback: {http_url}")
                         response = await client.request(
                             "PROPFIND",
-                            redirect_url,
+                            http_url,
                             headers={"Depth": "1"},
                         )
-                        logger.info(f"Redirect PROPFIND status: {response.status_code}")
+                        logger.info(f"HTTP fallback status: {response.status_code}")
                         
                         # #region agent log
-                        logger.info(f"[DEBUG-H7] After redirect: url={redirect_url}, status={response.status_code}, body_preview={response.text[:200]}")
+                        logger.info(f"[DEBUG-H8] HTTP fallback result: status={response.status_code}")
                         # #endregion
                 
                 if response.status_code not in (200, 207):
                     logger.error(f"PROPFIND failed: {response.status_code}")
                     # #region agent log
-                    logger.info(f"[DEBUG-H7] Failed response body: {response.text[:500]}")
+                    logger.info(f"[DEBUG-H8] Failed: status={response.status_code}, body={response.text[:300]}")
                     # #endregion
                     raise RuntimeError(f"Failed to list directory: HTTP {response.status_code}")
                 
