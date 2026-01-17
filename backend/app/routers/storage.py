@@ -150,39 +150,63 @@ async def debug_storage(
     
     try:
         from app.config import settings
+        import httpx
+        import base64
         
         results = {}
         
-        # Test different path formats
-        test_paths = [
-            path,
-            path.lstrip("/"),  # Without leading slash
-            path if path.endswith("/") else path + "/",  # With trailing slash
-            path.lstrip("/").rstrip("/") + "/" if path != "/" else "",  # No leading, with trailing
-        ]
-        
-        for tp in test_paths:
-            try:
-                raw_items = await service._run_sync(service._client.list, tp)
-                results[f"path_{tp or 'empty'}"] = {
-                    "items": raw_items,
-                    "count": len(raw_items) if raw_items else 0
-                }
-            except Exception as e:
-                results[f"path_{tp or 'empty'}"] = {"error": str(e)}
-        
-        # Also try to check if a known file exists
+        # Test webdavclient3 methods
         try:
-            exists = await service._run_sync(service._client.check, "Shared files/")
-            results["check_shared_files"] = exists
+            exists_shared = await service._run_sync(service._client.check, "Shared files/")
+            results["check_shared_files"] = exists_shared
         except Exception as e:
             results["check_shared_files"] = {"error": str(e)}
         
         try:
-            exists = await service._run_sync(service._client.check, "Files/")
-            results["check_files"] = exists
+            exists_files = await service._run_sync(service._client.check, "Files/")
+            results["check_files"] = exists_files
         except Exception as e:
             results["check_files"] = {"error": str(e)}
+        
+        # Try raw PROPFIND request
+        try:
+            auth_string = f"{settings.WEBDAV_USERNAME}:{settings.WEBDAV_PASSWORD}"
+            auth_bytes = base64.b64encode(auth_string.encode()).decode()
+            
+            headers = {
+                "Authorization": f"Basic {auth_bytes}",
+                "Depth": "1",
+                "Content-Type": "application/xml",
+            }
+            
+            propfind_body = """<?xml version="1.0" encoding="utf-8"?>
+<propfind xmlns="DAV:">
+  <prop>
+    <resourcetype/>
+    <getcontentlength/>
+    <getlastmodified/>
+  </prop>
+</propfind>"""
+            
+            url = settings.WEBDAV_URL.rstrip("/") + "/"
+            
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                response = await client.request(
+                    "PROPFIND",
+                    url,
+                    headers=headers,
+                    content=propfind_body
+                )
+                
+                results["propfind_status"] = response.status_code
+                results["propfind_headers"] = dict(response.headers)
+                # Truncate body if too long
+                body = response.text
+                results["propfind_body"] = body[:2000] if len(body) > 2000 else body
+                results["propfind_body_length"] = len(body)
+                
+        except Exception as e:
+            results["propfind_error"] = str(e)
         
         return {
             "webdav_url": settings.WEBDAV_URL,
