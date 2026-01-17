@@ -24,7 +24,6 @@ PUBLIC_ROUTES = [
     "/redoc",
     "/openapi.json",
     "/",
-    "/api/storage/debug",  # Temporary for debugging
 ]
 
 # CORS headers to add to 401 responses
