@@ -15,6 +15,7 @@ A document template management system for Norwegian real estate brokers, integra
 | **UI** | Shadcn/UI + Tailwind CSS |
 | **Hosting** | Railway (Frontend + Backend + PostgreSQL) |
 | **Storage** | WebDAV (proaktiv.no/d/) |
+| **Auth** | Password + JWT sessions (7-day expiry) |
 | **Status** | ✅ Production Live |
 
 ---
@@ -50,6 +51,15 @@ A document template management system for Norwegian real estate brokers, integra
 - SanitizerService enforces Vitec Stilark compliance
 - Layout partials for headers/footers/signatures
 - WebDAV storage for network file access
+
+### Authentication (V2.9)
+- Simple password-based authentication (single user)
+- JWT session tokens with 7-day expiry
+- Auth middleware protects all `/api/*` routes
+- Login page at `/login`
+- Logout button in header
+- **Disabled by default** - set `APP_PASSWORD_HASH` to enable
+- Generate hash: `python backend/scripts/generate_password_hash.py`
 
 ---
 
@@ -122,7 +132,10 @@ See `.cursor/active_context.md` for full status.
 - ✅ WebDAV storage integration
 - ✅ Storage browser UI
 - ✅ Layout partials for headers/footers/signatures
-- ⏳ WebDAV configuration pending (needs `/d/` path)
+- ✅ Password authentication system
+- ✅ Login page with JWT sessions
+- ✅ Railway CLI integration
+- ⏳ WebDAV needs PROPFIND enabled on server
 
 **V2.8 Railway Migration (Completed):**
 - ✅ Migrated from Azure to Railway
@@ -201,6 +214,22 @@ docker compose exec db psql -U postgres -d dokument_hub
 | Variable | Value |
 |----------|-------|
 | `DATABASE_URL` | Railway PostgreSQL connection |
+| `SECRET_KEY` | Random string (32+ chars) for JWT signing |
+| `APP_PASSWORD_HASH` | bcrypt hash - enables auth when set |
 | `WEBDAV_URL` | `http://proaktiv.no/d/` |
 | `WEBDAV_USERNAME` | (your username) |
 | `WEBDAV_PASSWORD` | (your password) |
+
+### Environment Variables (Frontend)
+| Variable | Value |
+|----------|-------|
+| `BACKEND_URL` | `https://proaktiv-dokument-hub-production.up.railway.app` |
+| `NEXT_PUBLIC_API_URL` | Same as BACKEND_URL |
+
+### Railway CLI
+```bash
+railway link          # Link to a service
+railway variables     # View environment variables
+railway redeploy      # Trigger redeploy
+railway logs          # View logs
+```

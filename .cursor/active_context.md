@@ -2,9 +2,9 @@
 
 ## PROJECT STATUS
 - **Phase:** 2.9 (Vitec Integration)
-- **Current Sprint:** V2.9 - Vitec Integration & WebDAV Storage
+- **Current Sprint:** V2.9 - Vitec Integration, WebDAV Storage & Authentication
 - **Architecture:** Document-first, shelf grouping, 4-tab viewer
-- **Last Milestone:** ✅ Railway Migration (2026-01-17)
+- **Last Milestone:** ✅ Authentication System (2026-01-17)
 - **Current Milestone:** Vitec Integration & WebDAV Storage
 
 ## V2.9 VITEC INTEGRATION (2026-01-17) - IN PROGRESS
@@ -19,19 +19,30 @@
 - ✅ Channel-aware layout partial selectors in settings
 - ✅ Inventory dashboard widget (sync status with Vitec)
 - ✅ Multiple bug fixes for Railway deployment
+- ✅ **Password Authentication System** (single-user, JWT sessions)
+- ✅ Login page with password protection
+- ✅ Auth middleware protecting all API routes
+- ✅ Logout button in header
+- ✅ Railway CLI integration for deployment management
 
 ### Pending Configuration
-- ⏳ WebDAV URL needs `/d/` path: `http://proaktiv.no/d/`
-- ⏳ Waiting for Railway redeploy with correct WebDAV config
+- ⏳ WebDAV server needs PROPFIND enabled for directory listing
+- ⏳ Contact web developer to enable WebDAV protocol support
 
 ### New Files Created
 | File | Purpose |
 |------|---------|
 | `backend/app/services/webdav_service.py` | WebDAV client wrapper |
 | `backend/app/routers/storage.py` | Storage API endpoints |
+| `backend/app/routers/auth.py` | Authentication endpoints (login/logout/status) |
+| `backend/app/middleware/auth.py` | JWT session validation middleware |
 | `backend/app/services/inventory_service.py` | Vitec template sync stats |
+| `backend/scripts/generate_password_hash.py` | CLI tool to generate bcrypt hashes |
 | `frontend/src/app/storage/page.tsx` | Storage browser page |
+| `frontend/src/app/login/page.tsx` | Password login page |
 | `frontend/src/components/storage/` | Storage UI components |
+| `frontend/src/components/auth/AuthProvider.tsx` | Auth guard wrapper |
+| `frontend/src/lib/api/auth.ts` | Auth API client |
 | `frontend/src/hooks/useLayoutPartials.ts` | Layout partials hook |
 | `frontend/src/hooks/useInventoryStats.ts` | Inventory stats hook |
 | `.cursor/vitec-reference.md` | Full Vitec Next reference |
@@ -123,9 +134,17 @@
 | Variable | Purpose |
 |----------|---------|
 | `DATABASE_URL` | PostgreSQL connection string |
+| `SECRET_KEY` | JWT signing key (32+ chars) |
+| `APP_PASSWORD_HASH` | bcrypt hash for app password (enables auth) |
 | `WEBDAV_URL` | WebDAV server URL (`http://proaktiv.no/d/`) |
 | `WEBDAV_USERNAME` | WebDAV login |
 | `WEBDAV_PASSWORD` | WebDAV password |
+
+### Environment Variables (Frontend)
+| Variable | Purpose |
+|----------|---------|
+| `BACKEND_URL` | Backend API URL for Next.js rewrites |
+| `NEXT_PUBLIC_API_URL` | Backend API URL for client-side calls |
 
 ### Deploy Process
 1. Push to `main` branch
