@@ -1,5 +1,10 @@
 """
 Pydantic schemas for Layout Partial operations.
+
+Supports:
+- header: Document headers for PDF templates
+- footer: Document footers for PDF templates  
+- signature: Email or SMS signatures
 """
 
 from pydantic import BaseModel, Field, ConfigDict
@@ -8,12 +13,18 @@ from uuid import UUID
 from datetime import datetime
 
 
+# Type definitions for layout partials
+LayoutPartialType = Literal['header', 'footer', 'signature']
+LayoutPartialContext = Literal['pdf', 'email', 'sms', 'all']
+
+
 class LayoutPartialBase(BaseModel):
     """Base schema for layout partial data."""
     name: str = Field(..., max_length=200, description="Partial name")
-    type: Literal['header', 'footer'] = Field(..., description="Partial type")
-    context: Literal['pdf', 'email', 'all'] = Field('all', description="Usage context")
+    type: LayoutPartialType = Field(..., description="Partial type: header, footer, or signature")
+    context: LayoutPartialContext = Field('all', description="Usage context: pdf, email, sms, or all")
     html_content: str = Field(..., description="HTML content")
+    document_type: Optional[str] = Field(None, max_length=50, description="Document type for specialized footers (kontrakt, skjote, etc.)")
 
 
 class LayoutPartialCreate(LayoutPartialBase):
@@ -24,9 +35,10 @@ class LayoutPartialCreate(LayoutPartialBase):
 class LayoutPartialUpdate(BaseModel):
     """Schema for updating a layout partial (all fields optional)."""
     name: Optional[str] = Field(None, max_length=200)
-    type: Optional[Literal['header', 'footer']] = None
-    context: Optional[Literal['pdf', 'email', 'all']] = None
+    type: Optional[LayoutPartialType] = None
+    context: Optional[LayoutPartialContext] = None
     html_content: Optional[str] = None
+    document_type: Optional[str] = Field(None, max_length=50)
     is_default: Optional[bool] = None
 
 
