@@ -254,6 +254,20 @@ class WebDAVService:
                 
                 logger.info(f"PROPFIND response status: {response.status_code}")
                 
+                # Handle redirect - log the location for debugging
+                if response.status_code in (301, 302, 303, 307, 308):
+                    location = response.headers.get("Location", "unknown")
+                    logger.warning(f"PROPFIND got redirect to: {location}")
+                    # Try following the redirect manually with PROPFIND
+                    if location and location.startswith(("http://", "https://")):
+                        logger.info(f"Following redirect with PROPFIND to: {location}")
+                        response = await client.request(
+                            "PROPFIND",
+                            location if location.endswith('/') else location + '/',
+                            headers={"Depth": "1"},
+                        )
+                        logger.info(f"Redirect PROPFIND response status: {response.status_code}")
+                
                 if response.status_code not in (200, 207):
                     logger.error(f"PROPFIND failed with status {response.status_code}: {response.text[:500]}")
                     raise RuntimeError(f"Failed to list directory: HTTP {response.status_code}")
