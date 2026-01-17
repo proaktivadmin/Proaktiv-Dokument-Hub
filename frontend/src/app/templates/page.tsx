@@ -36,14 +36,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { EditTemplateDialog } from "@/components/templates/EditTemplateDialog";
 import { PreviewDialog } from "@/components/templates/PreviewDialog";
 import { TemplateDetailSheet } from "@/components/templates/TemplateDetailSheet";
@@ -238,42 +230,10 @@ function TemplatesPageContent() {
       <Header onUploadSuccess={handleUploadSuccess} />
 
       <main className="container mx-auto px-6 py-8">
-        {/* Breadcrumb Navigation */}
-        <Breadcrumb className="mb-4">
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link href="/">Dashboard</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              {selectedCategory ? (
-                <BreadcrumbLink asChild>
-                  <Link href="/templates">Maler</Link>
-                </BreadcrumbLink>
-              ) : (
-                <BreadcrumbPage>Maler</BreadcrumbPage>
-              )}
-            </BreadcrumbItem>
-            {selectedCategory && (
-              <>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>
-                    {selectedCategory.icon && <span className="mr-1">{selectedCategory.icon}</span>}
-                    {selectedCategory.name}
-                  </BreadcrumbPage>
-                </BreadcrumbItem>
-              </>
-            )}
-          </BreadcrumbList>
-        </Breadcrumb>
-
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h2 className="text-2xl font-bold text-[#272630]">Maler</h2>
-            <p className="text-[#272630]/60 font-sans">Administrer alle dokumentmaler</p>
+            <h2 className="text-2xl font-bold text-foreground">Maler</h2>
+            <p className="text-muted-foreground">Administrer alle dokumentmaler</p>
           </div>
           
           {/* View mode toggle */}

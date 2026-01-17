@@ -2,16 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Building2, ChevronRight, Home } from "lucide-react";
+import { Building2 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { OfficeGrid, OfficeForm } from "@/components/offices";
 import { useOffices } from "@/hooks/v3/useOffices";
 import { officesApi } from "@/lib/api/offices";
@@ -57,30 +49,9 @@ export default function OfficesPage() {
     <div className="min-h-screen bg-background">
       <Header />
       <main className="container mx-auto px-6 py-8">
-      {/* Breadcrumb */}
-      <Breadcrumb className="mb-6">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/" className="flex items-center gap-1">
-              <Home className="h-4 w-4" />
-              Dashboard
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator>
-            <ChevronRight className="h-4 w-4" />
-          </BreadcrumbSeparator>
-          <BreadcrumbItem>
-            <BreadcrumbPage className="flex items-center gap-1">
-              <Building2 className="h-4 w-4" />
-              Kontorer
-            </BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold">Kontorer</h1>
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-foreground">Kontorer</h2>
         <p className="text-muted-foreground">
           Administrer kontorer, ansatte og markedsområder
         </p>

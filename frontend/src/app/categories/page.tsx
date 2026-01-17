@@ -8,7 +8,6 @@ import {
   Trash2,
   GripVertical,
   Folder,
-  ChevronRight,
   FileText,
   FileSpreadsheet,
   File,
@@ -44,14 +43,6 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -230,30 +221,9 @@ export default function CategoriesPage() {
       <Header />
 
       <main className="container mx-auto px-6 py-8">
-        {/* Breadcrumb */}
-        <Breadcrumb className="mb-6">
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/" className="flex items-center gap-1">
-                <Home className="h-4 w-4" />
-                Dashboard
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>
-              <ChevronRight className="h-4 w-4" />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbPage className="flex items-center gap-1">
-                <FolderTree className="h-4 w-4" />
-                Kategorier
-              </BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold">Kategorier</h1>
+            <h2 className="text-2xl font-bold text-foreground">Kategorier</h2>
             <p className="text-muted-foreground">Organiser malene dine i kategorier</p>
           </div>
           <Button onClick={() => setCreateDialogOpen(true)}>

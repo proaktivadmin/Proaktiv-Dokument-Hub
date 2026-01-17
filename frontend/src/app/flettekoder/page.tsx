@@ -5,16 +5,8 @@
  */
 
 import { useState } from "react";
-import { Variable, GitBranch, Layout, Wand2, Home, ChevronRight, Code2 } from "lucide-react";
+import { Variable, GitBranch, Layout, Wand2 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FlettekodeLibrary } from "@/components/flettekoder";
 import { VitecLogicSection } from "@/components/flettekoder/VitecLogicSection";
@@ -34,30 +26,11 @@ export default function FlettekodePage() {
 
       {/* Main content with tabs */}
       <main className="flex-1 overflow-hidden flex flex-col">
-        {/* Page header with breadcrumb */}
+        {/* Page header */}
         <div className="border-b bg-white">
-          <div className="container mx-auto px-6 py-4">
-          <Breadcrumb className="mb-3">
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/" className="flex items-center gap-1">
-                  <Home className="h-4 w-4" />
-                  Dashboard
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator>
-                <ChevronRight className="h-4 w-4" />
-              </BreadcrumbSeparator>
-              <BreadcrumbItem>
-                <BreadcrumbPage className="flex items-center gap-1">
-                  <Code2 className="h-4 w-4" />
-                  Flettekoder
-                </BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-          <h1 className="text-2xl font-bold">Flettekoder</h1>
-          <p className="text-muted-foreground">Søk og kopier Vitec flettekoder og kodemønstre</p>
+          <div className="container mx-auto px-6 py-6">
+            <h2 className="text-2xl font-bold text-foreground">Flettekoder</h2>
+            <p className="text-muted-foreground">Søk og kopier Vitec flettekoder og kodemønstre</p>
           </div>
         </div>
 

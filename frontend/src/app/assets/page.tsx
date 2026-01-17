@@ -1,16 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Image as ImageIcon, ChevronRight, Home, Building2, User } from "lucide-react";
+import { Image as ImageIcon, Building2, User } from "lucide-react";
 import { Header } from "@/components/layout/Header";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AssetGallery } from "@/components/assets";
@@ -33,30 +25,9 @@ export default function AssetsPage() {
     <div className="min-h-screen bg-background">
       <Header />
       <main className="container mx-auto px-6 py-8">
-      {/* Breadcrumb */}
-      <Breadcrumb className="mb-6">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/" className="flex items-center gap-1">
-              <Home className="h-4 w-4" />
-              Dashboard
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator>
-            <ChevronRight className="h-4 w-4" />
-          </BreadcrumbSeparator>
-          <BreadcrumbItem>
-            <BreadcrumbPage className="flex items-center gap-1">
-              <ImageIcon className="h-4 w-4" />
-              Mediefiler
-            </BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold">Mediefiler</h1>
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-foreground">Mediefiler</h2>
         <p className="text-muted-foreground">
           Administrer logoer, bilder og dokumenter for hele selskapet
         </p>
