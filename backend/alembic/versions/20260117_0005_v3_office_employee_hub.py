@@ -336,22 +336,22 @@ def upgrade() -> None:
     # ===========================================================================
     # Migration 12: Update layout_partials type constraint for 'signature' and 'stilark'
     # ===========================================================================
-    # Drop old constraint and add new one with additional types
-    op.drop_constraint('ck_layout_partial_type', 'layout_partials', type_='check')
+    # Drop old constraint (was renamed to _v2 in migration 0006) and add new one with additional types
+    op.drop_constraint('ck_layout_partial_type_v2', 'layout_partials', type_='check')
     op.create_check_constraint(
-        'ck_layout_partial_type',
+        'ck_layout_partial_type_v3',
         'layout_partials',
         "type IN ('header', 'footer', 'signature', 'stilark')"
     )
 
 
 def downgrade() -> None:
-    # Restore old layout_partials type constraint
-    op.drop_constraint('ck_layout_partial_type', 'layout_partials', type_='check')
+    # Restore old layout_partials type constraint (revert to _v2 name)
+    op.drop_constraint('ck_layout_partial_type_v3', 'layout_partials', type_='check')
     op.create_check_constraint(
-        'ck_layout_partial_type',
+        'ck_layout_partial_type_v2',
         'layout_partials',
-        "type IN ('header', 'footer')"
+        "type IN ('header', 'footer', 'signature')"
     )
     
     # Drop new tables in reverse order
