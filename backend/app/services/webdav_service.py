@@ -46,12 +46,20 @@ class WebDAVService:
     
     Uses httpx with Digest authentication for compatibility with
     servers that require it (like IIS-based WebDAV).
+    
+    Note: Some WebDAV servers (like the one at proaktiv.no) return ALL files
+    in a flat structure at root and don't support PROPFIND on subdirectories.
+    This service handles that by caching the full file list and building
+    a virtual directory structure client-side.
     """
     
     def __init__(self):
         self._configured = False
         self._base_url = ""
         self._auth: Optional[httpx.DigestAuth] = None
+        self._cached_items: Optional[List[StorageItem]] = None  # Cache for flat-structure servers
+        self._cache_time: Optional[datetime] = None
+        self._cache_ttl_seconds = 300  # 5 minute cache
         self._initialize()
     
     def _initialize(self):
@@ -237,9 +245,125 @@ class WebDAVService:
             logger.error(f"WebDAV connection check failed: {e}")
             return False
     
+    async def _fetch_all_items(self) -> List[StorageItem]:
+        """
+        Fetch all items from the WebDAV root.
+        Uses cache if available and not expired.
+        """
+        # Check cache
+        if self._cached_items is not None and self._cache_time is not None:
+            cache_age = (datetime.now() - self._cache_time).total_seconds()
+            if cache_age < self._cache_ttl_seconds:
+                logger.info(f"[DEBUG] Using cached items ({len(self._cached_items)} items, age={cache_age:.0f}s)")
+                return self._cached_items
+        
+        # Fetch from root
+        async with self._get_client() as client:
+            url = f"{self._base_url}/"
+            logger.info(f"PROPFIND request to root: {url}")
+            
+            response = await client.request(
+                "PROPFIND",
+                url,
+                headers={"Depth": "1"},
+            )
+            
+            logger.info(f"PROPFIND response status: {response.status_code}")
+            
+            if response.status_code not in (200, 207):
+                logger.error(f"PROPFIND failed with status {response.status_code}")
+                raise RuntimeError(f"Failed to fetch items: HTTP {response.status_code}")
+            
+            # Parse the XML response
+            items = self._parse_propfind_response(response.text, "/")
+            logger.info(f"Fetched {len(items)} items from WebDAV root")
+            
+            # Cache the results
+            self._cached_items = items
+            self._cache_time = datetime.now()
+            
+            return items
+    
+    def _build_virtual_directory(self, all_items: List[StorageItem], path: str) -> List[StorageItem]:
+        """
+        Build a virtual directory listing from flat file list.
+        
+        For servers that return all files at root, this filters and groups
+        items to simulate proper directory navigation.
+        """
+        # Normalize path
+        path = path.rstrip('/') + '/' if path != '/' else '/'
+        path_depth = path.count('/') - 1  # "/" = depth 0, "/foo/" = depth 1
+        
+        result = []
+        seen_dirs = set()
+        
+        for item in all_items:
+            item_path = item.path
+            
+            # Check if item is within the requested path
+            if path == '/':
+                # Root level - show immediate children
+                parts = item_path.strip('/').split('/')
+                if len(parts) >= 1:
+                    first_part = parts[0]
+                    if len(parts) == 1:
+                        # Direct file at root
+                        result.append(item)
+                    else:
+                        # This is inside a subdirectory - show the directory
+                        if first_part not in seen_dirs:
+                            seen_dirs.add(first_part)
+                            result.append(StorageItem(
+                                name=first_part,
+                                path=f"/{first_part}",
+                                is_directory=True,
+                                size=0,
+                                modified=None,
+                                content_type=None,
+                            ))
+            else:
+                # Subdirectory - show items that start with this path
+                clean_path = path.rstrip('/')
+                if item_path.startswith(clean_path + '/'):
+                    # Item is inside this directory
+                    relative = item_path[len(clean_path)+1:]  # Remove the path prefix
+                    parts = relative.strip('/').split('/')
+                    if len(parts) >= 1 and parts[0]:
+                        first_part = parts[0]
+                        if len(parts) == 1:
+                            # Direct child file
+                            result.append(item)
+                        else:
+                            # Subdirectory
+                            if first_part not in seen_dirs:
+                                seen_dirs.add(first_part)
+                                result.append(StorageItem(
+                                    name=first_part,
+                                    path=f"{clean_path}/{first_part}",
+                                    is_directory=True,
+                                    size=0,
+                                    modified=None,
+                                    content_type=None,
+                                ))
+        
+        # Sort: directories first, then by name
+        result.sort(key=lambda x: (not x.is_directory, x.name.lower()))
+        
+        # #region agent log
+        dirs = [i.name for i in result if i.is_directory][:5]
+        files = [i.name for i in result if not i.is_directory][:5]
+        logger.info(f"[DEBUG-FIX] Virtual directory for '{path}': total={len(result)}, dirs={dirs}, files={files}")
+        # #endregion
+        
+        return result
+    
     async def list_directory(self, path: str = "/") -> List[StorageItem]:
         """
         List contents of a directory.
+        
+        For flat-structure WebDAV servers, this fetches all items once
+        and builds a virtual directory structure.
         
         Args:
             path: Directory path (default: root)
@@ -254,54 +378,12 @@ class WebDAVService:
         if not path.startswith("/"):
             path = "/" + path
         
-        # Ensure path ends with / for directory listing
-        if not path.endswith("/"):
-            path = path + "/"
-        
         try:
-            async with self._get_client() as client:
-                url = f"{self._base_url}{path}"
-                logger.info(f"PROPFIND request to: {url}")
-                
-                # #region agent log
-                logger.info(f"[DEBUG-H2] PROPFIND: base_url={self._base_url}, path_arg={path}, full_url={url}")
-                # #endregion
-                
-                response = await client.request(
-                    "PROPFIND",
-                    url,
-                    headers={"Depth": "1"},
-                )
-                
-                logger.info(f"PROPFIND response status: {response.status_code}")
-                
-                # Handle redirect - log the location for debugging
-                if response.status_code in (301, 302, 303, 307, 308):
-                    location = response.headers.get("Location", "unknown")
-                    logger.warning(f"PROPFIND got redirect to: {location}")
-                    
-                    # #region agent log
-                    logger.info(f"[DEBUG-H2] Redirect: original={url}, location={location}, status={response.status_code}")
-                    # #endregion
-                    # Try following the redirect manually with PROPFIND
-                    if location and location.startswith(("http://", "https://")):
-                        logger.info(f"Following redirect with PROPFIND to: {location}")
-                        response = await client.request(
-                            "PROPFIND",
-                            location if location.endswith('/') else location + '/',
-                            headers={"Depth": "1"},
-                        )
-                        logger.info(f"Redirect PROPFIND response status: {response.status_code}")
-                
-                if response.status_code not in (200, 207):
-                    logger.error(f"PROPFIND failed with status {response.status_code}: {response.text[:500]}")
-                    raise RuntimeError(f"Failed to list directory: HTTP {response.status_code}")
-                
-                # Parse the XML response
-                items = self._parse_propfind_response(response.text, path)
-                logger.info(f"Parsed {len(items)} items from PROPFIND response")
-                
-                return items
+            # Fetch all items (uses cache if available)
+            all_items = await self._fetch_all_items()
+            
+            # Build virtual directory for the requested path
+            return self._build_virtual_directory(all_items, path)
                 
         except httpx.HTTPError as e:
             logger.error(f"Failed to list directory {path}: {e}")
