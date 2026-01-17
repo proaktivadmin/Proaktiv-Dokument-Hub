@@ -150,9 +150,18 @@ class TemplateSettingsService:
         if not template:
             raise HTTPException(status_code=404, detail="Template not found")
         
+        # Convert string IDs to UUID for Pydantic validation
+        header_id = None
+        if template.header_template_id:
+            header_id = UUID(template.header_template_id) if isinstance(template.header_template_id, str) else template.header_template_id
+
+        footer_id = None
+        if template.footer_template_id:
+            footer_id = UUID(template.footer_template_id) if isinstance(template.footer_template_id, str) else template.footer_template_id
+
         return {
-            'id': template.id,
-            'title': template.title,
+            'id': UUID(template.id) if isinstance(template.id, str) else template.id,
+            'title': template.title or "Untitled",
             'channel': template.channel,
             'template_type': template.template_type,
             'receiver_type': template.receiver_type,
@@ -163,8 +172,8 @@ class TemplateSettingsService:
             'ownership_types': template.ownership_types or [],
             'departments': template.departments or [],
             'email_subject': template.email_subject,
-            'header_template_id': template.header_template_id,
-            'footer_template_id': template.footer_template_id,
+            'header_template_id': header_id,
+            'footer_template_id': footer_id,
             'margin_top': template.margin_top,
             'margin_bottom': template.margin_bottom,
             'margin_left': template.margin_left,

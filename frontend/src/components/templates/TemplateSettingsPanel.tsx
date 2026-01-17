@@ -103,6 +103,14 @@ export function TemplateSettingsPanel({
   // Use prop if provided, otherwise use internal state
   const isSaving = isSavingProp;
 
+  // Sync local state when initialSettings prop changes (e.g., after save/refetch)
+  useEffect(() => {
+    setSettings({
+      ...DEFAULT_SETTINGS,
+      ...initialSettings,
+    });
+  }, [initialSettings]);
+
   // Track changes
   useEffect(() => {
     const initial = { ...DEFAULT_SETTINGS, ...initialSettings };

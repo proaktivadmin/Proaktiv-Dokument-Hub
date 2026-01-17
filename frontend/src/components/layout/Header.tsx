@@ -3,9 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { 
+import {
   Upload, FileText, FolderTree, LayoutDashboard, Sparkles, Code2, HardDrive, LogOut,
-  Building2, Users, Image, ChevronDown
+  Building2, Users, Image, ChevronDown, FileCode, Plus
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { UploadTemplateDialog } from "@/components/templates/UploadTemplateDialog";
+import { NewTemplateDialog } from "@/components/templates/NewTemplateDialog";
 import { cn } from "@/lib/utils";
 import { authApi } from "@/lib/api/auth";
 
@@ -25,11 +26,17 @@ interface HeaderProps {
 
 export function Header({ onUploadSuccess }: HeaderProps) {
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+  const [newTemplateDialogOpen, setNewTemplateDialogOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
   const handleUploadSuccess = () => {
     setUploadDialogOpen(false);
+    onUploadSuccess?.();
+  };
+
+  const handleNewTemplateSuccess = () => {
+    setNewTemplateDialogOpen(false);
     onUploadSuccess?.();
   };
 
@@ -175,13 +182,26 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              <Button
-                onClick={() => setUploadDialogOpen(true)}
-                className="ml-3 bg-[#272630] text-white hover:bg-[#272630]/90 rounded-md"
-              >
-                <Upload className="h-4 w-4 mr-2" />
-                Last opp
-              </Button>
+              {/* New Template Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button className="ml-3 bg-[#272630] text-white hover:bg-[#272630]/90 rounded-md">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Ny mal
+                    <ChevronDown className="h-3 w-3 ml-2" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem onClick={() => setUploadDialogOpen(true)}>
+                    <Upload className="h-4 w-4 mr-2" />
+                    Last opp fil
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setNewTemplateDialogOpen(true)}>
+                    <FileCode className="h-4 w-4 mr-2" />
+                    Lim inn HTML
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
 
               <Button
                 variant="ghost"
@@ -201,6 +221,12 @@ export function Header({ onUploadSuccess }: HeaderProps) {
         open={uploadDialogOpen}
         onOpenChange={setUploadDialogOpen}
         onSuccess={handleUploadSuccess}
+      />
+
+      <NewTemplateDialog
+        open={newTemplateDialogOpen}
+        onOpenChange={setNewTemplateDialogOpen}
+        onSuccess={handleNewTemplateSuccess}
       />
     </>
   );

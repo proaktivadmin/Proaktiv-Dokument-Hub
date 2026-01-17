@@ -59,13 +59,27 @@ export function TemplatePreview({
   };
 
   /**
+   * Check if content already has a #vitecTemplate wrapper
+   */
+  const hasVitecWrapper = (html: string): boolean => {
+    return html.includes('id="vitecTemplate"') || html.includes("id='vitecTemplate'");
+  };
+
+  /**
    * Build the complete HTML document for the iframe
    * Uses an external stylesheet for full Vitec/Proaktiv styling
+   * Automatically wraps content in #vitecTemplate for consistent centering
    */
   const buildPreviewDocument = (): string => {
     const processedContent = highlightMergeFields(content);
     const pageBreakClass = showPageBreaks ? "show-page-breaks" : "";
-    
+
+    // Wrap content in #vitecTemplate div if not already wrapped
+    // This ensures consistent centering via vitec-theme.css
+    const wrappedContent = hasVitecWrapper(processedContent)
+      ? processedContent
+      : `<div id="vitecTemplate">${processedContent}</div>`;
+
     return `<!DOCTYPE html>
 <html lang="no">
 <head>
@@ -75,7 +89,7 @@ export function TemplatePreview({
   <link rel="stylesheet" href="/vitec-theme.css" />
 </head>
 <body class="vitec-preview-mode ${pageBreakClass}">
-  ${processedContent}
+  ${wrappedContent}
 </body>
 </html>`;
   };
