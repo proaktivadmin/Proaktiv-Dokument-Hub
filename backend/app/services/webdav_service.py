@@ -295,6 +295,13 @@ class WebDAVService:
         path = path.rstrip('/') + '/' if path != '/' else '/'
         path_depth = path.count('/') - 1  # "/" = depth 0, "/foo/" = depth 1
         
+        # #region agent log
+        # Log sample of item paths to understand structure
+        sample_paths = [i.path for i in all_items[:20]]
+        dir_items = [(i.name, i.path) for i in all_items if i.is_directory][:10]
+        logger.info(f"[DEBUG-H6] Building dir for '{path}', sample_paths={sample_paths}, dir_items={dir_items}")
+        # #endregion
+        
         result = []
         seen_dirs = set()
         
