@@ -31,6 +31,9 @@ Thumbs.db
 # Docker
 docker-data/
 
+# Local data exports (may contain proprietary template source)
+data/
+
 # Legacy (Optional - if you want to ignore the old build artifacts)
 _legacy_v1/node_modules/
 _legacy_v1/dist/

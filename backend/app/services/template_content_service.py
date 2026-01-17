@@ -95,7 +95,7 @@ class TemplateContentService:
         processed_content = content
         if auto_sanitize:
             sanitizer = SanitizerService()
-            processed_content, _ = sanitizer.sanitize(content)
+            processed_content = sanitizer.sanitize(content)
             logger.info(f"Sanitized content for template {template_id}")
         
         # Update template content

@@ -15,7 +15,7 @@ import { TemplatePreview } from "./TemplatePreview";
 import { TemplateSettingsPanel, type TemplateSettings } from "./TemplateSettingsPanel";
 import { SimulatorPanel } from "./SimulatorPanel";
 import { CodeEditor } from "@/components/editor/CodeEditor";
-import { templateApi } from "@/lib/api";
+import { templateApi, layoutPartialsApi } from "@/lib/api";
 import { templateSettingsApi } from "@/lib/api/template-settings";
 import { useToast } from "@/hooks/use-toast";
 import { useTemplateSettings } from "@/hooks/useTemplateSettings";
@@ -58,6 +58,8 @@ export function TemplateDetailSheet({
   const [hasContentChanges, setHasContentChanges] = useState(false);
   const [processedContent, setProcessedContent] = useState<string | null>(null);
   const [testDataEnabled, setTestDataEnabled] = useState(false);
+  const [headerHtml, setHeaderHtml] = useState<string | null>(null);
+  const [footerHtml, setFooterHtml] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("preview");
@@ -88,6 +90,44 @@ export function TemplateDetailSheet({
     emailSubject: backendSettings.email_subject ?? null,
     themeStylesheet: null,
   } : undefined;
+
+  // Load header/footer partial content for preview (to mimic Vitec generated PDF)
+  useEffect(() => {
+    if (!open || !backendSettings) {
+      setHeaderHtml(null);
+      setFooterHtml(null);
+      return;
+    }
+
+    const headerId = backendSettings.header_template_id ?? null;
+    const footerId = backendSettings.footer_template_id ?? null;
+
+    async function loadPartials() {
+      try {
+        if (headerId) {
+          const header = await layoutPartialsApi.get(headerId);
+          setHeaderHtml(header.html_content);
+        } else {
+          setHeaderHtml(null);
+        }
+      } catch {
+        setHeaderHtml(null);
+      }
+
+      try {
+        if (footerId) {
+          const footer = await layoutPartialsApi.get(footerId);
+          setFooterHtml(footer.html_content);
+        } else {
+          setFooterHtml(null);
+        }
+      } catch {
+        setFooterHtml(null);
+      }
+    }
+
+    loadPartials();
+  }, [open, backendSettings?.header_template_id, backendSettings?.footer_template_id]);
 
   // Load content when dialog opens with an HTML template
   useEffect(() => {
@@ -267,6 +307,8 @@ export function TemplateDetailSheet({
                 title={template.title}
                 isLoading={isLoading}
                 error={error || undefined}
+                headerHtml={headerHtml}
+                footerHtml={footerHtml}
                 testDataEnabled={testDataEnabled}
                 hasProcessedData={!!processedContent}
                 onToggleTestData={() => setTestDataEnabled(!testDataEnabled)}

@@ -25,6 +25,16 @@ interface TemplatePreviewProps {
   title?: string;
   isLoading?: boolean;
   error?: string;
+  /** Stylesheet to load inside the iframe (defaults to /vitec-theme.css) */
+  stylesheetHref?: string;
+  /** Highlight merge fields in preview (developer aid). Default: false */
+  highlightMergeFields?: boolean;
+  /** Optional header HTML to render above the template content (PDF-like previews) */
+  headerHtml?: string | null;
+  /** Optional footer HTML to render below the template content (PDF-like previews) */
+  footerHtml?: string | null;
+  /** Optional signature HTML to render below the template content (email-like previews) */
+  signatureHtml?: string | null;
   /** Whether test data mode is enabled */
   testDataEnabled?: boolean;
   /** Callback to toggle test data mode */
@@ -38,6 +48,11 @@ export function TemplatePreview({
   title,
   isLoading = false,
   error,
+  stylesheetHref = "/vitec-theme.css",
+  highlightMergeFields = false,
+  headerHtml = null,
+  footerHtml = null,
+  signatureHtml = null,
   testDataEnabled = false,
   onToggleTestData,
   hasProcessedData = false,
@@ -51,18 +66,30 @@ export function TemplatePreview({
    * Highlight merge fields in the content
    * Converts [[field.name]] to highlighted spans
    */
-  const highlightMergeFields = (html: string): string => {
+  const applyMergeFieldHighlights = (html: string): string => {
     return html.replace(
       /\[\[([^\]]+)\]\]/g,
       '<span class="merge-field-highlight">[[$1]]</span>'
     );
   };
 
-  /**
-   * Check if content already has a #vitecTemplate wrapper
-   */
-  const hasVitecWrapper = (html: string): boolean => {
-    return html.includes('id="vitecTemplate"') || html.includes("id='vitecTemplate'");
+  const extractVitecInnerHtml = (html: string): { inner: string; wrapperAttributes: string } => {
+    try {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, "text/html");
+      const wrapper = doc.getElementById("vitecTemplate");
+      if (!wrapper) return { inner: html, wrapperAttributes: "" };
+
+      // Preserve wrapper attributes (except id) in a simple string form
+      const attrs = Array.from(wrapper.attributes)
+        .filter((a) => a.name !== "id")
+        .map((a) => `${a.name}="${a.value}"`)
+        .join(" ");
+
+      return { inner: wrapper.innerHTML, wrapperAttributes: attrs };
+    } catch {
+      return { inner: html, wrapperAttributes: "" };
+    }
   };
 
   /**
@@ -71,14 +98,21 @@ export function TemplatePreview({
    * Automatically wraps content in #vitecTemplate for consistent centering
    */
   const buildPreviewDocument = (): string => {
-    const processedContent = highlightMergeFields(content);
+    const processedContent = highlightMergeFields ? applyMergeFieldHighlights(content) : content;
     const pageBreakClass = showPageBreaks ? "show-page-breaks" : "";
 
-    // Wrap content in #vitecTemplate div if not already wrapped
-    // This ensures consistent centering via vitec-theme.css
-    const wrappedContent = hasVitecWrapper(processedContent)
-      ? processedContent
-      : `<div id="vitecTemplate">${processedContent}</div>`;
+    // Always render inside #vitecTemplate; if content already has wrapper, extract innerHTML.
+    const { inner, wrapperAttributes } = extractVitecInnerHtml(processedContent);
+    const headerBlock = headerHtml ? `<div data-vitec-preview="header">${headerHtml}</div>` : "";
+    const footerBlock = footerHtml ? `<div data-vitec-preview="footer">${footerHtml}</div>` : "";
+    const signatureBlock = signatureHtml ? `<div data-vitec-preview="signature">${signatureHtml}</div>` : "";
+
+    const wrappedContent = `<div id="vitecTemplate" ${wrapperAttributes}>
+      ${headerBlock}
+      ${inner}
+      ${signatureBlock}
+      ${footerBlock}
+    </div>`;
 
     return `<!DOCTYPE html>
 <html lang="no">
@@ -86,7 +120,7 @@ export function TemplatePreview({
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${title || "Template Preview"}</title>
-  <link rel="stylesheet" href="/vitec-theme.css" />
+  <link rel="stylesheet" href="${stylesheetHref}" />
 </head>
 <body class="vitec-preview-mode ${pageBreakClass}">
   ${wrappedContent}

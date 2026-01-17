@@ -14,6 +14,15 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { renderVitecPreview } from "@/lib/vitec/vitec-preview-renderer";
+import { getScenarioById, VITEC_TEST_SCENARIOS } from "@/lib/vitec/vitec-test-scenarios";
 
 interface DetectedVariable {
   path: string;
@@ -27,6 +36,7 @@ interface SimulatorPanelProps {
 }
 
 const STORAGE_KEY = "proaktiv_simulator_testdata";
+const SCENARIO_KEY = "proaktiv_simulator_scenario";
 
 // Default test data - comprehensive set for Norwegian real estate templates
 const DEFAULT_TEST_DATA: Record<string, string> = {
@@ -125,6 +135,25 @@ function loadSavedTestData(): Record<string, string> {
   }
 }
 
+function loadSavedScenarioId(): string {
+  if (typeof window === "undefined") return VITEC_TEST_SCENARIOS[0]?.id ?? "eierseksjon";
+  try {
+    const saved = localStorage.getItem(SCENARIO_KEY);
+    return saved || (VITEC_TEST_SCENARIOS[0]?.id ?? "eierseksjon");
+  } catch {
+    return VITEC_TEST_SCENARIOS[0]?.id ?? "eierseksjon";
+  }
+}
+
+function saveScenarioId(id: string) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(SCENARIO_KEY, id);
+  } catch (e) {
+    console.error("Failed to save scenario:", e);
+  }
+}
+
 // Save test data to localStorage
 function saveTestData(data: Record<string, string>) {
   if (typeof window === "undefined") return;
@@ -137,6 +166,7 @@ function saveTestData(data: Record<string, string>) {
 
 export function SimulatorPanel({ content, onApplyTestData }: SimulatorPanelProps) {
   const [testValues, setTestValues] = useState<Record<string, string>>({});
+  const [scenarioId, setScenarioId] = useState<string>(() => loadSavedScenarioId());
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
@@ -171,9 +201,10 @@ export function SimulatorPanel({ content, onApplyTestData }: SimulatorPanelProps
     );
   }, [content]);
 
-  // Initialize test values: First from localStorage, then fill gaps from defaults
+  // Initialize test values: saved values + defaults, then apply scenario overrides
   useEffect(() => {
     const savedData = loadSavedTestData();
+    const scenario = getScenarioById(scenarioId) ?? VITEC_TEST_SCENARIOS[0];
     const initial: Record<string, string> = {};
     
     detectedVariables.forEach((v) => {
@@ -186,9 +217,19 @@ export function SimulatorPanel({ content, onApplyTestData }: SimulatorPanelProps
           initial[v.path] = defaultValue;
         }
       }
+
+      // Scenario overrides win for deterministic preview branches
+      if (scenario?.value_overrides?.[v.path]) {
+        initial[v.path] = scenario.value_overrides[v.path];
+      }
     });
     setTestValues(initial);
-  }, [detectedVariables]);
+  }, [detectedVariables, scenarioId]);
+
+  // Persist scenario selection
+  useEffect(() => {
+    saveScenarioId(scenarioId);
+  }, [scenarioId]);
 
   // Filter variables by search
   const filteredVariables = useMemo(() => {
@@ -221,19 +262,16 @@ export function SimulatorPanel({ content, onApplyTestData }: SimulatorPanelProps
     
     setIsLoading(true);
     try {
-      // Replace all [[variables]] with test values
-      let processedContent = content;
-      
-      detectedVariables.forEach((variable) => {
-        const value = testValues[variable.path] || `[[${variable.path}]]`;
-        // Replace both [[path]] and [[*path]] variants
-        processedContent = processedContent.replace(
-          new RegExp(`\\[\\[\\*?${escapeRegExp(variable.path)}\\]\\]`, "g"),
-          value
-        );
+      const scenario = getScenarioById(scenarioId) ?? VITEC_TEST_SCENARIOS[0];
+      const model = buildVitecModelFromValues(testValues, scenario?.model_overrides);
+
+      const rendered = renderVitecPreview({
+        html: content,
+        values: testValues,
+        model,
       });
-      
-      onApplyTestData(processedContent);
+
+      onApplyTestData(rendered.html);
     } finally {
       setIsLoading(false);
     }
@@ -279,6 +317,18 @@ export function SimulatorPanel({ content, onApplyTestData }: SimulatorPanelProps
       {/* Stats bar */}
       <div className="flex items-center justify-between gap-4 p-4 border-b bg-gray-50">
         <div className="flex items-center gap-2 text-sm">
+          <Select value={scenarioId} onValueChange={setScenarioId}>
+            <SelectTrigger className="h-8 w-[220px]">
+              <SelectValue placeholder="Velg scenario..." />
+            </SelectTrigger>
+            <SelectContent>
+              {VITEC_TEST_SCENARIOS.map((s) => (
+                <SelectItem key={s.id} value={s.id}>
+                  {s.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <Badge variant="outline">{stats.total} variabler</Badge>
           <Badge variant="secondary">{stats.withValues} med verdi</Badge>
           {stats.missingRequired > 0 && (
@@ -375,7 +425,61 @@ export function SimulatorPanel({ content, onApplyTestData }: SimulatorPanelProps
   );
 }
 
-// Helper function to escape special regex characters
-function escapeRegExp(string: string): string {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+function buildVitecModelFromValues(
+  values: Record<string, string>,
+  overrides?: {
+    eiendom?: { eieform?: string; boligtype?: string };
+    kjopere_count?: number;
+    selgere_count?: number;
+  }
+): Record<string, unknown> {
+  const eiendom: Record<string, unknown> = {};
+  for (const [key, val] of Object.entries(values)) {
+    if (key.startsWith("eiendom.")) {
+      eiendom[key.slice("eiendom.".length)] = val;
+    }
+    if (key.startsWith("oppdrag.")) {
+      // keep for later, handled below
+    }
+  }
+
+  if (overrides?.eiendom?.eieform) eiendom["eieform"] = overrides.eiendom.eieform;
+  if (overrides?.eiendom?.boligtype) eiendom["boligtype"] = overrides.eiendom.boligtype;
+
+  const selgerItem = buildItemFromPrefix(values, "selger.");
+  const kjoperItem = buildItemFromPrefix(values, "kjoper.");
+
+  const selgereCount = overrides?.selgere_count ?? 1;
+  const kjopereCount = overrides?.kjopere_count ?? 1;
+
+  const selgere = Array.from({ length: selgereCount }, (_, idx) =>
+    idx === 0 ? selgerItem : { ...selgerItem, navn: `Selger ${idx + 1}` }
+  );
+  const kjopere = Array.from({ length: kjopereCount }, (_, idx) =>
+    idx === 0 ? kjoperItem : { ...kjoperItem, navn: `Kjøper ${idx + 1}` }
+  );
+
+  const oppdrag: Record<string, unknown> = {};
+  for (const [key, val] of Object.entries(values)) {
+    if (key.startsWith("oppdrag.")) {
+      const prop = key.slice("oppdrag.".length);
+      oppdrag[prop] = val === "true" ? true : val === "false" ? false : val;
+    }
+  }
+
+  return {
+    eiendom,
+    selgere,
+    kjopere,
+    oppdrag,
+  };
+}
+
+function buildItemFromPrefix(values: Record<string, string>, prefix: string): Record<string, unknown> {
+  const item: Record<string, unknown> = {};
+  for (const [key, val] of Object.entries(values)) {
+    if (!key.startsWith(prefix)) continue;
+    item[key.slice(prefix.length)] = val;
+  }
+  return item;
 }
