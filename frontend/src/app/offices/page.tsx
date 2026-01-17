@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Building2, ChevronRight, Home } from "lucide-react";
+import { Header } from "@/components/layout/Header";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -53,7 +54,9 @@ export default function OfficesPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-7xl">
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main className="container mx-auto px-6 py-8">
       {/* Breadcrumb */}
       <Breadcrumb className="mb-6">
         <BreadcrumbList>
@@ -101,6 +104,7 @@ export default function OfficesPage() {
         office={editingOffice}
         onSuccess={handleFormSuccess}
       />
+      </main>
     </div>
   );
 }

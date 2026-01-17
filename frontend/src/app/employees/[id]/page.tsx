@@ -7,6 +7,7 @@ import {
   Globe, Calendar, Edit, AlertTriangle, ExternalLink,
   Building2, Clock, CheckSquare
 } from "lucide-react";
+import { Header } from "@/components/layout/Header";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -50,24 +51,30 @@ export default function EmployeeDetailPage() {
 
   if (employeeLoading) {
     return (
-      <div className="container mx-auto px-4 py-6 max-w-7xl space-y-6">
-        <Skeleton className="h-8 w-64" />
-        <Skeleton className="h-48 w-full" />
-        <Skeleton className="h-96 w-full" />
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="container mx-auto px-6 py-8 space-y-6">
+          <Skeleton className="h-8 w-64" />
+          <Skeleton className="h-48 w-full" />
+          <Skeleton className="h-96 w-full" />
+        </main>
       </div>
     );
   }
 
   if (!employee) {
     return (
-      <div className="container mx-auto px-4 py-6 max-w-7xl">
-        <div className="text-center py-12">
-          <h1 className="text-2xl font-bold mb-2">Ansatt ikke funnet</h1>
-          <p className="text-muted-foreground mb-4">Den ansatte du leter etter eksisterer ikke.</p>
-          <Button onClick={() => router.push("/employees")}>
-            Tilbake til ansatte
-          </Button>
-        </div>
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="container mx-auto px-6 py-8">
+          <div className="text-center py-12">
+            <h1 className="text-2xl font-bold mb-2">Ansatt ikke funnet</h1>
+            <p className="text-muted-foreground mb-4">Den ansatte du leter etter eksisterer ikke.</p>
+            <Button onClick={() => router.push("/employees")}>
+              Tilbake til ansatte
+            </Button>
+          </div>
+        </main>
       </div>
     );
   }
@@ -75,7 +82,9 @@ export default function EmployeeDetailPage() {
   const status = statusConfig[employee.status];
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-7xl">
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main className="container mx-auto px-6 py-8">
       {/* Breadcrumb */}
       <Breadcrumb className="mb-6">
         <BreadcrumbList>
@@ -381,6 +390,7 @@ export default function EmployeeDetailPage() {
           setEditFormOpen(false);
         }}
       />
+      </main>
     </div>
   );
 }

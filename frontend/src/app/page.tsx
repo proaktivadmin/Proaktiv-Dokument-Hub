@@ -1,12 +1,15 @@
 "use client";
 
-import { FileText, Download, Clock, AlertCircle, CheckCircle2, XCircle, RefreshCw } from "lucide-react";
+import { FileText, Download, Clock, AlertCircle, CheckCircle2, XCircle, RefreshCw, Building2, Users, Image, ArrowRight } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDashboardStats } from "@/hooks/useDashboard";
 import { useRecentTemplates } from "@/hooks/useTemplates";
 import { useCategories } from "@/hooks/useCategories";
 import { useInventoryStats } from "@/hooks/useInventoryStats";
+import { useOffices } from "@/hooks/v3/useOffices";
+import { useEmployees } from "@/hooks/v3/useEmployees";
+import { useAssets } from "@/hooks/v3/useAssets";
 import { formatDistanceToNow } from "date-fns";
 import { nb } from "date-fns/locale";
 import Link from "next/link";
@@ -55,6 +58,11 @@ export default function Dashboard() {
   const { templates: recentTemplates, isLoading: templatesLoading, refetch: refetchTemplates } = useRecentTemplates();
   const { categories, isLoading: categoriesLoading } = useCategories();
   const { data: inventoryData, isLoading: inventoryLoading, error: inventoryError } = useInventoryStats(5);
+  
+  // V3 Company Hub data
+  const { offices, isLoading: officesLoading } = useOffices();
+  const { employees, statusCounts, isLoading: employeesLoading } = useEmployees();
+  const { assets, isLoading: assetsLoading } = useAssets({ is_global: true });
 
   const handleUploadSuccess = () => {
     refetchStats();
@@ -143,6 +151,95 @@ export default function Dashboard() {
               </div>
             </>
           )}
+        </div>
+
+        {/* Company Hub Quick Access */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          {/* Offices Card */}
+          <Link 
+            href="/offices" 
+            className="group bg-white rounded-md p-6 border border-[#E5E5E5] hover:border-[#BCAB8A] hover:shadow-md transition-all"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 rounded-lg bg-blue-500/10">
+                <Building2 className="h-6 w-6 text-blue-600" />
+              </div>
+              <ArrowRight className="h-5 w-5 text-[#272630]/30 group-hover:text-[#BCAB8A] group-hover:translate-x-1 transition-all" />
+            </div>
+            <h3 className="text-lg font-semibold text-[#272630] mb-1">Kontorer</h3>
+            {officesLoading ? (
+              <Skeleton className="h-4 w-32" />
+            ) : (
+              <p className="text-[#272630]/60 text-sm">
+                {offices.filter(o => o.is_active).length} aktive kontorer
+              </p>
+            )}
+            {!officesLoading && offices.length > 0 && (
+              <div className="flex flex-wrap gap-1 mt-3">
+                {offices.slice(0, 4).map((office) => (
+                  <span 
+                    key={office.id}
+                    className="px-2 py-0.5 text-xs rounded-full text-white"
+                    style={{ backgroundColor: office.color }}
+                  >
+                    {office.short_code}
+                  </span>
+                ))}
+                {offices.length > 4 && (
+                  <span className="px-2 py-0.5 text-xs rounded-full bg-[#E5E5E5] text-[#272630]/60">
+                    +{offices.length - 4}
+                  </span>
+                )}
+              </div>
+            )}
+          </Link>
+
+          {/* Employees Card */}
+          <Link 
+            href="/employees" 
+            className="group bg-white rounded-md p-6 border border-[#E5E5E5] hover:border-[#BCAB8A] hover:shadow-md transition-all"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 rounded-lg bg-green-500/10">
+                <Users className="h-6 w-6 text-green-600" />
+              </div>
+              <ArrowRight className="h-5 w-5 text-[#272630]/30 group-hover:text-[#BCAB8A] group-hover:translate-x-1 transition-all" />
+            </div>
+            <h3 className="text-lg font-semibold text-[#272630] mb-1">Ansatte</h3>
+            {employeesLoading ? (
+              <Skeleton className="h-4 w-32" />
+            ) : (
+              <p className="text-[#272630]/60 text-sm">
+                {statusCounts.active} aktive, {statusCounts.onboarding} i onboarding
+              </p>
+            )}
+            {!employeesLoading && statusCounts.offboarding > 0 && (
+              <div className="mt-3 px-2 py-1 bg-amber-50 border border-amber-200 rounded text-xs text-amber-700">
+                {statusCounts.offboarding} i offboarding
+              </div>
+            )}
+          </Link>
+
+          {/* Assets Card */}
+          <Link 
+            href="/assets" 
+            className="group bg-white rounded-md p-6 border border-[#E5E5E5] hover:border-[#BCAB8A] hover:shadow-md transition-all"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 rounded-lg bg-purple-500/10">
+                <Image className="h-6 w-6 text-purple-600" />
+              </div>
+              <ArrowRight className="h-5 w-5 text-[#272630]/30 group-hover:text-[#BCAB8A] group-hover:translate-x-1 transition-all" />
+            </div>
+            <h3 className="text-lg font-semibold text-[#272630] mb-1">Mediefiler</h3>
+            {assetsLoading ? (
+              <Skeleton className="h-4 w-32" />
+            ) : (
+              <p className="text-[#272630]/60 text-sm">
+                {assets.length} globale filer
+              </p>
+            )}
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

@@ -6,6 +6,7 @@ import {
   Building2, ChevronRight, Home, MapPin, Phone, Mail, 
   Globe, Users, Map, ExternalLink, Edit, Power
 } from "lucide-react";
+import { Header } from "@/components/layout/Header";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -55,30 +56,38 @@ export default function OfficeDetailPage() {
 
   if (officeLoading) {
     return (
-      <div className="container mx-auto px-4 py-6 max-w-7xl space-y-6">
-        <Skeleton className="h-8 w-64" />
-        <Skeleton className="h-48 w-full" />
-        <Skeleton className="h-96 w-full" />
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="container mx-auto px-6 py-8 space-y-6">
+          <Skeleton className="h-8 w-64" />
+          <Skeleton className="h-48 w-full" />
+          <Skeleton className="h-96 w-full" />
+        </main>
       </div>
     );
   }
 
   if (!office) {
     return (
-      <div className="container mx-auto px-4 py-6 max-w-7xl">
-        <div className="text-center py-12">
-          <h1 className="text-2xl font-bold mb-2">Kontor ikke funnet</h1>
-          <p className="text-muted-foreground mb-4">Kontoret du leter etter eksisterer ikke.</p>
-          <Button onClick={() => router.push("/offices")}>
-            Tilbake til kontorer
-          </Button>
-        </div>
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="container mx-auto px-6 py-8">
+          <div className="text-center py-12">
+            <h1 className="text-2xl font-bold mb-2">Kontor ikke funnet</h1>
+            <p className="text-muted-foreground mb-4">Kontoret du leter etter eksisterer ikke.</p>
+            <Button onClick={() => router.push("/offices")}>
+              Tilbake til kontorer
+            </Button>
+          </div>
+        </main>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-7xl">
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main className="container mx-auto px-6 py-8">
       {/* Breadcrumb */}
       <Breadcrumb className="mb-6">
         <BreadcrumbList>
@@ -310,6 +319,7 @@ export default function OfficeDetailPage() {
           }}
         />
       )}
+      </main>
     </div>
   );
 }

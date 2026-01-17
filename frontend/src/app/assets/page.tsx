@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Image as ImageIcon, ChevronRight, Home, Building2, User } from "lucide-react";
+import { Header } from "@/components/layout/Header";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -29,7 +30,9 @@ export default function AssetsPage() {
   const { offices, isLoading: officesLoading } = useOffices();
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-7xl">
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main className="container mx-auto px-6 py-8">
       {/* Breadcrumb */}
       <Breadcrumb className="mb-6">
         <BreadcrumbList>
@@ -143,6 +146,7 @@ export default function AssetsPage() {
           </Card>
         </TabsContent>
       </Tabs>
+      </main>
     </div>
   );
 }
