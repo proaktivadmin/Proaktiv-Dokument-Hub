@@ -5,16 +5,23 @@
  */
 
 import axios from "axios";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+import { getApiBaseUrl } from "./config";
 
 // Create axios instance with credentials enabled
 const authClient = axios.create({
-  baseURL: API_BASE_URL,
   withCredentials: true, // Required for cookies
   headers: {
     "Content-Type": "application/json",
   },
+});
+
+// Add request interceptor to set base URL dynamically (same pattern as main API)
+authClient.interceptors.request.use((config) => {
+  const baseUrl = getApiBaseUrl();
+  if (config.url && !config.url.startsWith('http')) {
+    config.url = `${baseUrl}${config.url}`;
+  }
+  return config;
 });
 
 export interface AuthStatus {

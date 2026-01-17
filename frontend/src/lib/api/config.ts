@@ -33,7 +33,9 @@ export function getApiBaseUrl(): string {
  * which is necessary because the module loads during SSR when window is undefined.
  */
 export function createApiClient(): AxiosInstance {
-  const api = axios.create();
+  const api = axios.create({
+    withCredentials: true, // Required for auth cookies
+  });
   
   // Add request interceptor to set base URL dynamically
   api.interceptors.request.use((config) => {
