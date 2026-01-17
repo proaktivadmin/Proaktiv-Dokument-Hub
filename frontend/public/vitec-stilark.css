@@ -1,0 +1,88 @@
+/**
+ * Vitec Stilark - Official base stylesheet (from Vitec Next)
+ * Used as the default preview stylesheet in the app.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap');
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-size: 10pt;
+  line-height: normal;
+  font-family: 'Open sans', sans-serif;
+}
+
+#vitecTemplate * {
+  font-variant-ligatures: none;
+}
+
+#editDocumentTemplate #vitec-stilark:after {
+  display: block;
+  padding: 1cm 1cm 1.5cm 1cm;
+  content: "Se kildekode";
+  font-size: 26pt;
+  font-weight: 400;
+  font-family: 'Open sans', sans-serif;
+  color: rgba(124, 124, 124, 0.7);
+}
+
+#vitecTemplate p,
+#vitecTemplate th p,
+#vitecTemplate td p {
+  font-size: 10pt;
+  line-height: normal;
+  font-family: 'Open sans', sans-serif;
+  margin: 1em 0;
+  padding-bottom: 0;
+}
+
+#vitecTemplate h1,
+#vitecTemplate h2,
+#vitecTemplate h3,
+#vitecTemplate h4,
+#vitecTemplate h5 {
+  font-family: 'Open sans', sans-serif;
+}
+
+#vitecTemplate table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+#vitecTemplate table th,
+#vitecTemplate table td {
+  vertical-align: top;
+  font-size: 10pt;
+  line-height: normal;
+  font-family: 'Open sans', sans-serif;
+}
+
+#vitecTemplate table th {
+  text-align: left;
+}
+
+#vitecTemplate strong {
+  font-size: 10pt;
+  line-height: normal;
+  font-family: 'Open sans', sans-serif;
+  font-weight: 700;
+}
+
+#vitecTemplate ul li,
+#vitecTemplate ol li {
+  font-size: 10pt;
+  line-height: normal;
+  font-family: 'Open sans', sans-serif;
+}
+
+#vitecTemplate div {
+  font-size: 10pt;
+  line-height: normal;
+  font-family: 'Open sans', sans-serif;
+}
+
+/* Ikke overstyre font-storrelser satt med CK Editor */
+#vitecTemplate span > strong {
+  font-size: inherit;
+}

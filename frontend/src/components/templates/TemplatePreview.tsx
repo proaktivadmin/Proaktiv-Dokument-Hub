@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
  * Renders HTML templates in an isolated iframe with the full Vitec/Proaktiv
  * styling loaded from an external CSS file.
  * 
- * The CSS file (/vitec-theme.css) is loaded via a link tag inside the iframe,
+ * The CSS file (/vitec-stilark.css) is loaded via a link tag inside the iframe,
  * ensuring complete style isolation from the main application.
  * 
  * Features:
@@ -25,7 +25,7 @@ interface TemplatePreviewProps {
   title?: string;
   isLoading?: boolean;
   error?: string;
-  /** Stylesheet to load inside the iframe (defaults to /vitec-theme.css) */
+  /** Stylesheet to load inside the iframe (defaults to /vitec-stilark.css) */
   stylesheetHref?: string;
   /** Highlight merge fields in preview (developer aid). Default: false */
   highlightMergeFields?: boolean;
@@ -48,7 +48,7 @@ export function TemplatePreview({
   title,
   isLoading = false,
   error,
-  stylesheetHref = "/vitec-theme.css",
+  stylesheetHref = "/vitec-stilark.css",
   highlightMergeFields = false,
   headerHtml = null,
   footerHtml = null,
