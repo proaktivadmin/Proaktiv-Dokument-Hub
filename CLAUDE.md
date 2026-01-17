@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-## Project: Proaktiv Dokument Hub V2.8
+## Project: Proaktiv Dokument Hub V2.9
 
 A document template management system for Norwegian real estate brokers, integrated with Vitec Next.
 
@@ -10,10 +10,11 @@ A document template management system for Norwegian real estate brokers, integra
 
 | Aspect | Details |
 |--------|---------|
-| **Phase** | 2.8 (Railway Migration Complete) |
+| **Phase** | 2.9 (Vitec Integration) |
 | **Stack** | Next.js 14 + FastAPI + PostgreSQL (Railway) |
 | **UI** | Shadcn/UI + Tailwind CSS |
 | **Hosting** | Railway (Frontend + Backend + PostgreSQL) |
+| **Storage** | WebDAV (proaktiv.no/d/) |
 | **Status** | ✅ Production Live |
 
 ---
@@ -44,6 +45,12 @@ A document template management system for Norwegian real estate brokers, integra
 - Loops: `vitec-foreach="item in collection"`
 - All operations through `MergeFieldService`
 
+### Vitec Integration (V2.9)
+- Full reference in `.cursor/vitec-reference.md`
+- SanitizerService enforces Vitec Stilark compliance
+- Layout partials for headers/footers/signatures
+- WebDAV storage for network file access
+
 ---
 
 ## Key Directories
@@ -54,19 +61,25 @@ A document template management system for Norwegian real estate brokers, integra
 ├── specs/           # Agent output specs
 ├── plans/           # Project plans and blueprints
 ├── commands/        # Slash commands
+├── vitec-reference.md  # Full Vitec Next reference
 └── active_context.md
 
 backend/
 ├── app/
 │   ├── models/      # SQLAlchemy models
 │   ├── services/    # Business logic (async)
+│   │   ├── sanitizer_service.py   # Vitec Stilark compliance
+│   │   ├── webdav_service.py      # WebDAV client
+│   │   └── inventory_service.py   # Template sync stats
 │   ├── routers/     # FastAPI endpoints
 │   └── schemas/     # Pydantic models
 
 frontend/
 ├── src/
 │   ├── app/         # Next.js pages
+│   │   └── storage/ # WebDAV browser page
 │   ├── components/  # React components
+│   │   └── storage/ # Storage browser components
 │   ├── hooks/       # Custom hooks
 │   ├── lib/         # API wrapper, utilities
 │   └── types/       # TypeScript interfaces
@@ -95,12 +108,21 @@ frontend/
 - Viewer components: `*Frame.tsx` (A4Frame, SMSFrame)
 - Library components: `*Library.tsx`, `*Card.tsx`
 - Inspector: `ElementInspector.tsx`
+- Storage components: `StorageBrowser.tsx`, `ImportToLibraryDialog.tsx`
 
 ---
 
 ## Current Status
 
 See `.cursor/active_context.md` for full status.
+
+**V2.9 Vitec Integration (In Progress):**
+- ✅ Full Vitec reference documentation
+- ✅ Enhanced SanitizerService with Vitec Stilark compliance
+- ✅ WebDAV storage integration
+- ✅ Storage browser UI
+- ✅ Layout partials for headers/footers/signatures
+- ⏳ WebDAV configuration pending (needs `/d/` path)
 
 **V2.8 Railway Migration (Completed):**
 - ✅ Migrated from Azure to Railway
@@ -174,3 +196,11 @@ docker compose exec db psql -U postgres -d dokument_hub
 - **Frontend:** https://blissful-quietude-production.up.railway.app
 - **Backend:** https://proaktiv-dokument-hub-production.up.railway.app
 - **Deploy:** Push to `main` branch
+
+### Environment Variables (Backend)
+| Variable | Value |
+|----------|-------|
+| `DATABASE_URL` | Railway PostgreSQL connection |
+| `WEBDAV_URL` | `http://proaktiv.no/d/` |
+| `WEBDAV_USERNAME` | (your username) |
+| `WEBDAV_PASSWORD` | (your password) |

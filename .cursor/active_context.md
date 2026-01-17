@@ -1,15 +1,50 @@
 # ACTIVE CONTEXT & ROADMAP
 
 ## PROJECT STATUS
-- **Phase:** 2.8 (Railway Migration Complete)
-- **Current Sprint:** ✅ COMPLETE
+- **Phase:** 2.9 (Vitec Integration)
+- **Current Sprint:** V2.9 - Vitec Integration & WebDAV Storage
 - **Architecture:** Document-first, shelf grouping, 4-tab viewer
 - **Last Milestone:** ✅ Railway Migration (2026-01-17)
-- **Current Milestone:** Production Live on Railway
+- **Current Milestone:** Vitec Integration & WebDAV Storage
 
-## V2.8 RAILWAY MIGRATION (2026-01-17)
+## V2.9 VITEC INTEGRATION (2026-01-17) - IN PROGRESS
 
-### Migration Complete ✅
+### Completed Today ✅
+- ✅ Full Vitec reference documentation (`.cursor/vitec-reference.md`)
+- ✅ Enhanced SanitizerService with Vitec Stilark compliance
+- ✅ WebDAV storage integration (backend service + API)
+- ✅ Storage browser UI with file management
+- ✅ Import-to-library functionality from WebDAV
+- ✅ Layout partials for headers/footers/signatures
+- ✅ Channel-aware layout partial selectors in settings
+- ✅ Inventory dashboard widget (sync status with Vitec)
+- ✅ Multiple bug fixes for Railway deployment
+
+### Pending Configuration
+- ⏳ WebDAV URL needs `/d/` path: `http://proaktiv.no/d/`
+- ⏳ Waiting for Railway redeploy with correct WebDAV config
+
+### New Files Created
+| File | Purpose |
+|------|---------|
+| `backend/app/services/webdav_service.py` | WebDAV client wrapper |
+| `backend/app/routers/storage.py` | Storage API endpoints |
+| `backend/app/services/inventory_service.py` | Vitec template sync stats |
+| `frontend/src/app/storage/page.tsx` | Storage browser page |
+| `frontend/src/components/storage/` | Storage UI components |
+| `frontend/src/hooks/useLayoutPartials.ts` | Layout partials hook |
+| `frontend/src/hooks/useInventoryStats.ts` | Inventory stats hook |
+| `.cursor/vitec-reference.md` | Full Vitec Next reference |
+
+### Bug Fixes Today
+- ✅ Fixed `layoutPartialsApi.list()` call signature in v2 hook
+- ✅ Fixed undefined `NEW_RESOURCE_STRING` in SanitizerService
+- ✅ Fixed Category/categoryApi exports in API barrel file
+- ✅ Improved WebDAV error handling with user-friendly messages
+
+## V2.8 RAILWAY MIGRATION (2026-01-17) ✅
+
+### Migration Complete
 - ✅ Backend deployed to Railway (FastAPI + PostgreSQL)
 - ✅ Frontend deployed to Railway (Next.js)
 - ✅ 44 templates imported to PostgreSQL database
@@ -21,18 +56,6 @@
 ### Production URLs
 - **Frontend:** https://blissful-quietude-production.up.railway.app
 - **Backend:** https://proaktiv-dokument-hub-production.up.railway.app
-
-### Changes Made
-| File | Changes |
-|------|---------|
-| `backend/requirements.txt` | Removed azure-storage-blob, azure-identity |
-| `backend/app/services/__init__.py` | Removed AzureStorageService |
-| `backend/app/main.py` | Removed Azure CORS origins |
-| `backend/scripts/start-prod.sh` | Simplified for Railway-only |
-| `frontend/next.config.js` | Removed Azure Blob image patterns |
-| `frontend/src/lib/api/config.ts` | Removed Azure detection logic |
-| `.github/workflows/deploy-azure.yml` | DELETED |
-| `infrastructure/bicep/` | DELETED |
 
 ## V2.7 COMPLETED FEATURES (2026-01-16)
 
@@ -52,29 +75,8 @@
 
 ### 3. Dashboard Stats API ✅
 - `GET /api/dashboard/stats` - Returns template counts
-- Fixed dashboard 500 error (endpoint now exists)
-- Includes recent uploads list
+- `GET /api/dashboard/inventory` - Vitec sync status
 - Dashboard now uses real backend data
-
-## V2.6 FEATURES (2026-01-15)
-
-### 1. Live Document Preview Thumbnails
-- Template cards show **live document previews** instead of static icons
-- Uses IntersectionObserver for **lazy loading**
-- 15% scale transform fits full document into thumbnail area
-
-### 2. A4 Page Break Visualization
-- Toggle button "Vis A4" / "Skjul A4" in preview toolbar
-- Shows **red dashed lines** at A4 page boundaries
-
-### 3. Simulator Test Data Persistence
-- Default test data **pre-populated** with common fields
-- Save/Reset/Clear buttons for test data management
-- Test data survives browser refresh
-
-### 4. Code Generator (Flettekoder Page)
-- Visual interface for building Vitec code snippets
-- Supports: `vitec-if/else`, `vitec-foreach`, inline conditions
 
 ## V2 CORE CONCEPTS
 
@@ -96,6 +98,12 @@
 - Auto-discovery scans existing templates
 - Visual code generator for non-coders
 
+### Vitec Integration (V2.9)
+- Full Vitec Stilark compliance in sanitizer
+- Headers/footers/signatures as layout partials
+- WebDAV storage for network file access
+- Template inventory tracking vs Vitec registry
+
 ## DATABASE STATUS
 - **Platform:** Railway PostgreSQL
 - **Templates:** 44
@@ -111,6 +119,14 @@
 | blissful-quietude | main | Frontend (Next.js) |
 | PostgreSQL | - | Database |
 
+### Environment Variables (Backend)
+| Variable | Purpose |
+|----------|---------|
+| `DATABASE_URL` | PostgreSQL connection string |
+| `WEBDAV_URL` | WebDAV server URL (`http://proaktiv.no/d/`) |
+| `WEBDAV_USERNAME` | WebDAV login |
+| `WEBDAV_PASSWORD` | WebDAV password |
+
 ### Deploy Process
 1. Push to `main` branch
 2. Railway auto-deploys both services
@@ -118,10 +134,14 @@
 
 ## NEXT STEPS (V2.9+)
 
-### Potential Features
+### Immediate
+- [ ] Verify WebDAV connection with correct URL path
+- [ ] Test storage browser functionality
+- [ ] Seed Vitec merge fields to database
+
+### Future Features
 - [ ] Custom domain setup (dokumenthub.proaktiv.no)
 - [ ] Template versioning UI (view/restore previous versions)
 - [ ] Visual builder with TipTap integration
 - [ ] Bulk template operations
 - [ ] Advanced search and filtering
-- [ ] Add more Vitec Logic patterns to snippets.json
