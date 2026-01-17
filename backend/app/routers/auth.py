@@ -90,14 +90,14 @@ async def login(login_request: LoginRequest, response: Response):
     # Create session token
     token = create_session_token()
     
-    # Set cookie
+    # Set cookie - use samesite="none" for cross-origin requests between Railway services
     expires = datetime.now(timezone.utc) + timedelta(days=settings.AUTH_SESSION_EXPIRE_DAYS)
     response.set_cookie(
         key="session",
         value=token,
         httponly=True,
-        secure=True,  # Only send over HTTPS
-        samesite="lax",
+        secure=True,  # Required for samesite="none"
+        samesite="none",  # Allow cross-origin (frontend/backend on different domains)
         expires=expires.strftime("%a, %d %b %Y %H:%M:%S GMT"),
         path="/"
     )
@@ -118,7 +118,7 @@ async def logout(response: Response):
         key="session",
         httponly=True,
         secure=True,
-        samesite="lax",
+        samesite="none",
         path="/"
     )
     return {"success": True, "message": "Logged out successfully"}
