@@ -74,6 +74,17 @@ async def debug_config():
     """
     import os
     fresh_settings = get_settings()
+    
+    # Get all env vars that contain "APP" or "PASSWORD" or "HASH" (for debugging)
+    relevant_env_vars = {
+        k: (v[:20] + "..." if len(v) > 20 else v) 
+        for k, v in os.environ.items() 
+        if any(x in k.upper() for x in ["APP", "PASSWORD", "HASH", "AUTH"])
+    }
+    
+    # List all env var NAMES (not values) to see what's available
+    all_env_var_names = sorted([k for k in os.environ.keys()])
+    
     return {
         "module_level_hash_set": bool(settings.APP_PASSWORD_HASH),
         "module_level_hash_length": len(settings.APP_PASSWORD_HASH) if settings.APP_PASSWORD_HASH else 0,
@@ -82,6 +93,8 @@ async def debug_config():
         "env_var_set": bool(os.environ.get("APP_PASSWORD_HASH")),
         "env_var_length": len(os.environ.get("APP_PASSWORD_HASH", "")),
         "env_var_starts_with": os.environ.get("APP_PASSWORD_HASH", "")[:10] if os.environ.get("APP_PASSWORD_HASH") else None,
+        "relevant_env_vars": relevant_env_vars,
+        "all_env_var_names": all_env_var_names,
     }
 
 
