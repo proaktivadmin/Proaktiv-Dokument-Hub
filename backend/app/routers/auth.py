@@ -66,6 +66,25 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
         return False
 
 
+@router.get("/debug-config")
+async def debug_config():
+    """
+    Debug endpoint to check auth configuration.
+    Remove this after debugging!
+    """
+    import os
+    fresh_settings = get_settings()
+    return {
+        "module_level_hash_set": bool(settings.APP_PASSWORD_HASH),
+        "module_level_hash_length": len(settings.APP_PASSWORD_HASH) if settings.APP_PASSWORD_HASH else 0,
+        "fresh_settings_hash_set": bool(fresh_settings.APP_PASSWORD_HASH),
+        "fresh_settings_hash_length": len(fresh_settings.APP_PASSWORD_HASH) if fresh_settings.APP_PASSWORD_HASH else 0,
+        "env_var_set": bool(os.environ.get("APP_PASSWORD_HASH")),
+        "env_var_length": len(os.environ.get("APP_PASSWORD_HASH", "")),
+        "env_var_starts_with": os.environ.get("APP_PASSWORD_HASH", "")[:10] if os.environ.get("APP_PASSWORD_HASH") else None,
+    }
+
+
 @router.post("/login")
 async def login(login_request: LoginRequest, response: Response):
     """
