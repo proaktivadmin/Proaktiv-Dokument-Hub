@@ -50,7 +50,7 @@ class TemplateContentUpdate(BaseModel):
     """Schema for updating template HTML content."""
     content: str = Field(..., min_length=1, description="HTML content")
     change_notes: Optional[str] = Field(None, max_length=500, description="Notes about the change")
-    auto_sanitize: bool = Field(True, description="Sanitize HTML for Vitec compatibility")
+    auto_sanitize: bool = Field(False, description="Sanitize HTML for Vitec compatibility")
 
 
 class TemplateContentResponse(BaseModel):

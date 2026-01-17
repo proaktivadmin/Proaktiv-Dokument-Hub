@@ -134,7 +134,7 @@ export const templateApi = {
         formData.append("category_id", payload.category_id);
       }
 
-      // auto_sanitize defaults to true, so only append if explicitly set
+      // auto_sanitize defaults to false, so only append if explicitly set
       if (payload.auto_sanitize !== undefined) {
         formData.append("auto_sanitize", String(payload.auto_sanitize));
       }

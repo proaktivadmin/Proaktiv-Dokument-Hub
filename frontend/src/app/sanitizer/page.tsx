@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect } from "react";
-import { Wand2, Save, RotateCcw, Check, AlertTriangle } from "lucide-react";
+import { Wand2, Check, AlertTriangle } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -22,9 +22,7 @@ import { Separator } from "@/components/ui/separator";
 import { TemplatePreview } from "@/components/templates/TemplatePreview";
 import { useTemplates } from "@/hooks/useTemplates";
 import { templateApi } from "@/lib/api";
-import { getApiBaseUrl } from "@/lib/api/config";
-
-const API_URL = getApiBaseUrl() || "http://localhost:8000";
+import { apiClient } from "@/lib/api/config";
 
 interface ValidationResult {
   has_vitec_wrapper: boolean;
@@ -91,16 +89,10 @@ export default function SanitizerPage() {
 
     async function validateContent() {
       try {
-        const response = await fetch(`${API_URL}/api/sanitize/validate`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ html: originalContent }),
+        const response = await apiClient.post("/sanitize/validate", {
+          html: originalContent,
         });
-
-        if (response.ok) {
-          const result = await response.json();
-          setValidation(result);
-        }
+        setValidation(response.data);
       } catch (err) {
         console.error("Validation failed:", err);
       }
@@ -110,78 +102,50 @@ export default function SanitizerPage() {
   }, [originalContent]);
 
   const handleSanitize = async () => {
-    if (!originalContent) return;
+    if (!originalContent || !selectedTemplateId) return;
 
     setIsLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch(`${API_URL}/api/sanitize/preview`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          html: originalContent,
-          update_resource: true,
-          theme_class: "proaktiv-theme",
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Sanitering feilet");
-      }
-
-      const result: SanitizeResult = await response.json();
-      setSanitizedContent(result.html);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Sanitering feilet");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSave = async () => {
-    if (!sanitizedContent || !selectedTemplateId) return;
-
     setIsSaving(true);
     setError(null);
+    setSaveSuccess(false);
 
     try {
-      // Use the template update API to save the sanitized content
-      // This would need a new endpoint: PUT /api/templates/{id}/content
-      const response = await fetch(`${API_URL}/api/templates/${selectedTemplateId}/content`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: sanitizedContent }),
+      const response = await apiClient.post<SanitizeResult>("/sanitize/preview", {
+        html: originalContent,
+        update_resource: true,
+        theme_class: "proaktiv-theme",
       });
 
-      if (!response.ok) {
-        throw new Error("Lagring feilet");
-      }
+      const sanitizedHtml = response.data.html;
 
+      // Persist sanitized content immediately
+      await apiClient.put(`/templates/${selectedTemplateId}/content`, {
+        content: sanitizedHtml,
+        auto_sanitize: false,
+      });
+
+      setSanitizedContent(sanitizedHtml);
+      setOriginalContent(sanitizedHtml);
       setSaveSuccess(true);
-      setOriginalContent(sanitizedContent);
-      setSanitizedContent("");
 
       // Re-validate
-      const valResponse = await fetch(`${API_URL}/api/sanitize/validate`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ html: sanitizedContent }),
-      });
-      if (valResponse.ok) {
-        setValidation(await valResponse.json());
+      try {
+        const valResponse = await apiClient.post("/sanitize/validate", {
+          html: sanitizedHtml,
+        });
+        setValidation(valResponse.data);
+      } catch {
+        // Validation failure is not critical
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Lagring feilet");
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error
+        ? err.message
+        : (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail || "Sanitering feilet";
+      setError(errorMessage);
     } finally {
+      setIsLoading(false);
       setIsSaving(false);
     }
-  };
-
-  const handleReset = () => {
-    setSanitizedContent("");
-    setError(null);
-    setSaveSuccess(false);
   };
 
   const selectedTemplate = templates.find((t) => t.id === selectedTemplateId);
@@ -247,31 +211,17 @@ export default function SanitizerPage() {
             </div>
           )}
 
-          <div className="flex gap-2">
+          <div className="flex items-center gap-3">
             <Button
               onClick={handleSanitize}
-              disabled={!originalContent || isLoading}
+              disabled={!originalContent || isLoading || isSaving}
             >
               <Wand2 className="h-4 w-4 mr-2" />
-              Sanitér
+              {isSaving ? "Saniterer og lagrer..." : "Sanitér og lagre"}
             </Button>
-            {sanitizedContent && (
-              <>
-                <Button variant="outline" onClick={handleReset}>
-                  <RotateCcw className="h-4 w-4 mr-2" />
-                  Tilbakestill
-                </Button>
-                <Button
-                  variant="default"
-                  onClick={handleSave}
-                  disabled={isSaving}
-                  className="bg-green-600 hover:bg-green-700"
-                >
-                  <Save className="h-4 w-4 mr-2" />
-                  {isSaving ? "Lagrer..." : "Lagre permanent"}
-                </Button>
-              </>
-            )}
+            <span className="text-sm text-muted-foreground">
+              Endringen lagres permanent i malen.
+            </span>
           </div>
         </div>
 
@@ -324,7 +274,7 @@ export default function SanitizerPage() {
             {/* Sanitized */}
             <div className="flex-1 flex flex-col">
               <div className="px-4 py-2 border-b bg-gray-100 text-sm font-medium">
-                Sanitert
+                Sanitert (lagret)
                 {sanitizedContent && (
                   <span className="text-gray-500 font-normal ml-2">
                     ({sanitizedContent.length.toLocaleString()} tegn)

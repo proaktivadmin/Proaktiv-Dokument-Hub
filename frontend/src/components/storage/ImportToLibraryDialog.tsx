@@ -14,7 +14,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -42,16 +41,11 @@ export function ImportToLibraryDialog({
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState<"draft" | "published">("draft");
   const [categoryId, setCategoryId] = useState<string>("");
-  const [autoSanitize, setAutoSanitize] = useState(true);
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoriesLoading, setCategoriesLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-
-  const isHtmlFile =
-    item?.name?.toLowerCase().endsWith(".html") ||
-    item?.name?.toLowerCase().endsWith(".htm");
 
   useEffect(() => {
     if (item) {
@@ -101,7 +95,6 @@ export function ImportToLibraryDialog({
         description: description.trim() || undefined,
         status,
         category_id: categoryId || undefined,
-        auto_sanitize: isHtmlFile ? autoSanitize : undefined,
       });
 
       setSuccess(true);
@@ -121,7 +114,6 @@ export function ImportToLibraryDialog({
       setDescription("");
       setStatus("draft");
       setCategoryId("");
-      setAutoSanitize(true);
       setError(null);
       setSuccess(false);
       onOpenChange(false);
@@ -244,34 +236,6 @@ export function ImportToLibraryDialog({
                   </label>
                 </div>
               </div>
-
-              {/* HTML Sanitization */}
-              {isHtmlFile && (
-                <div className="space-y-2 p-3 bg-muted/50 rounded-lg border">
-                  <div className="flex items-start gap-3">
-                    <Checkbox
-                      id="auto_sanitize"
-                      checked={autoSanitize}
-                      onCheckedChange={(checked) =>
-                        setAutoSanitize(checked === true)
-                      }
-                      disabled={loading}
-                      className="mt-0.5"
-                    />
-                    <div className="flex-1">
-                      <Label
-                        htmlFor="auto_sanitize"
-                        className="text-sm font-medium cursor-pointer"
-                      >
-                        Sanitize HTML for Vitec
-                      </Label>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Renser HTML-koden for Vitec Next-kompatibilitet.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
 
               {/* Error */}
               {error && (

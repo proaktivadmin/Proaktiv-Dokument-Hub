@@ -18,6 +18,7 @@ import { CodeEditor } from "@/components/editor/CodeEditor";
 import { templateApi } from "@/lib/api";
 import { templateSettingsApi } from "@/lib/api/template-settings";
 import { useToast } from "@/hooks/use-toast";
+import { useTemplateSettings } from "@/hooks/useTemplateSettings";
 import {
   Download,
   Pencil,
@@ -30,6 +31,8 @@ import {
   Settings,
   Play,
   Code,
+  Save,
+  Loader2,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { nb } from "date-fns/locale";
@@ -51,6 +54,8 @@ export function TemplateDetailSheet({
   onDownload,
 }: TemplateDetailSheetProps) {
   const [originalContent, setOriginalContent] = useState<string>("");
+  const [editedContent, setEditedContent] = useState<string>("");
+  const [hasContentChanges, setHasContentChanges] = useState(false);
   const [processedContent, setProcessedContent] = useState<string | null>(null);
   const [testDataEnabled, setTestDataEnabled] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -59,9 +64,30 @@ export function TemplateDetailSheet({
   const [isSavingContent, setIsSavingContent] = useState(false);
   const [isSavingSettings, setIsSavingSettings] = useState(false);
   const { toast } = useToast();
+
+  // Fetch settings for the settings tab
+  const { settings: backendSettings, refetch: refetchSettings } = useTemplateSettings(
+    template?.id ?? null
+  );
   
-  // Derived content: show processed if test data enabled, otherwise original
-  const content = testDataEnabled && processedContent ? processedContent : originalContent;
+  // Derived content: show processed if test data enabled, otherwise edited content
+  const content = testDataEnabled && processedContent ? processedContent : editedContent;
+
+  // Map backend settings to frontend format
+  const initialSettings = backendSettings ? {
+    marginTop: backendSettings.margin_top ?? 1.5,
+    marginRight: backendSettings.margin_right ?? 1.2,
+    marginBottom: backendSettings.margin_bottom ?? 1.0,
+    marginLeft: backendSettings.margin_left ?? 1.0,
+    headerTemplateId: backendSettings.header_template_id ?? null,
+    footerTemplateId: backendSettings.footer_template_id ?? null,
+    signatureTemplateId: null,
+    channel: (backendSettings.channel as TemplateSettings["channel"]) ?? "pdf_email",
+    receiverType: backendSettings.receiver_type ?? null,
+    receiver: backendSettings.receiver ?? null,
+    emailSubject: backendSettings.email_subject ?? null,
+    themeStylesheet: null,
+  } : undefined;
 
   // Load content when dialog opens with an HTML template
   useEffect(() => {
@@ -69,6 +95,8 @@ export function TemplateDetailSheet({
       loadContent(template.id);
     } else {
       setOriginalContent("");
+      setEditedContent("");
+      setHasContentChanges(false);
       setProcessedContent(null);
       setTestDataEnabled(false);
       setError(null);
@@ -82,6 +110,8 @@ export function TemplateDetailSheet({
     try {
       const response = await templateApi.getContent(templateId);
       setOriginalContent(response.content);
+      setEditedContent(response.content);
+      setHasContentChanges(false);
       setProcessedContent(null);
       setTestDataEnabled(false);
     } catch (err) {
@@ -90,6 +120,36 @@ export function TemplateDetailSheet({
       setError(errorMessage);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // Save content function
+  const saveContent = async () => {
+    if (!template || !hasContentChanges) return;
+
+    setIsSavingContent(true);
+    try {
+      const result = await templateSettingsApi.saveContent(template.id, {
+        content: editedContent,
+        auto_sanitize: false,
+      });
+
+      toast({
+        title: "Innhold lagret",
+        description: `Versjon ${result.version} opprettet. ${result.merge_fields_detected} flettekoder funnet.`,
+      });
+
+      // Update original content and reset change tracking
+      setOriginalContent(editedContent);
+      setHasContentChanges(false);
+    } catch (error) {
+      toast({
+        title: "Feil ved lagring",
+        description: error instanceof Error ? error.message : "Kunne ikke lagre innhold",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSavingContent(false);
     }
   };
 
@@ -227,59 +287,70 @@ export function TemplateDetailSheet({
           </TabsContent>
 
           {/* Code Tab - Monaco Editor */}
-          <TabsContent value="code" className="flex-1 m-0 overflow-hidden">
-            {isLoading ? (
-              <div className="h-full flex items-center justify-center bg-gray-900 text-gray-400">
-                Laster kode...
+          <TabsContent value="code" className="flex-1 m-0 overflow-hidden flex flex-col">
+            {/* Code Editor Toolbar */}
+            <div className="flex items-center justify-between px-4 py-2 bg-gray-800 border-b border-gray-700 shrink-0">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-400">HTML</span>
+                {hasContentChanges && (
+                  <Badge variant="outline" className="text-amber-400 border-amber-400">
+                    Ulagrede endringer
+                  </Badge>
+                )}
               </div>
-            ) : error ? (
-              <div className="h-full flex items-center justify-center bg-gray-900 text-red-400">
-                {error}
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-gray-500">Ctrl+S for å lagre</span>
+                <Button
+                  size="sm"
+                  onClick={saveContent}
+                  disabled={!hasContentChanges || isSavingContent}
+                  className="bg-green-600 hover:bg-green-700"
+                >
+                  {isSavingContent ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Lagrer...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4 mr-2" />
+                      Lagre
+                    </>
+                  )}
+                </Button>
               </div>
-            ) : originalContent ? (
-              <CodeEditor
-                value={originalContent}
-                onChange={(newContent) => {
-                  setOriginalContent(newContent);
-                  // Clear processed content since original changed
-                  setProcessedContent(null);
-                  setTestDataEnabled(false);
-                }}
-                language="html"
-                theme="vs-dark"
-                onSave={async (value) => {
-                  if (!template) return;
-                  
-                  setIsSavingContent(true);
-                  try {
-                    const result = await templateSettingsApi.saveContent(template.id, {
-                      content: value,
-                      auto_sanitize: true,
-                    });
-                    
-                    toast({
-                      title: "Innhold lagret",
-                      description: `Versjon ${result.version} opprettet. ${result.merge_fields_detected} flettekoder funnet.`,
-                    });
-                    
-                    // Reload content to get updated version
-                    await loadContent(template.id);
-                  } catch (error) {
-                    toast({
-                      title: "Feil ved lagring",
-                      description: error instanceof Error ? error.message : "Kunne ikke lagre innhold",
-                      variant: "destructive",
-                    });
-                  } finally {
-                    setIsSavingContent(false);
-                  }
-                }}
-              />
-            ) : (
-              <div className="h-full flex items-center justify-center bg-gray-900 text-gray-400">
-                Ingen kode tilgjengelig
-              </div>
-            )}
+            </div>
+
+            {/* Editor Area */}
+            <div className="flex-1 overflow-hidden">
+              {isLoading ? (
+                <div className="h-full flex items-center justify-center bg-gray-900 text-gray-400">
+                  Laster kode...
+                </div>
+              ) : error ? (
+                <div className="h-full flex items-center justify-center bg-gray-900 text-red-400">
+                  {error}
+                </div>
+              ) : editedContent !== undefined ? (
+                <CodeEditor
+                  value={editedContent}
+                  onChange={(newContent) => {
+                    setEditedContent(newContent);
+                    setHasContentChanges(newContent !== originalContent);
+                    // Clear processed content since content changed
+                    setProcessedContent(null);
+                    setTestDataEnabled(false);
+                  }}
+                  language="html"
+                  theme="vs-dark"
+                  onSave={saveContent}
+                />
+              ) : (
+                <div className="h-full flex items-center justify-center bg-gray-900 text-gray-400">
+                  Ingen kode tilgjengelig
+                </div>
+              )}
+            </div>
           </TabsContent>
 
           {/* Settings Tab */}
@@ -287,6 +358,7 @@ export function TemplateDetailSheet({
             <div className="max-w-xl mx-auto">
               <TemplateSettingsPanel
                 templateId={template.id}
+                initialSettings={initialSettings}
                 onSave={async (settings: TemplateSettings) => {
                   setIsSavingSettings(true);
                   try {
@@ -302,11 +374,14 @@ export function TemplateDetailSheet({
                       margin_left: settings.marginLeft,
                       margin_right: settings.marginRight,
                     });
-                    
+
                     toast({
                       title: "Innstillinger lagret",
                       description: "Malinnstillingene er oppdatert.",
                     });
+
+                    // Refetch settings to update state
+                    refetchSettings();
                   } catch (error) {
                     toast({
                       title: "Feil ved lagring",

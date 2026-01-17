@@ -62,7 +62,7 @@ class ImportRequest(BaseModel):
     description: Optional[str] = None
     status: str = "draft"
     category_id: Optional[str] = None
-    auto_sanitize: bool = True
+    auto_sanitize: bool = False
 
 
 class StatusResponse(BaseModel):

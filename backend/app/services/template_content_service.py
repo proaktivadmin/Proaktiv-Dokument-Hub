@@ -30,7 +30,7 @@ class TemplateContentService:
         content: str,
         updated_by: str,
         change_notes: Optional[str] = None,
-        auto_sanitize: bool = True
+        auto_sanitize: bool = False
     ) -> dict:
         """
         Save template HTML content with automatic versioning.
@@ -41,7 +41,7 @@ class TemplateContentService:
             content: New HTML content
             updated_by: User email
             change_notes: Optional notes about the change
-            auto_sanitize: Whether to sanitize the HTML
+            auto_sanitize: Whether to sanitize the HTML (manual by default)
             
         Returns:
             Dict containing:

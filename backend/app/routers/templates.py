@@ -153,15 +153,15 @@ async def create_template(
     title: str = Form(...),
     description: Optional[str] = Form(None),
     status: str = Form("draft"),
-    auto_sanitize: bool = Form(True),
+    auto_sanitize: bool = Form(False),
     user: dict = Depends(get_current_user)
 ):
     """
     Upload a new template.
     
     Args:
-        auto_sanitize: If True (default), HTML files will be sanitized for Vitec compatibility.
-                       Set to False for system templates that should not be modified.
+        auto_sanitize: If True, HTML files will be sanitized for Vitec compatibility.
+                       Defaults to False. Use the Sanitizer tool for manual cleanup.
     """
     # Validate file type
     allowed_types = ["docx", "doc", "pdf", "xlsx", "xls", "html", "htm"]

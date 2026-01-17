@@ -26,7 +26,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
 import { templateApi, categoryApi } from "@/lib/api";
 import type { TemplateStatus, Category } from "@/types";
 
@@ -70,12 +69,7 @@ export function UploadTemplateDialog({
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoriesLoading, setCategoriesLoading] = useState(false);
-  const [autoSanitize, setAutoSanitize] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
-  // Check if selected file is HTML
-  const isHtmlFile = file?.name?.toLowerCase().endsWith('.html') || 
-                     file?.name?.toLowerCase().endsWith('.htm');
 
   const {
     register,
@@ -169,7 +163,6 @@ export function UploadTemplateDialog({
   const removeFile = () => {
     setFile(null);
     setFileError(null);
-    setAutoSanitize(true); // Reset to default when file is removed
   };
 
   const handleClose = () => {
@@ -177,7 +170,6 @@ export function UploadTemplateDialog({
       setFile(null);
       setFileError(null);
       setUploadError(null);
-      setAutoSanitize(true); // Reset to default
       reset();
       onOpenChange(false);
     }
@@ -199,7 +191,6 @@ export function UploadTemplateDialog({
         description: data.description || undefined,
         status: data.status as TemplateStatus,
         category_id: data.category_id || undefined,
-        auto_sanitize: isHtmlFile ? autoSanitize : undefined,
       });
 
       // Reset form and close dialog on success
@@ -394,38 +385,6 @@ export function UploadTemplateDialog({
               </label>
             </div>
           </div>
-
-          {/* HTML Sanitization Checkbox - Only shown for HTML files */}
-          {isHtmlFile && (
-            <div className="space-y-2 p-3 bg-muted/50 rounded-lg border">
-              <div className="flex items-start gap-3">
-                <Checkbox
-                  id="auto_sanitize"
-                  checked={autoSanitize}
-                  onCheckedChange={(checked) => setAutoSanitize(checked === true)}
-                  disabled={isUploading}
-                  className="mt-0.5"
-                />
-                <div className="flex-1">
-                  <Label 
-                    htmlFor="auto_sanitize" 
-                    className="text-sm font-medium cursor-pointer"
-                  >
-                    Sanitize HTML for Vitec
-                  </Label>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Renser HTML-koden for Vitec Next-kompatibilitet. 
-                    Deaktiver for system-maler som allerede er korrekt formatert.
-                  </p>
-                </div>
-              </div>
-              {!autoSanitize && (
-                <p className="text-xs text-amber-600 ml-7">
-                  ⚠️ HTML-filen vil ikke bli renset. Kun for avanserte brukere.
-                </p>
-              )}
-            </div>
-          )}
 
           {/* Upload Error */}
           {uploadError && (
