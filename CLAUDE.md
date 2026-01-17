@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-## Project: Proaktiv Dokument Hub V2.6
+## Project: Proaktiv Dokument Hub V2.8
 
 A document template management system for Norwegian real estate brokers, integrated with Vitec Next.
 
@@ -10,11 +10,11 @@ A document template management system for Norwegian real estate brokers, integra
 
 | Aspect | Details |
 |--------|---------|
-| **Phase** | 2.6 (Document Preview & Simulator Enhancements) |
-| **Stack** | Next.js 14 + FastAPI + PostgreSQL + Azure Blob Storage |
+| **Phase** | 2.8 (Railway Migration Complete) |
+| **Stack** | Next.js 14 + FastAPI + PostgreSQL (Railway) |
 | **UI** | Shadcn/UI + Tailwind CSS |
-| **Auth** | Azure Easy Auth (mocked locally) |
-| **Status** | ✅ Production Ready |
+| **Hosting** | Railway (Frontend + Backend + PostgreSQL) |
+| **Status** | ✅ Production Live |
 
 ---
 
@@ -32,7 +32,7 @@ A document template management system for Norwegian real estate brokers, integra
 - Filtering **dims** non-matching cards (opacity 0.3), doesn't hide them
 - **Live document preview thumbnails** on cards for visual recognition
 
-### Template Viewer Features (V2.6)
+### Template Viewer Features (V2.6+)
 - **A4 Page Break Visualization** - Toggle to see where pages break
 - **Simulator Test Data Persistence** - Save default test values to localStorage
 - **Quick Test Data Toggle** - Switch between original and processed content
@@ -102,13 +102,19 @@ frontend/
 
 See `.cursor/active_context.md` for full status.
 
-**V2.6 Features (Completed):**
+**V2.8 Railway Migration (Completed):**
+- ✅ Migrated from Azure to Railway
+- ✅ 44 templates stored in PostgreSQL database
+- ✅ 11 categories seeded
+- ✅ Frontend and Backend on Railway
+- ✅ Deploys from `main` branch
+
+**V2.6-2.7 Features:**
 - ✅ Live document preview thumbnails on template cards
 - ✅ A4 page break visualization in document viewer
 - ✅ Simulator test data persistence with save/reset/clear
 - ✅ Visual code generator for Vitec snippets
 - ✅ 4-tab document viewer (Preview, Code, Settings, Simulator)
-- ✅ 43 templates in Azure Storage
 
 ---
 
@@ -149,6 +155,7 @@ Use `/architect`, `/frontend-architect`, `/builder` commands.
 
 ## Environment
 
+### Local Development
 ```bash
 # Start development
 docker compose up -d
@@ -162,3 +169,8 @@ http://localhost:3000
 # Database
 docker compose exec db psql -U postgres -d dokument_hub
 ```
+
+### Production (Railway)
+- **Frontend:** https://blissful-quietude-production.up.railway.app
+- **Backend:** https://proaktiv-dokument-hub-production.up.railway.app
+- **Deploy:** Push to `main` branch

@@ -1,26 +1,21 @@
-# Proaktiv Dokument Hub V2.6
+# Proaktiv Dokument Hub V2.8
 
 A modern document template management system for Norwegian real estate brokers, integrated with Vitec Next.
 
-![Version](https://img.shields.io/badge/version-2.6-blue)
+![Version](https://img.shields.io/badge/version-2.8-blue)
 ![Stack](https://img.shields.io/badge/stack-Next.js%20%2B%20FastAPI-green)
 ![Status](https://img.shields.io/badge/status-production-success)
+![Platform](https://img.shields.io/badge/platform-Railway-purple)
 
 ---
 
-## ✨ What's New in V2.6
+## ✨ What's New in V2.8
 
-### Live Document Preview Thumbnails
-Template cards now display **live previews** of document content, making it easy to visually identify templates at a glance.
-
-### A4 Page Break Visualization
-Toggle to see exactly where page breaks will occur on A4 paper - red dashed lines mark the 257mm content boundaries.
-
-### Simulator Test Data Persistence
-Default test values for merge fields are now **saved to your browser**, with options to save your own defaults, reset to system defaults, or clear all values.
-
-### Visual Code Generator
-Build Vitec code snippets (if/else, loops, inline conditions) without writing code - just click and copy.
+### Railway Migration Complete
+The application has been migrated from Azure Container Apps to **Railway**, providing:
+- Faster deployments (push to deploy)
+- Simpler infrastructure management
+- Template content stored in PostgreSQL database
 
 ---
 
@@ -45,19 +40,16 @@ Build Vitec code snippets (if/else, loops, inline conditions) without writing co
 │   Next.js 14    │────▶│    FastAPI      │────▶│   PostgreSQL    │
 │   (Frontend)    │     │    (Backend)    │     │   (Database)    │
 └─────────────────┘     └─────────────────┘     └─────────────────┘
-                               │
-                               ▼
-                        ┌─────────────────┐
-                        │  Azure Blob     │
-                        │  Storage        │
-                        └─────────────────┘
+        │                       │                       │
+        └───────────────────────┴───────────────────────┘
+                            Railway
 ```
 
 ### Tech Stack
 - **Frontend:** Next.js 14 (App Router), React, Tailwind CSS, Shadcn/UI
 - **Backend:** FastAPI, Pydantic, SQLAlchemy (async)
 - **Database:** PostgreSQL with JSONB fields
-- **Storage:** Azure Blob Storage for templates
+- **Hosting:** Railway (all services)
 - **Editor:** Monaco Editor for code viewing/editing
 
 ---
@@ -73,8 +65,8 @@ Build Vitec code snippets (if/else, loops, inline conditions) without writing co
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/proaktiv-dokument-hub.git
-cd proaktiv-dokument-hub
+git clone https://github.com/Adrian12341234-code/Proaktiv-Dokument-Hub.git
+cd Proaktiv-Dokument-Hub
 
 # Start all services
 docker compose up -d
@@ -92,6 +84,11 @@ curl http://localhost:8000/api/health
 # Frontend
 curl http://localhost:3000
 ```
+
+### Production URLs
+
+- **Frontend:** https://blissful-quietude-production.up.railway.app
+- **Backend API:** https://proaktiv-dokument-hub-production.up.railway.app
 
 ---
 
@@ -120,15 +117,10 @@ proaktiv-dokument-hub/
 │   │   └── schemas/         # Pydantic models
 │   └── alembic/             # Database migrations
 │
-├── .cursor/                  # Agent context and specs
-│   ├── active_context.md    # Current project status
-│   ├── specs/               # Architecture specifications
-│   └── agents/              # Agent prompts
-│
-└── documentation/           # Project documentation
-    ├── AI_HANDOFF.md        # Agent handoff protocol
-    ├── BRAND_GUIDE.md       # Design guidelines
-    └── API_REFERENCE.md     # API documentation
+└── .cursor/                  # Agent context and specs
+    ├── active_context.md    # Current project status
+    ├── specs/               # Architecture specifications
+    └── agents/              # Agent prompts
 ```
 
 ---
@@ -168,26 +160,37 @@ Templates use a custom merge field syntax compatible with Vitec Next:
 
 | Metric | Value |
 |--------|-------|
-| Templates | 43 |
+| Templates | 44 |
 | Merge Fields | 142 |
 | Code Patterns | 10 |
-| Categories | 12 |
+| Categories | 11 |
 
 ---
 
-## 🔐 Security
+## 🚀 Deployment
 
-- Azure Easy Auth for production authentication
-- Mocked authentication for local development
-- All API endpoints protected in production
+The app deploys automatically to Railway when you push to the `main` branch.
+
+### Railway Services
+1. **proaktiv-dokument-hub** - Backend (FastAPI)
+2. **blissful-quietude** - Frontend (Next.js)
+3. **PostgreSQL** - Database
+
+### Environment Variables
+Backend requires:
+- `DATABASE_URL` - PostgreSQL connection string
+- `SECRET_KEY` - Application secret
+- `APP_ENV` - Environment (production)
+
+Frontend requires:
+- `BACKEND_URL` - Backend API URL
 
 ---
 
 ## 📝 Documentation
 
-- [AI Handoff Protocol](documentation/AI_HANDOFF.md) - For AI agents
-- [Brand Guide](documentation/BRAND_GUIDE.md) - Design standards
-- [API Reference](documentation/API_REFERENCE.md) - Backend endpoints
+- [CLAUDE.md](CLAUDE.md) - Project conventions for AI agents
+- [.cursor/active_context.md](.cursor/active_context.md) - Current project status
 
 ---
 
@@ -196,7 +199,7 @@ Templates use a custom merge field syntax compatible with Vitec Next:
 1. Read `CLAUDE.md` for project conventions
 2. Check `.cursor/active_context.md` for current status
 3. Follow the agent pipeline for major features
-4. Update documentation with code changes
+4. Push to `main` for production deployment
 
 ---
 
