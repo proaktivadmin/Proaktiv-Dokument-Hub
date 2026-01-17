@@ -73,6 +73,11 @@ class Settings(BaseSettings):
     VITEC_INSTALLATION_ID: str = ""
     VITEC_ENVIRONMENT: str = "qa"
     VITEC_ACCESS_KEY: str = ""
+    
+    # WebDAV Network Storage
+    WEBDAV_URL: str = ""
+    WEBDAV_USERNAME: str = ""
+    WEBDAV_PASSWORD: str = ""
 
     @field_validator("SECRET_KEY", mode="before")
     @classmethod

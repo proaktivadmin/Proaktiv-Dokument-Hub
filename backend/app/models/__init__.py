@@ -10,6 +10,7 @@ from app.models.audit_log import AuditLog
 from app.models.merge_field import MergeField
 from app.models.code_pattern import CodePattern
 from app.models.layout_partial import LayoutPartial
+from app.models.vitec_registry import VitecTemplateRegistry
 
 __all__ = [
     "Base",
@@ -23,5 +24,6 @@ __all__ = [
     "MergeField",
     "CodePattern",
     "LayoutPartial",
+    "VitecTemplateRegistry",
 ]
 

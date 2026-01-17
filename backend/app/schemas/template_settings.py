@@ -1,5 +1,7 @@
 """
 Pydantic schemas for Template Settings operations.
+
+Based on Vitec Next configuration from .cursor/vitec-reference.md
 """
 
 from pydantic import BaseModel, Field, ConfigDict
@@ -7,6 +9,41 @@ from typing import Optional, List, Literal
 from uuid import UUID
 from decimal import Decimal
 from datetime import datetime
+
+
+# =============================================================================
+# VITEC TYPE DEFINITIONS (from vitec-reference.md)
+# =============================================================================
+
+# Template channel types
+ChannelType = Literal['pdf', 'email', 'sms', 'pdf_email']
+
+# Template types
+TemplateType = Literal['Objekt/Kontakt', 'System']
+
+# Receiver types
+ReceiverType = Literal['Egne/kundetilpasset', 'Systemstandard']
+
+# Primary receivers (from Kunderelasjonstyper - expanded)
+PrimaryReceiver = Literal[
+    'Selger', 'Kjoper', 'Megler', 'Bank', 'Forretningsforer',
+    'Visningsdeltager', 'Budgiver', 'Interessent', 'Utleier', 'Leietaker',
+    'Hjemmelshaver', 'Arving', 'Grunneier', 'Bortefester', 'Tinglysning',
+    'Forening', 'Forsikringsselskap', 'Advokat', 'Takstmann', 'Fotograf',
+    'Samarbeidspartner', 'Annen'
+]
+
+# Phases (from Vitec Faser - expanded)
+VitecPhase = Literal[
+    'Innsalg', 'Til salgs', 'Klargjoring', 'Kontrakt', 'Oppgjor',
+    '2 faser', '3 faser', '4 faser'
+]
+
+# Ownership types (from Objektstyper Eieform)
+OwnershipType = Literal[
+    'Selveier', 'Andel', 'Aksje', 'Obligasjon', 'Tomt', 
+    'Naering', 'Hytte', 'Borettslag', 'Sameie'
+]
 
 
 class TemplateContentUpdate(BaseModel):
@@ -29,20 +66,22 @@ class TemplateSettingsUpdate(BaseModel):
     """
     Schema for updating template Vitec settings.
     All fields are optional for partial updates.
+    
+    Based on Vitec Next configuration from vitec-reference.md.
     """
     # Channel and Type
-    channel: Optional[Literal['pdf', 'email', 'sms', 'pdf_email']] = Field(
+    channel: Optional[ChannelType] = Field(
         None, description="Template channel type"
     )
-    template_type: Optional[Literal['Objekt/Kontakt', 'System']] = Field(
+    template_type: Optional[TemplateType] = Field(
         None, description="Template type"
     )
     
     # Receiver
-    receiver_type: Optional[Literal['Egne/kundetilpasset', 'Systemstandard']] = Field(
+    receiver_type: Optional[ReceiverType] = Field(
         None, description="Receiver type"
     )
-    receiver: Optional[Literal['Selger', 'Kjøper', 'Megler', 'Bank', 'Forretningsfører']] = Field(
+    receiver: Optional[PrimaryReceiver] = Field(
         None, description="Primary receiver"
     )
     extra_receivers: Optional[List[str]] = Field(
@@ -50,14 +89,14 @@ class TemplateSettingsUpdate(BaseModel):
     )
     
     # Filtering/Categorization
-    phases: Optional[List[Literal['Oppdrag', 'Markedsføring', 'Visning', 'Budrunde', 'Kontrakt', 'Oppgjør']]] = Field(
-        None, description="Applicable phases"
+    phases: Optional[List[VitecPhase]] = Field(
+        None, description="Applicable phases (from Vitec Faser)"
     )
     assignment_types: Optional[List[str]] = Field(
         None, description="Assignment types"
     )
-    ownership_types: Optional[List[Literal['Bolig', 'Aksje', 'Tomt', 'Næring', 'Hytte']]] = Field(
-        None, description="Ownership types"
+    ownership_types: Optional[List[OwnershipType]] = Field(
+        None, description="Ownership types (from Vitec Eieform)"
     )
     departments: Optional[List[str]] = Field(
         None, description="Departments"

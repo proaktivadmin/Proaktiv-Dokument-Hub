@@ -246,3 +246,5 @@ export { layoutPartialsApi } from "./api/layout-partials";
 export { templateAnalysisApi } from "./api/template-analysis";
 export { templateSettingsApi } from "./api/template-settings";
 export { dashboardApi } from "./api/dashboard";
+export { storageApi } from "./api/storage";
+export type { StorageItem, BrowseResponse, StorageStatus, ImportToLibraryPayload, ImportResult } from "./api/storage";
