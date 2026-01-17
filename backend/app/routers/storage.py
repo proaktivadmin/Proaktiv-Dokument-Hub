@@ -149,20 +149,45 @@ async def debug_storage(
         return {"error": "WebDAV not configured"}
     
     try:
-        # Get raw client info
         from app.config import settings
         
-        # Ensure path ends with /
-        test_path = path if path.endswith("/") else path + "/"
+        results = {}
         
-        # Try to list
-        raw_items = await service._run_sync(service._client.list, test_path)
+        # Test different path formats
+        test_paths = [
+            path,
+            path.lstrip("/"),  # Without leading slash
+            path if path.endswith("/") else path + "/",  # With trailing slash
+            path.lstrip("/").rstrip("/") + "/" if path != "/" else "",  # No leading, with trailing
+        ]
+        
+        for tp in test_paths:
+            try:
+                raw_items = await service._run_sync(service._client.list, tp)
+                results[f"path_{tp or 'empty'}"] = {
+                    "items": raw_items,
+                    "count": len(raw_items) if raw_items else 0
+                }
+            except Exception as e:
+                results[f"path_{tp or 'empty'}"] = {"error": str(e)}
+        
+        # Also try to check if a known file exists
+        try:
+            exists = await service._run_sync(service._client.check, "Shared files/")
+            results["check_shared_files"] = exists
+        except Exception as e:
+            results["check_shared_files"] = {"error": str(e)}
+        
+        try:
+            exists = await service._run_sync(service._client.check, "Files/")
+            results["check_files"] = exists
+        except Exception as e:
+            results["check_files"] = {"error": str(e)}
         
         return {
             "webdav_url": settings.WEBDAV_URL,
-            "test_path": test_path,
-            "raw_items": raw_items,
-            "item_count": len(raw_items) if raw_items else 0,
+            "original_path": path,
+            "results": results,
         }
     except Exception as e:
         return {
