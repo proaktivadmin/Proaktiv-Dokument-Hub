@@ -135,6 +135,42 @@ async def get_storage_status():
         )
 
 
+@router.get("/debug")
+async def debug_storage(
+    path: str = Query("/", description="Directory path to test"),
+    user: dict = Depends(get_current_user)
+):
+    """
+    Debug endpoint to see raw WebDAV response.
+    """
+    service = get_webdav_service()
+    
+    if not service.is_configured:
+        return {"error": "WebDAV not configured"}
+    
+    try:
+        # Get raw client info
+        from app.config import settings
+        
+        # Ensure path ends with /
+        test_path = path if path.endswith("/") else path + "/"
+        
+        # Try to list
+        raw_items = await service._run_sync(service._client.list, test_path)
+        
+        return {
+            "webdav_url": settings.WEBDAV_URL,
+            "test_path": test_path,
+            "raw_items": raw_items,
+            "item_count": len(raw_items) if raw_items else 0,
+        }
+    except Exception as e:
+        return {
+            "error": str(e),
+            "error_type": type(e).__name__
+        }
+
+
 @router.get("/browse", response_model=BrowseResponse)
 async def browse_storage(
     path: str = Query("/", description="Directory path to browse"),

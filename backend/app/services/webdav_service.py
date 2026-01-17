@@ -124,11 +124,19 @@ class WebDAVService:
             path = "/" + path
         
         try:
-            # Get list of items
-            items = await self._run_sync(self._client.list, path, get_info=True)
+            # Ensure path ends with / for directory listing
+            if not path.endswith("/"):
+                path = path + "/"
             
-            logger.info(f"WebDAV list returned {len(items)} items for path: {path}")
-            logger.debug(f"Raw items: {items}")
+            # Get list of items - try with get_info first, fallback to simple list
+            try:
+                items = await self._run_sync(self._client.list, path, get_info=True)
+            except Exception as e:
+                logger.warning(f"get_info=True failed, trying simple list: {e}")
+                items = await self._run_sync(self._client.list, path)
+            
+            logger.info(f"WebDAV list returned {len(items) if items else 0} items for path: {path}")
+            logger.info(f"Raw items: {items}")
             
             result = []
             for item in items:
