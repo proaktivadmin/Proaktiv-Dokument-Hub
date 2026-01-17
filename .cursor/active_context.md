@@ -1,11 +1,12 @@
 # ACTIVE CONTEXT & ROADMAP
 
 ## PROJECT STATUS
-- **Phase:** 2.9 (Vitec Integration)
-- **Current Sprint:** V2.9 - Vitec Integration, WebDAV Storage & Authentication
+- **Phase:** 3.0 (Office & Employee Hub)
+- **Current Sprint:** V3.0 Full Feature Implementation
 - **Architecture:** Document-first, shelf grouping, 4-tab viewer
-- **Last Milestone:** ✅ Authentication System (2026-01-17)
-- **Current Milestone:** Vitec Integration & WebDAV Storage
+- **Last Milestone:** ✅ V2.9 Vitec Integration Complete (2026-01-17)
+- **Current Milestone:** V3.0 - Office/Employee Hub, Company Assets, Territory Map
+- **Agent Pipeline:** ✅ Backend Spec → ✅ Frontend Spec → ⏳ Builder
 
 ## V2.9 VITEC INTEGRATION (2026-01-17) - IN PROGRESS
 
@@ -151,16 +152,26 @@
 2. Railway auto-deploys both services
 3. Migrations run automatically via start-prod.sh
 
-## NEXT STEPS (V2.9+)
+## NEXT STEPS (V3.0)
 
-### Immediate
-- [ ] Verify WebDAV connection with correct URL path
-- [ ] Test storage browser functionality
-- [ ] Seed Vitec merge fields to database
+### Specs Completed
+- ✅ Backend Spec: `.cursor/specs/backend_spec.md` (2026-01-17)
+- ✅ Frontend Spec: `.cursor/specs/frontend_spec.md` (2026-01-17)
+- ⏳ Builder: Ready to start implementation
+
+### V3.0 Features (In Order)
+1. [ ] Seed 97 Vitec categories with vitec_id
+2. [ ] Office model + CRUD + UI
+3. [ ] Employee model + lifecycle + UI  
+4. [ ] Company Assets with scoping
+5. [ ] External Listings (third-party tracking)
+6. [ ] Checklists (onboarding/offboarding)
+7. [ ] Territory Map (postal code heatmap)
+8. [ ] System template versioning + defaults
+9. [ ] Bulk operations for templates
+10. [ ] Template version history UI
 
 ### Future Features
 - [ ] Custom domain setup (dokumenthub.proaktiv.no)
-- [ ] Template versioning UI (view/restore previous versions)
 - [ ] Visual builder with TipTap integration
-- [ ] Bulk template operations
 - [ ] Advanced search and filtering

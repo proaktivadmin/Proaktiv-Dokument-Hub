@@ -55,13 +55,14 @@ YOU ARE AN EXPERT FULL-STACK DEVELOPER SPECIALIZING IN:
 - Plans: `.cursor/plans/`
 - Active Context: `.cursor/active_context.md`
 
-## BACKEND PATTERNS (V2)
+## BACKEND PATTERNS (V2.9+)
 
 ### Database
 - UUID for all primary keys (match existing pattern)
 - JSONB for array/object fields (phases, departments, etc.)
 - All timestamps with timezone (TIMESTAMPTZ)
 - Decimal for margins (4,2 precision)
+- PostgreSQL on Railway (migrated from SQLite/Azure)
 
 ### Service Layer
 - All service methods must be async
@@ -70,23 +71,32 @@ YOU ARE AN EXPERT FULL-STACK DEVELOPER SPECIALIZING IN:
 - Error handling with HTTPException
 - Use `flush()` instead of `commit()` (session auto-commits)
 
-### Template Operations (V2.7)
+### Template Operations
 - Content saves trigger TemplateVersion creation
 - Content updates re-scan merge fields automatically
 - Settings updates do NOT create versions
 - Sanitization is optional via `auto_sanitize` flag
+- Version restore creates snapshot before restoring
 
 ### Existing Tables
+- `templates` - Core template storage with Vitec metadata
 - `merge_fields` - Flettekode registry
 - `code_patterns` - Reusable HTML snippets
-- `layout_partials` - Headers/footers
+- `layout_partials` - Headers/footers/signatures
 - `template_versions` - Version history
+- `audit_logs` - Action tracking
 
 ### API Patterns
+- `/api/templates` - Full CRUD with content/settings
 - `/api/merge-fields` - Flettekode CRUD + discovery
 - `/api/code-patterns` - Pattern library
 - `/api/layout-partials` - Header/footer management
-- `/api/templates/{id}/analyze` - Template analysis
-- `/api/templates/{id}/content` - Save HTML content (V2.7)
-- `/api/templates/{id}/settings` - Save metadata (V2.7)
-- `/api/dashboard/stats` - Dashboard statistics (V2.7)
+- `/api/dashboard` - Stats and inventory
+- `/api/storage` - WebDAV file operations
+- `/api/auth` - Password + JWT authentication
+
+### Authentication (V2.9)
+- Password-based single-user auth
+- JWT tokens with 7-day expiry
+- Auth middleware on all `/api/*` routes
+- Disabled by default (set `APP_PASSWORD_HASH` to enable)

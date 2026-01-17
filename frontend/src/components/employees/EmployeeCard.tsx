@@ -1,0 +1,149 @@
+"use client";
+
+import { User, Phone, Mail, Calendar, AlertTriangle, MoreVertical } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import type { EmployeeWithOffice, EmployeeStatus } from "@/types/v3";
+
+interface EmployeeCardProps {
+  employee: EmployeeWithOffice;
+  showOffice?: boolean;
+  onClick: () => void;
+  onEdit?: () => void;
+  onStartOffboarding?: () => void;
+  onDeactivate?: () => void;
+}
+
+const statusConfig: Record<EmployeeStatus, { label: string; variant: "default" | "secondary" | "destructive" | "outline"; className: string }> = {
+  active: { label: "Aktiv", variant: "default", className: "bg-green-500/10 text-green-600 hover:bg-green-500/20" },
+  onboarding: { label: "Onboarding", variant: "default", className: "bg-blue-500/10 text-blue-600 hover:bg-blue-500/20" },
+  offboarding: { label: "Offboarding", variant: "default", className: "bg-amber-500/10 text-amber-600 hover:bg-amber-500/20" },
+  inactive: { label: "Inaktiv", variant: "secondary", className: "" },
+};
+
+export function EmployeeCard({ 
+  employee, 
+  showOffice = false, 
+  onClick, 
+  onEdit,
+  onStartOffboarding,
+  onDeactivate,
+}: EmployeeCardProps) {
+  const status = statusConfig[employee.status];
+
+  return (
+    <Card 
+      className="group cursor-pointer hover:shadow-md transition-all duration-200"
+      onClick={onClick}
+    >
+      <CardContent className="p-4">
+        <div className="flex items-start gap-3">
+          {/* Avatar */}
+          <div 
+            className="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold shrink-0"
+            style={{ backgroundColor: employee.office.color }}
+          >
+            {employee.initials}
+          </div>
+
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <h3 className="font-semibold group-hover:text-primary transition-colors truncate">
+                  {employee.full_name}
+                </h3>
+                {employee.title && (
+                  <p className="text-sm text-muted-foreground truncate">{employee.title}</p>
+                )}
+              </div>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 shrink-0">
+                    <MoreVertical className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onClick(); }}>
+                    Se profil
+                  </DropdownMenuItem>
+                  {onEdit && (
+                    <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onEdit(); }}>
+                      Rediger
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuSeparator />
+                  {onStartOffboarding && employee.status === "active" && (
+                    <DropdownMenuItem 
+                      className="text-amber-600"
+                      onClick={(e) => { e.stopPropagation(); onStartOffboarding(); }}
+                    >
+                      Start offboarding
+                    </DropdownMenuItem>
+                  )}
+                  {onDeactivate && (
+                    <DropdownMenuItem 
+                      className="text-destructive"
+                      onClick={(e) => { e.stopPropagation(); onDeactivate(); }}
+                    >
+                      Deaktiver
+                    </DropdownMenuItem>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+
+            <div className="flex items-center gap-2 mt-2">
+              <Badge variant={status.variant} className={status.className}>
+                {status.label}
+              </Badge>
+              {showOffice && (
+                <Badge variant="outline" style={{ borderColor: employee.office.color }}>
+                  {employee.office.short_code}
+                </Badge>
+              )}
+            </div>
+
+            {/* Offboarding warning */}
+            {employee.status === "offboarding" && employee.days_until_end !== null && (
+              <div className="flex items-center gap-1.5 mt-2 text-xs text-amber-600">
+                <AlertTriangle className="h-3 w-3" />
+                <span>
+                  {employee.days_until_end <= 0 
+                    ? "Sluttdato passert" 
+                    : `${employee.days_until_end} dager igjen`}
+                </span>
+              </div>
+            )}
+
+            {/* Contact info */}
+            {(employee.email || employee.phone) && (
+              <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
+                {employee.phone && (
+                  <div className="flex items-center gap-1">
+                    <Phone className="h-3 w-3" />
+                    <span>{employee.phone}</span>
+                  </div>
+                )}
+                {employee.email && (
+                  <div className="flex items-center gap-1 truncate">
+                    <Mail className="h-3 w-3" />
+                    <span className="truncate">{employee.email}</span>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}

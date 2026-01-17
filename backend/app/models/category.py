@@ -13,6 +13,7 @@ from app.models.base import Base, GUID
 
 if TYPE_CHECKING:
     from app.models.template import Template
+    from app.models.layout_partial_version import LayoutPartialDefault
 
 
 class Category(Base):
@@ -21,6 +22,8 @@ class Category(Base):
     
     Categories provide a hierarchical organization structure
     for templates (e.g., "Akseptbrev", "Kontrakter", "AML").
+    
+    The vitec_id field maps to Vitec Next document category IDs.
     """
     
     __tablename__ = "categories"
@@ -37,6 +40,14 @@ class Category(Base):
         String(50), 
         unique=True, 
         nullable=False,
+        index=True
+    )
+    
+    # Vitec Next category ID (for integration)
+    vitec_id: Mapped[Optional[int]] = mapped_column(
+        Integer,
+        nullable=True,
+        unique=True,
         index=True
     )
     
@@ -70,11 +81,19 @@ class Category(Base):
         lazy="selectin"
     )
     
+    layout_partial_defaults: Mapped[List["LayoutPartialDefault"]] = relationship(
+        "LayoutPartialDefault",
+        back_populates="category",
+        cascade="all, delete-orphan",
+        lazy="selectin"
+    )
+    
     # Indexes
     __table_args__ = (
         Index("idx_categories_sort_order", "sort_order"),
+        Index("idx_categories_vitec_id", "vitec_id"),
     )
     
     def __repr__(self) -> str:
-        return f"<Category(id={self.id}, name='{self.name}', sort_order={self.sort_order})>"
+        return f"<Category(id={self.id}, name='{self.name}', vitec_id={self.vitec_id})>"
 

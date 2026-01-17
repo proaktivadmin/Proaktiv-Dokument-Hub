@@ -15,6 +15,8 @@ from app.middleware.auth import AuthMiddleware
 from app.routers import templates, tags, categories, analytics, health, sanitizer
 from app.routers import merge_fields, code_patterns, layout_partials, dashboard, admin, storage
 from app.routers import auth
+# V3 Routers
+from app.routers import offices, employees, assets, external_listings, checklists, territories
 
 # Configure logging
 logging.basicConfig(
@@ -93,6 +95,14 @@ app.include_router(layout_partials.router, prefix="/api", tags=["Layout Partials
 app.include_router(dashboard.router, prefix="/api", tags=["Dashboard"])
 app.include_router(admin.router, tags=["Admin"])
 app.include_router(storage.router, tags=["Storage"])
+
+# V3 Routers - Office & Employee Hub
+app.include_router(offices.router, prefix="/api", tags=["Offices"])
+app.include_router(employees.router, prefix="/api", tags=["Employees"])
+app.include_router(assets.router, prefix="/api", tags=["Assets"])
+app.include_router(external_listings.router, prefix="/api", tags=["External Listings"])
+app.include_router(checklists.router, prefix="/api", tags=["Checklists"])
+app.include_router(territories.router, prefix="/api", tags=["Territories"])
 
 
 @app.get("/")

@@ -1,0 +1,118 @@
+"use client";
+
+import { Users, Plus, Search } from "lucide-react";
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { EmployeeCard } from "./EmployeeCard";
+import type { EmployeeWithOffice } from "@/types/v3";
+
+interface EmployeeGridProps {
+  employees: EmployeeWithOffice[];
+  isLoading: boolean;
+  showOffice?: boolean;
+  onEmployeeClick: (employee: EmployeeWithOffice) => void;
+  onCreateNew?: () => void;
+  onEdit?: (employee: EmployeeWithOffice) => void;
+  onStartOffboarding?: (employee: EmployeeWithOffice) => void;
+  onDeactivate?: (employee: EmployeeWithOffice) => void;
+}
+
+export function EmployeeGrid({
+  employees,
+  isLoading,
+  showOffice = true,
+  onEmployeeClick,
+  onCreateNew,
+  onEdit,
+  onStartOffboarding,
+  onDeactivate,
+}: EmployeeGridProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Filter employees by search
+  const filteredEmployees = employees.filter((employee) => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      employee.full_name.toLowerCase().includes(query) ||
+      (employee.title?.toLowerCase().includes(query) ?? false) ||
+      (employee.email?.toLowerCase().includes(query) ?? false) ||
+      employee.office.name.toLowerCase().includes(query)
+    );
+  });
+
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center gap-4">
+          <Skeleton className="h-10 flex-1 max-w-sm" />
+          <Skeleton className="h-10 w-32" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-32" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4 flex-1">
+      {/* Header with search */}
+      <div className="flex items-center gap-4">
+        <div className="relative flex-1 max-w-sm">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Søk ansatte..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-9"
+          />
+        </div>
+
+        {onCreateNew && (
+          <Button onClick={onCreateNew} className="ml-auto">
+            <Plus className="h-4 w-4 mr-2" />
+            Ny ansatt
+          </Button>
+        )}
+      </div>
+
+      {/* Grid */}
+      {filteredEmployees.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-12 text-center">
+          <Users className="h-12 w-12 text-muted-foreground/50 mb-4" />
+          <h3 className="text-lg font-medium mb-1">Ingen ansatte funnet</h3>
+          <p className="text-sm text-muted-foreground mb-4">
+            {searchQuery
+              ? "Prøv å endre søket"
+              : "Kom i gang ved å legge til din første ansatt"}
+          </p>
+          {onCreateNew && !searchQuery && (
+            <Button onClick={onCreateNew}>
+              <Plus className="h-4 w-4 mr-2" />
+              Legg til ansatt
+            </Button>
+          )}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {filteredEmployees.map((employee) => (
+            <EmployeeCard
+              key={employee.id}
+              employee={employee}
+              showOffice={showOffice}
+              onClick={() => onEmployeeClick(employee)}
+              onEdit={onEdit ? () => onEdit(employee) : undefined}
+              onStartOffboarding={onStartOffboarding ? () => onStartOffboarding(employee) : undefined}
+              onDeactivate={onDeactivate ? () => onDeactivate(employee) : undefined}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

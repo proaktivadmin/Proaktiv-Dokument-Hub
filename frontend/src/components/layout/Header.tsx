@@ -3,8 +3,18 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Upload, FileText, FolderTree, LayoutDashboard, Sparkles, Code2, HardDrive, LogOut } from "lucide-react";
+import { 
+  Upload, FileText, FolderTree, LayoutDashboard, Sparkles, Code2, HardDrive, LogOut,
+  Building2, Users, Image, ChevronDown
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { UploadTemplateDialog } from "@/components/templates/UploadTemplateDialog";
 import { cn } from "@/lib/utils";
 import { authApi } from "@/lib/api/auth";
@@ -32,11 +42,25 @@ export function Header({ onUploadSuccess }: HeaderProps) {
   const navItems = [
     { href: "/", label: "Dashboard", icon: LayoutDashboard },
     { href: "/templates", label: "Maler", icon: FileText },
-    { href: "/categories", label: "Kategorier", icon: FolderTree },
     { href: "/flettekoder", label: "Flettekoder", icon: Code2 },
-    { href: "/storage", label: "Lagring", icon: HardDrive },
+  ];
+
+  // Company Hub dropdown items
+  const companyHubItems = [
+    { href: "/offices", label: "Kontorer", icon: Building2 },
+    { href: "/employees", label: "Ansatte", icon: Users },
+    { href: "/assets", label: "Mediefiler", icon: Image },
+  ];
+
+  // Tools dropdown items
+  const toolsItems = [
+    { href: "/categories", label: "Kategorier", icon: FolderTree },
+    { href: "/storage", label: "WebDAV Lagring", icon: HardDrive },
     { href: "/sanitizer", label: "Sanitizer", icon: Sparkles },
   ];
+
+  const isCompanyHubActive = ["/offices", "/employees", "/assets"].some(p => pathname.startsWith(p));
+  const isToolsActive = ["/categories", "/storage", "/sanitizer"].some(p => pathname.startsWith(p));
 
   return (
     <>
@@ -88,6 +112,68 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                   </Link>
                 );
               })}
+
+              {/* Company Hub Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className={cn(
+                      "px-4 py-2 text-sm font-medium rounded-md transition-colors inline-flex items-center gap-2",
+                      isCompanyHubActive
+                        ? "bg-white/60 text-[#272630]"
+                        : "text-[#272630]/70 hover:text-[#272630] hover:bg-white/40"
+                    )}
+                  >
+                    <Building2 className="h-4 w-4" />
+                    Selskap
+                    <ChevronDown className="h-3 w-3" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-48">
+                  {companyHubItems.map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <DropdownMenuItem key={item.href} asChild>
+                        <Link href={item.href} className="flex items-center gap-2">
+                          <Icon className="h-4 w-4" />
+                          {item.label}
+                        </Link>
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Tools Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className={cn(
+                      "px-4 py-2 text-sm font-medium rounded-md transition-colors inline-flex items-center gap-2",
+                      isToolsActive
+                        ? "bg-white/60 text-[#272630]"
+                        : "text-[#272630]/70 hover:text-[#272630] hover:bg-white/40"
+                    )}
+                  >
+                    <Sparkles className="h-4 w-4" />
+                    Verktøy
+                    <ChevronDown className="h-3 w-3" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-48">
+                  {toolsItems.map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <DropdownMenuItem key={item.href} asChild>
+                        <Link href={item.href} className="flex items-center gap-2">
+                          <Icon className="h-4 w-4" />
+                          {item.label}
+                        </Link>
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </DropdownMenuContent>
+              </DropdownMenu>
 
               <Button
                 onClick={() => setUploadDialogOpen(true)}

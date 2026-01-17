@@ -100,3 +100,9 @@ export interface DashboardStats {
 export interface ApiError {
   detail: string;
 }
+
+/**
+ * Re-export V2 and V3 types
+ */
+export * from './v2';
+export * from './v3';
