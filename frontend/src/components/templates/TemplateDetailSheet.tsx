@@ -16,6 +16,7 @@ import { TemplateSettingsPanel, type TemplateSettings } from "./TemplateSettings
 import { SimulatorPanel } from "./SimulatorPanel";
 import { CodeEditor } from "@/components/editor/CodeEditor";
 import { templateApi, layoutPartialsApi } from "@/lib/api";
+import { apiClient } from "@/lib/api/config";
 import { templateSettingsApi } from "@/lib/api/template-settings";
 import { useToast } from "@/hooks/use-toast";
 import { useTemplateSettings } from "@/hooks/useTemplateSettings";
@@ -33,6 +34,7 @@ import {
   Code,
   Save,
   Loader2,
+  Wand2,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { nb } from "date-fns/locale";
@@ -65,6 +67,7 @@ export function TemplateDetailSheet({
   const [activeTab, setActiveTab] = useState("preview");
   const [isSavingContent, setIsSavingContent] = useState(false);
   const [isSavingSettings, setIsSavingSettings] = useState(false);
+  const [isNormalizing, setIsNormalizing] = useState(false);
   const { toast } = useToast();
 
   // Fetch settings for the settings tab
@@ -193,6 +196,48 @@ export function TemplateDetailSheet({
     }
   };
 
+  const handleNormalize = async () => {
+    if (!template || !canPreview(template.file_type)) return;
+
+    const confirmText =
+      "Dette vil normalisere HTML til Vitec-standard og lagre permanent. Fortsette?";
+    if (!window.confirm(confirmText)) return;
+
+    setIsNormalizing(true);
+    try {
+      const sourceHtml = editedContent || originalContent;
+      const response = await apiClient.post<{ html: string }>("/sanitize/normalize", {
+        html: sourceHtml,
+      });
+      const normalizedHtml = response.data.html;
+
+      const result = await templateSettingsApi.saveContent(template.id, {
+        content: normalizedHtml,
+        auto_sanitize: false,
+      });
+
+      setOriginalContent(normalizedHtml);
+      setEditedContent(normalizedHtml);
+      setHasContentChanges(false);
+      setProcessedContent(null);
+      setTestDataEnabled(false);
+      setActiveTab("preview");
+
+      toast({
+        title: "Normalisert til Vitec",
+        description: `Versjon ${result.version} opprettet. ${result.merge_fields_detected} flettekoder funnet.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Normalisering feilet",
+        description: error instanceof Error ? error.message : "Kunne ikke normalisere malen",
+        variant: "destructive",
+      });
+    } finally {
+      setIsNormalizing(false);
+    }
+  };
+
   const canPreview = (fileType: string) => {
     return fileType === "html" || fileType === "htm";
   };
@@ -257,6 +302,17 @@ export function TemplateDetailSheet({
               </DialogDescription>
             </div>
             <div className="flex gap-2">
+              {canPreview(template.file_type) && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleNormalize}
+                  disabled={isNormalizing}
+                >
+                  <Wand2 className="h-4 w-4 mr-2" />
+                  {isNormalizing ? "Normaliserer..." : "Normaliser til Vitec"}
+                </Button>
+              )}
               <Button
                 variant="outline"
                 size="sm"

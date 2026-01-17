@@ -43,7 +43,6 @@ export default function SanitizerPage() {
   const { templates, isLoading: templatesLoading } = useTemplates({ per_page: 100 });
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>("");
   const [originalContent, setOriginalContent] = useState<string>("");
-  const [sanitizedContent, setSanitizedContent] = useState<string>("");
   const [validation, setValidation] = useState<ValidationResult | null>(null);
   const [normalizeReport, setNormalizeReport] = useState<Record<string, number | boolean> | null>(null);
   const [templateSettings, setTemplateSettings] = useState<UpdateTemplateSettingsResponse | null>(null);
@@ -61,7 +60,6 @@ export default function SanitizerPage() {
   useEffect(() => {
     if (!selectedTemplateId) {
       setOriginalContent("");
-      setSanitizedContent("");
       setValidation(null);
       setNormalizeReport(null);
       setTemplateSettings(null);
@@ -76,7 +74,6 @@ export default function SanitizerPage() {
       try {
         const response = await templateApi.getContent(selectedTemplateId);
         setOriginalContent(response.content);
-        setSanitizedContent("");
         setValidation(null);
         setNormalizeReport(null);
       } catch (err) {
@@ -144,7 +141,6 @@ export default function SanitizerPage() {
         auto_sanitize: false,
       });
 
-      setSanitizedContent(normalizedHtml);
       setOriginalContent(normalizedHtml);
       setNormalizeReport(response.data.report || null);
       setSaveSuccess(true);
@@ -291,60 +287,27 @@ export default function SanitizerPage() {
             <div className="text-center">
               <Wand2 className="h-12 w-12 mx-auto mb-4 opacity-50" />
               <p className="font-medium">Velg en mal for å starte</p>
-              <p className="text-sm">Kun HTML-maler kan saniteres</p>
+              <p className="text-sm">Kun HTML-maler kan normaliseres</p>
             </div>
           </div>
         ) : (
-          <>
-            {/* Original */}
-            <div className="flex-1 flex flex-col border-r">
-              <div className="px-4 py-2 border-b bg-gray-100 text-sm font-medium">
-                Original
-                {originalContent && (
-                  <span className="text-gray-500 font-normal ml-2">
-                    ({originalContent.length.toLocaleString()} tegn)
-                  </span>
-                )}
-              </div>
-              <div className="flex-1 overflow-hidden">
-                <TemplatePreview
-                  content={originalContent}
-                  title={selectedTemplate?.title || "Original"}
-                  isLoading={isLoading && !sanitizedContent}
-                />
-              </div>
+          <div className="flex-1 flex flex-col">
+            <div className="px-4 py-2 border-b bg-gray-100 text-sm font-medium">
+              Forhåndsvisning
+              {originalContent && (
+                <span className="text-gray-500 font-normal ml-2">
+                  ({originalContent.length.toLocaleString()} tegn)
+                </span>
+              )}
             </div>
-
-            {/* Sanitized */}
-            <div className="flex-1 flex flex-col">
-              <div className="px-4 py-2 border-b bg-gray-100 text-sm font-medium">
-                Normalisert (lagret)
-                {sanitizedContent && (
-                  <span className="text-gray-500 font-normal ml-2">
-                    ({sanitizedContent.length.toLocaleString()} tegn)
-                    <span className="text-green-600 ml-1">
-                      -{((1 - sanitizedContent.length / originalContent.length) * 100).toFixed(0)}%
-                    </span>
-                  </span>
-                )}
-              </div>
-              <div className="flex-1 overflow-hidden">
-                {sanitizedContent ? (
-                  <TemplatePreview
-                    content={sanitizedContent}
-                    title={`${selectedTemplate?.title || "Normalisert"} (normalisert)`}
-                  />
-                ) : (
-                  <div className="flex items-center justify-center h-full text-gray-400">
-                    <div className="text-center">
-                      <Wand2 className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                      <p>Klikk "Sanitér" for å se resultatet</p>
-                    </div>
-                  </div>
-                )}
-              </div>
+            <div className="flex-1 overflow-hidden">
+              <TemplatePreview
+                content={originalContent}
+                title={selectedTemplate?.title || "Forhåndsvisning"}
+                isLoading={isLoading}
+              />
             </div>
-          </>
+          </div>
         )}
       </div>
     </div>
