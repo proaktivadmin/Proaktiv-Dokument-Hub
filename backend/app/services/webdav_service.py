@@ -127,6 +127,9 @@ class WebDAVService:
             # Get list of items
             items = await self._run_sync(self._client.list, path, get_info=True)
             
+            logger.info(f"WebDAV list returned {len(items)} items for path: {path}")
+            logger.debug(f"Raw items: {items}")
+            
             result = []
             for item in items:
                 # Skip the current directory entry
@@ -135,11 +138,17 @@ class WebDAVService:
                     item_path = item.get("path", "")
                 else:
                     # Sometimes returns just strings
-                    name = item
+                    name = str(item)
                     item_path = f"{path.rstrip('/')}/{item}"
                 
-                # Skip parent directory references
-                if not name or name == "." or name == "..":
+                # Skip parent directory references and current directory
+                if not name or name == "." or name == ".." or name == "/":
+                    continue
+                
+                # Skip if the item path is the same as the requested path (current dir)
+                clean_path = path.rstrip("/")
+                clean_item_path = item_path.rstrip("/")
+                if clean_item_path == clean_path or clean_item_path == "":
                     continue
                 
                 # Determine if directory (ends with /)
