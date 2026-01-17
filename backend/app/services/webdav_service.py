@@ -369,9 +369,6 @@ class WebDAVService:
         """
         List contents of a directory.
         
-        For flat-structure WebDAV servers, this fetches all items once
-        and builds a virtual directory structure.
-        
         Args:
             path: Directory path (default: root)
             
@@ -385,12 +382,62 @@ class WebDAVService:
         if not path.startswith("/"):
             path = "/" + path
         
+        # Normalize path - remove trailing slash for consistency
+        clean_path = path.rstrip('/') if path != '/' else '/'
+        
         try:
-            # Fetch all items (uses cache if available)
-            all_items = await self._fetch_all_items()
-            
-            # Build virtual directory for the requested path
-            return self._build_virtual_directory(all_items, path)
+            async with self._get_client() as client:
+                # Try PROPFIND on the exact path (with trailing slash for directories)
+                url = f"{self._base_url}{clean_path}/"
+                logger.info(f"PROPFIND request to: {url}")
+                
+                # #region agent log
+                logger.info(f"[DEBUG-H7] PROPFIND attempt: url={url}, clean_path={clean_path}")
+                # #endregion
+                
+                response = await client.request(
+                    "PROPFIND",
+                    url,
+                    headers={"Depth": "1"},
+                )
+                
+                logger.info(f"PROPFIND response status: {response.status_code}")
+                
+                # Handle redirect - try the redirect location with PROPFIND
+                if response.status_code in (301, 302, 303, 307, 308):
+                    location = response.headers.get("Location", "")
+                    logger.warning(f"PROPFIND got redirect to: {location}")
+                    
+                    # #region agent log
+                    logger.info(f"[DEBUG-H7] Redirect: from={url}, to={location}")
+                    # #endregion
+                    
+                    if location:
+                        # Try PROPFIND on redirect location (ensure trailing slash)
+                        redirect_url = location if location.endswith('/') else location + '/'
+                        response = await client.request(
+                            "PROPFIND",
+                            redirect_url,
+                            headers={"Depth": "1"},
+                        )
+                        logger.info(f"Redirect PROPFIND status: {response.status_code}")
+                        
+                        # #region agent log
+                        logger.info(f"[DEBUG-H7] After redirect: url={redirect_url}, status={response.status_code}, body_preview={response.text[:200]}")
+                        # #endregion
+                
+                if response.status_code not in (200, 207):
+                    logger.error(f"PROPFIND failed: {response.status_code}")
+                    # #region agent log
+                    logger.info(f"[DEBUG-H7] Failed response body: {response.text[:500]}")
+                    # #endregion
+                    raise RuntimeError(f"Failed to list directory: HTTP {response.status_code}")
+                
+                # Parse the XML response
+                items = self._parse_propfind_response(response.text, clean_path + '/')
+                logger.info(f"Parsed {len(items)} items from PROPFIND response")
+                
+                return items
                 
         except httpx.HTTPError as e:
             logger.error(f"Failed to list directory {path}: {e}")
