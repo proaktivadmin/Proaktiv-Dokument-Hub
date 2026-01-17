@@ -90,6 +90,10 @@ class WebDAVService:
         """Parse WebDAV PROPFIND XML response into StorageItem list."""
         items = []
         
+        # Extract the path prefix from base_url (e.g., "/d" from "https://proaktiv.no/d")
+        from urllib.parse import urlparse
+        base_url_path = urlparse(self._base_url).path.rstrip('/')
+        
         try:
             # Parse XML
             root = ET.fromstring(xml_text)
@@ -160,10 +164,20 @@ class WebDAVService:
                 if contenttype is not None:
                     content_type = contenttype.text
                 
-                # Build path
-                from urllib.parse import unquote, urlparse
+                # Build path - remove the base URL path prefix (e.g., /d) from href
+                from urllib.parse import unquote
                 parsed_href = urlparse(href)
-                item_path = unquote(parsed_href.path) if parsed_href.path else href
+                full_path = unquote(parsed_href.path) if parsed_href.path else href
+                
+                # Remove the base URL path prefix to get the relative path
+                if base_url_path and full_path.startswith(base_url_path):
+                    item_path = full_path[len(base_url_path):]
+                else:
+                    item_path = full_path
+                
+                # Ensure path starts with /
+                if not item_path.startswith('/'):
+                    item_path = '/' + item_path
                 
                 # Skip the current directory itself
                 clean_base = base_path.rstrip('/')
