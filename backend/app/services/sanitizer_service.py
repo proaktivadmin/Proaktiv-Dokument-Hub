@@ -177,7 +177,7 @@ class SanitizerService:
         for element in soup.find_all(attrs={"vitec-template": True}):
             current_value = element.get("vitec-template", "")
             if current_value.startswith("resource:"):
-                element["vitec-template"] = self.NEW_RESOURCE_STRING
+                element["vitec-template"] = self.VITEC_STILARK_RESOURCE
 
     def _strip_inline_styles(self, soup: BeautifulSoup) -> None:
         """
