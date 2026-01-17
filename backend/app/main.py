@@ -11,8 +11,10 @@ import logging
 
 from app.config import settings
 from app.database import init_db, close_db
+from app.middleware.auth import AuthMiddleware
 from app.routers import templates, tags, categories, analytics, health, sanitizer
 from app.routers import merge_fields, code_patterns, layout_partials, dashboard, admin, storage
+from app.routers import auth
 
 # Configure logging
 logging.basicConfig(
@@ -72,7 +74,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Auth middleware (only active if APP_PASSWORD_HASH is set)
+app.add_middleware(AuthMiddleware)
+
 # Include routers
+app.include_router(auth.router, prefix="/api", tags=["Auth"])
 app.include_router(health.router)
 app.include_router(templates.router, prefix="/api/templates", tags=["Templates"])
 app.include_router(tags.router, prefix="/api/tags", tags=["Tags"])

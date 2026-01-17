@@ -78,6 +78,11 @@ class Settings(BaseSettings):
     WEBDAV_URL: str = ""
     WEBDAV_USERNAME: str = ""
     WEBDAV_PASSWORD: str = ""
+    
+    # Simple Password Auth
+    APP_PASSWORD_HASH: str = ""  # bcrypt hash of the app password
+    AUTH_SESSION_EXPIRE_DAYS: int = 7
+    AUTH_INACTIVITY_TIMEOUT_MINUTES: int = 30
 
     @field_validator("SECRET_KEY", mode="before")
     @classmethod

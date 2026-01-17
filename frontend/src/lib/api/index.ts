@@ -9,6 +9,7 @@ export { templateAnalysisApi } from "./template-analysis";
 export { templateSettingsApi } from "./template-settings";
 export { dashboardApi } from "./dashboard";
 export { storageApi } from "./storage";
+export { authApi } from "./auth";
 
 // Re-export from main api.ts for backwards compatibility
 export { categoryApi, templateApi, analyticsApi } from "../api";
@@ -25,3 +26,4 @@ export type {
   ImportResult,
   MovePayload,
 } from "./storage";
+export type { AuthStatus, AuthCheckResponse, LoginResponse } from "./auth";

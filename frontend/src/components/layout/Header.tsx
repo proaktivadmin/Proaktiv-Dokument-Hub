@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Upload, FileText, FolderTree, LayoutDashboard, Sparkles, Code2, HardDrive } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { Upload, FileText, FolderTree, LayoutDashboard, Sparkles, Code2, HardDrive, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UploadTemplateDialog } from "@/components/templates/UploadTemplateDialog";
 import { cn } from "@/lib/utils";
+import { authApi } from "@/lib/api/auth";
 
 interface HeaderProps {
   onUploadSuccess?: () => void;
@@ -15,10 +16,17 @@ interface HeaderProps {
 export function Header({ onUploadSuccess }: HeaderProps) {
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
 
   const handleUploadSuccess = () => {
     setUploadDialogOpen(false);
     onUploadSuccess?.();
+  };
+
+  const handleLogout = async () => {
+    await authApi.logout();
+    router.push("/login");
+    router.refresh();
   };
 
   const navItems = [
@@ -87,6 +95,16 @@ export function Header({ onUploadSuccess }: HeaderProps) {
               >
                 <Upload className="h-4 w-4 mr-2" />
                 Last opp
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleLogout}
+                className="ml-2 text-[#272630]/70 hover:text-[#272630] hover:bg-white/40"
+                title="Logg ut"
+              >
+                <LogOut className="h-4 w-4" />
               </Button>
             </nav>
           </div>
