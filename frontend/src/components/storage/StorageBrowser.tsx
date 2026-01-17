@@ -87,12 +87,13 @@ export function StorageBrowser({ onStatusChange }: StorageBrowserProps) {
     loadDirectory(currentPath);
   }, []);
 
+  // Check connection status only once on mount
   useEffect(() => {
-    // Check connection status
     storageApi.getStatus().then((status) => {
       onStatusChange?.(status.connected);
     });
-  }, [onStatusChange]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleNavigate = (path: string) => {
     loadDirectory(path);
