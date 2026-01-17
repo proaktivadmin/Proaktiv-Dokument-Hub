@@ -1,8 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { HardDrive, WifiOff, Wifi, AlertTriangle } from "lucide-react";
+import { HardDrive, WifiOff, Wifi, AlertTriangle, Home, ChevronRight } from "lucide-react";
 import { Header } from "@/components/layout/Header";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { StorageBrowser } from "@/components/storage";
 import { storageApi } from "@/lib/api";
 import { cn } from "@/lib/utils";
@@ -124,14 +132,32 @@ export default function StoragePage() {
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
       <main className="container mx-auto px-6 py-8 flex-1 flex flex-col">
+        {/* Breadcrumb */}
+        <Breadcrumb className="mb-6">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/" className="flex items-center gap-1">
+                <Home className="h-4 w-4" />
+                Dashboard
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator>
+              <ChevronRight className="h-4 w-4" />
+            </BreadcrumbSeparator>
+            <BreadcrumbItem>
+              <BreadcrumbPage className="flex items-center gap-1">
+                <HardDrive className="h-4 w-4" />
+                Nettverkslagring
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+
         {/* Page Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-semibold flex items-center gap-3">
-              <HardDrive className="h-6 w-6" />
-              Nettverkslagring
-            </h1>
-            <p className="text-muted-foreground mt-1">
+            <h1 className="text-2xl font-bold">Nettverkslagring</h1>
+            <p className="text-muted-foreground">
               Bla gjennom og administrer filer på proaktiv.no
             </p>
           </div>

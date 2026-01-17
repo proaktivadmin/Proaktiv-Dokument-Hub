@@ -6,8 +6,16 @@
  */
 
 import { useState, useEffect } from "react";
-import { Wand2, Save, RotateCcw, Check, AlertTriangle } from "lucide-react";
+import { Wand2, Save, RotateCcw, Check, AlertTriangle, Home, ChevronRight, Sparkles } from "lucide-react";
 import { Header } from "@/components/layout/Header";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
@@ -190,8 +198,33 @@ export default function SanitizerPage() {
     <div className="flex flex-col h-screen bg-background">
       <Header />
 
+      {/* Page header with breadcrumb */}
+      <div className="border-b px-6 py-4 bg-white">
+        <Breadcrumb className="mb-3">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/" className="flex items-center gap-1">
+                <Home className="h-4 w-4" />
+                Dashboard
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator>
+              <ChevronRight className="h-4 w-4" />
+            </BreadcrumbSeparator>
+            <BreadcrumbItem>
+              <BreadcrumbPage className="flex items-center gap-1">
+                <Sparkles className="h-4 w-4" />
+                Sanitizer
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <h1 className="text-2xl font-bold">Sanitizer</h1>
+        <p className="text-muted-foreground">Rens inline CSS fra maler og standardiser stilen</p>
+      </div>
+
       {/* Controls */}
-      <div className="border-b bg-gray-50 px-6 py-4">
+      <div className="border-b bg-muted/30 px-6 py-4">
         <div className="flex items-end gap-4">
           <div className="flex-1 max-w-md space-y-2">
             <Label htmlFor="template-select">Velg mal</Label>

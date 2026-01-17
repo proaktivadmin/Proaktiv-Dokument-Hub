@@ -85,7 +85,7 @@ export default function EmployeesPage() {
 
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-2">Ansatte</h1>
+        <h1 className="text-2xl font-bold">Ansatte</h1>
         <p className="text-muted-foreground">
           Oversikt over alle ansatte på tvers av kontorer
         </p>

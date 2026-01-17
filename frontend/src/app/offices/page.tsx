@@ -80,7 +80,7 @@ export default function OfficesPage() {
 
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-2">Kontorer</h1>
+        <h1 className="text-2xl font-bold">Kontorer</h1>
         <p className="text-muted-foreground">
           Administrer kontorer, ansatte og markedsområder
         </p>
