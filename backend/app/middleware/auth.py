@@ -28,6 +28,7 @@ PUBLIC_ROUTES = [
     "/api/sanitize/preview",
     "/api/sanitize/validate",
     "/api/sanitize/strip-styles",
+    "/api/sanitize/normalize",
 ]
 
 # CORS headers to add to 401 responses

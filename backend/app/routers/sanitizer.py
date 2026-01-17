@@ -9,6 +9,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 
 from app.services.sanitizer_service import SanitizerService, get_sanitizer_service
+from app.services.vitec_normalizer_service import VitecNormalizerService
 
 
 router = APIRouter(prefix="/api/sanitize", tags=["sanitizer"])
@@ -42,6 +43,13 @@ class SanitizeResponse(BaseModel):
     html: str = Field(..., description="The sanitized HTML content")
     original_length: int = Field(..., description="Length of the original HTML")
     sanitized_length: int = Field(..., description="Length of the sanitized HTML")
+
+
+class NormalizeResponse(BaseModel):
+    """Response model for normalization endpoint."""
+
+    html: str = Field(..., description="Normalized HTML content")
+    report: dict = Field(..., description="Normalization report")
 
 
 class ValidateRequest(BaseModel):
@@ -174,6 +182,27 @@ async def validate_template(
         raise HTTPException(
             status_code=500,
             detail=f"Failed to validate HTML: {str(e)}"
+        )
+
+
+@router.post("/normalize", response_model=NormalizeResponse)
+async def normalize_template(
+    request: SanitizeRequest
+) -> NormalizeResponse:
+    """
+    Normalize HTML template to Vitec structure and styling conventions.
+
+    This endpoint removes Proaktiv branding and preserves only Vitec-like
+    functional CSS (tables, insert placeholders, checkbox/radio, etc.).
+    """
+    try:
+        normalizer = VitecNormalizerService()
+        normalized_html, report = normalizer.normalize(request.html)
+        return NormalizeResponse(html=normalized_html, report=report)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to normalize HTML: {str(e)}"
         )
 
 

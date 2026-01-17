@@ -22,7 +22,9 @@ import { Separator } from "@/components/ui/separator";
 import { TemplatePreview } from "@/components/templates/TemplatePreview";
 import { useTemplates } from "@/hooks/useTemplates";
 import { templateApi } from "@/lib/api";
+import { templateSettingsApi } from "@/lib/api/template-settings";
 import { apiClient } from "@/lib/api/config";
+import type { UpdateTemplateSettingsResponse } from "@/types/v2";
 
 interface ValidationResult {
   has_vitec_wrapper: boolean;
@@ -32,10 +34,9 @@ interface ValidationResult {
   is_valid: boolean;
 }
 
-interface SanitizeResult {
+interface NormalizeResult {
   html: string;
-  original_length: number;
-  sanitized_length: number;
+  report: Record<string, number | boolean>;
 }
 
 export default function SanitizerPage() {
@@ -44,6 +45,8 @@ export default function SanitizerPage() {
   const [originalContent, setOriginalContent] = useState<string>("");
   const [sanitizedContent, setSanitizedContent] = useState<string>("");
   const [validation, setValidation] = useState<ValidationResult | null>(null);
+  const [normalizeReport, setNormalizeReport] = useState<Record<string, number | boolean> | null>(null);
+  const [templateSettings, setTemplateSettings] = useState<UpdateTemplateSettingsResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -60,6 +63,8 @@ export default function SanitizerPage() {
       setOriginalContent("");
       setSanitizedContent("");
       setValidation(null);
+      setNormalizeReport(null);
+      setTemplateSettings(null);
       return;
     }
 
@@ -73,6 +78,7 @@ export default function SanitizerPage() {
         setOriginalContent(response.content);
         setSanitizedContent("");
         setValidation(null);
+        setNormalizeReport(null);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Kunne ikke laste mal");
       } finally {
@@ -81,6 +87,22 @@ export default function SanitizerPage() {
     }
 
     loadTemplate();
+  }, [selectedTemplateId]);
+
+  // Load template settings (for channel warnings)
+  useEffect(() => {
+    if (!selectedTemplateId) return;
+
+    async function loadSettings() {
+      try {
+        const settings = await templateSettingsApi.getSettings(selectedTemplateId);
+        setTemplateSettings(settings);
+      } catch {
+        setTemplateSettings(null);
+      }
+    }
+
+    loadSettings();
   }, [selectedTemplateId]);
 
   // Validate original content
@@ -101,7 +123,7 @@ export default function SanitizerPage() {
     validateContent();
   }, [originalContent]);
 
-  const handleSanitize = async () => {
+  const handleNormalize = async () => {
     if (!originalContent || !selectedTemplateId) return;
 
     setIsLoading(true);
@@ -110,28 +132,27 @@ export default function SanitizerPage() {
     setSaveSuccess(false);
 
     try {
-      const response = await apiClient.post<SanitizeResult>("/sanitize/preview", {
+      const response = await apiClient.post<NormalizeResult>("/sanitize/normalize", {
         html: originalContent,
-        update_resource: true,
-        theme_class: "proaktiv-theme",
       });
 
-      const sanitizedHtml = response.data.html;
+      const normalizedHtml = response.data.html;
 
-      // Persist sanitized content immediately
+      // Persist normalized content immediately
       await apiClient.put(`/templates/${selectedTemplateId}/content`, {
-        content: sanitizedHtml,
+        content: normalizedHtml,
         auto_sanitize: false,
       });
 
-      setSanitizedContent(sanitizedHtml);
-      setOriginalContent(sanitizedHtml);
+      setSanitizedContent(normalizedHtml);
+      setOriginalContent(normalizedHtml);
+      setNormalizeReport(response.data.report || null);
       setSaveSuccess(true);
 
       // Re-validate
       try {
         const valResponse = await apiClient.post("/sanitize/validate", {
-          html: sanitizedHtml,
+          html: normalizedHtml,
         });
         setValidation(valResponse.data);
       } catch {
@@ -140,7 +161,7 @@ export default function SanitizerPage() {
     } catch (err: unknown) {
       const errorMessage = err instanceof Error
         ? err.message
-        : (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail || "Sanitering feilet";
+        : (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail || "Normalisering feilet";
       setError(errorMessage);
     } finally {
       setIsLoading(false);
@@ -157,8 +178,10 @@ export default function SanitizerPage() {
       {/* Page header */}
       <div className="border-b bg-white">
         <div className="container mx-auto px-6 py-6">
-          <h2 className="text-2xl font-bold text-foreground">Sanitizer</h2>
-          <p className="text-muted-foreground">Rens inline CSS fra maler og standardiser stilen</p>
+          <h2 className="text-2xl font-bold text-foreground">Normalisering til Vitec</h2>
+          <p className="text-muted-foreground">
+            Fjern Proaktiv-design og lagre malen i Vitec-standard (permanent)
+          </p>
         </div>
       </div>
 
@@ -213,11 +236,11 @@ export default function SanitizerPage() {
 
           <div className="flex items-center gap-3">
             <Button
-              onClick={handleSanitize}
+              onClick={handleNormalize}
               disabled={!originalContent || isLoading || isSaving}
             >
               <Wand2 className="h-4 w-4 mr-2" />
-              {isSaving ? "Saniterer og lagrer..." : "Sanitér og lagre"}
+              {isSaving ? "Normaliserer og lagrer..." : "Normaliser til Vitec (lagre)"}
             </Button>
             <span className="text-sm text-muted-foreground">
               Endringen lagres permanent i malen.
@@ -228,6 +251,27 @@ export default function SanitizerPage() {
         {error && (
           <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md text-red-700 text-sm">
             {error}
+          </div>
+        )}
+
+        {templateSettings?.channel && (templateSettings.channel === "email" || templateSettings.channel === "sms") && (
+          <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-md text-amber-700 text-sm">
+            <strong>Advarsel:</strong> Denne malen er for {templateSettings.channel.toUpperCase()}.
+            Normalisering kan påvirke e-post/SMS layout.
+          </div>
+        )}
+
+        {normalizeReport && (
+          <div className="mt-4 p-3 bg-muted/50 border rounded-md text-sm">
+            <p className="font-medium mb-2">Normaliseringsrapport</p>
+            <div className="grid grid-cols-2 gap-2 text-muted-foreground">
+              {Object.entries(normalizeReport).map(([key, value]) => (
+                <div key={key} className="flex items-center justify-between gap-2">
+                  <span>{key.replace(/_/g, " ")}</span>
+                  <span className="font-medium text-foreground">{String(value)}</span>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
@@ -274,7 +318,7 @@ export default function SanitizerPage() {
             {/* Sanitized */}
             <div className="flex-1 flex flex-col">
               <div className="px-4 py-2 border-b bg-gray-100 text-sm font-medium">
-                Sanitert (lagret)
+                Normalisert (lagret)
                 {sanitizedContent && (
                   <span className="text-gray-500 font-normal ml-2">
                     ({sanitizedContent.length.toLocaleString()} tegn)
@@ -288,7 +332,7 @@ export default function SanitizerPage() {
                 {sanitizedContent ? (
                   <TemplatePreview
                     content={sanitizedContent}
-                    title={`${selectedTemplate?.title || "Sanitert"} (sanitert)`}
+                    title={`${selectedTemplate?.title || "Normalisert"} (normalisert)`}
                   />
                 ) : (
                   <div className="flex items-center justify-center h-full text-gray-400">
