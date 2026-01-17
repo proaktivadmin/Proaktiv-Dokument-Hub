@@ -80,6 +80,36 @@ export default function StoragePage() {
     );
   }
 
+  // Show connection error with more details
+  if (status?.configured && !status?.connected) {
+    return (
+      <div className="container mx-auto px-6 py-8">
+        <div className="max-w-lg mx-auto text-center py-16">
+          <div className="mx-auto w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mb-6">
+            <WifiOff className="h-8 w-8 text-red-600" />
+          </div>
+          <h1 className="text-2xl font-semibold mb-2">
+            Tilkobling mislyktes
+          </h1>
+          <p className="text-muted-foreground mb-4">
+            Kunne ikke koble til nettverkslagringen. Sjekk at innstillingene er korrekte.
+          </p>
+          <div className="bg-destructive/10 text-destructive text-sm p-4 rounded-lg mb-6">
+            {status.message}
+          </div>
+          <div className="text-left text-sm text-muted-foreground bg-muted p-4 rounded-lg">
+            <p className="font-medium mb-2">Vanlige årsaker:</p>
+            <ul className="list-disc list-inside space-y-1">
+              <li>Feil WEBDAV_URL (må være en WebDAV-server, ikke vanlig nettside)</li>
+              <li>Feil brukernavn eller passord</li>
+              <li>Serveren er ikke tilgjengelig</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto px-6 py-8 h-[calc(100vh-80px)] flex flex-col">
       {/* Header */}

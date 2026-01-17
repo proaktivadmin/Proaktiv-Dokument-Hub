@@ -166,7 +166,25 @@ async def browse_storage(
             parent_path=_get_parent_path(path)
         )
     except RuntimeError as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        error_msg = str(e)
+        # Check for common error patterns
+        if "401" in error_msg:
+            raise HTTPException(
+                status_code=401,
+                detail="WebDAV authentication failed. Check WEBDAV_USERNAME and WEBDAV_PASSWORD."
+            )
+        elif "404" in error_msg:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Directory not found: {path}"
+            )
+        elif "connection" in error_msg.lower() or "refused" in error_msg.lower():
+            raise HTTPException(
+                status_code=503,
+                detail="Cannot connect to WebDAV server. Check WEBDAV_URL."
+            )
+        else:
+            raise HTTPException(status_code=500, detail=error_msg)
 
 
 @router.get("/download")
