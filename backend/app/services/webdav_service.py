@@ -96,10 +96,8 @@ class WebDAVService:
         base_url_path = urlparse(self._base_url).path.rstrip('/')
         
         # #region agent log
-        import os
-        with open(os.path.join(os.getcwd(), '.cursor', 'debug.log'), 'a') as f:
-            import json, time
-            f.write(json.dumps({"timestamp": int(time.time() * 1000), "location": "webdav_service.py:_parse_propfind", "message": "Parsing PROPFIND response", "data": {"base_path": base_path, "base_url_path": base_url_path, "xml_length": len(xml_text), "xml_preview": xml_text[:500]}, "sessionId": "debug-session", "runId": "run1", "hypothesisId": "H1"}) + '\n')
+        logger.info(f"[DEBUG-H1] Parsing PROPFIND: base_path={base_path}, base_url_path={base_url_path}, xml_len={len(xml_text)}")
+        logger.info(f"[DEBUG-H1] XML preview: {xml_text[:300]}")
         # #endregion
         
         try:
@@ -194,10 +192,8 @@ class WebDAVService:
                     continue
                 
                 # #region agent log
-                import os
-                with open(os.path.join(os.getcwd(), '.cursor', 'debug.log'), 'a') as f:
-                    import json, time
-                    f.write(json.dumps({"timestamp": int(time.time() * 1000), "location": "webdav_service.py:item_parsed", "message": "Parsed item", "data": {"name": name, "href": href, "full_path": full_path, "item_path": item_path, "is_dir": is_dir, "base_url_path": base_url_path}, "sessionId": "debug-session", "runId": "run1", "hypothesisId": "H3"}) + '\n')
+                if len(items) < 5:  # Only log first 5 items to avoid log spam
+                    logger.info(f"[DEBUG-H3] Item: name={name}, href={href}, full_path={full_path}, item_path={item_path}, is_dir={is_dir}")
                 # #endregion
                 
                 items.append(StorageItem(
@@ -216,12 +212,9 @@ class WebDAVService:
         items.sort(key=lambda x: (not x.is_directory, x.name.lower()))
         
         # #region agent log
-        import os
-        with open(os.path.join(os.getcwd(), '.cursor', 'debug.log'), 'a') as f:
-            import json, time
-            dirs = [i.name for i in items if i.is_directory][:5]
-            files = [i.name for i in items if not i.is_directory][:5]
-            f.write(json.dumps({"timestamp": int(time.time() * 1000), "location": "webdav_service.py:parse_result", "message": "Parse complete", "data": {"total_items": len(items), "sample_dirs": dirs, "sample_files": files, "base_path": base_path}, "sessionId": "debug-session", "runId": "run1", "hypothesisId": "H1"}) + '\n')
+        dirs = [i.name for i in items if i.is_directory][:5]
+        files = [i.name for i in items if not i.is_directory][:5]
+        logger.info(f"[DEBUG-H1] Parse complete: total={len(items)}, dirs={dirs}, files={files}, base_path={base_path}")
         # #endregion
         
         return items
@@ -271,10 +264,7 @@ class WebDAVService:
                 logger.info(f"PROPFIND request to: {url}")
                 
                 # #region agent log
-                import os
-                with open(os.path.join(os.getcwd(), '.cursor', 'debug.log'), 'a') as f:
-                    import json, time
-                    f.write(json.dumps({"timestamp": int(time.time() * 1000), "location": "webdav_service.py:list_directory", "message": "PROPFIND request", "data": {"base_url": self._base_url, "path_arg": path, "full_url": url}, "sessionId": "debug-session", "runId": "run1", "hypothesisId": "H2"}) + '\n')
+                logger.info(f"[DEBUG-H2] PROPFIND: base_url={self._base_url}, path_arg={path}, full_url={url}")
                 # #endregion
                 
                 response = await client.request(
@@ -291,10 +281,7 @@ class WebDAVService:
                     logger.warning(f"PROPFIND got redirect to: {location}")
                     
                     # #region agent log
-                    import os
-                    with open(os.path.join(os.getcwd(), '.cursor', 'debug.log'), 'a') as f:
-                        import json, time
-                        f.write(json.dumps({"timestamp": int(time.time() * 1000), "location": "webdav_service.py:redirect", "message": "Got redirect", "data": {"original_url": url, "redirect_location": location, "status": response.status_code}, "sessionId": "debug-session", "runId": "run1", "hypothesisId": "H2"}) + '\n')
+                    logger.info(f"[DEBUG-H2] Redirect: original={url}, location={location}, status={response.status_code}")
                     # #endregion
                     # Try following the redirect manually with PROPFIND
                     if location and location.startswith(("http://", "https://")):
