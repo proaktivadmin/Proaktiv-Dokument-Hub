@@ -190,10 +190,19 @@ async def debug_storage(
             
             url = settings.WEBDAV_URL.rstrip("/") + "/"
             
-            async with httpx.AsyncClient(timeout=30.0) as client:
+            async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
                 response = await client.request(
                     "PROPFIND",
                     url,
+                    headers=headers,
+                    content=propfind_body
+                )
+                
+                # Also try without trailing slash
+                url_no_slash = settings.WEBDAV_URL.rstrip("/")
+                response2 = await client.request(
+                    "PROPFIND",
+                    url_no_slash,
                     headers=headers,
                     content=propfind_body
                 )
@@ -202,8 +211,15 @@ async def debug_storage(
                 results["propfind_headers"] = dict(response.headers)
                 # Truncate body if too long
                 body = response.text
-                results["propfind_body"] = body[:2000] if len(body) > 2000 else body
+                results["propfind_body"] = body[:3000] if len(body) > 3000 else body
                 results["propfind_body_length"] = len(body)
+                
+                # Second request without trailing slash
+                results["propfind2_url"] = url_no_slash
+                results["propfind2_status"] = response2.status_code
+                body2 = response2.text
+                results["propfind2_body"] = body2[:3000] if len(body2) > 3000 else body2
+                results["propfind2_body_length"] = len(body2)
                 
         except Exception as e:
             results["propfind_error"] = str(e)
