@@ -80,10 +80,11 @@ class WebDAVService:
     
     def _get_client(self) -> httpx.AsyncClient:
         """Get an async HTTP client with digest auth."""
+        # Don't follow redirects - WebDAV servers may redirect in ways that break PROPFIND
         return httpx.AsyncClient(
             auth=self._auth,
             timeout=30.0,
-            follow_redirects=True
+            follow_redirects=False
         )
     
     def _parse_propfind_response(self, xml_text: str, base_path: str) -> List[StorageItem]:
