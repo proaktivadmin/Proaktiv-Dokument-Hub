@@ -1,25 +1,26 @@
 /**
- * Layout Partial Types for Headers/Footers
+ * Layout Partial Types for Headers/Footers/Signatures
  */
 
 /**
  * Partial types
  */
-export type LayoutPartialType = 'header' | 'footer';
+export type LayoutPartialType = 'header' | 'footer' | 'signature';
 
 /**
  * Context where partial can be used
  */
-export type LayoutPartialContext = 'pdf' | 'email' | 'all';
+export type LayoutPartialContext = 'pdf' | 'email' | 'sms' | 'all';
 
 /**
- * Header or footer partial template
+ * Header, footer, or signature partial template
  */
 export interface LayoutPartial {
   id: string;
   name: string;
   type: LayoutPartialType;
   context: LayoutPartialContext;
+  document_type?: string | null;
   html_content: string;
   is_default: boolean;
   created_by: string;
@@ -36,6 +37,7 @@ export interface LayoutPartialCreate {
   type: LayoutPartialType;
   html_content: string;
   context?: LayoutPartialContext;
+  document_type?: string;
   is_default?: boolean;
 }
 
@@ -46,6 +48,7 @@ export interface LayoutPartialUpdate {
   name?: string;
   type?: LayoutPartialType;
   context?: LayoutPartialContext;
+  document_type?: string;
   html_content?: string;
   is_default?: boolean;
 }

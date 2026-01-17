@@ -110,3 +110,41 @@ export interface RecentUploadV2 {
   title: string;
   created_at: string;
 }
+
+// ============================================================================
+// INVENTORY SYNC STATS
+// ============================================================================
+
+/**
+ * Inventory sync statistics from backend
+ */
+export interface InventorySyncStats {
+  total_vitec_templates: number;
+  total_local_templates: number;
+  synced: number;
+  missing: number;
+  modified: number;
+  local_only: number;
+  sync_percentage: number;
+}
+
+/**
+ * Missing template info
+ */
+export interface MissingTemplateInfo {
+  id: string;
+  vitec_name: string;
+  vitec_type: string;
+  vitec_phase: string | null;
+  vitec_category: string | null;
+  vitec_channel: string | null;
+  description: string | null;
+}
+
+/**
+ * Full inventory stats response
+ */
+export interface InventoryStatsResponse {
+  stats: InventorySyncStats;
+  missing_templates: MissingTemplateInfo[];
+}

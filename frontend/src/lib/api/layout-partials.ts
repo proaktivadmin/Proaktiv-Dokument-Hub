@@ -25,7 +25,14 @@ export const layoutPartialsApi = {
   /**
    * List layout partials with optional filters
    */
-  async list(params?: LayoutPartialListParams): Promise<LayoutPartialListResponse> {
+  async list(
+    type?: LayoutPartialType,
+    context?: LayoutPartialContext
+  ): Promise<LayoutPartialListResponse> {
+    const params: LayoutPartialListParams = {};
+    if (type) params.type = type;
+    if (context) params.context = context;
+    
     const { data } = await api.get<LayoutPartialListResponse>("/layout-partials", {
       params,
     });

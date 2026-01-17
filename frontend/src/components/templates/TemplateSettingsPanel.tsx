@@ -2,11 +2,11 @@
 
 /**
  * TemplateSettingsPanel - Settings panel for template configuration
- * Handles margins, header/footer, theme, receiver, output type, etc.
+ * Handles margins, header/footer/signature, theme, receiver, output type, etc.
  */
 
-import { useState, useEffect } from "react";
-import { Save, RotateCcw } from "lucide-react";
+import { useState, useEffect, useMemo } from "react";
+import { Save, RotateCcw, Loader2, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,6 +18,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { useLayoutPartialsForChannel } from "@/hooks/useLayoutPartials";
 
 export interface TemplateSettings {
   // Margins (in cm)
@@ -26,9 +33,10 @@ export interface TemplateSettings {
   marginBottom: number;
   marginLeft: number;
   
-  // Header/Footer template IDs
+  // Header/Footer/Signature template IDs
   headerTemplateId: string | null;
   footerTemplateId: string | null;
+  signatureTemplateId: string | null;
   
   // Output settings
   channel: "pdf" | "email" | "sms" | "pdf_email";
@@ -47,6 +55,7 @@ const DEFAULT_SETTINGS: TemplateSettings = {
   marginLeft: 1.0,
   headerTemplateId: null,
   footerTemplateId: null,
+  signatureTemplateId: null,
   channel: "pdf_email",
   receiverType: null,
   receiver: null,
@@ -54,13 +63,18 @@ const DEFAULT_SETTINGS: TemplateSettings = {
   themeStylesheet: null,
 };
 
+// Receiver options from Vitec reference
+const RECEIVER_OPTIONS = [
+  'Selger', 'Kjøper', 'Visningsdeltager', 'Budgiver', 'Interessent',
+  'Utleier', 'Leietaker', 'Megler', 'Bank', 'Forretningsfører',
+  'Advokat', 'Takstmann', 'Fotograf', 'Stylist', 'Annet'
+] as const;
+
 interface TemplateSettingsPanelProps {
   templateId: string;
   initialSettings?: Partial<TemplateSettings>;
   onSave?: (settings: TemplateSettings) => Promise<void>;
   isSaving?: boolean;
-  headerOptions?: Array<{ id: string; title: string }>;
-  footerOptions?: Array<{ id: string; title: string }>;
   themeOptions?: Array<{ id: string; name: string }>;
 }
 
@@ -69,8 +83,6 @@ export function TemplateSettingsPanel({
   initialSettings,
   onSave,
   isSaving: isSavingProp = false,
-  headerOptions = [],
-  footerOptions = [],
   themeOptions = [],
 }: TemplateSettingsPanelProps) {
   const [settings, setSettings] = useState<TemplateSettings>({
@@ -78,6 +90,15 @@ export function TemplateSettingsPanel({
     ...initialSettings,
   });
   const [hasChanges, setHasChanges] = useState(false);
+  const [previewPartial, setPreviewPartial] = useState<{ name: string; content: string } | null>(null);
+  
+  // Fetch layout partials based on selected channel
+  const { 
+    headers, 
+    footers, 
+    signatures, 
+    isLoading: partialsLoading 
+  } = useLayoutPartialsForChannel(settings.channel);
   
   // Use prop if provided, otherwise use internal state
   const isSaving = isSavingProp;
@@ -165,58 +186,147 @@ export function TemplateSettingsPanel({
 
       <Separator />
 
-      {/* Header/Footer Section */}
+      {/* Header/Footer/Signature Section */}
       <div>
-        <h3 className="text-sm font-medium mb-3">Topptekst og Bunntekst</h3>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-sm font-medium">Layout</h3>
+          {partialsLoading && (
+            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+          )}
+        </div>
         <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="header-template">Topptekst</Label>
-            <Select
-              value={settings.headerTemplateId || "none"}
-              onValueChange={(value) =>
-                setSettings((prev) => ({
-                  ...prev,
-                  headerTemplateId: value === "none" ? null : value,
-                }))
-              }
-            >
-              <SelectTrigger id="header-template">
-                <SelectValue placeholder="Velg topptekst..." />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">Ingen topptekst</SelectItem>
-                {headerOptions.map((option) => (
-                  <SelectItem key={option.id} value={option.id}>
-                    {option.title}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="footer-template">Bunntekst</Label>
-            <Select
-              value={settings.footerTemplateId || "none"}
-              onValueChange={(value) =>
-                setSettings((prev) => ({
-                  ...prev,
-                  footerTemplateId: value === "none" ? null : value,
-                }))
-              }
-            >
-              <SelectTrigger id="footer-template">
-                <SelectValue placeholder="Velg bunntekst..." />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">Ingen bunntekst</SelectItem>
-                {footerOptions.map((option) => (
-                  <SelectItem key={option.id} value={option.id}>
-                    {option.title}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          {/* Header (PDF only) */}
+          {(settings.channel === "pdf" || settings.channel === "pdf_email") && (
+            <div className="space-y-2">
+              <Label htmlFor="header-template">Topptekst (PDF)</Label>
+              <div className="flex gap-2">
+                <Select
+                  value={settings.headerTemplateId || "none"}
+                  onValueChange={(value) =>
+                    setSettings((prev) => ({
+                      ...prev,
+                      headerTemplateId: value === "none" ? null : value,
+                    }))
+                  }
+                >
+                  <SelectTrigger id="header-template" className="flex-1">
+                    <SelectValue placeholder="Velg topptekst..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">Ingen topptekst</SelectItem>
+                    {headers.map((header) => (
+                      <SelectItem key={header.id} value={header.id}>
+                        {header.name}
+                        {header.is_default && " ⭐"}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {settings.headerTemplateId && (
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => {
+                      const header = headers.find(h => h.id === settings.headerTemplateId);
+                      if (header) setPreviewPartial({ name: header.name, content: header.html_content });
+                    }}
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Footer (PDF only) */}
+          {(settings.channel === "pdf" || settings.channel === "pdf_email") && (
+            <div className="space-y-2">
+              <Label htmlFor="footer-template">Bunntekst (PDF)</Label>
+              <div className="flex gap-2">
+                <Select
+                  value={settings.footerTemplateId || "none"}
+                  onValueChange={(value) =>
+                    setSettings((prev) => ({
+                      ...prev,
+                      footerTemplateId: value === "none" ? null : value,
+                    }))
+                  }
+                >
+                  <SelectTrigger id="footer-template" className="flex-1">
+                    <SelectValue placeholder="Velg bunntekst..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">Ingen bunntekst</SelectItem>
+                    {footers.map((footer) => (
+                      <SelectItem key={footer.id} value={footer.id}>
+                        {footer.name}
+                        {footer.document_type && ` (${footer.document_type})`}
+                        {footer.is_default && " ⭐"}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {settings.footerTemplateId && (
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => {
+                      const footer = footers.find(f => f.id === settings.footerTemplateId);
+                      if (footer) setPreviewPartial({ name: footer.name, content: footer.html_content });
+                    }}
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Signature (Email/SMS) */}
+          {(settings.channel === "email" || settings.channel === "sms" || settings.channel === "pdf_email") && (
+            <div className="space-y-2">
+              <Label htmlFor="signature-template">
+                Signatur ({settings.channel === "sms" ? "SMS" : "E-post"})
+              </Label>
+              <div className="flex gap-2">
+                <Select
+                  value={settings.signatureTemplateId || "none"}
+                  onValueChange={(value) =>
+                    setSettings((prev) => ({
+                      ...prev,
+                      signatureTemplateId: value === "none" ? null : value,
+                    }))
+                  }
+                >
+                  <SelectTrigger id="signature-template" className="flex-1">
+                    <SelectValue placeholder="Velg signatur..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">Ingen signatur</SelectItem>
+                    {signatures.map((sig) => (
+                      <SelectItem key={sig.id} value={sig.id}>
+                        {sig.name}
+                        {sig.context !== "all" && ` (${sig.context.toUpperCase()})`}
+                        {sig.is_default && " ⭐"}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {settings.signatureTemplateId && (
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => {
+                      const sig = signatures.find(s => s.id === settings.signatureTemplateId);
+                      if (sig) setPreviewPartial({ name: sig.name, content: sig.html_content });
+                    }}
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -268,17 +378,27 @@ export function TemplateSettingsPanel({
 
           <div className="space-y-2">
             <Label htmlFor="receiver">Mottaker</Label>
-            <Input
-              id="receiver"
-              value={settings.receiver || ""}
-              onChange={(e) =>
+            <Select
+              value={settings.receiver || "none"}
+              onValueChange={(value) =>
                 setSettings((prev) => ({
                   ...prev,
-                  receiver: e.target.value || null,
+                  receiver: value === "none" ? null : value,
                 }))
               }
-              placeholder="Standard mottaker..."
-            />
+            >
+              <SelectTrigger id="receiver">
+                <SelectValue placeholder="Velg mottaker..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">Ikke spesifisert</SelectItem>
+                {RECEIVER_OPTIONS.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>
@@ -335,6 +455,23 @@ export function TemplateSettingsPanel({
           {isSaving ? "Lagrer..." : "Lagre endringer"}
         </Button>
       </div>
+
+      {/* Partial Preview Dialog */}
+      <Dialog open={!!previewPartial} onOpenChange={() => setPreviewPartial(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>{previewPartial?.name || "Forhåndsvisning"}</DialogTitle>
+          </DialogHeader>
+          <div className="border rounded-md p-4 bg-white min-h-[200px]">
+            {previewPartial?.content && (
+              <div 
+                dangerouslySetInnerHTML={{ __html: previewPartial.content }} 
+                className="vitec-preview"
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
