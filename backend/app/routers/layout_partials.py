@@ -1,5 +1,7 @@
 """
 Layout Partials API Routes
+
+Supports headers, footers, and signatures for PDF, email, and SMS channels.
 """
 
 from fastapi import APIRouter, HTTPException, Query, Depends, Header
@@ -14,7 +16,9 @@ from app.schemas.layout_partial import (
     LayoutPartialUpdate,
     LayoutPartialResponse,
     LayoutPartialListResponse,
-    LayoutPartialSetDefaultResponse
+    LayoutPartialSetDefaultResponse,
+    LayoutPartialType,
+    LayoutPartialContext
 )
 
 router = APIRouter(prefix="/layout-partials", tags=["Layout Partials"])
@@ -28,8 +32,8 @@ def get_current_user_email(x_user_email: str = Header(default="system@proaktiv.n
 @router.get("", response_model=LayoutPartialListResponse)
 async def list_layout_partials(
     db: AsyncSession = Depends(get_db),
-    type: Optional[Literal['header', 'footer']] = Query(None),
-    context: Optional[Literal['pdf', 'email', 'all']] = Query(None)
+    type: Optional[LayoutPartialType] = Query(None),
+    context: Optional[LayoutPartialContext] = Query(None)
 ):
     """List all layout partials with optional filters."""
     partials = await LayoutPartialService.get_list(
@@ -46,8 +50,8 @@ async def list_layout_partials(
 
 @router.get("/default", response_model=LayoutPartialResponse)
 async def get_default_partial(
-    type: Literal['header', 'footer'] = Query(...),
-    context: Literal['pdf', 'email', 'all'] = Query('all'),
+    type: LayoutPartialType = Query(...),
+    context: LayoutPartialContext = Query('all'),
     db: AsyncSession = Depends(get_db)
 ):
     """Get the default partial for a type/context combination."""
