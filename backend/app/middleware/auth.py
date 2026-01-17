@@ -26,6 +26,14 @@ PUBLIC_ROUTES = [
     "/",
 ]
 
+# CORS headers to add to 401 responses
+CORS_HEADERS = {
+    "Access-Control-Allow-Origin": "*",  # Will be overridden by main CORS for valid requests
+    "Access-Control-Allow-Credentials": "true",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS, PATCH",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization, Cookie",
+}
+
 
 class AuthMiddleware(BaseHTTPMiddleware):
     """
@@ -34,10 +42,15 @@ class AuthMiddleware(BaseHTTPMiddleware):
     - Allows public routes without authentication
     - If APP_PASSWORD_HASH is not set, allows all requests (auth disabled)
     - Protected routes require a valid session cookie
+    - Allows OPTIONS requests for CORS preflight
     """
     
     async def dispatch(self, request: Request, call_next):
         settings = get_settings()
+        
+        # Always allow OPTIONS requests (CORS preflight)
+        if request.method == "OPTIONS":
+            return await call_next(request)
         
         # If auth is not configured, allow all requests
         if not settings.APP_PASSWORD_HASH:
@@ -55,12 +68,20 @@ class AuthMiddleware(BaseHTTPMiddleware):
         if not path.startswith("/api"):
             return await call_next(request)
         
+        # Get origin for CORS headers
+        origin = request.headers.get("origin", "*")
+        cors_headers = {
+            "Access-Control-Allow-Origin": origin,
+            "Access-Control-Allow-Credentials": "true",
+        }
+        
         # Check for session token
         token = request.cookies.get("session")
         if not token:
             return JSONResponse(
                 status_code=401,
-                content={"detail": "Not authenticated"}
+                content={"detail": "Not authenticated"},
+                headers=cors_headers
             )
         
         # Verify token
@@ -68,7 +89,8 @@ class AuthMiddleware(BaseHTTPMiddleware):
         if not payload:
             return JSONResponse(
                 status_code=401,
-                content={"detail": "Invalid or expired session"}
+                content={"detail": "Invalid or expired session"},
+                headers=cors_headers
             )
         
         # Token is valid, continue
