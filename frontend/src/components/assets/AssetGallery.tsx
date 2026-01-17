@@ -7,6 +7,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AssetCard } from "./AssetCard";
 import { AssetUploadDialog } from "./AssetUploadDialog";
+import { AssetPreviewDialog } from "./AssetPreviewDialog";
 import { assetsApi } from "@/lib/api/assets";
 import type { CompanyAsset, AssetCategory } from "@/types/v3";
 
@@ -38,6 +39,7 @@ export function AssetGallery({
 }: AssetGalleryProps) {
   const [selectedCategory, setSelectedCategory] = useState<AssetCategory | "all">("all");
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+  const [previewAsset, setPreviewAsset] = useState<CompanyAsset | null>(null);
 
   const filteredAssets = selectedCategory === "all"
     ? assets
@@ -113,6 +115,7 @@ export function AssetGallery({
             <AssetCard
               key={asset.id}
               asset={asset}
+              onClick={() => setPreviewAsset(asset)}
               onDelete={() => handleDelete(asset)}
             />
           ))}
@@ -126,6 +129,13 @@ export function AssetGallery({
         scope={scope}
         scopeId={scopeId}
         onSuccess={onRefresh}
+      />
+
+      {/* Preview dialog */}
+      <AssetPreviewDialog
+        asset={previewAsset}
+        open={!!previewAsset}
+        onOpenChange={(open) => !open && setPreviewAsset(null)}
       />
     </div>
   );
