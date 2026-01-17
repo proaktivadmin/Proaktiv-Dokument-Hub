@@ -35,7 +35,8 @@ export default function FlettekodePage() {
       {/* Main content with tabs */}
       <main className="flex-1 overflow-hidden flex flex-col">
         {/* Page header with breadcrumb */}
-        <div className="border-b px-6 py-4 bg-white">
+        <div className="border-b bg-white">
+          <div className="container mx-auto px-6 py-4">
           <Breadcrumb className="mb-3">
             <BreadcrumbList>
               <BreadcrumbItem>
@@ -57,6 +58,7 @@ export default function FlettekodePage() {
           </Breadcrumb>
           <h1 className="text-2xl font-bold">Flettekoder</h1>
           <p className="text-muted-foreground">Søk og kopier Vitec flettekoder og kodemønstre</p>
+          </div>
         </div>
 
         <Tabs
@@ -64,7 +66,8 @@ export default function FlettekodePage() {
           onValueChange={setActiveTab}
           className="flex-1 flex flex-col"
         >
-          <div className="border-b px-6 bg-white">
+          <div className="border-b bg-white">
+            <div className="container mx-auto px-6">
             <TabsList className="h-12">
               <TabsTrigger value="variables" className="gap-2 text-sm">
                 <Variable className="h-4 w-4" />
@@ -83,11 +86,12 @@ export default function FlettekodePage() {
                 Layout
               </TabsTrigger>
             </TabsList>
+            </div>
           </div>
 
           {/* Variables Tab - Full merge field library */}
           <TabsContent value="variables" className="flex-1 m-0 overflow-hidden">
-            <div className="h-full p-6">
+            <div className="container mx-auto px-6 py-6 h-full">
               <FlettekodeLibrary
                 onCopy={(field) => handleCopy(`[[${field.path}]]`)}
               />
@@ -95,17 +99,23 @@ export default function FlettekodePage() {
           </TabsContent>
 
           {/* Code Generator Tab */}
-          <TabsContent value="generator" className="flex-1 m-0 overflow-auto p-6">
-            <CodeGenerator onCopy={handleCopy} />
+          <TabsContent value="generator" className="flex-1 m-0 overflow-auto">
+            <div className="container mx-auto px-6 py-6">
+              <CodeGenerator onCopy={handleCopy} />
+            </div>
           </TabsContent>
 
           {/* Logic & Layout Tab */}
-          <TabsContent value="logic" className="flex-1 m-0 overflow-auto p-6">
-            <VitecLogicSection onCopy={handleCopy} />
+          <TabsContent value="logic" className="flex-1 m-0 overflow-auto">
+            <div className="container mx-auto px-6 py-6">
+              <VitecLogicSection onCopy={handleCopy} />
+            </div>
           </TabsContent>
 
-          <TabsContent value="layout" className="flex-1 m-0 overflow-auto p-6">
-            <VitecLogicSection onCopy={handleCopy} />
+          <TabsContent value="layout" className="flex-1 m-0 overflow-auto">
+            <div className="container mx-auto px-6 py-6">
+              <VitecLogicSection onCopy={handleCopy} />
+            </div>
           </TabsContent>
         </Tabs>
       </main>

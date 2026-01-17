@@ -199,32 +199,35 @@ export default function SanitizerPage() {
       <Header />
 
       {/* Page header with breadcrumb */}
-      <div className="border-b px-6 py-4 bg-white">
-        <Breadcrumb className="mb-3">
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/" className="flex items-center gap-1">
-                <Home className="h-4 w-4" />
-                Dashboard
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>
-              <ChevronRight className="h-4 w-4" />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbPage className="flex items-center gap-1">
-                <Sparkles className="h-4 w-4" />
-                Sanitizer
-              </BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-        <h1 className="text-2xl font-bold">Sanitizer</h1>
-        <p className="text-muted-foreground">Rens inline CSS fra maler og standardiser stilen</p>
+      <div className="border-b bg-white">
+        <div className="container mx-auto px-6 py-4">
+          <Breadcrumb className="mb-3">
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/" className="flex items-center gap-1">
+                  <Home className="h-4 w-4" />
+                  Dashboard
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator>
+                <ChevronRight className="h-4 w-4" />
+              </BreadcrumbSeparator>
+              <BreadcrumbItem>
+                <BreadcrumbPage className="flex items-center gap-1">
+                  <Sparkles className="h-4 w-4" />
+                  Sanitizer
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+          <h1 className="text-2xl font-bold">Sanitizer</h1>
+          <p className="text-muted-foreground">Rens inline CSS fra maler og standardiser stilen</p>
+        </div>
       </div>
 
       {/* Controls */}
-      <div className="border-b bg-muted/30 px-6 py-4">
+      <div className="border-b bg-muted/30">
+        <div className="container mx-auto px-6 py-4">
         <div className="flex items-end gap-4">
           <div className="flex-1 max-w-md space-y-2">
             <Label htmlFor="template-select">Velg mal</Label>
@@ -311,6 +314,7 @@ export default function SanitizerPage() {
             Endringene ble lagret permanent!
           </div>
         )}
+        </div>
       </div>
 
       {/* Preview area */}
