@@ -38,10 +38,7 @@ export function useLayoutPartials(
     setError(null);
     
     try {
-      const response = await layoutPartialsApi.list({
-        type,
-        context,
-      });
+      const response = await layoutPartialsApi.list(type, context);
       
       setPartials(response.partials);
       setTotal(response.total);
