@@ -124,6 +124,80 @@ const DEFAULT_TEST_DATA: Record<string, string> = {
   "komplettmatrikkelutvidet": "Gnr. 45 Bnr. 2 Snr. 9 i Oslo kommune",
 };
 
+const FALLBACK_TEST_VALUES: Array<{ pattern: RegExp; value: string }> = [
+  { pattern: /(^|\.)(epost|email)/, value: "test@proaktiv.no" },
+  { pattern: /(^|\.)(tlf|telefon|mobil)/, value: "900 00 000" },
+  { pattern: /(^|\.)(orgnr|organisasjonsnummer)/, value: "999 999 999" },
+  { pattern: /(^|\.)(postnr|postnummer)/, value: "0150" },
+  { pattern: /(^|\.)(poststed|by|sted)/, value: "Oslo" },
+  { pattern: /(^|\.)(adresse|gatenavn|besoksadresse|postadresse|vei)/, value: "Storgata 5B" },
+  { pattern: /(^|\.)(dato|fdato|startdato|sluttdato)/, value: "15.01.2026" },
+  { pattern: /(^|\.)(pris|belop|sum|kostnad|avgift|honorar)/, value: "1 000 000,-" },
+  { pattern: /(^|\.)(prosent|pct)/, value: "1,0%" },
+  { pattern: /(^|\.)(andel|eierbrok|brok)/, value: "1/1" },
+  { pattern: /(^|\.)(areal|bruksareal|primarareal|prom|bra)/, value: "75 m2" },
+  { pattern: /(^|\.)(kommunenavn|kommune)/, value: "Oslo" },
+  { pattern: /(^|\.)(gnr|bnr|snr|seksjon)/, value: "45/2/9" },
+  { pattern: /(^|\.)(boligtype|eieform)/, value: "Selveier" },
+  { pattern: /(^|\.)(navn|kontaktnavn|firmanavn)/, value: "Ola Nordmann" },
+  { pattern: /(^|\.)(nr|nummer|antall|count)$/, value: "1" },
+];
+
+const GENERIC_FALLBACK_VALUE = "Testverdi";
+
+function isNonEmptyValue(value: string | null | undefined): value is string {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+function getDefaultValueForPath(path: string): string {
+  const direct = DEFAULT_TEST_DATA[path] || DEFAULT_TEST_DATA[`*${path}`];
+  if (direct) return direct;
+
+  const normalized = path.toLowerCase();
+  if (normalized.startsWith("brl.") || normalized.startsWith("borettslag.")) {
+    if (normalized.endsWith(".navn")) return "Storgata Borettslag";
+  }
+  if (normalized.startsWith("sameie.") && normalized.endsWith(".navn")) {
+    return "Storgata Sameie";
+  }
+  if (normalized.startsWith("meglerkontor.") && normalized.endsWith(".navn")) {
+    return "Proaktiv Eiendomsmegling AS";
+  }
+  if (normalized.startsWith("oppgjor.") && normalized.endsWith(".kontornavn")) {
+    return "Proaktiv Oppgjor";
+  }
+
+  for (const fallback of FALLBACK_TEST_VALUES) {
+    if (fallback.pattern.test(normalized)) {
+      return fallback.value;
+    }
+  }
+
+  const lastSegment = normalized.split(".").filter(Boolean).pop();
+  if (!lastSegment) return GENERIC_FALLBACK_VALUE;
+  const label = lastSegment.replace(/[_-]+/g, " ");
+  return `Test ${label}`;
+}
+
+function buildDefaultValues(
+  variables: DetectedVariable[],
+  scenario?: { value_overrides?: Record<string, string> }
+): Record<string, string> {
+  const initial: Record<string, string> = {};
+
+  variables.forEach((v) => {
+    initial[v.path] = getDefaultValueForPath(v.path);
+  });
+
+  if (scenario?.value_overrides) {
+    for (const [key, value] of Object.entries(scenario.value_overrides)) {
+      initial[key] = value;
+    }
+  }
+
+  return initial;
+}
+
 // Load saved test data from localStorage
 function loadSavedTestData(): Record<string, string> {
   if (typeof window === "undefined") return {};
@@ -205,22 +279,12 @@ export function SimulatorPanel({ content, onApplyTestData }: SimulatorPanelProps
   useEffect(() => {
     const savedData = loadSavedTestData();
     const scenario = getScenarioById(scenarioId) ?? VITEC_TEST_SCENARIOS[0];
-    const initial: Record<string, string> = {};
-    
-    detectedVariables.forEach((v) => {
-      // Priority: 1) Saved value, 2) Default value
-      if (savedData[v.path]) {
-        initial[v.path] = savedData[v.path];
-      } else {
-        const defaultValue = DEFAULT_TEST_DATA[v.path] || DEFAULT_TEST_DATA[`*${v.path}`];
-        if (defaultValue) {
-          initial[v.path] = defaultValue;
-        }
-      }
+    const initial = buildDefaultValues(detectedVariables, scenario);
 
-      // Scenario overrides win for deterministic preview branches
-      if (scenario?.value_overrides?.[v.path]) {
-        initial[v.path] = scenario.value_overrides[v.path];
+    detectedVariables.forEach((v) => {
+      const savedValue = savedData[v.path];
+      if (isNonEmptyValue(savedValue)) {
+        initial[v.path] = savedValue;
       }
     });
     setTestValues(initial);
@@ -278,14 +342,8 @@ export function SimulatorPanel({ content, onApplyTestData }: SimulatorPanelProps
   };
 
   const handleResetToDefaults = () => {
-    const initial: Record<string, string> = {};
-    detectedVariables.forEach((v) => {
-      const defaultValue = DEFAULT_TEST_DATA[v.path] || DEFAULT_TEST_DATA[`*${v.path}`];
-      if (defaultValue) {
-        initial[v.path] = defaultValue;
-      }
-    });
-    setTestValues(initial);
+    const scenario = getScenarioById(scenarioId) ?? VITEC_TEST_SCENARIOS[0];
+    setTestValues(buildDefaultValues(detectedVariables, scenario));
   };
 
   const handleClearAll = () => {
@@ -399,7 +457,7 @@ export function SimulatorPanel({ content, onApplyTestData }: SimulatorPanelProps
                   id={`var-${variable.path}`}
                   value={testValues[variable.path] || ""}
                   onChange={(e) => handleValueChange(variable.path, e.target.value)}
-                  placeholder={DEFAULT_TEST_DATA[variable.path] || "Skriv testverdi..."}
+                  placeholder={getDefaultValueForPath(variable.path)}
                   className="font-mono text-sm"
                 />
               </div>

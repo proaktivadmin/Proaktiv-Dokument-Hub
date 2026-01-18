@@ -16,13 +16,17 @@ Role-based user management with Microsoft Teams integration and email group func
 
 - [x] **B5**: Add endpoint for email group generation
 
+- [ ] **B6**: Ensure create/update persists `system_roles` + `sharepoint_folder_url`
+
 
 ### Frontend  
 - [x] **F1**: Create role filter sidebar component
 
-- [ ] **F2**: Update EmployeeList to use new filters
-- [ ] **F3**: Create "Email Group" action button (mailto generator)
+- [x] **F2**: Update EmployeeList to use new filters
+- [x] **F3**: Create "Email Group" action button (mailto generator)
 - [ ] **F4**: Add Teams group display in employee cards
+- [ ] **F5**: Include status filters in email group request
+- [ ] **F6**: Normalize role naming (`daglig leder` vs `daglig_leder`)
 
 ### Testing
 - [ ] **T1**: Test role filtering with sample data

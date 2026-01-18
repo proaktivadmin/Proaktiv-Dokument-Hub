@@ -1,7 +1,7 @@
 # PROGRESS.md - Session Tracker
 
-**Last Updated**: 2026-01-18 21:00
-**Current Focus**: Ralph Loop Setup Complete → Ready for Feature Implementation
+**Last Updated**: 2026-01-18 23:15
+**Current Focus**: V3.1 verification + QA signoff (employees + templates)
 
 ---
 
@@ -13,9 +13,14 @@
 - [x] Created `docs/features/leverandorer/TASKS.md`
 - [x] Created `docs/features/photo-export/TASKS.md`
 
+### V3.1 QA Fixes: ✅ DEPLOYED
+- [x] Added `/api/ping`, `/api/territories/stats`, and fixed `/employees/email-group` routing.
+- [x] Hardened template receiver filtering + template settings audit JSON serialization.
+- [x] Shelf view now loads all templates (pagination).
+
 ### Next Immediate Task
 **Feature:** Employee Management
-**Task:** F2 - Update EmployeeList to use new filters
+**Task:** F4/F5 - Add Teams group display + include status filters in email group
 
 
 
@@ -29,7 +34,8 @@
 
 | Feature | Status | Next Task |
 |---------|--------|-----------|
-| Employee Management | 🟡 In Progress | F2: Update EmployeeList |
+| Employee Management | 🟡 In Progress | F4/F5: Teams groups + email group filters |
+| V3.1 QA Fixes | 🟢 Complete | Monitor Railway deploy |
 
 
 
@@ -72,6 +78,11 @@
   - Integrated into `/employees` page
   - Updated API client and hook to support `role` and `search` params
 
+### 2026-01-18 (Late)
+- QA fixes completed for template receiver filtering, settings save, and shelf pagination.
+- Backend endpoints added/fixed: `/api/ping`, `/api/territories/stats`, `/api/employees/email-group`.
+- Deployed to `main` (commit `068ec02`) to trigger Railway auto-deploy.
+
 
 
 
@@ -84,4 +95,4 @@
 None currently.
 
 ## ❓ QUESTIONS FOR USER
-None currently.
+- Confirm the canonical role value for managing director (`daglig leder` vs `daglig_leder`).

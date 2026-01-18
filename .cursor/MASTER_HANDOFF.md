@@ -53,6 +53,19 @@ For current production + active roadmap, use `.cursor/active_context.md` as sour
 ### Next agent — append below
 <!-- NEXT_AGENT_NOTES_START -->
 
+### AI Signoff (2026-01-18)
+- Pushed `068ec02` to `main`; Railway deploy triggered.
+- QA fixes landed: `/api/ping`, `/api/territories/stats`, `/employees/email-group` route ordering, template receiver filter hardening, template settings audit JSON serialization, shelf pagination to load all templates.
+- Employee UI now supports role filtering + email group action.
+- Integrations note: Vitec Next API + Azure/Microsoft stubs remain present but intentionally inactive.
+
+#### Open Items / Follow-ups
+- Employee create/update should persist `system_roles` + `sharepoint_folder_url`.
+- Email group button should include status filters.
+- Normalize role naming (`daglig leder` vs `daglig_leder`) across FE/BE.
+- Remove unused `Badge` import in `frontend/src/components/employees/RoleFilter.tsx`.
+- Investigate attachment badges showing values like `"0, False"` (metadata cleanup).
+
 <!-- (leave space for next agent’s updates) -->
 
 <!-- NEXT_AGENT_NOTES_END -->

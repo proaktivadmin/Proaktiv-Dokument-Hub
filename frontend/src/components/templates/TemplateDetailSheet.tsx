@@ -330,7 +330,7 @@ export function TemplateDetailSheet({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-5xl h-[85vh] flex flex-col p-0 gap-0 min-h-0">
+      <DialogContent className="inset-0 translate-x-0 translate-y-0 w-screen h-screen max-w-none max-h-none flex flex-col p-0 gap-0 min-h-0 rounded-none">
         {/* Header */}
         <DialogHeader className="px-6 py-4 border-b shrink-0">
           <div className="flex items-center justify-between">
@@ -496,53 +496,51 @@ export function TemplateDetailSheet({
 
           {/* Settings Tab */}
           <TabsContent value="settings" className="flex-1 m-0 overflow-auto p-4 min-h-0">
-            <div className="max-w-3xl">
-              <TemplateSettingsPanel
-                templateId={template.id}
-                initialSettings={initialSettings}
-                onSave={async (settings: TemplateSettings) => {
-                  setIsSavingSettings(true);
-                  try {
-                    // Convert null to undefined for API compatibility
-                    await templateSettingsApi.updateSettings(template.id, {
-                      channel: settings.channel,
-                      template_type: settings.templateType ?? undefined,
-                      receiver_type: settings.receiverType ?? undefined,
-                      receiver: settings.receiver ?? undefined,
-                      extra_receivers: settings.extraReceivers,
-                      phases: settings.phases,
-                      assignment_types: settings.assignmentTypes,
-                      ownership_types: settings.ownershipTypes,
-                      departments: settings.departments,
-                      email_subject: settings.emailSubject ?? undefined,
-                      header_template_id: settings.headerTemplateId ?? undefined,
-                      footer_template_id: settings.footerTemplateId ?? undefined,
-                      margin_top: settings.marginTop,
-                      margin_bottom: settings.marginBottom,
-                      margin_left: settings.marginLeft,
-                      margin_right: settings.marginRight,
-                    });
+            <TemplateSettingsPanel
+              templateId={template.id}
+              initialSettings={initialSettings}
+              onSave={async (settings: TemplateSettings) => {
+                setIsSavingSettings(true);
+                try {
+                  // Convert null to undefined for API compatibility
+                  await templateSettingsApi.updateSettings(template.id, {
+                    channel: settings.channel,
+                    template_type: settings.templateType ?? undefined,
+                    receiver_type: settings.receiverType ?? undefined,
+                    receiver: settings.receiver ?? undefined,
+                    extra_receivers: settings.extraReceivers,
+                    phases: settings.phases,
+                    assignment_types: settings.assignmentTypes,
+                    ownership_types: settings.ownershipTypes,
+                    departments: settings.departments,
+                    email_subject: settings.emailSubject ?? undefined,
+                    header_template_id: settings.headerTemplateId ?? undefined,
+                    footer_template_id: settings.footerTemplateId ?? undefined,
+                    margin_top: settings.marginTop,
+                    margin_bottom: settings.marginBottom,
+                    margin_left: settings.marginLeft,
+                    margin_right: settings.marginRight,
+                  });
 
-                    toast({
-                      title: "Innstillinger lagret",
-                      description: "Malinnstillingene er oppdatert.",
-                    });
+                  toast({
+                    title: "Innstillinger lagret",
+                    description: "Malinnstillingene er oppdatert.",
+                  });
 
-                    // Refetch settings to update state
-                    refetchSettings();
-                  } catch (error) {
-                    toast({
-                      title: "Feil ved lagring",
-                      description: error instanceof Error ? error.message : "Kunne ikke lagre innstillinger",
-                      variant: "destructive",
-                    });
-                  } finally {
-                    setIsSavingSettings(false);
-                  }
-                }}
-                isSaving={isSavingSettings}
-              />
-            </div>
+                  // Refetch settings to update state
+                  refetchSettings();
+                } catch (error) {
+                  toast({
+                    title: "Feil ved lagring",
+                    description: error instanceof Error ? error.message : "Kunne ikke lagre innstillinger",
+                    variant: "destructive",
+                  });
+                } finally {
+                  setIsSavingSettings(false);
+                }
+              }}
+              isSaving={isSavingSettings}
+            />
           </TabsContent>
 
           {/* Simulator Tab */}

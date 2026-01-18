@@ -121,6 +121,32 @@ export function TemplatePreview({
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${title || "Template Preview"}</title>
   <link rel="stylesheet" href="${stylesheetHref}" />
+  <style>
+    body.vitec-preview-mode {
+      background: #f3f4f6;
+      padding: 24px;
+    }
+    #vitecTemplate {
+      width: 210mm;
+      max-width: 100%;
+      min-height: 297mm;
+      margin: 0 auto;
+      background: #ffffff;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      box-shadow:
+        0 10px 30px rgba(15, 23, 42, 0.08),
+        0 2px 6px rgba(15, 23, 42, 0.06);
+      box-sizing: border-box;
+    }
+    @media (max-width: 900px) {
+      body.vitec-preview-mode {
+        padding: 12px;
+      }
+      #vitecTemplate {
+        min-height: auto;
+      }
+    }
+  </style>
 </head>
 <body class="vitec-preview-mode ${pageBreakClass}">
   ${wrappedContent}
@@ -146,7 +172,7 @@ export function TemplatePreview({
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-96 bg-muted rounded-lg border">
+      <div className="flex items-center justify-center h-full bg-muted border">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-secondary mx-auto mb-3" />
           <p className="text-muted-foreground">Laster forhåndsvisning...</p>
@@ -157,7 +183,7 @@ export function TemplatePreview({
 
   if (error) {
     return (
-      <div className="flex items-center justify-center h-96 bg-red-50 rounded-lg border border-red-200">
+      <div className="flex items-center justify-center h-full bg-red-50 border border-red-200">
         <div className="text-center">
           <p className="text-red-600 font-medium">Kunne ikke laste forhåndsvisning</p>
           <p className="text-red-500 text-sm mt-1">{error}</p>
@@ -168,7 +194,7 @@ export function TemplatePreview({
 
   if (!content) {
     return (
-      <div className="flex items-center justify-center h-96 bg-muted rounded-lg border">
+      <div className="flex items-center justify-center h-full bg-muted border">
         <p className="text-muted-foreground">Ingen innhold å vise</p>
       </div>
     );
@@ -288,7 +314,7 @@ export function TemplatePreview({
           <iframe
             ref={iframeRef}
             title="Template Preview"
-            className="w-full h-full border-0 bg-muted"
+            className="w-full h-full border-0 bg-transparent"
             sandbox="allow-same-origin"
             style={{ minHeight: "100%" }}
           />

@@ -136,11 +136,11 @@ export function A4Frame({
   }, [content, headerHtml, footerHtml, margins, onElementClick]);
 
   return (
-    <div className="flex justify-center bg-gray-100 p-4 overflow-auto">
+    <div className="flex justify-center bg-slate-100 p-6 md:p-8 overflow-auto">
       {/* A4 page container */}
       <div
         className={cn(
-          "bg-white shadow-lg",
+          "bg-white shadow-lg ring-1 ring-black/5",
           showMargins && "relative"
         )}
         style={{

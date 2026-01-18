@@ -27,6 +27,7 @@
 - **Next.js warning**: `next@14.1.0` prints a security advisory warning during build; plan an upgrade window
 - **Inventory stats can show 0 Vitec templates** until the Vitec registry is seeded/imported
 - **WebDAV**: directory listing still needs server-side `PROPFIND` enabled
+- **Integrations (inactive)**: Vitec Next API + Azure/Microsoft stubs remain in place; keep dormant until activation
 
 ### “Next Agent” — Append Below ⬇️
 <!-- NEXT_AGENT_NOTES_START -->
@@ -49,6 +50,16 @@
 - `/territories` no longer shows 405 in the UI.
 - Template settings update no longer 500s; audit log now serializes settings payload safely.
 - Shelf view now loads all pages (shows full 259 templates instead of first 100).
+
+### AI Signoff (2026-01-18)
+- Pushed commit `068ec02` to `main`; Railway deploy triggered.
+- Local-only `.claude/settings.local.json` left uncommitted.
+- Follow-ups:
+  - Employee create/update should persist `system_roles` + `sharepoint_folder_url`.
+  - Email group button should include status filters.
+  - Normalize role naming (`daglig leder` vs `daglig_leder`) across FE/BE.
+  - Remove unused `Badge` import in `RoleFilter.tsx`.
+  - Investigate attachment badges showing values like `"0, False"` (metadata cleanup).
 
 <!-- (leave space for next agent’s updates) -->
 
