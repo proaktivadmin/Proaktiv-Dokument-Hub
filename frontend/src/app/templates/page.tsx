@@ -46,7 +46,7 @@ import { getCategoryIcon } from "@/lib/category-icons";
 import { formatDistanceToNow } from "date-fns";
 import { nb } from "date-fns/locale";
 import Link from "next/link";
-import type { Template } from "@/types";
+import type { Template, TemplateStatus } from "@/types";
 import { ShelfLibrary } from "@/components/shelf";
 
 function TemplateTableSkeleton() {
@@ -76,7 +76,7 @@ function TemplatesPageContent() {
   
   const [viewMode, setViewMode] = useState<ViewMode>("shelf");
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
+  const [statusFilter, setStatusFilter] = useState<TemplateStatus | undefined>(undefined);
   const [categoryFilter, setCategoryFilter] = useState<string | undefined>(undefined);
   const [receiverFilter, setReceiverFilter] = useState<string | undefined>(undefined);
   const [tablePage, setTablePage] = useState(1);
@@ -243,7 +243,7 @@ function TemplatesPageContent() {
     return fileType === "html" || fileType === "htm";
   };
 
-  const statusFilters = [
+  const statusFilters: Array<{ value: TemplateStatus | undefined; label: string }> = [
     { value: undefined, label: "Alle" },
     { value: "published", label: "Publisert" },
     { value: "draft", label: "Utkast" },
