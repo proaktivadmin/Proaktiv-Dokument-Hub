@@ -18,9 +18,9 @@ export type TemplateType = 'Objekt/Kontakt' | 'System';
 export type ReceiverType = 'Egne/kundetilpasset' | 'Systemstandard';
 
 /**
- * Receiver roles
+ * Receiver roles (dynamic list from Vitec/Proaktiv)
  */
-export type Receiver = 'Selger' | 'Kjøper' | 'Megler' | 'Bank' | 'Forretningsfører';
+export type Receiver = string;
 
 export interface TemplateTag {
   id: string;
