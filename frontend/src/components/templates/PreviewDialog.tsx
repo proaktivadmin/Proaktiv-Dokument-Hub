@@ -56,7 +56,7 @@ export function PreviewDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-6xl h-[90vh] flex flex-col p-0 gap-0">
+      <DialogContent className="max-w-6xl h-[90vh] flex flex-col p-0 gap-0 min-h-0">
         <DialogHeader className="px-6 py-4 border-b shrink-0">
           <DialogTitle className="flex items-center gap-2">
             <span>Forhåndsvisning</span>
@@ -68,7 +68,7 @@ export function PreviewDialog({
           </DialogTitle>
         </DialogHeader>
         
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-hidden min-h-0">
           {!isHtmlTemplate ? (
             <div className="flex items-center justify-center h-full bg-amber-50">
               <div className="text-center p-8">

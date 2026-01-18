@@ -32,6 +32,7 @@ class TemplateService:
         tag_ids: Optional[List[UUID]] = None,
         category_id: Optional[UUID] = None,
         category_ids: Optional[List[UUID]] = None,
+        receiver: Optional[str] = None,
         page: int = 1,
         per_page: int = 20,
         sort_by: str = "updated_at",
@@ -47,6 +48,7 @@ class TemplateService:
             tag_ids: Filter by tag IDs
             category_id: Filter by a single category ID
             category_ids: Filter by multiple category IDs
+            receiver: Filter by receiver (primary or extra receivers)
             page: Page number (1-indexed)
             per_page: Items per page
             sort_by: Field to sort by
@@ -82,6 +84,25 @@ class TemplateService:
             query = query.join(Template.categories).where(Category.id == category_id)
         elif category_ids:
             query = query.join(Template.categories).where(Category.id.in_(category_ids))
+
+        if receiver:
+            receiver_normalized = receiver
+            try:
+                import unicodedata
+
+                receiver_normalized = (
+                    unicodedata.normalize("NFKD", receiver)
+                    .encode("ascii", "ignore")
+                    .decode("ascii")
+                )
+            except Exception:
+                receiver_normalized = receiver
+
+            receiver_variants = {receiver, receiver_normalized}
+            conditions = [Template.receiver.in_(receiver_variants)]
+            for variant in receiver_variants:
+                conditions.append(Template.extra_receivers.contains([variant]))
+            query = query.where(or_(*conditions))
         
         # Count total
         count_query = select(func.count()).select_from(query.subquery())

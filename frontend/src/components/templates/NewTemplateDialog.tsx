@@ -32,6 +32,14 @@ import {
 } from "@/components/ui/select";
 import { CodeEditor } from "@/components/editor/CodeEditor";
 import { templateApi, categoryApi } from "@/lib/api";
+import { templateSettingsApi } from "@/lib/api/template-settings";
+import { useToast } from "@/hooks/use-toast";
+import {
+  TemplateSettingsPanel,
+  type TemplateSettings,
+  DEFAULT_TEMPLATE_SETTINGS,
+} from "@/components/templates/TemplateSettingsPanel";
+import { getCategoryIcon } from "@/lib/category-icons";
 import type { TemplateStatus, Category } from "@/types";
 
 const formSchema = z.object({
@@ -62,6 +70,9 @@ export function NewTemplateDialog({
   const [error, setError] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoriesLoading, setCategoriesLoading] = useState(false);
+  const [settingsDraft, setSettingsDraft] = useState<TemplateSettings>(DEFAULT_TEMPLATE_SETTINGS);
+  const [settingsKey, setSettingsKey] = useState(0);
+  const { toast } = useToast();
 
   const {
     register,
@@ -106,8 +117,14 @@ export function NewTemplateDialog({
       reset();
       setHtmlContent("");
       setError(null);
+      setSettingsDraft({ ...DEFAULT_TEMPLATE_SETTINGS });
+      setSettingsKey((prev) => prev + 1);
     }
   }, [open, reset]);
+
+  const handleSettingsChange = (nextSettings: TemplateSettings) => {
+    setSettingsDraft(nextSettings);
+  };
 
   const onSubmit = async (data: FormData) => {
     if (!htmlContent.trim()) {
@@ -125,13 +142,41 @@ export function NewTemplateDialog({
       const file = new File([blob], fileName, { type: "text/html" });
 
       // Use the existing upload API
-      await templateApi.upload({
+      const created = await templateApi.upload({
         file,
         title: data.title,
         description: data.description || "",
         status: data.status as TemplateStatus,
         category_id: data.category_id || undefined,
       });
+
+      try {
+        await templateSettingsApi.updateSettings(created.id, {
+          channel: settingsDraft.channel,
+          template_type: settingsDraft.templateType ?? undefined,
+          receiver_type: settingsDraft.receiverType ?? undefined,
+          receiver: settingsDraft.receiver ?? undefined,
+          extra_receivers: settingsDraft.extraReceivers,
+          phases: settingsDraft.phases,
+          assignment_types: settingsDraft.assignmentTypes,
+          ownership_types: settingsDraft.ownershipTypes,
+          departments: settingsDraft.departments,
+          email_subject: settingsDraft.emailSubject ?? undefined,
+          header_template_id: settingsDraft.headerTemplateId ?? undefined,
+          footer_template_id: settingsDraft.footerTemplateId ?? undefined,
+          margin_top: settingsDraft.marginTop,
+          margin_bottom: settingsDraft.marginBottom,
+          margin_left: settingsDraft.marginLeft,
+          margin_right: settingsDraft.marginRight,
+        });
+      } catch (settingsError) {
+        console.error("Failed to save template settings:", settingsError);
+        toast({
+          title: "Innstillinger ikke lagret",
+          description: "Malen ble opprettet, men innstillingene kunne ikke lagres.",
+          variant: "destructive",
+        });
+      }
 
       onSuccess?.();
       onOpenChange(false);
@@ -190,7 +235,10 @@ export function NewTemplateDialog({
                     <SelectItem value="none">Ingen kategori</SelectItem>
                     {categories.map((category) => (
                       <SelectItem key={category.id} value={category.id}>
-                        {category.icon && <span className="mr-2">{category.icon}</span>}
+                        {(() => {
+                          const IconComponent = getCategoryIcon(category.icon);
+                          return <IconComponent className="mr-2 h-4 w-4 text-muted-foreground" />;
+                        })()}
                         {category.name}
                       </SelectItem>
                     ))}
@@ -232,6 +280,22 @@ export function NewTemplateDialog({
                 <p className="text-sm text-red-500">{errors.description.message}</p>
               )}
             </div>
+
+            <details className="rounded-lg border border-[#E5E5E5] p-4">
+              <summary className="cursor-pointer text-sm font-medium">
+                Avanserte innstillinger
+              </summary>
+              <div className="mt-4 max-h-[40vh] overflow-y-auto pr-2">
+                <TemplateSettingsPanel
+                  key={`new-settings-${settingsKey}`}
+                  templateId="new"
+                  initialSettings={DEFAULT_TEMPLATE_SETTINGS}
+                  onSettingsChange={handleSettingsChange}
+                  showActions={false}
+                  disabled={isCreating}
+                />
+              </div>
+            </details>
           </div>
 
           {/* Code editor */}

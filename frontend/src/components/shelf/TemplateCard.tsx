@@ -20,6 +20,7 @@ import {
   Pencil,
   Trash2,
   Loader2,
+  Paperclip,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -57,10 +58,10 @@ const CHANNEL_ICONS: Record<TemplateChannel, React.ReactNode> = {
 };
 
 const CHANNEL_COLORS: Record<TemplateChannel, string> = {
-  pdf: "bg-blue-100 text-blue-700",
-  email: "bg-green-100 text-green-700",
-  sms: "bg-purple-100 text-purple-700",
-  pdf_email: "bg-amber-100 text-amber-700",
+  pdf: "bg-[#F5EDE1] text-[#8A5A2B]",
+  email: "bg-[#E6EEF9] text-[#1E40AF]",
+  sms: "bg-[#EFE8F8] text-[#6D28D9]",
+  pdf_email: "bg-[#EEEAF7] text-[#4338CA]",
 };
 
 // File type icons for non-HTML templates
@@ -74,8 +75,8 @@ const FILE_TYPE_ICONS: Record<string, React.ReactNode> = {
 
 export function TemplateCard({
   template,
-  width = 160,
-  height = 200,
+  width = 200,
+  height = 250,
   isDimmed = false,
   isSelected = false,
   onClick,
@@ -93,6 +94,18 @@ export function TemplateCard({
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const hasAttemptedLoad = useRef(false);
+  const attachmentNames = (template.attachments ?? []).filter(Boolean);
+  const hasAttachments = attachmentNames.length > 0;
+  const originTags = (template.tags ?? [])
+    .map((tag) => tag.name.trim().toLowerCase())
+    .filter(Boolean);
+  const isKundemal = originTags.some((tag) => tag.includes("kundemal"));
+  const isVitec = originTags.some((tag) => tag.includes("vitec"));
+  const originLabel = isKundemal ? "Kundemal" : isVitec ? "Vitec Next" : null;
+  const originBadgeClass = isKundemal
+    ? "bg-[#E7F5EC] text-[#166534]"
+    : "bg-[#E6EEF9] text-[#1E40AF]";
+  const channelLabel = template.channel === "pdf_email" ? "PDF" : template.channel.toUpperCase();
 
   const canPreview = template.file_type === "html" || template.file_type === "htm";
 
@@ -107,8 +120,8 @@ export function TemplateCard({
   <style>
     body {
       transform-origin: top left;
-      transform: scale(0.15);
-      width: 666.67%;
+      transform: scale(0.2);
+      width: 500%;
       pointer-events: none;
       overflow: hidden;
     }
@@ -269,32 +282,15 @@ export function TemplateCard({
                 <Settings className="h-4 w-4" />
               </Button>
             )}
-            {onCodeViewClick && (
-              <Button
-                size="icon"
-                variant="secondary"
-                className="h-8 w-8"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onCodeViewClick();
-                }}
-              >
-                <Code className="h-4 w-4" />
-              </Button>
-            )}
           </div>
         )}
 
-        {/* Channel badge */}
-        <Badge
-          className={cn(
-            "absolute right-2 top-2 gap-1 text-xs",
-            CHANNEL_COLORS[template.channel]
-          )}
-        >
-          {CHANNEL_ICONS[template.channel]}
-          {template.channel === "pdf_email" ? "PDF" : template.channel.toUpperCase()}
-        </Badge>
+        {/* Origin badge */}
+        {originLabel && (
+          <Badge className={cn("absolute right-2 top-2 text-xs", originBadgeClass)}>
+            {originLabel}
+          </Badge>
+        )}
 
         {/* Dropdown menu (top-left) */}
         <div className="absolute left-2 top-2" onClick={(e) => e.stopPropagation()}>
@@ -317,6 +313,12 @@ export function TemplateCard({
                 <DropdownMenuItem onClick={onPreview}>
                   <Eye className="mr-2 h-4 w-4" />
                   Forhåndsvis
+                </DropdownMenuItem>
+              )}
+              {onCodeViewClick && (
+                <DropdownMenuItem onClick={onCodeViewClick}>
+                  <Code className="mr-2 h-4 w-4" />
+                  Kode
                 </DropdownMenuItem>
               )}
               {onDownload && (
@@ -349,13 +351,28 @@ export function TemplateCard({
       </div>
 
       {/* Title area */}
-      <div className="flex flex-col gap-1 p-2">
+      <div className="flex flex-col gap-1 px-2 pb-2 pt-1">
         <h4 className="truncate text-sm font-medium text-gray-900" title={template.title}>
           {template.title}
         </h4>
-        <span className="text-xs text-gray-500">
-          v{template.version} • {template.status}
-        </span>
+        <div className="text-xs text-gray-500 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <Badge className={cn("gap-1 text-[10px]", CHANNEL_COLORS[template.channel])}>
+              {CHANNEL_ICONS[template.channel]}
+              {channelLabel}
+            </Badge>
+            <span>{template.status}</span>
+          </div>
+          {hasAttachments && (
+            <span
+              className="inline-flex items-center gap-1"
+              title={attachmentNames.join(", ")}
+            >
+              <Paperclip className="h-3 w-3" />
+              {attachmentNames.length}
+            </span>
+          )}
+        </div>
       </div>
     </div>
   );

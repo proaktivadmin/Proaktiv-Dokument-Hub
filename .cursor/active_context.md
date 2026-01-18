@@ -1,5 +1,43 @@
 # ACTIVE CONTEXT & ROADMAP
 
+## 2026-01-18 (LATEST UPDATES) — FRONTEND / UX / NAV
+
+### Shipped Today ✅
+- ✅ **Rebrand**: App is now **Vitec Next Admin Hub** (header, login, metadata, backend `APP_NAME`)
+- ✅ **Logo**: Lily mark (same as favicon) rendered in `#272630` via CSS mask in header + login
+- ✅ **Navigation cleanup**
+  - **Dokumenter** dropdown: Maler, Kategorier, Mottakere
+  - **Selskap** dropdown: Kontorer, Ansatte, **Filer**, **Markedsområder**
+- ✅ **Clickable linking**
+  - Categories and receiver types are clickable and deep-link to `/templates` filtered view
+  - `/templates` supports `?category=<uuid>` and `?receiver=<name>` with filter chips
+- ✅ **Receiver filter support**
+  - Backend: `/api/templates?receiver=...` (matches primary + extra receivers, normalizes diacritics)
+- ✅ **Edit / New / Upload dialogs**
+  - Settings now available from **Rediger** (no need to open template first)
+  - “Avanserte innstillinger” in **Ny mal** and **Last opp fil** uses the same settings UI
+- ✅ **Categories icon consistency**
+  - Removed emojis, standardized to Lucide icons via `frontend/src/lib/category-icons.ts`
+- ✅ **Dashboard polish**
+  - Cleaner top (removed “Dashboard” heading/description)
+  - Neutral palette for cards/icons/tags; “archived” translated to **Arkivert**
+- ✅ **Markedsområder page added**: `/territories`
+  - Stats + layer toggles + placeholder map (real heatmap pending geometry dataset)
+- ✅ **Postal code sync (Bring)**
+  - Script added: `backend/scripts/sync_postal_codes.py`
+  - Existing endpoint: `POST /api/postal-codes/sync` (yearly manual update)
+
+### Known Gaps / Caveats ⚠️
+- **Territory heatmap**: backend currently returns placeholder geometry; real map needs postal-code polygons dataset
+- **Local Windows venv**: `pip install -r backend/requirements.txt` may fail if Python version lacks `psycopg2-binary` wheels; easiest is running scripts inside Docker
+
+### “Next Agent” — Append Below ⬇️
+<!-- NEXT_AGENT_NOTES_START -->
+
+<!-- (leave space for next agent’s updates) -->
+
+<!-- NEXT_AGENT_NOTES_END -->
+
 ## PROJECT STATUS
 - **Phase:** 3.0 (Office & Employee Hub)
 - **Current Sprint:** V3.0 Full Feature Implementation

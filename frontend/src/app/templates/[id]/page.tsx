@@ -43,8 +43,14 @@ export default function TemplateDetailPage() {
       footerTemplateId: backendSettings.footer_template_id ?? null,
       signatureTemplateId: null, // Not in backend yet
       channel: (backendSettings.channel as TemplateSettings["channel"]) ?? "pdf_email",
+      templateType: (backendSettings.template_type as TemplateSettings["templateType"]) ?? null,
       receiverType: backendSettings.receiver_type ?? null,
       receiver: backendSettings.receiver ?? null,
+      extraReceivers: backendSettings.extra_receivers ?? [],
+      phases: backendSettings.phases ?? [],
+      assignmentTypes: backendSettings.assignment_types ?? [],
+      ownershipTypes: backendSettings.ownership_types ?? [],
+      departments: backendSettings.departments ?? [],
       emailSubject: backendSettings.email_subject ?? null,
       themeStylesheet: null, // Not in backend yet
     };
@@ -56,8 +62,14 @@ export default function TemplateDetailPage() {
       // Map frontend camelCase to backend snake_case
       const payload: UpdateTemplateSettingsRequest = {
         channel: settings.channel,
+        template_type: settings.templateType ?? undefined,
         receiver: settings.receiver ?? undefined,
         receiver_type: settings.receiverType ?? undefined,
+        extra_receivers: settings.extraReceivers,
+        phases: settings.phases,
+        assignment_types: settings.assignmentTypes,
+        ownership_types: settings.ownershipTypes,
+        departments: settings.departments,
         email_subject: settings.emailSubject ?? undefined,
         header_template_id: settings.headerTemplateId ?? undefined,
         footer_template_id: settings.footerTemplateId ?? undefined,
@@ -99,14 +111,14 @@ export default function TemplateDetailPage() {
 
       {/* Settings Sheet */}
       <Sheet open={settingsOpen} onOpenChange={setSettingsOpen}>
-        <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto">
-          <SheetHeader>
+        <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto p-4">
+          <SheetHeader className="space-y-1">
             <SheetTitle>Innstillinger</SheetTitle>
             <SheetDescription>
               Konfigurer marginer, topptekst, bunntekst og andre innstillinger for denne malen.
             </SheetDescription>
           </SheetHeader>
-          <div className="mt-6">
+          <div className="mt-3">
             <TemplateSettingsPanel
               templateId={templateId}
               initialSettings={initialSettings}

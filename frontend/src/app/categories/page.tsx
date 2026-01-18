@@ -1,46 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
   FolderTree,
   Plus,
   Pencil,
   Trash2,
   GripVertical,
-  Folder,
-  FileText,
-  FileSpreadsheet,
-  File,
-  Files,
-  FileCheck,
-  FileCheck2,
-  FilePlus,
-  FileQuestion,
-  Home,
-  Users,
-  Building,
-  Building2,
-  Mail,
-  Send,
-  MessageSquare,
-  MessageCircle,
-  Shield,
-  ShieldCheck,
-  Scale,
-  Info,
-  InfoIcon,
-  Megaphone,
-  Type,
-  Briefcase,
-  Receipt,
-  CreditCard,
-  Landmark,
-  Gavel,
-  BookOpen,
-  ClipboardList,
-  AlertCircle,
-  CheckCircle,
-  type LucideIcon,
 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Button } from "@/components/ui/button";
@@ -56,71 +23,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useCategories } from "@/hooks/useCategories";
-
-// Icon mapping for dynamic icon rendering - comprehensive list
-const iconMap: Record<string, LucideIcon> = {
-  // Folders
-  Folder,
-  FolderTree,
-  // Files
-  File,
-  Files,
-  FileText,
-  FileSpreadsheet,
-  FileCheck,
-  FileCheck2,
-  FilePlus,
-  FileQuestion,
-  // Buildings & Places
-  Home,
-  Building,
-  Building2,
-  Landmark,
-  // People
-  Users,
-  // Communication
-  Mail,
-  Send,
-  MessageSquare,
-  MessageCircle,
-  Megaphone,
-  // Legal & Business
-  Shield,
-  ShieldCheck,
-  Scale,
-  Gavel,
-  Briefcase,
-  // Finance
-  Receipt,
-  CreditCard,
-  // Info & Status
-  Info,
-  InfoIcon,
-  AlertCircle,
-  CheckCircle,
-  // Text
-  Type,
-  BookOpen,
-  ClipboardList,
-};
-
-// Helper function to get icon component from string name
-function getCategoryIcon(iconName: string | null | undefined): LucideIcon {
-  if (!iconName) return Folder;
-  
-  // Check if it's a lucide icon name
-  const Icon = iconMap[iconName];
-  if (Icon) return Icon;
-  
-  // Default fallback
-  return Folder;
-}
-
-// Helper to check if icon is an emoji (starts with non-ASCII)
-function isEmoji(str: string | null | undefined): boolean {
-  if (!str) return false;
-  return /^[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/u.test(str);
-}
+import { getCategoryIcon } from "@/lib/category-icons";
 
 // Extend categoryApi with create and delete methods inline for this page
 const extendedCategoryApi = {
@@ -259,7 +162,6 @@ export default function CategoriesPage() {
             <div className="divide-y">
               {categories.map((category, index) => {
                 const IconComponent = getCategoryIcon(category.icon);
-                const showEmoji = isEmoji(category.icon);
 
                 return (
                   <div
@@ -273,16 +175,17 @@ export default function CategoriesPage() {
 
                     {/* Icon Container */}
                     <div className="flex-shrink-0 p-2.5 bg-primary/10 rounded-md">
-                      {showEmoji ? (
-                        <span className="text-xl leading-none">{category.icon}</span>
-                      ) : (
-                        <IconComponent className="h-5 w-5 text-primary" />
-                      )}
+                      <IconComponent className="h-5 w-5 text-primary" />
                     </div>
 
                     {/* Category Info */}
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-slate-900">{category.name}</p>
+                      <Link
+                        href={{ pathname: "/templates", query: { category: category.id } }}
+                        className="font-medium text-slate-900 hover:underline"
+                      >
+                        {category.name}
+                      </Link>
                       {category.description && (
                         <p className="text-sm text-muted-foreground truncate">
                           {category.description}

@@ -175,8 +175,8 @@ export function TemplatePreview({
   }
 
   const containerClass = isFullscreen
-    ? "fixed inset-0 z-50 bg-background flex flex-col"
-    : "flex flex-col h-full";
+    ? "fixed inset-0 z-50 bg-background flex flex-col min-h-0"
+    : "flex flex-col h-full min-h-0";
 
   return (
     <div className={containerClass}>
@@ -279,7 +279,7 @@ export function TemplatePreview({
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 overflow-auto bg-muted">
+      <div className="flex-1 min-h-0 overflow-auto bg-muted">
         {showSource ? (
           <pre className="p-4 bg-primary text-primary-foreground text-sm font-mono overflow-auto h-full">
             <code>{content}</code>
@@ -290,7 +290,7 @@ export function TemplatePreview({
             title="Template Preview"
             className="w-full h-full border-0 bg-muted"
             sandbox="allow-same-origin"
-            style={{ minHeight: isFullscreen ? "100%" : "600px" }}
+            style={{ minHeight: "100%" }}
           />
         )}
       </div>

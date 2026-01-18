@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Loader2, Save } from "lucide-react";
+import { Loader2, Save, Settings } from "lucide-react";
 
 import {
   Dialog,
@@ -14,6 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,7 +27,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { templateApi, categoryApi } from "@/lib/api";
+import { templateSettingsApi } from "@/lib/api/template-settings";
+import { useTemplateSettings } from "@/hooks/useTemplateSettings";
+import {
+  TemplateSettingsPanel,
+  type TemplateSettings,
+  DEFAULT_TEMPLATE_SETTINGS,
+} from "@/components/templates/TemplateSettingsPanel";
+import { getCategoryIcon } from "@/lib/category-icons";
 import type { Template, TemplateStatus, Category } from "@/types";
+import type { UpdateTemplateSettingsRequest } from "@/types/v2";
 
 const editFormSchema = z.object({
   title: z
@@ -57,6 +67,9 @@ export function EditTemplateDialog({
   const [saveError, setSaveError] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoriesLoading, setCategoriesLoading] = useState(false);
+  const [settingsDraft, setSettingsDraft] = useState<TemplateSettings>(DEFAULT_TEMPLATE_SETTINGS);
+  const [settingsDirty, setSettingsDirty] = useState(false);
+  const [activeTab, setActiveTab] = useState("metadata");
 
   const {
     register,
@@ -78,6 +91,35 @@ export function EditTemplateDialog({
   const selectedStatus = watch("status");
   const selectedCategoryId = watch("category_id");
 
+  const { settings: backendSettings, isLoading: settingsLoading } = useTemplateSettings(
+    template?.id ?? null
+  );
+
+  const initialSettings = backendSettings
+    ? {
+        marginTop: backendSettings.margin_top ?? DEFAULT_TEMPLATE_SETTINGS.marginTop,
+        marginRight: backendSettings.margin_right ?? DEFAULT_TEMPLATE_SETTINGS.marginRight,
+        marginBottom: backendSettings.margin_bottom ?? DEFAULT_TEMPLATE_SETTINGS.marginBottom,
+        marginLeft: backendSettings.margin_left ?? DEFAULT_TEMPLATE_SETTINGS.marginLeft,
+        headerTemplateId: backendSettings.header_template_id ?? null,
+        footerTemplateId: backendSettings.footer_template_id ?? null,
+        signatureTemplateId: null,
+        channel:
+          (backendSettings.channel as TemplateSettings["channel"]) ??
+          DEFAULT_TEMPLATE_SETTINGS.channel,
+      templateType: (backendSettings.template_type as TemplateSettings["templateType"]) ?? null,
+        receiverType: backendSettings.receiver_type ?? null,
+        receiver: backendSettings.receiver ?? null,
+      extraReceivers: backendSettings.extra_receivers ?? [],
+      phases: backendSettings.phases ?? [],
+      assignmentTypes: backendSettings.assignment_types ?? [],
+      ownershipTypes: backendSettings.ownership_types ?? [],
+      departments: backendSettings.departments ?? [],
+        emailSubject: backendSettings.email_subject ?? null,
+        themeStylesheet: null,
+      }
+    : DEFAULT_TEMPLATE_SETTINGS;
+
   // Reset form when template changes
   useEffect(() => {
     if (template && open) {
@@ -88,8 +130,18 @@ export function EditTemplateDialog({
         category_id: template.categories?.[0]?.id || undefined,
       });
       setSaveError(null);
+      setActiveTab("metadata");
+      setSettingsDirty(false);
+      setSettingsDraft({ ...DEFAULT_TEMPLATE_SETTINGS, ...initialSettings });
     }
   }, [template, open, reset]);
+
+  useEffect(() => {
+    if (open) {
+      setSettingsDraft({ ...DEFAULT_TEMPLATE_SETTINGS, ...initialSettings });
+      setSettingsDirty(false);
+    }
+  }, [open, initialSettings]);
 
   // Fetch categories when dialog opens
   useEffect(() => {
@@ -113,8 +165,15 @@ export function EditTemplateDialog({
     if (!isSaving) {
       reset();
       setSaveError(null);
+      setSettingsDirty(false);
       onOpenChange(false);
     }
+  };
+
+  const handleSettingsChange = (nextSettings: TemplateSettings) => {
+    setSettingsDraft(nextSettings);
+    const baseline = { ...DEFAULT_TEMPLATE_SETTINGS, ...initialSettings };
+    setSettingsDirty(JSON.stringify(nextSettings) !== JSON.stringify(baseline));
   };
 
   const onSubmit = async (data: EditFormData) => {
@@ -128,7 +187,31 @@ export function EditTemplateDialog({
         title: data.title,
         description: data.description || undefined,
         status: data.status as TemplateStatus,
+        category_ids: data.category_id ? [data.category_id] : [],
       });
+
+      if (settingsDirty) {
+        const payload: UpdateTemplateSettingsRequest = {
+          channel: settingsDraft.channel,
+          template_type: settingsDraft.templateType ?? undefined,
+          receiver: settingsDraft.receiver ?? undefined,
+          receiver_type: settingsDraft.receiverType ?? undefined,
+          extra_receivers: settingsDraft.extraReceivers,
+          phases: settingsDraft.phases,
+          assignment_types: settingsDraft.assignmentTypes,
+          ownership_types: settingsDraft.ownershipTypes,
+          departments: settingsDraft.departments,
+          email_subject: settingsDraft.emailSubject ?? undefined,
+          header_template_id: settingsDraft.headerTemplateId ?? undefined,
+          footer_template_id: settingsDraft.footerTemplateId ?? undefined,
+          margin_top: settingsDraft.marginTop,
+          margin_bottom: settingsDraft.marginBottom,
+          margin_left: settingsDraft.marginLeft,
+          margin_right: settingsDraft.marginRight,
+        };
+
+        await templateSettingsApi.updateSettings(template.id, payload);
+      }
 
       // Close dialog and trigger refresh
       onOpenChange(false);
@@ -147,7 +230,7 @@ export function EditTemplateDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[880px] max-h-[85vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <DialogTitle>Rediger mal</DialogTitle>
           <DialogDescription>
@@ -155,7 +238,7 @@ export function EditTemplateDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 overflow-hidden flex flex-col">
           {/* File Info (Read-only) */}
           <div className="p-3 border rounded-lg bg-muted/50">
             <p className="text-sm font-medium">{template.file_name}</p>
@@ -164,103 +247,144 @@ export function EditTemplateDialog({
             </p>
           </div>
 
-          {/* Title Field */}
-          <div className="space-y-2">
-            <Label htmlFor="edit-title">Tittel</Label>
-            <Input
-              id="edit-title"
-              placeholder="F.eks. Kjøpekontrakt bolig v2.0"
-              {...register("title")}
-              disabled={isSaving}
-            />
-            {errors.title && (
-              <p className="text-sm text-destructive">{errors.title.message}</p>
-            )}
-          </div>
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="flex-1 overflow-hidden flex flex-col"
+          >
+            <TabsList>
+              <TabsTrigger value="metadata">Detaljer</TabsTrigger>
+              <TabsTrigger value="settings" className="flex items-center gap-2">
+                <Settings className="h-4 w-4" />
+                Innstillinger
+              </TabsTrigger>
+            </TabsList>
 
-          {/* Description Field */}
-          <div className="space-y-2">
-            <Label htmlFor="edit-description">
-              Beskrivelse{" "}
-              <span className="text-muted-foreground font-normal">(valgfritt)</span>
-            </Label>
-            <Textarea
-              id="edit-description"
-              placeholder="En kort beskrivelse av malen..."
-              rows={3}
-              {...register("description")}
-              disabled={isSaving}
-            />
-            {errors.description && (
-              <p className="text-sm text-destructive">{errors.description.message}</p>
-            )}
-          </div>
-
-          {/* Category Select */}
-          <div className="space-y-2">
-            <Label htmlFor="edit-category">
-              Kategori{" "}
-              <span className="text-muted-foreground font-normal">(valgfritt)</span>
-            </Label>
-            <Select
-              value={selectedCategoryId}
-              onValueChange={(value) => setValue("category_id", value, { shouldDirty: true })}
-              disabled={isSaving || categoriesLoading}
-            >
-              <SelectTrigger id="edit-category">
-                <SelectValue placeholder={categoriesLoading ? "Laster..." : "Velg kategori"} />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((category) => (
-                  <SelectItem key={category.id} value={category.id}>
-                    {category.icon && <span className="mr-2">{category.icon}</span>}
-                    {category.name}
-                  </SelectItem>
-                ))}
-                {categories.length === 0 && !categoriesLoading && (
-                  <SelectItem value="" disabled>
-                    Ingen kategorier funnet
-                  </SelectItem>
+            <TabsContent value="metadata" className="space-y-6 overflow-auto pr-2">
+              {/* Title Field */}
+              <div className="space-y-2">
+                <Label htmlFor="edit-title">Tittel</Label>
+                <Input
+                  id="edit-title"
+                  placeholder="F.eks. Kjøpekontrakt bolig v2.0"
+                  {...register("title")}
+                  disabled={isSaving}
+                />
+                {errors.title && (
+                  <p className="text-sm text-destructive">{errors.title.message}</p>
                 )}
-              </SelectContent>
-            </Select>
-          </div>
+              </div>
 
-          {/* Status Select */}
-          <div className="space-y-2">
-            <Label>Status</Label>
-            <Select
-              value={selectedStatus}
-              onValueChange={(value) =>
-                setValue("status", value as TemplateStatus, { shouldDirty: true })
-              }
-              disabled={isSaving}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="draft">
-                  <span className="flex items-center gap-2">
-                    <span className="h-2 w-2 rounded-full bg-amber-500" />
-                    Utkast
-                  </span>
-                </SelectItem>
-                <SelectItem value="published">
-                  <span className="flex items-center gap-2">
-                    <span className="h-2 w-2 rounded-full bg-green-500" />
-                    Publisert
-                  </span>
-                </SelectItem>
-                <SelectItem value="archived">
-                  <span className="flex items-center gap-2">
-                    <span className="h-2 w-2 rounded-full bg-slate-400" />
-                    Arkivert
-                  </span>
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+              {/* Description Field */}
+              <div className="space-y-2">
+                <Label htmlFor="edit-description">
+                  Beskrivelse{" "}
+                  <span className="text-muted-foreground font-normal">(valgfritt)</span>
+                </Label>
+                <Textarea
+                  id="edit-description"
+                  placeholder="En kort beskrivelse av malen..."
+                  rows={3}
+                  {...register("description")}
+                  disabled={isSaving}
+                />
+                {errors.description && (
+                  <p className="text-sm text-destructive">{errors.description.message}</p>
+                )}
+              </div>
+
+              {/* Category Select */}
+              <div className="space-y-2">
+                <Label htmlFor="edit-category">
+                  Kategori{" "}
+                  <span className="text-muted-foreground font-normal">(valgfritt)</span>
+                </Label>
+                <Select
+                  value={selectedCategoryId || "none"}
+                  onValueChange={(value) =>
+                    setValue("category_id", value === "none" ? undefined : value, {
+                      shouldDirty: true,
+                    })
+                  }
+                  disabled={isSaving || categoriesLoading}
+                >
+                  <SelectTrigger id="edit-category">
+                    <SelectValue placeholder={categoriesLoading ? "Laster..." : "Velg kategori"} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">Ingen kategori</SelectItem>
+                    {categories.map((category) => (
+                      <SelectItem key={category.id} value={category.id}>
+                        {(() => {
+                          const IconComponent = getCategoryIcon(category.icon);
+                          return <IconComponent className="mr-2 h-4 w-4 text-muted-foreground" />;
+                        })()}
+                        {category.name}
+                      </SelectItem>
+                    ))}
+                    {categories.length === 0 && !categoriesLoading && (
+                      <SelectItem value="" disabled>
+                        Ingen kategorier funnet
+                      </SelectItem>
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Status Select */}
+              <div className="space-y-2">
+                <Label>Status</Label>
+                <Select
+                  value={selectedStatus}
+                  onValueChange={(value) =>
+                    setValue("status", value as TemplateStatus, { shouldDirty: true })
+                  }
+                  disabled={isSaving}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="draft">
+                      <span className="flex items-center gap-2">
+                        <span className="h-2 w-2 rounded-full bg-amber-500" />
+                        Utkast
+                      </span>
+                    </SelectItem>
+                    <SelectItem value="published">
+                      <span className="flex items-center gap-2">
+                        <span className="h-2 w-2 rounded-full bg-green-500" />
+                        Publisert
+                      </span>
+                    </SelectItem>
+                    <SelectItem value="archived">
+                      <span className="flex items-center gap-2">
+                        <span className="h-2 w-2 rounded-full bg-slate-400" />
+                        Arkivert
+                      </span>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="settings" className="overflow-auto pr-2">
+              {settingsLoading ? (
+                <div className="text-sm text-muted-foreground py-4">
+                  Laster innstillinger...
+                </div>
+              ) : (
+                <TemplateSettingsPanel
+                  key={template.id}
+                  templateId={template.id}
+                  initialSettings={initialSettings}
+                  onSettingsChange={handleSettingsChange}
+                  showActions={false}
+                  disabled={isSaving}
+                />
+              )}
+            </TabsContent>
+          </Tabs>
 
           {/* Save Error */}
           {saveError && (
@@ -278,7 +402,7 @@ export function EditTemplateDialog({
             >
               Avbryt
             </Button>
-            <Button type="submit" disabled={isSaving || !isDirty}>
+            <Button type="submit" disabled={isSaving || (!isDirty && !settingsDirty)}>
               {isSaving ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

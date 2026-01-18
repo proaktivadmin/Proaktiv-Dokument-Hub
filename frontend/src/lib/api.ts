@@ -1,5 +1,6 @@
 import { AxiosError } from "axios";
 import type {
+  Template,
   TemplateListResponse,
   UploadTemplatePayload,
   UploadTemplateResponse,
@@ -98,6 +99,7 @@ export const templateApi = {
     status?: string;
     search?: string;
     category_id?: string;
+    receiver?: string;
     page?: number;
     per_page?: number;
     sort_by?: string;
@@ -110,6 +112,18 @@ export const templateApi = {
       return data;
     } catch (error) {
       handleError(error, "templateApi.list");
+    }
+  },
+
+  /**
+   * Get a single template by ID
+   */
+  async getById(templateId: string): Promise<Template> {
+    try {
+      const { data } = await api.get<Template>(`/templates/${templateId}`);
+      return data;
+    } catch (error) {
+      handleError(error, "templateApi.getById");
     }
   },
 

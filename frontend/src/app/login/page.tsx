@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -41,13 +40,29 @@ export default function LoginPage() {
       <div className="w-full max-w-md p-8">
         {/* Logo */}
         <div className="flex justify-center mb-8">
-          <Image
-            src="/assets/proaktiv-logo-black.png"
-            alt="Proaktiv"
-            width={180}
-            height={45}
-            priority
-          />
+          <div className="flex items-center gap-3">
+            <div
+              className="h-12 w-12"
+              aria-hidden="true"
+              style={{
+                backgroundColor: "#272630",
+                WebkitMaskImage: "url(/assets/proaktiv-lily-black.png)",
+                maskImage: "url(/assets/proaktiv-lily-black.png)",
+                WebkitMaskRepeat: "no-repeat",
+                maskRepeat: "no-repeat",
+                WebkitMaskPosition: "center",
+                maskPosition: "center",
+                WebkitMaskSize: "contain",
+                maskSize: "contain",
+              }}
+            />
+            <div>
+              <p className="text-lg font-semibold text-slate-900">
+                <span className="font-sans text-xl font-bold">Vitec Next</span>{" "}
+                <span className="font-serif text-base text-slate-500">Admin Hub</span>
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Login Card */}
@@ -58,8 +73,9 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <h1 className="text-2xl font-semibold text-center text-slate-900 mb-2">
-            Dokument Hub
+          <h1 className="text-center text-slate-900 mb-2">
+            <span className="font-sans text-3xl font-bold">Vitec Next</span>{" "}
+            <span className="font-serif text-2xl text-slate-500">Admin Hub</span>
           </h1>
           <p className="text-sm text-center text-slate-500 mb-6">
             Logg inn for å fortsette
@@ -105,7 +121,7 @@ export default function LoginPage() {
         </div>
 
         <p className="text-xs text-center text-slate-400 mt-6">
-          Proaktiv Dokument Hub v2.9
+          Vitec Next Admin Hub v2.9
         </p>
       </div>
     </div>

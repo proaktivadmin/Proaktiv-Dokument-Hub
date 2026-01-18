@@ -118,12 +118,16 @@ export function useGroupedTemplates(
       const response = await templateApi.list({
         status: filters?.status || undefined,
         search: filters?.search || undefined,
+        category_id: filters?.category_id || undefined,
+        receiver: filters?.receiver || undefined,
         per_page: 100, // Get all for grouping
       });
 
       // Transform to TemplateWithMetadata (add default V2 fields)
       const templatesWithMetadata: TemplateWithMetadata[] = response.templates.map((t) => ({
         ...t,
+        attachments: t.attachments ?? [],
+        tags: t.tags ?? [],
         preview_thumbnail_url: null,
         channel: "pdf_email" as const, // Default for existing templates
         template_type: null,
@@ -149,7 +153,7 @@ export function useGroupedTemplates(
     } finally {
       setIsLoading(false);
     }
-  }, [filters?.status, filters?.search]);
+  }, [filters?.status, filters?.search, filters?.category_id, filters?.receiver]);
 
   useEffect(() => {
     fetchTemplates();

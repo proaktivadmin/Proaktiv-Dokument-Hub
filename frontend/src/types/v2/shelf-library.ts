@@ -40,6 +40,7 @@ export interface TemplateFilterState {
   receiver: Receiver | null;
   ownership_types: OwnershipType[];
   status: 'draft' | 'published' | 'archived' | null;
+  category_id?: string | null;
 }
 
 /**

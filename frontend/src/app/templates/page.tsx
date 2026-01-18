@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import {
   FileText,
@@ -42,6 +42,7 @@ import { TemplateDetailSheet } from "@/components/templates/TemplateDetailSheet"
 import { useTemplates } from "@/hooks/useTemplates";
 import { useCategories } from "@/hooks/useCategories";
 import { templateApi } from "@/lib/api";
+import { getCategoryIcon } from "@/lib/category-icons";
 import { formatDistanceToNow } from "date-fns";
 import { nb } from "date-fns/locale";
 import Link from "next/link";
@@ -71,20 +72,32 @@ type ViewMode = "table" | "shelf";
 function TemplatesPageContent() {
   const searchParams = useSearchParams();
   const categoryFromUrl = searchParams.get("category");
+  const receiverFromUrl = searchParams.get("receiver");
   
   const [viewMode, setViewMode] = useState<ViewMode>("shelf");
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
   const [categoryFilter, setCategoryFilter] = useState<string | undefined>(undefined);
+  const [receiverFilter, setReceiverFilter] = useState<string | undefined>(undefined);
+  const [tablePage, setTablePage] = useState(1);
 
   // Sync category filter with URL params
   useEffect(() => {
     setCategoryFilter(categoryFromUrl || undefined);
   }, [categoryFromUrl]);
 
+  useEffect(() => {
+    setReceiverFilter(receiverFromUrl || undefined);
+  }, [receiverFromUrl]);
+
+  useEffect(() => {
+    setTablePage(1);
+  }, [searchQuery, statusFilter, categoryFilter, receiverFilter]);
+
   // Fetch categories for display
   const { categories } = useCategories();
   const selectedCategory = categories.find((c) => c.id === categoryFilter);
+  const selectedReceiver = receiverFilter ?? null;
 
   // Edit dialog state
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -107,13 +120,25 @@ function TemplatesPageContent() {
     search: searchQuery || undefined,
     status: statusFilter,
     category_id: categoryFilter,
-    per_page: 20,
+    receiver: receiverFilter,
+    page: tablePage,
+    per_page: 100,
   });
 
   const clearCategoryFilter = () => {
     setCategoryFilter(undefined);
-    // Update URL without category param
-    window.history.replaceState({}, "", "/templates");
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("category");
+    const url = params.toString() ? `/templates?${params.toString()}` : "/templates";
+    window.history.replaceState({}, "", url);
+  };
+
+  const clearReceiverFilter = () => {
+    setReceiverFilter(undefined);
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("receiver");
+    const url = params.toString() ? `/templates?${params.toString()}` : "/templates";
+    window.history.replaceState({}, "", url);
   };
 
   const handleUploadSuccess = () => {
@@ -203,13 +228,13 @@ function TemplatesPageContent() {
 
   const getFileTypeColor = (fileType: string) => {
     const colors: Record<string, string> = {
-      pdf: "bg-red-100 text-red-700",
-      docx: "bg-blue-100 text-blue-700",
-      doc: "bg-blue-100 text-blue-700",
-      xlsx: "bg-green-100 text-green-700",
-      xls: "bg-green-100 text-green-700",
-      html: "bg-orange-100 text-orange-700",
-      htm: "bg-orange-100 text-orange-700",
+      pdf: "bg-[#F5EDE1] text-[#8A5A2B]",
+      docx: "bg-[#E6EEF9] text-[#1E40AF]",
+      doc: "bg-[#E6EEF9] text-[#1E40AF]",
+      xlsx: "bg-[#E8F5EC] text-[#166534]",
+      xls: "bg-[#E8F5EC] text-[#166534]",
+      html: "bg-[#F3E8FF] text-[#6D28D9]",
+      htm: "bg-[#F3E8FF] text-[#6D28D9]",
     };
     return colors[fileType] || "bg-muted text-muted-foreground";
   };
@@ -224,6 +249,124 @@ function TemplatesPageContent() {
     { value: "draft", label: "Utkast" },
     { value: "archived", label: "Arkivert" },
   ];
+
+  type OriginKey = "vitec" | "kundemal" | "unknown";
+  const originGroupOrder: { key: OriginKey; label: string }[] = [
+    { key: "vitec", label: "Vitec Next" },
+    { key: "kundemal", label: "Kundemal" },
+    { key: "unknown", label: "Ukjent" },
+  ];
+
+  const getOriginKey = (template: Template): OriginKey => {
+    const tagNames = (template.tags ?? [])
+      .map((tag) => tag.name.trim().toLowerCase())
+      .filter(Boolean);
+    if (tagNames.some((name) => name.includes("kundemal"))) return "kundemal";
+    if (tagNames.some((name) => name.includes("vitec"))) return "vitec";
+    return "unknown";
+  };
+
+  const groupedTemplates = useMemo(() => {
+    const grouped: Record<OriginKey, Template[]> = {
+      vitec: [],
+      kundemal: [],
+      unknown: [],
+    };
+
+    templates.forEach((template) => {
+      grouped[getOriginKey(template)].push(template);
+    });
+
+    return grouped;
+  }, [templates]);
+
+  const renderTemplateRow = (template: Template) => (
+    <div
+      key={template.id}
+      onClick={() => handleRowClick(template)}
+      className="grid grid-cols-12 gap-4 p-4 items-center cursor-pointer hover:bg-[#F5F5F0] transition-colors"
+    >
+      <div className="col-span-5 flex items-center gap-3">
+        <div className={`p-2 rounded-md ${getFileTypeColor(template.file_type)}`}>
+          <FileText className="h-5 w-5" />
+        </div>
+        <div className="min-w-0">
+          <p className="font-medium text-[#272630] truncate">{template.title}</p>
+          <p className="text-sm text-[#272630]/50 font-sans truncate">
+            {template.file_name} • {formatFileSize(template.file_size_bytes)}
+          </p>
+        </div>
+      </div>
+
+      <div className="col-span-2">
+        <span
+          className={`px-2 py-1 rounded text-xs uppercase font-medium ${getFileTypeColor(
+            template.file_type
+          )}`}
+        >
+          {template.file_type}
+        </span>
+      </div>
+
+      <div className="col-span-2">
+        <span
+          className={`px-2 py-1 rounded-md text-xs font-medium font-sans ${
+            template.status === "published"
+              ? "bg-green-50 text-green-700 border border-green-200"
+              : template.status === "draft"
+              ? "bg-amber-50 text-amber-700 border border-amber-200"
+              : "bg-[#F5F5F0] text-[#272630]/60"
+          }`}
+        >
+          {template.status === "published"
+            ? "Publisert"
+            : template.status === "draft"
+            ? "Utkast"
+            : template.status}
+        </span>
+      </div>
+
+      <div className="col-span-2 flex items-center gap-1 text-sm text-[#272630]/50 font-sans">
+        <Clock className="h-4 w-4 text-[#BCAB8A]" />
+        {formatDate(template.updated_at)}
+      </div>
+
+      <div className="col-span-1 flex justify-end" onClick={(e) => e.stopPropagation()}>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <MoreHorizontal className="h-4 w-4" />
+              <span className="sr-only">Åpne meny</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {canPreview(template.file_type) && (
+              <DropdownMenuItem onClick={() => handlePreviewClick(template)}>
+                <Eye className="mr-2 h-4 w-4" />
+                Forhåndsvis
+              </DropdownMenuItem>
+            )}
+            <DropdownMenuItem onClick={() => handleDownload(template)}>
+              <Download className="mr-2 h-4 w-4" />
+              Last ned
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleEditClick(template)}>
+              <Pencil className="mr-2 h-4 w-4" />
+              Rediger
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => handleDeleteClick(template)}
+              className="text-red-600 focus:text-red-600 focus:bg-red-50"
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              Slett
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-background">
@@ -259,20 +402,41 @@ function TemplatesPageContent() {
           </div>
         </div>
 
-        {/* Active Category Filter */}
-        {selectedCategory && (
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-sm text-[#272630]/60 font-sans">Filtrert etter kategori:</span>
-            <div className="inline-flex items-center gap-1 px-3 py-1 rounded-md bg-[#BCAB8A] text-white text-sm font-medium">
-              {selectedCategory.icon && <span>{selectedCategory.icon}</span>}
-              {selectedCategory.name}
-              <button
-                onClick={clearCategoryFilter}
-                className="ml-1 hover:bg-white/20 rounded-full p-0.5"
-              >
-                <X className="h-3 w-3" />
-              </button>
-            </div>
+        {/* Active Filters */}
+        {(selectedCategory || selectedReceiver) && (
+          <div className="flex flex-wrap items-center gap-3 mb-4">
+            {selectedCategory && (
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-[#272630]/60 font-sans">Filtrert etter kategori:</span>
+                <div className="inline-flex items-center gap-1 px-3 py-1 rounded-md bg-[#BCAB8A] text-white text-sm font-medium">
+                  {(() => {
+                    const IconComponent = getCategoryIcon(selectedCategory.icon);
+                    return <IconComponent className="h-3.5 w-3.5" />;
+                  })()}
+                  {selectedCategory.name}
+                  <button
+                    onClick={clearCategoryFilter}
+                    className="ml-1 hover:bg-white/20 rounded-full p-0.5"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+              </div>
+            )}
+            {selectedReceiver && (
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-[#272630]/60 font-sans">Filtrert etter mottaker:</span>
+                <div className="inline-flex items-center gap-1 px-3 py-1 rounded-md bg-[#272630] text-white text-sm font-medium">
+                  {selectedReceiver}
+                  <button
+                    onClick={clearReceiverFilter}
+                    className="ml-1 hover:bg-white/20 rounded-full p-0.5"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -280,6 +444,12 @@ function TemplatesPageContent() {
         {viewMode === "shelf" && (
           <div className="bg-white rounded-md p-6 border" style={{ minHeight: "60vh" }}>
             <ShelfLibrary
+              key={`${categoryFilter ?? "all"}-${receiverFilter ?? "all"}-${statusFilter ?? "all"}`}
+              initialFilters={{
+                category_id: categoryFilter ?? null,
+                receiver: receiverFilter ?? null,
+                status: statusFilter ?? null,
+              }}
               onTemplateSelect={(template) => handleRowClick(template as unknown as Template)}
               onTemplatePreview={(template) => handlePreviewClick(template as unknown as Template)}
               onTemplateEdit={(template) => handleEditClick(template as unknown as Template)}
@@ -355,109 +525,48 @@ function TemplatesPageContent() {
 
               {/* Table Body */}
               <div className="divide-y divide-[#E5E5E5]">
-                {templates.map((template) => (
-                  <div
-                    key={template.id}
-                    onClick={() => handleRowClick(template)}
-                    className="grid grid-cols-12 gap-4 p-4 items-center cursor-pointer hover:bg-[#F5F5F0] transition-colors"
-                  >
-                    <div className="col-span-5 flex items-center gap-3">
-                      <div className={`p-2 rounded-md ${getFileTypeColor(template.file_type)}`}>
-                        <FileText className="h-5 w-5" />
+                {originGroupOrder.map((group) => {
+                  const groupTemplates = groupedTemplates[group.key];
+                  if (groupTemplates.length === 0) return null;
+
+                  return (
+                    <div key={group.key} className="bg-white">
+                      <div className="px-4 py-2 text-xs font-semibold uppercase tracking-wide bg-[#F5F5F0] text-[#272630]/70">
+                        {group.label} • {groupTemplates.length}
                       </div>
-                      <div className="min-w-0">
-                        <p className="font-medium text-[#272630] truncate">{template.title}</p>
-                        <p className="text-sm text-[#272630]/50 font-sans truncate">
-                          {template.file_name} • {formatFileSize(template.file_size_bytes)}
-                        </p>
+                      <div className="divide-y divide-[#E5E5E5]">
+                        {groupTemplates.map((template) => renderTemplateRow(template))}
                       </div>
                     </div>
-
-                    <div className="col-span-2">
-                      <span
-                        className={`px-2 py-1 rounded text-xs uppercase font-medium ${getFileTypeColor(
-                          template.file_type
-                        )}`}
-                      >
-                        {template.file_type}
-                      </span>
-                    </div>
-
-                    <div className="col-span-2">
-                      <span
-                        className={`px-2 py-1 rounded-md text-xs font-medium font-sans ${
-                          template.status === "published"
-                            ? "bg-green-50 text-green-700 border border-green-200"
-                            : template.status === "draft"
-                            ? "bg-amber-50 text-amber-700 border border-amber-200"
-                            : "bg-[#F5F5F0] text-[#272630]/60"
-                        }`}
-                      >
-                        {template.status === "published"
-                          ? "Publisert"
-                          : template.status === "draft"
-                          ? "Utkast"
-                          : template.status}
-                      </span>
-                    </div>
-
-                    <div className="col-span-2 flex items-center gap-1 text-sm text-[#272630]/50 font-sans">
-                      <Clock className="h-4 w-4 text-[#BCAB8A]" />
-                      {formatDate(template.updated_at)}
-                    </div>
-
-                    <div className="col-span-1 flex justify-end" onClick={(e) => e.stopPropagation()}>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon">
-                            <MoreHorizontal className="h-4 w-4" />
-                            <span className="sr-only">Åpne meny</span>
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          {canPreview(template.file_type) && (
-                            <DropdownMenuItem onClick={() => handlePreviewClick(template)}>
-                              <Eye className="mr-2 h-4 w-4" />
-                              Forhåndsvis
-                            </DropdownMenuItem>
-                          )}
-                          <DropdownMenuItem onClick={() => handleDownload(template)}>
-                            <Download className="mr-2 h-4 w-4" />
-                            Last ned
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleEditClick(template)}>
-                            <Pencil className="mr-2 h-4 w-4" />
-                            Rediger
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            onClick={() => handleDeleteClick(template)}
-                            className="text-red-600 focus:text-red-600 focus:bg-red-50"
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Slett
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               {/* Pagination */}
               {pagination && pagination.total_pages > 1 && (
                 <div className="p-4 border-t border-[#E5E5E5] flex items-center justify-between">
                   <p className="text-sm text-[#272630]/50 font-sans">
-                    Viser {templates.length} av {pagination.total} maler
+                    Viser {templates.length} av {pagination.total} maler • Side {pagination.page} av{" "}
+                    {pagination.total_pages}
                   </p>
                   <div className="flex gap-2">
-                    <Button variant="outline" size="sm" disabled={pagination.page === 1}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={pagination.page === 1}
+                      onClick={() => setTablePage((prev) => Math.max(1, prev - 1))}
+                    >
                       Forrige
                     </Button>
                     <Button
                       variant="outline"
                       size="sm"
                       disabled={pagination.page === pagination.total_pages}
+                      onClick={() =>
+                        setTablePage((prev) =>
+                          Math.min(pagination.total_pages, prev + 1)
+                        )
+                      }
                     >
                       Neste
                     </Button>

@@ -35,6 +35,7 @@ import {
   Save,
   Loader2,
   Wand2,
+  Paperclip,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { nb } from "date-fns/locale";
@@ -68,6 +69,7 @@ export function TemplateDetailSheet({
   const [isSavingContent, setIsSavingContent] = useState(false);
   const [isSavingSettings, setIsSavingSettings] = useState(false);
   const [isNormalizing, setIsNormalizing] = useState(false);
+  const [detailAttachments, setDetailAttachments] = useState<string[] | null>(null);
   const { toast } = useToast();
 
   // Fetch settings for the settings tab
@@ -88,8 +90,14 @@ export function TemplateDetailSheet({
     footerTemplateId: backendSettings.footer_template_id ?? null,
     signatureTemplateId: null,
     channel: (backendSettings.channel as TemplateSettings["channel"]) ?? "pdf_email",
+    templateType: (backendSettings.template_type as TemplateSettings["templateType"]) ?? null,
     receiverType: backendSettings.receiver_type ?? null,
     receiver: backendSettings.receiver ?? null,
+    extraReceivers: backendSettings.extra_receivers ?? [],
+    phases: backendSettings.phases ?? [],
+    assignmentTypes: backendSettings.assignment_types ?? [],
+    ownershipTypes: backendSettings.ownership_types ?? [],
+    departments: backendSettings.departments ?? [],
     emailSubject: backendSettings.email_subject ?? null,
     themeStylesheet: null,
   } : undefined;
@@ -145,6 +153,34 @@ export function TemplateDetailSheet({
       setError(null);
     }
   }, [open, template]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadDetails = async () => {
+      if (!open || !template) {
+        setDetailAttachments(null);
+        return;
+      }
+
+      try {
+        const detail = await templateApi.getById(template.id);
+        if (!cancelled) {
+          setDetailAttachments(detail.attachments ?? []);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setDetailAttachments(template.attachments ?? []);
+        }
+      }
+    };
+
+    loadDetails();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [open, template?.id]);
 
   const loadContent = async (templateId: string) => {
     setIsLoading(true);
@@ -285,9 +321,16 @@ export function TemplateDetailSheet({
 
   if (!template) return null;
 
+  const attachmentsFromList = template.attachments ?? [];
+  const attachmentSet = new Set<string>();
+  (detailAttachments ?? []).forEach((item) => item && attachmentSet.add(item));
+  attachmentsFromList.forEach((item) => item && attachmentSet.add(item));
+  const attachments = Array.from(attachmentSet);
+  const attachmentCount = attachments.length;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-5xl h-[85vh] flex flex-col p-0 gap-0">
+      <DialogContent className="max-w-5xl h-[85vh] flex flex-col p-0 gap-0 min-h-0">
         {/* Header */}
         <DialogHeader className="px-6 py-4 border-b shrink-0">
           <div className="flex items-center justify-between">
@@ -333,7 +376,7 @@ export function TemplateDetailSheet({
         </DialogHeader>
 
         {/* Tabs for different views */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden min-h-0">
           <div className="border-b px-6">
             <TabsList className="h-10">
               <TabsTrigger value="preview" className="gap-2">
@@ -356,7 +399,7 @@ export function TemplateDetailSheet({
           </div>
 
           {/* Preview Tab */}
-          <TabsContent value="preview" className="flex-1 m-0 overflow-hidden">
+          <TabsContent value="preview" className="flex-1 m-0 overflow-hidden min-h-0">
             {canPreview(template.file_type) ? (
               <TemplatePreview
                 content={content}
@@ -385,7 +428,7 @@ export function TemplateDetailSheet({
           </TabsContent>
 
           {/* Code Tab - Monaco Editor */}
-          <TabsContent value="code" className="flex-1 m-0 overflow-hidden flex flex-col">
+          <TabsContent value="code" className="flex-1 m-0 overflow-hidden flex flex-col min-h-0">
             {/* Code Editor Toolbar */}
             <div className="flex items-center justify-between px-4 py-2 bg-gray-800 border-b border-gray-700 shrink-0">
               <div className="flex items-center gap-2">
@@ -452,8 +495,8 @@ export function TemplateDetailSheet({
           </TabsContent>
 
           {/* Settings Tab */}
-          <TabsContent value="settings" className="flex-1 m-0 overflow-auto p-6">
-            <div className="max-w-xl mx-auto">
+          <TabsContent value="settings" className="flex-1 m-0 overflow-auto p-4 min-h-0">
+            <div className="max-w-3xl">
               <TemplateSettingsPanel
                 templateId={template.id}
                 initialSettings={initialSettings}
@@ -463,7 +506,14 @@ export function TemplateDetailSheet({
                     // Convert null to undefined for API compatibility
                     await templateSettingsApi.updateSettings(template.id, {
                       channel: settings.channel,
+                      template_type: settings.templateType ?? undefined,
+                      receiver_type: settings.receiverType ?? undefined,
                       receiver: settings.receiver ?? undefined,
+                      extra_receivers: settings.extraReceivers,
+                      phases: settings.phases,
+                      assignment_types: settings.assignmentTypes,
+                      ownership_types: settings.ownershipTypes,
+                      departments: settings.departments,
                       email_subject: settings.emailSubject ?? undefined,
                       header_template_id: settings.headerTemplateId ?? undefined,
                       footer_template_id: settings.footerTemplateId ?? undefined,
@@ -496,7 +546,7 @@ export function TemplateDetailSheet({
           </TabsContent>
 
           {/* Simulator Tab */}
-          <TabsContent value="simulator" className="flex-1 m-0 overflow-hidden">
+          <TabsContent value="simulator" className="flex-1 m-0 overflow-hidden min-h-0">
             <SimulatorPanel
               content={originalContent}
               onApplyTestData={(processed) => {
@@ -547,6 +597,17 @@ export function TemplateDetailSheet({
                     className="text-xs text-white"
                   >
                     {tag.name}
+                  </Badge>
+                ))}
+              </div>
+            )}
+            {attachments.length > 0 && (
+              <div className="flex items-center gap-1 flex-wrap">
+                <Paperclip className="h-4 w-4 text-gray-400" />
+                <span className="text-xs text-gray-500">{attachmentCount}</span>
+                {attachments.map((attachment) => (
+                  <Badge key={attachment} variant="outline" className="text-xs">
+                    {attachment}
                   </Badge>
                 ))}
               </div>

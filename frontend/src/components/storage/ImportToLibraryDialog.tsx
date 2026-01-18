@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { storageApi, categoryApi, type StorageItem } from "@/lib/api";
+import { getCategoryIcon } from "@/lib/category-icons";
 import type { Category } from "@/types";
 
 interface ImportToLibraryDialogProps {
@@ -196,9 +197,10 @@ export function ImportToLibraryDialog({
                   <SelectContent>
                     {categories.map((category) => (
                       <SelectItem key={category.id} value={category.id}>
-                        {category.icon && (
-                          <span className="mr-2">{category.icon}</span>
-                        )}
+                        {(() => {
+                          const IconComponent = getCategoryIcon(category.icon);
+                          return <IconComponent className="mr-2 h-4 w-4 text-muted-foreground" />;
+                        })()}
                         {category.name}
                       </SelectItem>
                     ))}

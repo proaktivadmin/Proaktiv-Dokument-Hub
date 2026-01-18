@@ -27,6 +27,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { templateApi, categoryApi } from "@/lib/api";
+import { templateSettingsApi } from "@/lib/api/template-settings";
+import { useToast } from "@/hooks/use-toast";
+import {
+  TemplateSettingsPanel,
+  type TemplateSettings,
+  DEFAULT_TEMPLATE_SETTINGS,
+} from "@/components/templates/TemplateSettingsPanel";
+import { getCategoryIcon } from "@/lib/category-icons";
 import type { TemplateStatus, Category } from "@/types";
 
 const ALLOWED_FILE_TYPES = {
@@ -70,6 +78,9 @@ export function UploadTemplateDialog({
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoriesLoading, setCategoriesLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [settingsDraft, setSettingsDraft] = useState<TemplateSettings>(DEFAULT_TEMPLATE_SETTINGS);
+  const [settingsKey, setSettingsKey] = useState(0);
+  const { toast } = useToast();
 
   const {
     register,
@@ -171,8 +182,14 @@ export function UploadTemplateDialog({
       setFileError(null);
       setUploadError(null);
       reset();
+      setSettingsDraft({ ...DEFAULT_TEMPLATE_SETTINGS });
+      setSettingsKey((prev) => prev + 1);
       onOpenChange(false);
     }
+  };
+
+  const handleSettingsChange = (nextSettings: TemplateSettings) => {
+    setSettingsDraft(nextSettings);
   };
 
   const onSubmit = async (data: UploadFormData) => {
@@ -185,7 +202,7 @@ export function UploadTemplateDialog({
     setUploadError(null);
 
     try {
-      await templateApi.upload({
+      const created = await templateApi.upload({
         file,
         title: data.title,
         description: data.description || undefined,
@@ -193,9 +210,39 @@ export function UploadTemplateDialog({
         category_id: data.category_id || undefined,
       });
 
+      try {
+        await templateSettingsApi.updateSettings(created.id, {
+          channel: settingsDraft.channel,
+          template_type: settingsDraft.templateType ?? undefined,
+          receiver_type: settingsDraft.receiverType ?? undefined,
+          receiver: settingsDraft.receiver ?? undefined,
+          extra_receivers: settingsDraft.extraReceivers,
+          phases: settingsDraft.phases,
+          assignment_types: settingsDraft.assignmentTypes,
+          ownership_types: settingsDraft.ownershipTypes,
+          departments: settingsDraft.departments,
+          email_subject: settingsDraft.emailSubject ?? undefined,
+          header_template_id: settingsDraft.headerTemplateId ?? undefined,
+          footer_template_id: settingsDraft.footerTemplateId ?? undefined,
+          margin_top: settingsDraft.marginTop,
+          margin_bottom: settingsDraft.marginBottom,
+          margin_left: settingsDraft.marginLeft,
+          margin_right: settingsDraft.marginRight,
+        });
+      } catch (settingsError) {
+        console.error("[Upload] Settings Error:", settingsError);
+        toast({
+          title: "Innstillinger ikke lagret",
+          description: "Malen ble opprettet, men innstillingene kunne ikke lagres.",
+          variant: "destructive",
+        });
+      }
+
       // Reset form and close dialog on success
       setFile(null);
       reset();
+      setSettingsDraft({ ...DEFAULT_TEMPLATE_SETTINGS });
+      setSettingsKey((prev) => prev + 1);
       onOpenChange(false);
       onSuccess?.();
     } catch (error) {
@@ -335,14 +382,17 @@ export function UploadTemplateDialog({
               </span>
             </Label>
             <Select
-              value={selectedCategoryId}
-              onValueChange={(value) => setValue("category_id", value)}
+              value={selectedCategoryId || "none"}
+              onValueChange={(value) =>
+                setValue("category_id", value === "none" ? undefined : value)
+              }
               disabled={isUploading || categoriesLoading}
             >
               <SelectTrigger id="category">
                 <SelectValue placeholder={categoriesLoading ? "Laster..." : "Velg kategori"} />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="none">Ingen kategori</SelectItem>
                 {categories.length === 0 && !categoriesLoading ? (
                   <div className="px-2 py-4 text-sm text-muted-foreground text-center">
                     Ingen kategorier funnet
@@ -350,7 +400,10 @@ export function UploadTemplateDialog({
                 ) : (
                   categories.map((category) => (
                     <SelectItem key={category.id} value={category.id}>
-                      {category.icon && <span className="mr-2">{category.icon}</span>}
+                      {(() => {
+                        const IconComponent = getCategoryIcon(category.icon);
+                        return <IconComponent className="mr-2 h-4 w-4 text-muted-foreground" />;
+                      })()}
                       {category.name}
                     </SelectItem>
                   ))
@@ -385,6 +438,22 @@ export function UploadTemplateDialog({
               </label>
             </div>
           </div>
+
+          <details className="rounded-lg border border-[#E5E5E5] p-4">
+            <summary className="cursor-pointer text-sm font-medium">
+              Avanserte innstillinger
+            </summary>
+            <div className="mt-4 max-h-[40vh] overflow-y-auto pr-2">
+              <TemplateSettingsPanel
+                key={`upload-settings-${settingsKey}`}
+                templateId="upload"
+                initialSettings={DEFAULT_TEMPLATE_SETTINGS}
+                onSettingsChange={handleSettingsChange}
+                showActions={false}
+                disabled={isUploading}
+              />
+            </div>
+          </details>
 
           {/* Upload Error */}
           {uploadError && (

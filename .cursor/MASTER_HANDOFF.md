@@ -1,7 +1,50 @@
 # MASTER HANDOFF DOCUMENT
-# Proaktiv Dokument Hub - Agent Pipeline Context
+# Vitec Next Admin Hub - Agent Pipeline Context
 
-**Last Updated:** 2026-01-15
+**Last Updated:** 2026-01-18
+
+**Important:** Large parts of this document are **historical** (Azure/SQLite era).  
+For current production + active roadmap, use `.cursor/active_context.md` as source of truth.
+
+---
+
+## 0. TODAY UPDATE (2026-01-18) — FRONTEND / UX / NAV (THIS AGENT)
+
+### What changed
+- **Rebrand** to **Vitec Next Admin Hub**
+  - Header + login + Next.js metadata + backend `APP_NAME`
+  - Lily logo rendered in `#272630` (CSS mask using `frontend/public/assets/proaktiv-lily-black.png`)
+- **Navigation**
+  - “Dokumenter” dropdown: Maler, Kategorier, Mottakere
+  - “Selskap” dropdown: Kontorer, Ansatte, Filer, **Markedsområder** (`/territories`)
+- **Templates discoverability**
+  - Categories + receivers are clickable to filtered templates view
+  - Added `/api/templates?receiver=...` backend filter (primary + extra receivers)
+- **Settings UX**
+  - Settings available directly from **Rediger** dialog
+  - “Avanserte innstillinger” in **Ny mal** and **Last opp fil**
+- **Dashboard polish**
+  - Removed “Dashboard” heading/description
+  - Neutral palette for cards/icons/status tags; translate archived → **Arkivert**
+- **New pages**
+  - `/mottakere` (receiver list)
+  - `/territories` (market area overview; map/heatmap placeholder pending geometry dataset)
+- **Postal codes sync**
+  - Script: `backend/scripts/sync_postal_codes.py`
+  - Existing endpoint: `POST /api/postal-codes/sync`
+
+### What to verify tomorrow
+- `/territories` loads in prod and is visible under **Selskap**
+- Template filtering works from category/receiver links
+- “Rediger” dialog saves category + advanced settings as expected
+
+### Next agent — append below
+<!-- NEXT_AGENT_NOTES_START -->
+
+<!-- (leave space for next agent’s updates) -->
+
+<!-- NEXT_AGENT_NOTES_END -->
+
 **Purpose:** Comprehensive context for AI agents working on this project
 
 ---

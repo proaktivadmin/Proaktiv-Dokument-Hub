@@ -13,6 +13,7 @@ import { useAssets } from "@/hooks/v3/useAssets";
 import { formatDistanceToNow } from "date-fns";
 import { nb } from "date-fns/locale";
 import Link from "next/link";
+import { getCategoryIcon } from "@/lib/category-icons";
 
 function StatCardSkeleton() {
   return (
@@ -57,7 +58,12 @@ export default function Dashboard() {
   const { stats, isLoading: statsLoading, error: statsError, refetch: refetchStats } = useDashboardStats();
   const { templates: recentTemplates, isLoading: templatesLoading, refetch: refetchTemplates } = useRecentTemplates();
   const { categories, isLoading: categoriesLoading } = useCategories();
-  const { data: inventoryData, isLoading: inventoryLoading, error: inventoryError } = useInventoryStats(5);
+  const {
+    data: inventoryData,
+    isLoading: inventoryLoading,
+    error: inventoryError,
+    refetch: refetchInventory,
+  } = useInventoryStats(5);
   
   // V3 Company Hub data
   const { offices, isLoading: officesLoading } = useOffices();
@@ -67,6 +73,7 @@ export default function Dashboard() {
   const handleUploadSuccess = () => {
     refetchStats();
     refetchTemplates();
+    refetchInventory();
   };
 
   const formatDate = (dateString: string | null) => {
@@ -94,11 +101,6 @@ export default function Dashboard() {
       <Header onUploadSuccess={handleUploadSuccess} />
 
       <main className="container mx-auto px-6 py-8">
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-foreground">Dashboard</h2>
-          <p className="text-muted-foreground">Oversikt over alle maler og aktivitet</p>
-        </div>
-
         {/* Error State */}
         {statsError && (
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
@@ -127,7 +129,7 @@ export default function Dashboard() {
               </div>
 
               <div className="bg-white rounded-md p-6 border border-[#E5E5E5]">
-                <p className="text-[#272630]/60 text-sm font-sans">Publiserte</p>
+                <p className="text-[#272630]/60 text-sm font-sans">Publisert</p>
                 <p className="text-4xl font-serif font-bold text-[#272630] mt-2">
                   {stats?.published ?? 0}
                 </p>
@@ -142,7 +144,7 @@ export default function Dashboard() {
 
               <div className="bg-white rounded-md p-6 border border-[#E5E5E5]">
                 <div className="flex items-center gap-2 text-[#272630]/60 text-sm font-sans">
-                  <Download className="h-4 w-4 text-[#BCAB8A]" />
+                  <Download className="h-4 w-4 text-[#272630]/50" />
                   Nedlastinger (30d)
                 </div>
                 <p className="text-4xl font-serif font-bold text-[#272630] mt-2">
@@ -161,8 +163,8 @@ export default function Dashboard() {
             className="group bg-white rounded-md p-6 border border-[#E5E5E5] hover:border-[#BCAB8A] hover:shadow-md transition-all"
           >
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-lg bg-blue-500/10">
-                <Building2 className="h-6 w-6 text-blue-600" />
+              <div className="p-3 rounded-lg bg-[#E9E7DC]">
+                <Building2 className="h-6 w-6 text-[#272630]" />
               </div>
               <ArrowRight className="h-5 w-5 text-[#272630]/30 group-hover:text-[#BCAB8A] group-hover:translate-x-1 transition-all" />
             </div>
@@ -200,8 +202,8 @@ export default function Dashboard() {
             className="group bg-white rounded-md p-6 border border-[#E5E5E5] hover:border-[#BCAB8A] hover:shadow-md transition-all"
           >
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-lg bg-green-500/10">
-                <Users className="h-6 w-6 text-green-600" />
+              <div className="p-3 rounded-lg bg-[#E9E7DC]">
+                <Users className="h-6 w-6 text-[#272630]" />
               </div>
               <ArrowRight className="h-5 w-5 text-[#272630]/30 group-hover:text-[#BCAB8A] group-hover:translate-x-1 transition-all" />
             </div>
@@ -226,12 +228,12 @@ export default function Dashboard() {
             className="group bg-white rounded-md p-6 border border-[#E5E5E5] hover:border-[#BCAB8A] hover:shadow-md transition-all"
           >
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-lg bg-purple-500/10">
-                <Image className="h-6 w-6 text-purple-600" />
+              <div className="p-3 rounded-lg bg-[#E9E7DC]">
+                <Image className="h-6 w-6 text-[#272630]" />
               </div>
               <ArrowRight className="h-5 w-5 text-[#272630]/30 group-hover:text-[#BCAB8A] group-hover:translate-x-1 transition-all" />
             </div>
-            <h3 className="text-lg font-semibold text-[#272630] mb-1">Mediefiler</h3>
+            <h3 className="text-lg font-semibold text-[#272630] mb-1">Filer</h3>
             {assetsLoading ? (
               <Skeleton className="h-4 w-32" />
             ) : (
@@ -242,116 +244,8 @@ export default function Dashboard() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Recent Templates */}
-          <div className="lg:col-span-2 bg-white rounded-md p-6 border border-[#E5E5E5]">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-[#272630]">Nylig opplastet</h3>
-              <Link
-                href="/templates"
-                className="text-sm text-[#BCAB8A] hover:text-[#BCAB8A]/80 font-medium"
-              >
-                Se alle →
-              </Link>
-            </div>
-
-            {templatesLoading ? (
-              <TemplateListSkeleton />
-            ) : recentTemplates.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">
-                <FileText className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                <p>Ingen maler lastet opp ennå.</p>
-                <p className="text-sm">Klikk "Last opp" for å legge til din første mal.</p>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {recentTemplates.map((template) => (
-                  <div
-                    key={template.id}
-                    className="flex items-center gap-3 p-3 border rounded-lg hover:bg-muted transition-colors"
-                  >
-                    <div
-                      className={`p-2 rounded bg-muted ${getFileTypeIcon(
-                        template.file_type
-                      )}`}
-                    >
-                      <FileText className="h-5 w-5" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate">{template.title}</p>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <span className="uppercase">{template.file_type}</span>
-                        <span>•</span>
-                        <span
-                          className={`px-2 py-0.5 rounded-full text-xs ${
-                            template.status === "published"
-                              ? "bg-green-100 text-green-700"
-                              : template.status === "draft"
-                              ? "bg-amber-100 text-amber-700"
-                              : "bg-muted text-muted-foreground"
-                          }`}
-                        >
-                          {template.status === "published"
-                            ? "Publisert"
-                            : template.status === "draft"
-                            ? "Utkast"
-                            : template.status}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="text-sm text-muted-foreground flex items-center gap-1">
-                      <Clock className="h-4 w-4" />
-                      {formatDate(template.created_at)}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Categories */}
-          <div className="bg-white rounded-md p-6 border border-[#E5E5E5]">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-[#272630]">Kategorier</h3>
-              <Link
-                href="/categories"
-                className="text-sm text-[#BCAB8A] hover:text-[#BCAB8A]/80 font-medium"
-              >
-                Administrer →
-              </Link>
-            </div>
-
-            {categoriesLoading ? (
-              <div className="space-y-3">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="p-3 rounded-md bg-[#F5F5F0]">
-                    <Skeleton className="h-4 w-24" />
-                  </div>
-                ))}
-              </div>
-            ) : categories.length === 0 ? (
-              <div className="text-center py-6 text-[#272630]/50">
-                <p>Ingen kategorier opprettet.</p>
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {categories.map((category) => (
-                  <Link
-                    key={category.id}
-                    href={`/templates?category=${category.id}`}
-                    className="flex items-center gap-3 p-3 rounded-md bg-[#F5F5F0] hover:bg-[#E9E7DC] transition-colors"
-                  >
-                    {category.icon && <span className="text-lg">{category.icon}</span>}
-                    <span className="font-medium text-[#272630]">{category.name}</span>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
         {/* Vitec Inventory Sync Status */}
-        <div className="mt-8 bg-white rounded-md p-6 border border-[#E5E5E5]">
+        <div className="bg-white rounded-md p-6 border border-[#E5E5E5] mb-8">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-[#272630]">Vitec Malbibliotek Status</h3>
             {inventoryData?.stats && (
@@ -387,36 +281,36 @@ export default function Dashboard() {
             <div className="space-y-6">
               {/* Stats Grid */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="p-4 rounded-md bg-green-50 border border-green-200">
-                  <div className="flex items-center gap-2 text-green-600 mb-1">
-                    <CheckCircle2 className="h-4 w-4" />
+                <div className="p-4 rounded-md bg-[#F5F5F0] border border-[#E5E5E5]">
+                  <div className="flex items-center gap-2 text-[#272630]/70 mb-1">
+                    <CheckCircle2 className="h-4 w-4 text-[#272630]/60" />
                     <span className="text-sm font-medium">Synkronisert</span>
                   </div>
-                  <p className="text-2xl font-bold text-green-700">{inventoryData.stats.synced}</p>
+                  <p className="text-2xl font-bold text-[#272630]">{inventoryData.stats.synced}</p>
                 </div>
                 
-                <div className="p-4 rounded-md bg-red-50 border border-red-200">
-                  <div className="flex items-center gap-2 text-red-600 mb-1">
-                    <XCircle className="h-4 w-4" />
+                <div className="p-4 rounded-md bg-[#F5F5F0] border border-[#E5E5E5]">
+                  <div className="flex items-center gap-2 text-[#272630]/70 mb-1">
+                    <XCircle className="h-4 w-4 text-[#272630]/60" />
                     <span className="text-sm font-medium">Mangler</span>
                   </div>
-                  <p className="text-2xl font-bold text-red-700">{inventoryData.stats.missing}</p>
+                  <p className="text-2xl font-bold text-[#272630]">{inventoryData.stats.missing}</p>
                 </div>
                 
-                <div className="p-4 rounded-md bg-amber-50 border border-amber-200">
-                  <div className="flex items-center gap-2 text-amber-600 mb-1">
-                    <RefreshCw className="h-4 w-4" />
+                <div className="p-4 rounded-md bg-[#F5F5F0] border border-[#E5E5E5]">
+                  <div className="flex items-center gap-2 text-[#272630]/70 mb-1">
+                    <RefreshCw className="h-4 w-4 text-[#272630]/60" />
                     <span className="text-sm font-medium">Modifisert</span>
                   </div>
-                  <p className="text-2xl font-bold text-amber-700">{inventoryData.stats.modified}</p>
+                  <p className="text-2xl font-bold text-[#272630]">{inventoryData.stats.modified}</p>
                 </div>
                 
-                <div className="p-4 rounded-md bg-blue-50 border border-blue-200">
-                  <div className="flex items-center gap-2 text-blue-600 mb-1">
-                    <FileText className="h-4 w-4" />
+                <div className="p-4 rounded-md bg-[#F5F5F0] border border-[#E5E5E5]">
+                  <div className="flex items-center gap-2 text-[#272630]/70 mb-1">
+                    <FileText className="h-4 w-4 text-[#272630]/60" />
                     <span className="text-sm font-medium">Kun lokal</span>
                   </div>
-                  <p className="text-2xl font-bold text-blue-700">{inventoryData.stats.local_only}</p>
+                  <p className="text-2xl font-bold text-[#272630]">{inventoryData.stats.local_only}</p>
                 </div>
               </div>
 
@@ -473,6 +367,117 @@ export default function Dashboard() {
               </div>
             </div>
           ) : null}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Recent Templates */}
+          <div className="lg:col-span-2 bg-white rounded-md p-6 border border-[#E5E5E5]">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-[#272630]">Nylig opplastet</h3>
+              <Link
+                href="/templates"
+                className="text-sm text-[#BCAB8A] hover:text-[#BCAB8A]/80 font-medium"
+              >
+                Se alle →
+              </Link>
+            </div>
+
+            {templatesLoading ? (
+              <TemplateListSkeleton />
+            ) : recentTemplates.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">
+                <FileText className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                <p>Ingen maler lastet opp ennå.</p>
+                <p className="text-sm">Klikk "Last opp" for å legge til din første mal.</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {recentTemplates.map((template) => (
+                  <div
+                    key={template.id}
+                    className="flex items-center gap-3 p-3 border rounded-lg hover:bg-muted transition-colors"
+                  >
+                    <div
+                      className={`p-2 rounded bg-muted ${getFileTypeIcon(
+                        template.file_type
+                      )}`}
+                    >
+                      <FileText className="h-5 w-5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium truncate">{template.title}</p>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <span className="uppercase">{template.file_type}</span>
+                        <span>•</span>
+                        <span
+                          className={`px-2 py-0.5 rounded-full text-xs border ${
+                            template.status === "published"
+                              ? "bg-[#E9E7DC] text-[#272630]/80 border-[#E5E5E5]"
+                              : template.status === "draft"
+                              ? "bg-[#F5F5F0] text-[#272630]/70 border-[#E5E5E5]"
+                              : "bg-white text-[#272630]/60 border-[#E5E5E5]"
+                          }`}
+                        >
+                          {template.status === "published"
+                            ? "Publisert"
+                            : template.status === "draft"
+                            ? "Utkast"
+                            : "Arkivert"}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="text-sm text-muted-foreground flex items-center gap-1">
+                      <Clock className="h-4 w-4" />
+                      {formatDate(template.created_at)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Categories */}
+          <div className="bg-white rounded-md p-6 border border-[#E5E5E5]">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-[#272630]">Kategorier</h3>
+              <Link
+                href="/categories"
+                className="text-sm text-[#BCAB8A] hover:text-[#BCAB8A]/80 font-medium"
+              >
+                Administrer →
+              </Link>
+            </div>
+
+            {categoriesLoading ? (
+              <div className="space-y-3">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="p-3 rounded-md bg-[#F5F5F0]">
+                    <Skeleton className="h-4 w-24" />
+                  </div>
+                ))}
+              </div>
+            ) : categories.length === 0 ? (
+              <div className="text-center py-6 text-[#272630]/50">
+                <p>Ingen kategorier opprettet.</p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {categories.map((category) => {
+                  const IconComponent = getCategoryIcon(category.icon);
+                  return (
+                  <Link
+                    key={category.id}
+                    href={`/templates?category=${category.id}`}
+                    className="flex items-center gap-3 p-3 rounded-md bg-[#F5F5F0] hover:bg-[#E9E7DC] transition-colors"
+                  >
+                    <IconComponent className="h-5 w-5 text-[#272630]" />
+                    <span className="font-medium text-[#272630]">{category.name}</span>
+                  </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Recent Activity from Dashboard Stats */}

@@ -25,9 +25,20 @@ class TemplateMetadataUpdate(BaseModel):
     receiver_type: Optional[Literal['Egne/kundetilpasset', 'Systemstandard']] = Field(
         None, description="Receiver type"
     )
-    receiver: Optional[Literal['Selger', 'Kjøper', 'Megler', 'Bank', 'Forretningsfører']] = Field(
-        None, description="Primary receiver"
-    )
+    receiver: Optional[Literal[
+        'Selger', 'Kjøper', 'Megler', 'Bank', 'Forretningsfører',
+        'Visningsdeltager', 'Budgiver', 'Interessent', 'Interessent - Match',
+        'Utleier', 'Leietaker', 'Borettslag', 'Bank - selger', 'Bank - kjøper',
+        'Ikke interessert', 'Hjemmelshaver', 'Panthaver', 'Saksøkt', 'Kreditor',
+        'Prosessfullmektig', 'Saksøker', 'Opprinnelig kjøper', 'Fremleier',
+        'Fremleietaker', 'Takstmann', 'Sameie', 'Aksjeselskap', 'Kommune',
+        'Interessent - budoppfølging', 'Interessent - autoprospekt',
+        'Fester', 'Fakturamottaker', 'Hjemmelsutsteder', 'Fullmektig',
+        'Grunneier', 'Tidligere eier/avdød', 'Arving', 'Selgers ektefelle',
+        'Kontodisponent selger', 'Kontodisponent kjøper', 'Kartverket',
+        'Advokat', 'Fotograf', 'Samarbeidspartner', 'Annen', 'Bortefester',
+        'Tinglysning', 'Forening', 'Forsikringsselskap', 'Kjoper', 'Forretningsforer'
+    ]] = Field(None, description="Primary receiver")
     extra_receivers: Optional[List[str]] = Field(
         None, description="Additional receivers"
     )

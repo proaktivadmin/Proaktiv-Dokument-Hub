@@ -6,7 +6,7 @@ Handles all template CRUD operations with database integration.
 
 from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Query, Depends, Body
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Optional, List
+from typing import Optional, List, Any
 from uuid import UUID
 from datetime import datetime, timezone
 from pydantic import BaseModel, Field
@@ -36,12 +36,88 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
+def _normalize_attachment_name(value: Any) -> Optional[str]:
+    if value is None:
+        return None
+    name = str(value).strip()
+    return name or None
+
+
+def _looks_like_attachment_key(key: str) -> bool:
+    lowered = key.lower()
+    return "attachment" in lowered or "vedlegg" in lowered
+
+
+def _extract_attachment_names_from_value(value: Any) -> list[str]:
+    names: list[str] = []
+    if value is None:
+        return names
+    if isinstance(value, list):
+        for entry in value:
+            names.extend(_extract_attachment_names_from_value(entry))
+        return names
+    if isinstance(value, dict):
+        for key in ("name", "fileName", "filename", "title", "documentName", "attachmentName", "templateName"):
+            if key in value:
+                name = _normalize_attachment_name(value.get(key))
+                if name:
+                    names.append(name)
+                    break
+        return names
+    name = _normalize_attachment_name(value)
+    if name:
+        names.append(name)
+    return names
+
+
+def _find_attachment_values(source: dict[str, Any], *, depth: int = 0, max_depth: int = 2) -> list[Any]:
+    if depth > max_depth:
+        return []
+    values: list[Any] = []
+    for key, value in source.items():
+        if _looks_like_attachment_key(key):
+            values.append(value)
+        if isinstance(value, dict):
+            values.extend(_find_attachment_values(value, depth=depth + 1, max_depth=max_depth))
+    return values
+
+
+def _extract_attachment_names(metadata_json: Optional[dict]) -> list[str]:
+    if not isinstance(metadata_json, dict):
+        return []
+
+    # Prefer normalized attachments stored by importer
+    if isinstance(metadata_json.get("vitec_attachments"), list):
+        raw_entries = metadata_json.get("vitec_attachments", [])
+        names = _extract_attachment_names_from_value(raw_entries)
+        return sorted(set(names))
+
+    candidates: list[Any] = []
+    for key in ("attachments", "attachmentTemplates", "attachmentTemplateList"):
+        if isinstance(metadata_json.get(key), list):
+            candidates.append(metadata_json.get(key))
+
+    for source_key in ("vitec_details", "vitec_raw"):
+        source = metadata_json.get(source_key)
+        if isinstance(source, dict):
+            candidates.extend(_find_attachment_values(source))
+
+    names: list[str] = []
+    for candidate in candidates:
+        names.extend(_extract_attachment_names_from_value(candidate))
+
+    return sorted(set(names))
+
+
 # Pydantic schemas for request bodies
 class TemplateUpdateRequest(BaseModel):
     """Request body for updating a template."""
     title: Optional[str] = Field(None, max_length=255, description="Template title")
     description: Optional[str] = Field(None, max_length=2000, description="Template description")
     status: Optional[str] = Field(None, pattern="^(draft|published|archived)$", description="Template status")
+    category_ids: Optional[List[UUID]] = Field(
+        None, description="Category IDs to associate with the template"
+    )
 
 
 def get_current_user():
@@ -55,6 +131,7 @@ async def list_templates(
     status: Optional[str] = Query(None, description="Filter by status"),
     search: Optional[str] = Query(None, description="Search in title/description"),
     category_id: Optional[str] = Query(None, description="Filter by category UUID"),
+    receiver: Optional[str] = Query(None, description="Filter by receiver (primary or extra)"),
     page: int = Query(1, ge=1),
     per_page: int = Query(20, ge=1, le=100),
     sort_by: str = Query("updated_at"),
@@ -77,6 +154,7 @@ async def list_templates(
         status=status,
         search=search,
         category_id=validated_category_id,
+        receiver=receiver,
         page=page,
         per_page=per_page,
         sort_by=sort_by,
@@ -99,6 +177,7 @@ async def list_templates(
                 "updated_at": t.updated_at.isoformat() if t.updated_at else None,
                 "tags": [{"id": str(tag.id), "name": tag.name, "color": tag.color} for tag in t.tags],
                 "categories": [{"id": str(cat.id), "name": cat.name, "icon": cat.icon} for cat in t.categories],
+                "attachments": _extract_attachment_names(t.metadata_json),
             }
             for t in templates
         ],
@@ -143,6 +222,7 @@ async def get_template(
         "vitec_merge_fields": template.vitec_merge_fields or [],
         "tags": [{"id": str(tag.id), "name": tag.name, "color": tag.color} for tag in template.tags],
         "categories": [{"id": str(cat.id), "name": cat.name, "icon": cat.icon} for cat in template.categories],
+        "attachments": _extract_attachment_names(template.metadata_json),
     }
 
 
@@ -272,6 +352,8 @@ async def update_template(
         updates["status"] = body.status
         if body.status == "published":
             updates["published_at"] = datetime.now(timezone.utc)
+    if body.category_ids is not None:
+        updates["category_ids"] = body.category_ids
     
     template = await TemplateService.update(
         db,

@@ -22,6 +22,12 @@ export type ReceiverType = 'Egne/kundetilpasset' | 'Systemstandard';
  */
 export type Receiver = 'Selger' | 'Kjøper' | 'Megler' | 'Bank' | 'Forretningsfører';
 
+export interface TemplateTag {
+  id: string;
+  name: string;
+  color: string;
+}
+
 /**
  * Transaction phases
  */
@@ -53,6 +59,8 @@ export interface TemplateWithMetadata {
   preview_url: string | null;
   created_at: string | null;
   updated_at: string | null;
+  attachments?: string[];
+  tags?: TemplateTag[];
   
   // V2 Vitec Metadata Fields
   preview_thumbnail_url: string | null;

@@ -30,6 +30,7 @@ export interface Template {
   updated_at: string | null;
   tags: Tag[];
   categories: Category[];
+  attachments?: string[];
 }
 
 export type TemplateStatus = "draft" | "published" | "archived";
@@ -65,6 +66,7 @@ export interface UpdateTemplatePayload {
   title?: string;
   description?: string;
   status?: TemplateStatus;
+  category_ids?: string[];
 }
 
 export interface UpdateTemplateResponse {
