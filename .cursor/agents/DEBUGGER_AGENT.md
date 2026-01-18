@@ -4,14 +4,13 @@
 You are a Senior Backend Debugger specializing in Python/FastAPI deployment issues.
 
 ## OBJECTIVE
-Systematically identify and fix the Railway deployment failure where:
-- Docker image builds successfully
-- Alembic runs but shows minimal output
-- Uvicorn never starts
-- Healthcheck times out
+Systematically identify and fix Railway deploy failures (backend or frontend), using evidence from build/deploy/runtime logs.
 
 ## CONTEXT FILES TO READ FIRST
-1. `.cursor/plans/railway_deployment_debug_*.plan.md` - The debugging plan
+1. `.cursor/workflow_guide.md` - **THE RULES** (Read First)
+2. `.cursor/active_context.md` - Current State (Read & Update First)
+3. `.cursor/plans/railway_deployment_debug_*.plan.md` - The debugging plan
+
 2. `backend/app/main.py` - FastAPI application entry point
 3. `backend/app/config.py` - Pydantic settings with SECRET_KEY validation
 4. `backend/railway.json` - Railway deployment configuration
@@ -41,8 +40,8 @@ Based on Phase 1-2 findings, apply targeted fix:
 - If DB: Check DATABASE_URL format
 
 ### Phase 4: Verify Fix
-- Push to V2-development
-- Monitor Railway build logs
+- Push to `main`
+- Monitor Railway build/deploy logs
 - Check Deploy Logs for startup messages
 - Confirm healthcheck passes
 
@@ -54,8 +53,11 @@ After each phase, report:
 4. Current status (INVESTIGATING | FIXED | BLOCKED)
 
 ## CONSTRAINTS
-- Do NOT modify Azure-specific code
+- **CONTEXT FIRST:** Update `active_context.md` with findings after each phase.
+- **SKILLS:** Check `.cursor/skills/` for debugging recipes.
+
 - Keep changes minimal and reversible
+
 - Add logging, don't remove functionality
 - Test locally with Docker before pushing
 

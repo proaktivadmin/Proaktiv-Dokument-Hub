@@ -8,7 +8,7 @@ For current production + active roadmap, use `.cursor/active_context.md` as sour
 
 ---
 
-## 0. TODAY UPDATE (2026-01-18) — FRONTEND / UX / NAV (THIS AGENT)
+## 0. TODAY UPDATE (2026-01-18) — TEMPLATE UX + IMPORT + DEPLOY FIXES
 
 ### What changed
 - **Rebrand** to **Vitec Next Admin Hub**
@@ -33,6 +33,18 @@ For current production + active roadmap, use `.cursor/active_context.md` as sour
   - Script: `backend/scripts/sync_postal_codes.py`
   - Existing endpoint: `POST /api/postal-codes/sync`
 
+- **Template workflow parity**
+  - Attachments exposed in list + detail responses and shown in UI (paperclip count + names)
+  - List view grouped by origin (**Vitec Next** vs **Kundemal**) and pagination fixed
+  - Settings UI expanded with Vitec “Kategorisering” fields (type/receiver/phases/etc.)
+- **Vitec Next import tooling**
+  - `backend/scripts/import_vitec_next_export.py`
+  - `docs/vitec-next-export-format.md`
+  - `docs/vitec-next-mcp-scrape-and-import.md`
+- **Railway build fixes**
+  - Receiver values treated as free-form strings in typing
+  - Status filter typing aligned to `TemplateStatus`
+
 ### What to verify tomorrow
 - `/territories` loads in prod and is visible under **Selskap**
 - Template filtering works from category/receiver links
@@ -49,36 +61,33 @@ For current production + active roadmap, use `.cursor/active_context.md` as sour
 
 ---
 
-## 1. PROJECT STATE SUMMARY
+## 1. PROJECT STATE SUMMARY (CURRENT)
 
 ### What Works
 - Frontend UI loads and renders correctly
 - Navigation between pages works
-- Template shelf view displays 43 templates
+- Template shelf view displays templates and supports filtering/grouping
 - Template preview with merge field highlighting
 - Code editor (Monaco) in template viewer
 - Simulator panel detects variables
 - Flettekoder page with 142 merge fields
-- Azure Blob Storage connection (templates stored correctly)
-- GitHub Actions CI/CD pipeline (builds and deploys)
-- Container Apps run and respond to requests
+- Railway deploy pipeline (push to `main` deploys frontend + backend)
+- PostgreSQL-backed persistence (Railway)
 
 ### What Is Broken
-- **Dashboard API:** Returns 500 error because `/api/dashboard/stats` endpoint doesn't exist
-- **Database Persistence:** SQLite in container filesystem resets on every restart
-- **No Auto-Migration:** Database tables not created automatically on startup
-- **No Seed Data:** Fresh database has no categories, no merge fields
-- **Volume Mount Removed:** Azure Files mount was causing container startup failures
+- No known production-blocking issues in current `main` deploy.
+- Build warnings:
+  - Next.js prints a security advisory warning for `next@14.1.0` (plan upgrade window)
 
 ---
 
 ## 2. CRITICAL FILES LIST
 
-### Infrastructure (Agent 0 - Azure Architect)
+### Infrastructure (Railway)
 | File | Purpose |
 |------|---------|
-| `infrastructure/bicep/main.bicep` | Azure resource definitions |
-| `.github/workflows/deploy-azure.yml` | CI/CD pipeline |
+| `docker-compose.yml` | Local dev stack (frontend + backend + db) |
+| `backend/railway.json` | Railway backend runtime config |
 | `backend/Dockerfile` | Backend container image |
 | `frontend/Dockerfile` | Frontend container image |
 | `backend/scripts/start.sh` | Container startup script |
@@ -115,53 +124,12 @@ For current production + active roadmap, use `.cursor/active_context.md` as sour
 
 ---
 
-## 3. KNOWN ISSUES (With Error Details)
+## 3. KNOWN ISSUES (CURRENT)
 
-### Issue 1: Missing Dashboard Stats API
-```
-URL: /api/dashboard/stats
-Expected: { total: number, published: number, draft: number, downloads: number }
-Actual: 404 Not Found
-Frontend Error: "Request failed with status code 500"
-```
-
-**Fix Required:** Create endpoint in `backend/app/routers/dashboard.py`
-
-### Issue 2: Ephemeral Database
-```
-Current Config (main.bicep):
-  DATABASE_URL = 'sqlite:///./app.db'
-  
-Problem: Container filesystem is ephemeral
-Result: All data lost when container restarts
-```
-
-**Fix Options:**
-1. Azure Files volume mount (was tried, failed)
-2. Azure PostgreSQL Flexible Server ($15/mo)
-3. SQLite with blob backup on shutdown
-
-### Issue 3: No Startup Initialization
-```
-Current: Container starts FastAPI directly
-Missing: 
-  1. Run alembic upgrade head
-  2. Seed default data
-  3. Then start uvicorn
-```
-
-**Fix Required:** Create proper `start.sh` entrypoint script
-
-### Issue 4: Volume Mount Failure (Historical)
-```
-Error: MountVolume.Setup failed for volume "database-volume"
-       mount failed: exit status 32
-       Permission denied
-       
-Root Cause: Azure Files storage not linked to Container Apps Environment
-```
-
-**Was "Fixed" By:** Removing volume mount entirely (not a real fix)
+- No known production-blocking issues in the current Railway deploy.
+- **Warnings to track:**
+  - `next@14.1.0` security advisory warning during build (plan upgrade)
+  - WebDAV directory listing requires server-side `PROPFIND` enabled (if WebDAV storage is used)
 
 ---
 
@@ -170,37 +138,20 @@ Root Cause: Azure Files storage not linked to Container Apps Environment
 ### URLs
 | Service | URL | Status |
 |---------|-----|--------|
-| Frontend | https://dokumenthub-web.greenmushroom-2067e5c8.norwayeast.azurecontainerapps.io/ | Running |
-| Backend | https://dokumenthub-api.greenmushroom-2067e5c8.norwayeast.azurecontainerapps.io/ | Running |
-| API Docs | https://dokumenthub-api.greenmushroom-2067e5c8.norwayeast.azurecontainerapps.io/docs | Working |
-| Health | https://dokumenthub-api.greenmushroom-2067e5c8.norwayeast.azurecontainerapps.io/api/health | Healthy |
-
-### Azure Resources
-| Resource | Value |
-|----------|-------|
-| Subscription ID | `1b7869ae-d3a4-445f-9ebf-bf0c3bf52309` |
-| Resource Group | `rg-dokumenthub-prod` |
-| Location | `norwayeast` |
-| Container Apps Environment | `dokumenthub-env` |
-| Backend App | `dokumenthub-api` |
-| Frontend App | `dokumenthub-web` |
+| Frontend | https://blissful-quietude-production.up.railway.app | Live |
+| Backend | https://proaktiv-dokument-hub-production.up.railway.app | Live |
+| API Docs | https://proaktiv-dokument-hub-production.up.railway.app/docs | Live |
+| Health | https://proaktiv-dokument-hub-production.up.railway.app/api/health | Live |
 
 ### GitHub Repository
 - **URL:** https://github.com/Adrian12341234-code/Proaktiv-Dokument-Hub
-- **Branch:** `V2-development` (triggers deployment)
-- **Workflow:** `.github/workflows/deploy-azure.yml`
+- **Branch:** `main` (triggers Railway auto-deploy)
 
 ---
 
 ## 5. GITHUB SECRETS
 
-| Secret Name | Purpose | Status |
-|-------------|---------|--------|
-| `AZURE_CREDENTIALS` | Service Principal JSON | Configured |
-| `AZURE_STORAGE_CONNECTION_STRING` | Blob storage connection | Configured |
-| `AZURE_STORAGE_ACCOUNT_NAME` | Storage account name | Configured |
-| `AZURE_STORAGE_ACCOUNT_KEY` | Storage account key | Configured |
-| `SECRET_KEY` | JWT/session signing | Auto-generated if missing |
+**Note:** Current production is on Railway. Most GitHub “Azure secrets” below are legacy and can be ignored.
 
 ---
 
@@ -212,13 +163,12 @@ Root Cause: Azure Files storage not linked to Container Apps Environment
 | UI Components | Shadcn/UI | Latest |
 | Styling | Tailwind CSS | 3.x |
 | Backend | FastAPI | 0.104+ |
-| Database | SQLite (ephemeral) | - |
+| Database | PostgreSQL (Railway) | - |
 | ORM | SQLAlchemy | 2.x |
 | Migrations | Alembic | 1.x |
 | Container | Docker | - |
-| Cloud | Azure Container Apps | - |
-| Storage | Azure Blob Storage | - |
-| CI/CD | GitHub Actions | - |
+| Cloud | Railway | - |
+| CI/CD | Railway (deploy on push) | - |
 
 ---
 
@@ -271,8 +221,8 @@ docker compose exec backend alembic upgrade head
 # View logs
 docker compose logs -f backend
 
-# Trigger GitHub deployment
-git push origin V2-development
+# Deploy to production (Railway auto-deploys on push)
+git push origin main
 ```
 
 ---

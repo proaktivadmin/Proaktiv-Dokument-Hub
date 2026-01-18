@@ -83,6 +83,19 @@ class Settings(BaseSettings):
     APP_PASSWORD_HASH: str = ""  # bcrypt hash of the app password
     AUTH_SESSION_EXPIRE_DAYS: int = 7
     AUTH_INACTIVITY_TIMEOUT_MINUTES: int = 30
+    
+    # Microsoft Graph API (Teams/SharePoint/Exchange integration)
+    MICROSOFT_TENANT_ID: str = "placeholder"  # Azure AD tenant ID
+    MICROSOFT_CLIENT_ID: str = "placeholder"  # App registration client ID
+    MICROSOFT_CLIENT_SECRET: str = ""  # App registration secret
+    MICROSOFT_SENDER_EMAIL: str = ""  # Email address for sending (must be authorized)
+
+    # Firecrawl (web scraping / crawling)
+    # Keep secrets out of code: set FIRECRAWL_API_KEY via env (.env locally, Railway variables in prod)
+    FIRECRAWL_API_KEY: str = ""
+    FIRECRAWL_TIMEOUT_MS: int = 30000
+    FIRECRAWL_ONLY_MAIN_CONTENT: bool = True
+
 
     @field_validator("SECRET_KEY", mode="before")
     @classmethod

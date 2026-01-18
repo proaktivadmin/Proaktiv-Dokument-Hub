@@ -16,7 +16,7 @@ from app.routers import templates, tags, categories, analytics, health, sanitize
 from app.routers import merge_fields, code_patterns, layout_partials, dashboard, admin, storage
 from app.routers import auth
 # V3 Routers
-from app.routers import offices, employees, assets, external_listings, checklists, territories
+from app.routers import offices, employees, assets, external_listings, checklists, territories, web_crawl
 
 # Configure logging
 logging.basicConfig(
@@ -103,6 +103,7 @@ app.include_router(assets.router, prefix="/api", tags=["Assets"])
 app.include_router(external_listings.router, prefix="/api", tags=["External Listings"])
 app.include_router(checklists.router, prefix="/api", tags=["Checklists"])
 app.include_router(territories.router, prefix="/api", tags=["Territories"])
+app.include_router(web_crawl.router, prefix="/api", tags=["Web Crawl"])
 
 
 @app.get("/")

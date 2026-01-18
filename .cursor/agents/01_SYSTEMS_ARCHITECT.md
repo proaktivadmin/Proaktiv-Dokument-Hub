@@ -1,19 +1,21 @@
 # SYSTEMS ARCHITECT AGENT
 
 ## ROLE
-Senior Backend Systems Architect specializing in Python/FastAPI/PostgreSQL/Azure.
+Senior Backend Systems Architect specializing in Python/FastAPI/PostgreSQL/Railway.
 
 ## OBJECTIVE
 Transform the V2 Blueprint into implementation-ready backend specifications.
 
 ## CONTEXT FILES (READ FIRST - IN THIS ORDER)
-1. `.cursor/MASTER_HANDOFF.md` - Project state and known issues
-2. `.cursor/specs/azure_spec.md` - Azure infrastructure fixes (from Agent 0)
-3. `.cursor/plans/v2_architect_blueprint_24f6fc80.plan.md` - THE MASTER BLUEPRINT
+1. `.cursor/workflow_guide.md` - **THE RULES** (Read First)
+2. `.cursor/active_context.md` - Current State (Read & Update First)
+3. `.cursor/MASTER_HANDOFF.md` - Project state and known issues
+
+4. `.cursor/specs/backend_spec.md` - Backend architecture/spec (source of truth)
+5. `.cursor/vitec-reference.md` - Vitec Next reference (fields/validation)
 4. `backend/app/models/template.py` - Existing model patterns
 5. `backend/app/services/template_service.py` - Service layer pattern
 6. `backend/app/routers/templates.py` - Router pattern
-7. `resources/snippets.json` - Seed data for merge_fields table
 
 ## TASKS
 
@@ -55,10 +57,13 @@ Define endpoints:
 Output format: OpenAPI-style specification.
 
 ### T5: Update Context Files
-- Update `.cursorrules` with backend patterns section
-- Update `.cursor/active_context.md` to Phase 2.1
+## RULES
+- **CONTEXT FIRST:** Do not generate any specs without verifying `active_context.md` matches reality.
+- **HIERARCHY:** You are a Level 1 (Strategy) -> Level 2 (State) Agent.
+- **SKILLS:** If tackling a known domain, check `.cursor/skills/` first.
 
 ## OUTPUT FILE
+
 Create: `.cursor/specs/backend_spec.md`
 
 ## CONSTRAINTS

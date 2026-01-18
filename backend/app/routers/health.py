@@ -44,6 +44,12 @@ async def health_check(db: AsyncSession = Depends(get_db)):
     }
 
 
+@router.get("/api/ping")
+async def ping():
+    """Lightweight ping endpoint for uptime checks."""
+    return {"status": "ok", "timestamp": datetime.utcnow().isoformat()}
+
+
 @router.get("/api/health/azure-storage")
 async def azure_storage_check():
     """

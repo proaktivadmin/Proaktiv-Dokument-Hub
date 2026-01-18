@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -95,8 +95,9 @@ export function EditTemplateDialog({
     template?.id ?? null
   );
 
-  const initialSettings = backendSettings
-    ? {
+  const initialSettings = useMemo(() => {
+    return backendSettings
+      ? {
         marginTop: backendSettings.margin_top ?? DEFAULT_TEMPLATE_SETTINGS.marginTop,
         marginRight: backendSettings.margin_right ?? DEFAULT_TEMPLATE_SETTINGS.marginRight,
         marginBottom: backendSettings.margin_bottom ?? DEFAULT_TEMPLATE_SETTINGS.marginBottom,
@@ -107,18 +108,19 @@ export function EditTemplateDialog({
         channel:
           (backendSettings.channel as TemplateSettings["channel"]) ??
           DEFAULT_TEMPLATE_SETTINGS.channel,
-      templateType: (backendSettings.template_type as TemplateSettings["templateType"]) ?? null,
+        templateType: (backendSettings.template_type as TemplateSettings["templateType"]) ?? null,
         receiverType: backendSettings.receiver_type ?? null,
         receiver: backendSettings.receiver ?? null,
-      extraReceivers: backendSettings.extra_receivers ?? [],
-      phases: backendSettings.phases ?? [],
-      assignmentTypes: backendSettings.assignment_types ?? [],
-      ownershipTypes: backendSettings.ownership_types ?? [],
-      departments: backendSettings.departments ?? [],
+        extraReceivers: backendSettings.extra_receivers ?? [],
+        phases: backendSettings.phases ?? [],
+        assignmentTypes: backendSettings.assignment_types ?? [],
+        ownershipTypes: backendSettings.ownership_types ?? [],
+        departments: backendSettings.departments ?? [],
         emailSubject: backendSettings.email_subject ?? null,
         themeStylesheet: null,
       }
-    : DEFAULT_TEMPLATE_SETTINGS;
+      : DEFAULT_TEMPLATE_SETTINGS;
+  }, [backendSettings]);
 
   // Reset form when template changes
   useEffect(() => {

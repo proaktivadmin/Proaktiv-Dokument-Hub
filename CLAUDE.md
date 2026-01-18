@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-## Project: Proaktiv Dokument Hub V2.9
+## Project: Vitec Next Admin Hub (Proaktiv Dokument Hub)
 
 A document template management system for Norwegian real estate brokers, integrated with Vitec Next.
 
@@ -10,7 +10,7 @@ A document template management system for Norwegian real estate brokers, integra
 
 | Aspect | Details |
 |--------|---------|
-| **Phase** | 2.9 (Vitec Integration) |
+| **Phase** | 3.1 (Verification) |
 | **Stack** | Next.js 14 + FastAPI + PostgreSQL (Railway) |
 | **UI** | Shadcn/UI + Tailwind CSS |
 | **Hosting** | Railway (Frontend + Backend + PostgreSQL) |
@@ -51,6 +51,7 @@ A document template management system for Norwegian real estate brokers, integra
 - SanitizerService enforces Vitec Stilark compliance
 - Layout partials for headers/footers/signatures
 - WebDAV storage for network file access
+- Vitec export + import workflow docs in `docs/`
 
 ### Authentication (V2.9)
 - Simple password-based authentication (single user)

@@ -3,21 +3,24 @@
  */
 
 import { apiClient } from './config';
-import type { 
-  EmployeeWithOffice, 
-  EmployeeCreatePayload, 
+import type {
+  EmployeeWithOffice,
+  EmployeeCreatePayload,
   EmployeeUpdatePayload,
   EmployeeListResponse,
   StartOffboardingPayload,
-  EmployeeStatus 
+  EmployeeStatus
 } from '@/types/v3';
 
 export interface EmployeeListParams {
   office_id?: string;
   status?: EmployeeStatus | EmployeeStatus[];
+  role?: string;
+  search?: string;
   skip?: number;
   limit?: number;
 }
+
 
 export const employeesApi = {
   async list(params?: EmployeeListParams): Promise<EmployeeListResponse> {
@@ -29,8 +32,11 @@ export const employeesApi = {
     }
     if (params?.skip) searchParams.set('skip', String(params.skip));
     if (params?.limit) searchParams.set('limit', String(params.limit));
-    
+    if (params?.role) searchParams.set('role', params.role);
+    if (params?.search) searchParams.set('search', params.search);
+
     const query = searchParams.toString();
+
     const response = await apiClient.get(`/employees${query ? `?${query}` : ''}`);
     return response.data;
   },

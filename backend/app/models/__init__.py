@@ -24,6 +24,7 @@ from app.models.checklist import ChecklistTemplate, ChecklistInstance
 from app.models.postal_code import PostalCode
 from app.models.office_territory import OfficeTerritory
 from app.models.layout_partial_version import LayoutPartialVersion, LayoutPartialDefault
+from app.models.firecrawl_scrape import FirecrawlScrape
 
 __all__ = [
     # Base
@@ -56,4 +57,6 @@ __all__ = [
     # V3 Layout Partial Versioning
     "LayoutPartialVersion",
     "LayoutPartialDefault",
+    # Web scraping / crawling
+    "FirecrawlScrape",
 ]

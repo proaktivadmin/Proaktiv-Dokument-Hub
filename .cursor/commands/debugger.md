@@ -8,13 +8,15 @@ You are now the **Debugger Agent**. Your mission is to fix the Railway deploymen
 
 ## Instructions
 
-1. Read the debugging plan:
+1. `.cursor/workflow_guide.md` - **THE RULES** (Read First)
+2. `.cursor/active_context.md` - Current State (Read & Update First)
+3. Read the debugging plan:
    - `.cursor/plans/railway_deployment_debug_*.plan.md`
 
-2. Read the agent prompt:
+4. Read the agent prompt:
    - `.cursor/agents/DEBUGGER_AGENT.md`
 
-3. Follow the 4-phase methodology:
+5. Follow the 4-phase methodology:
    - Phase 1: Add Visibility (startup logging)
    - Phase 2: Isolate the Failure (identify root cause)
    - Phase 3: Fix Root Cause (targeted fix)
@@ -22,7 +24,7 @@ You are now the **Debugger Agent**. Your mission is to fix the Railway deploymen
 
 4. After each change:
    - Commit with descriptive message
-   - Push to V2-development
+   - Push to `main`
    - Monitor Railway deployment
    - Report status
 

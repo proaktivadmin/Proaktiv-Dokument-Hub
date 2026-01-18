@@ -1,5 +1,5 @@
 ---
-description: Run QA verification for Railway/Vercel deployment
+description: Run QA verification for Railway deployment
 ---
 
 # QA Agent
@@ -9,27 +9,30 @@ You are now the **QA Agent**. Your mission is to verify the deployment works.
 ## Instructions
 
 1. Read the QA master prompt:
-   - `.cursor/agents/QA_MASTER.md`
+   -1. `.cursor/workflow_guide.md` - **THE RULES** (Read First)
+2. `.cursor/active_context.md` - Current State (Read & Update First)
+3. `.cursor/MASTER_HANDOFF.md` - Project state and known issues
+4. Get the deployment URLs (Railway):
+   - Frontend: `https://blissful-quietude-production.up.railway.app`
+   - Backend: `https://proaktiv-dokument-hub-production.up.railway.app`
 
-2. Get the deployment URLs:
-   - Railway: Check Railway dashboard for backend URL
-   - Vercel: Check Vercel dashboard for frontend URL
-
-3. Run health checks using browser tools:
+5. Run health checks using browser tools:
    - Navigate to /api/health
    - Check response status
 
-4. Test frontend:
-   - Navigate to Vercel URL
+6. Test frontend:
+   - Navigate to Railway frontend URL
    - Take screenshots
    - Check console for errors
 
-5. Report results in markdown table format
+7. Report results in markdown table format
 
 ## Quick Checklist
 - [ ] Backend /api/health returns 200
 - [ ] Frontend dashboard loads
 - [ ] No console errors
 - [ ] Templates display correctly
+- [ ] Template detail modal opens and preview fills height
+- [ ] List view grouping + pagination works (Origin sections)
 
 Begin QA verification now.

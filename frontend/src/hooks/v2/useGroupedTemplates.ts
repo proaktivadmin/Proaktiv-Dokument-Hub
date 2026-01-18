@@ -105,6 +105,7 @@ export function useGroupedTemplates(
   filters?: Partial<TemplateFilterState>
 ): UseGroupedTemplatesResult {
   const [templates, setTemplates] = useState<TemplateWithMetadata[]>([]);
+  const [totalTemplates, setTotalTemplates] = useState(0);
   const [collapsedShelves, setCollapsedShelves] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -114,17 +115,33 @@ export function useGroupedTemplates(
     setError(null);
 
     try {
-      // Fetch all templates (we'll group client-side)
-      const response = await templateApi.list({
+      const perPage = 100;
+      const baseParams = {
         status: filters?.status || undefined,
         search: filters?.search || undefined,
         category_id: filters?.category_id || undefined,
         receiver: filters?.receiver || undefined,
-        per_page: 100, // Get all for grouping
-      });
+        per_page: perPage,
+      };
+
+      const response = await templateApi.list({ ...baseParams, page: 1 });
+      const totalPages = response.pagination?.total_pages ?? 1;
+
+      let allTemplates = [...response.templates];
+      if (totalPages > 1) {
+        const pageResponses = await Promise.all(
+          Array.from({ length: totalPages - 1 }, (_, idx) => {
+            const page = idx + 2;
+            return templateApi.list({ ...baseParams, page });
+          })
+        );
+        pageResponses.forEach((pageResponse) => {
+          allTemplates = allTemplates.concat(pageResponse.templates);
+        });
+      }
 
       // Transform to TemplateWithMetadata (add default V2 fields)
-      const templatesWithMetadata: TemplateWithMetadata[] = response.templates.map((t) => ({
+      const templatesWithMetadata: TemplateWithMetadata[] = allTemplates.map((t) => ({
         ...t,
         attachments: t.attachments ?? [],
         tags: t.tags ?? [],
@@ -148,6 +165,7 @@ export function useGroupedTemplates(
       }));
 
       setTemplates(templatesWithMetadata);
+      setTotalTemplates(response.pagination?.total ?? templatesWithMetadata.length);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to fetch templates");
     } finally {
@@ -222,7 +240,7 @@ export function useGroupedTemplates(
 
   return {
     shelves,
-    totalTemplates: templates.length,
+    totalTemplates,
     isLoading,
     error,
     toggleCollapse,

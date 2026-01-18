@@ -1,21 +1,26 @@
-# Proaktiv Dokument Hub V2.8
+# Vitec Next Admin Hub (Proaktiv Dokument Hub)
 
 A modern document template management system for Norwegian real estate brokers, integrated with Vitec Next.
 
-![Version](https://img.shields.io/badge/version-2.8-blue)
+![Version](https://img.shields.io/badge/version-3.x-blue)
 ![Stack](https://img.shields.io/badge/stack-Next.js%20%2B%20FastAPI-green)
 ![Status](https://img.shields.io/badge/status-production-success)
 ![Platform](https://img.shields.io/badge/platform-Railway-purple)
 
 ---
 
-## ✨ What's New in V2.8
+## ✨ What’s New (2026-01-18)
 
-### Railway Migration Complete
-The application has been migrated from Azure Container Apps to **Railway**, providing:
-- Faster deployments (push to deploy)
-- Simpler infrastructure management
-- Template content stored in PostgreSQL database
+### Template workflow parity with Vitec Next
+- **Origin marker** (Vitec Next vs Kundemal) and list grouping
+- **Attachments** (paperclip count + names) in list/cards/detail
+- **Kategorisering fields** available in the Settings UI (type/receiver/phases/etc.)
+- **Pagination fixes** in list view
+
+### Import tooling for Vitec Next templates
+- `backend/scripts/import_vitec_next_export.py`
+- `docs/vitec-next-export-format.md`
+- `docs/vitec-next-mcp-scrape-and-import.md`
 
 ---
 
@@ -28,7 +33,7 @@ The application has been migrated from Azure Container Apps to **Railway**, prov
 | **Smart Sanitizer** | Strip inline CSS and normalize HTML for Vitec compatibility |
 | **Merge Field Library** | 142+ flettekoder with one-click copy |
 | **Code Patterns** | Pre-built Vitec logic snippets (if/else, loops) |
-| **Template Settings** | Configure margins, headers, footers, and themes |
+| **Template Settings** | Configure margins, headers/footers, and Vitec “Kategorisering” fields |
 | **Variable Simulator** | Test documents with sample data before deployment |
 
 ---
@@ -156,17 +161,6 @@ Templates use a custom merge field syntax compatible with Vitec Next:
 
 ---
 
-## 📊 Current Status
-
-| Metric | Value |
-|--------|-------|
-| Templates | 44 |
-| Merge Fields | 142 |
-| Code Patterns | 10 |
-| Categories | 11 |
-
----
-
 ## 🚀 Deployment
 
 The app deploys automatically to Railway when you push to the `main` branch.
@@ -191,6 +185,7 @@ Frontend requires:
 
 - [CLAUDE.md](CLAUDE.md) - Project conventions for AI agents
 - [.cursor/active_context.md](.cursor/active_context.md) - Current project status
+- [docs/vitec-next-mcp-scrape-and-import.md](docs/vitec-next-mcp-scrape-and-import.md) - Vitec export + import workflow
 
 ---
 
@@ -206,7 +201,3 @@ Frontend requires:
 ## 📄 License
 
 Proprietary - Proaktiv Eiendomsmegling AS
-
----
-
-*Built with ❤️ for Norwegian real estate professionals*

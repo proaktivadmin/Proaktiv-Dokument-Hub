@@ -23,7 +23,8 @@ export function useEmployees(params?: EmployeeListParams) {
     } finally {
       setIsLoading(false);
     }
-  }, [params?.office_id, JSON.stringify(params?.status), params?.skip, params?.limit]);
+  }, [params?.office_id, JSON.stringify(params?.status), params?.role, params?.search, params?.skip, params?.limit]);
+
 
   useEffect(() => {
     fetch();
@@ -45,14 +46,14 @@ export function useEmployees(params?: EmployeeListParams) {
     inactive: byStatus.inactive?.length || 0,
   };
 
-  return { 
-    employees, 
+  return {
+    employees,
     total,
     byStatus,
     statusCounts,
-    isLoading, 
-    error, 
-    refetch: fetch 
+    isLoading,
+    error,
+    refetch: fetch
   };
 }
 

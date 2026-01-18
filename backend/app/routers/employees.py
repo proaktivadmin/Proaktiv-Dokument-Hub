@@ -6,6 +6,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional, List
 from uuid import UUID
+from urllib.parse import quote
+
 
 from app.database import get_db
 from app.services.employee_service import EmployeeService
@@ -35,6 +37,8 @@ def _to_employee_with_office(employee) -> EmployeeWithOffice:
         phone=employee.phone,
         homepage_profile_url=employee.homepage_profile_url,
         linkedin_url=employee.linkedin_url,
+        sharepoint_folder_url=employee.sharepoint_folder_url,
+        system_roles=employee.system_roles or [],
         status=employee.status,
         start_date=employee.start_date,
         end_date=employee.end_date,
@@ -54,10 +58,13 @@ def _to_employee_with_office(employee) -> EmployeeWithOffice:
     )
 
 
+
 @router.get("", response_model=EmployeeListResponse)
 async def list_employees(
     office_id: Optional[UUID] = Query(None, description="Filter by office"),
     status: Optional[List[str]] = Query(None, description="Filter by status(es)"),
+    role: Optional[str] = Query(None, description="Filter by Vitec system role"),
+    search: Optional[str] = Query(None, description="Search by name or email"),
     skip: int = Query(0, ge=0, description="Offset for pagination"),
     limit: int = Query(100, ge=1, le=500, description="Max results"),
     db: AsyncSession = Depends(get_db),
@@ -65,16 +72,20 @@ async def list_employees(
     """
     List all employees with optional filtering.
     
-    Status can be: active, onboarding, offboarding, inactive.
-    Multiple statuses can be provided.
+    - **status**: active, onboarding, offboarding, inactive
+    - **role**: Vitec Next role (eiendomsmegler, superbruker, etc.)
+    - **search**: Partial match on name or email
     """
     employees, total = await EmployeeService.list(
         db,
         office_id=office_id,
         status=status,
+        role=role,
+        search=search,
         skip=skip,
         limit=limit,
     )
+
     
     items = [_to_employee_with_office(e) for e in employees]
     
@@ -101,6 +112,51 @@ async def create_employee(
     # Reload with office relationship
     employee = await EmployeeService.get_by_id(db, employee.id)
     return _to_employee_with_office(employee)
+
+
+@router.get("/email-group")
+async def get_email_group(
+    office_id: Optional[UUID] = Query(None, description="Filter by office"),
+    status: Optional[List[str]] = Query(None, description="Filter by status(es)"),
+    role: Optional[str] = Query(None, description="Filter by Vitec system role"),
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Generate email group from filtered employees.
+    
+    Returns:
+    - emails: List of email addresses
+    - mailto_link: Ready-to-use mailto: URL
+    - count: Number of recipients
+    """
+    employees, _ = await EmployeeService.list(
+        db,
+        office_id=office_id,
+        status=status or ["active"],  # Default to active employees
+        role=role,
+        skip=0,
+        limit=500,  # Safety limit
+    )
+    
+    # Extract valid emails
+    emails = [e.email for e in employees if e.email]
+    
+    if not emails:
+        return {
+            "emails": [],
+            "mailto_link": None,
+            "count": 0,
+            "message": "No employees with email addresses found",
+        }
+    
+    # Generate mailto link (semicolon separated for Outlook compatibility)
+    mailto_link = f"mailto:{quote(';'.join(emails))}"
+    
+    return {
+        "emails": emails,
+        "mailto_link": mailto_link,
+        "count": len(emails),
+    }
 
 
 @router.get("/{employee_id}", response_model=EmployeeWithOffice)
@@ -199,3 +255,4 @@ async def get_offboarding_due(
         "count": len(employees),
         "employees": [_to_employee_with_office(e) for e in employees],
     }
+

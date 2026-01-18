@@ -110,6 +110,12 @@ from app.schemas.layout_partial_version import (
     LayoutPartialDefaultWithDetails,
     LayoutPartialDefaultListResponse,
 )
+from app.schemas.firecrawl import (
+    FirecrawlScrapeRequest,
+    FirecrawlScrapeBase,
+    FirecrawlScrapeDetail,
+    FirecrawlScrapeListResponse,
+)
 
 __all__ = [
     # Merge Field
@@ -204,4 +210,9 @@ __all__ = [
     "LayoutPartialDefaultResponse",
     "LayoutPartialDefaultWithDetails",
     "LayoutPartialDefaultListResponse",
+    # Firecrawl
+    "FirecrawlScrapeRequest",
+    "FirecrawlScrapeBase",
+    "FirecrawlScrapeDetail",
+    "FirecrawlScrapeListResponse",
 ]

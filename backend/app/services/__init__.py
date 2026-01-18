@@ -19,6 +19,7 @@ from app.services.layout_partial_version_service import (
     LayoutPartialVersionService,
     LayoutPartialDefaultService,
 )
+from app.services.firecrawl_service import FirecrawlService
 
 __all__ = [
     # V2 Services
@@ -41,4 +42,5 @@ __all__ = [
     "OfficeTerritoryService",
     "LayoutPartialVersionService",
     "LayoutPartialDefaultService",
+    "FirecrawlService",
 ]

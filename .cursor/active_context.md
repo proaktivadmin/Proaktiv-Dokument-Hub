@@ -1,50 +1,65 @@
 # ACTIVE CONTEXT & ROADMAP
+> **Workflow Rule:** Follow `.cursor/workflow_guide.md`. Update this file *before* coding.
 
-## 2026-01-18 (LATEST UPDATES) — FRONTEND / UX / NAV
 
-### Shipped Today ✅
-- ✅ **Rebrand**: App is now **Vitec Next Admin Hub** (header, login, metadata, backend `APP_NAME`)
-- ✅ **Logo**: Lily mark (same as favicon) rendered in `#272630` via CSS mask in header + login
-- ✅ **Navigation cleanup**
-  - **Dokumenter** dropdown: Maler, Kategorier, Mottakere
-  - **Selskap** dropdown: Kontorer, Ansatte, **Filer**, **Markedsområder**
-- ✅ **Clickable linking**
-  - Categories and receiver types are clickable and deep-link to `/templates` filtered view
-  - `/templates` supports `?category=<uuid>` and `?receiver=<name>` with filter chips
-- ✅ **Receiver filter support**
-  - Backend: `/api/templates?receiver=...` (matches primary + extra receivers, normalizes diacritics)
-- ✅ **Edit / New / Upload dialogs**
-  - Settings now available from **Rediger** (no need to open template first)
-  - “Avanserte innstillinger” in **Ny mal** and **Last opp fil** uses the same settings UI
-- ✅ **Categories icon consistency**
-  - Removed emojis, standardized to Lucide icons via `frontend/src/lib/category-icons.ts`
-- ✅ **Dashboard polish**
-  - Cleaner top (removed “Dashboard” heading/description)
-  - Neutral palette for cards/icons/tags; “archived” translated to **Arkivert**
-- ✅ **Markedsområder page added**: `/territories`
-  - Stats + layer toggles + placeholder map (real heatmap pending geometry dataset)
-- ✅ **Postal code sync (Bring)**
-  - Script added: `backend/scripts/sync_postal_codes.py`
-  - Existing endpoint: `POST /api/postal-codes/sync` (yearly manual update)
+## 2026-01-18 (LATEST) — VITEC TEMPLATE UX + DEPLOY STABILITY
+
+### Shipped ✅ (on `main`)
+- ✅ **Rebrand**: App name/UX aligned to **Vitec Next Admin Hub** (header + login + metadata)
+- ✅ **Templates UX parity**
+  - **Origin grouping** in list view (Vitec Next vs Kundemal)
+  - **Pagination fixed** (working next/prev; increased `per_page` where appropriate)
+  - **Attachments** shown (paperclip count + names) and detail view refetches `/templates/{id}` so it stays accurate
+  - **Card view**: larger previews (fewer per row), cleaned overlays, channel badge moved to bottom row
+- ✅ **“Kategorisering” fields exposed in Settings UI**
+  - `template_type`, `receiver_type`, `receiver`, `extra_receivers`
+  - `phases`, `assignment_types`, `ownership_types`, `departments`
+  - Wired through: detail sheet + edit dialog + upload + new template
+- ✅ **Dashboard**: “Vitec Malbibliotek Status” widget moved above “Nylig opplastet” + “Kategorier” and refetches after uploads
+- ✅ **Vitec Next import tooling + docs**
+  - Script: `backend/scripts/import_vitec_next_export.py`
+  - Docs: `docs/vitec-next-export-format.md`, `docs/vitec-next-mcp-scrape-and-import.md`
+- ✅ **Railway frontend build fixes**
+  - Treat Vitec receiver values as free-form strings (typing)
+  - Tighten status filter typing to `TemplateStatus`
 
 ### Known Gaps / Caveats ⚠️
-- **Territory heatmap**: backend currently returns placeholder geometry; real map needs postal-code polygons dataset
-- **Local Windows venv**: `pip install -r backend/requirements.txt` may fail if Python version lacks `psycopg2-binary` wheels; easiest is running scripts inside Docker
+- **Next.js warning**: `next@14.1.0` prints a security advisory warning during build; plan an upgrade window
+- **Inventory stats can show 0 Vitec templates** until the Vitec registry is seeded/imported
+- **WebDAV**: directory listing still needs server-side `PROPFIND` enabled
 
 ### “Next Agent” — Append Below ⬇️
 <!-- NEXT_AGENT_NOTES_START -->
+
+### QA PASS (LOCALHOST, 2026-01-18)
+- Backend endpoints OK: `/api/health`, `/api/dashboard/stats`, `/api/templates`, `/api/templates/{id}`, `/api/categories`, `/api/merge-fields`, `/api/employees` (empty), `/api/offices`, `/api/assets`, `/api/territories` (empty).
+- Backend gaps: `/api/ping` returns 404; `/api/employees/email-group` returns 422 because `/email-group` is shadowed by `/{employee_id}` route.
+- Frontend OK: Dashboard loads; Templates list + Hylle view render; Template detail preview loads; Settings dialog shows "Kategorisering" fields; Employees/Offices/Assets/Mottakere pages render empty states.
+- Frontend issues:
+  - `/territories` shows "Request failed with status code 405" and console logs 405 at `/api/territories/stats`.
+  - `/templates?receiver=Selger` shows CORS errors (no `Access-Control-Allow-Origin`) and "Nettverksfeil" banner.
+  - Attachments badges include invalid values like `"0, False"` in templates list (data quality from metadata extraction).
+
+### Fixes Started (2026-01-18)
+- Plan: add `/api/ping`, add `/api/territories/stats`, move `/employees/email-group` above ID routes, and harden receiver filtering to avoid 500s in local dev.
+
+### Fixes Completed (2026-01-18)
+- Added `/api/ping`, `/api/territories/stats`, and reordered `/employees/email-group` to avoid UUID shadowing.
+- Receiver filter now returns 200; CORS/UI errors on `/templates?receiver=Selger` cleared.
+- `/territories` no longer shows 405 in the UI.
+- Template settings update no longer 500s; audit log now serializes settings payload safely.
+- Shelf view now loads all pages (shows full 259 templates instead of first 100).
 
 <!-- (leave space for next agent’s updates) -->
 
 <!-- NEXT_AGENT_NOTES_END -->
 
 ## PROJECT STATUS
-- **Phase:** 3.0 (Office & Employee Hub)
-- **Current Sprint:** V3.0 Full Feature Implementation
+- **Phase:** V3.1 Verification (polish + QA)
+- **Current Sprint:** Stabilize templates workflow + verify Company Hub pages
 - **Architecture:** Document-first, shelf grouping, 4-tab viewer
-- **Last Milestone:** ✅ V2.9 Vitec Integration Complete (2026-01-17)
-- **Current Milestone:** V3.0 - Office/Employee Hub, Company Assets, Territory Map
-- **Agent Pipeline:** ✅ Backend Spec → ✅ Frontend Spec → ⏳ Builder
+- **Deploy:** Railway (frontend + backend), deploys on push to `main`
+
 
 ## V2.9 VITEC INTEGRATION (2026-01-17) - IN PROGRESS
 
@@ -190,24 +205,30 @@
 2. Railway auto-deploys both services
 3. Migrations run automatically via start-prod.sh
 
-## NEXT STEPS (V3.0)
+## NEXT STEPS (V3.1)
 
 ### Specs Completed
 - ✅ Backend Spec: `.cursor/specs/backend_spec.md` (2026-01-17)
 - ✅ Frontend Spec: `.cursor/specs/frontend_spec.md` (2026-01-17)
-- ⏳ Builder: Ready to start implementation
+- ✅ Builder: Implementation complete (2026-01-18)
 
-### V3.0 Features (In Order)
-1. [ ] Seed 97 Vitec categories with vitec_id
-2. [ ] Office model + CRUD + UI
-3. [ ] Employee model + lifecycle + UI  
-4. [ ] Company Assets with scoping
-5. [ ] External Listings (third-party tracking)
-6. [ ] Checklists (onboarding/offboarding)
-7. [ ] Territory Map (postal code heatmap)
-8. [ ] System template versioning + defaults
-9. [ ] Bulk operations for templates
-10. [ ] Template version history UI
+### V3.0 Verification (Immediate)
+1. [ ] **Verify Database**: Ensure all tables created and relations working.
+2. [ ] **Verify Seeding**: Run `seed_vitec_categories.py` and check results.
+3. [ ] **Verify UI**: Test Office/Employee CRUD manually.
+4. [ ] **Territory Map**: Validate postal code sync and map rendering.
+
+### V3.0 Features (Implemented - Ready for QA)
+1. [x] Seed 97 Vitec categories with vitec_id
+2. [x] Office model + CRUD + UI
+3. [x] Employee model + lifecycle + UI  
+4. [x] Company Assets with scoping
+5. [x] External Listings (third-party tracking)
+6. [x] Checklists (onboarding/offboarding)
+7. [x] Territory Map (postal code heatmap)
+8. [x] System template versioning + defaults
+9. [ ] (Deferred) Bulk operations for templates
+10. [ ] (Deferred) Template version history UI
 
 ### Future Features
 - [ ] Custom domain setup (dokumenthub.proaktiv.no)

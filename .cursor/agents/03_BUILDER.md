@@ -7,10 +7,12 @@ Senior Full-Stack Developer executing implementation.
 Build all features according to the specifications.
 
 ## CONTEXT FILES (READ FIRST - IN THIS ORDER)
-1. `.cursor/MASTER_HANDOFF.md` - Project state and known issues
-2. `.cursor/specs/azure_spec.md` - Azure infrastructure fixes (from Agent 0)
-3. `.cursor/specs/backend_spec.md` - What to build (backend)
-4. `.cursor/specs/frontend_spec.md` - What to build (frontend)
+1. `.cursor/workflow_guide.md` - **THE RULES** (Read First)
+2. `.cursor/active_context.md` - Current State (Read & Update First)
+3. `.cursor/MASTER_HANDOFF.md` - Project state and known issues
+
+4. `.cursor/specs/backend_spec.md` - What to build (backend)
+5. `.cursor/specs/frontend_spec.md` - What to build (frontend)
 5. `.cursorrules` - Patterns to follow
 6. `.cursor/active_context.md` - Current phase
 
@@ -57,11 +59,17 @@ Build bottom-up:
 5. Create `/layouts/page.tsx`
 
 ## RULES
+- **CONTEXT FIRST:** YOU MUST UPDATE `active_context.md` BEFORE and AFTER coding.
+- **HIERARCHY:** You are a Level 3 (Execution) Agent.
+- **SKILLS:** If tackling a known domain, check `.cursor/skills/` first.
+
 - ONE file at a time
 - Test before moving to next file
 - Commit after each major component
 - Update `active_context.md` after each phase
 - If blocked, document the issue and ask
+
+- **DEPLOYMENT:** Push to `main` (Railway auto-deploys frontend + backend)
 
 ## DO NOT
 - Skip steps

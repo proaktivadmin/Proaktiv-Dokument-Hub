@@ -56,8 +56,11 @@ export interface Employee {
   phone: string | null;
   homepage_profile_url: string | null;
   linkedin_url: string | null;
+  sharepoint_folder_url: string | null;
+  system_roles: string[];
   status: EmployeeStatus;
   start_date: string | null; // ISO date
+
   end_date: string | null;
   hide_from_homepage_date: string | null;
   delete_data_date: string | null;
@@ -97,13 +100,13 @@ export interface EmployeeListResponse {
 // External Listings Types
 // =============================================================================
 
-export type ListingSource = 
-  | 'anbudstjenester' 
-  | 'finn' 
-  | 'nummeropplysning' 
-  | '1881' 
-  | 'gulesider' 
-  | 'google' 
+export type ListingSource =
+  | 'anbudstjenester'
+  | 'finn'
+  | 'nummeropplysning'
+  | '1881'
+  | 'gulesider'
+  | 'google'
   | 'other';
 
 export type ListingStatus = 'verified' | 'needs_update' | 'pending_check' | 'removed';
@@ -129,7 +132,7 @@ export interface ExternalListing {
 }
 
 export type ExternalListingCreatePayload = Omit<
-  ExternalListing, 
+  ExternalListing,
   'id' | 'created_at' | 'updated_at' | 'last_verified_at' | 'last_verified_by' | 'source_display_name' | 'owner_type' | 'is_verified' | 'needs_attention'
 >;
 

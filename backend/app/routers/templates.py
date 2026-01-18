@@ -362,6 +362,13 @@ async def update_template(
         **updates
     )
     
+    # Prepare log details (serialize non-JSON types)
+    log_details = updates.copy()
+    if "category_ids" in log_details and log_details["category_ids"]:
+        log_details["category_ids"] = [str(uid) for uid in log_details["category_ids"]]
+    if "published_at" in log_details and log_details["published_at"]:
+        log_details["published_at"] = log_details["published_at"].isoformat()
+
     # Audit log
     await AuditService.log(
         db,
@@ -369,7 +376,7 @@ async def update_template(
         entity_id=template.id,
         action="updated",
         user_email=user["email"],
-        details=updates
+        details=log_details
     )
     
     return {
@@ -425,12 +432,29 @@ async def download_template(
         user_email=user["email"]
     )
     
+    # Handle Vitec Next templates (internal content)
+    if template.azure_blob_url and template.azure_blob_url.startswith("vitec-next://"):
+        if template.content and template.file_type in ["html", "htm"]:
+            import base64
+            # Return content as Data URI
+            content_bytes = template.content.encode("utf-8")
+            b64_content = base64.b64encode(content_bytes).decode("ascii")
+            return {
+                "download_url": f"data:text/html;base64,{b64_content}",
+                "file_name": template.file_name,
+                "expires_at": None
+            }
+        elif not template.content:
+             # If no content is found (should not happen for HTML based on check), fallback or error
+             logger.warning(f"Vitec template {template.id} has no content in DB.")
+
     # TODO: Generate SAS URL for Azure Blob Storage
     return {
         "download_url": template.azure_blob_url,
         "file_name": template.file_name,
         "expires_at": datetime.now(timezone.utc).isoformat()
     }
+
 
 
 @router.get("/{template_id}/content")
@@ -528,7 +552,7 @@ async def update_template_settings(
     user: dict = Depends(get_current_user)
 ):
     """Update template Vitec metadata settings."""
-    template = await TemplateSettingsService.update_settings(
+    await TemplateSettingsService.update_settings(
         db,
         template_id,
         updated_by=user["email"],
@@ -542,10 +566,11 @@ async def update_template_settings(
         entity_id=template_id,
         action="settings_updated",
         user_email=user["email"],
-        details=body.model_dump(exclude_unset=True)
+        details=body.model_dump(exclude_unset=True, mode="json")
     )
     
-    return TemplateSettingsResponse.model_validate(template)
+    settings = await TemplateSettingsService.get_settings(db, template_id)
+    return TemplateSettingsResponse(**settings)
 
 
 @router.get("/{template_id}/settings", response_model=TemplateSettingsResponse)

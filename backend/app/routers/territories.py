@@ -3,6 +3,7 @@ Territories Router - API endpoints for postal codes and office territories.
 """
 
 from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional, List
 from uuid import UUID
@@ -11,6 +12,7 @@ import io
 
 from app.database import get_db
 from app.services.territory_service import PostalCodeService, OfficeTerritoryService
+from app.models.office_territory import OfficeTerritory
 from app.services.office_service import OfficeService
 from app.schemas.territory import (
     PostalCodeResponse,
@@ -170,6 +172,49 @@ async def get_available_layers(
     """
     sources = await OfficeTerritoryService.get_available_sources(db)
     return {"layers": sources}
+
+
+@router.get("/territories/stats")
+async def get_territory_stats(
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Get territory summary stats for dashboard cards.
+    """
+    total = await db.scalar(
+        select(func.count()).select_from(OfficeTerritory)
+    ) or 0
+
+    by_source = {
+        "vitec_next": 0,
+        "finn": 0,
+        "anbudstjenester": 0,
+        "homepage": 0,
+        "other": 0,
+    }
+    by_source_result = await db.execute(
+        select(OfficeTerritory.source, func.count())
+        .group_by(OfficeTerritory.source)
+    )
+    for source, count in by_source_result.all():
+        by_source[source] = count
+
+    offices_with_territories = await db.scalar(
+        select(func.count(func.distinct(OfficeTerritory.office_id)))
+    ) or 0
+
+    blacklisted_count = await db.scalar(
+        select(func.count())
+        .select_from(OfficeTerritory)
+        .where(OfficeTerritory.is_blacklisted == True)
+    ) or 0
+
+    return {
+        "total_territories": total,
+        "by_source": by_source,
+        "offices_with_territories": offices_with_territories,
+        "blacklisted_count": blacklisted_count,
+    }
 
 
 @router.post("/territories", response_model=OfficeTerritoryWithDetails, status_code=201)

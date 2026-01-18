@@ -5,6 +5,8 @@ Represents a company employee with lifecycle management.
 """
 
 from sqlalchemy import Column, String, Text, Boolean, DateTime, Date, ForeignKey, Index
+from sqlalchemy.dialects.postgresql import JSONB
+
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from sqlalchemy.sql import func
 from datetime import datetime, date
@@ -49,6 +51,14 @@ class Employee(Base):
     last_name: Mapped[str] = mapped_column(String(100), nullable=False)
     title: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
     
+    # Vitec Next System Roles (e.g., eiendomsmegler, superbruker, daglig_leder)
+    system_roles: Mapped[Optional[List[str]]] = mapped_column(
+        JSONB,
+        nullable=True,
+        default=list
+    )
+
+    
     # Contact
     email: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     phone: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
@@ -56,6 +66,10 @@ class Employee(Base):
     # Online Presence
     homepage_profile_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     linkedin_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    
+    # Microsoft 365 Integration
+    sharepoint_folder_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+
     
     # Employment Lifecycle
     status: Mapped[str] = mapped_column(
@@ -152,3 +166,10 @@ class Employee(Base):
         if not self.hide_from_homepage_date:
             return False
         return date.today() >= self.hide_from_homepage_date
+    
+    def has_role(self, role: str) -> bool:
+        """Check if employee has a specific Vitec Next role."""
+        if not self.system_roles:
+            return False
+        return role.lower() in [r.lower() for r in self.system_roles]
+

@@ -29,6 +29,9 @@ class EmployeeBase(BaseModel):
     phone: Optional[str] = Field(None, max_length=50, description="Phone number")
     homepage_profile_url: Optional[str] = Field(None, description="Homepage profile URL")
     linkedin_url: Optional[str] = Field(None, description="LinkedIn profile URL")
+    sharepoint_folder_url: Optional[str] = Field(None, description="SharePoint folder URL")
+    system_roles: Optional[List[str]] = Field(default_factory=list, description="Vitec Next system roles")
+
     status: EmployeeStatus = Field("active", description="Employment status")
     start_date: Optional[date] = Field(None, description="Employment start date")
     end_date: Optional[date] = Field(None, description="Employment end date")
@@ -55,6 +58,9 @@ class EmployeeUpdate(BaseModel):
     phone: Optional[str] = Field(None, max_length=50)
     homepage_profile_url: Optional[str] = None
     linkedin_url: Optional[str] = None
+    sharepoint_folder_url: Optional[str] = None
+    system_roles: Optional[List[str]] = None
+
     status: Optional[EmployeeStatus] = None
     start_date: Optional[date] = None
     end_date: Optional[date] = None

@@ -3,7 +3,7 @@ Template Service - Business logic for template operations.
 """
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func, or_
+from sqlalchemy import select, func, or_, Text, cast
 from sqlalchemy.orm import selectinload
 from typing import Optional, List, Tuple
 from uuid import UUID
@@ -85,6 +85,7 @@ class TemplateService:
         elif category_ids:
             query = query.join(Template.categories).where(Category.id.in_(category_ids))
 
+        receiver_variants = None
         if receiver:
             receiver_normalized = receiver
             try:
@@ -99,9 +100,45 @@ class TemplateService:
                 receiver_normalized = receiver
 
             receiver_variants = {receiver, receiver_normalized}
+
+            try:
+                dialect = db.get_bind().dialect.name
+            except Exception:
+                dialect = None
+
+            if dialect == "sqlite":
+                # SQLite JSON containment is unreliable; filter in Python.
+                sort_column = getattr(Template, sort_by, Template.updated_at)
+                if sort_order == "desc":
+                    query = query.order_by(sort_column.desc())
+                else:
+                    query = query.order_by(sort_column.asc())
+
+                result = await db.execute(query)
+                templates = result.scalars().unique().all()
+
+                import json
+
+                def matches_receiver(template: Template) -> bool:
+                    if template.receiver in receiver_variants:
+                        return True
+                    extra = template.extra_receivers or []
+                    if isinstance(extra, str):
+                        try:
+                            extra = json.loads(extra)
+                        except json.JSONDecodeError:
+                            extra = [extra]
+                    return any(value in receiver_variants for value in extra)
+
+                filtered = [t for t in templates if matches_receiver(t)]
+                total = len(filtered)
+                start = (page - 1) * per_page
+                end = start + per_page
+                return filtered[start:end], total
+
             conditions = [Template.receiver.in_(receiver_variants)]
             for variant in receiver_variants:
-                conditions.append(Template.extra_receivers.contains([variant]))
+                conditions.append(cast(Template.extra_receivers, Text).ilike(f"%{variant}%"))
             query = query.where(or_(*conditions))
         
         # Count total

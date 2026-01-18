@@ -29,10 +29,10 @@ const statusConfig: Record<EmployeeStatus, { label: string; variant: "default" |
   inactive: { label: "Inaktiv", variant: "secondary", className: "" },
 };
 
-export function EmployeeCard({ 
-  employee, 
-  showOffice = false, 
-  onClick, 
+export function EmployeeCard({
+  employee,
+  showOffice = false,
+  onClick,
   onEdit,
   onStartOffboarding,
   onDeactivate,
@@ -40,14 +40,14 @@ export function EmployeeCard({
   const status = statusConfig[employee.status];
 
   return (
-    <Card 
+    <Card
       className="group cursor-pointer hover:shadow-md transition-all duration-200"
       onClick={onClick}
     >
       <CardContent className="p-4">
         <div className="flex items-start gap-3">
           {/* Avatar */}
-          <div 
+          <div
             className="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold shrink-0"
             style={{ backgroundColor: employee.office.color }}
           >
@@ -82,7 +82,7 @@ export function EmployeeCard({
                   )}
                   <DropdownMenuSeparator />
                   {onStartOffboarding && employee.status === "active" && (
-                    <DropdownMenuItem 
+                    <DropdownMenuItem
                       className="text-amber-600"
                       onClick={(e) => { e.stopPropagation(); onStartOffboarding(); }}
                     >
@@ -90,7 +90,7 @@ export function EmployeeCard({
                     </DropdownMenuItem>
                   )}
                   {onDeactivate && (
-                    <DropdownMenuItem 
+                    <DropdownMenuItem
                       className="text-destructive"
                       onClick={(e) => { e.stopPropagation(); onDeactivate(); }}
                     >
@@ -110,6 +110,11 @@ export function EmployeeCard({
                   {employee.office.short_code}
                 </Badge>
               )}
+              {employee.system_roles && employee.system_roles.map((role, idx) => (
+                <Badge key={idx} variant="secondary" className="bg-slate-100 text-slate-700 border-slate-200">
+                  {role}
+                </Badge>
+              ))}
             </div>
 
             {/* Offboarding warning */}
@@ -117,8 +122,8 @@ export function EmployeeCard({
               <div className="flex items-center gap-1.5 mt-2 text-xs text-amber-600">
                 <AlertTriangle className="h-3 w-3" />
                 <span>
-                  {employee.days_until_end <= 0 
-                    ? "Sluttdato passert" 
+                  {employee.days_until_end <= 0
+                    ? "Sluttdato passert"
                     : `${employee.days_until_end} dager igjen`}
                 </span>
               </div>

@@ -7,10 +7,12 @@ Senior Frontend Architect specializing in Next.js 14/React/TypeScript/Tailwind/S
 Transform the V2 Blueprint into implementation-ready frontend specifications.
 
 ## CONTEXT FILES (READ FIRST - IN THIS ORDER)
-1. `.cursor/MASTER_HANDOFF.md` - Project state and known issues
-2. `.cursor/specs/azure_spec.md` - Azure infrastructure fixes (from Agent 0)
-3. `.cursor/specs/backend_spec.md` - Backend specs from Agent 1
-4. `.cursor/plans/v2_architect_blueprint_24f6fc80.plan.md` - THE MASTER BLUEPRINT
+1. `.cursor/workflow_guide.md` - **THE RULES** (Read First)
+2. `.cursor/active_context.md` - Current State (Read & Update First)
+3. `.cursor/MASTER_HANDOFF.md` - Project state and known issues
+
+4. `.cursor/specs/frontend_spec.md` - Current frontend spec (source of truth)
+5. `.cursor/specs/backend_spec.md` - Backend contract (API + schemas)
 5. `frontend/src/types/index.ts` - Existing type patterns
 6. `frontend/src/lib/api.ts` - API wrapper pattern
 7. `frontend/src/components/templates/TemplateDetailSheet.tsx` - Component pattern
@@ -90,7 +92,12 @@ List npm packages to install:
 Create: `.cursor/specs/frontend_spec.md`
 
 ## CONSTRAINTS
+- **CONTEXT FIRST:** Do not generate any specs without verifying `active_context.md` matches reality.
+- **HIERARCHY:** You are a Level 1 (Strategy) -> Level 2 (State) Agent.
+- **SKILLS:** If tackling a known domain, check `.cursor/skills/` first.
+
 - All props must be typed (no `any`)
+
 - Server Components default, `"use client"` only when needed
 - Use existing patterns from codebase
 - Prefer Shadcn components over custom

@@ -1,6 +1,6 @@
 "use client";
 
-import { Users, Plus, Search } from "lucide-react";
+import { Users, Plus, Search, Mail } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,12 @@ interface EmployeeGridProps {
   onEdit?: (employee: EmployeeWithOffice) => void;
   onStartOffboarding?: (employee: EmployeeWithOffice) => void;
   onDeactivate?: (employee: EmployeeWithOffice) => void;
+  currentFilters?: {
+    office_id?: string;
+    role?: string;
+  };
 }
+
 
 export function EmployeeGrid({
   employees,
@@ -28,6 +33,7 @@ export function EmployeeGrid({
   onEdit,
   onStartOffboarding,
   onDeactivate,
+  currentFilters,
 }: EmployeeGridProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -74,11 +80,37 @@ export function EmployeeGrid({
         </div>
 
         {onCreateNew && (
-          <Button onClick={onCreateNew} className="ml-auto">
-            <Plus className="h-4 w-4 mr-2" />
-            Ny ansatt
-          </Button>
+          <div className="flex gap-2 ml-auto">
+            {/* Email Group Button */}
+            <Button
+              variant="outline"
+              onClick={() => {
+                if (currentFilters) {
+                  const params = new URLSearchParams();
+                  if (currentFilters.office_id) params.append('office_id', currentFilters.office_id);
+                  if (currentFilters.role) params.append('role', currentFilters.role);
+
+                  // Direct fetch to trigger download/mailto
+                  fetch(`/api/employees/email-group?${params.toString()}`)
+                    .then(res => res.json())
+                    .then(data => {
+                      if (data.mailto_link) window.location.href = data.mailto_link;
+                    })
+                    .catch(err => console.error("Failed to get email group", err));
+                }
+              }}
+            >
+              <Mail className="h-4 w-4 mr-2" />
+              E-postliste
+            </Button>
+
+            <Button onClick={onCreateNew}>
+              <Plus className="h-4 w-4 mr-2" />
+              Ny ansatt
+            </Button>
+          </div>
         )}
+
       </div>
 
       {/* Grid */}

@@ -3,7 +3,9 @@ Employee Service - Business logic for employee management.
 """
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func
+from sqlalchemy import select, func, or_
+from sqlalchemy.dialects.postgresql import JSONB
+
 from sqlalchemy.orm import selectinload
 from typing import Optional, List
 from uuid import UUID
@@ -26,6 +28,8 @@ class EmployeeService:
         *,
         office_id: Optional[UUID] = None,
         status: Optional[List[str]] = None,
+        role: Optional[str] = None,
+        search: Optional[str] = None,
         skip: int = 0,
         limit: int = 100,
     ) -> tuple[List[Employee], int]:
@@ -36,6 +40,8 @@ class EmployeeService:
             db: Database session
             office_id: Filter by office
             status: Filter by status(es)
+            role: Filter by Vitec system role
+            search: Search by name or email
             skip: Offset for pagination
             limit: Max results
             
@@ -54,6 +60,23 @@ class EmployeeService:
             query = query.where(Employee.status.in_(status))
             count_query = count_query.where(Employee.status.in_(status))
         
+        # Role filter: check if role is in system_roles JSONB array
+        if role:
+            role_filter = Employee.system_roles.cast(JSONB).contains([role.lower()])
+            query = query.where(role_filter)
+            count_query = count_query.where(role_filter)
+        
+        # Search filter: name or email
+        if search:
+            search_term = f"%{search.lower()}%"
+            search_filter = or_(
+                func.lower(Employee.first_name).ilike(search_term),
+                func.lower(Employee.last_name).ilike(search_term),
+                func.lower(Employee.email).ilike(search_term),
+            )
+            query = query.where(search_filter)
+            count_query = count_query.where(search_filter)
+        
         # Execute count
         count_result = await db.execute(count_query)
         total = count_result.scalar() or 0
@@ -64,6 +87,7 @@ class EmployeeService:
         employees = list(result.scalars().all())
         
         return employees, total
+
     
     @staticmethod
     async def get_by_id(db: AsyncSession, employee_id: UUID) -> Optional[Employee]:

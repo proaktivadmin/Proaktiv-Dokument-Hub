@@ -57,6 +57,11 @@ class Office(Base):
     instagram_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     linkedin_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     
+    # Microsoft 365 Integration
+    teams_group_id: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    sharepoint_folder_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+
+    
     # Territory Map Color (hex)
     color: Mapped[str] = mapped_column(String(7), nullable=False, default="#4A90D9")
     
