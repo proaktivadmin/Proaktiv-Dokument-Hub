@@ -24,6 +24,9 @@ dist/
 .idea/
 .cursor/
 
+# API tooling secrets (Bruno environments contain credentials)
+api/environments/
+
 # OS
 .DS_Store
 Thumbs.db

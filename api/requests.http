@@ -1,0 +1,70 @@
+### REST Client requests for Proaktiv Dokument Hub
+### Secrets are loaded from .vscode/settings.json (gitignored)
+### See: https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+
+@hubBaseUrl = https://proatest.qa.vitecnext.no
+@installationId = MSPROATEST
+@backendUrl = http://localhost:8000
+
+# For secrets, add to .vscode/settings.json (create if missing):
+# {
+#   "rest-client.environmentVariables": {
+#     "$shared": {},
+#     "qa": {
+#       "hubProductLogin": "YOUR_PRODUCT_LOGIN",
+#       "hubAccessKey": "YOUR_ACCESS_KEY"
+#     }
+#   }
+# }
+
+### ──────────────────────────────────────────────
+### VITEC HUB API
+### ──────────────────────────────────────────────
+
+### Verify Product Access
+# @name accountMethods
+GET {{hubBaseUrl}}/Account/Methods
+Authorization: Basic {{hubProductLogin}}:{{hubAccessKey}}
+
+###
+
+### Get Departments (Offices)
+# @name departments
+GET {{hubBaseUrl}}/{{installationId}}/Departments
+Authorization: Basic {{hubProductLogin}}:{{hubAccessKey}}
+
+###
+
+### Get Employees
+# @name employees
+GET {{hubBaseUrl}}/{{installationId}}/Employees
+Authorization: Basic {{hubProductLogin}}:{{hubAccessKey}}
+
+###
+
+### ──────────────────────────────────────────────
+### BACKEND API (Local)
+### ──────────────────────────────────────────────
+
+### Sync Offices from Vitec Hub
+POST {{backendUrl}}/api/offices/sync
+
+###
+
+### Sync Employees from Vitec Hub
+POST {{backendUrl}}/api/employees/sync
+
+###
+
+### List all Offices
+GET {{backendUrl}}/api/offices
+
+###
+
+### List all Employees
+GET {{backendUrl}}/api/employees
+
+###
+
+### Health Check
+GET {{backendUrl}}/api/health

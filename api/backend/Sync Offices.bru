@@ -1,0 +1,15 @@
+meta {
+  name: Sync Offices
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{backendUrl}}/api/offices/sync
+  body: none
+  auth: none
+}
+
+docs {
+  Trigger office sync from Vitec Hub to local DB.
+}

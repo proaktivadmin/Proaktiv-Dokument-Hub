@@ -1,0 +1,25 @@
+meta {
+  name: Get Employees
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{hubBaseUrl}}/{{installationId}}/Employees
+  body: none
+  auth: basic
+}
+
+auth:basic {
+  username: {{hubProductLogin}}
+  password: {{HUB_ACCESS_KEY}}
+}
+
+vars:pre-request {
+  HUB_ACCESS_KEY: qawyg9lSc2hqJMp9cgf3DnAL2WVBcJSGKSGnuPa4C9EqNk9HzM7C
+}
+
+docs {
+  Fetch all employees for the installation.
+  Maps to our Employee model.
+}

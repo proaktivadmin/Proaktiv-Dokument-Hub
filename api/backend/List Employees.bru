@@ -1,0 +1,15 @@
+meta {
+  name: List Employees
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{backendUrl}}/api/employees
+  body: none
+  auth: none
+}
+
+docs {
+  List all employees from our database.
+}

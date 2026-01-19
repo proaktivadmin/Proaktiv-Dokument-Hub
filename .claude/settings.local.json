@@ -8,7 +8,11 @@
       "Bash(railway link:*)",
       "Bash(curl:*)",
       "Bash(deploy-all.bat)",
-      "Bash(cmd /c \"deploy-all.bat\")"
+      "Bash(cmd /c \"deploy-all.bat\")",
+      "Bash(git --version:*)",
+      "Bash(where git:*)",
+      "Bash(where:*)",
+      "Bash(dir:*)"
     ]
   }
 }

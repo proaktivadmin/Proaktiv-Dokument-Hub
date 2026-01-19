@@ -1,0 +1,15 @@
+meta {
+  name: Sync Employees
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{backendUrl}}/api/employees/sync
+  body: none
+  auth: none
+}
+
+docs {
+  Trigger employee sync from Vitec Hub to local DB.
+}

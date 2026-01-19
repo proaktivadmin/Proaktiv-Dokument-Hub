@@ -1,0 +1,21 @@
+meta {
+  name: Get Departments
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{hubBaseUrl}}/{{installationId}}/Departments
+  body: none
+  auth: basic
+}
+
+auth:basic {
+  username: {{hubProductLogin}}
+  password: {{hubAccessKey}}
+}
+
+docs {
+  Fetch all offices (departments) for the installation.
+  Maps to our Office model.
+}
