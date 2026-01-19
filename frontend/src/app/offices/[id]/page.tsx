@@ -20,6 +20,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { EmployeeGrid, EmployeeForm } from "@/components/employees";
 import { AssetGallery } from "@/components/assets";
 import { OfficeForm } from "@/components/offices";
@@ -115,51 +116,73 @@ export default function OfficeDetailPage() {
         </BreadcrumbList>
       </Breadcrumb>
 
-      {/* Office Header Card */}
-      <Card className="mb-6 border-l-4" style={{ borderLeftColor: office.color }}>
+      {/* Office Header with Banner */}
+      <Card className="mb-6 overflow-hidden">
+        {/* Banner Image */}
+        {office.profile_image_url ? (
+          <div className="relative h-48 w-full">
+            <img 
+              src={office.profile_image_url} 
+              alt={office.name}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+            
+            {/* Status badge on banner */}
+            <div className="absolute top-4 right-4">
+              <Badge 
+                variant={office.is_active ? "default" : "secondary"}
+                className={office.is_active ? "bg-emerald-500 text-white shadow-lg" : "bg-slate-500 text-white shadow-lg"}
+              >
+                {office.is_active ? "Aktiv" : "Inaktiv"}
+              </Badge>
+            </div>
+          </div>
+        ) : (
+          <div 
+            className="relative h-48 w-full"
+            style={{ backgroundColor: office.color }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
+            <div className="absolute top-4 right-4">
+              <Badge 
+                variant={office.is_active ? "default" : "secondary"}
+                className={office.is_active ? "bg-emerald-500 text-white shadow-lg" : "bg-slate-500 text-white shadow-lg"}
+              >
+                {office.is_active ? "Aktiv" : "Inaktiv"}
+              </Badge>
+            </div>
+          </div>
+        )}
+
         <CardContent className="p-6">
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-            <div className="flex items-start gap-4">
-              {/* Color indicator */}
-              <div 
-                className="w-16 h-16 rounded-lg flex items-center justify-center text-white font-bold text-xl shrink-0"
-                style={{ backgroundColor: office.color }}
-              >
-                {office.short_code}
-              </div>
+            <div className="flex-1">
+              <h1 className="text-3xl font-bold mb-2">{office.name}</h1>
 
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <h1 className="text-2xl font-bold">{office.name}</h1>
-                  <Badge variant={office.is_active ? "default" : "secondary"}>
-                    {office.is_active ? "Aktiv" : "Inaktiv"}
-                  </Badge>
+              {office.city && (
+                <div className="flex items-center gap-1.5 text-muted-foreground mb-3">
+                  <MapPin className="h-4 w-4" />
+                  <span>
+                    {office.street_address && `${office.street_address}, `}
+                    {office.postal_code} {office.city}
+                  </span>
                 </div>
+              )}
 
-                {office.city && (
-                  <div className="flex items-center gap-1.5 text-muted-foreground mb-2">
-                    <MapPin className="h-4 w-4" />
-                    <span>
-                      {office.street_address && `${office.street_address}, `}
-                      {office.postal_code} {office.city}
-                    </span>
-                  </div>
+              <div className="flex items-center gap-4 text-sm">
+                {office.email && (
+                  <a href={`mailto:${office.email}`} className="flex items-center gap-1.5 text-primary hover:underline">
+                    <Mail className="h-4 w-4" />
+                    {office.email}
+                  </a>
                 )}
-
-                <div className="flex items-center gap-4 text-sm">
-                  {office.email && (
-                    <a href={`mailto:${office.email}`} className="flex items-center gap-1.5 text-primary hover:underline">
-                      <Mail className="h-4 w-4" />
-                      {office.email}
-                    </a>
-                  )}
-                  {office.phone && (
-                    <a href={`tel:${office.phone}`} className="flex items-center gap-1.5 text-primary hover:underline">
-                      <Phone className="h-4 w-4" />
-                      {office.phone}
-                    </a>
-                  )}
-                </div>
+                {office.phone && (
+                  <a href={`tel:${office.phone}`} className="flex items-center gap-1.5 text-primary hover:underline">
+                    <Phone className="h-4 w-4" />
+                    {office.phone}
+                  </a>
+                )}
               </div>
             </div>
 
@@ -192,6 +215,51 @@ export default function OfficeDetailPage() {
               <div className="text-sm text-muted-foreground">Postnummer</div>
             </div>
           </div>
+
+          {/* Employee avatars quick access */}
+          {!employeesLoading && employees.length > 0 && (
+            <div className="mt-6 pt-6 border-t">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-medium text-muted-foreground">Ansatte</h3>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    document.querySelector('[value="employees"]')?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+                  }}
+                  className="text-xs"
+                >
+                  Se alle
+                </Button>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {employees.filter(e => e.status === 'active').slice(0, 12).map((emp) => (
+                  <Button
+                    key={emp.id}
+                    variant="ghost"
+                    size="sm"
+                    className="h-auto p-2 hover:bg-accent"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      router.push(`/employees/${emp.id}`);
+                    }}
+                  >
+                    <Avatar className="h-8 w-8 mr-2">
+                      <AvatarImage src={emp.profile_image_url || undefined} alt={emp.full_name} />
+                      <AvatarFallback 
+                        className="text-xs font-medium text-white"
+                        style={{ backgroundColor: office.color }}
+                      >
+                        {emp.initials}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="text-xs">{emp.full_name}</span>
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Online links */}
           {(office.homepage_url || office.google_my_business_url || office.facebook_url || office.linkedin_url) && (

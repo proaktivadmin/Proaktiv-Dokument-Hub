@@ -1,9 +1,10 @@
 "use client";
 
-import { User, Phone, Mail, Calendar, AlertTriangle, MoreVertical } from "lucide-react";
+import { Phone, Mail, AlertTriangle, MoreVertical } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,8 +24,8 @@ interface EmployeeCardProps {
 }
 
 const statusConfig: Record<EmployeeStatus, { label: string; variant: "default" | "secondary" | "destructive" | "outline"; className: string }> = {
-  active: { label: "Aktiv", variant: "default", className: "bg-green-500/10 text-green-600 hover:bg-green-500/20" },
-  onboarding: { label: "Onboarding", variant: "default", className: "bg-blue-500/10 text-blue-600 hover:bg-blue-500/20" },
+  active: { label: "Aktiv", variant: "default", className: "bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20" },
+  onboarding: { label: "Onboarding", variant: "default", className: "bg-sky-500/10 text-sky-600 hover:bg-sky-500/20" },
   offboarding: { label: "Offboarding", variant: "default", className: "bg-amber-500/10 text-amber-600 hover:bg-amber-500/20" },
   inactive: { label: "Inaktiv", variant: "secondary", className: "" },
 };
@@ -46,13 +47,16 @@ export function EmployeeCard({
     >
       <CardContent className="p-4">
         <div className="flex items-start gap-3">
-          {/* Avatar */}
-          <div
-            className="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold shrink-0"
-            style={{ backgroundColor: employee.office.color }}
-          >
-            {employee.initials}
-          </div>
+          {/* Avatar with profile image */}
+          <Avatar className="w-12 h-12 shrink-0">
+            <AvatarImage src={employee.profile_image_url || undefined} alt={employee.full_name} />
+            <AvatarFallback 
+              className="text-white font-semibold"
+              style={{ backgroundColor: employee.office.color }}
+            >
+              {employee.initials}
+            </AvatarFallback>
+          </Avatar>
 
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2">
@@ -101,17 +105,17 @@ export function EmployeeCard({
               </DropdownMenu>
             </div>
 
-            <div className="flex items-center gap-2 mt-2">
+            <div className="flex items-center gap-2 mt-2 flex-wrap">
               <Badge variant={status.variant} className={status.className}>
                 {status.label}
               </Badge>
               {showOffice && (
-                <Badge variant="outline" style={{ borderColor: employee.office.color }}>
+                <Badge variant="outline" style={{ borderColor: employee.office.color, color: employee.office.color }}>
                   {employee.office.short_code}
                 </Badge>
               )}
               {employee.system_roles && employee.system_roles.map((role, idx) => (
-                <Badge key={idx} variant="secondary" className="bg-slate-100 text-slate-700 border-slate-200">
+                <Badge key={idx} variant="secondary" className="bg-slate-100 text-slate-600">
                   {role}
                 </Badge>
               ))}

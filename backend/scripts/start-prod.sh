@@ -55,7 +55,7 @@ def get_sync_database_url(url: str) -> str:
 
 url = os.environ.get("DATABASE_URL", "")
 if not url or url.startswith("sqlite"):
-    print("ℹ️ DATABASE_URL not set or SQLite detected; skipping Alembic version check.")
+    print("INFO: DATABASE_URL not set or SQLite detected; skipping Alembic version check.")
     raise SystemExit(0)
 
 engine = create_engine(get_sync_database_url(url))
@@ -63,39 +63,59 @@ try:
     with engine.connect() as conn:
         rows = [r[0] for r in conn.execute(text("SELECT version_num FROM alembic_version"))]
 except Exception as exc:
-    print(f"ℹ️ Alembic version table not found or not accessible: {exc}")
+    print(f"INFO: Alembic version table not found or not accessible: {exc}")
     raise SystemExit(0)
 
 if len(rows) <= 1:
-    print("✅ Alembic version table has a single head.")
+    print("OK: Alembic version table has a single head.")
     raise SystemExit(0)
+
+print(f"WARNING: Multiple alembic versions found in DB: {rows}")
 
 config = Config(os.path.join(os.getcwd(), "alembic.ini"))
 script = ScriptDirectory.from_config(config)
 
-def is_ancestor(ancestor: str, descendant: str) -> bool:
-    try:
-        for rev in script.iterate_revisions(descendant, ancestor):
-            if rev.revision == ancestor:
-                return True
-    except Exception:
-        return False
-    return False
-
-top = []
-for rev in rows:
-    if not any(rev != other and is_ancestor(rev, other) for other in rows):
-        top.append(rev)
-
-if len(top) != 1:
-    print(f"❌ Multiple independent heads in alembic_version: {rows}. Manual intervention required.")
+# Build a list of all revisions in the current migration chain
+all_revisions = []
+try:
+    for rev in script.walk_revisions():
+        all_revisions.append(rev.revision)
+except Exception as e:
+    print(f"ERROR: Failed to walk revisions: {e}")
     raise SystemExit(1)
 
-keep = top[0]
-print(f"⚠️ Multiple alembic heads found: {rows}. Keeping {keep} and removing others.")
-with engine.begin() as conn:
-    conn.execute(text("DELETE FROM alembic_version WHERE version_num != :keep"), {"keep": keep})
-print("✅ Alembic version table repaired.")
+print(f"INFO: Migration chain has {len(all_revisions)} revisions")
+
+# Filter to only revisions that exist in the current chain
+valid_rows = [r for r in rows if r in all_revisions]
+invalid_rows = [r for r in rows if r not in all_revisions]
+
+if invalid_rows:
+    print(f"WARNING: Removing revisions not in current chain: {invalid_rows}")
+
+if not valid_rows:
+    print("ERROR: No valid revisions found in alembic_version that match current chain")
+    raise SystemExit(1)
+
+# Find which valid revision is furthest along (earliest in walk = latest revision)
+# walk_revisions() returns from newest to oldest
+keep = None
+for rev in all_revisions:
+    if rev in valid_rows:
+        keep = rev
+        break
+
+if not keep:
+    # Fallback: keep the first valid one
+    keep = valid_rows[0]
+
+if len(rows) > 1 or invalid_rows:
+    print(f"INFO: Keeping revision '{keep}' and removing others")
+    with engine.begin() as conn:
+        conn.execute(text("DELETE FROM alembic_version WHERE version_num != :keep"), {"keep": keep})
+    print("OK: Alembic version table repaired.")
+else:
+    print("OK: No repair needed.")
 PY
 
 # Run Alembic migrations

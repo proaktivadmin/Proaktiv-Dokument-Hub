@@ -127,7 +127,17 @@ frontend/
 
 See `.cursor/active_context.md` for full status.
 
-**V2.9 Vitec Integration (In Progress):**
+**V3.1 Office & Employee Hub (Completed):**
+- ✅ Office management with banner images and employee avatars
+- ✅ Employee profile pictures with circular avatars
+- ✅ Office cards with background images from `profile_image_url`
+- ✅ Clickable employee avatars on office cards and detail pages
+- ✅ Improved color scheme (emerald/sky instead of harsh blues)
+- ✅ Banner images on office detail pages
+- ✅ 6 offices and 23 employees imported from proaktiv.no
+- ✅ Avatar component with Radix UI integration
+
+**V2.9 Vitec Integration (Completed):**
 - ✅ Full Vitec reference documentation
 - ✅ Enhanced SanitizerService with Vitec Stilark compliance
 - ✅ WebDAV storage integration
@@ -136,7 +146,7 @@ See `.cursor/active_context.md` for full status.
 - ✅ Password authentication system
 - ✅ Login page with JWT sessions
 - ✅ Railway CLI integration
-- ⏳ WebDAV needs PROPFIND enabled on server
+- ✅ Alembic migration auto-repair in start-prod.sh
 
 **V2.8 Railway Migration (Completed):**
 - ✅ Migrated from Azure to Railway

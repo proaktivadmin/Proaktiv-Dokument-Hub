@@ -91,6 +91,7 @@ export default function OfficesPage() {
         isSyncing={isSyncing}
         onEdit={handleEdit}
         onDeactivate={handleDeactivate}
+        onEmployeeClick={(emp) => router.push(`/employees/${emp.id}`)}
       />
 
       {/* Form dialog */}

@@ -1,7 +1,7 @@
 # PROGRESS.md - Session Tracker
 
 **Last Updated**: 2026-01-19
-**Current Focus**: V3.1 verification + QA signoff (employees + templates)
+**Current Focus**: V3.1 Office & Employee UI Enhancements
 
 ---
 
@@ -13,6 +13,15 @@
 - [x] Created `docs/features/leverandorer/TASKS.md`
 - [x] Created `docs/features/photo-export/TASKS.md`
 
+### V3.1 Office & Employee UI: ✅ DEPLOYED
+- [x] Added banner images to office cards using `profile_image_url`
+- [x] Added employee profile pictures with Avatar component
+- [x] Made employee avatars clickable on office cards
+- [x] Added employee quick access section on office detail pages
+- [x] Improved color scheme (emerald/sky instead of harsh blues)
+- [x] Imported 6 offices and 23 employees from proaktiv.no
+- [x] Fixed Railway deployment with Alembic migration auto-repair
+
 ### V3.1 QA Fixes: ✅ DEPLOYED
 - [x] Added `/api/ping`, `/api/territories/stats`, and fixed `/employees/email-group` routing.
 - [x] Hardened template receiver filtering + template settings audit JSON serialization.
@@ -20,7 +29,7 @@
 
 ### Next Immediate Task
 **Feature:** Employee Management
-**Task:** F4/F5 - Add Teams group display + include status filters in email group
+**Task:** Monitor production deployment and gather user feedback
 
 
 

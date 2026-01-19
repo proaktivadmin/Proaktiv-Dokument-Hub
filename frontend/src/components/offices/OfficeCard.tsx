@@ -1,6 +1,6 @@
 "use client";
 
-import { Building2, MapPin, Users, Phone, Mail, MoreVertical } from "lucide-react";
+import { MapPin, Users, Phone, Mail, MoreVertical, User } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,43 +11,96 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { OfficeWithStats } from "@/types/v3";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import type { OfficeWithStats, EmployeeWithOffice } from "@/types/v3";
 
 interface OfficeCardProps {
   office: OfficeWithStats;
+  employees?: EmployeeWithOffice[];
   onClick: () => void;
   onEdit?: () => void;
   onDeactivate?: () => void;
+  onEmployeeClick?: (employee: EmployeeWithOffice) => void;
 }
 
-export function OfficeCard({ office, onClick, onEdit, onDeactivate }: OfficeCardProps) {
+export function OfficeCard({ office, employees = [], onClick, onEdit, onDeactivate, onEmployeeClick }: OfficeCardProps) {
+  const activeEmployees = employees.filter(e => e.status === 'active').slice(0, 6);
+  
   return (
     <Card 
-      className="group cursor-pointer hover:shadow-md transition-all duration-200 border-l-4"
-      style={{ borderLeftColor: office.color }}
+      className="group cursor-pointer hover:shadow-lg transition-all duration-200 overflow-hidden"
       onClick={onClick}
     >
-      <CardContent className="p-4">
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <Badge 
-              variant="outline" 
-              className="font-mono text-xs"
-              style={{ borderColor: office.color, color: office.color }}
-            >
-              {office.short_code}
-            </Badge>
+      {/* Banner Image */}
+      {office.profile_image_url ? (
+        <div className="relative h-32 w-full overflow-hidden">
+          <img 
+            src={office.profile_image_url} 
+            alt={office.name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          
+          {/* Status badge on banner */}
+          <div className="absolute top-2 right-2">
             <Badge 
               variant={office.is_active ? "default" : "secondary"}
-              className={office.is_active ? "bg-green-500/10 text-green-600 hover:bg-green-500/20" : ""}
+              className={office.is_active ? "bg-emerald-500 text-white shadow-md" : "bg-slate-500 text-white shadow-md"}
             >
               {office.is_active ? "Aktiv" : "Inaktiv"}
             </Badge>
           </div>
           
+          {/* City badge on banner */}
+          {office.city && (
+            <div className="absolute bottom-2 left-2">
+              <Badge variant="secondary" className="bg-white/90 text-slate-900 backdrop-blur-sm">
+                <MapPin className="h-3 w-3 mr-1" />
+                {office.city}
+              </Badge>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div 
+          className="relative h-32 w-full"
+          style={{ backgroundColor: office.color }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
+          
+          {/* Status badge */}
+          <div className="absolute top-2 right-2">
+            <Badge 
+              variant={office.is_active ? "default" : "secondary"}
+              className={office.is_active ? "bg-emerald-500 text-white shadow-md" : "bg-slate-500 text-white shadow-md"}
+            >
+              {office.is_active ? "Aktiv" : "Inaktiv"}
+            </Badge>
+          </div>
+          
+          {/* City badge */}
+          {office.city && (
+            <div className="absolute bottom-2 left-2">
+              <Badge variant="secondary" className="bg-white/90 text-slate-900 backdrop-blur-sm">
+                <MapPin className="h-3 w-3 mr-1" />
+                {office.city}
+              </Badge>
+            </div>
+          )}
+        </div>
+      )}
+
+      <CardContent className="p-4">
+        <div className="flex items-start justify-between mb-3">
+          <div className="flex-1 min-w-0">
+            <h3 className="font-semibold text-lg mb-1 group-hover:text-primary transition-colors truncate">
+              {office.name}
+            </h3>
+          </div>
+          
           <DropdownMenu>
             <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-              <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100">
+              <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 shrink-0">
                 <MoreVertical className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -73,31 +126,53 @@ export function OfficeCard({ office, onClick, onEdit, onDeactivate }: OfficeCard
           </DropdownMenu>
         </div>
 
-        <h3 className="font-semibold text-lg mb-1 group-hover:text-primary transition-colors">
-          {office.name}
-        </h3>
+        {/* Employee count with avatars */}
+        <div className="flex items-center gap-3 mb-3">
+          <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+            <Users className="h-4 w-4" />
+            <span>{office.employee_count} ansatte</span>
+            {office.active_employee_count < office.employee_count && (
+              <span className="text-xs text-amber-600">
+                ({office.active_employee_count} aktive)
+              </span>
+            )}
+          </div>
+        </div>
 
-        {office.city && (
-          <div className="flex items-center gap-1.5 text-sm text-muted-foreground mb-3">
-            <MapPin className="h-3.5 w-3.5" />
-            <span>{office.city}</span>
+        {/* Employee avatars */}
+        {activeEmployees.length > 0 && (
+          <div className="flex items-center gap-2 mb-3 pb-3 border-b">
+            <div className="flex -space-x-2">
+              {activeEmployees.map((emp) => (
+                <Avatar 
+                  key={emp.id}
+                  className="h-8 w-8 border-2 border-background cursor-pointer hover:scale-110 transition-transform"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onEmployeeClick?.(emp);
+                  }}
+                >
+                  <AvatarImage src={emp.profile_image_url || undefined} alt={emp.full_name} />
+                  <AvatarFallback 
+                    className="text-xs font-medium text-white"
+                    style={{ backgroundColor: office.color }}
+                  >
+                    {emp.initials}
+                  </AvatarFallback>
+                </Avatar>
+              ))}
+            </div>
+            {office.employee_count > 6 && (
+              <span className="text-xs text-muted-foreground">
+                +{office.employee_count - 6} flere
+              </span>
+            )}
           </div>
         )}
 
-        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-          <div className="flex items-center gap-1.5">
-            <Users className="h-3.5 w-3.5" />
-            <span>{office.employee_count} ansatte</span>
-          </div>
-          {office.active_employee_count < office.employee_count && (
-            <span className="text-xs text-amber-600">
-              ({office.active_employee_count} aktive)
-            </span>
-          )}
-        </div>
-
+        {/* Contact info */}
         {(office.phone || office.email) && (
-          <div className="mt-3 pt-3 border-t flex items-center gap-4 text-xs text-muted-foreground">
+          <div className="flex items-center gap-4 text-xs text-muted-foreground">
             {office.phone && (
               <div className="flex items-center gap-1">
                 <Phone className="h-3 w-3" />

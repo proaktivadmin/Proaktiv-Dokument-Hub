@@ -311,6 +311,13 @@ export async function GET(request: Request) {
 5. Cache responses when appropriate
 6. Log all external API calls
 
+### Proaktiv.no directory scraping (offices + employees)
+1. Read `docs/proaktiv-directory-sync.md` before running any crawl
+2. Always run bounded (delay + max pages + max runtime)
+3. Default to local DB unless explicitly asked to write to Railway DB
+4. Use `run-proaktiv-scraper.bat` (Windows) or run the Python module directly
+5. Use the Cursor command: `/scrape-proaktiv`
+
 ---
 
 ## 🎯 CURRENT SPRINT GOALS

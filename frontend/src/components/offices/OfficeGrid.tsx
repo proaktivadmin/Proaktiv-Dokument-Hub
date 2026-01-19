@@ -1,7 +1,7 @@
 "use client";
 
 import { Building2, Plus, Search, RefreshCcw } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,7 +13,8 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { OfficeCard } from "./OfficeCard";
-import type { OfficeWithStats } from "@/types/v3";
+import { employeesApi } from "@/lib/api/employees";
+import type { OfficeWithStats, EmployeeWithOffice } from "@/types/v3";
 
 interface OfficeGridProps {
   offices: OfficeWithStats[];
@@ -25,6 +26,7 @@ interface OfficeGridProps {
   onDeactivate?: (office: OfficeWithStats) => void;
   onSync?: () => void;
   isSyncing?: boolean;
+  onEmployeeClick?: (employee: EmployeeWithOffice) => void;
 }
 
 export function OfficeGrid({
@@ -37,11 +39,36 @@ export function OfficeGrid({
   onDeactivate,
   onSync,
   isSyncing = false,
+  onEmployeeClick,
 }: OfficeGridProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [cityFilter, setCityFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [employeesByOffice, setEmployeesByOffice] = useState<Record<string, EmployeeWithOffice[]>>({});
   const showActions = Boolean(onCreateNew || onSync);
+
+  // Fetch employees for all offices
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await employeesApi.list({ status: ['active', 'onboarding'] });
+        const grouped: Record<string, EmployeeWithOffice[]> = {};
+        response.items.forEach(emp => {
+          if (!grouped[emp.office_id]) {
+            grouped[emp.office_id] = [];
+          }
+          grouped[emp.office_id].push(emp);
+        });
+        setEmployeesByOffice(grouped);
+      } catch (error) {
+        console.error("Failed to fetch employees:", error);
+      }
+    };
+
+    if (offices.length > 0) {
+      fetchEmployees();
+    }
+  }, [offices]);
 
   // Filter offices
   const filteredOffices = offices.filter((office) => {
@@ -164,9 +191,11 @@ export function OfficeGrid({
             <OfficeCard
               key={office.id}
               office={office}
+              employees={employeesByOffice[office.id] || []}
               onClick={() => onOfficeClick(office)}
               onEdit={onEdit ? () => onEdit(office) : undefined}
               onDeactivate={onDeactivate ? () => onDeactivate(office) : undefined}
+              onEmployeeClick={onEmployeeClick}
             />
           ))}
         </div>

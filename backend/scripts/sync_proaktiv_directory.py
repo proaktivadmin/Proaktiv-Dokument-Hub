@@ -38,22 +38,23 @@ from app.services.firecrawl_service import FirecrawlService
 
 DEFAULT_START_URLS = [
     "https://proaktiv.no/eiendomsmegler/oslo",
-    "https://proaktiv.no/eiendomsmegler/drammen-lier-holmestrand",
-    "https://proaktiv.no/eiendomsmegler/lillestrom",
-    "https://proaktiv.no/eiendomsmegler/lorenskog",
+    "https://proaktiv.no/eiendomsmegler/drammen-lier",
+    "https://proaktiv.no/eiendomsmegler/lillestr%C3%B8m",
+    "https://proaktiv.no/eiendomsmegler/l%C3%B8renskog",
     "https://proaktiv.no/eiendomsmegler/bergen",
     "https://proaktiv.no/eiendomsmegler/voss",
     "https://proaktiv.no/eiendomsmegler/stavanger",
     "https://proaktiv.no/eiendomsmegler/sandnes",
     "https://proaktiv.no/eiendomsmegler/sola",
     "https://proaktiv.no/eiendomsmegler/trondheim",
-    "https://proaktiv.no/eiendomsmegler/alesund",
+    "https://proaktiv.no/eiendomsmegler/%C3%A5lesund",
     "https://proaktiv.no/eiendomsmegler/skien",
     "https://proaktiv.no/eiendomsmegler/haugesund",
-    "https://proaktiv.no/eiendomsmegler/kjedeledelse",
     "https://proaktiv.no/eiendomsmegler/sarpsborg",
-    "https://proaktiv.no/eiendomsmegler/jaeren",
+    "https://proaktiv.no/eiendomsmegler/j%C3%A6ren",
     "https://proaktiv.no/eiendomsmegler/kristiansand",
+    # Corporate directory (not under /eiendomsmegler)
+    "https://proaktiv.no/om-oss/kjedeledelse",
 ]
 
 STOP_SECTION_MARKERS = [
@@ -112,7 +113,14 @@ def is_eiendomsmegler_url(url: str) -> bool:
     return parsed.netloc.endswith("proaktiv.no") and "/eiendomsmegler" in parsed.path
 
 
+def is_kjedeledelse_url(url: str) -> bool:
+    parsed = urlparse(url)
+    return parsed.netloc.endswith("proaktiv.no") and parsed.path.rstrip("/") == "/om-oss/kjedeledelse"
+
+
 def classify_url(url: str) -> Optional[str]:
+    if is_kjedeledelse_url(url):
+        return "kjedledelse"
     parsed = urlparse(url)
     parts = parsed.path.strip("/").split("/")
     if not parts or parts[0] != "eiendomsmegler":
@@ -256,6 +264,79 @@ def extract_named_contacts(lines: List[str]) -> List[Dict[str, Optional[str]]]:
         seen.add(key)
         results.append({"name": name, "title": title, "email": email, "phone": phone})
     return results
+
+
+def parse_kjedeledelse_page(soup: BeautifulSoup, url: str) -> Tuple[OfficePayload, List[EmployeePayload]]:
+    """
+    Parse the corporate directory page at /om-oss/kjedeledelse.
+
+    This page is not under /eiendomsmegler, so it uses a line-based approach.
+    """
+    lines = extract_lines(str(soup))
+    _, heading = find_primary_heading(soup)
+    office_name = heading or "Kjedeledelse"
+
+    # Office contact: keep to a small window to avoid matching image file names, etc.
+    top_lines = lines[:200]
+    contact = parse_office_contact(top_lines)
+
+    # Address is typically: "Småstrandgaten 6, 5014 Bergen"
+    if not contact.get("street_address") or not contact.get("postal_code") or not contact.get("city"):
+        for line in top_lines:
+            cleaned = clean_text(line)
+            lower = cleaned.lower()
+            if (
+                "%" in cleaned
+                or "http" in lower
+                or "@" in cleaned
+                or lower.startswith("telefon")
+                or lower.startswith("e-post")
+            ):
+                continue
+            match = re.match(
+                r"^(?P<street>.+?)[,\\s]+(?P<postal>\\d{4})\\s+(?P<city>[A-Za-zÆØÅæøå .-]+)$",
+                cleaned,
+            )
+            if match:
+                contact["street_address"] = match.group("street")
+                contact["postal_code"] = match.group("postal")
+                contact["city"] = clean_text(match.group("city"))
+                break
+
+    office_payload = OfficePayload(
+        name=office_name,
+        homepage_url=url,
+        email=contact.get("email"),
+        phone=contact.get("phone"),
+        street_address=contact.get("street_address"),
+        postal_code=contact.get("postal_code"),
+        city=contact.get("city"),
+        description=extract_description(soup, anchor=office_name),
+        profile_image_url=extract_image_url(soup, url, office_name),
+    )
+
+    employees: List[EmployeePayload] = []
+    for row in extract_named_contacts(lines):
+        full_name = row.get("name") or ""
+        if not full_name:
+            continue
+        first_name, last_name = parse_employee_name(full_name)
+        employees.append(
+            EmployeePayload(
+                first_name=first_name,
+                last_name=last_name,
+                office_url=url,
+                office_name=office_name,
+                title=row.get("title"),
+                email=row.get("email"),
+                phone=row.get("phone"),
+                homepage_profile_url=None,
+                profile_image_url=extract_image_url(soup, url, full_name),
+                description=None,
+            )
+        )
+
+    return office_payload, employees
 
 
 def extract_name_title_map(soup: BeautifulSoup, base_url: str) -> Dict[str, str]:
@@ -691,6 +772,24 @@ async def sync_proaktiv(
                     continue
                 if link not in visited and link not in queue:
                     queue.append(link)
+
+            if page_type == "kjedledelse" and processed_offices < max_office_pages:
+                office_payload, employee_payloads = parse_kjedeledelse_page(soup, url)
+                office = await upsert_office(db, office_payload, overwrite=overwrite, dry_run=dry_run)
+                if office:
+                    processed_offices += 1
+                for emp_payload in employee_payloads:
+                    if processed_employees >= max_employee_pages:
+                        break
+                    employee = await upsert_employee(
+                        db,
+                        emp_payload,
+                        office,
+                        overwrite=overwrite,
+                        dry_run=dry_run,
+                    )
+                    if employee:
+                        processed_employees += 1
 
             if page_type == "office" and processed_offices < max_office_pages:
                 office_payload, employee_payloads = parse_office_page(soup, url)
