@@ -175,9 +175,26 @@ Backend requires:
 - `DATABASE_URL` - PostgreSQL connection string
 - `SECRET_KEY` - Application secret
 - `APP_ENV` - Environment (production)
+- `VITEC_INSTALLATION_ID` - Vitec Hub installation ID (e.g., MSPROATEST)
+- `VITEC_HUB_BASE_URL` - Hub base URL (QA: https://proatest.qa.vitecnext.no)
+- `VITEC_HUB_PRODUCT_LOGIN` - Product login username
+- `VITEC_HUB_ACCESS_KEY` - Product access key
 
 Frontend requires:
 - `BACKEND_URL` - Backend API URL
+
+### Vitec Hub QA Sync (Manual)
+```bash
+# Verify product login access (QA)
+curl -u "$VITEC_HUB_PRODUCT_LOGIN:$VITEC_HUB_ACCESS_KEY" \
+  https://proatest.qa.vitecnext.no/Account/Methods
+
+# Sync offices (departments)
+curl -X POST http://localhost:8000/api/offices/sync
+
+# Sync employees
+curl -X POST http://localhost:8000/api/employees/sync
+```
 
 ---
 

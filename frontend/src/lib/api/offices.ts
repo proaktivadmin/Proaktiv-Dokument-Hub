@@ -7,7 +7,8 @@ import type {
   OfficeWithStats, 
   OfficeCreatePayload, 
   OfficeUpdatePayload,
-  OfficeListResponse 
+  OfficeListResponse,
+  OfficeSyncResult
 } from '@/types/v3';
 
 export interface OfficeListParams {
@@ -59,6 +60,11 @@ export const officesApi = {
     territory_count: number;
   }> {
     const response = await apiClient.get(`/offices/${id}/stats`);
+    return response.data;
+  },
+
+  async sync(): Promise<OfficeSyncResult> {
+    const response = await apiClient.post('/offices/sync');
     return response.data;
   },
 };

@@ -38,6 +38,9 @@ class Employee(Base):
         primary_key=True, 
         default=lambda: str(uuid.uuid4())
     )
+
+    # Vitec Hub identifiers
+    vitec_employee_id: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
     
     # Foreign key
     office_id: Mapped[uuid.UUID] = mapped_column(
@@ -66,6 +69,10 @@ class Employee(Base):
     # Online Presence
     homepage_profile_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     linkedin_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+
+    # Profile Content
+    profile_image_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     
     # Microsoft 365 Integration
     sharepoint_folder_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
@@ -129,6 +136,7 @@ class Employee(Base):
         Index("idx_employees_office_id", "office_id"),
         Index("idx_employees_status", "status"),
         Index("idx_employees_email", "email"),
+        Index("idx_employees_vitec_employee_id", "vitec_employee_id"),
     )
     
     def __repr__(self) -> str:

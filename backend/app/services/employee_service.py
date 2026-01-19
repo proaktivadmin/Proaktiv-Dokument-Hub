@@ -12,9 +12,14 @@ from uuid import UUID
 from datetime import datetime
 import logging
 
+from fastapi import HTTPException
+
 from app.models.employee import Employee
 from app.models.office import Office
 from app.schemas.employee import EmployeeCreate, EmployeeUpdate, StartOffboarding
+from app.config import settings
+from app.services.vitec_hub_service import VitecHubService
+from app.services.office_service import OfficeService
 
 logger = logging.getLogger(__name__)
 
@@ -131,6 +136,21 @@ class EmployeeService:
             .where(Employee.email == email)
         )
         return result.scalar_one_or_none()
+
+    @staticmethod
+    async def get_by_vitec_employee_id(
+        db: AsyncSession,
+        vitec_employee_id: str
+    ) -> Optional[Employee]:
+        """
+        Get an employee by Vitec employee ID.
+        """
+        result = await db.execute(
+            select(Employee)
+            .options(selectinload(Employee.office))
+            .where(Employee.vitec_employee_id == vitec_employee_id)
+        )
+        return result.scalar_one_or_none()
     
     @staticmethod
     async def create(db: AsyncSession, data: EmployeeCreate) -> Employee:
@@ -146,6 +166,7 @@ class EmployeeService:
         """
         employee = Employee(
             office_id=str(data.office_id),
+            vitec_employee_id=data.vitec_employee_id,
             first_name=data.first_name,
             last_name=data.last_name,
             title=data.title,
@@ -153,6 +174,10 @@ class EmployeeService:
             phone=data.phone,
             homepage_profile_url=data.homepage_profile_url,
             linkedin_url=data.linkedin_url,
+            sharepoint_folder_url=data.sharepoint_folder_url,
+            profile_image_url=data.profile_image_url,
+            description=data.description,
+            system_roles=data.system_roles,
             status=data.status,
             start_date=data.start_date,
             end_date=data.end_date,
@@ -310,3 +335,223 @@ class EmployeeService:
             )
         )
         return list(result.scalars().all())
+
+    # =============================================================================
+    # Vitec Hub Sync
+    # =============================================================================
+
+    @staticmethod
+    def _normalize_text(value: Optional[str]) -> Optional[str]:
+        if value is None:
+            return None
+        cleaned = value.strip()
+        return cleaned if cleaned else None
+
+    @staticmethod
+    def _split_name(full_name: str) -> tuple[str, str]:
+        parts = (full_name or "").strip().split()
+        if not parts:
+            return "", ""
+        if len(parts) == 1:
+            return parts[0], ""
+        return parts[0], " ".join(parts[1:])
+
+    @staticmethod
+    def _extract_department_id(value: object) -> Optional[int]:
+        if isinstance(value, list) and value:
+            value = value[0]
+        if isinstance(value, int):
+            return value
+        if isinstance(value, str) and value.isdigit():
+            return int(value)
+        return None
+
+    @staticmethod
+    def _infer_roles_from_title(title: Optional[str]) -> List[str]:
+        if not title:
+            return []
+        mapping = {
+            "eiendomsmeglerfullmektig": "eiendomsmeglerfullmektig",
+            "eiendomsmegler": "eiendomsmegler",
+            "fagansvarlig": "fagansvarlig",
+            "daglig leder": "daglig_leder",
+        }
+        roles: List[str] = []
+        lower = title.lower()
+        for key, role in mapping.items():
+            if key in lower and role not in roles:
+                roles.append(role)
+        return roles
+
+    @staticmethod
+    def _map_employee_roles(positions: Optional[List[dict]], title: Optional[str]) -> List[str]:
+        role_map = {
+            1: "eiendomsmegler",
+            2: "daglig_leder",
+            3: "fagansvarlig",
+            4: "antihvitvaskingsansvarlig",
+            5: "medhjelper",
+            6: "oppgjor",
+            7: "administrasjon",
+            8: "eiendomsmeglerfullmektig",
+            9: "salgsleder",
+            10: "kontorleder",
+        }
+        roles: List[str] = []
+        for position in positions or []:
+            if not isinstance(position, dict):
+                continue
+            pos_type = position.get("type")
+            if isinstance(pos_type, dict):
+                pos_type = pos_type.get("value") or pos_type.get("id")
+            if isinstance(pos_type, int) and pos_type in role_map:
+                role = role_map[pos_type]
+                if role not in roles:
+                    roles.append(role)
+        if not roles:
+            roles = EmployeeService._infer_roles_from_title(title)
+        return roles
+
+    @staticmethod
+    def _map_employee_payload(raw: dict) -> dict:
+        name = raw.get("name") or ""
+        first_name, last_name = EmployeeService._split_name(name)
+        title = EmployeeService._normalize_text(raw.get("title"))
+        roles = EmployeeService._map_employee_roles(raw.get("employeePositions"), title)
+        active_flag = raw.get("employeeActive")
+        status = "active" if active_flag is True else "inactive" if active_flag is False else "active"
+        return {
+            "vitec_employee_id": raw.get("employeeId"),
+            "department_id": EmployeeService._extract_department_id(raw.get("departmentId")),
+            "first_name": EmployeeService._normalize_text(first_name),
+            "last_name": EmployeeService._normalize_text(last_name),
+            "title": title,
+            "email": EmployeeService._normalize_text(raw.get("email")),
+            "phone": EmployeeService._normalize_text(raw.get("mobilePhone") or raw.get("workPhone")),
+            "description": EmployeeService._normalize_text(raw.get("aboutMe")),
+            "system_roles": roles,
+            "status": status,
+        }
+
+    @staticmethod
+    async def upsert_from_hub(
+        db: AsyncSession,
+        payload: dict,
+        office: Office
+    ) -> tuple[Employee, str]:
+        existing = None
+        vitec_employee_id = payload.get("vitec_employee_id")
+        if vitec_employee_id:
+            existing = await EmployeeService.get_by_vitec_employee_id(db, vitec_employee_id)
+        if not existing and payload.get("email"):
+            existing = await EmployeeService.get_by_email(db, payload["email"])
+        if not existing and payload.get("first_name") and payload.get("last_name"):
+            result = await db.execute(
+                select(Employee)
+                .where(Employee.first_name == payload["first_name"])
+                .where(Employee.last_name == payload["last_name"])
+                .where(Employee.office_id == str(office.id))
+            )
+            existing = result.scalar_one_or_none()
+
+        if not existing:
+            employee = Employee(
+                office_id=str(office.id),
+                vitec_employee_id=vitec_employee_id,
+                first_name=payload.get("first_name") or "",
+                last_name=payload.get("last_name") or "",
+                title=payload.get("title"),
+                email=payload.get("email"),
+                phone=payload.get("phone"),
+                description=payload.get("description"),
+                system_roles=payload.get("system_roles") or [],
+                status=payload.get("status") or "active",
+            )
+            db.add(employee)
+            await db.flush()
+            await db.refresh(employee)
+            return employee, "created"
+
+        updated = False
+        if vitec_employee_id and existing.vitec_employee_id != vitec_employee_id:
+            existing.vitec_employee_id = vitec_employee_id
+            updated = True
+        if existing.office_id != str(office.id):
+            existing.office_id = str(office.id)
+            updated = True
+
+        for field in ["first_name", "last_name", "title", "email", "phone", "description", "status"]:
+            value = payload.get(field)
+            if value is None:
+                continue
+            if getattr(existing, field) != value:
+                setattr(existing, field, value)
+                updated = True
+
+        roles = payload.get("system_roles") or []
+        if roles and existing.system_roles != roles:
+            existing.system_roles = roles
+            updated = True
+
+        if updated:
+            await db.flush()
+            await db.refresh(existing)
+            return existing, "updated"
+
+        return existing, "skipped"
+
+    @staticmethod
+    async def sync_from_hub(
+        db: AsyncSession,
+        *,
+        installation_id: Optional[str] = None,
+    ) -> dict:
+        hub = VitecHubService()
+        install_id = installation_id or settings.VITEC_INSTALLATION_ID
+        if not install_id:
+            raise HTTPException(status_code=500, detail="VITEC_INSTALLATION_ID is not configured.")
+
+        employees = await hub.get_employees(install_id)
+        created = updated = skipped = missing_office = 0
+
+        for raw in employees:
+            payload = EmployeeService._map_employee_payload(raw or {})
+            if not payload.get("first_name") and not payload.get("last_name"):
+                skipped += 1
+                continue
+
+            department_id = payload.get("department_id")
+            if department_id is None:
+                skipped += 1
+                continue
+
+            office = await OfficeService.get_by_vitec_department_id(db, department_id)
+            if not office:
+                missing_office += 1
+                continue
+
+            _, action = await EmployeeService.upsert_from_hub(db, payload, office)
+            if action == "created":
+                created += 1
+            elif action == "updated":
+                updated += 1
+            else:
+                skipped += 1
+
+        total = len(employees)
+        logger.info(
+            "Vitec Hub employees sync complete: total=%s created=%s updated=%s skipped=%s missing_office=%s",
+            total,
+            created,
+            updated,
+            skipped,
+            missing_office,
+        )
+        return {
+            "total": total,
+            "synced": created + updated,
+            "created": created,
+            "updated": updated,
+            "skipped": skipped,
+            "missing_office": missing_office,
+        }

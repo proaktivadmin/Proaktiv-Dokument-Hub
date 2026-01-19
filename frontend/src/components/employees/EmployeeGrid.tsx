@@ -1,6 +1,6 @@
 "use client";
 
-import { Users, Plus, Search, Mail } from "lucide-react";
+import { Users, Plus, Search, Mail, RefreshCcw } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,8 @@ interface EmployeeGridProps {
   onEdit?: (employee: EmployeeWithOffice) => void;
   onStartOffboarding?: (employee: EmployeeWithOffice) => void;
   onDeactivate?: (employee: EmployeeWithOffice) => void;
+  onSync?: () => void;
+  isSyncing?: boolean;
   currentFilters?: {
     office_id?: string;
     role?: string;
@@ -33,9 +35,12 @@ export function EmployeeGrid({
   onEdit,
   onStartOffboarding,
   onDeactivate,
+  onSync,
+  isSyncing = false,
   currentFilters,
 }: EmployeeGridProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const showActions = Boolean(onCreateNew || onSync);
 
   // Filter employees by search
   const filteredEmployees = employees.filter((employee) => {
@@ -79,8 +84,14 @@ export function EmployeeGrid({
           />
         </div>
 
-        {onCreateNew && (
+        {showActions && (
           <div className="flex gap-2 ml-auto">
+            {onSync && (
+              <Button variant="outline" onClick={onSync} disabled={isSyncing}>
+                <RefreshCcw className="h-4 w-4 mr-2" />
+                {isSyncing ? "Synkroniserer..." : "Synkroniser Vitec"}
+              </Button>
+            )}
             {/* Email Group Button */}
             <Button
               variant="outline"
@@ -104,10 +115,12 @@ export function EmployeeGrid({
               E-postliste
             </Button>
 
-            <Button onClick={onCreateNew}>
-              <Plus className="h-4 w-4 mr-2" />
-              Ny ansatt
-            </Button>
+            {onCreateNew && (
+              <Button onClick={onCreateNew}>
+                <Plus className="h-4 w-4 mr-2" />
+                Ny ansatt
+              </Button>
+            )}
           </div>
         )}
 

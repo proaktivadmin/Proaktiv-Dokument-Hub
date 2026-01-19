@@ -41,6 +41,7 @@ from app.schemas.office import (
     OfficeResponse,
     OfficeWithStats,
     OfficeListResponse,
+    OfficeSyncResult,
 )
 from app.schemas.employee import (
     EmployeeBase,
@@ -50,6 +51,7 @@ from app.schemas.employee import (
     EmployeeWithOffice,
     EmployeeListResponse,
     StartOffboarding,
+    EmployeeSyncResult,
 )
 from app.schemas.company_asset import (
     CompanyAssetBase,
@@ -148,6 +150,7 @@ __all__ = [
     "OfficeResponse",
     "OfficeWithStats",
     "OfficeListResponse",
+    "OfficeSyncResult",
     # V3: Employee
     "EmployeeBase",
     "EmployeeCreate",
@@ -156,6 +159,7 @@ __all__ = [
     "EmployeeWithOffice",
     "EmployeeListResponse",
     "StartOffboarding",
+    "EmployeeSyncResult",
     # V3: CompanyAsset
     "CompanyAssetBase",
     "CompanyAssetCreate",

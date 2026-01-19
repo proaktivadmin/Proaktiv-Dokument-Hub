@@ -4,7 +4,7 @@ Office SQLAlchemy Model
 Represents a physical office location with contact info and online presence.
 """
 
-from sqlalchemy import Column, String, Text, Boolean, DateTime, Index
+from sqlalchemy import Column, String, Text, Boolean, DateTime, Index, Integer
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from sqlalchemy.sql import func
 from datetime import datetime
@@ -40,6 +40,7 @@ class Office(Base):
     # Basic Info
     name: Mapped[str] = mapped_column(String(200), nullable=False)
     short_code: Mapped[str] = mapped_column(String(10), nullable=False, unique=True)
+    vitec_department_id: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     
     # Contact
     email: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
@@ -56,6 +57,10 @@ class Office(Base):
     facebook_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     instagram_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     linkedin_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+
+    # Profile Content
+    profile_image_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     
     # Microsoft 365 Integration
     teams_group_id: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
@@ -114,6 +119,7 @@ class Office(Base):
     __table_args__ = (
         Index("idx_offices_city", "city"),
         Index("idx_offices_is_active", "is_active"),
+        Index("idx_offices_vitec_department_id", "vitec_department_id"),
     )
     
     def __repr__(self) -> str:

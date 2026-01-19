@@ -20,6 +20,7 @@ from app.services.layout_partial_version_service import (
     LayoutPartialDefaultService,
 )
 from app.services.firecrawl_service import FirecrawlService
+from app.services.vitec_hub_service import VitecHubService
 
 __all__ = [
     # V2 Services
@@ -43,4 +44,5 @@ __all__ = [
     "LayoutPartialVersionService",
     "LayoutPartialDefaultService",
     "FirecrawlService",
+    "VitecHubService",
 ]

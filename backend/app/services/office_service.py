@@ -8,11 +8,16 @@ from sqlalchemy.orm import selectinload
 from typing import Optional, List
 from uuid import UUID
 import logging
+import re
+
+from fastapi import HTTPException
 
 from app.models.office import Office
 from app.models.employee import Employee
 from app.models.office_territory import OfficeTerritory
 from app.schemas.office import OfficeCreate, OfficeUpdate, OfficeWithStats
+from app.config import settings
+from app.services.vitec_hub_service import VitecHubService
 
 logger = logging.getLogger(__name__)
 
@@ -108,6 +113,19 @@ class OfficeService:
             select(Office).where(Office.short_code == short_code.upper())
         )
         return result.scalar_one_or_none()
+
+    @staticmethod
+    async def get_by_vitec_department_id(
+        db: AsyncSession,
+        department_id: int
+    ) -> Optional[Office]:
+        """
+        Get an office by Vitec department ID.
+        """
+        result = await db.execute(
+            select(Office).where(Office.vitec_department_id == department_id)
+        )
+        return result.scalar_one_or_none()
     
     @staticmethod
     async def create(db: AsyncSession, data: OfficeCreate) -> Office:
@@ -124,6 +142,7 @@ class OfficeService:
         office = Office(
             name=data.name,
             short_code=data.short_code.upper(),
+            vitec_department_id=data.vitec_department_id,
             email=data.email,
             phone=data.phone,
             street_address=data.street_address,
@@ -134,6 +153,8 @@ class OfficeService:
             facebook_url=data.facebook_url,
             instagram_url=data.instagram_url,
             linkedin_url=data.linkedin_url,
+            profile_image_url=data.profile_image_url,
+            description=data.description,
             color=data.color,
             is_active=data.is_active,
         )
@@ -262,6 +283,7 @@ class OfficeService:
             id=office.id,
             name=office.name,
             short_code=office.short_code,
+            vitec_department_id=office.vitec_department_id,
             email=office.email,
             phone=office.phone,
             street_address=office.street_address,
@@ -272,6 +294,8 @@ class OfficeService:
             facebook_url=office.facebook_url,
             instagram_url=office.instagram_url,
             linkedin_url=office.linkedin_url,
+            profile_image_url=office.profile_image_url,
+            description=office.description,
             color=office.color,
             is_active=office.is_active,
             created_at=office.created_at,
@@ -280,3 +304,149 @@ class OfficeService:
             active_employee_count=active_count,
             territory_count=territory_count,
         )
+
+    # =============================================================================
+    # Vitec Hub Sync
+    # =============================================================================
+
+    @staticmethod
+    def _normalize_text(value: Optional[str]) -> Optional[str]:
+        if value is None:
+            return None
+        cleaned = value.strip()
+        return cleaned if cleaned else None
+
+    @staticmethod
+    async def _ensure_unique_short_code(db: AsyncSession, base_code: str) -> str:
+        base = re.sub(r"[^A-Z0-9]", "", (base_code or "").upper()) or "OFF"
+        candidate = base[:10]
+        suffix = 1
+        while True:
+            result = await db.execute(
+                select(Office).where(Office.short_code == candidate)
+            )
+            if not result.scalar_one_or_none():
+                return candidate
+            suffix += 1
+            trim_len = max(1, 10 - len(str(suffix)))
+            candidate = f"{base[:trim_len]}{suffix}"
+
+    @staticmethod
+    def _map_department_payload(raw: dict) -> dict:
+        name = raw.get("marketName") or raw.get("name") or raw.get("legalName") or "Vitec Office"
+        return {
+            "vitec_department_id": raw.get("departmentId"),
+            "department_number": raw.get("departmentNumber"),
+            "name": OfficeService._normalize_text(name),
+            "email": OfficeService._normalize_text(raw.get("email")),
+            "phone": OfficeService._normalize_text(raw.get("phone")),
+            "street_address": OfficeService._normalize_text(raw.get("streetAddress") or raw.get("postalAddress")),
+            "postal_code": OfficeService._normalize_text(raw.get("postalCode") or raw.get("visitPostalCode")),
+            "city": OfficeService._normalize_text(raw.get("city") or raw.get("visitCity")),
+            "description": OfficeService._normalize_text(raw.get("aboutDepartment")),
+            "is_active": raw.get("webPublish"),
+        }
+
+    @staticmethod
+    async def upsert_from_hub(db: AsyncSession, payload: dict) -> tuple[Office, str]:
+        existing = None
+        department_id = payload.get("vitec_department_id")
+        if department_id is not None:
+            existing = await OfficeService.get_by_vitec_department_id(db, department_id)
+        if not existing and payload.get("name"):
+            result = await db.execute(select(Office).where(Office.name == payload["name"]))
+            existing = result.scalar_one_or_none()
+
+        if not existing:
+            base_code = str(payload.get("department_number") or payload.get("name") or "OFF")
+            short_code = await OfficeService._ensure_unique_short_code(db, base_code)
+            office = Office(
+                name=payload.get("name") or "Vitec Office",
+                short_code=short_code,
+                vitec_department_id=department_id,
+                email=payload.get("email"),
+                phone=payload.get("phone"),
+                street_address=payload.get("street_address"),
+                postal_code=payload.get("postal_code"),
+                city=payload.get("city"),
+                description=payload.get("description"),
+                is_active=payload.get("is_active") if payload.get("is_active") is not None else True,
+            )
+            db.add(office)
+            await db.flush()
+            await db.refresh(office)
+            return office, "created"
+
+        updated = False
+        if department_id is not None and existing.vitec_department_id != department_id:
+            existing.vitec_department_id = department_id
+            updated = True
+
+        for field in [
+            "name",
+            "email",
+            "phone",
+            "street_address",
+            "postal_code",
+            "city",
+            "description",
+        ]:
+            value = payload.get(field)
+            if value is None:
+                continue
+            if getattr(existing, field) != value:
+                setattr(existing, field, value)
+                updated = True
+
+        if payload.get("is_active") is not None and existing.is_active != payload.get("is_active"):
+            existing.is_active = payload.get("is_active")
+            updated = True
+
+        if updated:
+            await db.flush()
+            await db.refresh(existing)
+            return existing, "updated"
+
+        return existing, "skipped"
+
+    @staticmethod
+    async def sync_from_hub(
+        db: AsyncSession,
+        *,
+        installation_id: Optional[str] = None,
+    ) -> dict:
+        hub = VitecHubService()
+        install_id = installation_id or settings.VITEC_INSTALLATION_ID
+        if not install_id:
+            raise HTTPException(status_code=500, detail="VITEC_INSTALLATION_ID is not configured.")
+
+        departments = await hub.get_departments(install_id)
+        created = updated = skipped = 0
+        for raw in departments:
+            payload = OfficeService._map_department_payload(raw or {})
+            if not payload.get("name"):
+                skipped += 1
+                continue
+            _, action = await OfficeService.upsert_from_hub(db, payload)
+            if action == "created":
+                created += 1
+            elif action == "updated":
+                updated += 1
+            else:
+                skipped += 1
+
+        total = len(departments)
+        logger.info(
+            "Vitec Hub offices sync complete: total=%s created=%s updated=%s skipped=%s",
+            total,
+            created,
+            updated,
+            skipped,
+        )
+        return {
+            "total": total,
+            "synced": created + updated,
+            "created": created,
+            "updated": updated,
+            "skipped": skipped,
+        }

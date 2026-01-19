@@ -15,6 +15,7 @@ from app.schemas.office import (
     OfficeResponse,
     OfficeWithStats,
     OfficeListResponse,
+    OfficeSyncResult,
 )
 
 router = APIRouter(prefix="/offices", tags=["Offices"])
@@ -44,6 +45,17 @@ async def list_offices(
     items = [OfficeService.to_response_with_stats(office) for office in offices]
     
     return OfficeListResponse(items=items, total=total)
+
+
+@router.post("/sync", response_model=OfficeSyncResult)
+async def sync_offices(
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Sync offices from Vitec Hub (Departments endpoint).
+    """
+    result = await OfficeService.sync_from_hub(db)
+    return OfficeSyncResult(**result)
 
 
 @router.post("", response_model=OfficeWithStats, status_code=201)

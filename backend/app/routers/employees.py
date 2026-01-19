@@ -20,6 +20,7 @@ from app.schemas.employee import (
     EmployeeListResponse,
     StartOffboarding,
     OfficeMinimal,
+    EmployeeSyncResult,
 )
 
 router = APIRouter(prefix="/employees", tags=["Employees"])
@@ -30,6 +31,7 @@ def _to_employee_with_office(employee) -> EmployeeWithOffice:
     return EmployeeWithOffice(
         id=employee.id,
         office_id=employee.office_id,
+        vitec_employee_id=employee.vitec_employee_id,
         first_name=employee.first_name,
         last_name=employee.last_name,
         title=employee.title,
@@ -38,6 +40,8 @@ def _to_employee_with_office(employee) -> EmployeeWithOffice:
         homepage_profile_url=employee.homepage_profile_url,
         linkedin_url=employee.linkedin_url,
         sharepoint_folder_url=employee.sharepoint_folder_url,
+        profile_image_url=employee.profile_image_url,
+        description=employee.description,
         system_roles=employee.system_roles or [],
         status=employee.status,
         start_date=employee.start_date,
@@ -90,6 +94,17 @@ async def list_employees(
     items = [_to_employee_with_office(e) for e in employees]
     
     return EmployeeListResponse(items=items, total=total)
+
+
+@router.post("/sync", response_model=EmployeeSyncResult)
+async def sync_employees(
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Sync employees from Vitec Hub.
+    """
+    result = await EmployeeService.sync_from_hub(db)
+    return EmployeeSyncResult(**result)
 
 
 @router.post("", response_model=EmployeeWithOffice, status_code=201)

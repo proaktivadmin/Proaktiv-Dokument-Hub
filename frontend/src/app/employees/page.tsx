@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Users } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { EmployeeGrid, EmployeeSidebar, EmployeeForm, RoleFilter } from "@/components/employees";
 
 import { useEmployees } from "@/hooks/v3/useEmployees";
 import { useOffices } from "@/hooks/v3/useOffices";
+import { useToast } from "@/hooks/use-toast";
+import { employeesApi } from "@/lib/api/employees";
+import { officesApi } from "@/lib/api/offices";
 import type { EmployeeWithOffice, EmployeeStatus } from "@/types/v3";
 
 export default function EmployeesPage() {
@@ -20,12 +22,14 @@ export default function EmployeesPage() {
 
   const [editingEmployee, setEditingEmployee] = useState<EmployeeWithOffice | null>(null);
 
-  const { offices, isLoading: officesLoading } = useOffices();
-  const { employees, statusCounts, isLoading: employeesLoading, refetch } = useEmployees({
+  const { toast } = useToast();
+  const { offices, isLoading: officesLoading, refetch: refetchOffices } = useOffices();
+  const { employees, statusCounts, isLoading: employeesLoading, refetch: refetchEmployees } = useEmployees({
     office_id: selectedOfficeId || undefined,
     status: statusFilters.length > 0 ? statusFilters : undefined,
     role: selectedRole || undefined,
   });
+  const [isSyncing, setIsSyncing] = useState(false);
 
 
   const handleEmployeeClick = (employee: EmployeeWithOffice) => {
@@ -51,8 +55,30 @@ export default function EmployeesPage() {
   };
 
   const handleFormSuccess = () => {
-    refetch();
+    refetchEmployees();
     handleFormClose();
+  };
+
+  const handleSync = async () => {
+    setIsSyncing(true);
+    try {
+      const officeResult = await officesApi.sync();
+      const employeeResult = await employeesApi.sync();
+      await Promise.all([refetchOffices(), refetchEmployees()]);
+      toast({
+        title: "Synkronisering fullført",
+        description: `Kontorer: ${officeResult.synced}/${officeResult.total}. Ansatte: ${employeeResult.synced}/${employeeResult.total}.`,
+      });
+    } catch (error) {
+      console.error("Failed to sync Vitec Hub data:", error);
+      toast({
+        title: "Synkronisering feilet",
+        description: "Kunne ikke hente data fra Vitec Hub. Sjekk tilgang og prøv igjen.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSyncing(false);
+    }
   };
 
   return (
@@ -91,6 +117,8 @@ export default function EmployeesPage() {
             showOffice={!selectedOfficeId}
             onEmployeeClick={handleEmployeeClick}
             onCreateNew={() => setFormOpen(true)}
+            onSync={handleSync}
+            isSyncing={isSyncing}
             onEdit={handleEdit}
             currentFilters={{
               office_id: selectedOfficeId || undefined,

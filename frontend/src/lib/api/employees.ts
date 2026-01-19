@@ -9,7 +9,8 @@ import type {
   EmployeeUpdatePayload,
   EmployeeListResponse,
   StartOffboardingPayload,
-  EmployeeStatus
+  EmployeeStatus,
+  EmployeeSyncResult
 } from '@/types/v3';
 
 export interface EmployeeListParams {
@@ -71,6 +72,11 @@ export const employeesApi = {
     employees: EmployeeWithOffice[];
   }> {
     const response = await apiClient.get('/employees/offboarding/due');
+    return response.data;
+  },
+
+  async sync(): Promise<EmployeeSyncResult> {
+    const response = await apiClient.post('/employees/sync');
     return response.data;
   },
 };

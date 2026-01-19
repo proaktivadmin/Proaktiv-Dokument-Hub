@@ -2,18 +2,20 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Building2 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { OfficeGrid, OfficeForm } from "@/components/offices";
 import { useOffices } from "@/hooks/v3/useOffices";
 import { officesApi } from "@/lib/api/offices";
+import { useToast } from "@/hooks/use-toast";
 import type { OfficeWithStats } from "@/types/v3";
 
 export default function OfficesPage() {
   const router = useRouter();
   const { offices, cities, isLoading, refetch } = useOffices();
+  const { toast } = useToast();
   const [formOpen, setFormOpen] = useState(false);
   const [editingOffice, setEditingOffice] = useState<OfficeWithStats | null>(null);
+  const [isSyncing, setIsSyncing] = useState(false);
 
   const handleOfficeClick = (office: OfficeWithStats) => {
     router.push(`/offices/${office.id}`);
@@ -45,6 +47,27 @@ export default function OfficesPage() {
     handleFormClose();
   };
 
+  const handleSync = async () => {
+    setIsSyncing(true);
+    try {
+      const result = await officesApi.sync();
+      await refetch();
+      toast({
+        title: "Kontorer synkronisert",
+        description: `Oppdatert ${result.synced} av ${result.total} kontorer.`,
+      });
+    } catch (error) {
+      console.error("Failed to sync offices:", error);
+      toast({
+        title: "Synkronisering feilet",
+        description: "Kunne ikke hente kontorer fra Vitec Hub.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -64,6 +87,8 @@ export default function OfficesPage() {
         isLoading={isLoading}
         onOfficeClick={handleOfficeClick}
         onCreateNew={() => setFormOpen(true)}
+        onSync={handleSync}
+        isSyncing={isSyncing}
         onEdit={handleEdit}
         onDeactivate={handleDeactivate}
       />

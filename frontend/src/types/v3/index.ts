@@ -10,6 +10,7 @@ export interface Office {
   id: string;
   name: string;
   short_code: string;
+  vitec_department_id: number | null;
   email: string | null;
   phone: string | null;
   street_address: string | null;
@@ -20,6 +21,8 @@ export interface Office {
   facebook_url: string | null;
   instagram_url: string | null;
   linkedin_url: string | null;
+  profile_image_url: string | null;
+  description: string | null;
   color: string; // Hex color for territory map
   is_active: boolean;
   created_at: string;
@@ -40,6 +43,14 @@ export interface OfficeListResponse {
   total: number;
 }
 
+export interface OfficeSyncResult {
+  total: number;
+  synced: number;
+  created: number;
+  updated: number;
+  skipped: number;
+}
+
 // =============================================================================
 // Employee Types
 // =============================================================================
@@ -49,6 +60,7 @@ export type EmployeeStatus = 'active' | 'onboarding' | 'offboarding' | 'inactive
 export interface Employee {
   id: string;
   office_id: string;
+  vitec_employee_id: string | null;
   first_name: string;
   last_name: string;
   title: string | null;
@@ -57,6 +69,8 @@ export interface Employee {
   homepage_profile_url: string | null;
   linkedin_url: string | null;
   sharepoint_folder_url: string | null;
+  profile_image_url: string | null;
+  description: string | null;
   system_roles: string[];
   status: EmployeeStatus;
   start_date: string | null; // ISO date
@@ -94,6 +108,15 @@ export interface StartOffboardingPayload {
 export interface EmployeeListResponse {
   items: EmployeeWithOffice[];
   total: number;
+}
+
+export interface EmployeeSyncResult {
+  total: number;
+  synced: number;
+  created: number;
+  updated: number;
+  skipped: number;
+  missing_office: number;
 }
 
 // =============================================================================

@@ -5,10 +5,13 @@ Configures Alembic to use our SQLAlchemy models and database settings.
 """
 
 from logging.config import fileConfig
-from sqlalchemy import engine_from_config, pool
+from sqlalchemy import engine_from_config, pool, text
 from alembic import context
+from alembic.script import ScriptDirectory
 import sys
 import os
+import json
+import time
 
 # Add the backend directory to the path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -19,6 +22,25 @@ from app.config import settings
 
 # This is the Alembic Config object
 config = context.config
+
+DEBUG_LOG_PATH = r"c:\Users\Adrian\Documents\Proaktiv-Dokument-Hub\.cursor\debug.log"
+
+
+def _debug_log(message: str, data: dict, hypothesis_id: str, location: str) -> None:
+    payload = {
+        "sessionId": "debug-session",
+        "runId": "run1",
+        "hypothesisId": hypothesis_id,
+        "location": location,
+        "message": message,
+        "data": data,
+        "timestamp": int(time.time() * 1000),
+    }
+    try:
+        with open(DEBUG_LOG_PATH, "a", encoding="utf-8") as log_file:
+            log_file.write(json.dumps(payload) + "\n")
+    except Exception:
+        pass
 
 # Override sqlalchemy.url from our settings
 def get_database_url() -> str:
@@ -93,6 +115,35 @@ def run_migrations_online() -> None:
     In this scenario we need to create an Engine and associate a
     connection with the context.
     """
+    # region agent log H1
+    _debug_log(
+        "alembic online start",
+        {
+            "script_location": config.get_main_option("script_location"),
+            "config_file": config.config_file_name,
+        },
+        "H1",
+        "alembic/env.py:run_migrations_online:entry",
+    )
+    # endregion
+
+    script = ScriptDirectory.from_config(config)
+    heads = script.get_heads()
+    try:
+        has_0008 = script.get_revision("0008") is not None
+    except Exception:
+        has_0008 = False
+    revision_count = sum(1 for _ in script.walk_revisions())
+
+    # region agent log H1
+    _debug_log(
+        "alembic script revisions",
+        {"heads": heads, "revision_count": revision_count, "has_0008": has_0008},
+        "H1",
+        "alembic/env.py:run_migrations_online:script",
+    )
+    # endregion
+
     connectable = engine_from_config(
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
@@ -101,6 +152,22 @@ def run_migrations_online() -> None:
 
     with connectable.connect() as connection:
         url = config.get_main_option("sqlalchemy.url")
+        current_rev = None
+        rev_error = None
+        try:
+            current_rev = connection.execute(text("SELECT version_num FROM alembic_version")).scalar()
+        except Exception as exc:
+            rev_error = exc.__class__.__name__
+
+        # region agent log H2
+        _debug_log(
+            "alembic version table",
+            {"current_rev": current_rev, "error": rev_error},
+            "H2",
+            "alembic/env.py:run_migrations_online:version",
+        )
+        # endregion
+
         context.configure(
             connection=connection,
             target_metadata=target_metadata,
@@ -108,6 +175,15 @@ def run_migrations_online() -> None:
             compare_server_default=True,
             render_as_batch=is_sqlite(url),  # SQLite requires batch mode
         )
+
+        # region agent log H3
+        _debug_log(
+            "alembic context configured",
+            {"render_as_batch": is_sqlite(url)},
+            "H3",
+            "alembic/env.py:run_migrations_online:configured",
+        )
+        # endregion
 
         with context.begin_transaction():
             context.run_migrations()

@@ -1,6 +1,6 @@
 # PROGRESS.md - Session Tracker
 
-**Last Updated**: 2026-01-18 23:15
+**Last Updated**: 2026-01-19
 **Current Focus**: V3.1 verification + QA signoff (employees + templates)
 
 ---
@@ -48,6 +48,14 @@
 ---
 
 ## 📝 SESSION LOG
+
+### 2026-01-19
+- Added Vitec Hub client with product-login auth + new config fields.
+- Implemented offices (Departments) and employees sync with upsert logic.
+- Added sync endpoints: `POST /api/offices/sync` and `POST /api/employees/sync`.
+- Added Alembic migration for `vitec_department_id` and `vitec_employee_id`.
+- Added API tests for sync endpoints (service mocked).
+- Wired frontend API clients + UI buttons for one-click Vitec sync.
 
 ### 2026-01-18 (Evening)
 - Pivoted from complex multi-agent to RALPH LOOP workflow

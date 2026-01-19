@@ -1,6 +1,6 @@
 "use client";
 
-import { Building2, Plus, Search } from "lucide-react";
+import { Building2, Plus, Search, RefreshCcw } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,8 @@ interface OfficeGridProps {
   onCreateNew?: () => void;
   onEdit?: (office: OfficeWithStats) => void;
   onDeactivate?: (office: OfficeWithStats) => void;
+  onSync?: () => void;
+  isSyncing?: boolean;
 }
 
 export function OfficeGrid({
@@ -33,10 +35,13 @@ export function OfficeGrid({
   onCreateNew,
   onEdit,
   onDeactivate,
+  onSync,
+  isSyncing = false,
 }: OfficeGridProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [cityFilter, setCityFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const showActions = Boolean(onCreateNew || onSync);
 
   // Filter offices
   const filteredOffices = offices.filter((office) => {
@@ -118,11 +123,21 @@ export function OfficeGrid({
           </SelectContent>
         </Select>
 
-        {onCreateNew && (
-          <Button onClick={onCreateNew} className="ml-auto">
-            <Plus className="h-4 w-4 mr-2" />
-            Nytt kontor
-          </Button>
+        {showActions && (
+          <div className="flex gap-2 ml-auto">
+            {onSync && (
+              <Button variant="outline" onClick={onSync} disabled={isSyncing}>
+                <RefreshCcw className="h-4 w-4 mr-2" />
+                {isSyncing ? "Synkroniserer..." : "Synkroniser Vitec"}
+              </Button>
+            )}
+            {onCreateNew && (
+              <Button onClick={onCreateNew}>
+                <Plus className="h-4 w-4 mr-2" />
+                Nytt kontor
+              </Button>
+            )}
+          </div>
         )}
       </div>
 

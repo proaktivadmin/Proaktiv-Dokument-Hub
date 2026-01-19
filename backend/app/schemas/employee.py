@@ -22,6 +22,7 @@ EmployeeStatus = Literal["active", "onboarding", "offboarding", "inactive"]
 class EmployeeBase(BaseModel):
     """Base schema with common employee fields."""
     office_id: UUID = Field(..., description="ID of the office this employee belongs to")
+    vitec_employee_id: Optional[str] = Field(None, description="Vitec Hub employeeId")
     first_name: str = Field(..., min_length=1, max_length=100, description="First name")
     last_name: str = Field(..., min_length=1, max_length=100, description="Last name")
     title: Optional[str] = Field(None, max_length=100, description="Job title")
@@ -30,6 +31,8 @@ class EmployeeBase(BaseModel):
     homepage_profile_url: Optional[str] = Field(None, description="Homepage profile URL")
     linkedin_url: Optional[str] = Field(None, description="LinkedIn profile URL")
     sharepoint_folder_url: Optional[str] = Field(None, description="SharePoint folder URL")
+    profile_image_url: Optional[str] = Field(None, description="Profile image URL")
+    description: Optional[str] = Field(None, description="Profile description")
     system_roles: Optional[List[str]] = Field(default_factory=list, description="Vitec Next system roles")
 
     status: EmployeeStatus = Field("active", description="Employment status")
@@ -51,6 +54,7 @@ class EmployeeCreate(EmployeeBase):
 class EmployeeUpdate(BaseModel):
     """Schema for updating an employee (all fields optional)."""
     office_id: Optional[UUID] = None
+    vitec_employee_id: Optional[str] = None
     first_name: Optional[str] = Field(None, min_length=1, max_length=100)
     last_name: Optional[str] = Field(None, min_length=1, max_length=100)
     title: Optional[str] = Field(None, max_length=100)
@@ -59,6 +63,8 @@ class EmployeeUpdate(BaseModel):
     homepage_profile_url: Optional[str] = None
     linkedin_url: Optional[str] = None
     sharepoint_folder_url: Optional[str] = None
+    profile_image_url: Optional[str] = None
+    description: Optional[str] = None
     system_roles: Optional[List[str]] = None
 
     status: Optional[EmployeeStatus] = None
@@ -118,3 +124,13 @@ class EmployeeListResponse(BaseModel):
     
     class Config:
         from_attributes = True
+
+
+class EmployeeSyncResult(BaseModel):
+    """Schema for employee sync results."""
+    total: int
+    synced: int
+    created: int
+    updated: int
+    skipped: int
+    missing_office: int

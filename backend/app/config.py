@@ -73,6 +73,9 @@ class Settings(BaseSettings):
     VITEC_INSTALLATION_ID: str = ""
     VITEC_ENVIRONMENT: str = "qa"
     VITEC_ACCESS_KEY: str = ""
+    VITEC_HUB_BASE_URL: str = ""
+    VITEC_HUB_PRODUCT_LOGIN: str = ""
+    VITEC_HUB_ACCESS_KEY: str = ""
     
     # WebDAV Network Storage
     WEBDAV_URL: str = ""
