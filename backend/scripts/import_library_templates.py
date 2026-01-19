@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Legacy Library Import Script
+Library Import Script
 
-Imports templates from the legacy library folder into the new system.
+Imports templates from a library folder into the system.
 - Creates categories from folder names
 - Sanitizes HTML content via SanitizerService
 - Uploads files to Azure Blob Storage
@@ -45,7 +45,6 @@ logger = logging.getLogger(__name__)
 
 # Default paths
 DEFAULT_SOURCE_PATH = Path("/app/library")
-LEGACY_SOURCE_PATH = Path("/app/_legacy_v1/library")
 
 # File extensions to process
 SUPPORTED_EXTENSIONS = {'.html', '.htm', '.docx', '.doc', '.pdf', '.xlsx', '.xls'}
@@ -387,18 +386,13 @@ class LibraryImporter:
 async def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
-        description="Import templates from legacy library"
+        description="Import templates from library"
     )
     parser.add_argument(
         '--source',
         type=str,
         default=str(DEFAULT_SOURCE_PATH),
         help=f"Source folder path (default: {DEFAULT_SOURCE_PATH})"
-    )
-    parser.add_argument(
-        '--legacy',
-        action='store_true',
-        help=f"Use legacy source path: {LEGACY_SOURCE_PATH}"
     )
     parser.add_argument(
         '--dry-run',
@@ -413,11 +407,7 @@ async def main():
     
     args = parser.parse_args()
     
-    # Determine source path
-    if args.legacy:
-        source_path = LEGACY_SOURCE_PATH
-    else:
-        source_path = Path(args.source)
+    source_path = Path(args.source)
     
     # Run the import
     importer = LibraryImporter(
