@@ -23,6 +23,15 @@ const statusLabels: Record<EmployeeStatus, string> = {
   inactive: "Inaktiv",
 };
 
+// Helper function to shorten office names
+const shortenOfficeName = (name: string): string => {
+  // Remove "Proaktiv Eiendomsmegling" and clean up
+  return name
+    .replace(/Proaktiv Eiendomsmegling\s*/gi, '')
+    .replace(/^-\s*/, '') // Remove leading dash
+    .trim() || name; // Fallback to original if empty
+};
+
 export function EmployeeSidebar({
   offices,
   selectedOfficeId,
@@ -69,7 +78,7 @@ export function EmployeeSidebar({
                   className="w-2 h-2 rounded-full shrink-0"
                   style={{ backgroundColor: office.color }}
                 />
-                <span className="truncate">{office.name}</span>
+                <span className="truncate">{shortenOfficeName(office.name)}</span>
               </div>
               <span className={cn(
                 "text-xs shrink-0",

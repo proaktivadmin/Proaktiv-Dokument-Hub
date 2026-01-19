@@ -8,6 +8,7 @@ Supports both PostgreSQL (production) and SQLite (development/low-cost).
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
+from sqlalchemy.engine import make_url
 from typing import AsyncGenerator
 import logging
 import os
@@ -34,6 +35,35 @@ def get_async_database_url(url: str) -> str:
     elif url.startswith("sqlite:///"):
         return url.replace("sqlite:///", "sqlite+aiosqlite:///", 1)
     return url
+
+
+def normalize_asyncpg_ssl(url: str) -> tuple[str, dict]:
+    """
+    Normalize SSL-related query params for asyncpg.
+
+    Why:
+    - Many hosted Postgres providers (incl. Railway external URLs) use `sslmode=require`
+      which is a libpq/psycopg2 concept.
+    - asyncpg does NOT understand `sslmode`, so leaving it in the query can break connects.
+
+    Strategy:
+    - Strip `sslmode` from the URL query for asyncpg
+    - Translate it into asyncpg connect args: {"ssl": True}
+    """
+    connect_args: dict = {}
+    try:
+        parsed = make_url(url)
+        query = dict(parsed.query)
+        sslmode = query.pop("sslmode", None)
+        if sslmode and str(sslmode).lower() in ("require", "verify-ca", "verify-full", "prefer"):
+            connect_args["ssl"] = True
+        if sslmode is not None:
+            parsed = parsed.set(query=query)
+            return str(parsed), connect_args
+    except Exception:
+        # If parsing fails, keep the original URL and no connect args.
+        pass
+    return url, connect_args
 
 
 def get_sync_database_url(url: str) -> str:
@@ -85,12 +115,18 @@ if is_sqlite(settings.DATABASE_URL):
     )
 else:
     # PostgreSQL configuration - with connection pooling
+    async_db_url = get_async_database_url(settings.DATABASE_URL)
+    async_connect_args: dict = {}
+    if "+asyncpg://" in async_db_url:
+        async_db_url, async_connect_args = normalize_asyncpg_ssl(async_db_url)
+
     async_engine = create_async_engine(
-        get_async_database_url(settings.DATABASE_URL),
+        async_db_url,
         echo=settings.DEBUG,
         pool_pre_ping=True,
         pool_size=5,
         max_overflow=10,
+        connect_args=async_connect_args,
     )
     
     sync_engine = create_engine(
