@@ -1,7 +1,7 @@
 """V3 Office & Employee Hub - Core Tables
 
-Revision ID: 0005
-Revises: 0004
+Revision ID: 0008
+Revises: 0007
 Create Date: 2026-01-17
 
 Creates V3 database schema:
@@ -24,9 +24,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = '202601170005'
-
-
+revision: str = '0008'
 down_revision: Union[str, None] = '0007'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
