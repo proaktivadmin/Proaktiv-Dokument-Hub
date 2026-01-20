@@ -7,7 +7,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from uuid import UUID
 
 from app.database import get_db
-from app.schemas.sync import SyncPreview
+from app.schemas.sync import SyncPreview, SyncDecisionUpdate, SyncCommitResult
+from app.services.sync_commit_service import SyncCommitService
 from app.services.sync_preview_service import SyncPreviewService
 
 router = APIRouter(prefix="/sync", tags=["Sync"])
@@ -47,3 +48,29 @@ async def cancel_session(
     service = SyncPreviewService()
     await service.cancel_session(db, session_id)
     return {"success": True}
+
+
+@router.patch("/sessions/{session_id}/decisions")
+async def update_decision(
+    session_id: UUID,
+    data: SyncDecisionUpdate,
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Update a decision for a single field in a session.
+    """
+    service = SyncCommitService()
+    await service.update_decision(db, session_id, data)
+    return {"success": True}
+
+
+@router.post("/sessions/{session_id}/commit", response_model=SyncCommitResult)
+async def commit_session(
+    session_id: UUID,
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Apply approved changes from a sync session.
+    """
+    service = SyncCommitService()
+    return await service.commit_session(db, session_id)

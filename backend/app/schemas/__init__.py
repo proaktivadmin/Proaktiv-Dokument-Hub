@@ -123,6 +123,8 @@ from app.schemas.sync import (
     RecordDiff,
     SyncSummary,
     SyncPreview,
+    SyncDecisionUpdate,
+    SyncCommitResult,
 )
 
 __all__ = [
@@ -230,4 +232,6 @@ __all__ = [
     "RecordDiff",
     "SyncSummary",
     "SyncPreview",
+    "SyncDecisionUpdate",
+    "SyncCommitResult",
 ]

@@ -69,6 +69,10 @@
   - Added SyncSession model + migration for session storage
   - Implemented preview service with session persistence and summary counts
   - Added sync preview router endpoints and tests
+- **Vitec Sync Review UI (Phase 2 / Plan 02-03):**
+  - Added decision update + commit endpoints with commit service
+  - Stored Vitec payloads in sessions for approved updates
+  - Extended sync preview responses to reflect saved decisions
 
 ### 2026-01-19 (Evening)
 - **Office & Employee UI Enhancements:**

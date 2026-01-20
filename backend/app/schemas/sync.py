@@ -56,3 +56,23 @@ class SyncPreview(BaseModel):
     offices: List[RecordDiff] = Field(default_factory=list)
     employees: List[RecordDiff] = Field(default_factory=list)
     summary: SyncSummary
+
+
+class SyncDecisionUpdate(BaseModel):
+    """Update decision for a single field."""
+
+    record_type: Literal["office", "employee"]
+    record_id: str = Field(..., min_length=1)
+    field_name: str = Field(..., min_length=1)
+    decision: Literal["accept", "reject"]
+
+
+class SyncCommitResult(BaseModel):
+    """Summary of applied changes after commit."""
+
+    offices_created: int = 0
+    offices_updated: int = 0
+    offices_skipped: int = 0
+    employees_created: int = 0
+    employees_updated: int = 0
+    employees_skipped: int = 0

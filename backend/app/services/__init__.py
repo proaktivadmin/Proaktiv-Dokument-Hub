@@ -23,6 +23,7 @@ from app.services.firecrawl_service import FirecrawlService
 from app.services.vitec_hub_service import VitecHubService
 from app.services.sync_matching_service import SyncMatchingService
 from app.services.sync_preview_service import SyncPreviewService
+from app.services.sync_commit_service import SyncCommitService
 
 __all__ = [
     # V2 Services
@@ -49,4 +50,5 @@ __all__ = [
     "VitecHubService",
     "SyncMatchingService",
     "SyncPreviewService",
+    "SyncCommitService",
 ]
