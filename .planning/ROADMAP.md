@@ -29,12 +29,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Admin can trigger employee sync and see Vitec employee data fetched
   3. Admin can trigger office sync and see Vitec office data fetched
   4. API errors surface clearly in UI (not silent failures)
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: Vitec API Service (authentication, client setup)
-- [ ] 01-02: Sync Trigger Endpoints (employee sync, office sync routes)
-- [ ] 01-03: Admin Sync UI (buttons, loading states, basic results display)
+- [ ] 01-01-PLAN.md - Add Vitec status endpoint and connection verification
+- [ ] 01-02-PLAN.md - Improve error feedback and add connection status UI
+- [ ] 01-03-PLAN.md - Production verification of complete sync flow
 
 ### Phase 2: Vitec Sync Review UI
 **Goal**: Admin can review and approve sync changes field-by-field before committing
@@ -118,7 +118,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Vitec API Connection | 0/3 | Not started | - |
+| 1. Vitec API Connection | 0/3 | Planned | - |
 | 2. Vitec Sync Review UI | 0/5 | Not started | - |
 | 3. Social Media Links | 0/4 | Not started | - |
 | 4. Stack Upgrade | 0/5 | Not started | - |
