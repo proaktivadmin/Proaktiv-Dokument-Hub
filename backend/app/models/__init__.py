@@ -25,6 +25,7 @@ from app.models.postal_code import PostalCode
 from app.models.office_territory import OfficeTerritory
 from app.models.layout_partial_version import LayoutPartialVersion, LayoutPartialDefault
 from app.models.firecrawl_scrape import FirecrawlScrape
+from app.models.sync_session import SyncSession
 
 __all__ = [
     # Base
@@ -59,4 +60,6 @@ __all__ = [
     "LayoutPartialDefault",
     # Web scraping / crawling
     "FirecrawlScrape",
+    # Sync review sessions
+    "SyncSession",
 ]

@@ -65,6 +65,10 @@
   - Added sync diff schemas (FieldDiff, RecordDiff, SyncSummary)
   - Implemented SyncMatchingService with matching and field diff generation
   - Exported new schemas and service
+- **Vitec Sync Review UI (Phase 2 / Plan 02-02):**
+  - Added SyncSession model + migration for session storage
+  - Implemented preview service with session persistence and summary counts
+  - Added sync preview router endpoints and tests
 
 ### 2026-01-19 (Evening)
 - **Office & Employee UI Enhancements:**

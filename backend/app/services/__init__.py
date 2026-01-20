@@ -22,6 +22,7 @@ from app.services.layout_partial_version_service import (
 from app.services.firecrawl_service import FirecrawlService
 from app.services.vitec_hub_service import VitecHubService
 from app.services.sync_matching_service import SyncMatchingService
+from app.services.sync_preview_service import SyncPreviewService
 
 __all__ = [
     # V2 Services
@@ -47,4 +48,5 @@ __all__ = [
     "FirecrawlService",
     "VitecHubService",
     "SyncMatchingService",
+    "SyncPreviewService",
 ]

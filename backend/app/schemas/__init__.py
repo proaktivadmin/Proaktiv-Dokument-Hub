@@ -122,6 +122,7 @@ from app.schemas.sync import (
     FieldDiff,
     RecordDiff,
     SyncSummary,
+    SyncPreview,
 )
 
 __all__ = [
@@ -228,4 +229,5 @@ __all__ = [
     "FieldDiff",
     "RecordDiff",
     "SyncSummary",
+    "SyncPreview",
 ]

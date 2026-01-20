@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field
 from typing import Any, List, Literal, Optional
+from datetime import datetime
 from uuid import UUID
 
 
@@ -44,3 +45,14 @@ class SyncSummary(BaseModel):
     employees_matched: int = 0
     employees_not_in_vitec: int = 0
     employees_missing_office: int = 0
+
+
+class SyncPreview(BaseModel):
+    """Full preview response for a sync session."""
+
+    session_id: UUID
+    created_at: datetime
+    expires_at: datetime
+    offices: List[RecordDiff] = Field(default_factory=list)
+    employees: List[RecordDiff] = Field(default_factory=list)
+    summary: SyncSummary

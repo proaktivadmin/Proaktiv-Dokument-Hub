@@ -1,0 +1,206 @@
+"""
+Sync preview service for Vitec review workflow.
+"""
+
+from __future__ import annotations
+
+from datetime import datetime, timedelta, timezone
+from typing import List, Set
+
+from fastapi import HTTPException
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.config import settings
+from app.models.employee import Employee
+from app.models.office import Office
+from app.models.sync_session import SyncSession
+from app.schemas.sync import RecordDiff, SyncPreview, SyncSummary
+from app.services.employee_service import EmployeeService
+from app.services.office_service import OfficeService
+from app.services.sync_matching_service import SyncMatchingService
+from app.services.vitec_hub_service import VitecHubService
+
+
+class SyncPreviewService:
+    """Generate and store preview sessions for Vitec sync review."""
+
+    def __init__(self) -> None:
+        self._hub = VitecHubService()
+        self._matching = SyncMatchingService()
+
+    async def generate_preview(self, db: AsyncSession) -> SyncPreview:
+        installation_id = settings.VITEC_INSTALLATION_ID
+        if not installation_id:
+            raise HTTPException(
+                status_code=500,
+                detail="VITEC_INSTALLATION_ID is not configured.",
+            )
+
+        departments = await self._hub.get_departments(installation_id)
+        employees = await self._hub.get_employees(installation_id)
+
+        now = datetime.now(timezone.utc)
+        expires_at = now + timedelta(hours=24)
+
+        session = SyncSession(
+            status="pending",
+            preview_data={},
+            decisions={},
+            created_at=now,
+            expires_at=expires_at,
+        )
+        db.add(session)
+        await db.flush()
+        await db.refresh(session)
+
+        office_diffs, matched_offices = await self._build_office_diffs(db, departments)
+        employee_diffs, matched_employees, missing_office = await self._build_employee_diffs(
+            db,
+            employees,
+        )
+
+        office_not_in_vitec = await self._local_offices_not_in_vitec(db, matched_offices)
+        employee_not_in_vitec = await self._local_employees_not_in_vitec(db, matched_employees)
+
+        office_diffs.extend(office_not_in_vitec)
+        employee_diffs.extend(employee_not_in_vitec)
+
+        summary = SyncSummary(
+            offices_new=sum(1 for diff in office_diffs if diff.match_type == "new"),
+            offices_matched=sum(1 for diff in office_diffs if diff.match_type == "matched"),
+            offices_not_in_vitec=sum(
+                1 for diff in office_diffs if diff.match_type == "not_in_vitec"
+            ),
+            employees_new=sum(1 for diff in employee_diffs if diff.match_type == "new"),
+            employees_matched=sum(1 for diff in employee_diffs if diff.match_type == "matched"),
+            employees_not_in_vitec=sum(
+                1 for diff in employee_diffs if diff.match_type == "not_in_vitec"
+            ),
+            employees_missing_office=missing_office,
+        )
+
+        preview = SyncPreview(
+            session_id=session.id,
+            created_at=now,
+            expires_at=expires_at,
+            offices=office_diffs,
+            employees=employee_diffs,
+            summary=summary,
+        )
+
+        session.preview_data = preview.model_dump(mode="json")
+        await db.flush()
+
+        return preview
+
+    async def get_session(self, db: AsyncSession, session_id) -> SyncPreview:
+        session = await self._load_session(db, session_id)
+        if session.expires_at < datetime.now(timezone.utc):
+            session.status = "expired"
+            await db.flush()
+            raise HTTPException(status_code=410, detail="Sync session has expired.")
+        if not session.preview_data:
+            raise HTTPException(status_code=404, detail="Sync preview not found.")
+        return SyncPreview.model_validate(session.preview_data)
+
+    async def cancel_session(self, db: AsyncSession, session_id) -> None:
+        session = await self._load_session(db, session_id)
+        session.status = "cancelled"
+        await db.flush()
+
+    async def _load_session(self, db: AsyncSession, session_id) -> SyncSession:
+        result = await db.execute(select(SyncSession).where(SyncSession.id == str(session_id)))
+        session = result.scalar_one_or_none()
+        if not session:
+            raise HTTPException(status_code=404, detail="Sync session not found.")
+        return session
+
+    async def _build_office_diffs(
+        self,
+        db: AsyncSession,
+        departments: list[dict],
+    ) -> tuple[List[RecordDiff], Set[str]]:
+        office_diffs: List[RecordDiff] = []
+        matched_ids: Set[str] = set()
+        for raw in departments:
+            diff = await self._matching.match_office(db, raw or {})
+            office_diffs.append(diff)
+            if diff.match_type == "matched" and diff.local_id:
+                matched_ids.add(str(diff.local_id))
+        return office_diffs, matched_ids
+
+    async def _build_employee_diffs(
+        self,
+        db: AsyncSession,
+        employees: list[dict],
+    ) -> tuple[List[RecordDiff], Set[str], int]:
+        employee_diffs: List[RecordDiff] = []
+        matched_ids: Set[str] = set()
+        missing_office = 0
+
+        office_lookup = await self._office_lookup(db)
+        for raw in employees:
+            payload = EmployeeService._map_employee_payload(raw or {})
+            department_id = payload.get("department_id")
+            if department_id is None or department_id not in office_lookup:
+                missing_office += 1
+
+            diff = await self._matching.match_employee(db, raw or {})
+            employee_diffs.append(diff)
+            if diff.match_type == "matched" and diff.local_id:
+                matched_ids.add(str(diff.local_id))
+        return employee_diffs, matched_ids, missing_office
+
+    async def _office_lookup(self, db: AsyncSession) -> dict[int, Office]:
+        result = await db.execute(select(Office))
+        offices = result.scalars().all()
+        return {office.vitec_department_id: office for office in offices if office.vitec_department_id}
+
+    async def _local_offices_not_in_vitec(
+        self,
+        db: AsyncSession,
+        matched_ids: Set[str],
+    ) -> List[RecordDiff]:
+        result = await db.execute(select(Office))
+        offices = result.scalars().all()
+        diffs: List[RecordDiff] = []
+        for office in offices:
+            if str(office.id) in matched_ids:
+                continue
+            diffs.append(
+                RecordDiff(
+                    match_type="not_in_vitec",
+                    local_id=office.id,
+                    vitec_id=None,
+                    display_name=office.name,
+                    fields=[],
+                    match_confidence=0.0,
+                    match_method=None,
+                )
+            )
+        return diffs
+
+    async def _local_employees_not_in_vitec(
+        self,
+        db: AsyncSession,
+        matched_ids: Set[str],
+    ) -> List[RecordDiff]:
+        result = await db.execute(select(Employee))
+        employees = result.scalars().all()
+        diffs: List[RecordDiff] = []
+        for employee in employees:
+            if str(employee.id) in matched_ids:
+                continue
+            diffs.append(
+                RecordDiff(
+                    match_type="not_in_vitec",
+                    local_id=employee.id,
+                    vitec_id=employee.vitec_employee_id,
+                    display_name=employee.full_name,
+                    fields=[],
+                    match_confidence=0.0,
+                    match_method=None,
+                )
+            )
+        return diffs
