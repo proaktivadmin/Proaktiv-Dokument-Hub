@@ -262,3 +262,5 @@ export { templateSettingsApi } from "./api/template-settings";
 export { dashboardApi } from "./api/dashboard";
 export { storageApi } from "./api/storage";
 export type { StorageItem, BrowseResponse, StorageStatus, ImportToLibraryPayload, ImportResult } from "./api/storage";
+export { vitecApi } from "./api/vitec";
+export type { VitecStatus } from "./api/vitec";
