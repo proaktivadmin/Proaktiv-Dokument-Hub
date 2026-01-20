@@ -513,6 +513,9 @@ class OfficeService:
             else:
                 skipped += 1
 
+        # Explicitly commit all changes
+        await db.commit()
+        
         total = len(departments)
         logger.info(
             "Vitec Hub offices sync complete: total=%s created=%s updated=%s skipped=%s",

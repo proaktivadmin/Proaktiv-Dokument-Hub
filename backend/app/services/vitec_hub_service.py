@@ -47,7 +47,7 @@ class VitecHubService:
     def _get_auth(self) -> httpx.BasicAuth:
         return httpx.BasicAuth(self._product_login, self._access_key)
 
-    async def _request(self, method: str, path: str) -> Any:
+    async def _request(self, method: str, path: str, *, accept: str = "application/json") -> Any:
         if not self.is_configured:
             raise HTTPException(
                 status_code=500,
@@ -59,7 +59,7 @@ class VitecHubService:
             async with httpx.AsyncClient(
                 auth=self._get_auth(),
                 timeout=30.0,
-                headers={"Accept": "application/json"},
+                headers={"Accept": accept},
             ) as client:
                 response = await client.request(method, url)
         except httpx.HTTPError as exc:
@@ -70,6 +70,8 @@ class VitecHubService:
             raise HTTPException(status_code=401, detail="Vitec Hub unauthorized.")
         if response.status_code == 403:
             raise HTTPException(status_code=403, detail="Vitec Hub forbidden.")
+        if response.status_code == 404:
+            return None  # Picture not found
         if response.status_code == 429:
             retry_after = response.headers.get("Retry-After")
             detail = "Vitec Hub rate limit reached."
@@ -82,6 +84,10 @@ class VitecHubService:
                 status_code=502,
                 detail=f"Vitec Hub error {response.status_code}: {message}",
             )
+
+        # Return raw bytes for image requests
+        if accept.startswith("image/"):
+            return response.content
 
         try:
             return response.json()
@@ -103,3 +109,45 @@ class VitecHubService:
         """Fetch employees for a specific installation."""
         data = await self._request("GET", f"{installation_id}/Employees")
         return list(data or [])
+
+    async def get_employee_picture(
+        self,
+        installation_id: str,
+        employee_id: str | int,
+    ) -> Optional[bytes]:
+        """
+        Fetch employee profile picture.
+        
+        Args:
+            installation_id: Vitec installation ID
+            employee_id: Employee ID (vitec_employee_id)
+            
+        Returns:
+            Image bytes or None if not found
+        """
+        return await self._request(
+            "GET",
+            f"{installation_id}/Employees/{employee_id}/Picture",
+            accept="image/*",
+        )
+
+    async def get_department_picture(
+        self,
+        installation_id: str,
+        department_id: str | int,
+    ) -> Optional[bytes]:
+        """
+        Fetch department banner/logo picture.
+        
+        Args:
+            installation_id: Vitec installation ID
+            department_id: Department ID (vitec_department_id)
+            
+        Returns:
+            Image bytes or None if not found
+        """
+        return await self._request(
+            "GET",
+            f"{installation_id}/Departments/{department_id}/Picture",
+            accept="image/*",
+        )

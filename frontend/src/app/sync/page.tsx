@@ -1,148 +1,100 @@
 "use client";
 
 import { useState } from "react";
-import type { Dispatch, SetStateAction } from "react";
 import { AxiosError } from "axios";
 import { Header } from "@/components/layout/Header";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { SyncPreview as SyncPreviewComponent } from "@/components/sync";
-import { syncApi } from "@/lib/api/sync";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { officesApi } from "@/lib/api/offices";
+import { employeesApi } from "@/lib/api/employees";
+import { vitecApi } from "@/lib/api/vitec";
 import { useToast } from "@/hooks/use-toast";
-import type { SyncCommitResult, SyncDecision, SyncPreview } from "@/types/v3";
+import { Image, Building2, Users, RefreshCcw } from "lucide-react";
 
 export default function SyncPage() {
   const { toast } = useToast();
-  const [preview, setPreview] = useState<SyncPreview | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isCommitting, setIsCommitting] = useState(false);
-  const [isBulkUpdating, setIsBulkUpdating] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isSyncingOffices, setIsSyncingOffices] = useState(false);
+  const [isSyncingEmployees, setIsSyncingEmployees] = useState(false);
+  const [isSyncingOfficePictures, setIsSyncingOfficePictures] = useState(false);
+  const [isSyncingEmployeePictures, setIsSyncingEmployeePictures] = useState(false);
 
-  const handleStartPreview = async () => {
-    setIsLoading(true);
-    setErrorMessage(null);
+  const handleSyncOffices = async () => {
+    setIsSyncingOffices(true);
     try {
-      const data = await syncApi.createPreview();
-      setPreview(data);
-    } catch (error) {
-      const message = extractErrorMessage(error, "Kunne ikke starte forhåndsvisning.");
-      setErrorMessage(message);
+      const result = await officesApi.sync();
       toast({
-        title: "Forhåndsvisning feilet",
-        description: message,
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleDecision = async (
-    recordType: "office" | "employee",
-    recordId: string,
-    fieldName: string,
-    decision: SyncDecision
-  ) => {
-    if (!preview) return;
-
-    try {
-      await syncApi.updateDecision(preview.session_id, {
-        record_type: recordType,
-        record_id: recordId,
-        field_name: fieldName,
-        decision,
-      });
-      setPreview((current) =>
-        current ? applyDecision(current, recordType, recordId, fieldName, decision) : current
-      );
-    } catch (error) {
-      if (handleSessionExpired(error, toast, setPreview)) return;
-      const message = extractErrorMessage(error, "Kunne ikke oppdatere valg.");
-      toast({
-        title: "Oppdatering feilet",
-        description: message,
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleCommit = async () => {
-    if (!preview) return;
-    setIsCommitting(true);
-    try {
-      const result = await syncApi.commitSession(preview.session_id);
-      toast({
-        title: "Synkronisering fullført",
-        description: formatCommitResult(result),
+        title: "Kontorer synkronisert",
+        description: `${result.synced} av ${result.total} kontorer oppdatert. ${result.created} nye, ${result.updated} oppdatert, ${result.skipped} hoppet over.`,
       });
     } catch (error) {
-      if (handleSessionExpired(error, toast, setPreview)) return;
-      const message = extractErrorMessage(error, "Kunne ikke fullføre synkronisering.");
+      const message = extractErrorMessage(error, "Kunne ikke synkronisere kontorer.");
       toast({
         title: "Synkronisering feilet",
         description: message,
         variant: "destructive",
       });
     } finally {
-      setIsCommitting(false);
+      setIsSyncingOffices(false);
     }
   };
 
-  const handleCancel = async () => {
-    if (!preview) return;
+  const handleSyncEmployees = async () => {
+    setIsSyncingEmployees(true);
     try {
-      await syncApi.cancelSession(preview.session_id);
-      setPreview(null);
+      const result = await employeesApi.sync();
       toast({
-        title: "Økten ble avbrutt",
-        description: "Forhåndsvisningen er avsluttet.",
+        title: "Medarbeidere synkronisert",
+        description: `${result.synced} av ${result.total} medarbeidere oppdatert. ${result.created} nye, ${result.updated} oppdatert, ${result.skipped} hoppet over.${result.missing_office > 0 ? ` ${result.missing_office} mangler kontor.` : ""}`,
       });
     } catch (error) {
-      if (handleSessionExpired(error, toast, setPreview)) return;
-      const message = extractErrorMessage(error, "Kunne ikke avbryte økten.");
+      const message = extractErrorMessage(error, "Kunne ikke synkronisere medarbeidere.");
       toast({
-        title: "Avbryt feilet",
-        description: message,
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleBulkUpdate = async (operations: DecisionOperation[]) => {
-    if (!preview) return;
-    if (operations.length === 0) {
-      toast({
-        title: "Ingen felter valgt",
-        description: "Ingen felt var tilgjengelig for denne handlingen.",
-      });
-      return;
-    }
-
-    setIsBulkUpdating(true);
-    try {
-      await Promise.all(
-        operations.map((operation) =>
-          syncApi.updateDecision(preview.session_id, operation)
-        )
-      );
-      setPreview((current) =>
-        current ? applyBulkDecisions(current, operations) : current
-      );
-      toast({
-        title: "Hurtigvalg fullført",
-        description: `Oppdaterte ${operations.length} felt.`,
-      });
-    } catch (error) {
-      if (handleSessionExpired(error, toast, setPreview)) return;
-      const message = extractErrorMessage(error, "Kunne ikke oppdatere felter.");
-      toast({
-        title: "Hurtigvalg feilet",
+        title: "Synkronisering feilet",
         description: message,
         variant: "destructive",
       });
     } finally {
-      setIsBulkUpdating(false);
+      setIsSyncingEmployees(false);
+    }
+  };
+
+  const handleSyncOfficePictures = async () => {
+    setIsSyncingOfficePictures(true);
+    try {
+      const result = await vitecApi.syncOfficePictures();
+      toast({
+        title: "Kontorbilder synkronisert",
+        description: `${result.synced} av ${result.total} bilder lastet ned. ${result.failed > 0 ? `${result.failed} feilet.` : ""}`,
+      });
+    } catch (error) {
+      const message = extractErrorMessage(error, "Kunne ikke synkronisere kontorbilder.");
+      toast({
+        title: "Synkronisering feilet",
+        description: message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsSyncingOfficePictures(false);
+    }
+  };
+
+  const handleSyncEmployeePictures = async () => {
+    setIsSyncingEmployeePictures(true);
+    try {
+      const result = await vitecApi.syncEmployeePictures();
+      toast({
+        title: "Medarbeiderbilder synkronisert",
+        description: `${result.synced} av ${result.total} bilder lastet ned. ${result.failed > 0 ? `${result.failed} feilet.` : ""}`,
+      });
+    } catch (error) {
+      const message = extractErrorMessage(error, "Kunne ikke synkronisere medarbeiderbilder.");
+      toast({
+        title: "Synkronisering feilet",
+        description: message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsSyncingEmployeePictures(false);
     }
   };
 
@@ -153,43 +105,125 @@ export default function SyncPage() {
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-foreground">Vitec synkronisering</h2>
           <p className="text-muted-foreground">
-            Forhåndsvis endringer og godkjenn oppdateringer før de lagres.
+            Synkroniser data og bilder direkte fra Vitec Hub.
           </p>
         </div>
 
-        {!preview && (
+        <div className="grid gap-6 md:grid-cols-2">
+          {/* Office Data Sync */}
           <Card>
-            <CardContent className="flex flex-col gap-4 p-6">
-              <p className="text-sm text-muted-foreground">
-                Start en forhåndsvisning for å se foreslåtte oppdateringer fra Vitec.
-              </p>
-              {errorMessage && (
-                <p className="text-sm text-destructive">{errorMessage}</p>
-              )}
-              <div>
-                <Button onClick={handleStartPreview} disabled={isLoading}>
-                  {isLoading ? "Starter..." : "Start forhåndsvisning"}
-                </Button>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/20">
+                  <Building2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                </div>
+                <div>
+                  <CardTitle>Kontorer</CardTitle>
+                  <CardDescription>Synkroniser kontordata</CardDescription>
+                </div>
               </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Henter kontorer fra Vitec og oppdaterer navn, adresse, kontaktinformasjon og andre detaljer.
+              </p>
+              <Button
+                onClick={handleSyncOffices}
+                disabled={isSyncingOffices}
+                className="w-full"
+              >
+                <RefreshCcw className={`mr-2 h-4 w-4 ${isSyncingOffices ? "animate-spin" : ""}`} />
+                {isSyncingOffices ? "Synkroniserer..." : "Synkroniser kontorer"}
+              </Button>
             </CardContent>
           </Card>
-        )}
 
-        {preview && (
-          <SyncPreviewComponent
-            preview={preview}
-            isCommitting={isCommitting}
-            isBulkUpdating={isBulkUpdating}
-            onDecision={handleDecision}
-            onCommit={handleCommit}
-            onCancel={handleCancel}
-            onAcceptAllNew={() => handleBulkUpdate(buildBulkOperations(preview, "new", "accept"))}
-            onAcceptHighConfidence={() =>
-              handleBulkUpdate(buildBulkOperations(preview, "high_confidence", "accept"))
-            }
-            onRejectAll={() => handleBulkUpdate(buildBulkOperations(preview, "all", "reject"))}
-          />
-        )}
+          {/* Employee Data Sync */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-sky-100 dark:bg-sky-900/20">
+                  <Users className="h-5 w-5 text-sky-600 dark:text-sky-400" />
+                </div>
+                <div>
+                  <CardTitle>Medarbeidere</CardTitle>
+                  <CardDescription>Synkroniser medarbeiderdata</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Henter medarbeidere fra Vitec og oppdaterer navn, tittel, kontaktinformasjon og roller.
+              </p>
+              <Button
+                onClick={handleSyncEmployees}
+                disabled={isSyncingEmployees}
+                className="w-full"
+              >
+                <RefreshCcw className={`mr-2 h-4 w-4 ${isSyncingEmployees ? "animate-spin" : ""}`} />
+                {isSyncingEmployees ? "Synkroniserer..." : "Synkroniser medarbeidere"}
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Office Pictures Sync */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/20">
+                  <Building2 className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                </div>
+                <div>
+                  <CardTitle>Kontorbilder</CardTitle>
+                  <CardDescription>Synkroniser bannerbilder</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Laster ned bannerbilder for alle kontorer fra Vitec Hub.
+              </p>
+              <Button
+                onClick={handleSyncOfficePictures}
+                disabled={isSyncingOfficePictures}
+                variant="outline"
+                className="w-full"
+              >
+                <Image className={`mr-2 h-4 w-4 ${isSyncingOfficePictures ? "animate-pulse" : ""}`} />
+                {isSyncingOfficePictures ? "Synkroniserer..." : "Synkroniser kontorbilder"}
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Employee Pictures Sync */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/20">
+                  <Image className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                </div>
+                <div>
+                  <CardTitle>Medarbeiderbilder</CardTitle>
+                  <CardDescription>Synkroniser profilbilder</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Laster ned profilbilder for alle medarbeidere fra Vitec Hub.
+              </p>
+              <Button
+                onClick={handleSyncEmployeePictures}
+                disabled={isSyncingEmployeePictures}
+                variant="outline"
+                className="w-full"
+              >
+                <Image className={`mr-2 h-4 w-4 ${isSyncingEmployeePictures ? "animate-pulse" : ""}`} />
+                {isSyncingEmployeePictures ? "Synkroniserer..." : "Synkroniser medarbeiderbilder"}
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
       </main>
     </div>
   );
@@ -203,142 +237,4 @@ const extractErrorMessage = (error: unknown, fallback: string): string => {
     return error.message;
   }
   return fallback;
-};
-
-const handleSessionExpired = (
-  error: unknown,
-  toast: ReturnType<typeof useToast>["toast"],
-  setPreview: Dispatch<SetStateAction<SyncPreview | null>>
-): boolean => {
-  if (error instanceof AxiosError && error.response?.status === 410) {
-    setPreview(null);
-    toast({
-      title: "Økten er utløpt",
-      description: "Start en ny forhåndsvisning for å fortsette.",
-      variant: "destructive",
-    });
-    return true;
-  }
-  return false;
-};
-
-type BulkMode = "new" | "high_confidence" | "all";
-
-type DecisionOperation = {
-  record_type: "office" | "employee";
-  record_id: string;
-  field_name: string;
-  decision: SyncDecision;
-};
-
-const buildBulkOperations = (
-  preview: SyncPreview,
-  mode: BulkMode,
-  decision: SyncDecision
-): DecisionOperation[] => {
-  const operations: DecisionOperation[] = [];
-
-  const shouldIncludeRecord = (record: SyncPreview["offices"][number]): boolean => {
-    if (mode === "new") return record.match_type === "new";
-    if (mode === "high_confidence") {
-      return record.match_type === "matched" && record.match_confidence >= 0.9;
-    }
-    return record.match_type !== "not_in_vitec";
-  };
-
-  const pushRecord = (
-    recordType: "office" | "employee",
-    record: SyncPreview["offices"][number]
-  ) => {
-    const recordId = record.local_id ?? record.vitec_id ?? "";
-    if (!recordId) return;
-    record.fields.forEach((field) => {
-      operations.push({
-        record_type: recordType,
-        record_id: recordId,
-        field_name: field.field_name,
-        decision,
-      });
-    });
-  };
-
-  preview.offices.filter(shouldIncludeRecord).forEach((record) => {
-    pushRecord("office", record);
-  });
-  preview.employees.filter(shouldIncludeRecord).forEach((record) => {
-    pushRecord("employee", record);
-  });
-
-  return operations;
-};
-
-const applyBulkDecisions = (
-  preview: SyncPreview,
-  operations: DecisionOperation[]
-): SyncPreview => {
-  if (operations.length === 0) return preview;
-  const operationMap = new Map<string, Map<string, SyncDecision>>();
-  operations.forEach((operation) => {
-    const key = `${operation.record_type}:${operation.record_id}`;
-    if (!operationMap.has(key)) {
-      operationMap.set(key, new Map());
-    }
-    operationMap.get(key)?.set(operation.field_name, operation.decision);
-  });
-
-  const updateRecords = (
-    records: SyncPreview["offices"],
-    recordType: "office" | "employee"
-  ) => {
-    return records.map((record) => {
-      const recordId = record.local_id ?? record.vitec_id ?? "";
-      const decisions = operationMap.get(`${recordType}:${recordId}`);
-      if (!decisions) return record;
-      return {
-        ...record,
-        fields: record.fields.map((field) => {
-          const decision = decisions.get(field.field_name);
-          return decision ? { ...field, decision } : field;
-        }),
-      };
-    });
-  };
-
-  return {
-    ...preview,
-    offices: updateRecords(preview.offices, "office"),
-    employees: updateRecords(preview.employees, "employee"),
-  };
-};
-
-const applyDecision = (
-  preview: SyncPreview,
-  recordType: "office" | "employee",
-  recordId: string,
-  fieldName: string,
-  decision: SyncDecision
-): SyncPreview => {
-  const key = recordType === "office" ? "offices" : "employees";
-  const updatedRecords = preview[key].map((record) => {
-    const id = record.local_id ?? record.vitec_id ?? "";
-    if (id !== recordId) {
-      return record;
-    }
-    return {
-      ...record,
-      fields: record.fields.map((field) =>
-        field.field_name === fieldName ? { ...field, decision } : field
-      ),
-    };
-  });
-  return { ...preview, [key]: updatedRecords };
-};
-
-const formatCommitResult = (result: SyncCommitResult): string => {
-  return (
-    `Kontorer: +${result.offices_created}, oppdatert ${result.offices_updated}, ` +
-    `hoppet over ${result.offices_skipped}. ` +
-    `Ansatte: +${result.employees_created}, oppdatert ${result.employees_updated}, ` +
-    `hoppet over ${result.employees_skipped}.`
-  );
 };

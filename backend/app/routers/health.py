@@ -23,10 +23,20 @@ async def health_check(db: AsyncSession = Depends(get_db)):
     """
     # Check database
     db_status = "connected"
+    office_count = 0
+    employee_count = 0
+    
     try:
         await db.execute(text("SELECT 1"))
-    except Exception:
-        db_status = "disconnected"
+        
+        # Get record counts
+        office_result = await db.execute(text("SELECT COUNT(*) FROM offices"))
+        office_count = office_result.scalar() or 0
+        
+        employee_result = await db.execute(text("SELECT COUNT(*) FROM employees"))
+        employee_count = employee_result.scalar() or 0
+    except Exception as e:
+        db_status = f"disconnected: {str(e)}"
     
     # Check Azure Storage
     storage_service = get_azure_storage_service()
@@ -44,6 +54,10 @@ async def health_check(db: AsyncSession = Depends(get_db)):
             "storage": storage_status,
             "vitec_api": vitec_status,
             "redis": "not_configured"
+        },
+        "data": {
+            "offices": office_count,
+            "employees": employee_count
         },
         "version": settings.APP_VERSION
     }

@@ -5,6 +5,7 @@ Provides endpoints for checking Vitec Hub API configuration and connection statu
 """
 
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import Response
 from pydantic import BaseModel
 from typing import Optional
 import logging
@@ -85,3 +86,195 @@ async def get_vitec_status():
             installation_id=masked_id,
             error=f"Connection test failed: {str(e)}",
         )
+
+
+@router.get("/employees/{employee_id}/picture")
+async def get_employee_picture(employee_id: str):
+    """
+    Fetch employee profile picture from Vitec Hub.
+    
+    Args:
+        employee_id: Vitec employee ID
+        
+    Returns:
+        Image bytes with appropriate content-type
+    """
+    hub = VitecHubService()
+    installation_id = settings.VITEC_INSTALLATION_ID
+    
+    if not installation_id:
+        raise HTTPException(
+            status_code=500,
+            detail="VITEC_INSTALLATION_ID is not configured.",
+        )
+    
+    image_data = await hub.get_employee_picture(installation_id, employee_id)
+    
+    if not image_data:
+        raise HTTPException(status_code=404, detail="Employee picture not found.")
+    
+    return Response(content=image_data, media_type="image/jpeg")
+
+
+@router.get("/departments/{department_id}/picture")
+async def get_department_picture(department_id: str):
+    """
+    Fetch department banner/logo picture from Vitec Hub.
+    
+    Args:
+        department_id: Vitec department ID
+        
+    Returns:
+        Image bytes with appropriate content-type
+    """
+    hub = VitecHubService()
+    installation_id = settings.VITEC_INSTALLATION_ID
+    
+    if not installation_id:
+        raise HTTPException(
+            status_code=500,
+            detail="VITEC_INSTALLATION_ID is not configured.",
+        )
+    
+    image_data = await hub.get_department_picture(installation_id, department_id)
+    
+    if not image_data:
+        raise HTTPException(status_code=404, detail="Department picture not found.")
+    
+    return Response(content=image_data, media_type="image/jpeg")
+
+
+class SyncPicturesResponse(BaseModel):
+    """Response model for picture sync operations."""
+    total: int
+    synced: int
+    failed: int
+    skipped: int
+
+
+@router.post("/sync-office-pictures", response_model=SyncPicturesResponse)
+async def sync_office_pictures():
+    """
+    Sync office banner pictures from Vitec Hub to local storage.
+    
+    Fetches pictures for all offices with vitec_department_id and stores them.
+    """
+    from app.database import get_db
+    from app.models.office import Office
+    from sqlalchemy import select
+    import base64
+    
+    hub = VitecHubService()
+    installation_id = settings.VITEC_INSTALLATION_ID
+    
+    if not installation_id:
+        raise HTTPException(
+            status_code=500,
+            detail="VITEC_INSTALLATION_ID is not configured.",
+        )
+    
+    total = synced = failed = skipped = 0
+    
+    async for db in get_db():
+        result = await db.execute(
+            select(Office).where(Office.vitec_department_id.isnot(None))
+        )
+        offices = result.scalars().all()
+        total = len(offices)
+        
+        for office in offices:
+            if not office.vitec_department_id:
+                skipped += 1
+                continue
+                
+            try:
+                image_data = await hub.get_department_picture(
+                    installation_id,
+                    office.vitec_department_id
+                )
+                
+                if image_data:
+                    # Store as data URL for now (could be enhanced to use Azure Storage)
+                    data_url = f"data:image/jpeg;base64,{base64.b64encode(image_data).decode()}"
+                    office.banner_image_url = data_url
+                    synced += 1
+                else:
+                    skipped += 1
+                    
+            except Exception as e:
+                logger.error(f"Failed to sync picture for office {office.id}: {e}")
+                failed += 1
+        
+        await db.commit()
+        break
+    
+    return SyncPicturesResponse(
+        total=total,
+        synced=synced,
+        failed=failed,
+        skipped=skipped,
+    )
+
+
+@router.post("/sync-employee-pictures", response_model=SyncPicturesResponse)
+async def sync_employee_pictures():
+    """
+    Sync employee profile pictures from Vitec Hub to local storage.
+    
+    Fetches pictures for all employees with vitec_employee_id and stores them.
+    """
+    from app.database import get_db
+    from app.models.employee import Employee
+    from sqlalchemy import select
+    import base64
+    
+    hub = VitecHubService()
+    installation_id = settings.VITEC_INSTALLATION_ID
+    
+    if not installation_id:
+        raise HTTPException(
+            status_code=500,
+            detail="VITEC_INSTALLATION_ID is not configured.",
+        )
+    
+    total = synced = failed = skipped = 0
+    
+    async for db in get_db():
+        result = await db.execute(
+            select(Employee).where(Employee.vitec_employee_id.isnot(None))
+        )
+        employees = result.scalars().all()
+        total = len(employees)
+        
+        for employee in employees:
+            if not employee.vitec_employee_id:
+                skipped += 1
+                continue
+                
+            try:
+                image_data = await hub.get_employee_picture(
+                    installation_id,
+                    employee.vitec_employee_id
+                )
+                
+                if image_data:
+                    # Store as data URL for now (could be enhanced to use Azure Storage)
+                    data_url = f"data:image/jpeg;base64,{base64.b64encode(image_data).decode()}"
+                    employee.profile_image_url = data_url
+                    synced += 1
+                else:
+                    skipped += 1
+                    
+            except Exception as e:
+                logger.error(f"Failed to sync picture for employee {employee.id}: {e}")
+                failed += 1
+        
+        await db.commit()
+        break
+    
+    return SyncPicturesResponse(
+        total=total,
+        synced=synced,
+        failed=failed,
+        skipped=skipped,
+    )

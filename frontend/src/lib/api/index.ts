@@ -46,4 +46,4 @@ export type { AssetListParams } from "./assets";
 export type { TerritoryListParams } from "./territories";
 export type { ChecklistTemplateListParams, ChecklistInstanceListParams } from "./checklists";
 export type { ExternalListingListParams } from "./external-listings";
-export type { VitecStatus } from "./vitec";
+export type { VitecStatus, SyncPicturesResponse } from "./vitec";
