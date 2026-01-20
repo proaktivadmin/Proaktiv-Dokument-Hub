@@ -15,7 +15,8 @@ import axios, { AxiosInstance } from 'axios';
  * 
  * Priority:
  * 1. NEXT_PUBLIC_API_URL environment variable (if set)
- * 2. Empty string (use relative URLs with Next.js rewrites)
+ * 2. Check if we're on the client side and use window.location
+ * 3. Empty string (use relative URLs with Next.js rewrites)
  */
 export function getApiBaseUrl(): string {
   // If explicitly set, use it
@@ -23,7 +24,17 @@ export function getApiBaseUrl(): string {
     return process.env.NEXT_PUBLIC_API_URL;
   }
   
-  // Default: use relative URLs (works with Next.js rewrites)
+  // On client side, check if we're on Railway production
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+    
+    // If on Railway frontend domain, use direct backend URL
+    if (hostname.includes('blissful-quietude') || hostname.includes('railway.app')) {
+      return 'https://proaktiv-dokument-hub-production.up.railway.app';
+    }
+  }
+  
+  // Default: use relative URLs (works with Next.js rewrites for localhost)
   return "";
 }
 
