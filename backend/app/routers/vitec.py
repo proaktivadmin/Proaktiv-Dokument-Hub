@@ -174,6 +174,7 @@ async def sync_office_pictures():
         )
     
     total = synced = failed = skipped = 0
+    batch_size = 5  # Commit every 5 items to prevent connection timeout
     
     async for db in get_db():
         result = await db.execute(
@@ -181,6 +182,7 @@ async def sync_office_pictures():
         )
         offices = result.scalars().all()
         total = len(offices)
+        batch_count = 0
         
         for office in offices:
             if not office.vitec_department_id:
@@ -198,14 +200,22 @@ async def sync_office_pictures():
                     data_url = f"data:image/jpeg;base64,{base64.b64encode(image_data).decode()}"
                     office.banner_image_url = data_url
                     synced += 1
+                    batch_count += 1
                 else:
                     skipped += 1
                     
             except Exception as e:
                 logger.error(f"Failed to sync picture for office {office.id}: {e}")
                 failed += 1
+            
+            # Commit in batches to prevent connection timeout
+            if batch_count >= batch_size:
+                await db.commit()
+                batch_count = 0
         
-        await db.commit()
+        # Commit any remaining changes
+        if batch_count > 0:
+            await db.commit()
         break
     
     return SyncPicturesResponse(
@@ -238,6 +248,7 @@ async def sync_employee_pictures():
         )
     
     total = synced = failed = skipped = 0
+    batch_size = 5  # Commit every 5 items to prevent connection timeout
     
     async for db in get_db():
         result = await db.execute(
@@ -245,6 +256,7 @@ async def sync_employee_pictures():
         )
         employees = result.scalars().all()
         total = len(employees)
+        batch_count = 0
         
         for employee in employees:
             if not employee.vitec_employee_id:
@@ -262,14 +274,22 @@ async def sync_employee_pictures():
                     data_url = f"data:image/jpeg;base64,{base64.b64encode(image_data).decode()}"
                     employee.profile_image_url = data_url
                     synced += 1
+                    batch_count += 1
                 else:
                     skipped += 1
                     
             except Exception as e:
                 logger.error(f"Failed to sync picture for employee {employee.id}: {e}")
                 failed += 1
+            
+            # Commit in batches to prevent connection timeout
+            if batch_count >= batch_size:
+                await db.commit()
+                batch_count = 0
         
-        await db.commit()
+        # Commit any remaining changes
+        if batch_count > 0:
+            await db.commit()
         break
     
     return SyncPicturesResponse(
