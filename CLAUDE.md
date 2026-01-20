@@ -137,6 +137,13 @@ See `.cursor/active_context.md` for full status.
 - ✅ 6 offices and 23 employees imported from proaktiv.no
 - ✅ Consistent employee page layout with 256px sidebar
 - ✅ Shortened office names (removed "Proaktiv Eiendomsmegling" prefix)
+- ✅ **Proaktiv Directory Scraper** - Automated tool to sync offices/employees from proaktiv.no
+  - One-command launcher: `run-proaktiv-scraper.bat`
+  - PowerShell runner with Local/Railway DB support
+  - Bounded crawling with safety limits
+  - Upserts offices (by `homepage_url`) and employees (by `email`)
+  - Documentation: `docs/proaktiv-directory-sync.md`
+  - Command: `/scrape-proaktiv` (see `.cursor/commands/scrape-proaktiv.md`)
 
 **V2.9 Vitec Integration (Completed):**
 - ✅ Full Vitec reference documentation
@@ -197,6 +204,7 @@ Use `/architect`, `/frontend-architect`, `/builder` commands.
 | `/frontend-architect` | Run Frontend Architect |
 | `/builder` | Run Builder |
 | `/status` | Check project status |
+| `/scrape-proaktiv` | Run Proaktiv directory scraper |
 
 ---
 

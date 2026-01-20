@@ -72,6 +72,15 @@
 - **Data Migration:**
   - Imported 6 offices and 23 employees from proaktiv.no directory
   - Seeded Railway PostgreSQL database with complete office/employee data
+- **Proaktiv Directory Scraper:**
+  - Created automated scraping tool for proaktiv.no directory
+  - One-command launcher: `run-proaktiv-scraper.bat`
+  - PowerShell runner with Local/Railway DB support: `backend/scripts/run_proaktiv_directory_sync.ps1`
+  - Bounded crawling with safety limits (max pages, runtime, delay)
+  - Upserts offices (by `homepage_url`) and employees (by `email`)
+  - Full documentation: `docs/proaktiv-directory-sync.md`
+  - Agent command: `/scrape-proaktiv` (`.cursor/commands/scrape-proaktiv.md`)
+  - Railway DB SSL support improved in `backend/app/database.py`
 - **Deployment Fixes:**
   - Enhanced `start-prod.sh` with Alembic migration auto-repair logic
   - Fixed multiple Alembic head conflicts in Railway deployment
