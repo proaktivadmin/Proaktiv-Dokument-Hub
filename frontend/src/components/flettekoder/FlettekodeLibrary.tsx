@@ -38,7 +38,7 @@ export function FlettekodeLibrary({ initialCategory, onCopy }: FlettekodeLibrary
   return (
     <div className="flex gap-6 h-full">
       {/* Sidebar */}
-      <aside className="flex-shrink-0">
+      <aside className="shrink-0">
         <CategorySidebar
           categories={categories}
           selectedCategory={selectedCategory}

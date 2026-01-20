@@ -58,7 +58,7 @@ const uploadFormSchema = z.object({
   category_id: z.string().optional(),
 });
 
-type UploadFormData = z.infer<typeof uploadFormSchema>;
+type UploadFormData = z.input<typeof uploadFormSchema>;
 
 interface UploadTemplateDialogProps {
   open: boolean;
@@ -313,7 +313,7 @@ export function UploadTemplateDialog({
               </div>
             ) : (
               <div className="flex items-center gap-3 p-3 border rounded-lg bg-muted/50">
-                <FileText className="h-8 w-8 text-primary flex-shrink-0" />
+                <FileText className="h-8 w-8 text-primary shrink-0" />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium truncate">{file.name}</p>
                   <p className="text-xs text-muted-foreground">

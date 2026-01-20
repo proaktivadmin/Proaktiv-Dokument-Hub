@@ -52,7 +52,7 @@ const formSchema = z.object({
   category_id: z.string().optional(),
 });
 
-type FormData = z.infer<typeof formSchema>;
+type FormData = z.input<typeof formSchema>;
 
 interface NewTemplateDialogProps {
   open: boolean;

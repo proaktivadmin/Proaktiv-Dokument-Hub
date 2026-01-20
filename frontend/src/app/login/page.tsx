@@ -38,15 +38,6 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
       <div className="w-full max-w-md p-8">
-        {/* Logo */}
-        <div className="flex justify-center mb-8">
-          <img
-            src="/assets/proaktiv-admin-logo.svg"
-            alt="Proaktiv Admin"
-            className="h-14 w-auto"
-          />
-        </div>
-
         {/* Login Card */}
         <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-8">
           <div className="flex items-center justify-center mb-6">
@@ -55,10 +46,14 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <h1 className="text-center text-slate-900 mb-2">
-            <span className="font-sans text-3xl font-bold">Proaktiv</span>{" "}
+          <div className="flex flex-col items-center gap-2 mb-2">
+            <img
+              src="/assets/proaktiv-logo.svg"
+              alt="Proaktiv"
+              className="h-10 w-auto"
+            />
             <span className="font-serif text-2xl text-slate-500">Admin</span>
-          </h1>
+          </div>
           <p className="text-sm text-center text-slate-500 mb-6">
             Logg inn for å fortsette
           </p>
@@ -80,7 +75,7 @@ export default function LoginPage() {
 
             {error && (
               <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-3 rounded-lg">
-                <AlertCircle className="h-4 w-4 flex-shrink-0" />
+                <AlertCircle className="h-4 w-4 shrink-0" />
                 <span>{error}</span>
               </div>
             )}

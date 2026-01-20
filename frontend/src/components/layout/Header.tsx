@@ -83,8 +83,8 @@ export function Header({ onUploadSuccess }: HeaderProps) {
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center">
               <img
-                src="/assets/proaktiv-admin-logo.svg"
-                alt="Proaktiv Admin"
+                src="/assets/proaktiv-logo.svg"
+                alt="Proaktiv"
                 className="h-10 w-auto"
               />
             </Link>

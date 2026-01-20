@@ -174,7 +174,7 @@ export default function CategoriesPage() {
                     </div>
 
                     {/* Icon Container */}
-                    <div className="flex-shrink-0 p-2.5 bg-primary/10 rounded-md">
+                    <div className="shrink-0 p-2.5 bg-primary/10 rounded-md">
                       <IconComponent className="h-5 w-5 text-primary" />
                     </div>
 
