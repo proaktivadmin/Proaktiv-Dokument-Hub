@@ -17,6 +17,7 @@ export interface EmployeeListParams {
   office_id?: string;
   status?: EmployeeStatus | EmployeeStatus[];
   role?: string;
+  is_featured?: boolean;
   search?: string;
   skip?: number;
   limit?: number;
@@ -34,6 +35,9 @@ export const employeesApi = {
     if (params?.skip) searchParams.set('skip', String(params.skip));
     if (params?.limit) searchParams.set('limit', String(params.limit));
     if (params?.role) searchParams.set('role', params.role);
+    if (params?.is_featured !== undefined) {
+      searchParams.set('is_featured', String(params.is_featured));
+    }
     if (params?.search) searchParams.set('search', params.search);
 
     const query = searchParams.toString();

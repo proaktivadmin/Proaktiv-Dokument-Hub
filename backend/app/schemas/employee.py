@@ -30,12 +30,16 @@ class EmployeeBase(BaseModel):
     phone: Optional[str] = Field(None, max_length=50, description="Phone number")
     homepage_profile_url: Optional[str] = Field(None, description="Homepage profile URL")
     linkedin_url: Optional[str] = Field(None, description="LinkedIn profile URL")
+    facebook_url: Optional[str] = Field(None, description="Facebook profile URL")
+    instagram_url: Optional[str] = Field(None, description="Instagram profile URL")
+    twitter_url: Optional[str] = Field(None, description="Twitter profile URL")
     sharepoint_folder_url: Optional[str] = Field(None, description="SharePoint folder URL")
     profile_image_url: Optional[str] = Field(None, description="Profile image URL")
     description: Optional[str] = Field(None, description="Profile description")
     system_roles: Optional[List[str]] = Field(default_factory=list, description="Vitec Next system roles")
 
     status: EmployeeStatus = Field("active", description="Employment status")
+    is_featured_broker: bool = Field(False, description="Whether the employee is a featured broker")
     start_date: Optional[date] = Field(None, description="Employment start date")
     end_date: Optional[date] = Field(None, description="Employment end date")
     hide_from_homepage_date: Optional[date] = Field(None, description="Date to hide from homepage")
@@ -62,12 +66,16 @@ class EmployeeUpdate(BaseModel):
     phone: Optional[str] = Field(None, max_length=50)
     homepage_profile_url: Optional[str] = None
     linkedin_url: Optional[str] = None
+    facebook_url: Optional[str] = None
+    instagram_url: Optional[str] = None
+    twitter_url: Optional[str] = None
     sharepoint_folder_url: Optional[str] = None
     profile_image_url: Optional[str] = None
     description: Optional[str] = None
     system_roles: Optional[List[str]] = None
 
     status: Optional[EmployeeStatus] = None
+    is_featured_broker: Optional[bool] = None
     start_date: Optional[date] = None
     end_date: Optional[date] = None
     hide_from_homepage_date: Optional[date] = None

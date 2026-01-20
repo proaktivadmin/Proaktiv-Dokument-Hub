@@ -69,6 +69,9 @@ class Employee(Base):
     # Online Presence
     homepage_profile_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     linkedin_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    facebook_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    instagram_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    twitter_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
     # Profile Content
     profile_image_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
@@ -84,6 +87,7 @@ class Employee(Base):
         nullable=False, 
         default="active"
     )  # 'active' | 'onboarding' | 'offboarding' | 'inactive'
+    is_featured_broker: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     start_date: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
     end_date: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
     

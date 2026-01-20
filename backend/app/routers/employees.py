@@ -39,11 +39,15 @@ def _to_employee_with_office(employee) -> EmployeeWithOffice:
         phone=employee.phone,
         homepage_profile_url=employee.homepage_profile_url,
         linkedin_url=employee.linkedin_url,
+        facebook_url=employee.facebook_url,
+        instagram_url=employee.instagram_url,
+        twitter_url=employee.twitter_url,
         sharepoint_folder_url=employee.sharepoint_folder_url,
         profile_image_url=employee.profile_image_url,
         description=employee.description,
         system_roles=employee.system_roles or [],
         status=employee.status,
+        is_featured_broker=employee.is_featured_broker,
         start_date=employee.start_date,
         end_date=employee.end_date,
         hide_from_homepage_date=employee.hide_from_homepage_date,
@@ -68,6 +72,7 @@ async def list_employees(
     office_id: Optional[UUID] = Query(None, description="Filter by office"),
     status: Optional[List[str]] = Query(None, description="Filter by status(es)"),
     role: Optional[str] = Query(None, description="Filter by Vitec system role"),
+    is_featured: Optional[bool] = Query(None, description="Filter by featured status"),
     search: Optional[str] = Query(None, description="Search by name or email"),
     skip: int = Query(0, ge=0, description="Offset for pagination"),
     limit: int = Query(100, ge=1, le=500, description="Max results"),
@@ -78,6 +83,7 @@ async def list_employees(
     
     - **status**: active, onboarding, offboarding, inactive
     - **role**: Vitec Next role (eiendomsmegler, superbruker, etc.)
+    - **is_featured**: Filter by featured brokers
     - **search**: Partial match on name or email
     """
     employees, total = await EmployeeService.list(
@@ -85,6 +91,7 @@ async def list_employees(
         office_id=office_id,
         status=status,
         role=role,
+        is_featured=is_featured,
         search=search,
         skip=skip,
         limit=limit,

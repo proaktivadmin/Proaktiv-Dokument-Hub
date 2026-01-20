@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { 
-  Users, ChevronRight, Home, Phone, Mail, 
+  Users, ChevronRight, Home, Phone, Mail,
   Globe, Calendar, Edit, AlertTriangle, ExternalLink,
-  Building2, Clock, CheckSquare
+  Building2, Clock, CheckSquare,
+  Facebook, Instagram, Linkedin, Twitter
 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import {
@@ -80,6 +81,12 @@ export default function EmployeeDetailPage() {
   }
 
   const status = statusConfig[employee.status];
+  const hasSocialLinks = Boolean(
+    employee.facebook_url ||
+    employee.instagram_url ||
+    employee.twitter_url ||
+    employee.linkedin_url
+  );
 
   return (
     <div className="min-h-screen bg-background">
@@ -171,8 +178,8 @@ export default function EmployeeDetailPage() {
           </div>
 
           {/* Online links */}
-          {(employee.homepage_profile_url || employee.linkedin_url) && (
-            <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t">
+          {(employee.homepage_profile_url || hasSocialLinks) && (
+            <div className="flex flex-wrap items-center gap-3 mt-4 pt-4 border-t">
               {employee.homepage_profile_url && (
                 <a href={employee.homepage_profile_url} target="_blank" rel="noopener noreferrer">
                   <Button variant="outline" size="sm">
@@ -182,13 +189,49 @@ export default function EmployeeDetailPage() {
                   </Button>
                 </a>
               )}
-              {employee.linkedin_url && (
-                <a href={employee.linkedin_url} target="_blank" rel="noopener noreferrer">
-                  <Button variant="outline" size="sm">
-                    LinkedIn
-                    <ExternalLink className="h-3 w-3 ml-1" />
-                  </Button>
-                </a>
+              {hasSocialLinks && (
+                <div className="flex items-center gap-3">
+                  {employee.facebook_url && (
+                    <a
+                      href={employee.facebook_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Facebook"
+                    >
+                      <Facebook className="h-5 w-5 text-muted-foreground hover:text-primary" />
+                    </a>
+                  )}
+                  {employee.instagram_url && (
+                    <a
+                      href={employee.instagram_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Instagram"
+                    >
+                      <Instagram className="h-5 w-5 text-muted-foreground hover:text-primary" />
+                    </a>
+                  )}
+                  {employee.twitter_url && (
+                    <a
+                      href={employee.twitter_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Twitter"
+                    >
+                      <Twitter className="h-5 w-5 text-muted-foreground hover:text-primary" />
+                    </a>
+                  )}
+                  {employee.linkedin_url && (
+                    <a
+                      href={employee.linkedin_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="LinkedIn"
+                    >
+                      <Linkedin className="h-5 w-5 text-muted-foreground hover:text-primary" />
+                    </a>
+                  )}
+                </div>
               )}
             </div>
           )}

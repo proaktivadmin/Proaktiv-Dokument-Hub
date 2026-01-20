@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -50,6 +51,10 @@ type FormData = {
   start_date: string;
   homepage_profile_url: string;
   linkedin_url: string;
+  facebook_url: string;
+  instagram_url: string;
+  twitter_url: string;
+  is_featured_broker: boolean;
 };
 
 export function EmployeeForm({ 
@@ -76,6 +81,10 @@ export function EmployeeForm({
       start_date: employee?.start_date?.split("T")[0] || new Date().toISOString().split("T")[0],
       homepage_profile_url: employee?.homepage_profile_url || "",
       linkedin_url: employee?.linkedin_url || "",
+      facebook_url: employee?.facebook_url || "",
+      instagram_url: employee?.instagram_url || "",
+      twitter_url: employee?.twitter_url || "",
+      is_featured_broker: employee?.is_featured_broker ?? false,
     },
   });
 
@@ -95,6 +104,10 @@ export function EmployeeForm({
         start_date: data.start_date || null,
         homepage_profile_url: data.homepage_profile_url || null,
         linkedin_url: data.linkedin_url || null,
+        facebook_url: data.facebook_url || null,
+        instagram_url: data.instagram_url || null,
+        twitter_url: data.twitter_url || null,
+        is_featured_broker: data.is_featured_broker,
         end_date: null,
         hide_from_homepage_date: null,
         delete_data_date: null,
@@ -240,6 +253,17 @@ export function EmployeeForm({
                 </div>
               </div>
 
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="is_featured_broker"
+                  checked={watch("is_featured_broker")}
+                  onCheckedChange={(checked) => setValue("is_featured_broker", !!checked)}
+                />
+                <Label htmlFor="is_featured_broker" className="cursor-pointer">
+                  Fremhevet megler
+                </Label>
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="start_date">Startdato</Label>
                 <Input
@@ -261,14 +285,48 @@ export function EmployeeForm({
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="linkedin_url">LinkedIn</Label>
-                <Input
-                  id="linkedin_url"
-                  type="url"
-                  {...register("linkedin_url")}
-                  placeholder="https://linkedin.com/in/per-hansen"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="facebook_url">Facebook</Label>
+                  <Input
+                    id="facebook_url"
+                    type="url"
+                    {...register("facebook_url")}
+                    placeholder="https://facebook.com/..."
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="instagram_url">Instagram</Label>
+                  <Input
+                    id="instagram_url"
+                    type="url"
+                    {...register("instagram_url")}
+                    placeholder="https://instagram.com/..."
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="twitter_url">Twitter</Label>
+                  <Input
+                    id="twitter_url"
+                    type="url"
+                    {...register("twitter_url")}
+                    placeholder="https://twitter.com/..."
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="linkedin_url">LinkedIn</Label>
+                  <Input
+                    id="linkedin_url"
+                    type="url"
+                    {...register("linkedin_url")}
+                    placeholder="https://linkedin.com/in/per-hansen"
+                  />
+                </div>
               </div>
             </TabsContent>
           </Tabs>

@@ -21,7 +21,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { EmployeeGrid, EmployeeForm } from "@/components/employees";
+import { EmployeeGrid, EmployeeForm, FeaturedBrokers } from "@/components/employees";
 import { AssetGallery } from "@/components/assets";
 import { OfficeForm } from "@/components/offices";
 import { useOffice } from "@/hooks/v3/useOffices";
@@ -262,7 +262,7 @@ export default function OfficeDetailPage() {
           )}
 
           {/* Online links */}
-          {(office.homepage_url || office.google_my_business_url || office.facebook_url || office.linkedin_url) && (
+          {(office.homepage_url || office.google_my_business_url || office.facebook_url || office.instagram_url || office.linkedin_url) && (
             <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t">
               {office.homepage_url && (
                 <a href={office.homepage_url} target="_blank" rel="noopener noreferrer">
@@ -289,6 +289,14 @@ export default function OfficeDetailPage() {
                   </Button>
                 </a>
               )}
+              {office.instagram_url && (
+                <a href={office.instagram_url} target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" size="sm">
+                    Instagram
+                    <ExternalLink className="h-3 w-3 ml-1" />
+                  </Button>
+                </a>
+              )}
               {office.linkedin_url && (
                 <a href={office.linkedin_url} target="_blank" rel="noopener noreferrer">
                   <Button variant="outline" size="sm">
@@ -301,6 +309,8 @@ export default function OfficeDetailPage() {
           )}
         </CardContent>
       </Card>
+
+      <FeaturedBrokers officeId={office.id} />
 
       {/* Tabs */}
       <Tabs defaultValue="employees" className="space-y-4">

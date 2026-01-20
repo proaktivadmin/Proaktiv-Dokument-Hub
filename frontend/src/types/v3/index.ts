@@ -71,11 +71,15 @@ export interface Employee {
   phone: string | null;
   homepage_profile_url: string | null;
   linkedin_url: string | null;
+  facebook_url: string | null;
+  instagram_url: string | null;
+  twitter_url: string | null;
   sharepoint_folder_url: string | null;
   profile_image_url: string | null;
   description: string | null;
   system_roles: string[];
   status: EmployeeStatus;
+  is_featured_broker: boolean;
   start_date: string | null; // ISO date
 
   end_date: string | null;

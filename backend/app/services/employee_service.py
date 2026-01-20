@@ -34,6 +34,7 @@ class EmployeeService:
         office_id: Optional[UUID] = None,
         status: Optional[List[str]] = None,
         role: Optional[str] = None,
+        is_featured: Optional[bool] = None,
         search: Optional[str] = None,
         skip: int = 0,
         limit: int = 100,
@@ -46,6 +47,7 @@ class EmployeeService:
             office_id: Filter by office
             status: Filter by status(es)
             role: Filter by Vitec system role
+            is_featured: Filter by featured broker flag
             search: Search by name or email
             skip: Offset for pagination
             limit: Max results
@@ -64,6 +66,10 @@ class EmployeeService:
         if status:
             query = query.where(Employee.status.in_(status))
             count_query = count_query.where(Employee.status.in_(status))
+
+        if is_featured is not None:
+            query = query.where(Employee.is_featured_broker == is_featured)
+            count_query = count_query.where(Employee.is_featured_broker == is_featured)
         
         # Role filter: check if role is in system_roles JSONB array
         if role:
@@ -174,11 +180,15 @@ class EmployeeService:
             phone=data.phone,
             homepage_profile_url=data.homepage_profile_url,
             linkedin_url=data.linkedin_url,
+            facebook_url=data.facebook_url,
+            instagram_url=data.instagram_url,
+            twitter_url=data.twitter_url,
             sharepoint_folder_url=data.sharepoint_folder_url,
             profile_image_url=data.profile_image_url,
             description=data.description,
             system_roles=data.system_roles,
             status=data.status,
+            is_featured_broker=data.is_featured_broker,
             start_date=data.start_date,
             end_date=data.end_date,
             hide_from_homepage_date=data.hide_from_homepage_date,
