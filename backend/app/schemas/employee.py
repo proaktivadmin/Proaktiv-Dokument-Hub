@@ -24,7 +24,7 @@ class EmployeeBase(BaseModel):
     office_id: UUID = Field(..., description="ID of the office this employee belongs to")
     vitec_employee_id: Optional[str] = Field(None, description="Vitec Hub employeeId")
     first_name: str = Field(..., min_length=1, max_length=100, description="First name")
-    last_name: str = Field(..., min_length=1, max_length=100, description="Last name")
+    last_name: str = Field("", max_length=100, description="Last name (can be empty)")
     title: Optional[str] = Field(None, max_length=100, description="Job title")
     email: Optional[str] = Field(None, max_length=255, description="Email address")
     phone: Optional[str] = Field(None, max_length=50, description="Phone number")
