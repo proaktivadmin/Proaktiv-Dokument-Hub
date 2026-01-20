@@ -155,14 +155,14 @@ class SyncPicturesResponse(BaseModel):
 @router.post("/sync-office-pictures", response_model=SyncPicturesResponse)
 async def sync_office_pictures():
     """
-    Sync office banner pictures from Vitec Hub to local storage.
+    Sync office banner pictures from Vitec Hub.
     
-    Fetches pictures for all offices with vitec_department_id and stores them.
+    Instead of storing base64 data (which fills up the database),
+    we store a proxy URL that fetches images on-demand from Vitec API.
     """
     from app.database import get_db
     from app.models.office import Office
     from sqlalchemy import select
-    import base64
     
     hub = VitecHubService()
     installation_id = settings.VITEC_INSTALLATION_ID
@@ -174,7 +174,7 @@ async def sync_office_pictures():
         )
     
     total = synced = failed = skipped = 0
-    batch_size = 5  # Commit every 5 items to prevent connection timeout
+    batch_size = 10  # Commit every 10 items
     
     async for db in get_db():
         result = await db.execute(
@@ -190,25 +190,27 @@ async def sync_office_pictures():
                 continue
                 
             try:
+                # Check if Vitec has a picture for this department
                 image_data = await hub.get_department_picture(
                     installation_id,
                     office.vitec_department_id
                 )
                 
                 if image_data:
-                    # Store as data URL for now (could be enhanced to use Azure Storage)
-                    data_url = f"data:image/jpeg;base64,{base64.b64encode(image_data).decode()}"
-                    office.banner_image_url = data_url
+                    # Store proxy URL instead of base64 data
+                    # This URL will fetch the image on-demand from our API
+                    proxy_url = f"/api/vitec/departments/{office.vitec_department_id}/picture"
+                    office.banner_image_url = proxy_url
                     synced += 1
                     batch_count += 1
                 else:
                     skipped += 1
                     
             except Exception as e:
-                logger.error(f"Failed to sync picture for office {office.id}: {e}")
+                logger.error(f"Failed to check picture for office {office.id}: {e}")
                 failed += 1
             
-            # Commit in batches to prevent connection timeout
+            # Commit in batches
             if batch_count >= batch_size:
                 await db.commit()
                 batch_count = 0
@@ -229,14 +231,14 @@ async def sync_office_pictures():
 @router.post("/sync-employee-pictures", response_model=SyncPicturesResponse)
 async def sync_employee_pictures():
     """
-    Sync employee profile pictures from Vitec Hub to local storage.
+    Sync employee profile pictures from Vitec Hub.
     
-    Fetches pictures for all employees with vitec_employee_id and stores them.
+    Instead of storing base64 data (which fills up the database),
+    we store a proxy URL that fetches images on-demand from Vitec API.
     """
     from app.database import get_db
     from app.models.employee import Employee
     from sqlalchemy import select
-    import base64
     
     hub = VitecHubService()
     installation_id = settings.VITEC_INSTALLATION_ID
@@ -248,7 +250,7 @@ async def sync_employee_pictures():
         )
     
     total = synced = failed = skipped = 0
-    batch_size = 5  # Commit every 5 items to prevent connection timeout
+    batch_size = 10  # Commit every 10 items
     
     async for db in get_db():
         result = await db.execute(
@@ -264,25 +266,27 @@ async def sync_employee_pictures():
                 continue
                 
             try:
+                # Check if Vitec has a picture for this employee
                 image_data = await hub.get_employee_picture(
                     installation_id,
                     employee.vitec_employee_id
                 )
                 
                 if image_data:
-                    # Store as data URL for now (could be enhanced to use Azure Storage)
-                    data_url = f"data:image/jpeg;base64,{base64.b64encode(image_data).decode()}"
-                    employee.profile_image_url = data_url
+                    # Store proxy URL instead of base64 data
+                    # This URL will fetch the image on-demand from our API
+                    proxy_url = f"/api/vitec/employees/{employee.vitec_employee_id}/picture"
+                    employee.profile_image_url = proxy_url
                     synced += 1
                     batch_count += 1
                 else:
                     skipped += 1
                     
             except Exception as e:
-                logger.error(f"Failed to sync picture for employee {employee.id}: {e}")
+                logger.error(f"Failed to check picture for employee {employee.id}: {e}")
                 failed += 1
             
-            # Commit in batches to prevent connection timeout
+            # Commit in batches
             if batch_count >= batch_size:
                 await db.commit()
                 batch_count = 0
