@@ -21,6 +21,8 @@
 - [x] Improved color scheme (emerald/sky instead of harsh blues)
 - [x] Imported 6 offices and 23 employees from proaktiv.no
 - [x] Fixed Railway deployment with Alembic migration auto-repair
+- [x] Fixed employee page layout with consistent grid for role filter
+- [x] Shortened office names in sidebar (removed "Proaktiv Eiendomsmegling" prefix)
 
 ### V3.1 QA Fixes: ✅ DEPLOYED
 - [x] Added `/api/ping`, `/api/territories/stats`, and fixed `/employees/email-group` routing.
@@ -28,8 +30,8 @@
 - [x] Shelf view now loads all templates (pagination).
 
 ### Next Immediate Task
-**Feature:** Employee Management
-**Task:** Monitor production deployment and gather user feedback
+**Feature:** Office & Employee Hub
+**Task:** Production deployed - monitoring and gathering user feedback
 
 
 
@@ -58,7 +60,24 @@
 
 ## 📝 SESSION LOG
 
-### 2026-01-19
+### 2026-01-19 (Evening)
+- **Office & Employee UI Enhancements:**
+  - Added banner images to office cards and detail pages using `profile_image_url`
+  - Implemented Avatar component with Radix UI for employee profile pictures
+  - Made employee avatars clickable on office cards (up to 6 shown)
+  - Added employee quick access section on office detail pages (up to 12 avatars)
+  - Updated color scheme from harsh blues to emerald/sky tones
+  - Fixed employee page layout: RoleFilter now has consistent 256px width
+  - Shortened office names in sidebar by removing "Proaktiv Eiendomsmegling" prefix
+- **Data Migration:**
+  - Imported 6 offices and 23 employees from proaktiv.no directory
+  - Seeded Railway PostgreSQL database with complete office/employee data
+- **Deployment Fixes:**
+  - Enhanced `start-prod.sh` with Alembic migration auto-repair logic
+  - Fixed multiple Alembic head conflicts in Railway deployment
+  - Successfully deployed all changes to production
+
+### 2026-01-19 (Morning)
 - Added Vitec Hub client with product-login auth + new config fields.
 - Implemented offices (Departments) and employees sync with upsert logic.
 - Added sync endpoints: `POST /api/offices/sync` and `POST /api/employees/sync`.

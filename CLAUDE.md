@@ -129,13 +129,14 @@ See `.cursor/active_context.md` for full status.
 
 **V3.1 Office & Employee Hub (Completed):**
 - ✅ Office management with banner images and employee avatars
-- ✅ Employee profile pictures with circular avatars
+- ✅ Employee profile pictures with circular avatars (Radix UI)
 - ✅ Office cards with background images from `profile_image_url`
-- ✅ Clickable employee avatars on office cards and detail pages
+- ✅ Clickable employee avatars on office cards (up to 6) and detail pages (up to 12)
 - ✅ Improved color scheme (emerald/sky instead of harsh blues)
-- ✅ Banner images on office detail pages
+- ✅ Banner images on office detail pages with gradient overlays
 - ✅ 6 offices and 23 employees imported from proaktiv.no
-- ✅ Avatar component with Radix UI integration
+- ✅ Consistent employee page layout with 256px sidebar
+- ✅ Shortened office names (removed "Proaktiv Eiendomsmegling" prefix)
 
 **V2.9 Vitec Integration (Completed):**
 - ✅ Full Vitec reference documentation

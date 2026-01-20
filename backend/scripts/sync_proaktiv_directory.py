@@ -315,26 +315,13 @@ def parse_kjedeledelse_page(soup: BeautifulSoup, url: str) -> Tuple[OfficePayloa
         profile_image_url=extract_image_url(soup, url, office_name),
     )
 
-    employees: List[EmployeePayload] = []
-    for row in extract_named_contacts(lines):
-        full_name = row.get("name") or ""
-        if not full_name:
-            continue
-        first_name, last_name = parse_employee_name(full_name)
-        employees.append(
-            EmployeePayload(
-                first_name=first_name,
-                last_name=last_name,
-                office_url=url,
-                office_name=office_name,
-                title=row.get("title"),
-                email=row.get("email"),
-                phone=row.get("phone"),
-                homepage_profile_url=None,
-                profile_image_url=extract_image_url(soup, url, full_name),
-                description=None,
-            )
-        )
+    # Employee entries on this page use the same "pane" layout as city/office pages,
+    # but usually do not link to /eiendomsmegler profile pages.
+    employees = extract_employee_cards(soup, url)
+    employees = [emp for emp in employees if (emp.email or "").lower() != "post@proaktiv.no"]
+    for emp in employees:
+        emp.office_url = url
+        emp.office_name = office_name
 
     return office_payload, employees
 
@@ -408,6 +395,24 @@ def extract_employee_cards(soup: BeautifulSoup, base_url: str) -> List[EmployeeP
             continue
         title_el = card.select_one("div.name_tittel")
         title = clean_text(title_el.get_text(" ")) if title_el else None
+        if not title:
+            # Fallback: some pages render title as a plain text line (no dedicated class).
+            text = card.get_text("\n", strip=True)
+            lines = [clean_text(line) for line in text.splitlines() if clean_text(line)]
+            for line in lines:
+                lower = line.lower()
+                if not line or line == name:
+                    continue
+                if lower.startswith("telefon") or lower.startswith("e-post"):
+                    continue
+                if "@" in line or looks_like_phone_line(line):
+                    continue
+                if lower.startswith("false -"):
+                    continue
+                if len(line) > 120:
+                    continue
+                title = line
+                break
         email = extract_email(email_link.get("href", ""))
         phone = format_phone(tel_link.get("href", ""))
         profile_url = None
