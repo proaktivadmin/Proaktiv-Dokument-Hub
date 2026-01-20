@@ -17,18 +17,12 @@ depends_on = None
 
 
 def upgrade() -> None:
-    op.add_column("employees", sa.Column("facebook_url", sa.Text(), nullable=True))
-    op.add_column("employees", sa.Column("instagram_url", sa.Text(), nullable=True))
-    op.add_column("employees", sa.Column("twitter_url", sa.Text(), nullable=True))
-    op.add_column(
-        "employees",
-        sa.Column(
-            "is_featured_broker",
-            sa.Boolean(),
-            nullable=False,
-            server_default="false",
-        ),
-    )
+    # Use IF NOT EXISTS to make migration idempotent
+    # (columns may have been added manually)
+    op.execute("ALTER TABLE employees ADD COLUMN IF NOT EXISTS facebook_url TEXT")
+    op.execute("ALTER TABLE employees ADD COLUMN IF NOT EXISTS instagram_url TEXT")
+    op.execute("ALTER TABLE employees ADD COLUMN IF NOT EXISTS twitter_url TEXT")
+    op.execute("ALTER TABLE employees ADD COLUMN IF NOT EXISTS is_featured_broker BOOLEAN DEFAULT FALSE")
 
 
 def downgrade() -> None:
