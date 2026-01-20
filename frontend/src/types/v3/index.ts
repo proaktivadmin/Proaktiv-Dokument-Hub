@@ -8,8 +8,10 @@
 
 export interface Office {
   id: string;
-  name: string;
+  name: string; // Marketing/display name
+  legal_name: string | null; // Legal company name (e.g., 'Proaktiv Gruppen AS')
   short_code: string;
+  organization_number: string | null; // Norwegian org number for matching/merging
   vitec_department_id: number | null;
   email: string | null;
   phone: string | null;
@@ -22,6 +24,7 @@ export interface Office {
   instagram_url: string | null;
   linkedin_url: string | null;
   profile_image_url: string | null;
+  banner_image_url: string | null; // Office banner image for cards
   description: string | null;
   color: string; // Hex color for territory map
   is_active: boolean;

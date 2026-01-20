@@ -39,7 +39,9 @@ class Office(Base):
     
     # Basic Info
     name: Mapped[str] = mapped_column(String(200), nullable=False)
+    legal_name: Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
     short_code: Mapped[str] = mapped_column(String(10), nullable=False, unique=True)
+    organization_number: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
     vitec_department_id: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     
     # Contact
@@ -60,6 +62,7 @@ class Office(Base):
 
     # Profile Content
     profile_image_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    banner_image_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     
     # Microsoft 365 Integration
@@ -120,6 +123,7 @@ class Office(Base):
         Index("idx_offices_city", "city"),
         Index("idx_offices_is_active", "is_active"),
         Index("idx_offices_vitec_department_id", "vitec_department_id"),
+        Index("idx_offices_organization_number", "organization_number"),
     )
     
     def __repr__(self) -> str:

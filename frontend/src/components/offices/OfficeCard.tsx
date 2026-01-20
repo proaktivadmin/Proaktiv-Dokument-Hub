@@ -1,6 +1,6 @@
 "use client";
 
-import { MapPin, Users, Phone, Mail, MoreVertical, User } from "lucide-react";
+import { MapPin, Users, Phone, Mail, MoreVertical, User, Building } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { OfficeWithStats, EmployeeWithOffice } from "@/types/v3";
 
@@ -25,6 +31,8 @@ interface OfficeCardProps {
 
 export function OfficeCard({ office, employees = [], onClick, onEdit, onDeactivate, onEmployeeClick }: OfficeCardProps) {
   const activeEmployees = employees.filter(e => e.status === 'active').slice(0, 6);
+  // Prefer banner_image_url, fall back to profile_image_url
+  const bannerImage = office.banner_image_url || office.profile_image_url;
   
   return (
     <Card 
@@ -32,10 +40,10 @@ export function OfficeCard({ office, employees = [], onClick, onEdit, onDeactiva
       onClick={onClick}
     >
       {/* Banner Image */}
-      {office.profile_image_url ? (
+      {bannerImage ? (
         <div className="relative h-32 w-full overflow-hidden">
           <img 
-            src={office.profile_image_url} 
+            src={bannerImage} 
             alt={office.name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
@@ -93,9 +101,32 @@ export function OfficeCard({ office, employees = [], onClick, onEdit, onDeactiva
       <CardContent className="p-4">
         <div className="flex items-start justify-between mb-3">
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-lg mb-1 group-hover:text-primary transition-colors truncate">
-              {office.name}
-            </h3>
+            {office.legal_name && office.legal_name !== office.name ? (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <h3 className="font-semibold text-lg mb-1 group-hover:text-primary transition-colors truncate cursor-help">
+                      {office.name}
+                    </h3>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="max-w-xs">
+                    <div className="flex items-center gap-1.5 text-xs">
+                      <Building className="h-3 w-3" />
+                      <span>Juridisk navn: {office.legal_name}</span>
+                    </div>
+                    {office.organization_number && (
+                      <div className="text-xs text-muted-foreground mt-1">
+                        Org.nr: {office.organization_number}
+                      </div>
+                    )}
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            ) : (
+              <h3 className="font-semibold text-lg mb-1 group-hover:text-primary transition-colors truncate">
+                {office.name}
+              </h3>
+            )}
           </div>
           
           <DropdownMenu>

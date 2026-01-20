@@ -14,8 +14,10 @@ from uuid import UUID
 
 class OfficeBase(BaseModel):
     """Base schema with common office fields."""
-    name: str = Field(..., min_length=1, max_length=200, description="Office name")
+    name: str = Field(..., min_length=1, max_length=200, description="Office marketing/display name")
+    legal_name: Optional[str] = Field(None, max_length=200, description="Legal company name (e.g., 'Proaktiv Gruppen AS')")
     short_code: str = Field(..., min_length=1, max_length=10, description="Unique short code (e.g., 'STAV')")
+    organization_number: Optional[str] = Field(None, max_length=20, description="Norwegian organization number (organisasjonsnummer)")
     vitec_department_id: Optional[int] = Field(None, description="Vitec Hub departmentId")
     email: Optional[str] = Field(None, max_length=255, description="Office email")
     phone: Optional[str] = Field(None, max_length=50, description="Office phone")
@@ -28,6 +30,7 @@ class OfficeBase(BaseModel):
     instagram_url: Optional[str] = Field(None, description="Instagram profile URL")
     linkedin_url: Optional[str] = Field(None, description="LinkedIn page URL")
     profile_image_url: Optional[str] = Field(None, description="Office profile image URL")
+    banner_image_url: Optional[str] = Field(None, description="Office banner image URL for cards")
     description: Optional[str] = Field(None, description="Office description")
     color: str = Field("#4A90D9", pattern=r"^#[0-9A-Fa-f]{6}$", description="Hex color for territory map")
     is_active: bool = Field(True, description="Whether office is active")
@@ -45,7 +48,9 @@ class OfficeCreate(OfficeBase):
 class OfficeUpdate(BaseModel):
     """Schema for updating an office (all fields optional)."""
     name: Optional[str] = Field(None, min_length=1, max_length=200)
+    legal_name: Optional[str] = Field(None, max_length=200)
     short_code: Optional[str] = Field(None, min_length=1, max_length=10)
+    organization_number: Optional[str] = Field(None, max_length=20)
     vitec_department_id: Optional[int] = None
     email: Optional[str] = Field(None, max_length=255)
     phone: Optional[str] = Field(None, max_length=50)
@@ -58,6 +63,7 @@ class OfficeUpdate(BaseModel):
     instagram_url: Optional[str] = None
     linkedin_url: Optional[str] = None
     profile_image_url: Optional[str] = None
+    banner_image_url: Optional[str] = None
     description: Optional[str] = None
     color: Optional[str] = Field(None, pattern=r"^#[0-9A-Fa-f]{6}$")
     is_active: Optional[bool] = None

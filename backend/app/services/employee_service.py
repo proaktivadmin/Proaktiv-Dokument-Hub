@@ -420,6 +420,16 @@ class EmployeeService:
         roles = EmployeeService._map_employee_roles(raw.get("employeePositions"), title)
         active_flag = raw.get("employeeActive")
         status = "active" if active_flag is True else "inactive" if active_flag is False else "active"
+        
+        # Profile image URL - try multiple possible field names
+        profile_image_url = EmployeeService._normalize_text(
+            raw.get("imageUrl") or
+            raw.get("profileImageUrl") or
+            raw.get("profileImage") or
+            raw.get("photoUrl") or
+            raw.get("avatarUrl")
+        )
+        
         return {
             "vitec_employee_id": raw.get("employeeId"),
             "department_id": EmployeeService._extract_department_id(raw.get("departmentId")),
@@ -429,6 +439,7 @@ class EmployeeService:
             "email": EmployeeService._normalize_text(raw.get("email")),
             "phone": EmployeeService._normalize_text(raw.get("mobilePhone") or raw.get("workPhone")),
             "description": EmployeeService._normalize_text(raw.get("aboutMe")),
+            "profile_image_url": profile_image_url,
             "system_roles": roles,
             "status": status,
         }
@@ -464,6 +475,7 @@ class EmployeeService:
                 email=payload.get("email"),
                 phone=payload.get("phone"),
                 description=payload.get("description"),
+                profile_image_url=payload.get("profile_image_url"),
                 system_roles=payload.get("system_roles") or [],
                 status=payload.get("status") or "active",
             )
@@ -480,7 +492,7 @@ class EmployeeService:
             existing.office_id = str(office.id)
             updated = True
 
-        for field in ["first_name", "last_name", "title", "email", "phone", "description", "status"]:
+        for field in ["first_name", "last_name", "title", "email", "phone", "description", "profile_image_url", "status"]:
             value = payload.get(field)
             if value is None:
                 continue

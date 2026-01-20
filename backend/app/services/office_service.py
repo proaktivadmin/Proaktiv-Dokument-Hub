@@ -126,6 +126,20 @@ class OfficeService:
             select(Office).where(Office.vitec_department_id == department_id)
         )
         return result.scalar_one_or_none()
+
+    @staticmethod
+    async def get_by_organization_number(
+        db: AsyncSession,
+        org_number: str
+    ) -> Optional[Office]:
+        """
+        Get an office by Norwegian organization number (organisasjonsnummer).
+        This is the most reliable identifier for merging offices.
+        """
+        result = await db.execute(
+            select(Office).where(Office.organization_number == org_number)
+        )
+        return result.scalar_one_or_none()
     
     @staticmethod
     async def create(db: AsyncSession, data: OfficeCreate) -> Office:
@@ -282,7 +296,9 @@ class OfficeService:
         return OfficeWithStats(
             id=office.id,
             name=office.name,
+            legal_name=office.legal_name,
             short_code=office.short_code,
+            organization_number=office.organization_number,
             vitec_department_id=office.vitec_department_id,
             email=office.email,
             phone=office.phone,
@@ -295,6 +311,7 @@ class OfficeService:
             instagram_url=office.instagram_url,
             linkedin_url=office.linkedin_url,
             profile_image_url=office.profile_image_url,
+            banner_image_url=office.banner_image_url,
             description=office.description,
             color=office.color,
             is_active=office.is_active,
@@ -333,26 +350,72 @@ class OfficeService:
 
     @staticmethod
     def _map_department_payload(raw: dict) -> dict:
-        name = raw.get("marketName") or raw.get("name") or raw.get("legalName") or "Vitec Office"
+        # Marketing name is primary display name, legal name stored separately
+        market_name = OfficeService._normalize_text(raw.get("marketName"))
+        legal_name = OfficeService._normalize_text(raw.get("legalName"))
+        fallback_name = raw.get("name") or "Vitec Office"
+        
+        # Use marketName first, then name, legal name as last resort
+        display_name = market_name or OfficeService._normalize_text(raw.get("name")) or legal_name or fallback_name
+        
+        # Organization number for matching/merging (Norwegian: organisasjonsnummer)
+        org_number = OfficeService._normalize_text(
+            raw.get("organizationNumber") or 
+            raw.get("orgNumber") or 
+            raw.get("orgnr")
+        )
+        
+        # Image URLs
+        banner_url = OfficeService._normalize_text(
+            raw.get("departmentImageUrl") or
+            raw.get("imageUrl") or
+            raw.get("bannerUrl")
+        )
+        profile_url = OfficeService._normalize_text(
+            raw.get("logoUrl") or
+            raw.get("profileImageUrl")
+        )
+        
         return {
             "vitec_department_id": raw.get("departmentId"),
             "department_number": raw.get("departmentNumber"),
-            "name": OfficeService._normalize_text(name),
+            "name": display_name,
+            "legal_name": legal_name,
+            "organization_number": org_number,
             "email": OfficeService._normalize_text(raw.get("email")),
             "phone": OfficeService._normalize_text(raw.get("phone")),
             "street_address": OfficeService._normalize_text(raw.get("streetAddress") or raw.get("postalAddress")),
             "postal_code": OfficeService._normalize_text(raw.get("postalCode") or raw.get("visitPostalCode")),
             "city": OfficeService._normalize_text(raw.get("city") or raw.get("visitCity")),
             "description": OfficeService._normalize_text(raw.get("aboutDepartment")),
+            "banner_image_url": banner_url,
+            "profile_image_url": profile_url,
             "is_active": raw.get("webPublish"),
         }
 
     @staticmethod
     async def upsert_from_hub(db: AsyncSession, payload: dict) -> tuple[Office, str]:
+        """
+        Upsert an office from Vitec Hub data.
+        
+        Match priority:
+        1. organization_number (most reliable for merging)
+        2. vitec_department_id
+        3. name (fallback)
+        """
         existing = None
+        org_number = payload.get("organization_number")
         department_id = payload.get("vitec_department_id")
-        if department_id is not None:
+        
+        # Priority 1: Match by organization number (Norwegian: organisasjonsnummer)
+        if org_number:
+            existing = await OfficeService.get_by_organization_number(db, org_number)
+        
+        # Priority 2: Match by Vitec department ID
+        if not existing and department_id is not None:
             existing = await OfficeService.get_by_vitec_department_id(db, department_id)
+        
+        # Priority 3: Match by name (fallback)
         if not existing and payload.get("name"):
             result = await db.execute(select(Office).where(Office.name == payload["name"]))
             existing = result.scalar_one_or_none()
@@ -362,7 +425,9 @@ class OfficeService:
             short_code = await OfficeService._ensure_unique_short_code(db, base_code)
             office = Office(
                 name=payload.get("name") or "Vitec Office",
+                legal_name=payload.get("legal_name"),
                 short_code=short_code,
+                organization_number=org_number,
                 vitec_department_id=department_id,
                 email=payload.get("email"),
                 phone=payload.get("phone"),
@@ -370,6 +435,8 @@ class OfficeService:
                 postal_code=payload.get("postal_code"),
                 city=payload.get("city"),
                 description=payload.get("description"),
+                profile_image_url=payload.get("profile_image_url"),
+                banner_image_url=payload.get("banner_image_url"),
                 is_active=payload.get("is_active") if payload.get("is_active") is not None else True,
             )
             db.add(office)
@@ -378,18 +445,29 @@ class OfficeService:
             return office, "created"
 
         updated = False
+        
+        # Update organization_number if we now have it
+        if org_number and existing.organization_number != org_number:
+            existing.organization_number = org_number
+            updated = True
+        
+        # Update department_id if we now have it
         if department_id is not None and existing.vitec_department_id != department_id:
             existing.vitec_department_id = department_id
             updated = True
 
+        # Update other fields
         for field in [
             "name",
+            "legal_name",
             "email",
             "phone",
             "street_address",
             "postal_code",
             "city",
             "description",
+            "profile_image_url",
+            "banner_image_url",
         ]:
             value = payload.get(field)
             if value is None:
