@@ -20,6 +20,9 @@ export { territoriesApi } from "./territories";
 export { checklistsApi } from "./checklists";
 export { externalListingsApi } from "./external-listings";
 
+// Vitec Integration
+export { vitecApi } from "./vitec";
+
 // Re-export from main api.ts for backwards compatibility
 export { categoryApi, templateApi, analyticsApi } from "../api";
 
@@ -42,3 +45,4 @@ export type { AssetListParams } from "./assets";
 export type { TerritoryListParams } from "./territories";
 export type { ChecklistTemplateListParams, ChecklistInstanceListParams } from "./checklists";
 export type { ExternalListingListParams } from "./external-listings";
+export type { VitecStatus } from "./vitec";

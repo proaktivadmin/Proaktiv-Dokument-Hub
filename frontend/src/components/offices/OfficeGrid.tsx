@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { OfficeCard } from "./OfficeCard";
+import { VitecConnectionStatus } from "@/components/vitec";
 import { employeesApi } from "@/lib/api/employees";
 import type { OfficeWithStats, EmployeeWithOffice } from "@/types/v3";
 
@@ -45,6 +46,7 @@ export function OfficeGrid({
   const [cityFilter, setCityFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [employeesByOffice, setEmployeesByOffice] = useState<Record<string, EmployeeWithOffice[]>>({});
+  const [vitecConnected, setVitecConnected] = useState<boolean | null>(null);
   const showActions = Boolean(onCreateNew || onSync);
 
   // Fetch employees for all offices
@@ -151,9 +153,15 @@ export function OfficeGrid({
         </Select>
 
         {showActions && (
-          <div className="flex gap-2 ml-auto">
+          <div className="flex gap-2 ml-auto items-center">
+            <VitecConnectionStatus onStatusChange={setVitecConnected} />
             {onSync && (
-              <Button variant="outline" onClick={onSync} disabled={isSyncing}>
+              <Button
+                variant="outline"
+                onClick={onSync}
+                disabled={isSyncing || vitecConnected === false}
+                title={vitecConnected === false ? "Vitec API ikke tilkoblet" : undefined}
+              >
                 <RefreshCcw className="h-4 w-4 mr-2" />
                 {isSyncing ? "Synkroniserer..." : "Synkroniser Vitec"}
               </Button>

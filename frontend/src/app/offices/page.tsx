@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { AxiosError } from "axios";
 import { Header } from "@/components/layout/Header";
 import { OfficeGrid, OfficeForm } from "@/components/offices";
 import { useOffices } from "@/hooks/v3/useOffices";
@@ -58,9 +59,18 @@ export default function OfficesPage() {
       });
     } catch (error) {
       console.error("Failed to sync offices:", error);
+      
+      // Extract actual error message from backend response
+      let errorMessage = "Kunne ikke hente kontorer fra Vitec Hub.";
+      if (error instanceof AxiosError && error.response?.data?.detail) {
+        errorMessage = error.response.data.detail;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      
       toast({
         title: "Synkronisering feilet",
-        description: "Kunne ikke hente kontorer fra Vitec Hub.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmployeeCard } from "./EmployeeCard";
+import { VitecConnectionStatus } from "@/components/vitec";
 import type { EmployeeWithOffice } from "@/types/v3";
 
 interface EmployeeGridProps {
@@ -40,6 +41,7 @@ export function EmployeeGrid({
   currentFilters,
 }: EmployeeGridProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [vitecConnected, setVitecConnected] = useState<boolean | null>(null);
   const showActions = Boolean(onCreateNew || onSync);
 
   // Filter employees by search
@@ -85,9 +87,15 @@ export function EmployeeGrid({
         </div>
 
         {showActions && (
-          <div className="flex gap-2 ml-auto">
+          <div className="flex gap-2 ml-auto items-center">
+            <VitecConnectionStatus onStatusChange={setVitecConnected} />
             {onSync && (
-              <Button variant="outline" onClick={onSync} disabled={isSyncing}>
+              <Button
+                variant="outline"
+                onClick={onSync}
+                disabled={isSyncing || vitecConnected === false}
+                title={vitecConnected === false ? "Vitec API ikke tilkoblet" : undefined}
+              >
                 <RefreshCcw className="h-4 w-4 mr-2" />
                 {isSyncing ? "Synkroniserer..." : "Synkroniser Vitec"}
               </Button>

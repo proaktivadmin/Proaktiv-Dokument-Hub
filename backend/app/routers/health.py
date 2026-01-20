@@ -10,6 +10,7 @@ from datetime import datetime
 from app.config import settings
 from app.database import get_db
 from app.services.azure_storage_service import get_azure_storage_service
+from app.services.vitec_hub_service import VitecHubService
 
 router = APIRouter()
 
@@ -31,13 +32,17 @@ async def health_check(db: AsyncSession = Depends(get_db)):
     storage_service = get_azure_storage_service()
     storage_status = "configured" if storage_service.is_configured else "not_configured"
     
+    # Check Vitec Hub API configuration
+    vitec_hub = VitecHubService()
+    vitec_status = "configured" if vitec_hub.is_configured else "not_configured"
+    
     return {
         "status": "healthy" if db_status == "connected" else "degraded",
         "timestamp": datetime.utcnow().isoformat(),
         "services": {
             "database": db_status,
             "storage": storage_status,
-            "vitec_api": "not_configured",
+            "vitec_api": vitec_status,
             "redis": "not_configured"
         },
         "version": settings.APP_VERSION
