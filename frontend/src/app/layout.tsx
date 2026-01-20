@@ -17,8 +17,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: 'Vitec Next Admin Hub',
-  description: 'Admin hub for Vitec Next templates',
+  title: 'Proaktiv Admin',
+  description: 'Administrasjon for Proaktiv dokumentmaler',
   icons: {
     icon: '/favicon.png',
     apple: '/favicon.png',

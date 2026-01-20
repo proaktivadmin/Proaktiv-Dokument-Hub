@@ -81,28 +81,12 @@ export function Header({ onUploadSuccess }: HeaderProps) {
       <header className="border-b border-[#E5E5E5] bg-[#E9E7DC] sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-3">
-              <div
-                className="h-10 w-10"
-                aria-hidden="true"
-                style={{
-                  backgroundColor: "#272630",
-                  WebkitMaskImage: "url(/assets/proaktiv-lily-black.png)",
-                  maskImage: "url(/assets/proaktiv-lily-black.png)",
-                  WebkitMaskRepeat: "no-repeat",
-                  maskRepeat: "no-repeat",
-                  WebkitMaskPosition: "center",
-                  maskPosition: "center",
-                  WebkitMaskSize: "contain",
-                  maskSize: "contain",
-                }}
+            <Link href="/" className="flex items-center">
+              <img
+                src="/assets/proaktiv-admin-logo.svg"
+                alt="Proaktiv Admin"
+                className="h-10 w-auto"
               />
-              <div>
-                <h1 className="leading-tight text-[#272630]">
-                  <span className="font-sans text-2xl font-bold">Vitec Next</span>{" "}
-                  <span className="font-serif text-lg text-[#272630]/60">Admin Hub</span>
-                </h1>
-              </div>
             </Link>
 
             <nav className="flex items-center gap-1">

@@ -34,7 +34,7 @@ class Settings(BaseSettings):
     )
     
     # Application
-    APP_NAME: str = "Vitec Next Admin Hub"
+    APP_NAME: str = "Proaktiv Admin"
     APP_VERSION: str = "1.0.0"
     APP_ENV: str = "development"
     LOG_LEVEL: str = "INFO"

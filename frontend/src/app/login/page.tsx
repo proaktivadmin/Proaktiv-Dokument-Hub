@@ -40,29 +40,11 @@ export default function LoginPage() {
       <div className="w-full max-w-md p-8">
         {/* Logo */}
         <div className="flex justify-center mb-8">
-          <div className="flex items-center gap-3">
-            <div
-              className="h-12 w-12"
-              aria-hidden="true"
-              style={{
-                backgroundColor: "#272630",
-                WebkitMaskImage: "url(/assets/proaktiv-lily-black.png)",
-                maskImage: "url(/assets/proaktiv-lily-black.png)",
-                WebkitMaskRepeat: "no-repeat",
-                maskRepeat: "no-repeat",
-                WebkitMaskPosition: "center",
-                maskPosition: "center",
-                WebkitMaskSize: "contain",
-                maskSize: "contain",
-              }}
-            />
-            <div>
-              <p className="text-lg font-semibold text-slate-900">
-                <span className="font-sans text-xl font-bold">Vitec Next</span>{" "}
-                <span className="font-serif text-base text-slate-500">Admin Hub</span>
-              </p>
-            </div>
-          </div>
+          <img
+            src="/assets/proaktiv-admin-logo.svg"
+            alt="Proaktiv Admin"
+            className="h-14 w-auto"
+          />
         </div>
 
         {/* Login Card */}
@@ -74,8 +56,8 @@ export default function LoginPage() {
           </div>
 
           <h1 className="text-center text-slate-900 mb-2">
-            <span className="font-sans text-3xl font-bold">Vitec Next</span>{" "}
-            <span className="font-serif text-2xl text-slate-500">Admin Hub</span>
+            <span className="font-sans text-3xl font-bold">Proaktiv</span>{" "}
+            <span className="font-serif text-2xl text-slate-500">Admin</span>
           </h1>
           <p className="text-sm text-center text-slate-500 mb-6">
             Logg inn for å fortsette
@@ -121,7 +103,7 @@ export default function LoginPage() {
         </div>
 
         <p className="text-xs text-center text-slate-400 mt-6">
-          Vitec Next Admin Hub v2.9
+          Proaktiv Admin v2.9
         </p>
       </div>
     </div>

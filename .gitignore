@@ -30,6 +30,7 @@ api/environments/
 # OS
 .DS_Store
 Thumbs.db
+nul
 
 # Docker
 docker-data/

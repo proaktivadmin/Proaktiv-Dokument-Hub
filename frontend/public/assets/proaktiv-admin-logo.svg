@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="120" viewBox="0 0 520 120" fill="none" role="img" aria-label="Proaktiv Admin">
+  <defs>
+    <mask id="lily-mask" maskUnits="userSpaceOnUse">
+      <image href="/assets/proaktiv-lily-black.png" x="452" y="16" width="52" height="72" preserveAspectRatio="xMidYMid meet" />
+    </mask>
+  </defs>
+  <text x="0" y="56" font-family="Playfair Display, Times New Roman, serif" font-size="42" font-weight="600" letter-spacing="3" fill="#272630">PROAKTIV</text>
+  <text x="4" y="86" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="500" letter-spacing="6" fill="#272630" opacity="0.6">ADMIN</text>
+  <rect x="452" y="16" width="52" height="72" fill="#272630" mask="url(#lily-mask)" />
+</svg>
