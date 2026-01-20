@@ -26,14 +26,22 @@ As an admin, I want to click a button on an office or employee profile page to s
 
 #### `POST /api/offices/{id}/scrape`
 - Scrapes the office's `homepage_url`
-- Updates fields: `name`, `email`, `phone`, `street_address`, `postal_code`, `city`, `description`, `profile_image_url`, social links
+- Updates fields: 
+  - Basic info: `name`, `email`, `phone`, `street_address`, `postal_code`, `city`
+  - **Banner image**: `profile_image_url` (office homepage banner/hero image)
+  - Description: `description` (office presentation text)
+  - Social links: `facebook_url`, `instagram_url`, `linkedin_url`, `google_my_business_url`
 - Returns updated office data
 - Response: `200 OK` with updated `OfficeWithStats`
 - Error: `404` if office not found, `400` if no `homepage_url` set
 
 #### `POST /api/employees/{id}/scrape`
 - Scrapes the employee's `homepage_profile_url`
-- Updates fields: `first_name`, `last_name`, `title`, `email`, `phone`, `profile_image_url`, `description`
+- Updates fields:
+  - Basic info: `first_name`, `last_name`, `title`, `email`, `phone`
+  - **Profile picture**: `profile_image_url` (employee photo from profile page)
+  - **Presentation text**: `description` (employee bio/presentation from profile page)
+  - Social: `linkedin_url` (if available on profile)
 - Returns updated employee data
 - Response: `200 OK` with updated `EmployeeWithOffice`
 - Error: `404` if employee not found, `400` if no `homepage_profile_url` set
@@ -45,10 +53,19 @@ As an admin, I want to click a button on an office or employee profile page to s
 - Reuse parsing logic from `sync_proaktiv_directory.py`
 - Extract single-page scraping functions:
   - `scrape_office_page(url: str) -> dict`
+    - Parse office name, contact info, address
+    - **Extract banner/hero image URL** (usually first large image or header background)
+    - Extract office description/presentation text
+    - Extract social media links
   - `scrape_employee_page(url: str) -> dict`
+    - Parse employee name, title, contact info
+    - **Extract profile picture URL** (usually `.employee-photo`, `.profile-image`, or similar)
+    - **Extract presentation text** (bio, description, "Om meg" section)
+    - Extract LinkedIn link if present
 - Use direct HTTP fetch (no Firecrawl needed for single pages)
 - Add 1-second delay before scraping to be polite
 - Handle errors gracefully (network issues, parsing failures)
+- Download and validate images before saving URLs
 
 ### Frontend Components
 - Add scrape button to `frontend/src/app/offices/[id]/page.tsx`
@@ -91,7 +108,20 @@ As an admin, I want to click a button on an office or employee profile page to s
 - [ ] Scrape button appears on employee detail page when `homepage_profile_url` exists
 - [ ] Clicking scrape button shows loading state
 - [ ] Successful scrape updates the displayed data
+- [ ] **Office banner image** is scraped and displayed after update
+- [ ] **Employee profile picture** is scraped and displayed after update
+- [ ] **Employee presentation text** is scraped and shown in description
+- [ ] Office and employee cards already link to homepage/profile (verify existing functionality)
 - [ ] Success toast shows "Data oppdatert fra hjemmeside"
 - [ ] Error toast shows helpful message if scraping fails
 - [ ] Rate limiting prevents abuse (1 scrape/minute per resource)
 - [ ] Scraping works for both local and Railway databases
+
+## Current Implementation Status
+- ✅ Office cards already link to `homepage_url` (clickable)
+- ✅ Employee cards already link to `homepage_profile_url` (clickable)
+- ✅ Office `profile_image_url` field exists and displays as banner
+- ✅ Employee `profile_image_url` field exists and displays as avatar
+- ✅ Employee `description` field exists for presentation text
+- ⏳ Scraping logic needs to extract images and presentation text
+- ⏳ On-demand scrape endpoints need to be created

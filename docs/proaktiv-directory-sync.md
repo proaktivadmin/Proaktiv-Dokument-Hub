@@ -6,10 +6,16 @@ This repo includes a bounded web crawler to **extract offices + employees** from
 
 - **Offices** (`offices`)
   - Key: `homepage_url` (used for upsert match)
-  - Fields: `name`, `email`, `phone`, `street_address`, `postal_code`, `city`, `description`, `profile_image_url`, + social/links when present
+  - Fields: `name`, `email`, `phone`, `street_address`, `postal_code`, `city`
+  - **Images**: `profile_image_url` (banner/hero image from office homepage)
+  - **Content**: `description` (office presentation text)
+  - **Social**: `facebook_url`, `instagram_url`, `linkedin_url`, `google_my_business_url`
 - **Employees** (`employees`)
   - Key: `email` (primary match) then `homepage_profile_url` (fallback match)
-  - Fields: `first_name`, `last_name`, `title`, `email`, `phone`, `homepage_profile_url`, `profile_image_url`, `description`
+  - Fields: `first_name`, `last_name`, `title`, `email`, `phone`, `homepage_profile_url`
+  - **Images**: `profile_image_url` (employee photo from profile page)
+  - **Content**: `description` (employee bio/presentation text from profile page)
+  - **Social**: `linkedin_url` (when available)
 
 ## Script location
 
