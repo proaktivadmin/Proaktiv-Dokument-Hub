@@ -118,6 +118,11 @@ from app.schemas.firecrawl import (
     FirecrawlScrapeDetail,
     FirecrawlScrapeListResponse,
 )
+from app.schemas.sync import (
+    FieldDiff,
+    RecordDiff,
+    SyncSummary,
+)
 
 __all__ = [
     # Merge Field
@@ -219,4 +224,8 @@ __all__ = [
     "FirecrawlScrapeBase",
     "FirecrawlScrapeDetail",
     "FirecrawlScrapeListResponse",
+    # Sync Preview
+    "FieldDiff",
+    "RecordDiff",
+    "SyncSummary",
 ]

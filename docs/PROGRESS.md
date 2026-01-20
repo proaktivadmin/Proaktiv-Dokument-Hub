@@ -1,7 +1,7 @@
 # PROGRESS.md - Session Tracker
 
-**Last Updated**: 2026-01-19
-**Current Focus**: V3.1 Office & Employee UI Enhancements
+**Last Updated**: 2026-01-20
+**Current Focus**: Vitec Sync Review UI
 
 ---
 
@@ -30,8 +30,8 @@
 - [x] Shelf view now loads all templates (pagination).
 
 ### Next Immediate Task
-**Feature:** Office & Employee Hub
-**Task:** Production deployed - monitoring and gathering user feedback
+**Feature:** Vitec Sync Review UI
+**Task:** Phase 2 implementation (preview/commit workflow)
 
 
 
@@ -59,6 +59,12 @@
 ---
 
 ## 📝 SESSION LOG
+
+### 2026-01-20
+- **Vitec Sync Review UI (Phase 2 / Plan 02-01):**
+  - Added sync diff schemas (FieldDiff, RecordDiff, SyncSummary)
+  - Implemented SyncMatchingService with matching and field diff generation
+  - Exported new schemas and service
 
 ### 2026-01-19 (Evening)
 - **Office & Employee UI Enhancements:**
