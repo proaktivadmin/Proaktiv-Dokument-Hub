@@ -83,9 +83,9 @@ export function Header({ onUploadSuccess }: HeaderProps) {
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center">
               <img
-                src="/assets/proaktiv-logo.svg"
+                src="https://proaktiv.no/assets/logos/logo.svg"
                 alt="Proaktiv"
-                className="h-10 w-auto"
+                className="h-8 w-auto"
               />
             </Link>
 
@@ -127,7 +127,7 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                     <ChevronDown className="h-3 w-3" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-48">
+                <DropdownMenuContent align="start" className="w-48 bg-white">
                   {documentsItems.map((item) => {
                     const Icon = item.icon;
                     return (
@@ -158,7 +158,7 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                     <ChevronDown className="h-3 w-3" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-48">
+                <DropdownMenuContent align="start" className="w-48 bg-white">
                   {companyHubItems.map((item) => {
                     const Icon = item.icon;
                     return (
@@ -189,7 +189,7 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                     <ChevronDown className="h-3 w-3" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-48">
+                <DropdownMenuContent align="start" className="w-48 bg-white">
                   {toolsItems.map((item) => {
                     const Icon = item.icon;
                     return (
@@ -213,7 +213,7 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                     <ChevronDown className="h-3 w-3 ml-2" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuContent align="end" className="w-48 bg-white">
                   <DropdownMenuItem onClick={() => setUploadDialogOpen(true)}>
                     <Upload className="h-4 w-4 mr-2" />
                     Last opp fil

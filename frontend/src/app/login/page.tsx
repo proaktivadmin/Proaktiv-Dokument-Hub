@@ -48,9 +48,9 @@ export default function LoginPage() {
 
           <div className="flex flex-col items-center gap-2 mb-2">
             <img
-              src="/assets/proaktiv-logo.svg"
+              src="https://proaktiv.no/assets/logos/logo.svg"
               alt="Proaktiv"
-              className="h-10 w-auto"
+              className="h-8 w-auto"
             />
             <span className="font-serif text-2xl text-slate-500">Admin</span>
           </div>
