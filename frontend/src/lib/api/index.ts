@@ -19,6 +19,7 @@ export { assetsApi } from "./assets";
 export { territoriesApi } from "./territories";
 export { checklistsApi } from "./checklists";
 export { externalListingsApi } from "./external-listings";
+export { syncApi } from "./sync";
 
 // Vitec Integration
 export { vitecApi } from "./vitec";

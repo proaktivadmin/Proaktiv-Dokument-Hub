@@ -123,6 +123,67 @@ export interface EmployeeSyncResult {
 }
 
 // =============================================================================
+// Sync Review Types
+// =============================================================================
+
+export type SyncDecision = 'accept' | 'reject';
+
+export interface FieldDiff {
+  field_name: string;
+  local_value: unknown | null;
+  vitec_value: unknown | null;
+  has_conflict: boolean;
+  decision: SyncDecision | null;
+}
+
+export type RecordMatchType = 'new' | 'matched' | 'not_in_vitec';
+
+export interface RecordDiff {
+  match_type: RecordMatchType;
+  local_id: string | null;
+  vitec_id: string | null;
+  display_name: string;
+  fields: FieldDiff[];
+  match_confidence: number;
+  match_method: string | null;
+}
+
+export interface SyncSummary {
+  offices_new: number;
+  offices_matched: number;
+  offices_not_in_vitec: number;
+  employees_new: number;
+  employees_matched: number;
+  employees_not_in_vitec: number;
+  employees_missing_office: number;
+}
+
+export interface SyncPreview {
+  session_id: string;
+  created_at: string;
+  expires_at: string;
+  offices: RecordDiff[];
+  employees: RecordDiff[];
+  summary: SyncSummary;
+}
+
+export interface SyncDecisionUpdatePayload {
+  record_type: 'office' | 'employee';
+  record_id: string;
+  field_name: string;
+  decision: SyncDecision;
+}
+
+export interface SyncCommitResult {
+  offices_created: number;
+  offices_updated: number;
+  offices_skipped: number;
+  employees_created: number;
+  employees_updated: number;
+  employees_skipped: number;
+}
+
+// =============================================================================
 // External Listings Types
 // =============================================================================
 

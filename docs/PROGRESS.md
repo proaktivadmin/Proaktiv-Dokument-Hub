@@ -73,6 +73,10 @@
   - Added decision update + commit endpoints with commit service
   - Stored Vitec payloads in sessions for approved updates
   - Extended sync preview responses to reflect saved decisions
+- **Vitec Sync Review UI (Phase 2 / Plan 02-04):**
+  - Added sync API client + shared types
+  - Built sync review components and /sync page UI
+  - Wired approve/reject and commit actions in the frontend
 
 ### 2026-01-19 (Evening)
 - **Office & Employee UI Enhancements:**
