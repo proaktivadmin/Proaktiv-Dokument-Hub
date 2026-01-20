@@ -77,6 +77,10 @@
   - Added sync API client + shared types
   - Built sync review components and /sync page UI
   - Wired approve/reject and commit actions in the frontend
+- **Vitec Sync Review UI (Phase 2 / Plan 02-05):**
+  - Added bulk actions and session expiry timer
+  - Linked sync review page in header navigation
+  - Hardened sync page error handling for expired sessions
 
 ### 2026-01-19 (Evening)
 - **Office & Employee UI Enhancements:**

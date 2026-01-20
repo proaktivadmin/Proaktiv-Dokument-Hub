@@ -2,6 +2,8 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { BulkActions } from "./BulkActions";
+import { SessionTimer } from "./SessionTimer";
 import { SyncSummary } from "./SyncSummary";
 import { RecordDiffCard } from "./RecordDiffCard";
 import type { SyncDecision, SyncPreview as SyncPreviewType } from "@/types/v3";
@@ -9,6 +11,7 @@ import type { SyncDecision, SyncPreview as SyncPreviewType } from "@/types/v3";
 interface SyncPreviewProps {
   preview: SyncPreviewType;
   isCommitting: boolean;
+  isBulkUpdating: boolean;
   onDecision: (
     recordType: "office" | "employee",
     recordId: string,
@@ -17,27 +20,44 @@ interface SyncPreviewProps {
   ) => void;
   onCommit: () => void;
   onCancel: () => void;
+  onAcceptAllNew: () => void;
+  onAcceptHighConfidence: () => void;
+  onRejectAll: () => void;
 }
 
 export function SyncPreview({
   preview,
   isCommitting,
+  isBulkUpdating,
   onDecision,
   onCommit,
   onCancel,
+  onAcceptAllNew,
+  onAcceptHighConfidence,
+  onRejectAll,
 }: SyncPreviewProps) {
   return (
     <div className="space-y-6">
-      <SyncSummary summary={preview.summary} />
-
-      <div className="flex flex-wrap items-center gap-2">
-        <Button onClick={onCommit} disabled={isCommitting}>
-          {isCommitting ? "Lagrer..." : "Fullfør synkronisering"}
-        </Button>
-        <Button variant="outline" onClick={onCancel}>
-          Avbryt økt
-        </Button>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <SessionTimer expiresAt={preview.expires_at} />
+        <div className="flex flex-wrap items-center gap-2">
+          <Button onClick={onCommit} disabled={isCommitting}>
+            {isCommitting ? "Lagrer..." : "Fullfør synkronisering"}
+          </Button>
+          <Button variant="outline" onClick={onCancel}>
+            Avbryt økt
+          </Button>
+        </div>
       </div>
+
+      <BulkActions
+        onAcceptAllNew={onAcceptAllNew}
+        onAcceptHighConfidence={onAcceptHighConfidence}
+        onRejectAll={onRejectAll}
+        isBusy={isBulkUpdating}
+      />
+
+      <SyncSummary summary={preview.summary} />
 
       <Tabs defaultValue="offices" className="space-y-4">
         <TabsList>

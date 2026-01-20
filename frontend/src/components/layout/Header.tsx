@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Upload, FileText, FolderTree, LayoutDashboard, Sparkles, Code2, HardDrive, LogOut,
-  Building2, Users, Image, ChevronDown, FileCode, Plus, Map
+  Building2, Users, Image, ChevronDown, FileCode, Plus, Map, RefreshCcw
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -69,11 +69,12 @@ export function Header({ onUploadSuccess }: HeaderProps) {
   const toolsItems = [
     { href: "/storage", label: "WebDAV Lagring", icon: HardDrive },
     { href: "/sanitizer", label: "Sanitizer", icon: Sparkles },
+    { href: "/sync", label: "Synkronisering", icon: RefreshCcw },
   ];
 
   const isDocumentsActive = ["/templates", "/categories", "/mottakere"].some(p => pathname.startsWith(p));
   const isCompanyHubActive = ["/offices", "/employees", "/assets", "/territories"].some(p => pathname.startsWith(p));
-  const isToolsActive = ["/storage", "/sanitizer"].some(p => pathname.startsWith(p));
+  const isToolsActive = ["/storage", "/sanitizer", "/sync"].some(p => pathname.startsWith(p));
 
   return (
     <>
