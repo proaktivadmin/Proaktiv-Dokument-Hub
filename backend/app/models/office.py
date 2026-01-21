@@ -4,18 +4,19 @@ Office SQLAlchemy Model
 Represents a physical office location with contact info and online presence.
 """
 
-from sqlalchemy import Column, String, Text, Boolean, DateTime, Index, Integer
-from sqlalchemy.orm import relationship, Mapped, mapped_column
-from sqlalchemy.sql import func
-from datetime import datetime
-from typing import Optional, List, TYPE_CHECKING
 import uuid
+from datetime import datetime
+from typing import TYPE_CHECKING
 
-from app.models.base import Base, GUID
+from sqlalchemy import Boolean, DateTime, Index, Integer, String, Text
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.sql import func
+
+from app.models.base import GUID, Base
 
 if TYPE_CHECKING:
-    from app.models.employee import Employee
     from app.models.company_asset import CompanyAsset
+    from app.models.employee import Employee
     from app.models.external_listing import ExternalListing
     from app.models.office_territory import OfficeTerritory
 
@@ -23,101 +24,85 @@ if TYPE_CHECKING:
 class Office(Base):
     """
     Office model representing a physical office location.
-    
+
     Stores contact information, address, online presence URLs,
     and territory map color for heatmap visualization.
     """
-    
+
     __tablename__ = "offices"
-    
+
     # Primary key
-    id: Mapped[uuid.UUID] = mapped_column(
-        GUID, 
-        primary_key=True, 
-        default=lambda: str(uuid.uuid4())
-    )
-    
+    id: Mapped[uuid.UUID] = mapped_column(GUID, primary_key=True, default=lambda: str(uuid.uuid4()))
+
     # Basic Info
     name: Mapped[str] = mapped_column(String(200), nullable=False)
-    legal_name: Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
+    legal_name: Mapped[str | None] = mapped_column(String(200), nullable=True)
     short_code: Mapped[str] = mapped_column(String(10), nullable=False, unique=True)
-    organization_number: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
-    vitec_department_id: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
-    
+    organization_number: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    vitec_department_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+
     # Contact
-    email: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
-    phone: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
-    
+    email: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    phone: Mapped[str | None] = mapped_column(String(50), nullable=True)
+
     # Address
-    street_address: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
-    postal_code: Mapped[Optional[str]] = mapped_column(String(10), nullable=True)
-    city: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
-    
+    street_address: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    postal_code: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    city: Mapped[str | None] = mapped_column(String(100), nullable=True)
+
     # Online Presence
-    homepage_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    google_my_business_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    facebook_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    instagram_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    linkedin_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    homepage_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+    google_my_business_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+    facebook_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+    instagram_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+    linkedin_url: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     # Profile Content
-    profile_image_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    banner_image_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    
-    # Microsoft 365 Integration
-    teams_group_id: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
-    sharepoint_folder_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    profile_image_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+    banner_image_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
 
-    
+    # Microsoft 365 Integration
+    teams_group_id: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    sharepoint_folder_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+
     # Territory Map Color (hex)
     color: Mapped[str] = mapped_column(String(7), nullable=False, default="#4A90D9")
-    
+
     # Status
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
-    
+
     # Timestamps
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), 
-        server_default=func.now()
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), 
-        server_default=func.now(),
-        onupdate=func.now()
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
-    
+
     # Relationships
-    employees: Mapped[List["Employee"]] = relationship(
-        "Employee",
-        back_populates="office",
-        cascade="all, delete-orphan",
-        lazy="selectin"
+    employees: Mapped[list["Employee"]] = relationship(
+        "Employee", back_populates="office", cascade="all, delete-orphan", lazy="selectin"
     )
-    
-    assets: Mapped[List["CompanyAsset"]] = relationship(
+
+    assets: Mapped[list["CompanyAsset"]] = relationship(
         "CompanyAsset",
         back_populates="office",
         cascade="all, delete-orphan",
         lazy="selectin",
-        foreign_keys="[CompanyAsset.office_id]"
+        foreign_keys="[CompanyAsset.office_id]",
     )
-    
-    external_listings: Mapped[List["ExternalListing"]] = relationship(
+
+    external_listings: Mapped[list["ExternalListing"]] = relationship(
         "ExternalListing",
         back_populates="office",
         cascade="all, delete-orphan",
         lazy="selectin",
-        foreign_keys="[ExternalListing.office_id]"
+        foreign_keys="[ExternalListing.office_id]",
     )
-    
-    territories: Mapped[List["OfficeTerritory"]] = relationship(
-        "OfficeTerritory",
-        back_populates="office",
-        cascade="all, delete-orphan",
-        lazy="selectin"
+
+    territories: Mapped[list["OfficeTerritory"]] = relationship(
+        "OfficeTerritory", back_populates="office", cascade="all, delete-orphan", lazy="selectin"
     )
-    
+
     # Indexes
     __table_args__ = (
         Index("idx_offices_city", "city"),
@@ -125,10 +110,10 @@ class Office(Base):
         Index("idx_offices_vitec_department_id", "vitec_department_id"),
         Index("idx_offices_organization_number", "organization_number"),
     )
-    
+
     def __repr__(self) -> str:
         return f"<Office(id={self.id}, name='{self.name}', short_code='{self.short_code}')>"
-    
+
     @property
     def full_address(self) -> str:
         """Return formatted full address."""
@@ -140,12 +125,12 @@ class Office(Base):
         elif self.city:
             parts.append(self.city)
         return ", ".join(parts)
-    
+
     @property
     def employee_count(self) -> int:
         """Return count of employees."""
         return len(self.employees) if self.employees else 0
-    
+
     @property
     def active_employee_count(self) -> int:
         """Return count of active employees."""

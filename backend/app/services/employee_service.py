@@ -2,46 +2,44 @@
 Employee Service - Business logic for employee management.
 """
 
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func, or_
-from sqlalchemy.dialects.postgresql import JSONB
-
-from sqlalchemy.orm import selectinload
-from typing import Optional, List
-from uuid import UUID
-from datetime import datetime
+import builtins
 import logging
+from uuid import UUID
 
 from fastapi import HTTPException
+from sqlalchemy import func, or_, select
+from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
+from app.config import settings
 from app.models.employee import Employee
 from app.models.office import Office
 from app.schemas.employee import EmployeeCreate, EmployeeUpdate, StartOffboarding
-from app.config import settings
-from app.services.vitec_hub_service import VitecHubService
 from app.services.office_service import OfficeService
+from app.services.vitec_hub_service import VitecHubService
 
 logger = logging.getLogger(__name__)
 
 
 class EmployeeService:
     """Service for employee CRUD and lifecycle operations."""
-    
+
     @staticmethod
     async def list(
         db: AsyncSession,
         *,
-        office_id: Optional[UUID] = None,
-        status: Optional[List[str]] = None,
-        role: Optional[str] = None,
-        is_featured: Optional[bool] = None,
-        search: Optional[str] = None,
+        office_id: UUID | None = None,
+        status: list[str] | None = None,
+        role: str | None = None,
+        is_featured: bool | None = None,
+        search: str | None = None,
         skip: int = 0,
         limit: int = 100,
-    ) -> tuple[List[Employee], int]:
+    ) -> tuple[list[Employee], int]:
         """
         List employees with optional filtering.
-        
+
         Args:
             db: Database session
             office_id: Filter by office
@@ -51,18 +49,18 @@ class EmployeeService:
             search: Search by name or email
             skip: Offset for pagination
             limit: Max results
-            
+
         Returns:
             Tuple of (employees, total_count)
         """
         query = select(Employee).options(selectinload(Employee.office))
         count_query = select(func.count()).select_from(Employee)
-        
+
         # Apply filters
         if office_id:
             query = query.where(Employee.office_id == str(office_id))
             count_query = count_query.where(Employee.office_id == str(office_id))
-        
+
         if status:
             query = query.where(Employee.status.in_(status))
             count_query = count_query.where(Employee.status.in_(status))
@@ -70,13 +68,13 @@ class EmployeeService:
         if is_featured is not None:
             query = query.where(Employee.is_featured_broker == is_featured)
             count_query = count_query.where(Employee.is_featured_broker == is_featured)
-        
+
         # Role filter: check if role is in system_roles JSONB array
         if role:
             role_filter = Employee.system_roles.cast(JSONB).contains([role.lower()])
             query = query.where(role_filter)
             count_query = count_query.where(role_filter)
-        
+
         # Search filter: name or email
         if search:
             search_term = f"%{search.lower()}%"
@@ -87,28 +85,27 @@ class EmployeeService:
             )
             query = query.where(search_filter)
             count_query = count_query.where(search_filter)
-        
+
         # Execute count
         count_result = await db.execute(count_query)
         total = count_result.scalar() or 0
-        
+
         # Execute main query with pagination
         query = query.order_by(Employee.last_name, Employee.first_name).offset(skip).limit(limit)
         result = await db.execute(query)
         employees = list(result.scalars().all())
-        
+
         return employees, total
 
-    
     @staticmethod
-    async def get_by_id(db: AsyncSession, employee_id: UUID) -> Optional[Employee]:
+    async def get_by_id(db: AsyncSession, employee_id: UUID) -> Employee | None:
         """
         Get an employee by ID with related entities.
-        
+
         Args:
             db: Database session
             employee_id: Employee UUID
-            
+
         Returns:
             Employee or None
         """
@@ -118,36 +115,31 @@ class EmployeeService:
                 selectinload(Employee.office),
                 selectinload(Employee.assets),
                 selectinload(Employee.external_listings),
-                selectinload(Employee.checklists)
+                selectinload(Employee.checklists),
             )
             .where(Employee.id == str(employee_id))
         )
         return result.scalar_one_or_none()
-    
+
     @staticmethod
-    async def get_by_email(db: AsyncSession, email: str) -> Optional[Employee]:
+    async def get_by_email(db: AsyncSession, email: str) -> Employee | None:
         """
         Get an employee by email.
-        
+
         Args:
             db: Database session
             email: Employee email
-            
+
         Returns:
             Employee or None
         """
         result = await db.execute(
-            select(Employee)
-            .options(selectinload(Employee.office))
-            .where(Employee.email == email)
+            select(Employee).options(selectinload(Employee.office)).where(Employee.email == email)
         )
         return result.scalar_one_or_none()
 
     @staticmethod
-    async def get_by_vitec_employee_id(
-        db: AsyncSession,
-        vitec_employee_id: str
-    ) -> Optional[Employee]:
+    async def get_by_vitec_employee_id(db: AsyncSession, vitec_employee_id: str) -> Employee | None:
         """
         Get an employee by Vitec employee ID.
         """
@@ -157,16 +149,16 @@ class EmployeeService:
             .where(Employee.vitec_employee_id == vitec_employee_id)
         )
         return result.scalar_one_or_none()
-    
+
     @staticmethod
     async def create(db: AsyncSession, data: EmployeeCreate) -> Employee:
         """
         Create a new employee.
-        
+
         Args:
             db: Database session
             data: Employee creation data
-            
+
         Returns:
             Created employee
         """
@@ -197,152 +189,139 @@ class EmployeeService:
         db.add(employee)
         await db.flush()
         await db.refresh(employee)
-        
+
         logger.info(f"Created employee: {employee.full_name} ({employee.id})")
         return employee
-    
+
     @staticmethod
-    async def update(
-        db: AsyncSession,
-        employee_id: UUID,
-        data: EmployeeUpdate
-    ) -> Optional[Employee]:
+    async def update(db: AsyncSession, employee_id: UUID, data: EmployeeUpdate) -> Employee | None:
         """
         Update an existing employee.
-        
+
         Args:
             db: Database session
             employee_id: Employee UUID
             data: Update data
-            
+
         Returns:
             Updated employee or None if not found
         """
         employee = await EmployeeService.get_by_id(db, employee_id)
         if not employee:
             return None
-        
+
         update_data = data.model_dump(exclude_unset=True)
-        
+
         # Convert office_id to string if present
         if "office_id" in update_data:
             update_data["office_id"] = str(update_data["office_id"])
-        
+
         for field, value in update_data.items():
             setattr(employee, field, value)
-        
+
         await db.flush()
         await db.refresh(employee)
-        
+
         logger.info(f"Updated employee: {employee.full_name} ({employee.id})")
         return employee
-    
+
     @staticmethod
-    async def start_offboarding(
-        db: AsyncSession,
-        employee_id: UUID,
-        data: StartOffboarding
-    ) -> Optional[Employee]:
+    async def start_offboarding(db: AsyncSession, employee_id: UUID, data: StartOffboarding) -> Employee | None:
         """
         Start the offboarding process for an employee.
-        
+
         Args:
             db: Database session
             employee_id: Employee UUID
             data: Offboarding data
-            
+
         Returns:
             Updated employee or None if not found
         """
         employee = await EmployeeService.get_by_id(db, employee_id)
         if not employee:
             return None
-        
+
         employee.status = "offboarding"
         employee.end_date = data.end_date
         employee.hide_from_homepage_date = data.hide_from_homepage_date
         employee.delete_data_date = data.delete_data_date
-        
+
         await db.flush()
         await db.refresh(employee)
-        
+
         logger.info(f"Started offboarding for: {employee.full_name} ({employee.id})")
         return employee
-    
+
     @staticmethod
-    async def deactivate(db: AsyncSession, employee_id: UUID) -> Optional[Employee]:
+    async def deactivate(db: AsyncSession, employee_id: UUID) -> Employee | None:
         """
         Deactivate an employee (mark as inactive).
-        
+
         Args:
             db: Database session
             employee_id: Employee UUID
-            
+
         Returns:
             Deactivated employee or None if not found
         """
         employee = await EmployeeService.get_by_id(db, employee_id)
         if not employee:
             return None
-        
+
         employee.status = "inactive"
         await db.flush()
         await db.refresh(employee)
-        
+
         logger.info(f"Deactivated employee: {employee.full_name} ({employee.id})")
         return employee
-    
+
     @staticmethod
     async def get_by_office(
-        db: AsyncSession,
-        office_id: UUID,
-        *,
-        status: Optional[List[str]] = None
-    ) -> List[Employee]:
+        db: AsyncSession, office_id: UUID, *, status: builtins.list[str] | None = None
+    ) -> builtins.list[Employee]:
         """
         Get all employees for an office.
-        
+
         Args:
             db: Database session
             office_id: Office UUID
             status: Filter by status(es)
-            
+
         Returns:
             List of employees
         """
         query = select(Employee).where(Employee.office_id == str(office_id))
-        
+
         if status:
             query = query.where(Employee.status.in_(status))
-        
+
         query = query.order_by(Employee.last_name, Employee.first_name)
         result = await db.execute(query)
         return list(result.scalars().all())
-    
+
     @staticmethod
-    async def get_offboarding_due(db: AsyncSession) -> List[Employee]:
+    async def get_offboarding_due(db: AsyncSession) -> builtins.list[Employee]:
         """
         Get employees with offboarding tasks due.
-        
+
         Returns employees who are offboarding and have dates in the past.
-        
+
         Args:
             db: Database session
-            
+
         Returns:
             List of employees needing attention
         """
         from datetime import date
+
         today = date.today()
-        
+
         result = await db.execute(
             select(Employee)
             .options(selectinload(Employee.office))
             .where(Employee.status == "offboarding")
-            .where(
-                (Employee.hide_from_homepage_date <= today) |
-                (Employee.delete_data_date <= today)
-            )
+            .where((Employee.hide_from_homepage_date <= today) | (Employee.delete_data_date <= today))
         )
         return list(result.scalars().all())
 
@@ -351,7 +330,7 @@ class EmployeeService:
     # =============================================================================
 
     @staticmethod
-    def _normalize_text(value: Optional[str]) -> Optional[str]:
+    def _normalize_text(value: str | None) -> str | None:
         if value is None:
             return None
         cleaned = value.strip()
@@ -367,7 +346,7 @@ class EmployeeService:
         return parts[0], " ".join(parts[1:])
 
     @staticmethod
-    def _extract_department_id(value: object) -> Optional[int]:
+    def _extract_department_id(value: object) -> int | None:
         if isinstance(value, list) and value:
             value = value[0]
         if isinstance(value, int):
@@ -377,7 +356,7 @@ class EmployeeService:
         return None
 
     @staticmethod
-    def _infer_roles_from_title(title: Optional[str]) -> List[str]:
+    def _infer_roles_from_title(title: str | None) -> builtins.list[str]:
         if not title:
             return []
         mapping = {
@@ -386,7 +365,7 @@ class EmployeeService:
             "fagansvarlig": "fagansvarlig",
             "daglig leder": "daglig_leder",
         }
-        roles: List[str] = []
+        roles: list[str] = []
         lower = title.lower()
         for key, role in mapping.items():
             if key in lower and role not in roles:
@@ -394,7 +373,7 @@ class EmployeeService:
         return roles
 
     @staticmethod
-    def _map_employee_roles(positions: Optional[List[dict]], title: Optional[str]) -> List[str]:
+    def _map_employee_roles(positions: builtins.list[dict] | None, title: str | None) -> builtins.list[str]:
         role_map = {
             1: "eiendomsmegler",
             2: "daglig_leder",
@@ -407,7 +386,7 @@ class EmployeeService:
             9: "salgsleder",
             10: "kontorleder",
         }
-        roles: List[str] = []
+        roles: list[str] = []
         for position in positions or []:
             if not isinstance(position, dict):
                 continue
@@ -430,16 +409,16 @@ class EmployeeService:
         roles = EmployeeService._map_employee_roles(raw.get("employeePositions"), title)
         active_flag = raw.get("employeeActive")
         status = "active" if active_flag is True else "inactive" if active_flag is False else "active"
-        
+
         # Profile image URL - try multiple possible field names
         profile_image_url = EmployeeService._normalize_text(
-            raw.get("imageUrl") or
-            raw.get("profileImageUrl") or
-            raw.get("profileImage") or
-            raw.get("photoUrl") or
-            raw.get("avatarUrl")
+            raw.get("imageUrl")
+            or raw.get("profileImageUrl")
+            or raw.get("profileImage")
+            or raw.get("photoUrl")
+            or raw.get("avatarUrl")
         )
-        
+
         return {
             "vitec_employee_id": raw.get("employeeId"),
             "department_id": EmployeeService._extract_department_id(raw.get("departmentId")),
@@ -455,11 +434,7 @@ class EmployeeService:
         }
 
     @staticmethod
-    async def upsert_from_hub(
-        db: AsyncSession,
-        payload: dict,
-        office: Office
-    ) -> tuple[Employee, str]:
+    async def upsert_from_hub(db: AsyncSession, payload: dict, office: Office) -> tuple[Employee, str]:
         existing = None
         vitec_employee_id = payload.get("vitec_employee_id")
         if vitec_employee_id:
@@ -502,7 +477,16 @@ class EmployeeService:
             existing.office_id = str(office.id)
             updated = True
 
-        for field in ["first_name", "last_name", "title", "email", "phone", "description", "profile_image_url", "status"]:
+        for field in [
+            "first_name",
+            "last_name",
+            "title",
+            "email",
+            "phone",
+            "description",
+            "profile_image_url",
+            "status",
+        ]:
             value = payload.get(field)
             if value is None:
                 continue
@@ -526,7 +510,7 @@ class EmployeeService:
     async def sync_from_hub(
         db: AsyncSession,
         *,
-        installation_id: Optional[str] = None,
+        installation_id: str | None = None,
     ) -> dict:
         hub = VitecHubService()
         install_id = installation_id or settings.VITEC_INSTALLATION_ID
@@ -562,7 +546,7 @@ class EmployeeService:
 
         # Explicitly commit all changes
         await db.commit()
-        
+
         total = len(employees)
         logger.info(
             "Vitec Hub employees sync complete: total=%s created=%s updated=%s skipped=%s missing_office=%s",

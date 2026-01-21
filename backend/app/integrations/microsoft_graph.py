@@ -4,9 +4,10 @@ Microsoft Graph API Client
 Integration with Microsoft 365 for Teams and SharePoint operations.
 """
 
-import httpx
 import logging
-from typing import Optional, List, Dict, Any
+from typing import Any
+
+import httpx
 from pydantic import BaseModel
 
 from app.config import settings
@@ -18,62 +19,61 @@ logger = logging.getLogger(__name__)
 # Response Models
 # =============================================================================
 
+
 class TeamsGroup(BaseModel):
     """Teams group/team representation."""
+
     id: str
     display_name: str
-    description: Optional[str] = None
-    mail: Optional[str] = None
+    description: str | None = None
+    mail: str | None = None
 
 
 class TeamMember(BaseModel):
     """Team member representation."""
+
     id: str
     display_name: str
-    email: Optional[str] = None
+    email: str | None = None
 
 
 # =============================================================================
 # Microsoft Graph Client
 # =============================================================================
 
+
 class MicrosoftGraphClient:
     """
     Client for Microsoft Graph API operations.
-    
+
     Supports:
     - Teams groups listing
     - Team membership queries
     - Email sending via Exchange
-    
+
     Uses client credentials flow (service account).
     """
-    
+
     BASE_URL = "https://graph.microsoft.com/v1.0"
-    
+
     def __init__(self):
         self.tenant_id = settings.MICROSOFT_TENANT_ID
         self.client_id = settings.MICROSOFT_CLIENT_ID
         self.client_secret = settings.MICROSOFT_CLIENT_SECRET
-        self._access_token: Optional[str] = None
-    
+        self._access_token: str | None = None
+
     @property
     def is_configured(self) -> bool:
         """Check if Microsoft Graph credentials are configured."""
-        return bool(
-            self.tenant_id and 
-            self.client_id and 
-            self.client_secret and
-            self.tenant_id != "placeholder"
-        )
-    
+        return bool(self.tenant_id and self.client_id and self.client_secret and self.tenant_id != "placeholder")
+
     async def _get_access_token(self) -> str:
         """Get access token using client credentials flow."""
         if not self.is_configured:
             raise ValueError("Microsoft Graph credentials not configured")
-        
+
         token_url = f"https://login.microsoftonline.com/{self.tenant_id}/oauth2/v2.0/token"
-        
+
         async with httpx.AsyncClient() as client:
             response = await client.post(
                 token_url,
@@ -87,22 +87,17 @@ class MicrosoftGraphClient:
             response.raise_for_status()
             data = response.json()
             return data["access_token"]
-    
-    async def _request(
-        self, 
-        method: str, 
-        endpoint: str, 
-        **kwargs
-    ) -> Dict[str, Any]:
+
+    async def _request(self, method: str, endpoint: str, **kwargs) -> dict[str, Any]:
         """Make authenticated request to Graph API."""
         if not self._access_token:
             self._access_token = await self._get_access_token()
-        
+
         headers = {
             "Authorization": f"Bearer {self._access_token}",
             "Content-Type": "application/json",
         }
-        
+
         async with httpx.AsyncClient() as client:
             response = await client.request(
                 method,
@@ -112,22 +107,22 @@ class MicrosoftGraphClient:
             )
             response.raise_for_status()
             return response.json() if response.content else {}
-    
+
     # =========================================================================
     # Teams Operations
     # =========================================================================
-    
-    async def list_teams(self) -> List[TeamsGroup]:
+
+    async def list_teams(self) -> list[TeamsGroup]:
         """
         List all Teams groups the service account has access to.
-        
+
         Returns:
             List of TeamsGroup objects
         """
         if not self.is_configured:
             logger.warning("Microsoft Graph not configured, returning empty list")
             return []
-        
+
         try:
             data = await self._request("GET", "/groups?$filter=resourceProvisioningOptions/Any(x:x eq 'Team')")
             return [
@@ -142,20 +137,20 @@ class MicrosoftGraphClient:
         except Exception as e:
             logger.error(f"Failed to list Teams: {e}")
             return []
-    
-    async def get_team_members(self, team_id: str) -> List[TeamMember]:
+
+    async def get_team_members(self, team_id: str) -> list[TeamMember]:
         """
         Get members of a specific team.
-        
+
         Args:
             team_id: The Teams group ID
-            
+
         Returns:
             List of TeamMember objects
         """
         if not self.is_configured:
             return []
-        
+
         try:
             data = await self._request("GET", f"/groups/{team_id}/members")
             return [
@@ -169,42 +164,42 @@ class MicrosoftGraphClient:
         except Exception as e:
             logger.error(f"Failed to get team members: {e}")
             return []
-    
+
     # =========================================================================
     # Email Operations
     # =========================================================================
-    
+
     async def send_email(
         self,
-        to: List[str],
+        to: list[str],
         subject: str,
         body: str,
         *,
-        from_address: Optional[str] = None,
+        from_address: str | None = None,
         is_html: bool = False,
     ) -> bool:
         """
         Send email via Microsoft Graph.
-        
+
         Args:
             to: List of recipient email addresses
             subject: Email subject
             body: Email body content
             from_address: Sender address (must be authorized)
             is_html: Whether body is HTML
-            
+
         Returns:
             True if sent successfully
         """
         if not self.is_configured:
             logger.warning("Microsoft Graph not configured, email not sent")
             return False
-        
+
         sender = from_address or settings.MICROSOFT_SENDER_EMAIL
         if not sender:
             logger.error("No sender email configured")
             return False
-        
+
         message = {
             "message": {
                 "subject": subject,
@@ -212,13 +207,11 @@ class MicrosoftGraphClient:
                     "contentType": "HTML" if is_html else "Text",
                     "content": body,
                 },
-                "toRecipients": [
-                    {"emailAddress": {"address": addr}} for addr in to
-                ],
+                "toRecipients": [{"emailAddress": {"address": addr}} for addr in to],
             },
             "saveToSentItems": "true",
         }
-        
+
         try:
             await self._request(
                 "POST",

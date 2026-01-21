@@ -4,26 +4,47 @@ Proaktiv Dokument Hub - FastAPI Backend
 Main application entry point with database integration.
 """
 
+import json
+import logging
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from contextlib import asynccontextmanager
-import logging
 
 from app.config import settings
-from app.database import init_db, close_db
+from app.database import close_db, init_db
 from app.middleware.auth import AuthMiddleware
-from app.routers import templates, tags, categories, analytics, health, sanitizer
-from app.routers import merge_fields, code_patterns, layout_partials, dashboard, admin, storage
-from app.routers import auth
+
 # V3 Routers
-from app.routers import offices, employees, assets, external_listings, checklists, territories, web_crawl, sync
 # Vitec Integration
-from app.routers import vitec
+from app.routers import (
+    admin,
+    analytics,
+    assets,
+    auth,
+    categories,
+    checklists,
+    code_patterns,
+    dashboard,
+    employees,
+    external_listings,
+    health,
+    layout_partials,
+    merge_fields,
+    offices,
+    sanitizer,
+    storage,
+    sync,
+    tags,
+    templates,
+    territories,
+    vitec,
+    web_crawl,
+)
 
 # Configure logging
 logging.basicConfig(
-    level=getattr(logging, settings.LOG_LEVEL),
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    level=getattr(logging, settings.LOG_LEVEL), format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -50,7 +71,6 @@ app = FastAPI(
 
 # CORS Configuration
 # Parse allowed origins from environment or use defaults
-import json
 try:
     allowed_origins = json.loads(settings.ALLOWED_ORIGINS)
 except (json.JSONDecodeError, TypeError):
@@ -113,9 +133,4 @@ app.include_router(sync.router, prefix="/api", tags=["Sync"])
 @app.get("/")
 async def root():
     """Root endpoint."""
-    return {
-        "name": settings.APP_NAME,
-        "version": settings.APP_VERSION,
-        "status": "running",
-        "docs": "/docs"
-    }
+    return {"name": settings.APP_NAME, "version": settings.APP_VERSION, "status": "running", "docs": "/docs"}

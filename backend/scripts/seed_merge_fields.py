@@ -7,16 +7,17 @@ Run with: python -m scripts.seed_merge_fields
 """
 
 import asyncio
-import sys
 import os
+import sys
 
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from sqlalchemy.dialects.postgresql import insert as pg_insert
-from app.database import async_engine
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
+
+from app.database import async_engine
 
 # Vitec merge field definitions
 # Format: {path, category, label, description, example_value, data_type, is_iterable, parent_model}
@@ -32,7 +33,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "Storgata 1",
         "data_type": "string",
         "is_iterable": False,
-        "parent_model": "Model.eiendom"
+        "parent_model": "Model.eiendom",
     },
     {
         "path": "eiendom.postnr",
@@ -42,7 +43,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "0155",
         "data_type": "string",
         "is_iterable": False,
-        "parent_model": "Model.eiendom"
+        "parent_model": "Model.eiendom",
     },
     {
         "path": "eiendom.poststed",
@@ -52,7 +53,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "Oslo",
         "data_type": "string",
         "is_iterable": False,
-        "parent_model": "Model.eiendom"
+        "parent_model": "Model.eiendom",
     },
     {
         "path": "eiendom.pris",
@@ -62,7 +63,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "4 500 000",
         "data_type": "number",
         "is_iterable": False,
-        "parent_model": "Model.eiendom"
+        "parent_model": "Model.eiendom",
     },
     {
         "path": "eiendom.eieform",
@@ -72,7 +73,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "Eiet",
         "data_type": "string",
         "is_iterable": False,
-        "parent_model": "Model.eiendom"
+        "parent_model": "Model.eiendom",
     },
     {
         "path": "eiendom.boligtype",
@@ -82,7 +83,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "Leilighet",
         "data_type": "string",
         "is_iterable": False,
-        "parent_model": "Model.eiendom"
+        "parent_model": "Model.eiendom",
     },
     {
         "path": "eiendom.bra",
@@ -92,7 +93,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "85",
         "data_type": "number",
         "is_iterable": False,
-        "parent_model": "Model.eiendom"
+        "parent_model": "Model.eiendom",
     },
     {
         "path": "eiendom.prom",
@@ -102,7 +103,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "78",
         "data_type": "number",
         "is_iterable": False,
-        "parent_model": "Model.eiendom"
+        "parent_model": "Model.eiendom",
     },
     {
         "path": "komplettmatrikkelutvidet",
@@ -112,9 +113,8 @@ VITEC_MERGE_FIELDS = [
         "example_value": "Gnr 1 Bnr 23 Snr 4",
         "data_type": "string",
         "is_iterable": False,
-        "parent_model": None
+        "parent_model": None,
     },
-    
     # ==========================================================================
     # Selger (Seller)
     # ==========================================================================
@@ -126,7 +126,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "Ola Nordmann",
         "data_type": "string",
         "is_iterable": True,
-        "parent_model": "Model.selgere"
+        "parent_model": "Model.selgere",
     },
     {
         "path": "selger.hovedgatenavnognr",
@@ -136,7 +136,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "Parkveien 10",
         "data_type": "string",
         "is_iterable": True,
-        "parent_model": "Model.selgere"
+        "parent_model": "Model.selgere",
     },
     {
         "path": "selger.hovedpostnr",
@@ -146,7 +146,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "0350",
         "data_type": "string",
         "is_iterable": True,
-        "parent_model": "Model.selgere"
+        "parent_model": "Model.selgere",
     },
     {
         "path": "selger.hovedpoststed",
@@ -156,7 +156,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "Oslo",
         "data_type": "string",
         "is_iterable": True,
-        "parent_model": "Model.selgere"
+        "parent_model": "Model.selgere",
     },
     {
         "path": "selger.emailadresse",
@@ -166,7 +166,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "ola@example.com",
         "data_type": "string",
         "is_iterable": True,
-        "parent_model": "Model.selgere"
+        "parent_model": "Model.selgere",
     },
     {
         "path": "selger.hovedtlf",
@@ -176,7 +176,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "912 34 567",
         "data_type": "string",
         "is_iterable": True,
-        "parent_model": "Model.selgere"
+        "parent_model": "Model.selgere",
     },
     {
         "path": "selger.idnummer",
@@ -186,9 +186,8 @@ VITEC_MERGE_FIELDS = [
         "example_value": "01018012345",
         "data_type": "string",
         "is_iterable": True,
-        "parent_model": "Model.selgere"
+        "parent_model": "Model.selgere",
     },
-    
     # ==========================================================================
     # Kjøper (Buyer)
     # ==========================================================================
@@ -200,7 +199,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "Kari Nordmann",
         "data_type": "string",
         "is_iterable": True,
-        "parent_model": "Model.kjopere"
+        "parent_model": "Model.kjopere",
     },
     {
         "path": "kjoper.hovedgatenavnognr",
@@ -210,7 +209,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "Strandveien 5",
         "data_type": "string",
         "is_iterable": True,
-        "parent_model": "Model.kjopere"
+        "parent_model": "Model.kjopere",
     },
     {
         "path": "kjoper.hovedpostnr",
@@ -220,7 +219,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "0252",
         "data_type": "string",
         "is_iterable": True,
-        "parent_model": "Model.kjopere"
+        "parent_model": "Model.kjopere",
     },
     {
         "path": "kjoper.hovedpoststed",
@@ -230,7 +229,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "Oslo",
         "data_type": "string",
         "is_iterable": True,
-        "parent_model": "Model.kjopere"
+        "parent_model": "Model.kjopere",
     },
     {
         "path": "kjoper.emailadresse",
@@ -240,7 +239,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "kari@example.com",
         "data_type": "string",
         "is_iterable": True,
-        "parent_model": "Model.kjopere"
+        "parent_model": "Model.kjopere",
     },
     {
         "path": "kjoper.hovedtlf",
@@ -250,9 +249,8 @@ VITEC_MERGE_FIELDS = [
         "example_value": "987 65 432",
         "data_type": "string",
         "is_iterable": True,
-        "parent_model": "Model.kjopere"
+        "parent_model": "Model.kjopere",
     },
-    
     # ==========================================================================
     # Megler (Broker)
     # ==========================================================================
@@ -264,7 +262,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "Per Hansen",
         "data_type": "string",
         "is_iterable": False,
-        "parent_model": "Model.ansvarligmegler"
+        "parent_model": "Model.ansvarligmegler",
     },
     {
         "path": "ansvarligmegler.tittel",
@@ -274,7 +272,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "Eiendomsmegler MNEF",
         "data_type": "string",
         "is_iterable": False,
-        "parent_model": "Model.ansvarligmegler"
+        "parent_model": "Model.ansvarligmegler",
     },
     {
         "path": "ansvarligmegler.epost",
@@ -284,7 +282,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "per@meglerkontor.no",
         "data_type": "string",
         "is_iterable": False,
-        "parent_model": "Model.ansvarligmegler"
+        "parent_model": "Model.ansvarligmegler",
     },
     {
         "path": "ansvarligmegler.telefon",
@@ -294,9 +292,8 @@ VITEC_MERGE_FIELDS = [
         "example_value": "22 33 44 55",
         "data_type": "string",
         "is_iterable": False,
-        "parent_model": "Model.ansvarligmegler"
+        "parent_model": "Model.ansvarligmegler",
     },
-    
     # ==========================================================================
     # Meglerkontor (Office)
     # ==========================================================================
@@ -308,7 +305,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "Proaktiv Eiendomsmegling AS",
         "data_type": "string",
         "is_iterable": False,
-        "parent_model": "Model.meglerkontor"
+        "parent_model": "Model.meglerkontor",
     },
     {
         "path": "meglerkontor.besoksadresse",
@@ -318,7 +315,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "Stortingsgata 20, 0161 Oslo",
         "data_type": "string",
         "is_iterable": False,
-        "parent_model": "Model.meglerkontor"
+        "parent_model": "Model.meglerkontor",
     },
     {
         "path": "meglerkontor.orgnr",
@@ -328,9 +325,8 @@ VITEC_MERGE_FIELDS = [
         "example_value": "912 345 678",
         "data_type": "string",
         "is_iterable": False,
-        "parent_model": "Model.meglerkontor"
+        "parent_model": "Model.meglerkontor",
     },
-    
     # ==========================================================================
     # Økonomi (Economy)
     # ==========================================================================
@@ -342,7 +338,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "2.5",
         "data_type": "number",
         "is_iterable": False,
-        "parent_model": "Model.oppdrag"
+        "parent_model": "Model.oppdrag",
     },
     {
         "path": "oppdrag.selgersamletsum",
@@ -352,7 +348,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "125 000",
         "data_type": "number",
         "is_iterable": False,
-        "parent_model": "Model.oppdrag"
+        "parent_model": "Model.oppdrag",
     },
     {
         "path": "oppdrag.selgerutleggsum",
@@ -362,7 +358,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "25 000",
         "data_type": "number",
         "is_iterable": False,
-        "parent_model": "Model.oppdrag"
+        "parent_model": "Model.oppdrag",
     },
     {
         "path": "oppdrag.salgssum",
@@ -372,9 +368,8 @@ VITEC_MERGE_FIELDS = [
         "example_value": "4 750 000",
         "data_type": "number",
         "is_iterable": False,
-        "parent_model": "Model.oppdrag"
+        "parent_model": "Model.oppdrag",
     },
-    
     # ==========================================================================
     # Oppgjør (Settlement)
     # ==========================================================================
@@ -386,7 +381,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "Proaktiv Oppgjør AS",
         "data_type": "string",
         "is_iterable": False,
-        "parent_model": "Model.oppgjor"
+        "parent_model": "Model.oppgjor",
     },
     {
         "path": "oppdrag.overtagelse",
@@ -396,7 +391,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "01.03.2026",
         "data_type": "date",
         "is_iterable": False,
-        "parent_model": "Model.oppdrag"
+        "parent_model": "Model.oppdrag",
     },
     {
         "path": "oppdrag.kontraktsdato",
@@ -406,9 +401,8 @@ VITEC_MERGE_FIELDS = [
         "example_value": "15.01.2026",
         "data_type": "date",
         "is_iterable": False,
-        "parent_model": "Model.oppdrag"
+        "parent_model": "Model.oppdrag",
     },
-    
     # ==========================================================================
     # Dato (Dates)
     # ==========================================================================
@@ -420,9 +414,8 @@ VITEC_MERGE_FIELDS = [
         "example_value": "17. januar 2026",
         "data_type": "date",
         "is_iterable": False,
-        "parent_model": None
+        "parent_model": None,
     },
-    
     # ==========================================================================
     # Samlinger (Collections)
     # ==========================================================================
@@ -434,7 +427,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "[{navn: 'Ola'}, {navn: 'Kari'}]",
         "data_type": "array",
         "is_iterable": True,
-        "parent_model": "Model"
+        "parent_model": "Model",
     },
     {
         "path": "Model.kjopere",
@@ -444,7 +437,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "[{navn: 'Per'}]",
         "data_type": "array",
         "is_iterable": True,
-        "parent_model": "Model"
+        "parent_model": "Model",
     },
     {
         "path": "Model.meglere",
@@ -454,7 +447,7 @@ VITEC_MERGE_FIELDS = [
         "example_value": "[{navn: 'Per Hansen'}]",
         "data_type": "array",
         "is_iterable": True,
-        "parent_model": "Model"
+        "parent_model": "Model",
     },
 ]
 
@@ -462,39 +455,41 @@ VITEC_MERGE_FIELDS = [
 async def seed_merge_fields():
     """Seed merge fields using upsert."""
     from app.models.merge_field import MergeField
-    
-    async_session = sessionmaker(
-        async_engine, class_=AsyncSession, expire_on_commit=False
-    )
-    
+
+    async_session = sessionmaker(async_engine, class_=AsyncSession, expire_on_commit=False)
+
     async with async_session() as session:
         count = 0
         for field_data in VITEC_MERGE_FIELDS:
             # Use PostgreSQL INSERT ... ON CONFLICT for upsert
-            stmt = pg_insert(MergeField).values(
-                path=field_data["path"],
-                category=field_data["category"],
-                label=field_data["label"],
-                description=field_data.get("description"),
-                example_value=field_data.get("example_value"),
-                data_type=field_data.get("data_type", "string"),
-                is_iterable=field_data.get("is_iterable", False),
-                parent_model=field_data.get("parent_model")
-            ).on_conflict_do_update(
-                index_elements=["path"],
-                set_={
-                    "category": field_data["category"],
-                    "label": field_data["label"],
-                    "description": field_data.get("description"),
-                    "example_value": field_data.get("example_value"),
-                    "data_type": field_data.get("data_type", "string"),
-                    "is_iterable": field_data.get("is_iterable", False),
-                    "parent_model": field_data.get("parent_model")
-                }
+            stmt = (
+                pg_insert(MergeField)
+                .values(
+                    path=field_data["path"],
+                    category=field_data["category"],
+                    label=field_data["label"],
+                    description=field_data.get("description"),
+                    example_value=field_data.get("example_value"),
+                    data_type=field_data.get("data_type", "string"),
+                    is_iterable=field_data.get("is_iterable", False),
+                    parent_model=field_data.get("parent_model"),
+                )
+                .on_conflict_do_update(
+                    index_elements=["path"],
+                    set_={
+                        "category": field_data["category"],
+                        "label": field_data["label"],
+                        "description": field_data.get("description"),
+                        "example_value": field_data.get("example_value"),
+                        "data_type": field_data.get("data_type", "string"),
+                        "is_iterable": field_data.get("is_iterable", False),
+                        "parent_model": field_data.get("parent_model"),
+                    },
+                )
             )
             await session.execute(stmt)
             count += 1
-        
+
         await session.commit()
         print(f"Seeded {count} merge fields")
 

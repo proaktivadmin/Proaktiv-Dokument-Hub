@@ -1,10 +1,28 @@
 # API Routers
-from app.routers import templates, tags, categories, analytics, health, sanitizer
-from app.routers import merge_fields, code_patterns, layout_partials
-from app.routers import dashboard, admin, storage, auth
 # V3 Routers
-from app.routers import offices, employees, assets, external_listings, checklists, territories
-from app.routers import web_crawl, sync
+from app.routers import (
+    admin,
+    analytics,
+    assets,
+    auth,
+    categories,
+    checklists,
+    code_patterns,
+    dashboard,
+    employees,
+    external_listings,
+    health,
+    layout_partials,
+    merge_fields,
+    offices,
+    sanitizer,
+    storage,
+    sync,
+    tags,
+    templates,
+    territories,
+    web_crawl,
+)
 
 __all__ = [
     # Core

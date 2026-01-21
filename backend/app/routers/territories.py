@@ -2,31 +2,30 @@
 Territories Router - API endpoints for postal codes and office territories.
 """
 
-from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File
-from sqlalchemy import select, func
-from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Optional, List
-from uuid import UUID
 import csv
 import io
+from uuid import UUID
+
+from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
+from sqlalchemy import func, select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
-from app.services.territory_service import PostalCodeService, OfficeTerritoryService
 from app.models.office_territory import OfficeTerritory
-from app.services.office_service import OfficeService
 from app.schemas.territory import (
-    PostalCodeResponse,
-    PostalCodeSyncResult,
-    OfficeTerritoryCreate,
-    OfficeTerritoryUpdate,
-    OfficeTerritoryResponse,
-    OfficeTerritoryWithDetails,
-    OfficeTerritoryListResponse,
-    TerritoryMapData,
-    TerritoryImportResult,
     BlacklistEntry,
     OfficeMinimalForTerritory,
+    OfficeTerritoryCreate,
+    OfficeTerritoryListResponse,
+    OfficeTerritoryUpdate,
+    OfficeTerritoryWithDetails,
+    PostalCodeResponse,
+    PostalCodeSyncResult,
+    TerritoryImportResult,
+    TerritoryMapData,
 )
+from app.services.office_service import OfficeService
+from app.services.territory_service import OfficeTerritoryService, PostalCodeService
 
 router = APIRouter(tags=["Territories"])
 
@@ -67,7 +66,9 @@ def _territory_to_response(t) -> OfficeTerritoryWithDetails:
             name=t.office.name,
             short_code=t.office.short_code,
             color=t.office.color,
-        ) if t.office else None,
+        )
+        if t.office
+        else None,
         postal_info=_postal_code_to_response(t.postal_code_info) if t.postal_code_info else None,
     )
 
@@ -76,13 +77,14 @@ def _territory_to_response(t) -> OfficeTerritoryWithDetails:
 # Postal Code Endpoints
 # =============================================================================
 
-@router.get("/postal-codes", response_model=List[PostalCodeResponse])
+
+@router.get("/postal-codes", response_model=list[PostalCodeResponse])
 async def list_postal_codes(
     db: AsyncSession = Depends(get_db),
 ):
     """
     List all postal codes.
-    
+
     Returns all Norwegian postal codes from the database.
     Run /postal-codes/sync to populate from Bring registry.
     """
@@ -96,7 +98,7 @@ async def sync_postal_codes(
 ):
     """
     Sync postal codes from Bring Postnummerregister.
-    
+
     Downloads and upserts all Norwegian postal codes.
     """
     result = await PostalCodeService.sync_from_bring(db)
@@ -114,7 +116,7 @@ async def get_postal_code(
     pc = await PostalCodeService.get_by_code(db, postal_code)
     if not pc:
         raise HTTPException(status_code=404, detail="Postal code not found")
-    
+
     return _postal_code_to_response(pc)
 
 
@@ -122,17 +124,18 @@ async def get_postal_code(
 # Territory Endpoints
 # =============================================================================
 
+
 @router.get("/territories", response_model=OfficeTerritoryListResponse)
 async def list_territories(
-    office_id: Optional[UUID] = Query(None, description="Filter by office"),
-    source: Optional[str] = Query(None, description="Filter by source"),
+    office_id: UUID | None = Query(None, description="Filter by office"),
+    source: str | None = Query(None, description="Filter by source"),
     skip: int = Query(0, ge=0, description="Offset for pagination"),
     limit: int = Query(100, ge=1, le=1000, description="Max results"),
     db: AsyncSession = Depends(get_db),
 ):
     """
     List all territory assignments.
-    
+
     Source can be: vitec_next, finn, anbudstjenester, homepage, other.
     """
     territories, total = await OfficeTerritoryService.list(
@@ -142,20 +145,20 @@ async def list_territories(
         skip=skip,
         limit=limit,
     )
-    
+
     items = [_territory_to_response(t) for t in territories]
-    
+
     return OfficeTerritoryListResponse(items=items, total=total)
 
 
 @router.get("/territories/map", response_model=TerritoryMapData)
 async def get_map_data(
-    layer: Optional[List[str]] = Query(None, description="Source layers to include"),
+    layer: list[str] | None = Query(None, description="Source layers to include"),
     db: AsyncSession = Depends(get_db),
 ):
     """
     Get GeoJSON data for territory map.
-    
+
     Returns feature collection with territory properties.
     Note: Geometry data is a placeholder - actual polygons would need
     to be sourced from a postal code geometry dataset.
@@ -181,9 +184,7 @@ async def get_territory_stats(
     """
     Get territory summary stats for dashboard cards.
     """
-    total = await db.scalar(
-        select(func.count()).select_from(OfficeTerritory)
-    ) or 0
+    total = await db.scalar(select(func.count()).select_from(OfficeTerritory)) or 0
 
     by_source = {
         "vitec_next": 0,
@@ -192,22 +193,15 @@ async def get_territory_stats(
         "homepage": 0,
         "other": 0,
     }
-    by_source_result = await db.execute(
-        select(OfficeTerritory.source, func.count())
-        .group_by(OfficeTerritory.source)
-    )
+    by_source_result = await db.execute(select(OfficeTerritory.source, func.count()).group_by(OfficeTerritory.source))
     for source, count in by_source_result.all():
         by_source[source] = count
 
-    offices_with_territories = await db.scalar(
-        select(func.count(func.distinct(OfficeTerritory.office_id)))
-    ) or 0
+    offices_with_territories = await db.scalar(select(func.count(func.distinct(OfficeTerritory.office_id)))) or 0
 
-    blacklisted_count = await db.scalar(
-        select(func.count())
-        .select_from(OfficeTerritory)
-        .where(OfficeTerritory.is_blacklisted == True)
-    ) or 0
+    blacklisted_count = (
+        await db.scalar(select(func.count()).select_from(OfficeTerritory).where(OfficeTerritory.is_blacklisted)) or 0
+    )
 
     return {
         "total_territories": total,
@@ -229,14 +223,14 @@ async def create_territory(
     office = await OfficeService.get_by_id(db, data.office_id)
     if not office:
         raise HTTPException(status_code=400, detail="Office not found")
-    
+
     # Verify postal code exists
     pc = await PostalCodeService.get_by_code(db, data.postal_code)
     if not pc:
         raise HTTPException(status_code=400, detail="Postal code not found")
-    
+
     territory = await OfficeTerritoryService.create(db, data)
-    
+
     # Reload with relationships
     territory = await OfficeTerritoryService.get_by_id(db, territory.id)
     return _territory_to_response(territory)
@@ -254,7 +248,7 @@ async def update_territory(
     territory = await OfficeTerritoryService.update(db, territory_id, data)
     if not territory:
         raise HTTPException(status_code=404, detail="Territory not found")
-    
+
     # Reload with relationships
     territory = await OfficeTerritoryService.get_by_id(db, territory.id)
     return _territory_to_response(territory)
@@ -276,6 +270,7 @@ async def delete_territory(
 # =============================================================================
 # Blacklist Endpoints
 # =============================================================================
+
 
 @router.get("/territories/blacklist")
 async def get_blacklist(
@@ -301,19 +296,20 @@ async def add_to_blacklist(
     office = await OfficeService.get_by_id(db, office_id)
     if not office:
         raise HTTPException(status_code=400, detail="Office not found")
-    
+
     # Verify postal code exists
     pc = await PostalCodeService.get_by_code(db, data.postal_code)
     if not pc:
         raise HTTPException(status_code=400, detail="Postal code not found")
-    
-    territory = await OfficeTerritoryService.add_to_blacklist(db, data.postal_code, office_id)
+
+    await OfficeTerritoryService.add_to_blacklist(db, data.postal_code, office_id)
     return {"message": f"Added {data.postal_code} to blacklist"}
 
 
 # =============================================================================
 # Import Endpoints
 # =============================================================================
+
 
 @router.post("/territories/import", response_model=TerritoryImportResult)
 async def import_territories(
@@ -324,7 +320,7 @@ async def import_territories(
 ):
     """
     Import territories from CSV file.
-    
+
     Expected CSV format:
     postal_code,priority
     0001,1
@@ -334,7 +330,7 @@ async def import_territories(
     office = await OfficeService.get_by_id(db, office_id)
     if not office:
         raise HTTPException(status_code=400, detail="Office not found")
-    
+
     # Parse CSV
     content = await file.read()
     try:
@@ -343,6 +339,6 @@ async def import_territories(
         data = list(reader)
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to parse CSV: {str(e)}")
-    
+
     result = await OfficeTerritoryService.import_from_csv(db, data, office_id, source)
     return TerritoryImportResult(**result)

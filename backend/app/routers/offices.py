@@ -2,36 +2,35 @@
 Offices Router - API endpoints for office management.
 """
 
-from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Optional, List
 from uuid import UUID
 
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.database import get_db
-from app.services.office_service import OfficeService
 from app.schemas.office import (
     OfficeCreate,
-    OfficeUpdate,
-    OfficeResponse,
-    OfficeWithStats,
     OfficeListResponse,
     OfficeSyncResult,
+    OfficeUpdate,
+    OfficeWithStats,
 )
+from app.services.office_service import OfficeService
 
 router = APIRouter(prefix="/offices", tags=["Offices"])
 
 
 @router.get("", response_model=OfficeListResponse)
 async def list_offices(
-    city: Optional[str] = Query(None, description="Filter by city"),
-    is_active: Optional[bool] = Query(None, description="Filter by active status"),
+    city: str | None = Query(None, description="Filter by city"),
+    is_active: bool | None = Query(None, description="Filter by active status"),
     skip: int = Query(0, ge=0, description="Offset for pagination"),
     limit: int = Query(100, ge=1, le=500, description="Max results"),
     db: AsyncSession = Depends(get_db),
 ):
     """
     List all offices with optional filtering.
-    
+
     Returns offices with computed statistics (employee counts, territory count).
     """
     offices, total = await OfficeService.list(
@@ -41,9 +40,9 @@ async def list_offices(
         skip=skip,
         limit=limit,
     )
-    
+
     items = [OfficeService.to_response_with_stats(office) for office in offices]
-    
+
     return OfficeListResponse(items=items, total=total)
 
 
@@ -65,17 +64,14 @@ async def create_office(
 ):
     """
     Create a new office.
-    
+
     The short_code must be unique and will be uppercased.
     """
     # Check for duplicate short_code
     existing = await OfficeService.get_by_short_code(db, data.short_code)
     if existing:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Office with short code '{data.short_code}' already exists"
-        )
-    
+        raise HTTPException(status_code=400, detail=f"Office with short code '{data.short_code}' already exists")
+
     office = await OfficeService.create(db, data)
     return OfficeService.to_response_with_stats(office)
 
@@ -87,13 +83,13 @@ async def get_office(
 ):
     """
     Get an office by ID.
-    
+
     Returns the office with computed statistics.
     """
     office = await OfficeService.get_by_id(db, office_id)
     if not office:
         raise HTTPException(status_code=404, detail="Office not found")
-    
+
     return OfficeService.to_response_with_stats(office)
 
 
@@ -105,22 +101,19 @@ async def update_office(
 ):
     """
     Update an office.
-    
+
     Only provided fields will be updated.
     """
     # Check for duplicate short_code if changing
     if data.short_code:
         existing = await OfficeService.get_by_short_code(db, data.short_code)
         if existing and str(existing.id) != str(office_id):
-            raise HTTPException(
-                status_code=400,
-                detail=f"Office with short code '{data.short_code}' already exists"
-            )
-    
+            raise HTTPException(status_code=400, detail=f"Office with short code '{data.short_code}' already exists")
+
     office = await OfficeService.update(db, office_id, data)
     if not office:
         raise HTTPException(status_code=404, detail="Office not found")
-    
+
     return OfficeService.to_response_with_stats(office)
 
 
@@ -131,13 +124,13 @@ async def deactivate_office(
 ):
     """
     Deactivate an office (soft delete).
-    
+
     Sets is_active to False. Office data is preserved.
     """
     office = await OfficeService.deactivate(db, office_id)
     if not office:
         raise HTTPException(status_code=404, detail="Office not found")
-    
+
     return OfficeService.to_response_with_stats(office)
 
 
@@ -148,15 +141,12 @@ async def get_office_stats(
 ):
     """
     Get statistics for an office.
-    
+
     Returns employee counts and territory count.
     """
     office = await OfficeService.get_by_id(db, office_id)
     if not office:
         raise HTTPException(status_code=404, detail="Office not found")
-    
+
     stats = await OfficeService.get_stats(db, office_id)
-    return {
-        "office_id": str(office_id),
-        **stats
-    }
+    return {"office_id": str(office_id), **stats}

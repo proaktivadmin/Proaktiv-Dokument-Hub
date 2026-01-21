@@ -5,13 +5,13 @@ Provides async SQLAlchemy engine and session factory for database operations.
 Supports both PostgreSQL (production) and SQLite (development/low-cost).
 """
 
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
-from sqlalchemy.orm import Session
-from sqlalchemy import create_engine
-from sqlalchemy.engine import make_url
-from typing import AsyncGenerator
 import logging
 import os
+from collections.abc import AsyncGenerator
+
+from sqlalchemy import create_engine
+from sqlalchemy.engine import make_url
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from app.config import settings
 
@@ -26,7 +26,7 @@ def is_sqlite(url: str) -> bool:
 def get_async_database_url(url: str) -> str:
     """
     Convert database URL to async format.
-    
+
     - postgresql:// -> postgresql+asyncpg://
     - sqlite:// -> sqlite+aiosqlite://
     """
@@ -69,7 +69,7 @@ def normalize_asyncpg_ssl(url: str) -> tuple[str, dict]:
 def get_sync_database_url(url: str) -> str:
     """
     Ensure URL uses sync driver for Alembic migrations.
-    
+
     - postgresql+asyncpg:// -> postgresql://
     - sqlite+aiosqlite:// -> sqlite://
     """
@@ -83,7 +83,7 @@ def get_sync_database_url(url: str) -> str:
 def ensure_sqlite_directory(url: str) -> None:
     """
     Ensure the directory for SQLite database file exists.
-    
+
     For URLs like sqlite:////data/prod.db, creates /data if needed.
     """
     if is_sqlite(url):
@@ -107,7 +107,7 @@ if is_sqlite(settings.DATABASE_URL):
         echo=settings.DEBUG,
         connect_args={"check_same_thread": False},
     )
-    
+
     sync_engine = create_engine(
         get_sync_database_url(settings.DATABASE_URL),
         echo=settings.DEBUG,
@@ -128,7 +128,7 @@ else:
         max_overflow=10,
         connect_args=async_connect_args,
     )
-    
+
     sync_engine = create_engine(
         get_sync_database_url(settings.DATABASE_URL),
         echo=settings.DEBUG,
@@ -149,12 +149,12 @@ async_session_factory = async_sessionmaker(
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
     """
     Dependency that provides a database session.
-    
+
     Usage:
         @router.get("/items")
         async def get_items(db: AsyncSession = Depends(get_db)):
             ...
-    
+
     Yields:
         AsyncSession: Database session that auto-closes after request.
     """
@@ -172,40 +172,40 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
 async def init_db() -> None:
     """
     Initialize database connection.
-    
+
     Called on application startup to verify database connectivity.
     For SQLite, also creates tables if they don't exist.
     """
     from sqlalchemy import text
-    
+
     # Import models to ensure they're registered with Base
-    from app.models import Base
     # Import ALL models so Base.metadata.create_all() creates all tables
     from app.models import (  # noqa: F401
-        template,
-        category,
-        tag,
+        Base,
         audit_log,
-        merge_field,
+        category,
         code_pattern,
         layout_partial,
+        merge_field,
+        tag,
+        template,
     )
-    
+
     try:
         async with async_engine.connect() as conn:
             # Test connection
             await conn.execute(text("SELECT 1"))
-        
+
         db_type = "SQLite" if is_sqlite(settings.DATABASE_URL) else "PostgreSQL"
         logger.info(f"Database connection established successfully ({db_type})")
-        
+
         # For SQLite (ephemeral), automatically create all tables on startup
         if is_sqlite(settings.DATABASE_URL):
             logger.info("SQLite detected - creating tables if they don't exist...")
             async with async_engine.begin() as conn:
                 await conn.run_sync(Base.metadata.create_all)
             logger.info("Database tables created/verified successfully")
-            
+
     except Exception as e:
         logger.error(f"Failed to connect to database: {e}")
         raise
@@ -214,7 +214,7 @@ async def init_db() -> None:
 async def close_db() -> None:
     """
     Close database connections.
-    
+
     Called on application shutdown.
     """
     await async_engine.dispose()

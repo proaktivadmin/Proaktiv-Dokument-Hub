@@ -4,21 +4,23 @@ Alembic Environment Configuration
 Configures Alembic to use our SQLAlchemy models and database settings.
 """
 
-from logging.config import fileConfig
-from sqlalchemy import engine_from_config, pool, text
-from alembic import context
-from alembic.script import ScriptDirectory
-import sys
-import os
 import json
+import os
+import sys
 import time
+from logging.config import fileConfig
+
+from alembic.script import ScriptDirectory
+from sqlalchemy import engine_from_config, pool, text
+
+from alembic import context
 
 # Add the backend directory to the path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Import our models and settings
-from app.models import Base
 from app.config import settings
+from app.models import Base
 
 # This is the Alembic Config object
 config = context.config
@@ -41,6 +43,7 @@ def _debug_log(message: str, data: dict, hypothesis_id: str, location: str) -> N
             log_file.write(json.dumps(payload) + "\n")
     except Exception:
         pass
+
 
 # Override sqlalchemy.url from our settings
 def get_database_url() -> str:
@@ -193,4 +196,3 @@ if context.is_offline_mode():
     run_migrations_offline()
 else:
     run_migrations_online()
-

@@ -4,7 +4,7 @@ Sync commit service for Vitec review workflow.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID
 
@@ -13,8 +13,8 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.sync_session import SyncSession
-from app.schemas.office import OfficeCreate, OfficeUpdate
 from app.schemas.employee import EmployeeCreate, EmployeeUpdate
+from app.schemas.office import OfficeCreate, OfficeUpdate
 from app.schemas.sync import SyncCommitResult, SyncDecisionUpdate
 from app.services.employee_service import EmployeeService
 from app.services.office_service import OfficeService
@@ -47,7 +47,7 @@ class SyncCommitService:
         if session.status == "cancelled":
             raise HTTPException(status_code=409, detail="Sync session is cancelled.")
 
-        if session.expires_at < datetime.now(timezone.utc):
+        if session.expires_at < datetime.now(UTC):
             session.status = "expired"
             await db.flush()
             raise HTTPException(status_code=410, detail="Sync session has expired.")

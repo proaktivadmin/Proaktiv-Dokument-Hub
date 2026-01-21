@@ -19,9 +19,7 @@ from app.services.territory_service import PostalCodeService
 
 
 async def sync_postal_codes() -> None:
-    async_session = sessionmaker(
-        async_engine, class_=AsyncSession, expire_on_commit=False
-    )
+    async_session = sessionmaker(async_engine, class_=AsyncSession, expire_on_commit=False)
 
     async with async_session() as session:
         result = await PostalCodeService.sync_from_bring(session)

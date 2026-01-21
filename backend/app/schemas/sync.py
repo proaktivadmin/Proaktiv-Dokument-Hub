@@ -4,20 +4,21 @@ Pydantic schemas for Vitec sync review.
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
-from typing import Any, List, Literal, Optional
 from datetime import datetime
+from typing import Any, Literal
 from uuid import UUID
+
+from pydantic import BaseModel, Field
 
 
 class FieldDiff(BaseModel):
     """Field-level diff between local and Vitec values."""
 
     field_name: str = Field(..., min_length=1)
-    local_value: Optional[Any] = Field(None, description="Current local value")
-    vitec_value: Optional[Any] = Field(None, description="Incoming Vitec value")
+    local_value: Any | None = Field(None, description="Current local value")
+    vitec_value: Any | None = Field(None, description="Incoming Vitec value")
     has_conflict: bool = Field(False, description="Both values exist and differ")
-    decision: Optional[Literal["accept", "reject"]] = Field(
+    decision: Literal["accept", "reject"] | None = Field(
         None,
         description="User decision for this field",
     )
@@ -27,12 +28,12 @@ class RecordDiff(BaseModel):
     """Diff summary for a single record."""
 
     match_type: Literal["new", "matched", "not_in_vitec"]
-    local_id: Optional[UUID] = None
-    vitec_id: Optional[str] = None
+    local_id: UUID | None = None
+    vitec_id: str | None = None
     display_name: str
-    fields: List[FieldDiff] = Field(default_factory=list)
+    fields: list[FieldDiff] = Field(default_factory=list)
     match_confidence: float = Field(0.0, ge=0.0, le=1.0)
-    match_method: Optional[str] = None
+    match_method: str | None = None
 
 
 class SyncSummary(BaseModel):
@@ -53,8 +54,8 @@ class SyncPreview(BaseModel):
     session_id: UUID
     created_at: datetime
     expires_at: datetime
-    offices: List[RecordDiff] = Field(default_factory=list)
-    employees: List[RecordDiff] = Field(default_factory=list)
+    offices: list[RecordDiff] = Field(default_factory=list)
+    employees: list[RecordDiff] = Field(default_factory=list)
     summary: SyncSummary
 
 

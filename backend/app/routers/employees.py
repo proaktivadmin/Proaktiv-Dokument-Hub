@@ -2,26 +2,24 @@
 Employees Router - API endpoints for employee management.
 """
 
+from urllib.parse import quote
+from uuid import UUID
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Optional, List
-from uuid import UUID
-from urllib.parse import quote
-
 
 from app.database import get_db
-from app.services.employee_service import EmployeeService
-from app.services.office_service import OfficeService
 from app.schemas.employee import (
     EmployeeCreate,
-    EmployeeUpdate,
-    EmployeeResponse,
-    EmployeeWithOffice,
     EmployeeListResponse,
-    StartOffboarding,
-    OfficeMinimal,
     EmployeeSyncResult,
+    EmployeeUpdate,
+    EmployeeWithOffice,
+    OfficeMinimal,
+    StartOffboarding,
 )
+from app.services.employee_service import EmployeeService
+from app.services.office_service import OfficeService
 
 router = APIRouter(prefix="/employees", tags=["Employees"])
 
@@ -59,28 +57,29 @@ def _to_employee_with_office(employee) -> EmployeeWithOffice:
             name=employee.office.name,
             short_code=employee.office.short_code,
             color=employee.office.color,
-        ) if employee.office else None,
+        )
+        if employee.office
+        else None,
         full_name=employee.full_name,
         initials=employee.initials,
         days_until_end=employee.days_until_end,
     )
 
 
-
 @router.get("", response_model=EmployeeListResponse)
 async def list_employees(
-    office_id: Optional[UUID] = Query(None, description="Filter by office"),
-    status: Optional[List[str]] = Query(None, description="Filter by status(es)"),
-    role: Optional[str] = Query(None, description="Filter by Vitec system role"),
-    is_featured: Optional[bool] = Query(None, description="Filter by featured status"),
-    search: Optional[str] = Query(None, description="Search by name or email"),
+    office_id: UUID | None = Query(None, description="Filter by office"),
+    status: list[str] | None = Query(None, description="Filter by status(es)"),
+    role: str | None = Query(None, description="Filter by Vitec system role"),
+    is_featured: bool | None = Query(None, description="Filter by featured status"),
+    search: str | None = Query(None, description="Search by name or email"),
     skip: int = Query(0, ge=0, description="Offset for pagination"),
     limit: int = Query(100, ge=1, le=500, description="Max results"),
     db: AsyncSession = Depends(get_db),
 ):
     """
     List all employees with optional filtering.
-    
+
     - **status**: active, onboarding, offboarding, inactive
     - **role**: Vitec Next role (eiendomsmegler, superbruker, etc.)
     - **is_featured**: Filter by featured brokers
@@ -97,9 +96,8 @@ async def list_employees(
         limit=limit,
     )
 
-    
     items = [_to_employee_with_office(e) for e in employees]
-    
+
     return EmployeeListResponse(items=items, total=total)
 
 
@@ -121,16 +119,16 @@ async def create_employee(
 ):
     """
     Create a new employee.
-    
+
     The office_id must reference an existing office.
     """
     # Verify office exists
     office = await OfficeService.get_by_id(db, data.office_id)
     if not office:
         raise HTTPException(status_code=400, detail="Office not found")
-    
+
     employee = await EmployeeService.create(db, data)
-    
+
     # Reload with office relationship
     employee = await EmployeeService.get_by_id(db, employee.id)
     return _to_employee_with_office(employee)
@@ -138,14 +136,14 @@ async def create_employee(
 
 @router.get("/email-group")
 async def get_email_group(
-    office_id: Optional[UUID] = Query(None, description="Filter by office"),
-    status: Optional[List[str]] = Query(None, description="Filter by status(es)"),
-    role: Optional[str] = Query(None, description="Filter by Vitec system role"),
+    office_id: UUID | None = Query(None, description="Filter by office"),
+    status: list[str] | None = Query(None, description="Filter by status(es)"),
+    role: str | None = Query(None, description="Filter by Vitec system role"),
     db: AsyncSession = Depends(get_db),
 ):
     """
     Generate email group from filtered employees.
-    
+
     Returns:
     - emails: List of email addresses
     - mailto_link: Ready-to-use mailto: URL
@@ -159,10 +157,10 @@ async def get_email_group(
         skip=0,
         limit=500,  # Safety limit
     )
-    
+
     # Extract valid emails
     emails = [e.email for e in employees if e.email]
-    
+
     if not emails:
         return {
             "emails": [],
@@ -170,10 +168,10 @@ async def get_email_group(
             "count": 0,
             "message": "No employees with email addresses found",
         }
-    
+
     # Generate mailto link (semicolon separated for Outlook compatibility)
     mailto_link = f"mailto:{quote(';'.join(emails))}"
-    
+
     return {
         "emails": emails,
         "mailto_link": mailto_link,
@@ -188,13 +186,13 @@ async def get_employee(
 ):
     """
     Get an employee by ID.
-    
+
     Returns the employee with office details.
     """
     employee = await EmployeeService.get_by_id(db, employee_id)
     if not employee:
         raise HTTPException(status_code=404, detail="Employee not found")
-    
+
     return _to_employee_with_office(employee)
 
 
@@ -206,7 +204,7 @@ async def update_employee(
 ):
     """
     Update an employee.
-    
+
     Only provided fields will be updated.
     """
     # Verify new office exists if changing
@@ -214,11 +212,11 @@ async def update_employee(
         office = await OfficeService.get_by_id(db, data.office_id)
         if not office:
             raise HTTPException(status_code=400, detail="Office not found")
-    
+
     employee = await EmployeeService.update(db, employee_id, data)
     if not employee:
         raise HTTPException(status_code=404, detail="Employee not found")
-    
+
     # Reload with office relationship
     employee = await EmployeeService.get_by_id(db, employee.id)
     return _to_employee_with_office(employee)
@@ -232,13 +230,13 @@ async def start_offboarding(
 ):
     """
     Start the offboarding process for an employee.
-    
+
     Sets status to 'offboarding' and configures offboarding dates.
     """
     employee = await EmployeeService.start_offboarding(db, employee_id, data)
     if not employee:
         raise HTTPException(status_code=404, detail="Employee not found")
-    
+
     # Reload with office relationship
     employee = await EmployeeService.get_by_id(db, employee.id)
     return _to_employee_with_office(employee)
@@ -251,13 +249,13 @@ async def deactivate_employee(
 ):
     """
     Deactivate an employee (soft delete).
-    
+
     Sets status to 'inactive'. Employee data is preserved.
     """
     employee = await EmployeeService.deactivate(db, employee_id)
     if not employee:
         raise HTTPException(status_code=404, detail="Employee not found")
-    
+
     # Reload with office relationship
     employee = await EmployeeService.get_by_id(db, employee.id)
     return _to_employee_with_office(employee)
@@ -269,7 +267,7 @@ async def get_offboarding_due(
 ):
     """
     Get employees with overdue offboarding tasks.
-    
+
     Returns employees who are offboarding and have dates in the past.
     """
     employees = await EmployeeService.get_offboarding_due(db)
@@ -277,4 +275,3 @@ async def get_offboarding_due(
         "count": len(employees),
         "employees": [_to_employee_with_office(e) for e in employees],
     }
-

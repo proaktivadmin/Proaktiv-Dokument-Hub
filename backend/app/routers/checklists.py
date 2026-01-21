@@ -2,26 +2,25 @@
 Checklists Router - API endpoints for checklist management.
 """
 
-from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Optional, List
 from uuid import UUID
 
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.database import get_db
-from app.services.checklist_service import ChecklistTemplateService, ChecklistInstanceService
-from app.services.employee_service import EmployeeService
 from app.schemas.checklist import (
-    ChecklistTemplateCreate,
-    ChecklistTemplateUpdate,
-    ChecklistTemplateResponse,
     ChecklistInstanceCreate,
-    ChecklistInstanceUpdateProgress,
-    ChecklistInstanceResponse,
-    ChecklistInstanceWithDetails,
     ChecklistInstanceListResponse,
-    ProgressInfo,
+    ChecklistInstanceUpdateProgress,
+    ChecklistInstanceWithDetails,
+    ChecklistTemplateCreate,
+    ChecklistTemplateResponse,
+    ChecklistTemplateUpdate,
     EmployeeMinimal,
+    ProgressInfo,
 )
+from app.services.checklist_service import ChecklistInstanceService, ChecklistTemplateService
+from app.services.employee_service import EmployeeService
 
 router = APIRouter(prefix="/checklists", tags=["Checklists"])
 
@@ -47,7 +46,7 @@ def _instance_to_response(instance) -> ChecklistInstanceWithDetails:
     completed = instance.completed_count
     total = instance.total_count
     percentage = instance.progress_percentage
-    
+
     return ChecklistInstanceWithDetails(
         id=instance.id,
         template_id=instance.template_id,
@@ -68,7 +67,9 @@ def _instance_to_response(instance) -> ChecklistInstanceWithDetails:
             id=instance.employee.id,
             first_name=instance.employee.first_name,
             last_name=instance.employee.last_name,
-        ) if instance.employee else None,
+        )
+        if instance.employee
+        else None,
         progress=ProgressInfo(
             completed=completed,
             total=total,
@@ -81,9 +82,10 @@ def _instance_to_response(instance) -> ChecklistInstanceWithDetails:
 # Template Endpoints
 # =============================================================================
 
-@router.get("/templates", response_model=List[ChecklistTemplateResponse])
+
+@router.get("/templates", response_model=list[ChecklistTemplateResponse])
 async def list_templates(
-    type: Optional[str] = Query(None, description="Filter by type (onboarding/offboarding)"),
+    type: str | None = Query(None, description="Filter by type (onboarding/offboarding)"),
     is_active: bool = Query(True, description="Filter by active status"),
     db: AsyncSession = Depends(get_db),
 ):
@@ -117,7 +119,7 @@ async def get_template(
     template = await ChecklistTemplateService.get_by_id(db, template_id)
     if not template:
         raise HTTPException(status_code=404, detail="Template not found")
-    
+
     return _template_to_response(template)
 
 
@@ -133,7 +135,7 @@ async def update_template(
     template = await ChecklistTemplateService.update(db, template_id, data)
     if not template:
         raise HTTPException(status_code=404, detail="Template not found")
-    
+
     return _template_to_response(template)
 
 
@@ -148,7 +150,7 @@ async def deactivate_template(
     template = await ChecklistTemplateService.deactivate(db, template_id)
     if not template:
         raise HTTPException(status_code=404, detail="Template not found")
-    
+
     return _template_to_response(template)
 
 
@@ -156,17 +158,18 @@ async def deactivate_template(
 # Instance Endpoints
 # =============================================================================
 
+
 @router.get("/instances", response_model=ChecklistInstanceListResponse)
 async def list_instances(
-    employee_id: Optional[UUID] = Query(None, description="Filter by employee"),
-    status: Optional[str] = Query(None, description="Filter by status"),
+    employee_id: UUID | None = Query(None, description="Filter by employee"),
+    status: str | None = Query(None, description="Filter by status"),
     skip: int = Query(0, ge=0, description="Offset for pagination"),
     limit: int = Query(100, ge=1, le=500, description="Max results"),
     db: AsyncSession = Depends(get_db),
 ):
     """
     List all checklist instances with optional filtering.
-    
+
     Status can be: in_progress, completed, cancelled.
     """
     instances, total = await ChecklistInstanceService.list(
@@ -176,9 +179,9 @@ async def list_instances(
         skip=skip,
         limit=limit,
     )
-    
+
     items = [_instance_to_response(i) for i in instances]
-    
+
     return ChecklistInstanceListResponse(items=items, total=total)
 
 
@@ -194,14 +197,14 @@ async def assign_checklist(
     template = await ChecklistTemplateService.get_by_id(db, data.template_id)
     if not template:
         raise HTTPException(status_code=400, detail="Template not found")
-    
+
     # Verify employee exists
     employee = await EmployeeService.get_by_id(db, data.employee_id)
     if not employee:
         raise HTTPException(status_code=400, detail="Employee not found")
-    
+
     instance = await ChecklistInstanceService.create(db, data)
-    
+
     # Reload with relationships
     instance = await ChecklistInstanceService.get_by_id(db, instance.id)
     return _instance_to_response(instance)
@@ -218,7 +221,7 @@ async def get_instance(
     instance = await ChecklistInstanceService.get_by_id(db, instance_id)
     if not instance:
         raise HTTPException(status_code=404, detail="Instance not found")
-    
+
     return _instance_to_response(instance)
 
 
@@ -230,14 +233,14 @@ async def update_instance_progress(
 ):
     """
     Update checklist progress.
-    
+
     Provide the list of completed item names.
     If all items are completed, status is automatically set to 'completed'.
     """
     instance = await ChecklistInstanceService.update_progress(db, instance_id, data)
     if not instance:
         raise HTTPException(status_code=404, detail="Instance not found")
-    
+
     # Reload with relationships
     instance = await ChecklistInstanceService.get_by_id(db, instance.id)
     return _instance_to_response(instance)
@@ -254,7 +257,7 @@ async def cancel_instance(
     instance = await ChecklistInstanceService.cancel(db, instance_id)
     if not instance:
         raise HTTPException(status_code=404, detail="Instance not found")
-    
+
     # Reload with relationships
     instance = await ChecklistInstanceService.get_by_id(db, instance.id)
     return _instance_to_response(instance)

@@ -6,14 +6,15 @@ Stores scrape requests and results from Firecrawl for later review / reuse.
 
 from __future__ import annotations
 
-from sqlalchemy import String, Text, Integer, Boolean, DateTime, Index
+import uuid
+from datetime import datetime
+from typing import Any
+
+from sqlalchemy import Boolean, DateTime, Index, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql import func
-from datetime import datetime
-from typing import Optional, List, Dict, Any
-import uuid
 
-from app.models.base import Base, GUID, JSONType
+from app.models.base import GUID, Base, JSONType
 
 
 class FirecrawlScrape(Base):
@@ -30,22 +31,22 @@ class FirecrawlScrape(Base):
     # Request
     url: Mapped[str] = mapped_column(Text, nullable=False)
     status: Mapped[str] = mapped_column(String(20), nullable=False, default="pending")
-    requested_formats: Mapped[Optional[List[str]]] = mapped_column(JSONType, nullable=True, default=list)
+    requested_formats: Mapped[list[str] | None] = mapped_column(JSONType, nullable=True, default=list)
     only_main_content: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
-    wait_for_ms: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
-    timeout_ms: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
-    include_tags: Mapped[Optional[List[str]]] = mapped_column(JSONType, nullable=True, default=list)
-    exclude_tags: Mapped[Optional[List[str]]] = mapped_column(JSONType, nullable=True, default=list)
+    wait_for_ms: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    timeout_ms: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    include_tags: Mapped[list[str] | None] = mapped_column(JSONType, nullable=True, default=list)
+    exclude_tags: Mapped[list[str] | None] = mapped_column(JSONType, nullable=True, default=list)
 
     # Result (selected fields)
-    result_markdown: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    result_html: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    result_raw_html: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    result_links: Mapped[Optional[List[str]]] = mapped_column(JSONType, nullable=True, default=list)
-    result_metadata: Mapped[Optional[Dict[str, Any]]] = mapped_column(JSONType, nullable=True, default=dict)
-    result_json: Mapped[Optional[Dict[str, Any]]] = mapped_column(JSONType, nullable=True, default=dict)
+    result_markdown: Mapped[str | None] = mapped_column(Text, nullable=True)
+    result_html: Mapped[str | None] = mapped_column(Text, nullable=True)
+    result_raw_html: Mapped[str | None] = mapped_column(Text, nullable=True)
+    result_links: Mapped[list[str] | None] = mapped_column(JSONType, nullable=True, default=list)
+    result_metadata: Mapped[dict[str, Any] | None] = mapped_column(JSONType, nullable=True, default=dict)
+    result_json: Mapped[dict[str, Any] | None] = mapped_column(JSONType, nullable=True, default=dict)
 
-    error: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    error: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
@@ -63,4 +64,3 @@ class FirecrawlScrape(Base):
         Index("idx_firecrawl_scrapes_created_at", "created_at"),
         Index("idx_firecrawl_scrapes_status", "status"),
     )
-

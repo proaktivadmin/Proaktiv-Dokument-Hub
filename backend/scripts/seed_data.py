@@ -6,17 +6,17 @@ Run with: python -m scripts.seed_data
 """
 
 import asyncio
-import sys
 import os
+import sys
 
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.database import async_session_factory
-from app.services.tag_service import TagService
-from app.services.category_service import CategoryService
 
+from app.database import async_session_factory
+from app.services.category_service import CategoryService
+from app.services.tag_service import TagService
 
 # Initial tags based on legacy system
 INITIAL_TAGS = [
@@ -75,17 +75,16 @@ async def seed_categories(db: AsyncSession) -> int:
 async def main():
     """Run seed data script."""
     print("🌱 Seeding database with initial data...\n")
-    
+
     async with async_session_factory() as db:
         print("📌 Creating tags...")
         tags_created = await seed_tags(db)
-        
+
         print("\n📁 Creating categories...")
         cats_created = await seed_categories(db)
-        
+
         print(f"\n✅ Done! Created {tags_created} tags and {cats_created} categories.")
 
 
 if __name__ == "__main__":
     asyncio.run(main())
-

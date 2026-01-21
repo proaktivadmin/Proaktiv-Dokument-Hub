@@ -4,10 +4,11 @@ Firecrawl Service - business logic for web scraping.
 
 from __future__ import annotations
 
-from typing import Optional, List, Dict, Any, Tuple
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func
 import logging
+from typing import Any
+
+from sqlalchemy import func, select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings
 from app.models.firecrawl_scrape import FirecrawlScrape
@@ -28,7 +29,7 @@ class FirecrawlService:
         return bool(settings.FIRECRAWL_API_KEY)
 
     @staticmethod
-    def _get_client() -> "AsyncFirecrawl":
+    def _get_client() -> AsyncFirecrawl:
         if AsyncFirecrawl is None:
             raise RuntimeError("firecrawl-py is not installed")
         if not settings.FIRECRAWL_API_KEY:
@@ -36,32 +37,32 @@ class FirecrawlService:
         return AsyncFirecrawl(api_key=settings.FIRECRAWL_API_KEY)
 
     @staticmethod
-    def _normalize_result(result: Any) -> Dict[str, Any]:
+    def _normalize_result(result: Any) -> dict[str, Any]:
         if isinstance(result, dict):
             return result
         if hasattr(result, "model_dump"):
             return result.model_dump()
-        data: Dict[str, Any] = {}
+        data: dict[str, Any] = {}
         for key in ("markdown", "html", "rawHtml", "raw_html", "links", "metadata", "json", "data", "success"):
             if hasattr(result, key):
                 data[key] = getattr(result, key)
         return data
 
     @staticmethod
-    def _extract_payload(result_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _extract_payload(result_data: dict[str, Any]) -> dict[str, Any]:
         payload = result_data.get("data")
         if isinstance(payload, dict):
             return payload
         return result_data
 
     @staticmethod
-    def _safe_list(value: Any) -> List[str]:
+    def _safe_list(value: Any) -> list[str]:
         if isinstance(value, list):
             return [str(item) for item in value if item is not None]
         return []
 
     @staticmethod
-    def _safe_dict(value: Any) -> Dict[str, Any]:
+    def _safe_dict(value: Any) -> dict[str, Any]:
         if isinstance(value, dict):
             return value
         return {}
@@ -70,21 +71,19 @@ class FirecrawlService:
     async def run_scrape(
         *,
         url: str,
-        formats: Optional[List[str]],
-        only_main_content: Optional[bool],
-        wait_for_ms: Optional[int],
-        timeout_ms: Optional[int],
-        include_tags: Optional[List[str]],
-        exclude_tags: Optional[List[str]],
-    ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+        formats: list[str] | None,
+        only_main_content: bool | None,
+        wait_for_ms: int | None,
+        timeout_ms: int | None,
+        include_tags: list[str] | None,
+        exclude_tags: list[str] | None,
+    ) -> tuple[dict[str, Any], dict[str, Any]]:
         client = FirecrawlService._get_client()
         resolved_formats = formats or ["markdown"]
-        resolved_only_main = (
-            settings.FIRECRAWL_ONLY_MAIN_CONTENT if only_main_content is None else only_main_content
-        )
+        resolved_only_main = settings.FIRECRAWL_ONLY_MAIN_CONTENT if only_main_content is None else only_main_content
         resolved_timeout = settings.FIRECRAWL_TIMEOUT_MS if timeout_ms is None else timeout_ms
 
-        options: Dict[str, Any] = {
+        options: dict[str, Any] = {
             "formats": resolved_formats,
             "only_main_content": resolved_only_main,
             "timeout": resolved_timeout,
@@ -106,21 +105,19 @@ class FirecrawlService:
         db: AsyncSession,
         *,
         url: str,
-        formats: Optional[List[str]],
-        only_main_content: Optional[bool],
-        wait_for_ms: Optional[int],
-        timeout_ms: Optional[int],
-        include_tags: Optional[List[str]],
-        exclude_tags: Optional[List[str]],
+        formats: list[str] | None,
+        only_main_content: bool | None,
+        wait_for_ms: int | None,
+        timeout_ms: int | None,
+        include_tags: list[str] | None,
+        exclude_tags: list[str] | None,
     ) -> FirecrawlScrape:
         requested_formats = formats or ["markdown"]
         scrape = FirecrawlScrape(
             url=url,
             status="pending",
             requested_formats=requested_formats,
-            only_main_content=settings.FIRECRAWL_ONLY_MAIN_CONTENT
-            if only_main_content is None
-            else only_main_content,
+            only_main_content=settings.FIRECRAWL_ONLY_MAIN_CONTENT if only_main_content is None else only_main_content,
             wait_for_ms=wait_for_ms,
             timeout_ms=timeout_ms if timeout_ms is not None else settings.FIRECRAWL_TIMEOUT_MS,
             include_tags=include_tags or [],
@@ -161,10 +158,10 @@ class FirecrawlService:
     async def list_scrapes(
         db: AsyncSession,
         *,
-        status: Optional[str] = None,
+        status: str | None = None,
         skip: int = 0,
         limit: int = 50,
-    ) -> Tuple[List[FirecrawlScrape], int]:
+    ) -> tuple[list[FirecrawlScrape], int]:
         query = select(FirecrawlScrape)
         count_query = select(func.count()).select_from(FirecrawlScrape)
 
@@ -183,8 +180,6 @@ class FirecrawlService:
         return items, total
 
     @staticmethod
-    async def get_by_id(db: AsyncSession, scrape_id: str) -> Optional[FirecrawlScrape]:
-        result = await db.execute(
-            select(FirecrawlScrape).where(FirecrawlScrape.id == str(scrape_id))
-        )
+    async def get_by_id(db: AsyncSession, scrape_id: str) -> FirecrawlScrape | None:
+        result = await db.execute(select(FirecrawlScrape).where(FirecrawlScrape.id == str(scrape_id)))
         return result.scalar_one_or_none()

@@ -2,10 +2,11 @@
 Health Check Endpoints
 """
 
-from fastapi import APIRouter, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import text
 from datetime import datetime
+
+from fastapi import APIRouter, Depends
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings
 from app.database import get_db
@@ -25,27 +26,27 @@ async def health_check(db: AsyncSession = Depends(get_db)):
     db_status = "connected"
     office_count = 0
     employee_count = 0
-    
+
     try:
         await db.execute(text("SELECT 1"))
-        
+
         # Get record counts
         office_result = await db.execute(text("SELECT COUNT(*) FROM offices"))
         office_count = office_result.scalar() or 0
-        
+
         employee_result = await db.execute(text("SELECT COUNT(*) FROM employees"))
         employee_count = employee_result.scalar() or 0
     except Exception as e:
         db_status = f"disconnected: {str(e)}"
-    
+
     # Check Azure Storage
     storage_service = get_azure_storage_service()
     storage_status = "configured" if storage_service.is_configured else "not_configured"
-    
+
     # Check Vitec Hub API configuration
     vitec_hub = VitecHubService()
     vitec_status = "configured" if vitec_hub.is_configured else "not_configured"
-    
+
     return {
         "status": "healthy" if db_status == "connected" else "degraded",
         "timestamp": datetime.utcnow().isoformat(),
@@ -53,13 +54,10 @@ async def health_check(db: AsyncSession = Depends(get_db)):
             "database": db_status,
             "storage": storage_status,
             "vitec_api": vitec_status,
-            "redis": "not_configured"
+            "redis": "not_configured",
         },
-        "data": {
-            "offices": office_count,
-            "employees": employee_count
-        },
-        "version": settings.APP_VERSION
+        "data": {"offices": office_count, "employees": employee_count},
+        "version": settings.APP_VERSION,
     }
 
 
@@ -77,11 +75,8 @@ async def azure_storage_check():
     """
     storage_service = get_azure_storage_service()
     result = await storage_service.test_connection()
-    
-    return {
-        "timestamp": datetime.utcnow().isoformat(),
-        **result
-    }
+
+    return {"timestamp": datetime.utcnow().isoformat(), **result}
 
 
 @router.get("/api/health/ready")
@@ -94,4 +89,3 @@ async def readiness_check():
 async def liveness_check():
     """Kubernetes liveness probe."""
     return {"status": "alive"}
-

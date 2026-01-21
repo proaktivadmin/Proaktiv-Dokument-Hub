@@ -2,12 +2,12 @@
 Audit Service - Logging user actions for compliance.
 """
 
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
-from typing import Optional, List, Any
-from uuid import UUID
-from datetime import datetime
 import logging
+from datetime import datetime
+from uuid import UUID
+
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.audit_log import AuditLog
 
@@ -18,7 +18,7 @@ class AuditService:
     """
     Service class for audit log operations.
     """
-    
+
     @staticmethod
     async def log(
         db: AsyncSession,
@@ -27,11 +27,11 @@ class AuditService:
         entity_id: UUID,
         action: str,
         user_email: str,
-        details: Optional[dict] = None
+        details: dict | None = None,
     ) -> AuditLog:
         """
         Create an audit log entry.
-        
+
         Args:
             db: Database session
             entity_type: Type of entity (template, tag, category)
@@ -39,41 +39,32 @@ class AuditService:
             action: Action performed (created, updated, deleted, published, downloaded)
             user_email: User who performed the action
             details: Additional context
-            
+
         Returns:
             Created audit log entry
         """
         audit_log = AuditLog(
-            entity_type=entity_type,
-            entity_id=entity_id,
-            action=action,
-            user_email=user_email,
-            details=details or {}
+            entity_type=entity_type, entity_id=entity_id, action=action, user_email=user_email, details=details or {}
         )
         db.add(audit_log)
         # Note: get_db() handles commit automatically after request
         await db.flush()
         await db.refresh(audit_log)
-        
+
         logger.debug(f"Audit: {action} {entity_type}:{entity_id} by {user_email}")
         return audit_log
-    
+
     @staticmethod
-    async def get_for_entity(
-        db: AsyncSession,
-        entity_type: str,
-        entity_id: UUID,
-        limit: int = 50
-    ) -> List[AuditLog]:
+    async def get_for_entity(db: AsyncSession, entity_type: str, entity_id: UUID, limit: int = 50) -> list[AuditLog]:
         """
         Get audit logs for a specific entity.
-        
+
         Args:
             db: Database session
             entity_type: Type of entity
             entity_id: Entity UUID
             limit: Max number of entries to return
-            
+
         Returns:
             List of audit log entries
         """
@@ -86,20 +77,20 @@ class AuditService:
         )
         result = await db.execute(query)
         return list(result.scalars().all())
-    
+
     @staticmethod
     async def get_recent(
         db: AsyncSession,
         *,
-        entity_type: Optional[str] = None,
-        action: Optional[str] = None,
-        user_email: Optional[str] = None,
-        since: Optional[datetime] = None,
-        limit: int = 100
-    ) -> List[AuditLog]:
+        entity_type: str | None = None,
+        action: str | None = None,
+        user_email: str | None = None,
+        since: datetime | None = None,
+        limit: int = 100,
+    ) -> list[AuditLog]:
         """
         Get recent audit logs with optional filters.
-        
+
         Args:
             db: Database session
             entity_type: Filter by entity type
@@ -107,12 +98,12 @@ class AuditService:
             user_email: Filter by user
             since: Filter by timestamp
             limit: Max number of entries
-            
+
         Returns:
             List of audit log entries
         """
         query = select(AuditLog).order_by(AuditLog.timestamp.desc())
-        
+
         if entity_type:
             query = query.where(AuditLog.entity_type == entity_type)
         if action:
@@ -121,8 +112,7 @@ class AuditService:
             query = query.where(AuditLog.user_email == user_email)
         if since:
             query = query.where(AuditLog.timestamp >= since)
-        
+
         query = query.limit(limit)
         result = await db.execute(query)
         return list(result.scalars().all())
-

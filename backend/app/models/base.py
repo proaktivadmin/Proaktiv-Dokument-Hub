@@ -4,10 +4,9 @@ SQLAlchemy Base Model Configuration
 Provides cross-database compatible type aliases for PostgreSQL and SQLite.
 """
 
-from sqlalchemy.orm import DeclarativeBase, declared_attr
-from sqlalchemy import MetaData, JSON, String, Text
+from sqlalchemy import JSON, MetaData, String
 from sqlalchemy.dialects import postgresql
-import uuid as uuid_module
+from sqlalchemy.orm import DeclarativeBase, declared_attr
 
 # Naming convention for constraints (helps with Alembic migrations)
 convention = {
@@ -30,13 +29,13 @@ ArrayType = JSON  # Store arrays as JSON (works on all databases)
 
 class Base(DeclarativeBase):
     """Base class for all SQLAlchemy models."""
-    
+
     metadata = metadata
-    
+
     @declared_attr.directive
     def __tablename__(cls) -> str:
         """Generate table name from class name (snake_case)."""
         import re
-        name = cls.__name__
-        return re.sub(r'(?<!^)(?=[A-Z])', '_', name).lower() + 's'
 
+        name = cls.__name__
+        return re.sub(r"(?<!^)(?=[A-Z])", "_", name).lower() + "s"

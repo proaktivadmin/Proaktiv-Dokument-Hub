@@ -9,35 +9,36 @@ You will be prompted to enter a password.
 The output is the bcrypt hash to set as APP_PASSWORD_HASH.
 """
 
-import bcrypt
 import getpass
+
+import bcrypt
 
 
 def generate_hash(password: str) -> str:
     """Generate a bcrypt hash for the given password."""
     salt = bcrypt.gensalt(rounds=12)
-    hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
-    return hashed.decode('utf-8')
+    hashed = bcrypt.hashpw(password.encode("utf-8"), salt)
+    return hashed.decode("utf-8")
 
 
 def main():
     print("=== Password Hash Generator ===")
     print()
-    
+
     # Get password securely
     password = getpass.getpass("Enter your password: ")
     confirm = getpass.getpass("Confirm password: ")
-    
+
     if password != confirm:
         print("\n❌ Passwords do not match!")
         return
-    
+
     if len(password) < 8:
         print("\n⚠️  Warning: Password is less than 8 characters!")
-    
+
     # Generate hash
     hash_value = generate_hash(password)
-    
+
     print()
     print("=" * 60)
     print("✅ Password hash generated successfully!")

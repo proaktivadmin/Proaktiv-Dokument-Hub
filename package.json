@@ -19,8 +19,8 @@
       "eslint --fix --max-warnings=0"
     ],
     "backend/**/*.py": [
-      "ruff check --fix",
-      "ruff format"
+      "python -m ruff check --fix",
+      "python -m ruff format"
     ]
   }
 }

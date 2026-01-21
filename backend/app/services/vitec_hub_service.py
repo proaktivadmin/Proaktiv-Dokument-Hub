@@ -7,7 +7,7 @@ Handles authenticated requests to the Vitec Megler Hub API.
 from __future__ import annotations
 
 import logging
-from typing import Any, Optional
+from typing import Any
 
 import httpx
 from fastapi import HTTPException
@@ -23,9 +23,9 @@ class VitecHubService:
     def __init__(
         self,
         *,
-        base_url: Optional[str] = None,
-        product_login: Optional[str] = None,
-        access_key: Optional[str] = None,
+        base_url: str | None = None,
+        product_login: str | None = None,
+        access_key: str | None = None,
     ) -> None:
         self._base_url = (base_url or settings.VITEC_HUB_BASE_URL or self._derive_base_url()).rstrip("/")
         self._product_login = product_login or settings.VITEC_HUB_PRODUCT_LOGIN
@@ -114,14 +114,14 @@ class VitecHubService:
         self,
         installation_id: str,
         employee_id: str | int,
-    ) -> Optional[bytes]:
+    ) -> bytes | None:
         """
         Fetch employee profile picture.
-        
+
         Args:
             installation_id: Vitec installation ID
             employee_id: Employee ID (vitec_employee_id)
-            
+
         Returns:
             Image bytes or None if not found
         """
@@ -135,14 +135,14 @@ class VitecHubService:
         self,
         installation_id: str,
         department_id: str | int,
-    ) -> Optional[bytes]:
+    ) -> bytes | None:
         """
         Fetch department banner/logo picture.
-        
+
         Args:
             installation_id: Vitec installation ID
             department_id: Department ID (vitec_department_id)
-            
+
         Returns:
             Image bytes or None if not found
         """

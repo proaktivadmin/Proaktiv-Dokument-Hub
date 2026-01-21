@@ -11,7 +11,6 @@ from __future__ import annotations
 
 import logging
 import re
-from typing import Dict, List, Tuple
 
 from bs4 import BeautifulSoup, Tag
 
@@ -80,15 +79,13 @@ class VitecNormalizerService:
         "#3e3d4a",
     )
 
-    INLINE_BORDER_KEEP = re.compile(
-        r"\b1px\b.*\bsolid\b.*(black|#000|#000000)\b", re.IGNORECASE
-    )
+    INLINE_BORDER_KEEP = re.compile(r"\b1px\b.*\bsolid\b.*(black|#000|#000000)\b", re.IGNORECASE)
 
-    def normalize(self, html: str) -> Tuple[str, Dict[str, int | bool]]:
+    def normalize(self, html: str) -> tuple[str, dict[str, int | bool]]:
         """
         Normalize template HTML to Vitec conventions.
         """
-        report: Dict[str, int | bool] = {
+        report: dict[str, int | bool] = {
             "removed_style_tags": 0,
             "kept_style_tags": 0,
             "removed_css_rules": 0,
@@ -115,7 +112,7 @@ class VitecNormalizerService:
         normalized_html = self._ensure_wrapper_and_marker(soup, report)
         return normalized_html, report
 
-    def _remove_proaktiv_classes(self, soup: BeautifulSoup, report: Dict[str, int | bool]) -> None:
+    def _remove_proaktiv_classes(self, soup: BeautifulSoup, report: dict[str, int | bool]) -> None:
         for element in soup.find_all(class_=True):
             class_list = element.get("class", [])
             if isinstance(class_list, str):
@@ -136,7 +133,7 @@ class VitecNormalizerService:
         lowered = class_name.lower()
         return any(marker in lowered for marker in self.PROAKTIV_CLASS_MARKERS)
 
-    def _normalize_style_tags(self, soup: BeautifulSoup, report: Dict[str, int | bool]) -> None:
+    def _normalize_style_tags(self, soup: BeautifulSoup, report: dict[str, int | bool]) -> None:
         for style_tag in soup.find_all("style"):
             css_text = style_tag.string or style_tag.get_text() or ""
             cleaned_css, removed, kept = self._filter_css_rules(css_text)
@@ -151,12 +148,12 @@ class VitecNormalizerService:
                 style_tag.decompose()
                 report["removed_style_tags"] = int(report["removed_style_tags"]) + 1
 
-    def _filter_css_rules(self, css_text: str) -> Tuple[str, int, int]:
+    def _filter_css_rules(self, css_text: str) -> tuple[str, int, int]:
         """
         Keep only functional/structural CSS rules. Drop @import and branding rules.
         """
         rules = self._split_css_rules(css_text)
-        kept_rules: List[str] = []
+        kept_rules: list[str] = []
         removed_count = 0
 
         for rule in rules:
@@ -181,9 +178,9 @@ class VitecNormalizerService:
 
         return "\n".join(kept_rules).strip(), removed_count, len(kept_rules)
 
-    def _split_css_rules(self, css_text: str) -> List[str]:
-        rules: List[str] = []
-        buffer: List[str] = []
+    def _split_css_rules(self, css_text: str) -> list[str]:
+        rules: list[str] = []
+        buffer: list[str] = []
         depth = 0
 
         for char in css_text:
@@ -199,7 +196,7 @@ class VitecNormalizerService:
         # Discard incomplete rules safely
         return rules
 
-    def _split_selector_declarations(self, rule: str) -> Tuple[str, str]:
+    def _split_selector_declarations(self, rule: str) -> tuple[str, str]:
         if "{" not in rule or "}" not in rule:
             return "", ""
         selector, remainder = rule.split("{", 1)
@@ -240,7 +237,7 @@ class VitecNormalizerService:
             return True
         return False
 
-    def _normalize_inline_styles(self, soup: BeautifulSoup, report: Dict[str, int | bool]) -> None:
+    def _normalize_inline_styles(self, soup: BeautifulSoup, report: dict[str, int | bool]) -> None:
         for element in soup.find_all(style=True):
             original_style = element.get("style", "")
             if not original_style:
@@ -255,8 +252,8 @@ class VitecNormalizerService:
             else:
                 del element["style"]
 
-    def _filter_inline_styles(self, style_string: str) -> Tuple[List[str], int]:
-        kept: List[str] = []
+    def _filter_inline_styles(self, style_string: str) -> tuple[list[str], int]:
+        kept: list[str] = []
         removed = 0
 
         declarations = [d.strip() for d in style_string.split(";") if d.strip()]
@@ -285,9 +282,7 @@ class VitecNormalizerService:
 
         return kept, removed
 
-    def _ensure_wrapper_and_marker(
-        self, soup: BeautifulSoup, report: Dict[str, int | bool]
-    ) -> str:
+    def _ensure_wrapper_and_marker(self, soup: BeautifulSoup, report: dict[str, int | bool]) -> str:
         wrapper = soup.find(id="vitecTemplate")
         if not wrapper:
             content = self._extract_content(soup)
@@ -300,15 +295,14 @@ class VitecNormalizerService:
         self._ensure_stilark_marker(wrapper, report)
         return self._extract_content(soup)
 
-    def _ensure_stilark_marker(self, wrapper: Tag, report: Dict[str, int | bool]) -> None:
+    def _ensure_stilark_marker(self, wrapper: Tag, report: dict[str, int | bool]) -> None:
         # Remove any existing Stilark markers to avoid duplicates
         for tag in wrapper.find_all(attrs={"vitec-template": True}):
             if "vitec stilark" in str(tag.get("vitec-template", "")).lower():
                 tag.decompose()
 
         marker = BeautifulSoup(
-            f'<span vitec-template="{self.VITEC_STILARK_RESOURCE}" '
-            f'contenteditable="false">&nbsp;</span>',
+            f'<span vitec-template="{self.VITEC_STILARK_RESOURCE}" contenteditable="false">&nbsp;</span>',
             "html.parser",
         ).find("span")
 
@@ -330,4 +324,3 @@ class VitecNormalizerService:
         if soup.html and soup.body:
             return "".join(str(child) for child in soup.body.children).strip()
         return str(soup).strip()
-

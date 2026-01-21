@@ -2,20 +2,20 @@
 External Listings Router - API endpoints for third-party listing management.
 """
 
-from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Optional
 from uuid import UUID
 
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.database import get_db
-from app.services.external_listing_service import ExternalListingService
 from app.schemas.external_listing import (
     ExternalListingCreate,
-    ExternalListingUpdate,
-    ExternalListingResponse,
     ExternalListingListResponse,
+    ExternalListingResponse,
+    ExternalListingUpdate,
     ExternalListingVerify,
 )
+from app.services.external_listing_service import ExternalListingService
 
 router = APIRouter(prefix="/external-listings", tags=["External Listings"])
 
@@ -44,17 +44,17 @@ def _to_response(listing) -> ExternalListingResponse:
 
 @router.get("", response_model=ExternalListingListResponse)
 async def list_external_listings(
-    office_id: Optional[UUID] = Query(None, description="Filter by office"),
-    employee_id: Optional[UUID] = Query(None, description="Filter by employee"),
-    status: Optional[str] = Query(None, description="Filter by status"),
-    source: Optional[str] = Query(None, description="Filter by source"),
+    office_id: UUID | None = Query(None, description="Filter by office"),
+    employee_id: UUID | None = Query(None, description="Filter by employee"),
+    status: str | None = Query(None, description="Filter by status"),
+    source: str | None = Query(None, description="Filter by source"),
     skip: int = Query(0, ge=0, description="Offset for pagination"),
     limit: int = Query(100, ge=1, le=500, description="Max results"),
     db: AsyncSession = Depends(get_db),
 ):
     """
     List all external listings with optional filtering.
-    
+
     Status can be: verified, needs_update, pending_check, removed.
     Source can be: anbudstjenester, finn, nummeropplysning, 1881, gulesider, google, other.
     """
@@ -67,9 +67,9 @@ async def list_external_listings(
         skip=skip,
         limit=limit,
     )
-    
-    items = [_to_response(l) for l in listings]
-    
+
+    items = [_to_response(listing) for listing in listings]
+
     return ExternalListingListResponse(items=items, total=total)
 
 
@@ -80,15 +80,12 @@ async def create_external_listing(
 ):
     """
     Create a new external listing.
-    
+
     Either office_id or employee_id must be provided.
     """
     if not data.office_id and not data.employee_id:
-        raise HTTPException(
-            status_code=400,
-            detail="Either office_id or employee_id must be provided"
-        )
-    
+        raise HTTPException(status_code=400, detail="Either office_id or employee_id must be provided")
+
     listing = await ExternalListingService.create(db, data)
     return _to_response(listing)
 
@@ -99,13 +96,13 @@ async def get_listings_needing_attention(
 ):
     """
     Get all listings needing attention.
-    
+
     Returns listings with status 'needs_update' or 'pending_check'.
     """
     listings = await ExternalListingService.get_needing_attention(db)
     return {
         "count": len(listings),
-        "listings": [_to_response(l) for l in listings],
+        "listings": [_to_response(listing) for listing in listings],
     }
 
 
@@ -120,7 +117,7 @@ async def get_external_listing(
     listing = await ExternalListingService.get_by_id(db, listing_id)
     if not listing:
         raise HTTPException(status_code=404, detail="Listing not found")
-    
+
     return _to_response(listing)
 
 
@@ -132,13 +129,13 @@ async def update_external_listing(
 ):
     """
     Update an external listing.
-    
+
     Only provided fields will be updated.
     """
     listing = await ExternalListingService.update(db, listing_id, data)
     if not listing:
         raise HTTPException(status_code=404, detail="Listing not found")
-    
+
     return _to_response(listing)
 
 
@@ -150,7 +147,7 @@ async def verify_external_listing(
 ):
     """
     Mark a listing as verified.
-    
+
     Updates the status and records verification timestamp.
     """
     listing = await ExternalListingService.verify(
@@ -162,7 +159,7 @@ async def verify_external_listing(
     )
     if not listing:
         raise HTTPException(status_code=404, detail="Listing not found")
-    
+
     return _to_response(listing)
 
 

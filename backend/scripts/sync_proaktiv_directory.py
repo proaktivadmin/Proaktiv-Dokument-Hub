@@ -16,9 +16,9 @@ import os
 import re
 import sys
 import time
+from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import Iterable, List, Optional, Dict, Tuple, Set
-from urllib.parse import urljoin, urlparse, unquote, quote
+from urllib.parse import quote, unquote, urljoin, urlparse
 
 import httpx
 from bs4 import BeautifulSoup
@@ -31,10 +31,9 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.config import settings
 from app.database import async_engine
-from app.models.office import Office
 from app.models.employee import Employee
+from app.models.office import Office
 from app.services.firecrawl_service import FirecrawlService
-
 
 DEFAULT_START_URLS = [
     "https://proaktiv.no/eiendomsmegler/oslo",
@@ -76,27 +75,27 @@ STOP_SECTION_MARKERS = [
 class OfficePayload:
     name: str
     homepage_url: str
-    email: Optional[str] = None
-    phone: Optional[str] = None
-    street_address: Optional[str] = None
-    postal_code: Optional[str] = None
-    city: Optional[str] = None
-    description: Optional[str] = None
-    profile_image_url: Optional[str] = None
+    email: str | None = None
+    phone: str | None = None
+    street_address: str | None = None
+    postal_code: str | None = None
+    city: str | None = None
+    description: str | None = None
+    profile_image_url: str | None = None
 
 
 @dataclass
 class EmployeePayload:
     first_name: str
     last_name: str
-    office_url: Optional[str]
-    office_name: Optional[str]
-    title: Optional[str] = None
-    email: Optional[str] = None
-    phone: Optional[str] = None
-    homepage_profile_url: Optional[str] = None
-    profile_image_url: Optional[str] = None
-    description: Optional[str] = None
+    office_url: str | None
+    office_name: str | None
+    title: str | None = None
+    email: str | None = None
+    phone: str | None = None
+    homepage_profile_url: str | None = None
+    profile_image_url: str | None = None
+    description: str | None = None
 
 
 def normalize_url(url: str) -> str:
@@ -118,7 +117,7 @@ def is_kjedeledelse_url(url: str) -> bool:
     return parsed.netloc.endswith("proaktiv.no") and parsed.path.rstrip("/") == "/om-oss/kjedeledelse"
 
 
-def classify_url(url: str) -> Optional[str]:
+def classify_url(url: str) -> str | None:
     if is_kjedeledelse_url(url):
         return "kjedledelse"
     parsed = urlparse(url)
@@ -142,13 +141,13 @@ def clean_text(value: str) -> str:
     return re.sub(r"\s+", " ", value or "").strip()
 
 
-def extract_lines(html: str) -> List[str]:
+def extract_lines(html: str) -> list[str]:
     soup = BeautifulSoup(html, "lxml")
     text = soup.get_text("\n")
     return [line for line in (clean_text(line) for line in text.splitlines()) if line]
 
 
-def find_primary_heading(soup: BeautifulSoup) -> Tuple[Optional[object], str]:
+def find_primary_heading(soup: BeautifulSoup) -> tuple[object | None, str]:
     bad_fragments = ("logg inn", "registrer bruker", "glemt passord", "ny bruker")
     candidate = None
     candidate_el = None
@@ -172,7 +171,7 @@ def extract_primary_heading(soup: BeautifulSoup, fallback: str) -> str:
     return text or fallback
 
 
-def slice_lines_between(lines: List[str], start_patterns: Iterable[str], stop_markers: Iterable[str]) -> List[str]:
+def slice_lines_between(lines: list[str], start_patterns: Iterable[str], stop_markers: Iterable[str]) -> list[str]:
     start_idx = -1
     for idx, line in enumerate(lines):
         if any(re.search(pattern, line, re.IGNORECASE) for pattern in start_patterns):
@@ -181,8 +180,8 @@ def slice_lines_between(lines: List[str], start_patterns: Iterable[str], stop_ma
     if start_idx == -1:
         return lines
 
-    sliced: List[str] = []
-    for line in lines[start_idx + 1:]:
+    sliced: list[str] = []
+    for line in lines[start_idx + 1 :]:
         if any(marker.lower() in line.lower() for marker in stop_markers):
             break
         sliced.append(line)
@@ -210,19 +209,19 @@ def looks_like_title(line: str) -> bool:
     return True
 
 
-def extract_email(value: str) -> Optional[str]:
+def extract_email(value: str) -> str | None:
     match = re.search(r"([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,})", value, re.IGNORECASE)
     return match.group(1) if match else None
 
 
-def format_phone(value: str) -> Optional[str]:
+def format_phone(value: str) -> str | None:
     digits = re.sub(r"\D", "", value or "")
     if not digits:
         return None
     if digits.startswith("47") and len(digits) > 8:
         digits = digits[-8:]
     if len(digits) == 8:
-        return " ".join(digits[i:i + 2] for i in range(0, 8, 2))
+        return " ".join(digits[i : i + 2] for i in range(0, 8, 2))
     return value.strip() if value else None
 
 
@@ -231,9 +230,9 @@ def looks_like_phone_line(line: str) -> bool:
     return len(digits) == 8 and len(line.strip()) <= 20
 
 
-def extract_named_contacts(lines: List[str]) -> List[Dict[str, Optional[str]]]:
-    results: List[Dict[str, Optional[str]]] = []
-    seen: Set[Tuple[Optional[str], Optional[str]]] = set()
+def extract_named_contacts(lines: list[str]) -> list[dict[str, str | None]]:
+    results: list[dict[str, str | None]] = []
+    seen: set[tuple[str | None, str | None]] = set()
     for i, line in enumerate(lines):
         if not line.lower().startswith("telefon"):
             continue
@@ -266,7 +265,7 @@ def extract_named_contacts(lines: List[str]) -> List[Dict[str, Optional[str]]]:
     return results
 
 
-def parse_kjedeledelse_page(soup: BeautifulSoup, url: str) -> Tuple[OfficePayload, List[EmployeePayload]]:
+def parse_kjedeledelse_page(soup: BeautifulSoup, url: str) -> tuple[OfficePayload, list[EmployeePayload]]:
     """
     Parse the corporate directory page at /om-oss/kjedeledelse.
 
@@ -326,8 +325,8 @@ def parse_kjedeledelse_page(soup: BeautifulSoup, url: str) -> Tuple[OfficePayloa
     return office_payload, employees
 
 
-def extract_name_title_map(soup: BeautifulSoup, base_url: str) -> Dict[str, str]:
-    links: Dict[str, str] = {}
+def extract_name_title_map(soup: BeautifulSoup, base_url: str) -> dict[str, str]:
+    links: dict[str, str] = {}
     for a in soup.find_all("a", href=True):
         text = clean_text(a.get_text(" "))
         if not looks_like_name(text):
@@ -340,8 +339,8 @@ def extract_name_title_map(soup: BeautifulSoup, base_url: str) -> Dict[str, str]
     return links
 
 
-def extract_image_url(soup: BeautifulSoup, base_url: str, name: Optional[str]) -> Optional[str]:
-    candidates: List[str] = []
+def extract_image_url(soup: BeautifulSoup, base_url: str, name: str | None) -> str | None:
+    candidates: list[str] = []
     for img in soup.find_all("img"):
         alt = clean_text(img.get("alt", ""))
         classes = " ".join(img.get("class", [])).lower()
@@ -360,7 +359,7 @@ def extract_image_url(soup: BeautifulSoup, base_url: str, name: Optional[str]) -
     return candidates[0] if candidates else None
 
 
-def derive_office_from_profile(profile_url: str) -> Tuple[Optional[str], Optional[str]]:
+def derive_office_from_profile(profile_url: str) -> tuple[str | None, str | None]:
     parsed = urlparse(profile_url)
     parts = parsed.path.strip("/").split("/")
     if len(parts) >= 3 and parts[0] == "eiendomsmegler":
@@ -369,9 +368,9 @@ def derive_office_from_profile(profile_url: str) -> Tuple[Optional[str], Optiona
     return None, None
 
 
-def extract_employee_cards(soup: BeautifulSoup, base_url: str) -> List[EmployeePayload]:
-    payloads: List[EmployeePayload] = []
-    seen: Set[str] = set()
+def extract_employee_cards(soup: BeautifulSoup, base_url: str) -> list[EmployeePayload]:
+    payloads: list[EmployeePayload] = []
+    seen: set[str] = set()
     for card in soup.select("div.flexcolumn0.pane"):
         email_link = card.select_one("a[href^=mailto]")
         tel_link = card.select_one("a[href^=tel]")
@@ -447,8 +446,8 @@ def extract_employee_cards(soup: BeautifulSoup, base_url: str) -> List[EmployeeP
     return payloads
 
 
-def extract_description(soup: BeautifulSoup, *, anchor: Optional[str] = None) -> Optional[str]:
-    paragraphs: List[str] = []
+def extract_description(soup: BeautifulSoup, *, anchor: str | None = None) -> str | None:
+    paragraphs: list[str] = []
     lines = extract_lines(str(soup))
     start_idx = 0
     if anchor:
@@ -486,14 +485,14 @@ def extract_description(soup: BeautifulSoup, *, anchor: Optional[str] = None) ->
     return " ".join(paragraphs) if paragraphs else None
 
 
-def parse_employee_name(full_name: str) -> Tuple[str, str]:
+def parse_employee_name(full_name: str) -> tuple[str, str]:
     parts = full_name.split()
     if len(parts) == 1:
         return parts[0], ""
     return parts[0], " ".join(parts[1:])
 
 
-def parse_office_contact(lines: List[str]) -> Dict[str, Optional[str]]:
+def parse_office_contact(lines: list[str]) -> dict[str, str | None]:
     email = None
     phone = None
     street_address = None
@@ -586,15 +585,13 @@ async def upsert_office(
     *,
     overwrite: bool,
     dry_run: bool,
-) -> Optional[Office]:
+) -> Office | None:
     existing = None
     if payload.homepage_url:
         result = await db.execute(select(Office).where(Office.homepage_url == payload.homepage_url))
         existing = result.scalar_one_or_none()
     if not existing and payload.name:
-        result = await db.execute(
-            select(Office).where(Office.name == payload.name)
-        )
+        result = await db.execute(select(Office).where(Office.name == payload.name))
         existing = result.scalar_one_or_none()
 
     if dry_run:
@@ -640,7 +637,7 @@ async def upsert_office(
     return existing
 
 
-def infer_roles(title: Optional[str]) -> List[str]:
+def infer_roles(title: str | None) -> list[str]:
     if not title:
         return []
     mapping = {
@@ -660,11 +657,11 @@ def infer_roles(title: Optional[str]) -> List[str]:
 async def upsert_employee(
     db: AsyncSession,
     payload: EmployeePayload,
-    office: Optional[Office],
+    office: Office | None,
     *,
     overwrite: bool,
     dry_run: bool,
-) -> Optional[Employee]:
+) -> Employee | None:
     existing = None
     if payload.email:
         result = await db.execute(select(Employee).where(Employee.email == payload.email))
@@ -721,7 +718,7 @@ async def upsert_employee(
 
 async def sync_proaktiv(
     *,
-    start_urls: List[str],
+    start_urls: list[str],
     delay_ms: int,
     max_pages: int,
     max_runtime_minutes: int,
@@ -734,18 +731,21 @@ async def sync_proaktiv(
 ) -> None:
     async_session = sessionmaker(async_engine, class_=AsyncSession, expire_on_commit=False)
     queue = [normalize_url(url) for url in start_urls]
-    visited: Set[str] = set()
+    visited: set[str] = set()
     processed_offices = 0
     processed_employees = 0
     total_processed = 0
     start_time = time.monotonic()
     delay_seconds = max(0, delay_ms / 1000)
 
-    async with async_session() as db, httpx.AsyncClient(
-        headers={"User-Agent": "Mozilla/5.0"},
-        follow_redirects=True,
-        timeout=30,
-    ) as client:
+    async with (
+        async_session() as db,
+        httpx.AsyncClient(
+            headers={"User-Agent": "Mozilla/5.0"},
+            follow_redirects=True,
+            timeout=30,
+        ) as client,
+    ):
         while queue and total_processed < max_pages:
             if (time.monotonic() - start_time) > (max_runtime_minutes * 60):
                 print("[Sync] Max runtime reached, stopping.")
@@ -763,7 +763,9 @@ async def sync_proaktiv(
                 await asyncio.sleep(delay_seconds)
 
             try:
-                html = await fetch_html(client, url, use_firecrawl=use_firecrawl, timeout_ms=settings.FIRECRAWL_TIMEOUT_MS)
+                html = await fetch_html(
+                    client, url, use_firecrawl=use_firecrawl, timeout_ms=settings.FIRECRAWL_TIMEOUT_MS
+                )
             except Exception as exc:
                 print(f"[Sync] Failed to fetch {url}: {exc}")
                 continue
@@ -861,7 +863,8 @@ async def sync_proaktiv(
                         office = await upsert_office(
                             db,
                             OfficePayload(
-                                name=emp_payload.office_name or slug_to_city(urlparse(emp_payload.office_url).path.split("/")[-1]),
+                                name=emp_payload.office_name
+                                or slug_to_city(urlparse(emp_payload.office_url).path.split("/")[-1]),
                                 homepage_url=emp_payload.office_url,
                                 city=slug_to_city(urlparse(url).path.split("/")[-1]),
                             ),
@@ -881,14 +884,11 @@ async def sync_proaktiv(
             if not dry_run:
                 await db.commit()
 
-    print(
-        f"[Sync] Done. processed_pages={total_processed} "
-        f"offices={processed_offices} employees={processed_employees}"
-    )
+    print(f"[Sync] Done. processed_pages={total_processed} offices={processed_offices} employees={processed_employees}")
 
 
-def extract_links(soup: BeautifulSoup, base_url: str) -> List[str]:
-    links: List[str] = []
+def extract_links(soup: BeautifulSoup, base_url: str) -> list[str]:
+    links: list[str] = []
     for a in soup.find_all("a", href=True):
         href = a.get("href", "")
         if href.startswith("#") or href.startswith("mailto:") or href.startswith("tel:"):
@@ -902,7 +902,7 @@ def extract_links(soup: BeautifulSoup, base_url: str) -> List[str]:
     return links
 
 
-def parse_office_page(soup: BeautifulSoup, url: str) -> Tuple[OfficePayload, List[EmployeePayload]]:
+def parse_office_page(soup: BeautifulSoup, url: str) -> tuple[OfficePayload, list[EmployeePayload]]:
     lines = extract_lines(str(soup))
     heading_el, office_name = find_primary_heading(soup)
     office_name = office_name or "Proaktiv Office"
@@ -929,11 +929,11 @@ def parse_office_page(soup: BeautifulSoup, url: str) -> Tuple[OfficePayload, Lis
     return office_payload, employee_payloads
 
 
-def parse_city_employees(soup: BeautifulSoup, url: str) -> List[EmployeePayload]:
+def parse_city_employees(soup: BeautifulSoup, url: str) -> list[EmployeePayload]:
     return extract_employee_cards(soup, url)
 
 
-def parse_employee_page(soup: BeautifulSoup, url: str) -> Tuple[EmployeePayload, Optional[OfficePayload]]:
+def parse_employee_page(soup: BeautifulSoup, url: str) -> tuple[EmployeePayload, OfficePayload | None]:
     heading_el, name = find_primary_heading(soup)
     title = None
     if heading_el:

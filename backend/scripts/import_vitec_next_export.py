@@ -19,14 +19,13 @@ import logging
 import os
 import sys
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
-
 
 # -----------------------------------------------------------------------------
 # Import path bootstrap (works in local + /app container)
@@ -41,14 +40,14 @@ try:
     # When running in Docker, legacy scripts used: sys.path.insert(0, "/app")
     # but we support both.
     from app.database import async_session_factory
-    from app.models.template import Template
-    from app.models.tag import Tag
     from app.models.category import Category
+    from app.models.tag import Tag
+    from app.models.template import Template
+    from app.services.sanitizer_service import get_sanitizer_service
+    from app.services.template_analyzer_service import TemplateAnalyzerService
+    from app.services.template_content_service import TemplateContentService
     from app.services.template_service import TemplateService
     from app.services.template_settings_service import TemplateSettingsService
-    from app.services.template_content_service import TemplateContentService
-    from app.services.template_analyzer_service import TemplateAnalyzerService
-    from app.services.sanitizer_service import get_sanitizer_service
 except Exception as e:  # pragma: no cover
     raise RuntimeError(
         "Failed to import backend modules. Run from repo root, or inside /app in the backend container."
@@ -64,7 +63,7 @@ logger = logging.getLogger(__name__)
 
 
 def _utc_now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 def _normalize_title(value: str) -> str:
@@ -101,7 +100,7 @@ def _is_kundemal_origin_tag(value: str) -> bool:
     return "kundemal" in lowered
 
 
-def _extract_is_system(item: dict[str, Any], metadata: dict[str, Any]) -> Optional[bool]:
+def _extract_is_system(item: dict[str, Any], metadata: dict[str, Any]) -> bool | None:
     sources = [
         metadata.get("vitec_details"),
         metadata.get("vitec_raw"),
@@ -130,7 +129,7 @@ def _resolve_origin_tag(
     tag_names: list[str],
     item: dict[str, Any],
     metadata: dict[str, Any],
-) -> tuple[Optional[str], Optional[str]]:
+) -> tuple[str | None, str | None]:
     for tag in tag_names:
         if _is_kundemal_origin_tag(tag):
             return tag, "tags"
@@ -161,7 +160,7 @@ def _resolve_origin_tag(
     return None, None
 
 
-def _apply_origin_tag(tag_names: list[str], origin_tag: Optional[str]) -> list[str]:
+def _apply_origin_tag(tag_names: list[str], origin_tag: str | None) -> list[str]:
     if not origin_tag:
         return _norm_str_list(tag_names)
 
@@ -182,7 +181,7 @@ def _apply_origin_tag(tag_names: list[str], origin_tag: Optional[str]) -> list[s
     return _norm_str_list(cleaned)
 
 
-def _normalize_attachment_name(value: Any) -> Optional[str]:
+def _normalize_attachment_name(value: Any) -> str | None:
     if value is None:
         return None
     name = str(value).strip()
@@ -194,7 +193,7 @@ def _looks_like_attachment_key(key: str) -> bool:
     return "attachment" in lowered or "vedlegg" in lowered
 
 
-def _normalize_attachment_entry(entry: Any, source: str) -> Optional[dict[str, Any]]:
+def _normalize_attachment_entry(entry: Any, source: str) -> dict[str, Any] | None:
     if isinstance(entry, str):
         name = _normalize_attachment_name(entry)
         if not name:
@@ -301,7 +300,8 @@ def _extract_vitec_attachments(
 
     return _dedupe_attachments(attachments)
 
-def _as_decimal(value: Any) -> Optional[Decimal]:
+
+def _as_decimal(value: Any) -> Decimal | None:
     if value is None:
         return None
     if isinstance(value, Decimal):
@@ -360,12 +360,12 @@ async def _get_or_create_tag(session, name: str, *, color: str = "#3B82F6") -> T
         raise
 
 
-async def _get_category_by_vitec_id(session, vitec_id: int) -> Optional[Category]:
+async def _get_category_by_vitec_id(session, vitec_id: int) -> Category | None:
     res = await session.execute(select(Category).where(Category.vitec_id == vitec_id))
     return res.scalar_one_or_none()
 
 
-async def _get_or_create_category(session, *, name: Optional[str], vitec_id: Optional[int]) -> Optional[Category]:
+async def _get_or_create_category(session, *, name: str | None, vitec_id: int | None) -> Category | None:
     if vitec_id is not None:
         existing = await _get_category_by_vitec_id(session, vitec_id)
         if existing:
@@ -412,7 +412,7 @@ async def _get_or_create_category(session, *, name: Optional[str], vitec_id: Opt
         raise
 
 
-async def _get_template_by_file_name(session, file_name: str) -> Optional[Template]:
+async def _get_template_by_file_name(session, file_name: str) -> Template | None:
     res = await session.execute(select(Template).where(Template.file_name == file_name))
     return res.scalar_one_or_none()
 
@@ -421,23 +421,21 @@ async def _get_template_by_file_name(session, file_name: str) -> Optional[Templa
 class TitleCandidate:
     id: Any
     title: str
-    channel: Optional[str]
-    created_at: Optional[datetime]
+    channel: str | None
+    created_at: datetime | None
 
 
 def _created_at_key(candidate: "TitleCandidate") -> datetime:
     created_at = candidate.created_at
     if created_at is None:
-        return datetime.min.replace(tzinfo=timezone.utc)
+        return datetime.min.replace(tzinfo=UTC)
     if created_at.tzinfo is None:
-        return created_at.replace(tzinfo=timezone.utc)
+        return created_at.replace(tzinfo=UTC)
     return created_at
 
 
 async def _build_title_index(session) -> dict[str, list[TitleCandidate]]:
-    res = await session.execute(
-        select(Template.id, Template.title, Template.channel, Template.created_at)
-    )
+    res = await session.execute(select(Template.id, Template.title, Template.channel, Template.created_at))
     rows = res.all()
     index: dict[str, list[TitleCandidate]] = {}
     for template_id, title, channel, created_at in rows:
@@ -457,19 +455,15 @@ async def _build_title_index(session) -> dict[str, list[TitleCandidate]]:
 
 def _choose_title_match(
     candidates: list[TitleCandidate],
-    channel: Optional[str],
-) -> tuple[Optional[TitleCandidate], Optional[str]]:
+    channel: str | None,
+) -> tuple[TitleCandidate | None, str | None]:
     if not candidates:
         return None, None
 
     match_reason = "title"
     filtered = candidates
     if channel:
-        channel_matches = [
-            candidate
-            for candidate in candidates
-            if (candidate.channel or "").strip() == channel
-        ]
+        channel_matches = [candidate for candidate in candidates if (candidate.channel or "").strip() == channel]
         if len(channel_matches) == 1:
             return channel_matches[0], "title+channel"
         if len(channel_matches) > 1:
@@ -526,7 +520,7 @@ async def import_vitec_export(
     stats = ImportStats()
 
     async with async_session_factory() as session:
-        title_index: Optional[dict[str, list[TitleCandidate]]] = None
+        title_index: dict[str, list[TitleCandidate]] | None = None
         if match_title:
             title_index = await _build_title_index(session)
 
@@ -614,7 +608,7 @@ async def import_vitec_export(
                         category_ids.append(category.id)
 
                 existing = await _get_template_by_file_name(session, file_name)
-                match_source: Optional[str] = "file_name" if existing else None
+                match_source: str | None = "file_name" if existing else None
 
                 if existing is None and match_title and title_index is not None:
                     title_key = _normalize_title(title)
@@ -861,4 +855,3 @@ async def main() -> None:
 
 if __name__ == "__main__":
     asyncio.run(main())
-

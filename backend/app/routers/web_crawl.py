@@ -2,18 +2,18 @@
 Web Crawl Router - Firecrawl endpoints.
 """
 
-from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Optional
 from uuid import UUID
 
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.database import get_db
-from app.services.firecrawl_service import FirecrawlService
 from app.schemas.firecrawl import (
-    FirecrawlScrapeRequest,
     FirecrawlScrapeDetail,
     FirecrawlScrapeListResponse,
+    FirecrawlScrapeRequest,
 )
+from app.services.firecrawl_service import FirecrawlService
 
 router = APIRouter(prefix="/web-crawl", tags=["Web Crawl"])
 
@@ -44,7 +44,7 @@ async def scrape_url(
 
 @router.get("/scrapes", response_model=FirecrawlScrapeListResponse)
 async def list_scrapes(
-    status: Optional[str] = Query(None, description="Filter by status (pending, completed, failed)"),
+    status: str | None = Query(None, description="Filter by status (pending, completed, failed)"),
     skip: int = Query(0, ge=0, description="Offset for pagination"),
     limit: int = Query(50, ge=1, le=200, description="Max results"),
     db: AsyncSession = Depends(get_db),

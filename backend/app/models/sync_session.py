@@ -6,15 +6,15 @@ Stores preview data and decisions for manual Vitec sync review.
 
 from __future__ import annotations
 
-from datetime import datetime
-from typing import Optional, Dict, Any
 import uuid
+from datetime import datetime
+from typing import Any
 
 from sqlalchemy import DateTime, Index, String
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql import func
 
-from app.models.base import Base, GUID, JSONType
+from app.models.base import GUID, Base, JSONType
 
 
 class SyncSession(Base):
@@ -34,12 +34,12 @@ class SyncSession(Base):
         default="pending",
     )  # pending | committed | expired | cancelled
 
-    preview_data: Mapped[Optional[Dict[str, Any]]] = mapped_column(
+    preview_data: Mapped[dict[str, Any] | None] = mapped_column(
         JSONType,
         nullable=True,
         default=dict,
     )
-    decisions: Mapped[Optional[Dict[str, Any]]] = mapped_column(
+    decisions: Mapped[dict[str, Any] | None] = mapped_column(
         JSONType,
         nullable=True,
         default=dict,

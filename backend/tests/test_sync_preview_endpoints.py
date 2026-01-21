@@ -1,16 +1,16 @@
 import unittest
-from datetime import datetime, timedelta, timezone
-from uuid import UUID, uuid4
+from datetime import UTC, datetime, timedelta
 from unittest.mock import patch
+from uuid import UUID, uuid4
 
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from app.database import get_db
 from app.routers import sync
-from app.schemas.sync import SyncPreview, SyncSummary, SyncCommitResult
-from app.services.sync_preview_service import SyncPreviewService
+from app.schemas.sync import SyncCommitResult, SyncPreview, SyncSummary
 from app.services.sync_commit_service import SyncCommitService
+from app.services.sync_preview_service import SyncPreviewService
 
 
 def create_test_app() -> FastAPI:
@@ -20,7 +20,7 @@ def create_test_app() -> FastAPI:
 
 
 def _build_preview() -> SyncPreview:
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     return SyncPreview(
         session_id=uuid4(),
         created_at=now,

@@ -8,12 +8,13 @@ Run with: python -m scripts.seed_layout_partials
 Or remotely: python backend/scripts/seed_layout_partials.py --api-url <URL>
 """
 
-import asyncio
-import sys
-import os
 import argparse
+import asyncio
+import os
+import sys
+from typing import Any
+
 import requests
-from typing import List, Dict, Any
 
 # Add parent directory to path for local execution
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -24,14 +25,14 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Based on .cursor/vitec-reference.md
 # =============================================================================
 
-LAYOUT_PARTIALS: List[Dict[str, Any]] = [
+LAYOUT_PARTIALS: list[dict[str, Any]] = [
     # ----- HEADERS -----
     {
         "name": "Vitec Topptekst",
         "type": "header",
         "context": "pdf",
         "is_default": True,
-        "html_content": '''<div id="vitecTemplate">
+        "html_content": """<div id="vitecTemplate">
   <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
   <table style="width:21cm">
     <tbody>
@@ -45,18 +46,17 @@ LAYOUT_PARTIALS: List[Dict[str, Any]] = [
       </tr>
     </tbody>
   </table>
-</div>''',
+</div>""",
         "created_by": "system",
-        "updated_by": "system"
+        "updated_by": "system",
     },
-    
     # ----- FOOTERS -----
     {
         "name": "Vitec Bunntekst",
         "type": "footer",
         "context": "pdf",
         "is_default": True,
-        "html_content": '''<div id="vitecTemplate">
+        "html_content": """<div id="vitecTemplate">
   <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
   <table cellspacing="0" style="border-collapse:collapse; table-layout:fixed; width:21cm">
     <tbody>
@@ -84,16 +84,16 @@ LAYOUT_PARTIALS: List[Dict[str, Any]] = [
       </tr>
     </tbody>
   </table>
-</div>''',
+</div>""",
         "created_by": "system",
-        "updated_by": "system"
+        "updated_by": "system",
     },
     {
         "name": "Vitec Bunntekst Kontrakt",
         "type": "footer",
         "context": "pdf",
         "is_default": False,
-        "html_content": '''<div id="vitecTemplate">
+        "html_content": """<div id="vitecTemplate">
   <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
   <table style="height:1.5cm; table-layout:fixed; width:20cm">
     <tbody>
@@ -116,16 +116,16 @@ LAYOUT_PARTIALS: List[Dict[str, Any]] = [
       </tr>
     </tbody>
   </table>
-</div>''',
+</div>""",
         "created_by": "system",
-        "updated_by": "system"
+        "updated_by": "system",
     },
     {
         "name": "Vitec Bunntekst Sikring",
         "type": "footer",
         "context": "pdf",
         "is_default": False,
-        "html_content": '''<style type="text/css">
+        "html_content": """<style type="text/css">
 #vitecTemplate td[data-label] {
     padding: 16px 2px 4px 3px;
     position: relative;
@@ -166,7 +166,7 @@ LAYOUT_PARTIALS: List[Dict[str, Any]] = [
           <small>Statens kartverk - rev 01/19</small>
         </td>
         <td class="no-border" colspan="60" style="text-align:center">
-          <small>Pantedokument - Panterett i 
+          <small>Pantedokument - Panterett i
             <span vitec-if="Model.eiendom.eieform != &quot;Andel&quot;">fast eiendom</span>
             <span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">andel i borettslag</span>
           </small>
@@ -177,16 +177,16 @@ LAYOUT_PARTIALS: List[Dict[str, Any]] = [
       </tr>
     </tbody>
   </table>
-</div>''',
+</div>""",
         "created_by": "system",
-        "updated_by": "system"
+        "updated_by": "system",
     },
     {
         "name": "Vitec Bunntekst Skjote",
         "type": "footer",
         "context": "pdf",
         "is_default": False,
-        "html_content": '''<div id="vitecTemplate" style="padding-left:0.5cm; padding-right:0.5cm">
+        "html_content": """<div id="vitecTemplate" style="padding-left:0.5cm; padding-right:0.5cm">
   <table>
     <tbody>
       <tr>
@@ -200,16 +200,16 @@ LAYOUT_PARTIALS: List[Dict[str, Any]] = [
       </tr>
     </tbody>
   </table>
-</div>''',
+</div>""",
         "created_by": "system",
-        "updated_by": "system"
+        "updated_by": "system",
     },
     {
         "name": "Vitec Bunntekst Sidetall",
         "type": "footer",
         "context": "pdf",
         "is_default": False,
-        "html_content": '''<style type="text/css">
+        "html_content": """<style type="text/css">
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap');
 
 #vitecTemplate table {
@@ -241,16 +241,16 @@ LAYOUT_PARTIALS: List[Dict[str, Any]] = [
       </tr>
     </tbody>
   </table>
-</div>''',
+</div>""",
         "created_by": "system",
-        "updated_by": "system"
+        "updated_by": "system",
     },
     {
         "name": "Vitec Bunntekst Fremleiekontrakt",
         "type": "footer",
         "context": "pdf",
         "is_default": False,
-        "html_content": '''<div id="vitecTemplate">
+        "html_content": """<div id="vitecTemplate">
   <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
   <table style="height:1.5cm; table-layout:fixed; width:20cm">
     <tbody>
@@ -270,18 +270,17 @@ LAYOUT_PARTIALS: List[Dict[str, Any]] = [
       </tr>
     </tbody>
   </table>
-</div>''',
+</div>""",
         "created_by": "system",
-        "updated_by": "system"
+        "updated_by": "system",
     },
-    
     # ----- SIGNATURES -----
     {
         "name": "E-post signatur",
         "type": "signature",
         "context": "email",
         "is_default": True,
-        "html_content": '''<div>
+        "html_content": """<div>
   <span style="font-family:calibri,sans-serif; font-size:11pt">&nbsp;</span><br />
   <span style="font-family:calibri,sans-serif; font-size:11pt">&nbsp;</span><br />
   <span style="font-family:calibri,sans-serif; font-size:11pt">&nbsp;</span><br />
@@ -292,38 +291,37 @@ LAYOUT_PARTIALS: List[Dict[str, Any]] = [
   <span style="font-family:calibri,sans-serif; font-size:11pt">[[avsender.meglerkontor.navn]]</span><br />
   <span style="font-family:calibri,sans-serif; font-size:11pt">Mobil: [[avsender.mobiltlf]], e-post: [[avsender.epost]]</span><br />
   <span style="font-family:calibri,sans-serif; font-size:11pt">Besoksadresse: [[avsender.meglerkontor.besoksadresse]], [[avsender.meglerkontor.postnr]] [[avsender.meglerkontor.poststed]]</span>
-</div>''',
+</div>""",
         "created_by": "system",
-        "updated_by": "system"
+        "updated_by": "system",
     },
     {
         "name": "SMS-signatur",
         "type": "signature",
         "context": "sms",
         "is_default": True,
-        "html_content": '''<div>Vennlig hilsen</div>
+        "html_content": """<div>Vennlig hilsen</div>
 <div>[[avsender.navn]]</div>
 <div>&nbsp;</div>
 <div>[[avsender.tittel]]</div>
-<div>[[avsender.meglerkontor.navn]]</div>''',
+<div>[[avsender.meglerkontor.navn]]</div>""",
         "created_by": "system",
-        "updated_by": "system"
+        "updated_by": "system",
     },
 ]
 
 
 async def seed_layout_partials_local():
     """Seed layout partials to local database."""
-    from sqlalchemy.ext.asyncio import AsyncSession
     from app.database import async_session_factory
     from app.services.layout_partial_service import LayoutPartialService
-    
+
     print("Seeding layout partials to local database...")
-    
+
     async with async_session_factory() as db:
         created = 0
         skipped = 0
-        
+
         for partial_data in LAYOUT_PARTIALS:
             try:
                 await LayoutPartialService.create(db, **partial_data)
@@ -337,7 +335,7 @@ async def seed_layout_partials_local():
                     print(f"  [ERROR] {partial_data['name']}: {e}")
             except Exception as e:
                 print(f"  [ERROR] {partial_data['name']}: {e}")
-        
+
         await db.commit()
         print(f"\nDone! Created {created}, Skipped {skipped}")
 
@@ -346,11 +344,11 @@ def seed_layout_partials_remote(api_url: str):
     """Seed layout partials to remote API."""
     endpoint = f"{api_url.rstrip('/')}/api/layout-partials"
     print(f"Seeding layout partials to {endpoint}...")
-    
+
     created = 0
     skipped = 0
     errors = 0
-    
+
     for partial_data in LAYOUT_PARTIALS:
         try:
             response = requests.post(endpoint, json=partial_data, timeout=30)
@@ -366,23 +364,23 @@ def seed_layout_partials_remote(api_url: str):
         except Exception as e:
             errors += 1
             print(f"  [ERROR] {partial_data['name']}: {e}")
-    
+
     print(f"\nDone! Created {created}, Skipped {skipped}, Errors {errors}")
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Seed Vitec layout partials to database')
-    parser.add_argument('--api-url', help='Remote API URL (if not provided, uses local database)')
-    parser.add_argument('--dry-run', action='store_true', help='Show what would be seeded')
-    
+    parser = argparse.ArgumentParser(description="Seed Vitec layout partials to database")
+    parser.add_argument("--api-url", help="Remote API URL (if not provided, uses local database)")
+    parser.add_argument("--dry-run", action="store_true", help="Show what would be seeded")
+
     args = parser.parse_args()
-    
+
     if args.dry_run:
         print(f"Would seed {len(LAYOUT_PARTIALS)} layout partials:")
         for p in LAYOUT_PARTIALS:
             print(f"  [{p['type']}] {p['name']} ({p['context']})")
         return
-    
+
     if args.api_url:
         seed_layout_partials_remote(args.api_url)
     else:

@@ -2,23 +2,21 @@
 Assets Router - API endpoints for company asset management.
 """
 
-from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File, Form
+import io
+from uuid import UUID
+
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile
 from fastapi.responses import StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Optional
-from uuid import UUID
-import io
 
 from app.database import get_db
+from app.schemas.company_asset import (
+    CompanyAssetListResponse,
+    CompanyAssetResponse,
+    CompanyAssetUpdate,
+)
 from app.services.company_asset_service import CompanyAssetService
 from app.services.webdav_service import WebDAVService
-from app.schemas.company_asset import (
-    CompanyAssetCreate,
-    CompanyAssetUpdate,
-    CompanyAssetResponse,
-    CompanyAssetListResponse,
-    AssetMetadata,
-)
 
 router = APIRouter(prefix="/assets", tags=["Assets"])
 
@@ -47,17 +45,17 @@ def _to_response(asset) -> CompanyAssetResponse:
 
 @router.get("", response_model=CompanyAssetListResponse)
 async def list_assets(
-    category: Optional[str] = Query(None, description="Filter by category"),
-    office_id: Optional[UUID] = Query(None, description="Filter by office"),
-    employee_id: Optional[UUID] = Query(None, description="Filter by employee"),
-    is_global: Optional[bool] = Query(None, description="Filter by global flag"),
+    category: str | None = Query(None, description="Filter by category"),
+    office_id: UUID | None = Query(None, description="Filter by office"),
+    employee_id: UUID | None = Query(None, description="Filter by employee"),
+    is_global: bool | None = Query(None, description="Filter by global flag"),
     skip: int = Query(0, ge=0, description="Offset for pagination"),
     limit: int = Query(100, ge=1, le=500, description="Max results"),
     db: AsyncSession = Depends(get_db),
 ):
     """
     List all assets with optional filtering.
-    
+
     Category can be: logo, photo, marketing, document, other.
     """
     assets, total = await CompanyAssetService.list(
@@ -69,9 +67,9 @@ async def list_assets(
         skip=skip,
         limit=limit,
     )
-    
+
     items = [_to_response(a) for a in assets]
-    
+
     return CompanyAssetListResponse(items=items, total=total)
 
 
@@ -80,16 +78,16 @@ async def upload_asset(
     file: UploadFile = File(...),
     name: str = Form(...),
     category: str = Form("other"),
-    office_id: Optional[str] = Form(None),
-    employee_id: Optional[str] = Form(None),
+    office_id: str | None = Form(None),
+    employee_id: str | None = Form(None),
     is_global: bool = Form(False),
-    alt_text: Optional[str] = Form(None),
-    usage_notes: Optional[str] = Form(None),
+    alt_text: str | None = Form(None),
+    usage_notes: str | None = Form(None),
     db: AsyncSession = Depends(get_db),
 ):
     """
     Upload a new asset.
-    
+
     Files are stored in WebDAV under /assets/{scope}/{id}/.
     """
     # Determine scope and storage path
@@ -101,16 +99,17 @@ async def upload_asset(
     elif employee_id:
         scope = "employee"
         scope_id = employee_id
-    
+
     # Read file content
     content = await file.read()
     file_size = len(content)
-    
+
     # Generate storage path
     import uuid as uuid_module
+
     asset_id = str(uuid_module.uuid4())
     storage_path = f"/assets/{scope}/{scope_id or 'company'}/{asset_id}_{file.filename}"
-    
+
     # Upload to WebDAV (if available)
     try:
         webdav = WebDAVService()
@@ -121,24 +120,26 @@ async def upload_asset(
     except Exception as e:
         # Log but don't fail - store path anyway for future upload
         import logging
+
         logging.warning(f"WebDAV upload failed: {e}")
-    
+
     # Build metadata
     metadata = {}
     if alt_text:
         metadata["alt_text"] = alt_text
     if usage_notes:
         metadata["usage_notes"] = usage_notes
-    
+
     # If image, try to get dimensions
     if file.content_type and file.content_type.startswith("image/"):
         try:
             from PIL import Image
+
             img = Image.open(io.BytesIO(content))
             metadata["dimensions"] = {"width": img.width, "height": img.height}
         except Exception:
             pass
-    
+
     # Create database record
     asset = await CompanyAssetService.create(
         db,
@@ -153,7 +154,7 @@ async def upload_asset(
         is_global=is_global,
         metadata=metadata,
     )
-    
+
     return _to_response(asset)
 
 
@@ -168,7 +169,7 @@ async def get_asset(
     asset = await CompanyAssetService.get_by_id(db, asset_id)
     if not asset:
         raise HTTPException(status_code=404, detail="Asset not found")
-    
+
     return _to_response(asset)
 
 
@@ -183,23 +184,18 @@ async def download_asset(
     asset = await CompanyAssetService.get_by_id(db, asset_id)
     if not asset:
         raise HTTPException(status_code=404, detail="Asset not found")
-    
+
     try:
         webdav = WebDAVService()
         content = await webdav.download(asset.storage_path)
-        
+
         return StreamingResponse(
             io.BytesIO(content),
             media_type=asset.content_type,
-            headers={
-                "Content-Disposition": f'attachment; filename="{asset.filename}"'
-            }
+            headers={"Content-Disposition": f'attachment; filename="{asset.filename}"'},
         )
     except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Failed to download file: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=f"Failed to download file: {str(e)}")
 
 
 @router.put("/{asset_id}", response_model=CompanyAssetResponse)
@@ -210,13 +206,13 @@ async def update_asset(
 ):
     """
     Update asset metadata.
-    
+
     Only name, category, and metadata can be updated.
     """
     asset = await CompanyAssetService.update(db, asset_id, data)
     if not asset:
         raise HTTPException(status_code=404, detail="Asset not found")
-    
+
     return _to_response(asset)
 
 
@@ -227,20 +223,21 @@ async def delete_asset(
 ):
     """
     Delete an asset.
-    
+
     Removes both the database record and the file in storage.
     """
     asset = await CompanyAssetService.get_by_id(db, asset_id)
     if not asset:
         raise HTTPException(status_code=404, detail="Asset not found")
-    
+
     # Try to delete from WebDAV
     try:
         webdav = WebDAVService()
         await webdav.delete(asset.storage_path)
     except Exception as e:
         import logging
+
         logging.warning(f"Failed to delete file from WebDAV: {e}")
-    
+
     # Delete database record
     await CompanyAssetService.delete(db, asset_id)

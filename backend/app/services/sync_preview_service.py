@@ -4,8 +4,7 @@ Sync preview service for Vitec review workflow.
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
-from typing import List, Set
+from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
 from fastapi import HTTPException
@@ -41,7 +40,7 @@ class SyncPreviewService:
         departments = await self._hub.get_departments(installation_id)
         employees = await self._hub.get_employees(installation_id)
 
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         expires_at = now + timedelta(hours=24)
 
         session = SyncSession(
@@ -70,14 +69,10 @@ class SyncPreviewService:
         summary = SyncSummary(
             offices_new=sum(1 for diff in office_diffs if diff.match_type == "new"),
             offices_matched=sum(1 for diff in office_diffs if diff.match_type == "matched"),
-            offices_not_in_vitec=sum(
-                1 for diff in office_diffs if diff.match_type == "not_in_vitec"
-            ),
+            offices_not_in_vitec=sum(1 for diff in office_diffs if diff.match_type == "not_in_vitec"),
             employees_new=sum(1 for diff in employee_diffs if diff.match_type == "new"),
             employees_matched=sum(1 for diff in employee_diffs if diff.match_type == "matched"),
-            employees_not_in_vitec=sum(
-                1 for diff in employee_diffs if diff.match_type == "not_in_vitec"
-            ),
+            employees_not_in_vitec=sum(1 for diff in employee_diffs if diff.match_type == "not_in_vitec"),
             employees_missing_office=missing_office,
         )
 
@@ -102,7 +97,7 @@ class SyncPreviewService:
 
     async def get_session(self, db: AsyncSession, session_id: UUID) -> SyncPreview:
         session = await self._load_session(db, session_id)
-        if session.expires_at < datetime.now(timezone.utc):
+        if session.expires_at < datetime.now(UTC):
             session.status = "expired"
             await db.flush()
             raise HTTPException(status_code=410, detail="Sync session has expired.")
@@ -149,9 +144,9 @@ class SyncPreviewService:
         self,
         db: AsyncSession,
         departments: list[dict],
-    ) -> tuple[List[RecordDiff], Set[str], dict[str, dict]]:
-        office_diffs: List[RecordDiff] = []
-        matched_ids: Set[str] = set()
+    ) -> tuple[list[RecordDiff], set[str], dict[str, dict]]:
+        office_diffs: list[RecordDiff] = []
+        matched_ids: set[str] = set()
         payloads: dict[str, dict] = {}
 
         for raw in departments:
@@ -169,9 +164,9 @@ class SyncPreviewService:
         self,
         db: AsyncSession,
         employees: list[dict],
-    ) -> tuple[List[RecordDiff], Set[str], int, dict[str, dict]]:
-        employee_diffs: List[RecordDiff] = []
-        matched_ids: Set[str] = set()
+    ) -> tuple[list[RecordDiff], set[str], int, dict[str, dict]]:
+        employee_diffs: list[RecordDiff] = []
+        matched_ids: set[str] = set()
         missing_office = 0
         payloads: dict[str, dict] = {}
 
@@ -199,11 +194,11 @@ class SyncPreviewService:
     async def _local_offices_not_in_vitec(
         self,
         db: AsyncSession,
-        matched_ids: Set[str],
-    ) -> List[RecordDiff]:
+        matched_ids: set[str],
+    ) -> list[RecordDiff]:
         result = await db.execute(select(Office))
         offices = result.scalars().all()
-        diffs: List[RecordDiff] = []
+        diffs: list[RecordDiff] = []
         for office in offices:
             if str(office.id) in matched_ids:
                 continue
@@ -223,11 +218,11 @@ class SyncPreviewService:
     async def _local_employees_not_in_vitec(
         self,
         db: AsyncSession,
-        matched_ids: Set[str],
-    ) -> List[RecordDiff]:
+        matched_ids: set[str],
+    ) -> list[RecordDiff]:
         result = await db.execute(select(Employee))
         employees = result.scalars().all()
-        diffs: List[RecordDiff] = []
+        diffs: list[RecordDiff] = []
         for employee in employees:
             if str(employee.id) in matched_ids:
                 continue

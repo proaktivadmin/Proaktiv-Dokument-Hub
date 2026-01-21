@@ -10,34 +10,32 @@ Optional: python -m scripts.seed_vitec_categories --source path/to/vitec-referen
 
 import argparse
 import asyncio
-import sys
 import os
 import re
+import sys
 from pathlib import Path
-from typing import List, Optional, Tuple
 
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from sqlalchemy import select
-from app.database import async_engine
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
+
+from app.database import async_engine
 
 REFERENCE_DEFAULT = Path(__file__).resolve().parents[2] / ".cursor" / "vitec-reference.md"
 
 CATEGORY_LINE_RE = re.compile(r"^\|\s*(\d+)\s*\|\s*([^|]+?)\s*\|\s*([^|]*)\|\s*$")
 
 
-def load_categories_from_reference(path: Path) -> List[Tuple[int, str, Optional[str]]]:
+def load_categories_from_reference(path: Path) -> list[tuple[int, str, str | None]]:
     if not path.exists():
-        raise FileNotFoundError(
-            f"Reference file not found: {path}. Provide --source to the Vitec reference markdown."
-        )
+        raise FileNotFoundError(f"Reference file not found: {path}. Provide --source to the Vitec reference markdown.")
 
     content = path.read_text(encoding="utf-8")
     lines = content.splitlines()
-    categories: List[Tuple[int, str, Optional[str]]] = []
+    categories: list[tuple[int, str, str | None]] = []
     in_table = False
 
     for line in lines:
@@ -72,11 +70,9 @@ def load_categories_from_reference(path: Path) -> List[Tuple[int, str, Optional[
 async def seed_vitec_categories(source: Path):
     """Seed Vitec categories using Vitec reference markdown."""
     from app.models.category import Category
-    
-    async_session = sessionmaker(
-        async_engine, class_=AsyncSession, expire_on_commit=False
-    )
-    
+
+    async_session = sessionmaker(async_engine, class_=AsyncSession, expire_on_commit=False)
+
     async with async_session() as session:
         categories = load_categories_from_reference(source)
         count = 0
@@ -105,7 +101,7 @@ async def seed_vitec_categories(source: Path):
                 session.add(category)
 
             count += 1
-        
+
         await session.commit()
         print(f"Seeded {count} Vitec categories")
 

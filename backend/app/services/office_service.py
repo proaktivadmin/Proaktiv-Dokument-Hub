@@ -2,21 +2,20 @@
 Office Service - Business logic for office management.
 """
 
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func
-from sqlalchemy.orm import selectinload
-from typing import Optional, List
-from uuid import UUID
 import logging
 import re
+from uuid import UUID
 
 from fastapi import HTTPException
+from sqlalchemy import func, select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
-from app.models.office import Office
+from app.config import settings
 from app.models.employee import Employee
+from app.models.office import Office
 from app.models.office_territory import OfficeTerritory
 from app.schemas.office import OfficeCreate, OfficeUpdate, OfficeWithStats
-from app.config import settings
 from app.services.vitec_hub_service import VitecHubService
 
 logger = logging.getLogger(__name__)
@@ -24,64 +23,61 @@ logger = logging.getLogger(__name__)
 
 class OfficeService:
     """Service for office CRUD operations."""
-    
+
     @staticmethod
     async def list(
         db: AsyncSession,
         *,
-        city: Optional[str] = None,
-        is_active: Optional[bool] = None,
+        city: str | None = None,
+        is_active: bool | None = None,
         skip: int = 0,
         limit: int = 100,
-    ) -> tuple[List[Office], int]:
+    ) -> tuple[list[Office], int]:
         """
         List offices with optional filtering.
-        
+
         Args:
             db: Database session
             city: Filter by city
             is_active: Filter by active status
             skip: Offset for pagination
             limit: Max results
-            
+
         Returns:
             Tuple of (offices, total_count)
         """
-        query = select(Office).options(
-            selectinload(Office.employees),
-            selectinload(Office.territories)
-        )
+        query = select(Office).options(selectinload(Office.employees), selectinload(Office.territories))
         count_query = select(func.count()).select_from(Office)
-        
+
         # Apply filters
         if city:
             query = query.where(Office.city.ilike(f"%{city}%"))
             count_query = count_query.where(Office.city.ilike(f"%{city}%"))
-        
+
         if is_active is not None:
             query = query.where(Office.is_active == is_active)
             count_query = count_query.where(Office.is_active == is_active)
-        
+
         # Execute count
         count_result = await db.execute(count_query)
         total = count_result.scalar() or 0
-        
+
         # Execute main query with pagination
         query = query.order_by(Office.name).offset(skip).limit(limit)
         result = await db.execute(query)
         offices = list(result.scalars().all())
-        
+
         return offices, total
-    
+
     @staticmethod
-    async def get_by_id(db: AsyncSession, office_id: UUID) -> Optional[Office]:
+    async def get_by_id(db: AsyncSession, office_id: UUID) -> Office | None:
         """
         Get an office by ID with related entities.
-        
+
         Args:
             db: Database session
             office_id: Office UUID
-            
+
         Returns:
             Office or None
         """
@@ -91,65 +87,53 @@ class OfficeService:
                 selectinload(Office.employees),
                 selectinload(Office.territories),
                 selectinload(Office.assets),
-                selectinload(Office.external_listings)
+                selectinload(Office.external_listings),
             )
             .where(Office.id == str(office_id))
         )
         return result.scalar_one_or_none()
-    
+
     @staticmethod
-    async def get_by_short_code(db: AsyncSession, short_code: str) -> Optional[Office]:
+    async def get_by_short_code(db: AsyncSession, short_code: str) -> Office | None:
         """
         Get an office by short code.
-        
+
         Args:
             db: Database session
             short_code: Office short code (e.g., 'STAV')
-            
+
         Returns:
             Office or None
         """
-        result = await db.execute(
-            select(Office).where(Office.short_code == short_code.upper())
-        )
+        result = await db.execute(select(Office).where(Office.short_code == short_code.upper()))
         return result.scalar_one_or_none()
 
     @staticmethod
-    async def get_by_vitec_department_id(
-        db: AsyncSession,
-        department_id: int
-    ) -> Optional[Office]:
+    async def get_by_vitec_department_id(db: AsyncSession, department_id: int) -> Office | None:
         """
         Get an office by Vitec department ID.
         """
-        result = await db.execute(
-            select(Office).where(Office.vitec_department_id == department_id)
-        )
+        result = await db.execute(select(Office).where(Office.vitec_department_id == department_id))
         return result.scalar_one_or_none()
 
     @staticmethod
-    async def get_by_organization_number(
-        db: AsyncSession,
-        org_number: str
-    ) -> Optional[Office]:
+    async def get_by_organization_number(db: AsyncSession, org_number: str) -> Office | None:
         """
         Get an office by Norwegian organization number (organisasjonsnummer).
         This is the most reliable identifier for merging offices.
         """
-        result = await db.execute(
-            select(Office).where(Office.organization_number == org_number)
-        )
+        result = await db.execute(select(Office).where(Office.organization_number == org_number))
         return result.scalar_one_or_none()
-    
+
     @staticmethod
     async def create(db: AsyncSession, data: OfficeCreate) -> Office:
         """
         Create a new office.
-        
+
         Args:
             db: Database session
             data: Office creation data
-            
+
         Returns:
             Created office
         """
@@ -175,124 +159,121 @@ class OfficeService:
         db.add(office)
         await db.flush()
         await db.refresh(office)
-        
+
         logger.info(f"Created office: {office.name} ({office.short_code})")
         return office
-    
+
     @staticmethod
-    async def update(
-        db: AsyncSession,
-        office_id: UUID,
-        data: OfficeUpdate
-    ) -> Optional[Office]:
+    async def update(db: AsyncSession, office_id: UUID, data: OfficeUpdate) -> Office | None:
         """
         Update an existing office.
-        
+
         Args:
             db: Database session
             office_id: Office UUID
             data: Update data
-            
+
         Returns:
             Updated office or None if not found
         """
         office = await OfficeService.get_by_id(db, office_id)
         if not office:
             return None
-        
+
         update_data = data.model_dump(exclude_unset=True)
-        
+
         # Uppercase short_code if provided
         if "short_code" in update_data:
             update_data["short_code"] = update_data["short_code"].upper()
-        
+
         for field, value in update_data.items():
             setattr(office, field, value)
-        
+
         await db.flush()
         await db.refresh(office)
-        
+
         logger.info(f"Updated office: {office.name} ({office.id})")
         return office
-    
+
     @staticmethod
-    async def deactivate(db: AsyncSession, office_id: UUID) -> Optional[Office]:
+    async def deactivate(db: AsyncSession, office_id: UUID) -> Office | None:
         """
         Deactivate an office (soft delete).
-        
+
         Args:
             db: Database session
             office_id: Office UUID
-            
+
         Returns:
             Deactivated office or None if not found
         """
         office = await OfficeService.get_by_id(db, office_id)
         if not office:
             return None
-        
+
         office.is_active = False
         await db.flush()
         await db.refresh(office)
-        
+
         logger.info(f"Deactivated office: {office.name} ({office.id})")
         return office
-    
+
     @staticmethod
     async def get_stats(db: AsyncSession, office_id: UUID) -> dict:
         """
         Get statistics for an office.
-        
+
         Args:
             db: Database session
             office_id: Office UUID
-            
+
         Returns:
             Dict with employee_count, active_employee_count, territory_count
         """
         # Employee counts
         employee_count_query = await db.execute(
-            select(func.count()).select_from(Employee)
-            .where(Employee.office_id == str(office_id))
+            select(func.count()).select_from(Employee).where(Employee.office_id == str(office_id))
         )
         employee_count = employee_count_query.scalar() or 0
-        
+
         active_count_query = await db.execute(
-            select(func.count()).select_from(Employee)
+            select(func.count())
+            .select_from(Employee)
             .where(Employee.office_id == str(office_id))
             .where(Employee.status == "active")
         )
         active_count = active_count_query.scalar() or 0
-        
+
         # Territory count
         territory_count_query = await db.execute(
-            select(func.count()).select_from(OfficeTerritory)
+            select(func.count())
+            .select_from(OfficeTerritory)
             .where(OfficeTerritory.office_id == str(office_id))
-            .where(OfficeTerritory.is_blacklisted == False)
+            .where(not OfficeTerritory.is_blacklisted)
         )
         territory_count = territory_count_query.scalar() or 0
-        
+
         return {
             "employee_count": employee_count,
             "active_employee_count": active_count,
             "territory_count": territory_count,
         }
-    
+
     @staticmethod
     def to_response_with_stats(office: Office) -> OfficeWithStats:
         """
         Convert an Office model to OfficeWithStats response.
-        
+
         Args:
             office: Office model with loaded relationships
-            
+
         Returns:
             OfficeWithStats schema
         """
         employee_count = len(office.employees) if office.employees else 0
         active_count = len([e for e in (office.employees or []) if e.status == "active"])
         territory_count = len([t for t in (office.territories or []) if not t.is_blacklisted])
-        
+
         return OfficeWithStats(
             id=office.id,
             name=office.name,
@@ -327,7 +308,7 @@ class OfficeService:
     # =============================================================================
 
     @staticmethod
-    def _normalize_text(value: Optional[str]) -> Optional[str]:
+    def _normalize_text(value: str | None) -> str | None:
         if value is None:
             return None
         cleaned = value.strip()
@@ -339,9 +320,7 @@ class OfficeService:
         candidate = base[:10]
         suffix = 1
         while True:
-            result = await db.execute(
-                select(Office).where(Office.short_code == candidate)
-            )
+            result = await db.execute(select(Office).where(Office.short_code == candidate))
             if not result.scalar_one_or_none():
                 return candidate
             suffix += 1
@@ -354,28 +333,21 @@ class OfficeService:
         market_name = OfficeService._normalize_text(raw.get("marketName"))
         legal_name = OfficeService._normalize_text(raw.get("legalName"))
         fallback_name = raw.get("name") or "Vitec Office"
-        
+
         # Use marketName first, then name, legal name as last resort
         display_name = market_name or OfficeService._normalize_text(raw.get("name")) or legal_name or fallback_name
-        
+
         # Organization number for matching/merging (Norwegian: organisasjonsnummer)
         org_number = OfficeService._normalize_text(
-            raw.get("organizationNumber") or 
-            raw.get("orgNumber") or 
-            raw.get("orgnr")
+            raw.get("organizationNumber") or raw.get("orgNumber") or raw.get("orgnr")
         )
-        
+
         # Image URLs
         banner_url = OfficeService._normalize_text(
-            raw.get("departmentImageUrl") or
-            raw.get("imageUrl") or
-            raw.get("bannerUrl")
+            raw.get("departmentImageUrl") or raw.get("imageUrl") or raw.get("bannerUrl")
         )
-        profile_url = OfficeService._normalize_text(
-            raw.get("logoUrl") or
-            raw.get("profileImageUrl")
-        )
-        
+        profile_url = OfficeService._normalize_text(raw.get("logoUrl") or raw.get("profileImageUrl"))
+
         return {
             "vitec_department_id": raw.get("departmentId"),
             "department_number": raw.get("departmentNumber"),
@@ -397,7 +369,7 @@ class OfficeService:
     async def upsert_from_hub(db: AsyncSession, payload: dict) -> tuple[Office, str]:
         """
         Upsert an office from Vitec Hub data.
-        
+
         Match priority:
         1. organization_number (most reliable for merging)
         2. vitec_department_id
@@ -406,15 +378,15 @@ class OfficeService:
         existing = None
         org_number = payload.get("organization_number")
         department_id = payload.get("vitec_department_id")
-        
+
         # Priority 1: Match by organization number (Norwegian: organisasjonsnummer)
         if org_number:
             existing = await OfficeService.get_by_organization_number(db, org_number)
-        
+
         # Priority 2: Match by Vitec department ID
         if not existing and department_id is not None:
             existing = await OfficeService.get_by_vitec_department_id(db, department_id)
-        
+
         # Priority 3: Match by name (fallback)
         if not existing and payload.get("name"):
             result = await db.execute(select(Office).where(Office.name == payload["name"]))
@@ -445,12 +417,12 @@ class OfficeService:
             return office, "created"
 
         updated = False
-        
+
         # Update organization_number if we now have it
         if org_number and existing.organization_number != org_number:
             existing.organization_number = org_number
             updated = True
-        
+
         # Update department_id if we now have it
         if department_id is not None and existing.vitec_department_id != department_id:
             existing.vitec_department_id = department_id
@@ -491,7 +463,7 @@ class OfficeService:
     async def sync_from_hub(
         db: AsyncSession,
         *,
-        installation_id: Optional[str] = None,
+        installation_id: str | None = None,
     ) -> dict:
         hub = VitecHubService()
         install_id = installation_id or settings.VITEC_INSTALLATION_ID
@@ -515,7 +487,7 @@ class OfficeService:
 
         # Explicitly commit all changes
         await db.commit()
-        
+
         total = len(departments)
         logger.info(
             "Vitec Hub offices sync complete: total=%s created=%s updated=%s skipped=%s",

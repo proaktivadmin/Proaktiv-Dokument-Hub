@@ -5,126 +5,126 @@ V3: Added Office, Employee, CompanyAsset, ExternalListing, Checklist,
     Territory (PostalCode, OfficeTerritory), LayoutPartialVersion, LayoutPartialDefault
 """
 
-from app.schemas.merge_field import (
-    MergeFieldBase,
-    MergeFieldCreate,
-    MergeFieldUpdate,
-    MergeFieldResponse,
-    MergeFieldListResponse,
-    MergeFieldDiscoveryResult,
+from app.schemas.checklist import (
+    ChecklistInstanceBase,
+    ChecklistInstanceCreate,
+    ChecklistInstanceListResponse,
+    ChecklistInstanceResponse,
+    ChecklistInstanceUpdateProgress,
+    ChecklistInstanceWithDetails,
+    ChecklistItem,
+    ChecklistTemplateBase,
+    ChecklistTemplateCreate,
+    ChecklistTemplateResponse,
+    ChecklistTemplateUpdate,
 )
 from app.schemas.code_pattern import (
     CodePatternBase,
     CodePatternCreate,
-    CodePatternUpdate,
-    CodePatternResponse,
     CodePatternListResponse,
+    CodePatternResponse,
+    CodePatternUpdate,
+)
+from app.schemas.company_asset import (
+    AssetMetadata,
+    CompanyAssetBase,
+    CompanyAssetCreate,
+    CompanyAssetListResponse,
+    CompanyAssetResponse,
+    CompanyAssetUpdate,
+)
+from app.schemas.employee import (
+    EmployeeBase,
+    EmployeeCreate,
+    EmployeeListResponse,
+    EmployeeResponse,
+    EmployeeSyncResult,
+    EmployeeUpdate,
+    EmployeeWithOffice,
+    StartOffboarding,
+)
+from app.schemas.external_listing import (
+    ExternalListingBase,
+    ExternalListingCreate,
+    ExternalListingListResponse,
+    ExternalListingResponse,
+    ExternalListingUpdate,
+    ExternalListingVerify,
+)
+from app.schemas.firecrawl import (
+    FirecrawlScrapeBase,
+    FirecrawlScrapeDetail,
+    FirecrawlScrapeListResponse,
+    FirecrawlScrapeRequest,
 )
 from app.schemas.layout_partial import (
     LayoutPartialBase,
     LayoutPartialCreate,
-    LayoutPartialUpdate,
-    LayoutPartialResponse,
     LayoutPartialListResponse,
+    LayoutPartialResponse,
     LayoutPartialSetDefaultResponse,
+    LayoutPartialUpdate,
 )
-from app.schemas.template_metadata import (
-    TemplateMetadataUpdate,
-    TemplateAnalysisResult,
+from app.schemas.layout_partial_version import (
+    LayoutPartialDefaultBase,
+    LayoutPartialDefaultCreate,
+    LayoutPartialDefaultListResponse,
+    LayoutPartialDefaultResponse,
+    LayoutPartialDefaultUpdate,
+    LayoutPartialDefaultWithDetails,
+    LayoutPartialRevertRequest,
+    LayoutPartialRevertResponse,
+    LayoutPartialVersionBase,
+    LayoutPartialVersionCreate,
+    LayoutPartialVersionListResponse,
+    LayoutPartialVersionResponse,
+)
+from app.schemas.merge_field import (
+    MergeFieldBase,
+    MergeFieldCreate,
+    MergeFieldDiscoveryResult,
+    MergeFieldListResponse,
+    MergeFieldResponse,
+    MergeFieldUpdate,
 )
 
 # V3 Schemas
 from app.schemas.office import (
     OfficeBase,
     OfficeCreate,
-    OfficeUpdate,
-    OfficeResponse,
-    OfficeWithStats,
     OfficeListResponse,
+    OfficeResponse,
     OfficeSyncResult,
-)
-from app.schemas.employee import (
-    EmployeeBase,
-    EmployeeCreate,
-    EmployeeUpdate,
-    EmployeeResponse,
-    EmployeeWithOffice,
-    EmployeeListResponse,
-    StartOffboarding,
-    EmployeeSyncResult,
-)
-from app.schemas.company_asset import (
-    CompanyAssetBase,
-    CompanyAssetCreate,
-    CompanyAssetUpdate,
-    CompanyAssetResponse,
-    CompanyAssetListResponse,
-    AssetMetadata,
-)
-from app.schemas.external_listing import (
-    ExternalListingBase,
-    ExternalListingCreate,
-    ExternalListingUpdate,
-    ExternalListingResponse,
-    ExternalListingListResponse,
-    ExternalListingVerify,
-)
-from app.schemas.checklist import (
-    ChecklistItem,
-    ChecklistTemplateBase,
-    ChecklistTemplateCreate,
-    ChecklistTemplateUpdate,
-    ChecklistTemplateResponse,
-    ChecklistInstanceBase,
-    ChecklistInstanceCreate,
-    ChecklistInstanceUpdateProgress,
-    ChecklistInstanceResponse,
-    ChecklistInstanceWithDetails,
-    ChecklistInstanceListResponse,
-)
-from app.schemas.territory import (
-    PostalCodeBase,
-    PostalCodeCreate,
-    PostalCodeResponse,
-    PostalCodeSyncResult,
-    OfficeTerritoryBase,
-    OfficeTerritoryCreate,
-    OfficeTerritoryUpdate,
-    OfficeTerritoryResponse,
-    OfficeTerritoryWithDetails,
-    OfficeTerritoryListResponse,
-    TerritoryMapData,
-    TerritoryFeature,
-    TerritoryImportResult,
-    BlacklistEntry,
-)
-from app.schemas.layout_partial_version import (
-    LayoutPartialVersionBase,
-    LayoutPartialVersionCreate,
-    LayoutPartialVersionResponse,
-    LayoutPartialVersionListResponse,
-    LayoutPartialRevertRequest,
-    LayoutPartialRevertResponse,
-    LayoutPartialDefaultBase,
-    LayoutPartialDefaultCreate,
-    LayoutPartialDefaultUpdate,
-    LayoutPartialDefaultResponse,
-    LayoutPartialDefaultWithDetails,
-    LayoutPartialDefaultListResponse,
-)
-from app.schemas.firecrawl import (
-    FirecrawlScrapeRequest,
-    FirecrawlScrapeBase,
-    FirecrawlScrapeDetail,
-    FirecrawlScrapeListResponse,
+    OfficeUpdate,
+    OfficeWithStats,
 )
 from app.schemas.sync import (
     FieldDiff,
     RecordDiff,
-    SyncSummary,
-    SyncPreview,
-    SyncDecisionUpdate,
     SyncCommitResult,
+    SyncDecisionUpdate,
+    SyncPreview,
+    SyncSummary,
+)
+from app.schemas.template_metadata import (
+    TemplateAnalysisResult,
+    TemplateMetadataUpdate,
+)
+from app.schemas.territory import (
+    BlacklistEntry,
+    OfficeTerritoryBase,
+    OfficeTerritoryCreate,
+    OfficeTerritoryListResponse,
+    OfficeTerritoryResponse,
+    OfficeTerritoryUpdate,
+    OfficeTerritoryWithDetails,
+    PostalCodeBase,
+    PostalCodeCreate,
+    PostalCodeResponse,
+    PostalCodeSyncResult,
+    TerritoryFeature,
+    TerritoryImportResult,
+    TerritoryMapData,
 )
 
 __all__ = [

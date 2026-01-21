@@ -5,8 +5,9 @@ Sync matching service for Vitec preview workflow.
 from __future__ import annotations
 
 import logging
+from collections.abc import Sequence
 from difflib import SequenceMatcher
-from typing import Any, List, Optional, Sequence
+from typing import Any
 
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -58,7 +59,7 @@ class SyncMatchingService:
         return True
 
     @staticmethod
-    def _normalize_name(value: Optional[str]) -> Optional[str]:
+    def _normalize_name(value: str | None) -> str | None:
         if value is None:
             return None
         cleaned = value.strip().lower()
@@ -66,11 +67,11 @@ class SyncMatchingService:
 
     @staticmethod
     def generate_field_diffs(
-        local_record: Optional[object],
+        local_record: object | None,
         payload: dict,
         fields: Sequence[str],
-    ) -> List[FieldDiff]:
-        diffs: List[FieldDiff] = []
+    ) -> list[FieldDiff]:
+        diffs: list[FieldDiff] = []
         for field_name in fields:
             vitec_value = payload.get(field_name)
             if not SyncMatchingService._should_include_vitec_value(vitec_value):
@@ -83,9 +84,7 @@ class SyncMatchingService:
                 continue
 
             has_conflict = (
-                comparable_local is not None
-                and comparable_vitec is not None
-                and comparable_local != comparable_vitec
+                comparable_local is not None and comparable_vitec is not None and comparable_local != comparable_vitec
             )
             diffs.append(
                 FieldDiff(
@@ -100,8 +99,8 @@ class SyncMatchingService:
     @staticmethod
     async def match_office(db: AsyncSession, raw_department: dict) -> RecordDiff:
         payload = OfficeService._map_department_payload(raw_department or {})
-        match: Optional[Office] = None
-        match_method: Optional[str] = None
+        match: Office | None = None
+        match_method: str | None = None
         match_confidence = 0.0
 
         org_number = payload.get("organization_number")
@@ -122,9 +121,7 @@ class SyncMatchingService:
 
         normalized_name = SyncMatchingService._normalize_name(payload.get("name"))
         if not match and normalized_name:
-            result = await db.execute(
-                select(Office).where(func.lower(Office.name) == normalized_name)
-            )
+            result = await db.execute(select(Office).where(func.lower(Office.name) == normalized_name))
             match = result.scalar_one_or_none()
             if match:
                 match_method = "name_exact"
@@ -133,7 +130,7 @@ class SyncMatchingService:
         if not match and normalized_name:
             result = await db.execute(select(Office))
             offices = result.scalars().all()
-            best_match: Optional[Office] = None
+            best_match: Office | None = None
             best_ratio = 0.0
             for office in offices:
                 office_name = SyncMatchingService._normalize_name(office.name) or ""
@@ -169,8 +166,8 @@ class SyncMatchingService:
     @staticmethod
     async def match_employee(db: AsyncSession, raw_employee: dict) -> RecordDiff:
         payload = EmployeeService._map_employee_payload(raw_employee or {})
-        match: Optional[Employee] = None
-        match_method: Optional[str] = None
+        match: Employee | None = None
+        match_method: str | None = None
         match_confidence = 0.0
 
         vitec_employee_id = payload.get("vitec_employee_id")
@@ -182,9 +179,7 @@ class SyncMatchingService:
 
         email = payload.get("email")
         if not match and email:
-            result = await db.execute(
-                select(Employee).where(func.lower(Employee.email) == email.lower())
-            )
+            result = await db.execute(select(Employee).where(func.lower(Employee.email) == email.lower()))
             match = result.scalar_one_or_none()
             if match:
                 match_method = "email"
