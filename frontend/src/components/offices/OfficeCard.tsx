@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { OfficeWithStats, EmployeeWithOffice } from "@/types/v3";
+import { resolveApiUrl } from "@/lib/api/config";
 
 interface OfficeCardProps {
   office: OfficeWithStats;
@@ -33,6 +34,7 @@ export function OfficeCard({ office, employees = [], onClick, onEdit, onDeactiva
   const activeEmployees = employees.filter(e => e.status === 'active').slice(0, 6);
   // Prefer banner_image_url, fall back to profile_image_url
   const bannerImage = office.banner_image_url || office.profile_image_url;
+  const statusIndicatorClass = office.is_active ? "bg-emerald-500" : "bg-red-500";
   
   return (
     <Card 
@@ -43,21 +45,16 @@ export function OfficeCard({ office, employees = [], onClick, onEdit, onDeactiva
       {bannerImage ? (
         <div className="relative h-32 w-full overflow-hidden">
           <img 
-            src={bannerImage} 
+            src={resolveApiUrl(bannerImage) ?? bannerImage} 
             alt={office.name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-          
-          {/* Status badge on banner */}
-          <div className="absolute top-2 right-2">
-            <Badge 
-              variant={office.is_active ? "default" : "secondary"}
-              className={office.is_active ? "bg-emerald-500 text-white shadow-md" : "bg-slate-500 text-white shadow-md"}
-            >
-              {office.is_active ? "Aktiv" : "Inaktiv"}
-            </Badge>
-          </div>
+          <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
+
+          <div
+            className={`absolute top-2 right-2 h-3 w-3 rounded-full ring-2 ring-white/80 ${statusIndicatorClass}`}
+            title={office.is_active ? "Aktiv" : "Inaktiv"}
+          />
           
           {/* City badge on banner */}
           {office.city && (
@@ -74,17 +71,12 @@ export function OfficeCard({ office, employees = [], onClick, onEdit, onDeactiva
           className="relative h-32 w-full"
           style={{ backgroundColor: office.color }}
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
-          
-          {/* Status badge */}
-          <div className="absolute top-2 right-2">
-            <Badge 
-              variant={office.is_active ? "default" : "secondary"}
-              className={office.is_active ? "bg-emerald-500 text-white shadow-md" : "bg-slate-500 text-white shadow-md"}
-            >
-              {office.is_active ? "Aktiv" : "Inaktiv"}
-            </Badge>
-          </div>
+          <div className="absolute inset-0 bg-linear-to-br from-white/10 to-transparent" />
+
+          <div
+            className={`absolute top-2 right-2 h-3 w-3 rounded-full ring-2 ring-white/80 ${statusIndicatorClass}`}
+            title={office.is_active ? "Aktiv" : "Inaktiv"}
+          />
           
           {/* City badge */}
           {office.city && (
@@ -183,7 +175,7 @@ export function OfficeCard({ office, employees = [], onClick, onEdit, onDeactiva
                     onEmployeeClick?.(emp);
                   }}
                 >
-                  <AvatarImage src={emp.profile_image_url || undefined} alt={emp.full_name} />
+                  <AvatarImage src={resolveApiUrl(emp.profile_image_url)} alt={emp.full_name} />
                   <AvatarFallback 
                     className="text-xs font-medium text-white"
                     style={{ backgroundColor: office.color }}

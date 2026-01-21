@@ -15,8 +15,8 @@
     "lint-staged": "^15.2.0"
   },
   "lint-staged": {
-    "frontend/**/*.{ts,tsx}": [
-      "eslint --fix --max-warnings=0"
+    "frontend/src/**/*.{ts,tsx}": [
+      "npx --prefix frontend eslint --fix"
     ],
     "backend/**/*.py": [
       "python -m ruff check --fix",

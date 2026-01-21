@@ -44,7 +44,7 @@ export function OfficeGrid({
 }: OfficeGridProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [cityFilter, setCityFilter] = useState<string>("all");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [showInactive, setShowInactive] = useState(false);
   const [employeesByOffice, setEmployeesByOffice] = useState<Record<string, EmployeeWithOffice[]>>({});
   const [vitecConnected, setVitecConnected] = useState<boolean | null>(null);
   const showActions = Boolean(onCreateNew || onSync);
@@ -89,9 +89,8 @@ export function OfficeGrid({
       return false;
     }
 
-    // Status filter
-    if (statusFilter === "active" && !office.is_active) return false;
-    if (statusFilter === "inactive" && office.is_active) return false;
+    // Status filter (active by default)
+    if (!showInactive && !office.is_active) return false;
 
     return true;
   });
@@ -141,16 +140,12 @@ export function OfficeGrid({
           </SelectContent>
         </Select>
 
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[140px]">
-            <SelectValue placeholder="Alle statuser" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Alle statuser</SelectItem>
-            <SelectItem value="active">Aktive</SelectItem>
-            <SelectItem value="inactive">Inaktive</SelectItem>
-          </SelectContent>
-        </Select>
+        <Button
+          variant="outline"
+          onClick={() => setShowInactive((prev) => !prev)}
+        >
+          {showInactive ? "Skjul inaktive" : "Vis inaktive"}
+        </Button>
 
         {showActions && (
           <div className="flex gap-2 ml-auto items-center">
@@ -182,11 +177,11 @@ export function OfficeGrid({
           <Building2 className="h-12 w-12 text-muted-foreground/50 mb-4" />
           <h3 className="text-lg font-medium mb-1">Ingen kontorer funnet</h3>
           <p className="text-sm text-muted-foreground mb-4">
-            {searchQuery || cityFilter !== "all" || statusFilter !== "all"
+            {searchQuery || cityFilter !== "all"
               ? "Prøv å endre søket eller filtrene"
               : "Kom i gang ved å opprette ditt første kontor"}
           </p>
-          {onCreateNew && !searchQuery && cityFilter === "all" && statusFilter === "all" && (
+          {onCreateNew && !searchQuery && cityFilter === "all" && (
             <Button onClick={onCreateNew}>
               <Plus className="h-4 w-4 mr-2" />
               Opprett kontor

@@ -28,6 +28,7 @@ import { useOffice } from "@/hooks/v3/useOffices";
 import { useEmployees } from "@/hooks/v3/useEmployees";
 import { useAssets } from "@/hooks/v3/useAssets";
 import { officesApi } from "@/lib/api/offices";
+import { resolveApiUrl } from "@/lib/api/config";
 import type { EmployeeWithOffice } from "@/types/v3";
 
 export default function OfficeDetailPage() {
@@ -122,11 +123,11 @@ export default function OfficeDetailPage() {
         {office.profile_image_url ? (
           <div className="relative h-48 w-full">
             <img 
-              src={office.profile_image_url} 
+              src={resolveApiUrl(office.profile_image_url) ?? office.profile_image_url} 
               alt={office.name}
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent" />
             
             {/* Status badge on banner */}
             <div className="absolute top-4 right-4">
@@ -143,7 +144,7 @@ export default function OfficeDetailPage() {
             className="relative h-48 w-full"
             style={{ backgroundColor: office.color }}
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-br from-white/10 to-transparent" />
             <div className="absolute top-4 right-4">
               <Badge 
                 variant={office.is_active ? "default" : "secondary"}
@@ -246,7 +247,7 @@ export default function OfficeDetailPage() {
                     }}
                   >
                     <Avatar className="h-8 w-8 mr-2">
-                      <AvatarImage src={emp.profile_image_url || undefined} alt={emp.full_name} />
+                      <AvatarImage src={resolveApiUrl(emp.profile_image_url)} alt={emp.full_name} />
                       <AvatarFallback 
                         className="text-xs font-medium text-white"
                         style={{ backgroundColor: office.color }}

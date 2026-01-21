@@ -17,14 +17,18 @@ export default function EmployeesPage() {
   const router = useRouter();
 
   const [selectedOfficeId, setSelectedOfficeId] = useState<string | null>(null);
-  const [statusFilters, setStatusFilters] = useState<EmployeeStatus[]>(["active", "onboarding", "offboarding"]);
+  const [statusFilters, setStatusFilters] = useState<EmployeeStatus[]>(["active"]);
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [formOpen, setFormOpen] = useState(false);
 
   const [editingEmployee, setEditingEmployee] = useState<EmployeeWithOffice | null>(null);
 
   const { toast } = useToast();
-  const { offices, isLoading: officesLoading, refetch: refetchOffices } = useOffices();
+  const showInactive = statusFilters.includes("inactive");
+  const allStatuses: EmployeeStatus[] = ["active", "onboarding", "offboarding", "inactive"];
+  const { offices, isLoading: officesLoading, refetch: refetchOffices } = useOffices(
+    showInactive ? undefined : { is_active: true }
+  );
   const { employees, statusCounts, isLoading: employeesLoading, refetch: refetchEmployees } = useEmployees({
     office_id: selectedOfficeId || undefined,
     status: statusFilters.length > 0 ? statusFilters : undefined,
@@ -48,6 +52,10 @@ export default function EmployeesPage() {
         ? prev.filter((s) => s !== status)
         : [...prev, status]
     );
+  };
+
+  const handleToggleInactive = () => {
+    setStatusFilters((prev) => (prev.includes("inactive") ? ["active"] : allStatuses));
   };
 
   const handleFormClose = () => {
@@ -125,6 +133,8 @@ export default function EmployeesPage() {
             employees={employees}
             isLoading={employeesLoading || officesLoading}
             showOffice={!selectedOfficeId}
+            showInactive={showInactive}
+            onToggleShowInactive={handleToggleInactive}
             onEmployeeClick={handleEmployeeClick}
             onCreateNew={() => setFormOpen(true)}
             onSync={handleSync}

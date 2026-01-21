@@ -6,6 +6,7 @@ import { useEmployees } from "@/hooks/v3/useEmployees";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { resolveApiUrl } from "@/lib/api/config";
 
 interface FeaturedBrokersProps {
   officeId: string;
@@ -43,7 +44,7 @@ export function FeaturedBrokers({ officeId }: FeaturedBrokersProps) {
             <CardContent className="p-4">
               <div className="flex items-start gap-3">
                 <Avatar className="h-12 w-12 shrink-0">
-                  <AvatarImage src={employee.profile_image_url || undefined} alt={employee.full_name} />
+                  <AvatarImage src={resolveApiUrl(employee.profile_image_url)} alt={employee.full_name} />
                   <AvatarFallback
                     className="text-white font-semibold"
                     style={{ backgroundColor: employee.office.color }}

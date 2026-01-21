@@ -388,7 +388,7 @@ export default function Dashboard() {
               <div className="text-center py-8 text-muted-foreground">
                 <FileText className="h-12 w-12 mx-auto mb-3 opacity-50" />
                 <p>Ingen maler lastet opp ennå.</p>
-                <p className="text-sm">Klikk "Last opp" for å legge til din første mal.</p>
+                <p className="text-sm">Klikk &quot;Last opp&quot; for å legge til din første mal.</p>
               </div>
             ) : (
               <div className="space-y-3">

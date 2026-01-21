@@ -10,6 +10,10 @@
 
 import axios, { AxiosInstance } from 'axios';
 
+function normalizeBaseUrl(url: string): string {
+  return url.replace(/\/+$/, "");
+}
+
 /**
  * Get the API base URL based on the environment.
  * 
@@ -21,7 +25,7 @@ import axios, { AxiosInstance } from 'axios';
 export function getApiBaseUrl(): string {
   // If explicitly set, use it
   if (process.env.NEXT_PUBLIC_API_URL) {
-    return process.env.NEXT_PUBLIC_API_URL;
+    return normalizeBaseUrl(process.env.NEXT_PUBLIC_API_URL);
   }
   
   // On client side, check if we're on Railway production
@@ -36,6 +40,27 @@ export function getApiBaseUrl(): string {
   
   // Default: use relative URLs (works with Next.js rewrites for localhost)
   return "";
+}
+
+/**
+ * Resolve stored DB URLs like `/api/...` to the real backend base URL when needed.
+ *
+ * This avoids Next.js proxying to `http://localhost:8000` in production when BACKEND_URL
+ * isn't set, and makes avatars/banner images work reliably on Railway.
+ */
+export function resolveApiUrl(url: string | null | undefined): string | undefined {
+  if (!url) return undefined;
+  if (/^https?:\/\//i.test(url) || url.startsWith("data:") || url.startsWith("blob:")) {
+    return url;
+  }
+
+  // Only rewrite our API proxy paths; leave other relative URLs untouched
+  if (url.startsWith("/api/") || url === "/api") {
+    const baseUrl = getApiBaseUrl();
+    if (baseUrl) return `${baseUrl}${url}`;
+  }
+
+  return url;
 }
 
 /**

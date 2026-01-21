@@ -13,6 +13,8 @@ interface EmployeeGridProps {
   employees: EmployeeWithOffice[];
   isLoading: boolean;
   showOffice?: boolean;
+  showInactive?: boolean;
+  onToggleShowInactive?: () => void;
   onEmployeeClick: (employee: EmployeeWithOffice) => void;
   onCreateNew?: () => void;
   onEdit?: (employee: EmployeeWithOffice) => void;
@@ -31,6 +33,8 @@ export function EmployeeGrid({
   employees,
   isLoading,
   showOffice = true,
+  showInactive = false,
+  onToggleShowInactive,
   onEmployeeClick,
   onCreateNew,
   onEdit,
@@ -85,6 +89,12 @@ export function EmployeeGrid({
             className="pl-9"
           />
         </div>
+
+        {onToggleShowInactive && (
+          <Button variant="outline" onClick={onToggleShowInactive}>
+            {showInactive ? "Skjul inaktive" : "Vis inaktive"}
+          </Button>
+        )}
 
         {showActions && (
           <div className="flex gap-2 ml-auto items-center">

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Image as ImageIcon, Building2, User } from "lucide-react";
+import Link from "next/link";
 import { Header } from "@/components/layout/Header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -73,7 +74,7 @@ export default function AssetsPage() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {offices.map((office) => (
-                    <a 
+                    <Link
                       key={office.id}
                       href={`/offices/${office.id}`}
                       className="p-4 border rounded-lg hover:border-primary transition-colors flex items-center gap-3"
@@ -90,7 +91,7 @@ export default function AssetsPage() {
                           Se kontorfiler →
                         </p>
                       </div>
-                    </a>
+                    </Link>
                   ))}
                 </div>
               )}
@@ -107,12 +108,12 @@ export default function AssetsPage() {
               <p className="text-muted-foreground">
                 Gå til en ansatts profil for å se og laste opp filer knyttet til den ansatte.
               </p>
-              <a 
-                href="/employees" 
+              <Link
+                href="/employees"
                 className="inline-block mt-4 text-primary hover:underline"
               >
                 Se alle ansatte →
-              </a>
+              </Link>
             </CardContent>
           </Card>
         </TabsContent>
