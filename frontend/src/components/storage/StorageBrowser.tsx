@@ -39,7 +39,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { storageApi, type StorageItem, type BrowseResponse } from "@/lib/api";
+import { storageApi, type StorageItem } from "@/lib/api";
 import { RenameDialog } from "./RenameDialog";
 import { NewFolderDialog } from "./NewFolderDialog";
 import { ImportToLibraryDialog } from "./ImportToLibraryDialog";

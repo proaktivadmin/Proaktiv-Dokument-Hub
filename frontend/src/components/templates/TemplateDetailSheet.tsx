@@ -168,7 +168,7 @@ export function TemplateDetailSheet({
         if (!cancelled) {
           setDetailAttachments(detail.attachments ?? []);
         }
-      } catch (err) {
+      } catch {
         if (!cancelled) {
           setDetailAttachments(template.attachments ?? []);
         }

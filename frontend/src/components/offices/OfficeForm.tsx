@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { officesApi } from "@/lib/api/offices";
-import type { Office, OfficeWithStats, OfficeCreatePayload, OfficeUpdatePayload } from "@/types/v3";
+import type { OfficeWithStats, OfficeCreatePayload, OfficeUpdatePayload } from "@/types/v3";
 
 interface OfficeFormProps {
   open: boolean;

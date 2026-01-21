@@ -23,7 +23,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useMergeFields } from "@/hooks/v2/useMergeFields";
 
-type ConditionType = "simple" | "comparison" | "multiple";
+// ConditionType is reserved for future complex condition builder
+// type ConditionType = "simple" | "comparison" | "multiple";
 type Operator = "==" | "!=" | ">" | "<" | ">=" | "<=";
 type LogicOperator = "&&" | "||";
 

@@ -45,7 +45,6 @@ import { templateApi } from "@/lib/api";
 import { getCategoryIcon } from "@/lib/category-icons";
 import { formatDistanceToNow } from "date-fns";
 import { nb } from "date-fns/locale";
-import Link from "next/link";
 import type { Template, TemplateStatus } from "@/types";
 import { ShelfLibrary } from "@/components/shelf";
 

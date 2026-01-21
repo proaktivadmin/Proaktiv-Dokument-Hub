@@ -5,7 +5,6 @@
 import { apiClient } from './config';
 import type { 
   ChecklistTemplate,
-  ChecklistInstance,
   ChecklistInstanceWithDetails,
   ChecklistInstanceListResponse,
   ChecklistItem,

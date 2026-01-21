@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { HardDrive, WifiOff, Wifi, AlertTriangle } from "lucide-react";
+import { WifiOff, Wifi, AlertTriangle } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { StorageBrowser } from "@/components/storage";
 import { storageApi } from "@/lib/api";

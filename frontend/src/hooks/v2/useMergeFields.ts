@@ -168,7 +168,7 @@ export function useMergeFieldAutocomplete(
         if (!cancelled) {
           setSuggestions(results);
         }
-      } catch (err) {
+      } catch {
         if (!cancelled) {
           setSuggestions([]);
         }

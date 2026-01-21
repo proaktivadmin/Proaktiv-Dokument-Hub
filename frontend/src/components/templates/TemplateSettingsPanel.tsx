@@ -127,7 +127,7 @@ interface TemplateSettingsPanelProps {
 }
 
 export function TemplateSettingsPanel({
-  templateId,
+  templateId: _templateId,
   initialSettings,
   onSave,
   isSaving: isSavingProp = false,

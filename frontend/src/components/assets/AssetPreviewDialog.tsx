@@ -1,6 +1,6 @@
 "use client";
 
-import { Download, X, File, FileText, FileSpreadsheet, Maximize2 } from "lucide-react";
+import { Download, File, FileText, FileSpreadsheet, Maximize2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,

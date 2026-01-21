@@ -1,16 +1,9 @@
 "use client";
 
-import { File, Image as ImageIcon, Download, Trash2, MoreVertical } from "lucide-react";
+import { File, Download, Trash2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { assetsApi } from "@/lib/api/assets";
 import type { CompanyAsset, AssetCategory } from "@/types/v3";
 

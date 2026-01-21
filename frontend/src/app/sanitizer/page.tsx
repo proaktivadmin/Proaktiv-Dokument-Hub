@@ -18,7 +18,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { TemplatePreview } from "@/components/templates/TemplatePreview";
 import { useTemplates } from "@/hooks/useTemplates";
 import { templateApi } from "@/lib/api";

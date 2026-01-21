@@ -82,9 +82,10 @@ export function CodeEditor({
     [onChange]
   );
 
-  const handleFormat = useCallback(() => {
-    editorRef.current?.getAction("editor.action.formatDocument")?.run();
-  }, []);
+  // Format action available for future toolbar integration
+  // const handleFormat = useCallback(() => {
+  //   editorRef.current?.getAction("editor.action.formatDocument")?.run();
+  // }, []);
 
   return (
     <div className="h-full w-full flex flex-col">

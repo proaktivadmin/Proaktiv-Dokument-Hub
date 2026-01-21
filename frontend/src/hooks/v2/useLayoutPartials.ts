@@ -91,7 +91,7 @@ export function useDefaultPartial(
       try {
         const result = await layoutPartialsApi.getDefault(type, context);
         setPartial(result);
-      } catch (err) {
+      } catch {
         setPartial(null);
       } finally {
         setIsLoading(false);

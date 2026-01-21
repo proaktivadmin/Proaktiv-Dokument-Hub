@@ -2,9 +2,8 @@
  * Hook for grouping templates by various criteria
  */
 
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import type { TemplateWithMetadata, ShelfGroupBy, GroupedTemplates } from '@/types/v2';
-import { FileText, Mail, MessageSquare, FolderOpen, CheckCircle, Clock } from 'lucide-react';
 
 export function useGroupedTemplates(
   templates: TemplateWithMetadata[],
@@ -16,29 +15,23 @@ export function useGroupedTemplates(
     // Group templates
     templates.forEach((template) => {
       let key: string;
-      let label: string;
 
       switch (groupBy) {
         case 'channel':
           key = template.channel;
-          label = getChannelLabel(template.channel);
           break;
         case 'category':
           // Use template_type as category fallback
           key = template.template_type || 'uncategorized';
-          label = template.template_type || 'Ukategorisert';
           break;
         case 'status':
           key = template.status;
-          label = getStatusLabel(template.status);
           break;
         case 'phase':
           key = template.phases[0] || 'no-phase';
-          label = template.phases[0] || 'Ingen fase';
           break;
         default:
           key = 'all';
-          label = 'Alle maler';
       }
 
       if (!groups.has(key)) {
@@ -95,24 +88,3 @@ function getLabelForGroup(id: string, groupBy: ShelfGroupBy): string {
   }
 }
 
-function getIconForGroup(id: string, groupBy: ShelfGroupBy): React.ReactNode {
-  if (groupBy === 'channel') {
-    const icons: Record<string, React.ReactNode> = {
-      pdf: <FileText className="h-4 w-4" />,
-      email: <Mail className="h-4 w-4" />,
-      sms: <MessageSquare className="h-4 w-4" />,
-      pdf_email: <FileText className="h-4 w-4" />,
-    };
-    return icons[id];
-  }
-
-  if (groupBy === 'status') {
-    const icons: Record<string, React.ReactNode> = {
-      published: <CheckCircle className="h-4 w-4" />,
-      draft: <Clock className="h-4 w-4" />,
-    };
-    return icons[id];
-  }
-
-  return <FolderOpen className="h-4 w-4" />;
-}

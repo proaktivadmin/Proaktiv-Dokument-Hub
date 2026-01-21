@@ -1,6 +1,6 @@
 "use client";
 
-import { FileText, Download, Clock, AlertCircle, CheckCircle2, XCircle, RefreshCw, Building2, Users, Image, ArrowRight } from "lucide-react";
+import { FileText, Download, Clock, AlertCircle, CheckCircle2, XCircle, RefreshCw, Building2, Users, ImageIcon, ArrowRight } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDashboardStats } from "@/hooks/useDashboard";
@@ -40,20 +40,6 @@ function TemplateListSkeleton() {
   );
 }
 
-function CategorySkeleton() {
-  return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-      {[1, 2, 3, 4].map((i) => (
-        <div key={i} className="p-4 rounded-md bg-[#F5F5F0]">
-          <Skeleton className="h-5 w-24 mb-2" />
-          <Skeleton className="h-8 w-12 mb-1" />
-          <Skeleton className="h-3 w-16" />
-        </div>
-      ))}
-    </div>
-  );
-}
-
 export default function Dashboard() {
   const { stats, isLoading: statsLoading, error: statsError, refetch: refetchStats } = useDashboardStats();
   const { templates: recentTemplates, isLoading: templatesLoading, refetch: refetchTemplates } = useRecentTemplates();
@@ -67,7 +53,7 @@ export default function Dashboard() {
   
   // V3 Company Hub data
   const { offices, isLoading: officesLoading } = useOffices();
-  const { employees, statusCounts, isLoading: employeesLoading } = useEmployees();
+  const { statusCounts, isLoading: employeesLoading } = useEmployees();
   const { assets, isLoading: assetsLoading } = useAssets({ is_global: true });
 
   const handleUploadSuccess = () => {
@@ -229,7 +215,7 @@ export default function Dashboard() {
           >
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 rounded-lg bg-[#E9E7DC]">
-                <Image className="h-6 w-6 text-[#272630]" />
+                <ImageIcon className="h-6 w-6 text-[#272630]" />
               </div>
               <ArrowRight className="h-5 w-5 text-[#272630]/30 group-hover:text-[#BCAB8A] group-hover:translate-x-1 transition-all" />
             </div>

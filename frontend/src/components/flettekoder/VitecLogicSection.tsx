@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect } from "react";
-import { Search, GitBranch, Layout, Code } from "lucide-react";
+import { Search, GitBranch, Layout } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CodeSnippetCard, type CodeSnippet } from "./CodeSnippetCard";

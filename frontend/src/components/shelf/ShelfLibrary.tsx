@@ -37,7 +37,7 @@ export function ShelfLibrary({
   const router = useRouter();
   const [groupBy, setGroupBy] = useState<ShelfGroupBy>(defaultGroupBy);
   const [searchQuery, setSearchQuery] = useState(initialFilters?.search || "");
-  const [filters, setFilters] = useState<Partial<TemplateFilterState>>(initialFilters || {});
+  const [filters] = useState<Partial<TemplateFilterState>>(initialFilters || {});
 
   const {
     shelves,

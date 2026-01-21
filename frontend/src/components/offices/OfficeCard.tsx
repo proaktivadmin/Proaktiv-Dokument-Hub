@@ -1,6 +1,6 @@
 "use client";
 
-import { MapPin, Users, Phone, Mail, MoreVertical, User, Building } from "lucide-react";
+import { MapPin, Users, Phone, Mail, MoreVertical, Building } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

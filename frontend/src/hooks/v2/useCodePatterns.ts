@@ -31,7 +31,7 @@ export interface UseCodePatternsResult {
 export function useCodePatterns(options: UseCodePatternsOptions = {}): UseCodePatternsResult {
   const [patterns, setPatterns] = useState<CodePattern[]>([]);
   const [total, setTotal] = useState(0);
-  const [page, setPage] = useState(options.page || 1);
+  const [page] = useState(options.page || 1);
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
