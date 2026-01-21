@@ -184,11 +184,22 @@ async def init_db() -> None:
         Base,
         audit_log,
         category,
+        checklist,
         code_pattern,
+        company_asset,
+        employee,
+        external_listing,
+        firecrawl_scrape,
         layout_partial,
+        layout_partial_version,
         merge_field,
+        office,
+        office_territory,
+        postal_code,
+        sync_session,
         tag,
         template,
+        vitec_registry,
     )
 
     try:
