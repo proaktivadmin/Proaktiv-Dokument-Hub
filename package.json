@@ -1,0 +1,26 @@
+{
+  "name": "proaktiv-dokument-hub",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Document template management system for Norwegian real estate brokers",
+  "scripts": {
+    "prepare": "husky",
+    "lint:frontend": "npm run lint --prefix frontend",
+    "lint:backend": "ruff check backend",
+    "typecheck": "npm run typecheck --prefix frontend",
+    "build:frontend": "npm run build --prefix frontend"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.0"
+  },
+  "lint-staged": {
+    "frontend/**/*.{ts,tsx}": [
+      "eslint --fix --max-warnings=0"
+    ],
+    "backend/**/*.py": [
+      "ruff check --fix",
+      "ruff format"
+    ]
+  }
+}
