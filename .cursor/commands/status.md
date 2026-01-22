@@ -3,9 +3,9 @@
 Read the current project status and provide a summary.
 
 ## Read These Files
-1. `.planning/STATE.md` - Current project state and position
-2. `.planning/ROADMAP.md` - Phase progress and roadmap
-3. `.cursor/active_context.md` - Session-level context
+1. `CLAUDE.md` - Quick project reference
+2. `.planning/STATE.md` - Current project state (source of truth)
+3. `.planning/ROADMAP.md` - Phase progress and roadmap
 
 ## Summarize
 1. **Current Phase:** What phase are we in? (check ROADMAP.md)

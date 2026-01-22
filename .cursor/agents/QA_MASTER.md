@@ -23,9 +23,9 @@ Perform comprehensive testing to ensure the deployed application works correctly
 | CI/CD | GitHub Actions |
 
 ## CONTEXT FILES (READ FIRST)
-1. `.planning/STATE.md` - Current project state
-2. `.cursor/active_context.md` - Session context
-3. `.cursor/MASTER_HANDOFF.md` - Project state and known issues
+1. `CLAUDE.md` - Quick project reference
+2. `.planning/STATE.md` - Current project state (source of truth)
+3. `.planning/ROADMAP.md` - Phase progress
 
 ## CI/CD STATUS CHECK
 

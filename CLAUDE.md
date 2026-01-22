@@ -69,13 +69,19 @@ A document template management system for Norwegian real estate brokers, integra
 ## Key Directories
 
 ```
-.cursor/
-├── agents/          # Agent prompts (architect, builder)
-├── specs/           # Agent output specs
-├── plans/           # Project plans and blueprints
-├── commands/        # Slash commands
-├── vitec-reference.md  # Full Vitec Next reference
-└── active_context.md
+.planning/               # Project planning (source of truth)
+├── STATE.md             # Current position and progress
+├── ROADMAP.md           # Phase breakdown
+├── PROJECT.md           # Requirements and context
+├── codebase/            # Technical docs (STACK.md, TESTING.md)
+└── phases/              # Active and completed phase plans
+
+.cursor/                 # Agent resources
+├── agents/              # Agent prompts (architect, builder)
+├── specs/               # Generated specifications
+├── commands/            # Slash commands
+├── skills/              # Reusable skill modules
+└── vitec-reference.md   # Vitec Next API reference
 
 backend/
 ├── app/

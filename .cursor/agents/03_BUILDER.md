@@ -18,13 +18,12 @@ Build all features according to the specifications.
 | CI/CD | GitHub Actions |
 
 ## CONTEXT FILES (READ FIRST - IN THIS ORDER)
-1. `.planning/STATE.md` - Current project state
-2. `.planning/ROADMAP.md` - Phase progress
-3. `.cursor/active_context.md` - Session context
-4. `.cursor/MASTER_HANDOFF.md` - Project state and known issues
-5. `.cursor/specs/backend_spec.md` - What to build (backend)
-6. `.cursor/specs/frontend_spec.md` - What to build (frontend)
-7. `.cursorrules` - Patterns to follow
+1. `CLAUDE.md` - Quick project reference
+2. `.planning/STATE.md` - Current project state (source of truth)
+3. `.planning/ROADMAP.md` - Phase progress
+4. `.cursor/specs/backend_spec.md` - What to build (backend)
+5. `.cursor/specs/frontend_spec.md` - What to build (frontend)
+6. `.cursorrules` - Patterns to follow
 
 ## EXECUTION ORDER
 

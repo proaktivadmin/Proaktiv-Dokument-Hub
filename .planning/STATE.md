@@ -1,5 +1,8 @@
 # Project State
 
+> **This is the single source of truth for project status.**
+> See also: `CLAUDE.md` (quick reference), `.cursor/workflow_guide.md` (workflow)
+
 ## Project Reference
 
 See: .planning/PROJECT.md (updated 2026-01-22)
@@ -85,3 +88,11 @@ Resume file: None
 - Vitest configured for frontend
 - Pytest + pytest-asyncio for backend
 - 14 tests total (11 passing, 3 xfail)
+
+### Structure Cleanup (2026-01-22)
+- Archived Azure-related files (migration complete)
+- Archived Railway migration docs (complete)
+- Archived completed phases (1, 4) to `.planning/phases/_complete/`
+- Archived session logs to `docs/_archive/`
+- Consolidated context files (removed duplicates)
+- Updated workflow guide with new structure

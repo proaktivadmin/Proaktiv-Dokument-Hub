@@ -1,66 +1,90 @@
-# The Proaktiv Ultimate Workflow
+# Project Workflow Guide
 
-This workflow combines the best elements of **Ralph** (Hierarchy), **GSD** (Context-First), and **Agentic Skills** into a unified process for this project.
+**Updated:** 2026-01-22 (after structure cleanup)
 
-## 1. Core Philosophy: "Context is King" (from GSD)
-**Rule #1:** No code is written until context is understood.
-The AI must always know *where* it is in the grand scheme before taking a step. This prevents "context drift" over long sessions.
+## File Structure
 
-## 2. The Hierarchy (from Ralph)
-We structure work in three distinct layers to manage complexity:
+### Source of Truth Hierarchy
 
-### Level 1: STRATEGY (The "What")
-*   **Files:** `.planning/PROJECT.md`, `.planning/ROADMAP.md`, `.planning/REQUIREMENTS.md`
-*   **Purpose:** Defines the *Goal*, *Requirements*, and *Architecture*.
-*   **Updates:** Only when requirements change or phases are completed.
+```
+CLAUDE.md                    # Quick reference (read-only summary)
+    ↓
+.planning/                   # Project planning (single source of truth)
+├── STATE.md                 # Current position and progress
+├── ROADMAP.md               # Phase breakdown and timeline
+├── PROJECT.md               # Requirements and context
+├── REQUIREMENTS.md          # Detailed requirement tracking
+├── codebase/                # Technical documentation
+│   ├── STACK.md             # Technology versions
+│   ├── ARCHITECTURE.md      # System design
+│   └── TESTING.md           # Test patterns
+└── phases/                  # Active phase plans
+    ├── 02-*/                # Current phases
+    ├── 03-*/                # Future phases
+    └── _complete/           # Archived completed phases
+```
 
-### Level 2: STATE (The "Now")
-*   **File:** `.planning/STATE.md` (project-level), `.cursor/active_context.md` (session-level)
-*   **Purpose:** The single source of truth for the *Current Position*.
-*   **Contents:**
-    *   **Current Phase:** Which roadmap phase are we in?
-    *   **Progress:** What percentage complete?
-    *   **Recent Changes:** What did we just complete?
-*   **Usage:** Read at start of session, update after major completions.
+### Agent Resources
 
-### Level 3: EXECUTION (The "How")
-*   **Files:** Source code, Tests, `.planning/phases/*/PLAN.md` files.
-*   **Purpose:** The actual implementation.
+```
+.cursor/
+├── agents/                  # Agent prompts
+│   ├── 01_SYSTEMS_ARCHITECT.md
+│   ├── 02_FRONTEND_ARCHITECT.md
+│   ├── 03_BUILDER.md
+│   ├── DEBUGGER_AGENT.md
+│   └── QA_MASTER.md
+├── commands/                # Slash commands
+├── specs/                   # Generated specifications
+├── skills/                  # Reusable skill modules
+├── vitec-reference.md       # Vitec Next API reference
+└── _archive/                # Historical/obsolete files
+```
 
-## 2.1 CI/CD Integration
-Before any code changes:
-1. Check CI status: `gh run list --limit 3`
-2. After changes, verify CI passes
-3. All pushes to `main` trigger GitHub Actions
+### Documentation
 
-## 3. Agent Personas (from Prompt Engineering)
-We use specialized modes (switched via `/commands` or Agentic Mode):
-*   **Architect**: Reads Level 1, updates Level 2. (Planning)
-*   **Builder**: Reads Level 2, executes Level 3. (Coding)
-*   **Debugger**: Reads Level 3, updates Level 2. (Fixing)
+```
+docs/
+├── PRD.md                   # Product requirements
+├── proaktiv-directory-sync.md  # Scraper documentation
+├── vitec-next-*.md          # Vitec integration docs
+├── features/                # Feature specifications
+└── _archive/                # Historical session logs
+```
 
-## 4. The Workflow Loop
+## Workflow
 
-1.  **START SESSION**:
-    *   Read `.cursor/active_context.md`.
-    *   *Self-Correction:* If stale, read `plans/` and update `active_context.md`.
+### 1. Start Session
+Read these files in order:
+1. `CLAUDE.md` - Quick context
+2. `.planning/STATE.md` - Current position
+3. `.planning/ROADMAP.md` - What's next
 
-2.  **PICK TASK**:
-    *   Select next item from `active_context.md` checklist.
-    *   Break it down into atomic steps if too large (create a mini-checklist).
+### 2. Before Coding
+- Check CI status: `gh run list --limit 3`
+- Read relevant phase plan in `.planning/phases/`
 
-3.  **EXECUTE**:
-    *   Write Code / Run Terminal.
-    *   *Checkpoint:* If a step succeeds, mark it `[x]` in `active_context.md`.
+### 3. After Changes
+- Update `.planning/STATE.md` with progress
+- Run tests: `cd frontend && npm run test:run` / `cd backend && pytest`
+- Commit and push to trigger CI
 
-4.  **VERIFY**:
-    *   Run tests/verification steps.
-    *   Update `active_context.md` with results ("Known Issues").
+### 4. Phase Completion
+- Move phase folder to `.planning/phases/_complete/`
+- Update `.planning/ROADMAP.md` status
+- Update `CLAUDE.md` Current Status section
 
-5.  **HANDOFF**:
-    *   Summary of what was done.
-    *   Clear "Next Steps" for the next agent session.
+## Quick Commands
 
-## 5. Skills & Tools (from Awesome Skills)
-When encountering specific domains, look for specialized prompts in `.cursor/skills/` (to be created as needed).
-*   Example: `skills/pdf_parsing.md`, `skills/vitec_api.md`.
+| Command | Purpose |
+|---------|---------|
+| `gh run list --limit 3` | Check CI status |
+| `cd frontend && npm run test:run` | Run frontend tests |
+| `cd backend && pytest` | Run backend tests |
+| `docker compose up -d` | Start local dev |
+
+## Don't
+
+- Create new context files (use existing `.planning/` structure)
+- Put session notes in root (use `.planning/` or `docs/`)
+- Skip updating STATE.md after major changes
