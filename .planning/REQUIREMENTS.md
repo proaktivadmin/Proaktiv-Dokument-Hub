@@ -27,11 +27,13 @@ Requirements for current milestone. Each maps to roadmap phases.
 
 ### Stack Upgrade
 
-- [ ] **UPGRADE-01**: Frontend upgraded to Next.js 15
-- [ ] **UPGRADE-02**: Frontend upgraded to React 19
-- [ ] **UPGRADE-03**: Frontend upgraded to Tailwind 4
-- [ ] **UPGRADE-04**: All async request APIs updated (cookies, headers, params)
-- [ ] **UPGRADE-05**: Build succeeds with no TypeScript errors
+- [x] **UPGRADE-01**: Frontend upgraded to Next.js 16 (skipped 15)
+- [x] **UPGRADE-02**: Frontend upgraded to React 19
+- [x] **UPGRADE-03**: Frontend upgraded to Tailwind 4
+- [x] **UPGRADE-04**: TypeScript upgraded to 5.9, all type checks passing
+- [x] **UPGRADE-05**: Build succeeds with no TypeScript errors
+- [x] **UPGRADE-06**: CI/CD pipeline added (GitHub Actions)
+- [x] **UPGRADE-07**: Testing infrastructure (Vitest + Pytest)
 
 ### Vercel Migration
 
@@ -73,9 +75,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| VITEC-01 | Phase 1 | Pending |
-| VITEC-02 | Phase 1 | Pending |
-| VITEC-03 | Phase 1 | Pending |
+| VITEC-01 | Phase 1 | ✅ Complete |
+| VITEC-02 | Phase 1 | ✅ Complete |
+| VITEC-03 | Phase 1 | ✅ Complete |
 | VITEC-04 | Phase 2 | Pending |
 | VITEC-05 | Phase 2 | Pending |
 | VITEC-06 | Phase 2 | Pending |
@@ -85,11 +87,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SOCIAL-02 | Phase 3 | Pending |
 | SOCIAL-03 | Phase 3 | Pending |
 | SOCIAL-04 | Phase 3 | Pending |
-| UPGRADE-01 | Phase 4 | Pending |
-| UPGRADE-02 | Phase 4 | Pending |
-| UPGRADE-03 | Phase 4 | Pending |
-| UPGRADE-04 | Phase 4 | Pending |
-| UPGRADE-05 | Phase 4 | Pending |
+| UPGRADE-01 | Phase 4 | ✅ Complete |
+| UPGRADE-02 | Phase 4 | ✅ Complete |
+| UPGRADE-03 | Phase 4 | ✅ Complete |
+| UPGRADE-04 | Phase 4 | ✅ Complete |
+| UPGRADE-05 | Phase 4 | ✅ Complete |
+| UPGRADE-06 | Phase 4 | ✅ Complete |
+| UPGRADE-07 | Phase 4 | ✅ Complete |
 | VERCEL-01 | Phase 5 | Pending |
 | VERCEL-02 | Phase 5 | Pending |
 | VERCEL-03 | Phase 5 | Pending |
@@ -97,10 +101,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | VERCEL-05 | Phase 5 | Pending |
 
 **Coverage:**
-- v1 requirements: 22 total
-- Mapped to phases: 22
+- v1 requirements: 24 total
+- Complete: 10 (Phase 1 + Phase 4)
+- Pending: 14
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-01-20*
-*Last updated: 2026-01-20 after initial definition*
+*Last updated: 2026-01-22 after Phase 4 completion*

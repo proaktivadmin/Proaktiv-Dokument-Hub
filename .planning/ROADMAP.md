@@ -12,10 +12,10 @@ This roadmap delivers Vitec API integration for employee/office sync, social med
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Vitec API Connection** - Establish authenticated API connectivity and basic sync triggers
-- [ ] **Phase 2: Vitec Sync Review UI** - Build field-level diff comparison and manual approval workflow
+- [x] **Phase 1: Vitec API Connection** - Establish authenticated API connectivity and basic sync triggers
+- [x] **Phase 2: Vitec Sync Review UI** - Build field-level diff comparison and manual approval workflow
 - [ ] **Phase 3: Social Media Links** - Add social media URL fields to offices and employees
-- [ ] **Phase 4: Stack Upgrade** - Upgrade Next.js 15, React 19, Tailwind 4 (fixes CVE-2025-29927)
+- [x] **Phase 4: Stack Upgrade** - Upgrade Next.js 16, React 19, Tailwind 4, TypeScript 5.9 (fixes CVE-2025-29927)
 - [ ] **Phase 5: Vercel Migration** - Move frontend to Vercel, update backend CORS, cleanup Railway
 
 ## Phase Details
@@ -36,24 +36,37 @@ Plans:
 - [ ] 01-02-PLAN.md - Improve error feedback and add connection status UI
 - [ ] 01-03-PLAN.md - Production verification of complete sync flow
 
-### Phase 2: Vitec Sync Review UI
+### Phase 2: Vitec Sync Review UI ✅ COMPLETE
 **Goal**: Admin can review and approve sync changes field-by-field before committing
 **Depends on**: Phase 1
 **Requirements**: VITEC-04, VITEC-05, VITEC-06, VITEC-07, VITEC-08
 **Success Criteria** (what must be TRUE):
-  1. System matches Vitec employees to local employees by email address
-  2. Admin sees field-by-field diff (old vs new) for each matched record
-  3. Admin can approve or reject individual field changes
-  4. Unmatched Vitec records can be created as new entries
-  5. Sync summary shows counts: new, matched, conflicts
-**Plans**: TBD
+  1. ✅ System matches Vitec employees to local employees by email address
+  2. ✅ Admin sees field-by-field diff (old vs new) for each matched record
+  3. ✅ Admin can approve or reject individual field changes
+  4. ✅ Unmatched Vitec records can be created as new entries
+  5. ✅ Sync summary shows counts: new, matched, conflicts
+**Completed**: 2026-01-22
+
+**What was delivered:**
+- SyncMatchingService: email-based employee matching, vitec_department_id office matching
+- SyncPreviewService: field-by-field diff generation with conflict detection
+- SyncCommitService: apply approved changes, create new records, batch commits
+- Sync page UI: preview cards, diff display, accept/reject controls, commit button
+- Employee/office picture sync buttons with proxy URL storage
+- Direct sync endpoints for offices and employees (bypasses review for speed)
+- Default to showing only active offices/employees with "Vis inaktive" toggle
+- Small green/red dot status indicator on office cards
+- Avatar images resolved to backend URL (fixes Railway proxy ECONNREFUSED)
+- Empty last_name handling for Vitec employees
+- Batch database commits to prevent connection timeouts
 
 Plans:
-- [ ] 02-01: Matching Service (email-based employee matching, office matching)
-- [ ] 02-02: Diff Generation (field-by-field comparison logic)
-- [ ] 02-03: Review UI Components (diff display, approve/reject controls)
-- [ ] 02-04: Sync Commit Logic (apply approved changes, create new records)
-- [ ] 02-05: Sync Summary Dashboard (change counts, conflict highlights)
+- [x] 02-01: Matching Service (email-based employee matching, office matching)
+- [x] 02-02: Diff Generation (field-by-field comparison logic)
+- [x] 02-03: Review UI Components (diff display, approve/reject controls)
+- [x] 02-04: Sync Commit Logic (apply approved changes, create new records)
+- [x] 02-05: Sync Summary Dashboard (change counts, conflict highlights)
 
 ### Phase 3: Social Media Links
 **Goal**: Offices and employees can display social media links on their profiles
@@ -72,24 +85,30 @@ Plans:
 - [ ] 03-03: Employee Social UI (edit form, featured broker flag)
 - [ ] 03-04: Featured Brokers Section (display on office page)
 
-### Phase 4: Stack Upgrade
-**Goal**: Frontend running on Next.js 15, React 19, Tailwind 4 with no errors
+### Phase 4: Stack Upgrade ✅ COMPLETE
+**Goal**: Frontend running on Next.js 16, React 19, Tailwind 4 with no errors
 **Depends on**: Nothing (independent, but should complete before Phase 5)
 **Requirements**: UPGRADE-01, UPGRADE-02, UPGRADE-03, UPGRADE-04, UPGRADE-05
 **Success Criteria** (what must be TRUE):
-  1. Next.js 15 installed and running (CVE-2025-29927 fixed)
-  2. React 19 installed with all components rendering correctly
-  3. Tailwind 4 installed with existing styles preserved
-  4. All async request APIs (cookies, headers, params) properly awaited
-  5. Build succeeds with zero TypeScript errors
-**Plans**: TBD
+  1. ✅ Next.js 16 installed and running (CVE-2025-29927 fixed)
+  2. ✅ React 19 installed with all components rendering correctly
+  3. ✅ Tailwind 4 installed with existing styles preserved
+  4. ✅ TypeScript 5.9 with all type checks passing
+  5. ✅ Build succeeds with zero TypeScript errors
+  6. ✅ CI/CD pipeline added (ESLint, TypeScript, Pyright, Pytest, Vitest)
+**Completed**: 2026-01-22
 
-Plans:
-- [ ] 04-01: Next.js 15 Upgrade (dependencies, config changes)
-- [ ] 04-02: React 19 Upgrade (dependency update, component fixes)
-- [ ] 04-03: Tailwind 4 Upgrade (config migration, style verification)
-- [ ] 04-04: Async API Migration (cookies/headers/params await patterns)
-- [ ] 04-05: Build Verification (TypeScript errors, runtime testing)
+**What was delivered:**
+- Next.js 14 → 16.1.4 (skipped 15, went to 16)
+- React 18 → 19.2.3
+- Tailwind 3 → 4.1.18
+- TypeScript 5.3 → 5.9.3
+- Added Vitest for frontend testing
+- Added Pytest + pytest-asyncio for backend testing
+- Added Ruff for Python linting/formatting
+- Added Pyright for Python type checking
+- Added GitHub Actions CI workflow
+- Added Sentry for error tracking (frontend + backend)
 
 ### Phase 5: Vercel Migration
 **Goal**: Frontend deployed to Vercel with backend remaining on Railway
@@ -119,11 +138,11 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Vitec API Connection | 3/3 | Complete | 2026-01-20 |
-| 2. Vitec Sync Review UI | 0/5 | In Progress | - |
+| 2. Vitec Sync Review UI | 5/5 | Complete | 2026-01-22 |
 | 3. Social Media Links | 0/4 | Not started | - |
-| 4. Stack Upgrade | 0/5 | Not started | - |
+| 4. Stack Upgrade | 5/5 | Complete | 2026-01-22 |
 | 5. Vercel Migration | 0/5 | Not started | - |
 
 ---
 *Roadmap created: 2026-01-20*
-*Last updated: 2026-01-20 (Phase 2 started)*
+*Last updated: 2026-01-22 (Phase 2 completed)*

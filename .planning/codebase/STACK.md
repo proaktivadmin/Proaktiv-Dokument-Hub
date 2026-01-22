@@ -1,11 +1,11 @@
 # Technology Stack
 
-**Analysis Date:** 2026-01-20
+**Analysis Date:** 2026-01-22
 
 ## Languages
 
 **Primary:**
-- TypeScript 5.3.3 - Frontend (Next.js, React components)
+- TypeScript 5.9.3 - Frontend (Next.js, React components)
 - Python 3.11 - Backend (FastAPI)
 
 **Secondary:**
@@ -21,20 +21,20 @@
 **Backend:**
 - Python 3.11 (slim in Docker)
 - Package Manager: pip
-- Requirements: `backend/requirements.txt`
+- Requirements: `backend/requirements.txt`, `backend/requirements-dev.txt`
 
 ## Frameworks
 
 **Frontend Core:**
-- Next.js 14.1.0 - React framework with App Router
-- React 18.2.0 - UI library
-- React DOM 18.2.0 - DOM rendering
+- Next.js 16.1.4 - React framework with App Router
+- React 19.2.3 - UI library
+- React DOM 19.2.3 - DOM rendering
 
 **Frontend UI:**
-- Tailwind CSS 3.4.1 - Utility-first CSS
+- Tailwind CSS 4.1.18 - Utility-first CSS
 - Shadcn/UI - Component library (Radix UI primitives)
 - Radix UI - Headless UI components (@radix-ui/react-*)
-- Lucide React 0.312.0 - Icon library
+- Lucide React 0.562.0 - Icon library
 - tailwindcss-animate 1.0.7 - Animation utilities
 
 **Backend Core:**
@@ -44,15 +44,20 @@
 - Pydantic Settings 2.1.0 - Configuration management
 
 **Database:**
-- SQLAlchemy 2.0.25 - ORM with async support
+- SQLAlchemy 2.0.46 - ORM with async support
 - Asyncpg 0.29.0 - PostgreSQL async driver
 - Psycopg2-binary 2.9.9 - PostgreSQL sync driver
 - Aiosqlite 0.19.0 - SQLite async driver (dev/fallback)
 - Alembic 1.13.1 - Database migrations
 
-**Testing:**
-- ESLint 8.56.0 - JavaScript/TypeScript linting
-- eslint-config-next 14.1.0 - Next.js ESLint config
+**Testing & Linting:**
+- ESLint 9.39.2 - JavaScript/TypeScript linting
+- eslint-config-next 16.1.4 - Next.js ESLint config
+- Vitest 4.0.17 - Frontend unit testing
+- Pytest 8.0.0+ - Backend testing
+- pytest-asyncio 0.23.0+ - Async test support
+- Ruff 0.4.0+ - Python linting and formatting
+- Pyright 1.1.350+ - Python type checking
 
 **Build/Dev:**
 - PostCSS 8.4.33 - CSS processing
@@ -62,14 +67,15 @@
 ## Key Dependencies
 
 **Frontend Critical:**
-- axios 1.6.5 - HTTP client for API calls
+- axios 1.13.2 - HTTP client for API calls
 - zustand 4.4.7 - State management
-- zod 3.22.4 - Schema validation
-- react-hook-form 7.49.3 - Form handling
-- @hookform/resolvers 3.3.4 - Zod integration for forms
+- zod 4.3.5 - Schema validation
+- react-hook-form 7.71.1 - Form handling
+- @hookform/resolvers 5.2.2 - Zod integration for forms
 - @monaco-editor/react 4.7.0 - Code editor for template editing
-- react-dropzone 14.2.3 - File upload drag-and-drop
+- react-dropzone 14.3.8 - File upload drag-and-drop
 - date-fns 3.2.0 - Date utilities
+- @sentry/nextjs 10.36.0 - Error tracking and monitoring
 
 **Frontend UI Primitives (Shadcn/Radix):**
 - @radix-ui/react-dialog 1.0.5
@@ -96,6 +102,7 @@
 
 **Utilities:**
 - python-dateutil 2.8.2 - Date utilities
+- sentry-sdk[fastapi] 2.0.0+ - Error tracking and monitoring
 
 ## Configuration
 
@@ -160,6 +167,23 @@
 - Frontend: `https://blissful-quietude-production.up.railway.app`
 - Backend: `https://proaktiv-dokument-hub-production.up.railway.app`
 
+## CI/CD Pipeline
+
+**GitHub Actions Workflow:** `.github/workflows/ci.yml`
+
+**Jobs:**
+1. **Lint Frontend** - ESLint + TypeScript check
+2. **Lint Backend** - Ruff check + Ruff format + Pyright
+3. **Test Frontend** - Vitest (depends on Lint Frontend)
+4. **Test Backend** - Pytest (depends on Lint Backend)
+5. **Build Frontend** - Next.js production build (depends on Lint + Test Frontend)
+
+**Triggers:**
+- Push to `main` branch
+- Pull requests to `main` branch
+
+**Runner:** Blacksmith 4vCPU Ubuntu 24.04
+
 ---
 
-*Stack analysis: 2026-01-20*
+*Stack analysis: 2026-01-22*

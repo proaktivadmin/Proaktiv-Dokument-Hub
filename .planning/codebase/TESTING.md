@@ -1,44 +1,69 @@
 # Testing Patterns
 
-**Analysis Date:** 2025-01-20
+**Analysis Date:** 2026-01-22
 
 ## Test Framework
 
 **Backend Runner:**
-- Python unittest (standard library)
-- No pytest configuration detected
-- No `requirements-dev.txt` or test dependencies in `requirements.txt`
-- Config: None (uses unittest defaults)
+- Pytest 8.0.0+ with pytest-asyncio 0.23.0+
+- Configuration: `backend/pytest.ini`
+- Dev dependencies: `backend/requirements-dev.txt`
 
-**Assertion Library:**
-- Python `unittest.TestCase` assertions (`assertEqual`, `assertIn`)
+**Backend Assertion Library:**
+- Pytest native assertions (`assert`)
+- Pytest markers (`@pytest.mark.xfail`, `@pytest.mark.asyncio`)
 
-**Run Commands:**
+**Backend Run Commands:**
 ```bash
-python -m unittest discover backend/tests  # Run all tests
-python -m unittest backend.tests.test_vitec_normalizer_service  # Run specific module
+cd backend
+pytest                    # Run all tests
+pytest -v                 # Verbose output
+pytest tests/test_vitec_normalizer_service.py  # Run specific file
+pytest --cov=app          # With coverage
 ```
 
-**Frontend:**
-- No Jest or Vitest configuration detected
-- No test files found in `frontend/src/`
-- Testing framework: **Not configured**
+**Frontend Runner:**
+- Vitest 4.0.17 with jsdom environment
+- Configuration: `frontend/vitest.config.ts`
+- Setup file: `frontend/vitest.setup.tsx`
+
+**Frontend Assertion Library:**
+- Vitest native (`expect`, `vi.mock`, `vi.fn`)
+- @testing-library/jest-dom matchers
+
+**Frontend Run Commands:**
+```bash
+cd frontend
+npm run test              # Watch mode
+npm run test:run          # Single run
+npm run test:coverage     # With coverage
+```
 
 ## Test File Organization
 
 **Location:**
 - Backend: Separate `backend/tests/` directory
-- Frontend: No test files present
+- Frontend: `frontend/src/__tests__/` directory
 
 **Naming:**
-- Python: `test_*.py` pattern (`test_vitec_normalizer_service.py`, `test_vitec_hub_sync_endpoints.py`)
+- Python: `test_*.py` pattern
+- TypeScript: `*.test.ts` or `*.test.tsx` pattern
 
 **Structure:**
 ```
 backend/
 └── tests/
-    ├── test_vitec_normalizer_service.py    # Unit tests for VitecNormalizerService
-    └── test_vitec_hub_sync_endpoints.py    # API endpoint tests
+    ├── conftest.py                         # Pytest fixtures
+    ├── test_sync_preview_endpoints.py      # Sync preview API tests
+    ├── test_vitec_hub_sync_endpoints.py    # Vitec Hub API tests
+    └── test_vitec_normalizer_service.py    # Normalizer unit tests
+
+frontend/
+├── vitest.config.ts                        # Vitest configuration
+├── vitest.setup.tsx                        # Test setup (mocks)
+└── src/
+    └── __tests__/
+        └── utils.test.ts                   # Utility function tests
 ```
 
 ## Test Structure
@@ -242,10 +267,29 @@ assert "highlight-box" not in normalized
 assert int(report["removed_css_rules"]) >= 1
 ```
 
+## CI Integration
+
+**GitHub Actions runs all tests on:**
+- Push to `main`
+- Pull requests to `main`
+
+**Backend CI:**
+```yaml
+- name: Run pytest
+  run: pytest
+  env:
+    PYTHONPATH: ${{ github.workspace }}/backend
+```
+
+**Frontend CI:**
+```yaml
+- name: Run Vitest
+  run: npm run test:run
+```
+
 ## Test Gaps
 
 **Not Tested:**
-- Frontend components (no test framework)
 - Database models directly (mocked in integration tests)
 - Error handling paths
 - Authentication/authorization flows
@@ -253,42 +297,19 @@ assert int(report["removed_css_rules"]) >= 1
 - Azure storage integration
 
 **Priority Areas for Future Tests:**
-1. Frontend: Add Vitest + React Testing Library
-2. Backend: Add pytest with pytest-asyncio
-3. E2E: Add Playwright for critical user flows
-4. API: Expand endpoint coverage beyond sync endpoints
+1. E2E: Add Playwright for critical user flows
+2. API: Expand endpoint coverage
+3. Frontend: Add React component tests with Testing Library
 
-## Adding Tests (Recommended Setup)
+## Current Test Status
 
-**Backend (pytest):**
-```bash
-# Add to requirements.txt
-pytest==8.0.0
-pytest-asyncio==0.23.0
-pytest-cov==4.1.0
-httpx==0.26.0  # Already present
+**Backend Tests:** 10 tests
+- 7 passing
+- 3 xfail (normalizer CSS features not yet implemented)
 
-# Create pytest.ini
-[pytest]
-asyncio_mode = auto
-testpaths = tests
-```
-
-**Frontend (Vitest):**
-```bash
-# Install
-npm install -D vitest @testing-library/react @testing-library/jest-dom jsdom
-
-# vitest.config.ts
-import { defineConfig } from 'vitest/config'
-export default defineConfig({
-  test: {
-    environment: 'jsdom',
-    globals: true,
-  },
-})
-```
+**Frontend Tests:** 4 tests
+- 4 passing (utility functions)
 
 ---
 
-*Testing analysis: 2025-01-20*
+*Testing analysis: 2026-01-22*

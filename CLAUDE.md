@@ -10,12 +10,14 @@ A document template management system for Norwegian real estate brokers, integra
 
 | Aspect | Details |
 |--------|---------|
-| **Phase** | 3.1 (Verification) |
-| **Stack** | Next.js 14 + FastAPI + PostgreSQL (Railway) |
-| **UI** | Shadcn/UI + Tailwind CSS |
+| **Phase** | 3.2 (Stack Upgraded, CI/CD Active) |
+| **Stack** | Next.js 16 + React 19 + FastAPI + PostgreSQL (Railway) |
+| **UI** | Shadcn/UI + Tailwind CSS 4 |
 | **Hosting** | Railway (Frontend + Backend + PostgreSQL) |
 | **Storage** | WebDAV (proaktiv.no/d/) |
 | **Auth** | Password + JWT sessions (7-day expiry) |
+| **CI/CD** | GitHub Actions (lint, typecheck, test, build) |
+| **Monitoring** | Sentry (frontend + backend) |
 | **Status** | ✅ Production Live |
 
 ---
@@ -125,7 +127,22 @@ frontend/
 
 ## Current Status
 
-See `.cursor/active_context.md` for full status.
+See `.planning/STATE.md` for full status.
+
+**V3.2 Stack Upgrade + CI/CD (Completed 2026-01-22):**
+- ✅ Next.js 14 → 16.1.4 upgrade
+- ✅ React 18 → 19.2.3 upgrade
+- ✅ Tailwind CSS 3 → 4.1.18 upgrade
+- ✅ TypeScript 5.3 → 5.9.3 upgrade
+- ✅ SQLAlchemy 2.0.25 → 2.0.46 upgrade
+- ✅ GitHub Actions CI/CD pipeline
+  - Frontend: ESLint + TypeScript + Vitest
+  - Backend: Ruff + Pyright + Pytest
+- ✅ Testing infrastructure
+  - Vitest for frontend (4 tests)
+  - Pytest + pytest-asyncio for backend (10 tests, 3 xfail)
+- ✅ Sentry error tracking (frontend + backend)
+- ✅ CVE-2025-29927 security vulnerability fixed
 
 **V3.1 Office & Employee Hub (Completed):**
 - ✅ Office management with banner images and employee avatars
@@ -205,6 +222,31 @@ Use `/architect`, `/frontend-architect`, `/builder` commands.
 | `/builder` | Run Builder |
 | `/status` | Check project status |
 | `/scrape-proaktiv` | Run Proaktiv directory scraper |
+
+---
+
+## Testing
+
+### Run Tests Locally
+```bash
+# Frontend
+cd frontend
+npm run test:run          # Single run
+npm run test              # Watch mode
+
+# Backend
+cd backend
+pytest                    # All tests
+pytest -v                 # Verbose
+```
+
+### CI/CD Pipeline
+Push to `main` triggers GitHub Actions:
+1. **Lint Frontend** - ESLint + TypeScript
+2. **Lint Backend** - Ruff + Pyright
+3. **Test Frontend** - Vitest
+4. **Test Backend** - Pytest
+5. **Build Frontend** - Next.js production build
 
 ---
 
