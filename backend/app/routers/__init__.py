@@ -10,6 +10,7 @@ from app.routers import (
     code_patterns,
     dashboard,
     employees,
+    entra_sync,
     external_listings,
     health,
     layout_partials,
@@ -21,6 +22,7 @@ from app.routers import (
     tags,
     templates,
     territories,
+    vitec,
     web_crawl,
 )
 
@@ -49,4 +51,6 @@ __all__ = [
     "territories",
     "web_crawl",
     "sync",
+    "vitec",
+    "entra_sync",
 ]

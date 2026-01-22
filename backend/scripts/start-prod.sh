@@ -5,36 +5,42 @@ echo "🚀 Starting Proaktiv Dokument Hub Backend..."
 
 cd /app
 
-# Wait for database if using Postgres
-echo "⏳ Checking database availability..."
+# Wait for database if using Postgres (with actual connection test, not just socket)
+echo "⏳ Waiting for database to be ready..."
 python - <<'PY'
 import os
-import socket
 import time
-from urllib.parse import urlparse
 
 url = os.environ.get("DATABASE_URL", "")
 if not url or url.startswith("sqlite"):
     print("ℹ️ DATABASE_URL not set or SQLite detected; skipping DB wait.")
     raise SystemExit(0)
 
-# Normalize async URLs for parsing
-url = url.replace("postgresql+asyncpg://", "postgresql://").replace("postgresql+psycopg2://", "postgresql://")
-parsed = urlparse(url)
-host = parsed.hostname or "localhost"
-port = parsed.port or 5432
-timeout = int(os.environ.get("DB_WAIT_TIMEOUT", "60"))
+# Normalize URL for psycopg2 (remove async drivers)
+sync_url = url.replace("postgresql+asyncpg://", "postgresql://").replace("postgresql+psycopg2://", "postgresql://")
+
+timeout = int(os.environ.get("DB_WAIT_TIMEOUT", "90"))  # Increased timeout for Railway cold starts
 deadline = time.time() + timeout
+attempt = 0
 
 while time.time() < deadline:
+    attempt += 1
     try:
-        with socket.create_connection((host, port), timeout=2):
-            print(f"✅ Database is reachable at {host}:{port}")
-            raise SystemExit(0)
-    except OSError:
-        time.sleep(2)
+        import psycopg2
+        conn = psycopg2.connect(sync_url, connect_timeout=5)
+        conn.close()
+        print(f"✅ Database is ready and accepting connections (attempt {attempt})")
+        raise SystemExit(0)
+    except Exception as e:
+        remaining = int(deadline - time.time())
+        if remaining > 0:
+            print(f"⏳ Database not ready yet (attempt {attempt}): {type(e).__name__}. Retrying... ({remaining}s left)")
+            time.sleep(3)
+        else:
+            print(f"❌ Database not ready after {timeout}s: {e}")
+            raise SystemExit(1)
 
-print(f"❌ Database not reachable after {timeout}s at {host}:{port}")
+print(f"❌ Database not ready after {timeout}s")
 raise SystemExit(1)
 PY
 
