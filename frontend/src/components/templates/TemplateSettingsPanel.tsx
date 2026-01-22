@@ -5,7 +5,7 @@
  * Handles margins, header/footer/signature, theme, receiver, output type, etc.
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Save, RotateCcw, Loader2, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -140,7 +140,6 @@ export function TemplateSettingsPanel({
     ...DEFAULT_TEMPLATE_SETTINGS,
     ...initialSettings,
   });
-  const [hasChanges, setHasChanges] = useState(false);
   const [previewPartial, setPreviewPartial] = useState<{ name: string; content: string } | null>(null);
   
   // Fetch layout partials based on selected channel
@@ -155,20 +154,19 @@ export function TemplateSettingsPanel({
   const isSaving = isSavingProp;
   const isInteractionDisabled = disabled || isSaving;
 
+  // Derive hasChanges from state (avoid cascading renders)
+  const initial = useMemo(() => ({ ...DEFAULT_TEMPLATE_SETTINGS, ...initialSettings }), [initialSettings]);
+  const hasChanges = useMemo(() => JSON.stringify(settings) !== JSON.stringify(initial), [settings, initial]);
+
   // Sync local state when initialSettings prop changes (e.g., after save/refetch)
+  // This is intentional: we need to sync external props to local state for controlled editing
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSettings({
       ...DEFAULT_TEMPLATE_SETTINGS,
       ...initialSettings,
     });
   }, [initialSettings]);
-
-  // Track changes
-  useEffect(() => {
-    const initial = { ...DEFAULT_TEMPLATE_SETTINGS, ...initialSettings };
-    const changed = JSON.stringify(settings) !== JSON.stringify(initial);
-    setHasChanges(changed);
-  }, [settings, initialSettings]);
 
   useEffect(() => {
     onSettingsChange?.(settings);

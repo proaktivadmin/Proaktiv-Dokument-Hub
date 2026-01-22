@@ -16,7 +16,7 @@
   },
   "lint-staged": {
     "frontend/src/**/*.{ts,tsx}": [
-      "npx --prefix frontend eslint --fix"
+      "npx --prefix frontend eslint --fix --config frontend/eslint.config.mjs"
     ],
     "backend/**/*.py": [
       "python -m ruff check --fix",

@@ -1,6 +1,6 @@
 "use client";
 
-import { Download, File, FileText, FileSpreadsheet, Maximize2 } from "lucide-react";
+import { Download, File, FileText, FileSpreadsheet, Maximize2, type LucideIcon } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -34,14 +34,17 @@ const categoryColors: Record<AssetCategory, string> = {
   other: "bg-gray-500/10 text-gray-600",
 };
 
-function getFileIcon(mimeType: string) {
+// Render the appropriate file icon based on mime type
+function FileIconDisplay({ mimeType, className }: { mimeType: string; className?: string }) {
+  let IconComponent: LucideIcon = File;
+  
   if (mimeType.includes("spreadsheet") || mimeType.includes("excel")) {
-    return FileSpreadsheet;
+    IconComponent = FileSpreadsheet;
+  } else if (mimeType.includes("pdf") || mimeType.includes("document") || mimeType.includes("text")) {
+    IconComponent = FileText;
   }
-  if (mimeType.includes("pdf") || mimeType.includes("document") || mimeType.includes("text")) {
-    return FileText;
-  }
-  return File;
+  
+  return <IconComponent className={className} />;
 }
 
 export function AssetPreviewDialog({ asset, open, onOpenChange }: AssetPreviewDialogProps) {
@@ -66,8 +69,6 @@ export function AssetPreviewDialog({ asset, open, onOpenChange }: AssetPreviewDi
   const handleOpenInNewTab = () => {
     window.open(assetsApi.getDownloadUrl(asset.id), "_blank");
   };
-
-  const FileIcon = getFileIcon(asset.content_type);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -114,7 +115,7 @@ export function AssetPreviewDialog({ asset, open, onOpenChange }: AssetPreviewDi
             />
           ) : (
             <div className="text-center py-16">
-              <FileIcon className="h-24 w-24 mx-auto text-muted-foreground/50 mb-4" />
+              <FileIconDisplay mimeType={asset.content_type} className="h-24 w-24 mx-auto text-muted-foreground/50 mb-4" />
               <h3 className="text-lg font-medium mb-1">{asset.filename}</h3>
               <p className="text-sm text-muted-foreground mb-4">
                 Forhåndsvisning ikke tilgjengelig for denne filtypen
