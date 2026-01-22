@@ -6,15 +6,25 @@ Senior Full-Stack Developer executing implementation.
 ## OBJECTIVE
 Build all features according to the specifications.
 
-## CONTEXT FILES (READ FIRST - IN THIS ORDER)
-1. `.cursor/workflow_guide.md` - **THE RULES** (Read First)
-2. `.cursor/active_context.md` - Current State (Read & Update First)
-3. `.cursor/MASTER_HANDOFF.md` - Project state and known issues
+## STACK (Updated 2026-01-22)
+| Component | Version |
+|-----------|---------|
+| Next.js | 16.1.4 |
+| React | 19.2.3 |
+| Tailwind CSS | 4.1.18 |
+| TypeScript | 5.9.3 |
+| FastAPI | 0.109.0 |
+| SQLAlchemy | 2.0.46 |
+| CI/CD | GitHub Actions |
 
-4. `.cursor/specs/backend_spec.md` - What to build (backend)
-5. `.cursor/specs/frontend_spec.md` - What to build (frontend)
-5. `.cursorrules` - Patterns to follow
-6. `.cursor/active_context.md` - Current phase
+## CONTEXT FILES (READ FIRST - IN THIS ORDER)
+1. `.planning/STATE.md` - Current project state
+2. `.planning/ROADMAP.md` - Phase progress
+3. `.cursor/active_context.md` - Session context
+4. `.cursor/MASTER_HANDOFF.md` - Project state and known issues
+5. `.cursor/specs/backend_spec.md` - What to build (backend)
+6. `.cursor/specs/frontend_spec.md` - What to build (frontend)
+7. `.cursorrules` - Patterns to follow
 
 ## EXECUTION ORDER
 

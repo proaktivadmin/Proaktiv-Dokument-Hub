@@ -1,9 +1,25 @@
 # Deployment Guide: Railway + Vercel
 
-**Date:** 2026-01-16
-**Status:** Ready for Deployment
+**Date:** 2026-01-16 (Updated 2026-01-22)
+**Status:** Railway Live, Vercel Migration Pending (Phase 5)
 
 This guide walks you through deploying the migrated application to Railway (backend) and Vercel (frontend).
+
+## Current Production (2026-01-22)
+
+| Component | Location | URL |
+|-----------|----------|-----|
+| Frontend | Railway | https://blissful-quietude-production.up.railway.app |
+| Backend | Railway | https://proaktiv-dokument-hub-production.up.railway.app |
+| Database | Railway | PostgreSQL 15 (internal) |
+| CI/CD | GitHub Actions | Push to `main` triggers all checks |
+
+## Stack Versions
+- Next.js 16.1.4, React 19.2.3, Tailwind 4.1.18, TypeScript 5.9.3
+- FastAPI 0.109.0, SQLAlchemy 2.0.46, Python 3.11
+- CI: ESLint, TypeScript, Vitest, Ruff, Pyright, Pytest
+
+---
 
 ---
 

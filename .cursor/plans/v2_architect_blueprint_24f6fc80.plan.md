@@ -1,6 +1,12 @@
 ---
 name: V2_Architect_Blueprint
-overview: Agent-ready architectural blueprint for V2 Dokument Hub. Document-first approach with shelf-based template library, Flettekode system, and 4-mode preview. For Architect agent to create implementation specs for Builder agent.
+overview: |
+  Agent-ready architectural blueprint for V2 Dokument Hub. Document-first approach with 
+  shelf-based template library, Flettekode system, and 4-mode preview.
+  
+  STATUS (2026-01-22): V2 features complete. V3.2 now active with upgraded stack:
+  Next.js 16, React 19, Tailwind 4, TypeScript 5.9, SQLAlchemy 2.0.46.
+  See .planning/STATE.md for current project status.
 todos:
   - id: architect-update-cursorrules
     content: Update .cursorrules with V2 patterns (document-first, shelf-layout, etc.)

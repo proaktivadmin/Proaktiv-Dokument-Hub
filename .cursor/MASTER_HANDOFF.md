@@ -1,14 +1,52 @@
 # MASTER HANDOFF DOCUMENT
 # Vitec Next Admin Hub - Agent Pipeline Context
 
-**Last Updated:** 2026-01-18
+**Last Updated:** 2026-01-22
 
 **Important:** Large parts of this document are **historical** (Azure/SQLite era).  
-For current production + active roadmap, use `.cursor/active_context.md` as source of truth.
+For current production + active roadmap, use `.planning/STATE.md` as source of truth.
 
 ---
 
-## 0. TODAY UPDATE (2026-01-18) — TEMPLATE UX + IMPORT + DEPLOY FIXES
+## 0. TODAY UPDATE (2026-01-22) — STACK UPGRADE + CI/CD PIPELINE
+
+### What changed
+- **Stack Upgrade Complete** (Phase 4 of roadmap)
+  - Next.js 14 → 16.1.4 (skipped 15, went directly to 16)
+  - React 18 → 19.2.3
+  - Tailwind CSS 3 → 4.1.18
+  - TypeScript 5.3 → 5.9.3
+  - SQLAlchemy 2.0.25 → 2.0.46
+- **CI/CD Pipeline** via GitHub Actions
+  - Frontend: ESLint + TypeScript + Vitest
+  - Backend: Ruff + Pyright + Pytest
+  - Workflow: `.github/workflows/ci.yml`
+  - All checks passing on `main`
+- **Testing Infrastructure**
+  - Vitest configured (`frontend/vitest.config.ts`)
+  - Pytest + pytest-asyncio (`backend/pytest.ini`)
+  - 14 tests total (11 passing, 3 xfail)
+- **GitHub CLI** installed for CI monitoring
+- **Sentry** error tracking (frontend + backend)
+- **CVE-2025-29927** security vulnerability fixed
+
+### What to verify
+- CI passes on all pushes to `main`
+- Production build succeeds on Railway
+- No runtime regressions from upgrades
+
+### Roadmap Status
+| Phase | Status | Completed |
+|-------|--------|-----------|
+| 1. Vitec API Connection | ✅ Complete | 2026-01-20 |
+| 2. Vitec Sync Review UI | 🔄 In Progress | - |
+| 3. Social Media Links | Not started | - |
+| 4. Stack Upgrade | ✅ Complete | 2026-01-22 |
+| 5. Vercel Migration | Not started | - |
+
+---
+
+## PREVIOUS UPDATE (2026-01-18) — TEMPLATE UX + IMPORT + DEPLOY FIXES
 
 ### What changed
 - **Rebrand** to **Vitec Next Admin Hub**
@@ -172,16 +210,23 @@ For current production + active roadmap, use `.cursor/active_context.md` as sour
 
 | Layer | Technology | Version |
 |-------|------------|---------|
-| Frontend | Next.js | 14.1.0 |
+| Frontend | Next.js | 16.1.4 |
+| React | React | 19.2.3 |
 | UI Components | Shadcn/UI | Latest |
-| Styling | Tailwind CSS | 3.x |
-| Backend | FastAPI | 0.104+ |
-| Database | PostgreSQL (Railway) | - |
-| ORM | SQLAlchemy | 2.x |
-| Migrations | Alembic | 1.x |
+| Styling | Tailwind CSS | 4.1.18 |
+| TypeScript | TypeScript | 5.9.3 |
+| Backend | FastAPI | 0.109.0 |
+| Database | PostgreSQL (Railway) | 15 |
+| ORM | SQLAlchemy | 2.0.46 |
+| Migrations | Alembic | 1.13.1 |
 | Container | Docker | - |
 | Cloud | Railway | - |
-| CI/CD | Railway (deploy on push) | - |
+| CI/CD | GitHub Actions + Railway | - |
+| Monitoring | Sentry | - |
+| Testing (FE) | Vitest | 4.0.17 |
+| Testing (BE) | Pytest | 8.0.0+ |
+| Linting (FE) | ESLint | 9.39.2 |
+| Linting (BE) | Ruff + Pyright | Latest |
 
 ---
 

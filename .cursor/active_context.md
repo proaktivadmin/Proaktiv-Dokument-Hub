@@ -2,7 +2,33 @@
 > **Workflow Rule:** Follow `.cursor/workflow_guide.md`. Update this file *before* coding.
 
 
-## 2026-01-18 (LATEST) — VITEC TEMPLATE UX + DEPLOY STABILITY
+## 2026-01-22 (LATEST) — STACK UPGRADE + CI/CD PIPELINE
+
+### Shipped ✅ (on `main`)
+- ✅ **Stack Upgrade Complete** (Phase 4)
+  - Next.js 14 → 16.1.4
+  - React 18 → 19.2.3
+  - Tailwind CSS 3 → 4.1.18
+  - TypeScript 5.3 → 5.9.3
+  - SQLAlchemy 2.0.25 → 2.0.46
+- ✅ **CI/CD Pipeline** (GitHub Actions)
+  - Frontend: ESLint + TypeScript + Vitest
+  - Backend: Ruff + Pyright + Pytest
+  - All checks passing on `main`
+- ✅ **Testing Infrastructure**
+  - Vitest for frontend (4 tests passing)
+  - Pytest for backend (10 tests, 3 xfail)
+- ✅ **GitHub CLI** installed for CI monitoring
+- ✅ **CVE-2025-29927** security vulnerability fixed
+
+### Known Gaps / Caveats ⚠️
+- **3 normalizer tests marked xfail** - CSS stripping features not yet implemented
+- **Pyright lenient config** - Strict type checks disabled for pre-existing issues
+- **Vercel migration pending** - Phase 5 not started
+
+---
+
+## 2026-01-18 — VITEC TEMPLATE UX + DEPLOY STABILITY
 
 ### Shipped ✅ (on `main`)
 - ✅ **Rebrand**: App name/UX aligned to **Vitec Next Admin Hub** (header + login + metadata)
@@ -66,9 +92,11 @@
 <!-- NEXT_AGENT_NOTES_END -->
 
 ## PROJECT STATUS
-- **Phase:** V3.1 Verification (polish + QA)
-- **Current Sprint:** Stabilize templates workflow + verify Company Hub pages
+- **Phase:** V3.2 (Stack Upgraded, CI/CD Active)
+- **Current Sprint:** Phase 2 - Vitec Sync Review UI
 - **Architecture:** Document-first, shelf grouping, 4-tab viewer
+- **Stack:** Next.js 16 + React 19 + Tailwind 4 + TypeScript 5.9
+- **CI/CD:** GitHub Actions (lint, typecheck, test, build)
 - **Deploy:** Railway (frontend + backend), deploys on push to `main`
 
 

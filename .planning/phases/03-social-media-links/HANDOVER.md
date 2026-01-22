@@ -1,7 +1,16 @@
-﻿# Phase 3: Social Media Links - Agent Handover
+# Phase 3: Social Media Links - Agent Handover
 
 **Created:** 2026-01-20
-**Purpose:** Complete context for implementing social media links and featured brokers
+**Updated:** 2026-01-22
+**Status:** Not Started
+**Prerequisites:** Phase 4 ✅ Complete
+
+### Stack (Updated 2026-01-22)
+- **Backend:** FastAPI 0.109 + SQLAlchemy 2.0.46 + Pydantic 2.x + PostgreSQL
+- **Frontend:** Next.js 16 + React 19 + Shadcn/UI + Tailwind CSS 4 + TypeScript 5.9
+- **Testing:** Vitest (frontend) + Pytest (backend)
+- **CI/CD:** GitHub Actions (lint, typecheck, test, build)
+- **Deployment:** Railway (backend + DB + frontend)
 
 ---
 

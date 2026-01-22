@@ -37,9 +37,11 @@ Execute plans in sequence. Each plan builds on the previous:
 
 ## PROJECT CONTEXT
 
-### Stack
-- **Backend:** FastAPI + SQLAlchemy 2.x (async) + Pydantic 2.x + PostgreSQL
-- **Frontend:** Next.js 14 + React 18 + Shadcn/UI + Tailwind CSS + Tanstack Query
+### Stack (Updated 2026-01-22)
+- **Backend:** FastAPI 0.109 + SQLAlchemy 2.0.46 (async) + Pydantic 2.x + PostgreSQL
+- **Frontend:** Next.js 16 + React 19 + Shadcn/UI + Tailwind CSS 4 + TypeScript 5.9
+- **Testing:** Vitest (frontend) + Pytest (backend)
+- **CI/CD:** GitHub Actions (lint, typecheck, test, build)
 - **Deployment:** Railway (backend + DB + frontend)
 
 ### Key Patterns
