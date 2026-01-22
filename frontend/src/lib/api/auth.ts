@@ -2,10 +2,14 @@
  * Auth API Client
  * 
  * Handles authentication with the backend.
+ * Always uses the full backend URL for cross-origin cookie handling.
  */
 
 import axios from "axios";
 import { getApiBaseUrl } from "./config";
+
+// Railway backend URL - must use full URL for cross-origin cookies
+const BACKEND_URL = "https://proaktiv-dokument-hub-production.up.railway.app";
 
 // Create axios instance with credentials enabled
 const authClient = axios.create({
@@ -15,10 +19,14 @@ const authClient = axios.create({
   },
 });
 
-// Add request interceptor to set base URL dynamically (same pattern as main API)
+// Add request interceptor to set base URL dynamically
+// For auth, we ALWAYS use the full backend URL to ensure cookies work cross-origin
 authClient.interceptors.request.use((config) => {
-  const baseUrl = getApiBaseUrl();
   if (config.url && !config.url.startsWith('http')) {
+    // Use getApiBaseUrl for local dev, hardcoded for production reliability
+    const baseUrl = typeof window !== 'undefined' && window.location.hostname === 'localhost'
+      ? getApiBaseUrl()
+      : BACKEND_URL;
     config.url = `${baseUrl}${config.url}`;
   }
   return config;
