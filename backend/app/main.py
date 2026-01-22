@@ -6,12 +6,30 @@ Main application entry point with database integration.
 
 import json
 import logging
+import os
 from contextlib import asynccontextmanager
 
+import sentry_sdk
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
+
+# Initialize Sentry for error tracking and performance monitoring
+# Only enabled if SENTRY_DSN environment variable is set
+if os.environ.get("SENTRY_DSN"):
+    sentry_sdk.init(
+        dsn=os.environ.get("SENTRY_DSN"),
+        # Performance monitoring - capture 10% of transactions in production
+        traces_sample_rate=1.0 if settings.DEBUG else 0.1,
+        # Environment and release identification
+        environment=os.environ.get("SENTRY_ENVIRONMENT", "production"),
+        release=f"proaktiv-backend@{settings.APP_VERSION}",
+        # Include user info for debugging (disable if privacy concerns)
+        send_default_pii=False,
+        # Enable profiling for performance analysis (5% of transactions)
+        profiles_sample_rate=0.05,
+    )
 from app.database import close_db, init_db
 from app.middleware.auth import AuthMiddleware
 

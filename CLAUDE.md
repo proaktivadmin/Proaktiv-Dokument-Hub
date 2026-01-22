@@ -239,12 +239,18 @@ docker compose exec db psql -U postgres -d dokument_hub
 | `WEBDAV_URL` | `http://proaktiv.no/d/` |
 | `WEBDAV_USERNAME` | (your username) |
 | `WEBDAV_PASSWORD` | (your password) |
+| `SENTRY_DSN` | Sentry DSN for error tracking (optional) |
+| `SENTRY_ENVIRONMENT` | Environment name: `production`, `staging`, etc. |
 
 ### Environment Variables (Frontend)
 | Variable | Value |
 |----------|-------|
 | `BACKEND_URL` | `https://proaktiv-dokument-hub-production.up.railway.app` |
 | `NEXT_PUBLIC_API_URL` | Same as BACKEND_URL |
+| `NEXT_PUBLIC_SENTRY_DSN` | Sentry DSN for error tracking (optional) |
+| `SENTRY_ORG` | Sentry organization slug (for source maps) |
+| `SENTRY_PROJECT` | Sentry project slug (for source maps) |
+| `SENTRY_AUTH_TOKEN` | Sentry auth token (for source map upload) |
 
 ### Railway CLI
 ```bash

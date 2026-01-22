@@ -32,3 +32,6 @@ lxml==5.1.0
 
 # Web crawling / scraping (Firecrawl)
 firecrawl-py==4.11.1
+
+# Error tracking & performance monitoring
+sentry-sdk[fastapi]>=2.0.0
