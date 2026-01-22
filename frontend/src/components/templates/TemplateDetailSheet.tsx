@@ -14,7 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TemplatePreview } from "./TemplatePreview";
 import { TemplateSettingsPanel, type TemplateSettings } from "./TemplateSettingsPanel";
 import { SimulatorPanel } from "./SimulatorPanel";
-import { CodeEditor } from "@/components/editor/CodeEditor";
+import { LazyCodeEditor as CodeEditor } from "@/components/editor/LazyCodeEditor";
 import { templateApi, layoutPartialsApi } from "@/lib/api";
 import { apiClient } from "@/lib/api/config";
 import { templateSettingsApi } from "@/lib/api/template-settings";

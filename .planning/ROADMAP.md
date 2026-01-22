@@ -112,7 +112,7 @@ Plans:
 
 ### Phase 5: Vercel Migration
 **Goal**: Frontend deployed to Vercel with backend remaining on Railway
-**Depends on**: Phase 4
+**Depends on**: Phase 4 ✅
 **Requirements**: VERCEL-01, VERCEL-02, VERCEL-03, VERCEL-04, VERCEL-05
 **Success Criteria** (what must be TRUE):
   1. Backend CORS accepts requests from Vercel deployment domains
@@ -120,14 +120,22 @@ Plans:
   3. API calls from Vercel frontend reach Railway backend successfully
   4. Authentication (login, session, logout) works on Vercel deployment
   5. Railway frontend service deleted after successful migration
-**Plans**: TBD
+**Status**: Ready to start (Phase 4 prerequisite complete)
+
+**Agent Pipeline:**
+| Order | Command | Agent | Purpose |
+|-------|---------|-------|---------|
+| 1 | `/vercel-architect` | Infra Architect | Update CORS, create vercel.json |
+| 2 | `/vercel-builder` | Builder | Deploy to Vercel |
+| 3 | `/vercel-qa` | QA Master | Full E2E testing |
+| 4 | `/vercel-cleanup` | Cleanup | Remove Railway frontend |
 
 Plans:
-- [ ] 05-01: Backend CORS Update (add Vercel domains)
-- [ ] 05-02: Vercel Deployment Setup (project creation, env vars)
-- [ ] 05-03: API Rewrite Configuration (frontend to backend routing)
-- [ ] 05-04: Auth Testing (login flow verification on Vercel)
-- [ ] 05-05: Railway Cleanup (remove frontend service)
+- [ ] 05-01: CORS Update (add Vercel domains to backend)
+- [ ] 05-02: Vercel Config (create vercel.json, update next.config.js)
+- [ ] 05-03: Deploy to Vercel (environment variables, initial deploy)
+- [ ] 05-04: Verification (full E2E testing)
+- [ ] 05-05: Cleanup (remove Railway frontend, update docs)
 
 ## Progress
 

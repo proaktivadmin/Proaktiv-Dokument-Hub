@@ -30,7 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CodeEditor } from "@/components/editor/CodeEditor";
+import { LazyCodeEditor as CodeEditor } from "@/components/editor/LazyCodeEditor";
 import { templateApi, categoryApi } from "@/lib/api";
 import { templateSettingsApi } from "@/lib/api/template-settings";
 import { useToast } from "@/hooks/use-toast";
