@@ -51,8 +51,10 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install ruff
-        run: pip install ruff
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
 
       - name: Run ruff check
         run: ruff check .
@@ -60,10 +62,36 @@ jobs:
       - name: Run ruff format check
         run: ruff format --check .
 
+      - name: Run pyright type check
+        run: pyright
+
+  test-frontend:
+    name: Test Frontend
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    needs: [lint-frontend]
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Vitest
+        run: npm run test:run
+
   build-frontend:
     name: Build Frontend
     runs-on: blacksmith-4vcpu-ubuntu-2404
-    needs: [lint-frontend]
+    needs: [lint-frontend, test-frontend]
     defaults:
       run:
         working-directory: frontend
@@ -82,10 +110,7 @@ jobs:
         with:
           path: frontend/.next/cache
           # Rebuild cache when packages, source files, styles, or config files change
-          # Includes: TS/TSX source, CSS styles, and all build-affecting config files
           key: ${{ runner.os }}-nextjs-${{ hashFiles('frontend/package-lock.json') }}-${{ hashFiles('frontend/src/**/*.ts', 'frontend/src/**/*.tsx', 'frontend/src/**/*.css', 'frontend/tailwind.config.ts', 'frontend/postcss.config.*', 'frontend/next.config.*', 'frontend/tsconfig.json', 'frontend/components.json') }}
-          # No restore-keys - we only want exact matches to prevent stale cache usage
-          # This ensures source code changes always trigger a fresh build
 
       - name: Install dependencies
         run: npm ci
@@ -117,5 +142,5 @@ jobs:
           pip install -r requirements.txt
           pip install -r requirements-dev.txt
 
-      - name: Run tests
-        run: python -m unittest discover tests -v
+      - name: Run pytest
+        run: pytest
