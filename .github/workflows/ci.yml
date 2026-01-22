@@ -81,8 +81,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: frontend/.next/cache
-          # Rebuild cache when packages or source files change
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('frontend/package-lock.json') }}-${{ hashFiles('frontend/src/**/*.ts', 'frontend/src/**/*.tsx') }}
+          # Rebuild cache when packages, source files, or config files change
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('frontend/package-lock.json') }}-${{ hashFiles('frontend/src/**/*.ts', 'frontend/src/**/*.tsx', 'frontend/src/**/*.css', 'frontend/tailwind.config.ts', 'frontend/postcss.config.*', 'frontend/next.config.*', 'frontend/components.json', 'frontend/tsconfig.json') }}
           # Fall back to previous cache if source changed but packages didn't
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('frontend/package-lock.json') }}-
