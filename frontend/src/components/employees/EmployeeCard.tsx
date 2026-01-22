@@ -1,10 +1,11 @@
 "use client";
 
-import { Phone, Mail, AlertTriangle, MoreVertical } from "lucide-react";
+import { Phone, Mail, AlertTriangle, MoreVertical, Cloud, FileSignature } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { EmployeeWithOffice, EmployeeStatus } from "@/types/v3";
 import { resolveApiUrl } from "@/lib/api/config";
+import { cn } from "@/lib/utils";
 
 interface EmployeeCardProps {
   employee: EmployeeWithOffice;
@@ -22,6 +24,14 @@ interface EmployeeCardProps {
   onEdit?: () => void;
   onStartOffboarding?: () => void;
   onDeactivate?: () => void;
+  // Selection props
+  selectable?: boolean;
+  selected?: boolean;
+  onSelectChange?: (selected: boolean) => void;
+  // Entra sync props
+  entraConnected?: boolean;
+  onEntraSync?: () => void;
+  onSignaturePreview?: () => void;
 }
 
 const statusConfig: Record<EmployeeStatus, { label: string; variant: "default" | "secondary" | "destructive" | "outline"; className: string }> = {
@@ -38,16 +48,38 @@ export function EmployeeCard({
   onEdit,
   onStartOffboarding,
   onDeactivate,
+  selectable = false,
+  selected = false,
+  onSelectChange,
+  entraConnected = false,
+  onEntraSync,
+  onSignaturePreview,
 }: EmployeeCardProps) {
   const status = statusConfig[employee.status];
 
   return (
     <Card
-      className="group cursor-pointer hover:shadow-md transition-all duration-200"
+      className={cn(
+        "group cursor-pointer hover:shadow-md transition-all duration-200",
+        selected && "ring-2 ring-primary"
+      )}
       onClick={onClick}
     >
       <CardContent className="p-4">
         <div className="flex items-start gap-3">
+          {/* Selection checkbox */}
+          {selectable && (
+            <div
+              className="shrink-0 pt-1"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Checkbox
+                checked={selected}
+                onCheckedChange={(checked) => onSelectChange?.(checked === true)}
+              />
+            </div>
+          )}
+
           {/* Avatar with profile image */}
           <Avatar className="w-12 h-12 shrink-0">
             <AvatarImage src={resolveApiUrl(employee.profile_image_url)} alt={employee.full_name} />
@@ -84,6 +116,24 @@ export function EmployeeCard({
                     <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onEdit(); }}>
                       Rediger
                     </DropdownMenuItem>
+                  )}
+                  {/* Entra ID sync options */}
+                  {entraConnected && (
+                    <>
+                      <DropdownMenuSeparator />
+                      {onEntraSync && (
+                        <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onEntraSync(); }}>
+                          <Cloud className="h-4 w-4 mr-2" />
+                          Synkroniser til Entra ID
+                        </DropdownMenuItem>
+                      )}
+                      {onSignaturePreview && (
+                        <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onSignaturePreview(); }}>
+                          <FileSignature className="h-4 w-4 mr-2" />
+                          Forhåndsvis signatur
+                        </DropdownMenuItem>
+                      )}
+                    </>
                   )}
                   <DropdownMenuSeparator />
                   {onStartOffboarding && employee.status === "active" && (

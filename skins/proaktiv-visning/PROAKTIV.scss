@@ -1,0 +1,61 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+
+$primary: #272630;
+$primary-hover: #3E3D4A;
+
+body {
+    background: #f8f9fa;
+    font-family: 'Open sans', sans-serif;
+
+    a {
+        color: $primary;
+    }
+
+    .btn {
+
+        &.btn-primary {
+            background-color: $primary;
+            border: none;
+
+            &:not(:disabled):hover,
+            &:not(:disabled):focus {
+                background-color: $primary-hover;
+            }
+        }
+
+        &.btn-outline-primary {
+            border-color: $primary;
+            color: $primary;
+
+            &:not(:disabled):hover,
+            &:not(:disabled):focus {
+                border-color: $primary-hover;
+                background-color: $primary-hover;
+                color: #fff;
+            }
+
+            &.btn-primary {
+                background-color: $primary;
+                border: solid 1px $primary;
+                color: #fff;
+
+                &:not(:disabled):hover,
+                &:not(:disabled):focus {
+                    background-color: $primary-hover;
+                    border: solid 1px $primary-hover;
+                    color: #fff;
+                }
+            }
+        }
+    }
+
+    .container {
+
+        .list-group-item {
+
+            .far {
+                color: $primary;
+            }
+        }
+    }
+}

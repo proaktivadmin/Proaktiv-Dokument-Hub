@@ -1,0 +1,45 @@
+<div style='font-family: "Open Sans", Helvetica, sans-serif'>
+<p>En ny interessent har fått salgsoppgave tilsendt og blitt registrert på eiendommen. </p>
+<div><b>[[oppdrag.adresse.adresse]]</b></div>
+<div>Oppdrag: [[oppdrag.oppdragsnummer]]</div>
+<br />
+<div><b>Kontaktinformasjon: </b></div>
+<div>[[interestedparty.navn]]</div>
+<div>Telefon: [[interestedparty.telefon]]</div>
+
+
+	<span vitec-if="Model.interestedparty.consentscontactforownestate || Model.interestedparty.consentscontactforfinance">
+		<div>Kunden ønsker også å bli kontaktet vedrørende
+			<span vitec-if="Model.interestedparty.consentscontactforownestate && Model.interestedparty.consentscontactforfinance">
+				finansiering og verdivurdering/tilbud på salg av egen bolig
+			</span>
+
+			<span vitec-if="(Model.interestedparty.consentscontactforownestate && Model.interestedparty.consentscontactforfinance) == false && Model.interestedparty.consentscontactforfinance">
+				finansiering
+			</span>
+			<span vitec-if="(Model.interestedparty.consentscontactforownestate && Model.interestedparty.consentscontactforfinance) == false && Model.interestedparty.consentscontactforownestate">
+				verdivurdering/tilbud på salg av egen bolig
+			</span>
+		.</div>
+
+		<span vitec-if="Model.tiptobankisexpected">
+			<div>
+				<span vitec-if="Model.tiptobankiscreated">
+					<text>Tips til bank er automatisk sendt ut.</text>						
+				</span>
+				<span vitec-if="Model.tiptobankiscreated == false">
+					<text>Tips til bank er IKKE sendt. Det må sendes manuelt.</text>
+				</span>
+			</div>
+		</span>
+
+		<br />
+	</span>
+
+	<div vitec-if="Model.interestedparty.hasnextlink">
+		<a href="[[interestedparty.nextlink]]">Åpne interessenten i Next.</a>
+	</div>
+	<br />
+	<div>Med vennlig hilsen,</div>
+	<div>Proaktiv Eiendomsmegling</div>
+</div>

@@ -9,8 +9,6 @@ both marketing name (name) and legal name separately.
 """
 
 from alembic import op
-import sqlalchemy as sa
-
 
 # revision identifiers, used by Alembic.
 revision = "202601190003"
@@ -20,29 +18,16 @@ depends_on = None
 
 
 def upgrade() -> None:
-    # Add organization_number for matching/merging offices
-    op.add_column(
-        "offices",
-        sa.Column("organization_number", sa.String(length=20), nullable=True)
-    )
-    op.create_index(
-        "idx_offices_organization_number",
-        "offices",
-        ["organization_number"],
-        unique=False,
-    )
-    
-    # Add legal_name to store the legal company name separately
-    op.add_column(
-        "offices",
-        sa.Column("legal_name", sa.String(length=200), nullable=True)
-    )
-    
-    # Add banner_image_url for office card banners
-    op.add_column(
-        "offices",
-        sa.Column("banner_image_url", sa.Text(), nullable=True)
-    )
+    # Use IF NOT EXISTS to make migration idempotent
+    op.execute("ALTER TABLE offices ADD COLUMN IF NOT EXISTS organization_number VARCHAR(20)")
+    op.execute("ALTER TABLE offices ADD COLUMN IF NOT EXISTS legal_name VARCHAR(200)")
+    op.execute("ALTER TABLE offices ADD COLUMN IF NOT EXISTS banner_image_url TEXT")
+
+    # Create index if not exists
+    op.execute("""
+        CREATE INDEX IF NOT EXISTS idx_offices_organization_number
+        ON offices (organization_number)
+    """)
 
 
 def downgrade() -> None:

@@ -1,0 +1,17 @@
+Salgsoppgave sendt.
+
+<span vitec-if="Model.interestedparty.consentscontactforownestate">
+	<text>Ønsker verdivurdering/tilbud. </text>
+</span>
+
+<span vitec-if="Model.interestedparty.consentscontactforfinance">
+	<text>Ønsker tilbud på finansiering. </text>
+	<span vitec-if="Model.tiptobankisexpected">
+		<span vitec-if="Model.tiptobankiscreated">
+			<text>Tips til bank er sendt.</text>					
+		</span>
+		<span vitec-if="Model.tiptobankiscreated == false">
+			<text>Tips til bank er IKKE sendt. Det må sendes manuelt.</text>
+		</span>
+	</span>
+</span>

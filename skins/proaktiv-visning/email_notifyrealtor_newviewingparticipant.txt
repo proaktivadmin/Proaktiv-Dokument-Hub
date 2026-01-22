@@ -1,0 +1,59 @@
+<div style='font-family: "Open Sans", Helvetica, sans-serif'>
+    
+	<span vitec-if="Model.visnignsdatovalgtmanuellt == true">
+			<p>
+				<strong>[[interestedparty.navn]] er påmeldt visning</strong><br />
+				Visningstid: [[visingsdato]]<br />
+				Antall personer: [[participants]]
+			</p>
+	</span>
+	<span vitec-if="Model.visnignsdatovalgtmanuellt == false">
+			<p>[[interestedparty.navn]] ønsker å komme på visning. Du må kontakte kunden direkte for å avtale et tidspunkt.</p>
+	</span>
+	
+	<div><strong>Kontaktopplysninger:</strong><br >
+	Telefon: [[interestedparty.telefon]]</div>
+	<span vitec-if="Model.interestedparty.harmail == true">
+			<div>E-postadresse: [[interestedparty.mail]]</div>
+	</span>
+	<br />
+	<br />
+	<span vitec-if="Model.interestedparty.consentscontactforownestate || Model.interestedparty.consentscontactforfinance">
+		<div>Kunden ønsker å bli kontaktet vedrørende
+			<span vitec-if="Model.interestedparty.consentscontactforownestate && Model.interestedparty.consentscontactforfinance">
+				finansiering og verdivurdering/tilbud på salg av egen bolig.
+			</span>
+
+			<span vitec-if="(Model.interestedparty.consentscontactforownestate && Model.interestedparty.consentscontactforfinance) == false && Model.interestedparty.consentscontactforfinance">
+				finansiering.
+			</span>
+			<span vitec-if="(Model.interestedparty.consentscontactforownestate && Model.interestedparty.consentscontactforfinance) == false && Model.interestedparty.consentscontactforownestate">
+				verdivurdering/tilbud på salg av egen bolig.
+			</span>
+		</div>
+
+		<span vitec-if="Model.tiptobankisexpected">
+			<div>
+				<span vitec-if="Model.tiptobankiscreated">
+					<text>Tips til bank er automatisk sendt ut.</text>					
+				</span>
+				<span vitec-if="Model.tiptobankiscreated == false">
+					<text>Tips til bank er IKKE sendt. Det må sendes manuelt.</text>
+				</span>
+			</div>
+		</span>
+
+		<br />
+	</span>
+
+	<div vitec-if="Model.interestedparty.salgsoppgaverequested">
+		<div>Link til salgsoppgave er sendt på e-post til kunden.</div><br />
+	</div>
+
+	<div vitec-if="Model.interestedparty.hasnextlink">
+		<a href="[[interestedparty.nextlink]]">Åpne interessenten i Next.</a>
+	</div>
+	<br />
+	<div>Med vennlig hilsen,</div>
+	<div>Proaktiv Eiendomsmegling</div>
+</div>

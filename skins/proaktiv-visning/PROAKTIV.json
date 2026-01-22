@@ -1,0 +1,56 @@
+{
+  "showNewsletterBox": false,
+  "showFinanceBox": false,
+  "showSellingOwnProperty": true,
+  "AutoTipToBank": false,
+  "BankTipSourceViewingRegistration": "",
+  "BankTipSourceSalesDocument": "",
+
+  "propertyDescriptionText": "Hvis du ønsker videre oppfølging på eiendommen trenger vi mer informasjon:",
+
+  "consentFinancingText": "Jeg ønsker tilbud om finansiering",
+  "consentFollowupText": "Jeg ønsker verdivurdering av min bolig",
+  "consentNewsletterText": "Jeg ønsker å abonnere på nyhetsbrev",
+  "consentBidInfoText": "Jeg ønsker bli informert om bud på eiendommen",
+
+  "consentFinancingHelp": "Din kontaktinformasjon sendes til en bankrådgiver. Du vil bli kontaktet innen kort tid med et tilbud om lån.",
+  "consentFollowupHelp": "En eiendomsmegler vil kontakte deg og avtale tid for verdivurdering.",
+  "consentNewsletterHelp": "Eiendomsmeglerforetaket får tillatelse til å kontakte deg med relevant informasjon.",
+  "consentBidInfoHelp": "Du vil bli registrert som interessent og varslet om bud frem til eiendommen er solgt.",
+
+  "consentFinanceHelpButtonText": "",
+  "consentFollowHelpButtonText": "",
+  "consentNewsletterHelpButtonText": "",
+  "consentBidInfoHelpButtonText": "",
+  "SendConsentCofirmationSms": false,
+
+  "SendRegistrationCofirmationSms": true,
+  "SendRegistrationCofirmationEmail": true,
+
+  "AnnouncementEnabled": false,
+  "AnnouncementText": "",
+
+  "helpIcon": "help-icon",
+
+  "forceAcceptGdpr": false,
+
+  "showPersonvernButton": true,
+  "personvernButtonText": "<span class=\"link-text\">Les om personvern</span> <i aria-hidden=\"true\" class='far fa-question-circle'></i>",
+  "personvernModalText": "<h2>Dine personopplysninger</h2><p>Hensikten med denne registreringen er å tilby deg relevant og ønsket informasjon fra Proaktiv Eiendomsmegling.</p><p>Vi plikter å oppbevare dine opplysninger på en forsvarlig måte og følge gjeldende lover og forskrifter om vern av personopplysninger.</p><p>Les mer i vår <a rel=\"noopener\" target=\"_blank\" href=\"https://proaktiv.no/personvern\">personvernerklæring</a>.</p><p><strong>Er du allerede kunde?</strong><br />Har du nye kontaktopplysninger eller ønsker å endre valg? Benytt skjemaet for å registrere deg på visning, men informer også megler slik at dine opplysninger blir registrert korrekt.</p>",
+
+  "consentWhyButtonText": "",
+  "consentWhyInfoText": "",
+
+  "VisningsPameldinNotifyBroker": ["mainBroker"],
+  "VisningsPameldinNotifyEmails": [],
+  "SalgsoppgavenedlastetNotifyBroker": ["mainBroker"],
+  "SalgsoppgavenedlastetNotifyEmails": [],
+
+  "useGoogleTagManager": false,
+  "googleTagManagerId": "GTM-XXXX",
+  "DownForMaintenance": false,
+  "DownForMaintenanceText": "<h1>Tjenesten er ikke tilgjengelig for øyeblikket.</h1>",
+  "SendTipToBankProductId": "0",
+  "CookiesConsentBannerText": "Vi benytter informasjonskapsler",
+  "CookiesConsentModalText": "Vi benytter informasjonskapsler for funksjonalitet i visningsportalen. Dette er for å sikre deg en best mulig opplevelse av tjenesten."
+}

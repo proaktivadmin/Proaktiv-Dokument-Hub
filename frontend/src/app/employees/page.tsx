@@ -4,7 +4,15 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
 import { Header } from "@/components/layout/Header";
-import { EmployeeGrid, EmployeeSidebar, EmployeeForm, RoleFilter } from "@/components/employees";
+import {
+  EmployeeGrid,
+  EmployeeSidebar,
+  EmployeeForm,
+  RoleFilter,
+  EntraSyncDialog,
+  EntraSyncBatchDialog,
+  SignaturePreviewDialog,
+} from "@/components/employees";
 
 import { useEmployees } from "@/hooks/v3/useEmployees";
 import { useOffices } from "@/hooks/v3/useOffices";
@@ -22,6 +30,14 @@ export default function EmployeesPage() {
   const [formOpen, setFormOpen] = useState(false);
 
   const [editingEmployee, setEditingEmployee] = useState<EmployeeWithOffice | null>(null);
+
+  // Entra sync dialog state
+  const [entraSyncEmployee, setEntraSyncEmployee] = useState<EmployeeWithOffice | null>(null);
+  const [entraSyncDialogOpen, setEntraSyncDialogOpen] = useState(false);
+  const [signaturePreviewEmployee, setSignaturePreviewEmployee] = useState<EmployeeWithOffice | null>(null);
+  const [signaturePreviewOpen, setSignaturePreviewOpen] = useState(false);
+  const [batchSyncEmployees, setBatchSyncEmployees] = useState<EmployeeWithOffice[]>([]);
+  const [batchSyncDialogOpen, setBatchSyncDialogOpen] = useState(false);
 
   const { toast } = useToast();
   const showInactive = statusFilters.includes("inactive");
@@ -99,6 +115,42 @@ export default function EmployeesPage() {
     }
   };
 
+  // Entra sync handlers
+  const handleEntraSync = (employee: EmployeeWithOffice) => {
+    setEntraSyncEmployee(employee);
+    setEntraSyncDialogOpen(true);
+  };
+
+  const handleSignaturePreview = (employee: EmployeeWithOffice) => {
+    setSignaturePreviewEmployee(employee);
+    setSignaturePreviewOpen(true);
+  };
+
+  const handleBatchEntraSync = (employees: EmployeeWithOffice[]) => {
+    setBatchSyncEmployees(employees);
+    setBatchSyncDialogOpen(true);
+  };
+
+  const handleEntraSyncComplete = () => {
+    toast({
+      title: "Entra ID synkronisering fullført",
+      description: entraSyncEmployee
+        ? `${entraSyncEmployee.full_name} er oppdatert i Microsoft 365.`
+        : "Ansatt er oppdatert.",
+    });
+    setEntraSyncDialogOpen(false);
+    setEntraSyncEmployee(null);
+  };
+
+  const handleBatchSyncComplete = (result: { successful: number; failed: number }) => {
+    toast({
+      title: "Batch synkronisering fullført",
+      description: `${result.successful} av ${result.successful + result.failed} ansatte ble synkronisert til Entra ID.`,
+    });
+    setBatchSyncDialogOpen(false);
+    setBatchSyncEmployees([]);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -144,6 +196,10 @@ export default function EmployeesPage() {
               office_id: selectedOfficeId || undefined,
               role: selectedRole || undefined,
             }}
+            // Entra sync handlers
+            onEntraSync={handleEntraSync}
+            onSignaturePreview={handleSignaturePreview}
+            onBatchEntraSync={handleBatchEntraSync}
           />
         </div>
 
@@ -155,6 +211,35 @@ export default function EmployeesPage() {
           offices={offices}
           defaultOfficeId={selectedOfficeId || undefined}
           onSuccess={handleFormSuccess}
+        />
+
+        {/* Entra sync dialog */}
+        <EntraSyncDialog
+          employee={entraSyncEmployee}
+          open={entraSyncDialogOpen}
+          onOpenChange={setEntraSyncDialogOpen}
+          onSyncComplete={handleEntraSyncComplete}
+          onOpenSignaturePreview={() => {
+            if (entraSyncEmployee) {
+              handleSignaturePreview(entraSyncEmployee);
+            }
+          }}
+        />
+
+        {/* Signature preview dialog */}
+        <SignaturePreviewDialog
+          employeeId={signaturePreviewEmployee?.id || null}
+          employeeName={signaturePreviewEmployee?.full_name}
+          open={signaturePreviewOpen}
+          onOpenChange={setSignaturePreviewOpen}
+        />
+
+        {/* Batch sync dialog */}
+        <EntraSyncBatchDialog
+          employees={batchSyncEmployees}
+          open={batchSyncDialogOpen}
+          onOpenChange={setBatchSyncDialogOpen}
+          onSyncComplete={handleBatchSyncComplete}
         />
       </main>
     </div>

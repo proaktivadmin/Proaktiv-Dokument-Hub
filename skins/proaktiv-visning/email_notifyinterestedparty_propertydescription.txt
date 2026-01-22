@@ -1,0 +1,15 @@
+<div style='font-family: "Open Sans", Helvetica, sans-serif'>
+	<p>Hei, </p>
+
+	<p>Takk for din interesse på [[oppdrag.adresse.adresse]].</p>
+	<p><span><a href="[[oppdrag.salgsoppgavelink]]">Last ned salgsoppgaven</a></span>.</p>
+
+	<div>Med vennlig hilsen,</div>
+	<div>[[oppdrag.saksbehandler.navn]]</div>
+
+	<span vitec-if="Model.oppdrag.saksbehandler.hartitel == true">
+		<div>[[oppdrag.saksbehandler.titel]]</div>
+	</span>
+		
+	<div>Telefon: [[oppdrag.saksbehandler.telefon]]</div>
+</div>

@@ -1,0 +1,23 @@
+<div style='font-family: "Open Sans", Helvetica, sans-serif'>
+    <p>Hei, </p>
+    <p>Takk for påmelding til visning - [[oppdrag.adresse.adresse]].</p>
+
+    <p vitec-if="Model.visingspamelding == false">
+        Megler vil ta kontakt med deg for å avtale et tidspunkt.
+    </p>
+    <p vitec-if="Model.visingspamelding == true">
+        <span>Visningstid: [[visingsdato]].<br /></span>
+        <span>Antall personer: [[participants]]</span>
+    </p>
+    <p vitec-if="Model.interestedparty.salgsoppgaverequested == true">
+        <a href="[[oppdrag.salgsoppgavelink]]">Last ned salgsoppgaven</a>.
+    </p>
+    <p vitec-if="Model.oppdrag.saksbehandler.harnavn == true">
+        <span>Med vennlig hilsen,<br /></span>
+        <span>[[oppdrag.saksbehandler.navn]]<br /></span>
+        <span vitec-if="Model.oppdrag.saksbehandler.hartitel == true">
+            [[oppdrag.saksbehandler.titel]]<br />
+        </span>
+        <span>Telefon: [[oppdrag.saksbehandler.telefon]]</span>
+    </p>
+</div>

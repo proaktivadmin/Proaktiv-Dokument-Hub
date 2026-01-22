@@ -1,0 +1,14 @@
+--
+{{DisplayName}}
+{{JobTitle}}
+
+Mobil: {{MobilePhone}}
+E-post: {{Email}}
+
+Proaktiv Eiendomsmegling {{OfficeName}}
+{{OfficeAddress}}, {{OfficePostal}}
+Tlf: {{OfficePhone}}
+Web: proaktiv.no
+
+---
+Denne e-posten og eventuelle vedlegg er kun ment for mottaker(e) og kan inneholde konfidensiell informasjon.

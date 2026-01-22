@@ -1,0 +1,189 @@
+﻿$primary: #272630; /* Proaktiv charcoal */
+$secondary: #5e6d82; /* gray */
+$success: #a4b5a8; /* Proaktiv gronn */
+$danger: #cd2026; /* red - keep for errors */
+$warning: #bcab8a; /* Proaktiv bronse */
+$info: #e9e7dc; /* Proaktiv beige */
+$light: #f8f9fa; /* lightgray */
+$dark: #272630; /* Proaktiv primary */
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+
+body {
+    font-family: 'Open sans', sans-serif;
+
+    a {
+        color: $primary;
+    }
+
+    .bg-primary {
+        background-color: $primary !important;
+    }
+
+    .bg-secondary {
+        background-color: $secondary !important;
+    }
+
+    .bg-success {
+        background-color: $success !important;
+    }
+
+    .bg-danger {
+        background-color: $danger !important;
+    }
+
+    .bg-warning {
+        background-color: $warning !important;
+    }
+
+    .bg-info {
+        background-color: $info !important;
+    }
+
+    .bg-light {
+        background-color: $light !important;
+    }
+
+    .bg-dark {
+        background-color: $dark !important;
+    }
+
+    .btn-primary {
+        background-color: $primary;
+        border: none;
+
+        &:not(:disabled):hover,
+        &:not(:disabled):focus {
+            background-color: #3E3D4A;
+        }
+    }
+
+    .btn-secondary {
+        background-color: $secondary;
+        border: none;
+    }
+
+    .btn-success {
+        background-color: $success;
+        border: none;
+    }
+
+    .btn-danger {
+        background-color: $danger;
+        border: none;
+    }
+
+    .btn-warning {
+        background-color: $warning;
+        border: none;
+    }
+
+    .btn-info {
+        background-color: $info;
+        border: none;
+    }
+
+    .btn-light {
+        background-color: $light;
+        border: none;
+    }
+
+    .btn-dark {
+        background-color: $dark;
+        border: none;
+    }
+
+    .btn-outline-danger {
+        border-color: $danger;
+
+        &:not(:disabled):not(.disabled):active {
+            border-color: $danger;
+        }
+    }
+
+    main {
+        .container {
+
+            &.status {
+
+                &.bid-signing {
+                    background-color: $warning;
+                }
+
+                &.bid-done {
+                    background-color: $success;
+                    color: $primary;
+                }
+
+                &.bid-retrying {
+                    background-color: $info;
+                }
+
+                &.bid-failed {
+                    background-color: $danger;
+                    color: white;
+                }
+            }
+
+            .list-group {
+
+                .list-group-item {
+
+                    .link-text {
+                        color: $primary;
+                    }
+
+                    .far {
+
+                        &.fa-check {
+                            color: $success;
+                        }
+
+                        &.fa-arrow-alt-square-down, &.fa-external-link-square-alt {
+                            color: $primary;
+                        }
+                    }
+                }
+            }
+        }
+
+        .progress-article {
+            .container {
+                .bid-progress-container {
+                    .circle {
+                        &.active {
+                            border-color: $primary;
+                        }
+
+                        &.completed, &.allStepsCompleted {
+                            border-color: $success;
+                            background-color: lighten($success, 15%);
+
+                            i {
+                                color: darken($success, 20%);
+                            }
+                        }
+
+                        &.failed, &.failedButActive {
+                            border-color: $danger;
+                            background-color: lighten($danger, 30%);
+
+                            i {
+                                color: $danger;
+                            }
+                        }
+
+                        &.waiting {
+                            border-color: $warning;
+                            background-color: lighten($warning, 20%);
+
+                            i {
+                                color: darken($warning, 20%);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

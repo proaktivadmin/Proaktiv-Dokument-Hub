@@ -1,0 +1,25 @@
+<span vitec-if="Model.visingspamelding">
+	<span vitec-if="Model.registerWithoutSpecificViewingDate == true && Model.isHubUpdatedForParticipants == true">
+		Visningspåmelding [[participants]] personer.
+	</span>
+	<span vitec-if="Model.registerWithoutSpecificViewingDate == false || Model.isHubUpdatedForParticipants == false">
+		Visningspåmelding. 
+	</span>
+</span>
+<span vitec-if="Model.interestedparty.consentscontactforownestate">
+	<text>Ønsker verdivurdering/tilbud. </text>
+</span>
+<span vitec-if="Model.interestedparty.consentscontactforfinance">
+	<text>Ønsker tilbud på finansiering. </text>
+	<span vitec-if="Model.tiptobankisexpected">
+		<span vitec-if="Model.tiptobankiscreated">
+			<text>Tips til bank er sendt. </text>					
+		</span>
+		<span vitec-if="Model.tiptobankiscreated == false">
+			<text>Tips til bank er IKKE sendt. Det må sendes manuelt. </text>
+		</span>
+	</span>
+</span>
+<span vitec-if="Model.interestedparty.salgsoppgaverequested">
+	<text>Salgsoppgave sendt.</text>
+</span>

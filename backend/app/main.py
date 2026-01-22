@@ -45,6 +45,7 @@ from app.routers import (
     code_patterns,
     dashboard,
     employees,
+    entra_sync,
     external_listings,
     health,
     layout_partials,
@@ -149,6 +150,7 @@ app.include_router(territories.router, prefix="/api", tags=["Territories"])
 app.include_router(web_crawl.router, prefix="/api", tags=["Web Crawl"])
 app.include_router(vitec.router, prefix="/api", tags=["Vitec"])
 app.include_router(sync.router, prefix="/api", tags=["Sync"])
+app.include_router(entra_sync.router, prefix="/api", tags=["Entra Sync"])
 
 
 @app.get("/")

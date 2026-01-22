@@ -1,0 +1,18 @@
+installationid: [[installationid]]
+oppdragsid: [[oppdrag.id]]
+salgsoppgave finnes: [[oppdrag.salgsoppgavefinnes]]
+gateadresse: [[oppdrag.adresse.adresse]]
+leilighetsnummer: [[oppdrag.adresse.leilighetnummer]]
+postnummer: [[oppdrag.adresse.postnummer]]
+sted: [[oppdrag.adresse.sted]]
+oppdragsnummer: [[oppdrag.oppdragsnummer]]
+saksbehandler navn: [[oppdrag.saksbehandler.navn]]
+saksbehandler titel: [[oppdrag.saksbehandler.titel]]
+saksbehandler telefon: [[oppdrag.saksbehandler.telefon]]
+ <span vitec-if="Model.visingspamelding == true">
+    <text>visingspåmelding er true</text>
+</span>    
+<span vitec-if="Model.visingspamelding == false">
+    <text>visingspåmelding er false</text>
+</span>
+visingsdato (hvis visingspåmelding): [[visingsdato]]

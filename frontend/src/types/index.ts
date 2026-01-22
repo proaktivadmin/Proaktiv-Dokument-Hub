@@ -108,3 +108,4 @@ export interface ApiError {
  */
 export * from './v2';
 export * from './v3';
+export * from './entra-sync';

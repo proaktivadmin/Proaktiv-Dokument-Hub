@@ -24,6 +24,9 @@ export { syncApi } from "./sync";
 // Vitec Integration
 export { vitecApi } from "./vitec";
 
+// Entra ID Sync
+export { entraSyncApi } from "./entra-sync";
+
 // Re-export from main api.ts for backwards compatibility
 export { categoryApi, templateApi, analyticsApi } from "../api";
 

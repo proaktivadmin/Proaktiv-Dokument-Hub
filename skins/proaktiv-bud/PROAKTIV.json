@@ -1,0 +1,47 @@
+{
+  "ShowConsentFinancing": false,
+  "ShowConsentFollowup": true,
+  "ShowConsentNewsletter": false,
+  "ShowConsentSearchProfile": true,
+
+  "ConsentFinancingText": "Finansiering",
+  "ConsentFollowupText": "Verdivurdering",
+  "ConsentNewsletterText": "Nyhetsbrev",
+  "ConsentSearchProfileText": "Søkeprofil",
+
+  "ConsentFinancingHelp": "Din kontaktinformasjon og boligen du ser på, sendes til en rådgiver i banken. Rådgiveren tar kontakt innen kort tid for å gi et tilbud om lån.",
+  "ConsentFollowupHelp": "En av våre lokalkjente meglere kontakter deg for å avtale en tid for verdivurdering.",
+  "ConsentNewsletterHelp": "Nyhetsbrev",
+  "ConsentSearchProfileHelp": "Søkeprofil",
+
+  "SendConsentCofirmationSms": true,
+
+  "HelpIcon": "help-icon",
+
+  "ShowPersonvernButton": true,
+  "PersonvernButtonText": "Les om personvern",
+  "PersonvernModalText": "Eiendomsmeglerforetaket behandler personopplysninger som er nødvendige for å oppfylle avtalen med deg samt andre formål som selskapet har lov til å behandle opplysningene til i henhold til personvernforordningen. Les mer om hvordan vi behandler personopplysninger i <a rel=\"noopener\" target=\"_blank\" href=\"https://proaktiv.no/personvern\">personvernerklæringen</a>.",
+
+  "SendTipToBank": false,
+  "SendTipToBankSource": "Budportal",
+
+  "UseGoogleTagManager": false,
+  "GoogleTagManagerId": "GTM-XXXX",
+
+  "DownForMaintenance": false,
+  "DownForMaintenanceText": "Tjenesten er ikke tilgjengelig for øyeblikket. Kontakt megler for å gi bud på eiendommen.",
+
+  "UseSmsOrEmailValidation": true,
+  "DisableRadiobuttonsForProfessionalActor": false,
+
+  "UseStepInfo": false,
+  "StepInfoFillForm": "Vennligst følg instruksjonene nøye og sørg for å fylle ut alle de påkrevde feltene. Hvis du har glemt å fylle ut noe, vil dette bli vist i oppsummeringen nederst på skjemaet.",
+  "StepInfoSignBid": "Du signerer skjemaet elektronisk. Trykk på lenken for å starte signering.",
+  "StepInfoSendBidToBroker": "Budet sendes til megler for journalføring.",
+  "BidComplete": "Budet er levert megler og journalført.",
+  "StepComplete": "FULLFØRT!",
+
+  "ServiceMessage": "",
+  "CookiesConsentBannerText": "For å levere deg en god nettjeneste og forbedre brukeropplevelsen, bruker vi informasjonskapsler (cookies).",
+  "CookiesConsentModalText": "Denne nettjenesten bruker informasjonskapsler som er nødvendige for at siden skal fungere riktig. I tillegg kan vi bruke andre informasjonskapsler for analyse og tilpasning. Disse er valgfrie, og du kan selv bestemme om du vil godta dem eller ikke."
+}

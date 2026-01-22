@@ -1,0 +1,26 @@
+/*
+  Hver regel har et sett med ruleitems, der alle ruleitems må være truffet for at en bruker blir ansett som blacklisted
+  Regeltyper er: "mobile", "email" og "ipaddress", for henholdsvis mobiltelefon, epost og ip-adresse
+*/
+{
+  "rules": [
+    {
+      "ruleitems": [
+        {
+          "value": "^\\+224\\d{8}$",
+          "MatchCondition": "Regex",
+          "BlacklistType": "Mobile"
+        }
+      ]
+    },
+    {
+      "ruleitems": [
+        {
+          "value": "^(?=.*\\d{5,})[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$",
+          "MatchCondition": "Regex",
+          "BlacklistType": "Email"
+        }
+      ]
+    }
+  ]
+}

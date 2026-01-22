@@ -33,7 +33,8 @@ Progress: [████████░░] 80% (2 of 5 phases complete, Phase 5 
 | 1. Vitec API Connection | 3/3 | Complete | 2026-01-20 |
 | 4. Stack Upgrade | 5/5 | Complete | 2026-01-22 |
 | 5. Vercel Migration | 2/5 | In Progress | - |
-| 6. Entra ID Signature Sync | 0/4 | Ready | - |
+| 6. Entra ID Signature Sync | 8/8 | Ready for Testing | 2026-01-22 |
+| 7. Office Enhancements + SalesScreen | 0/8 | Ready | - |
 
 **Recent Trend:**
 - Phase 4 completed rapidly (same day)
@@ -100,11 +101,51 @@ Next step: Deploy frontend to Vercel using `/vercel-builder`
 - Consolidated context files (removed duplicates)
 - Updated workflow guide with new structure
 
-### Phase 06 Setup (2026-01-22)
-- Created Entra ID Signature Sync phase structure
-- Research complete: Microsoft Graph API + Exchange Online
-- 4 execution plans (prerequisites, script, template, testing)
-- New agents: SCRIPT_ARCHITECT, SCRIPT_BUILDER
-- New commands: /entra-architect, /entra-builder, /entra-qa, /entra-sync
-- New skill: microsoft-graph-powershell
-- Ready for implementation with `/entra-architect`
+### Phase 06: Entra ID Signature Sync (Implementation Complete - Ready for Testing)
+- Completed by `/entra-builder` agent on 2026-01-22
+- All planned files created and integrated
+- **PowerShell Script:**
+  - `backend/scripts/Sync-EntraIdEmployees.ps1` - Full sync script with:
+    - Certificate and client secret auth
+    - Profile, photo, and signature sync
+    - DryRun mode, FilterEmail for testing
+    - Rate limiting and retry logic
+  - `backend/scripts/templates/email-signature.html` - Proaktiv-branded HTML
+  - `backend/scripts/templates/email-signature.txt` - Plain text fallback
+  - `run-entra-sync.bat` - Windows launcher
+  - `docs/entra-signature-sync.md` - Full documentation
+- **Backend API:**
+  - `backend/app/schemas/entra_sync.py` - Pydantic schemas
+  - `backend/app/services/entra_sync_service.py` - Service layer
+  - `backend/app/routers/entra_sync.py` - FastAPI endpoints
+  - Config settings added to `backend/app/config.py`
+- **Frontend:**
+  - Types, API client, hooks in `frontend/src/types/entra-sync.ts`
+  - 4 new components: EntraConnectionStatus, SignaturePreviewDialog, EntraSyncDialog, EntraSyncBatchDialog
+  - EmployeeCard updated with selection checkbox + Entra menu items
+  - EmployeeGrid updated with batch selection mode
+  - employees/page.tsx wired up with all dialogs
+- **Next step:** Run `/entra-qa` to test with real Azure credentials
+
+### Phase 07: Office Enhancements + SalesScreen (Ready)
+- Separated from Phase 06 to allow independent development
+- Research complete: See 07-RESEARCH-SALESSCREEN.md
+- 8 execution plans (07-01 through 07-08):
+  - 07-01: Add region field to offices (DB + API)
+  - 07-02: Region filter and grouping in office UI
+  - 07-03: Office merge backend API
+  - 07-04: Office merge frontend UI
+  - 07-05: Add SalesScreen fields to Office model
+  - 07-06: SalesScreen backend service and API
+  - 07-07: SalesScreen frontend types, hooks, dialogs
+  - 07-08: SalesScreen integration with employee UI + onboarding
+- Ready for implementation after Phase 06 or in parallel
+
+### Office Regions
+Defined regions for geographic grouping:
+- Trøndelag (Trondheim area)
+- Romerike (Lillestrøm, Lørenskog area)
+- Sør-Rogaland (Stavanger, Sandnes, Sola area)
+- Vest (Bergen, Voss area)
+- Sør (Kristiansand, Skien area)
+- Øst (Oslo, Drammen area)

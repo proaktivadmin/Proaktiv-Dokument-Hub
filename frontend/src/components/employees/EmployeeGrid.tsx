@@ -1,11 +1,13 @@
 "use client";
 
-import { Users, Plus, Search, Mail, RefreshCcw } from "lucide-react";
-import { useState } from "react";
+import { Users, Plus, Search, Mail, RefreshCcw, Cloud, CheckSquare, X } from "lucide-react";
+import { useState, useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Checkbox } from "@/components/ui/checkbox";
 import { EmployeeCard } from "./EmployeeCard";
+import { EntraConnectionStatus } from "./EntraConnectionStatus";
 import { VitecConnectionStatus } from "@/components/vitec";
 import type { EmployeeWithOffice } from "@/types/v3";
 
@@ -26,6 +28,10 @@ interface EmployeeGridProps {
     office_id?: string;
     role?: string;
   };
+  // Entra sync props
+  onEntraSync?: (employee: EmployeeWithOffice) => void;
+  onSignaturePreview?: (employee: EmployeeWithOffice) => void;
+  onBatchEntraSync?: (employees: EmployeeWithOffice[]) => void;
 }
 
 
@@ -43,9 +49,15 @@ export function EmployeeGrid({
   onSync,
   isSyncing = false,
   currentFilters,
+  onEntraSync,
+  onSignaturePreview,
+  onBatchEntraSync,
 }: EmployeeGridProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [vitecConnected, setVitecConnected] = useState<boolean | null>(null);
+  const [entraConnected, setEntraConnected] = useState<boolean | null>(null);
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const showActions = Boolean(onCreateNew || onSync);
 
   // Filter employees by search
@@ -59,6 +71,35 @@ export function EmployeeGrid({
       employee.office.name.toLowerCase().includes(query)
     );
   });
+
+  // Get selected employees
+  const selectedEmployees = useMemo(() => {
+    return filteredEmployees.filter((e) => selectedIds.has(e.id));
+  }, [filteredEmployees, selectedIds]);
+
+  // Selection handlers
+  const toggleSelect = (employeeId: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(employeeId)) {
+        next.delete(employeeId);
+      } else {
+        next.add(employeeId);
+      }
+      return next;
+    });
+  };
+
+  const selectAll = () => {
+    setSelectedIds(new Set(filteredEmployees.map((e) => e.id)));
+  };
+
+  const clearSelection = () => {
+    setSelectedIds(new Set());
+    setSelectionMode(false);
+  };
+
+  const allSelected = filteredEmployees.length > 0 && filteredEmployees.every((e) => selectedIds.has(e.id));
 
   if (isLoading) {
     return (
@@ -99,6 +140,25 @@ export function EmployeeGrid({
         {showActions && (
           <div className="flex gap-2 ml-auto items-center">
             <VitecConnectionStatus onStatusChange={setVitecConnected} />
+            <EntraConnectionStatus onStatusChange={setEntraConnected} />
+            
+            {/* Selection mode toggle */}
+            {entraConnected && onBatchEntraSync && (
+              <Button
+                variant={selectionMode ? "secondary" : "outline"}
+                onClick={() => {
+                  if (selectionMode) {
+                    clearSelection();
+                  } else {
+                    setSelectionMode(true);
+                  }
+                }}
+              >
+                <CheckSquare className="h-4 w-4 mr-2" />
+                {selectionMode ? "Avbryt valg" : "Velg flere"}
+              </Button>
+            )}
+
             {onSync && (
               <Button
                 variant="outline"
@@ -144,6 +204,42 @@ export function EmployeeGrid({
 
       </div>
 
+      {/* Selection action bar */}
+      {selectionMode && selectedIds.size > 0 && (
+        <div className="flex items-center gap-4 p-3 bg-primary/5 rounded-lg border border-primary/20">
+          <div className="flex items-center gap-2">
+            <Checkbox
+              checked={allSelected}
+              onCheckedChange={(checked) => {
+                if (checked) {
+                  selectAll();
+                } else {
+                  setSelectedIds(new Set());
+                }
+              }}
+            />
+            <span className="text-sm font-medium">
+              {selectedIds.size} valgt
+            </span>
+          </div>
+          
+          <div className="flex gap-2 ml-auto">
+            {onBatchEntraSync && (
+              <Button
+                size="sm"
+                onClick={() => onBatchEntraSync(selectedEmployees)}
+              >
+                <Cloud className="h-4 w-4 mr-2" />
+                Synkroniser {selectedIds.size} til Entra ID
+              </Button>
+            )}
+            <Button size="sm" variant="ghost" onClick={clearSelection}>
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* Grid */}
       {filteredEmployees.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -172,6 +268,14 @@ export function EmployeeGrid({
               onEdit={onEdit ? () => onEdit(employee) : undefined}
               onStartOffboarding={onStartOffboarding ? () => onStartOffboarding(employee) : undefined}
               onDeactivate={onDeactivate ? () => onDeactivate(employee) : undefined}
+              // Selection props
+              selectable={selectionMode}
+              selected={selectedIds.has(employee.id)}
+              onSelectChange={() => toggleSelect(employee.id)}
+              // Entra props
+              entraConnected={entraConnected === true}
+              onEntraSync={onEntraSync ? () => onEntraSync(employee) : undefined}
+              onSignaturePreview={onSignaturePreview ? () => onSignaturePreview(employee) : undefined}
             />
           ))}
         </div>

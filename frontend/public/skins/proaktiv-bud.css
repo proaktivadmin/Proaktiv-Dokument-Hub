@@ -1,0 +1,129 @@
+/* Proaktiv charcoal */
+/* gray */
+/* Proaktiv gronn */
+/* red - keep for errors */
+/* Proaktiv bronse */
+/* Proaktiv beige */
+/* lightgray */
+/* Proaktiv primary */
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap");
+body {
+  font-family: "Open sans", sans-serif;
+}
+body a {
+  color: #272630;
+}
+body .bg-primary {
+  background-color: #272630 !important;
+}
+body .bg-secondary {
+  background-color: #5e6d82 !important;
+}
+body .bg-success {
+  background-color: #a4b5a8 !important;
+}
+body .bg-danger {
+  background-color: #cd2026 !important;
+}
+body .bg-warning {
+  background-color: #bcab8a !important;
+}
+body .bg-info {
+  background-color: #e9e7dc !important;
+}
+body .bg-light {
+  background-color: #f8f9fa !important;
+}
+body .bg-dark {
+  background-color: #272630 !important;
+}
+body .btn-primary {
+  background-color: #272630;
+  border: none;
+}
+body .btn-primary:not(:disabled):hover, body .btn-primary:not(:disabled):focus {
+  background-color: #3E3D4A;
+}
+body .btn-secondary {
+  background-color: #5e6d82;
+  border: none;
+}
+body .btn-success {
+  background-color: #a4b5a8;
+  border: none;
+}
+body .btn-danger {
+  background-color: #cd2026;
+  border: none;
+}
+body .btn-warning {
+  background-color: #bcab8a;
+  border: none;
+}
+body .btn-info {
+  background-color: #e9e7dc;
+  border: none;
+}
+body .btn-light {
+  background-color: #f8f9fa;
+  border: none;
+}
+body .btn-dark {
+  background-color: #272630;
+  border: none;
+}
+body .btn-outline-danger {
+  border-color: #cd2026;
+}
+body .btn-outline-danger:not(:disabled):not(.disabled):active {
+  border-color: #cd2026;
+}
+body main .container.status.bid-signing {
+  background-color: #bcab8a;
+}
+body main .container.status.bid-done {
+  background-color: #a4b5a8;
+  color: #272630;
+}
+body main .container.status.bid-retrying {
+  background-color: #e9e7dc;
+}
+body main .container.status.bid-failed {
+  background-color: #cd2026;
+  color: white;
+}
+body main .container .list-group .list-group-item .link-text {
+  color: #272630;
+}
+body main .container .list-group .list-group-item .far.fa-check {
+  color: #a4b5a8;
+}
+body main .container .list-group .list-group-item .far.fa-arrow-alt-square-down, body main .container .list-group .list-group-item .far.fa-external-link-square-alt {
+  color: #272630;
+}
+body main .progress-article .container .bid-progress-container .circle.active {
+  border-color: #272630;
+}
+body main .progress-article .container .bid-progress-container .circle.completed, body main .progress-article .container .bid-progress-container .circle.allStepsCompleted {
+  border-color: #a4b5a8;
+  background-color: rgb(206.1909090909, 215.3090909091, 208.3363636364);
+}
+body main .progress-article .container .bid-progress-container .circle.completed i, body main .progress-article .container .bid-progress-container .circle.allStepsCompleted i {
+  color: rgb(108.9818181818, 134.0181818182, 114.8727272727);
+}
+body main .progress-article .container .bid-progress-container .circle.failed, body main .progress-article .container .bid-progress-container .circle.failedButActive {
+  border-color: #cd2026;
+  background-color: rgb(238.7974683544, 151.2025316456, 154.2405063291);
+}
+body main .progress-article .container .bid-progress-container .circle.failed i, body main .progress-article .container .bid-progress-container .circle.failedButActive i {
+  color: #cd2026;
+}
+body main .progress-article .container .bid-progress-container .circle.waiting {
+  border-color: #bcab8a;
+  background-color: rgb(225.1413043478, 217.5652173913, 202.8586956522);
+}
+body main .progress-article .container .bid-progress-container .circle.waiting i {
+  color: rgb(142.4347826087, 121.7391304348, 81.5652173913);
+}
+
+/*# sourceMappingURL=PROAKTIV.css.map */

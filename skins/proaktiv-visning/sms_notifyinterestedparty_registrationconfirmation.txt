@@ -1,0 +1,12 @@
+Takk for påmelding til visning - [[oppdrag.adresse.adresse]].
+<br /><br />
+<span vitec-if="Model.visingspamelding == false">
+Megler vil ta kontakt med deg for å avtale et tidspunkt.</span>
+<span vitec-if="Model.visingspamelding == true">
+Visningstid: [[visingsdato]].<br />
+Antall personer: [[participants]]
+</span>
+<br /><br />
+[[oppdrag.saksbehandler.navn]]<br />
+[[oppdrag.saksbehandler.titel]]<br />
+[[oppdrag.saksbehandler.telefon]]

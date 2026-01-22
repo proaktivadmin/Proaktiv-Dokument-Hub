@@ -99,6 +99,14 @@ class Settings(BaseSettings):
     FIRECRAWL_TIMEOUT_MS: int = 30000
     FIRECRAWL_ONLY_MAIN_CONTENT: bool = True
 
+    # Entra ID Sync (Microsoft 365 / Azure AD integration)
+    # Used for syncing employee profiles to Entra ID and pushing email signatures
+    ENTRA_TENANT_ID: str = ""  # Azure AD tenant ID (GUID)
+    ENTRA_CLIENT_ID: str = ""  # Azure App Registration client ID (GUID)
+    ENTRA_CLIENT_SECRET: str = ""  # Client secret (or use certificate)
+    ENTRA_CERT_THUMBPRINT: str = ""  # Certificate thumbprint (alternative to secret)
+    ENTRA_ORGANIZATION: str = ""  # Microsoft 365 domain (e.g., proaktiv.onmicrosoft.com)
+
     @field_validator("SECRET_KEY", mode="before")
     @classmethod
     def validate_secret_key(cls, v: str, info) -> str:
