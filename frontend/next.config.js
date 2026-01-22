@@ -5,6 +5,7 @@ const isDev = process.env.NODE_ENV === 'development';
 // Backend URL for CSP connect-src directive
 // In production, this is the Railway backend; in dev, localhost
 // Normalize to remove trailing slashes for consistent CSP formatting
+// Note: Frontend is on Vercel, backend remains on Railway
 const backendUrl = (process.env.BACKEND_URL 
   || process.env.NEXT_PUBLIC_API_URL 
   || (isDev ? 'http://localhost:8000' : 'https://proaktiv-dokument-hub-production.up.railway.app')
@@ -37,12 +38,11 @@ const cspHeader = `
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Use standalone output for non-Vercel deployments (Railway, Docker)
-  // Vercel automatically handles output mode
+  // Vercel automatically handles output mode; standalone only needed for local Docker
   ...(process.env.VERCEL ? {} : { output: 'standalone' }),
   
-  // API proxy rewrites - only used in non-Vercel environments
-  // Vercel uses vercel.json rewrites instead (more reliable for external API proxying)
+  // API proxy rewrites - only used for local development
+  // Vercel uses vercel.json rewrites for production
   ...(process.env.VERCEL
     ? {}
     : {

@@ -5,7 +5,7 @@
  * 
  * Supports:
  * - Local development (localhost:3000 → localhost:8000 via Next.js rewrites)
- * - Railway (relative URLs, Next.js rewrites to BACKEND_URL)
+ * - Vercel production (vercel.json rewrites to Railway backend)
  */
 
 import axios, { AxiosInstance } from 'axios';
@@ -28,12 +28,12 @@ export function getApiBaseUrl(): string {
     return normalizeBaseUrl(process.env.NEXT_PUBLIC_API_URL);
   }
   
-  // On client side, check if we're on Railway production
+  // On client side, check if we're on Vercel production
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
     
-    // If on Railway frontend domain, use direct backend URL
-    if (hostname.includes('blissful-quietude') || hostname.includes('railway.app')) {
+    // If on Vercel domain, use direct backend URL (Railway backend)
+    if (hostname.includes('vercel.app') || hostname.includes('proaktiv-dokument-hub')) {
       return 'https://proaktiv-dokument-hub-production.up.railway.app';
     }
   }
@@ -46,7 +46,7 @@ export function getApiBaseUrl(): string {
  * Resolve stored DB URLs like `/api/...` to the real backend base URL when needed.
  *
  * This avoids Next.js proxying to `http://localhost:8000` in production when BACKEND_URL
- * isn't set, and makes avatars/banner images work reliably on Railway.
+ * isn't set, and makes avatars/banner images work reliably.
  */
 export function resolveApiUrl(url: string | null | undefined): string | undefined {
   if (!url) return undefined;

@@ -13,7 +13,7 @@ A document template management system for Norwegian real estate brokers, integra
 | **Phase** | 3.2 (Stack Upgraded, CI/CD Active) |
 | **Stack** | Next.js 16 + React 19 + FastAPI + PostgreSQL (Railway) |
 | **UI** | Shadcn/UI + Tailwind CSS 4 |
-| **Hosting** | Railway (Frontend + Backend + PostgreSQL) |
+| **Hosting** | Vercel (Frontend) + Railway (Backend + PostgreSQL) |
 | **Storage** | WebDAV (proaktiv.no/d/) |
 | **Auth** | Password + JWT sessions (7-day expiry) |
 | **CI/CD** | GitHub Actions (lint, typecheck, test, build) |
@@ -135,6 +135,14 @@ frontend/
 
 See `.planning/STATE.md` for full status.
 
+**Phase 06: Entra ID Signature Sync (Ready for Implementation):**
+- 🔲 Sync employee data from PostgreSQL to Microsoft Entra ID
+- 🔲 Upload profile photos to Entra ID
+- 🔲 Push email signatures to Exchange Online
+- 🔲 2-way sync: Vitec Next → Local DB → Entra ID
+- Plans: `.planning/phases/06-entra-signature-sync/`
+- Commands: `/entra-architect`, `/entra-builder`, `/entra-qa`
+
 **V3.2 Stack Upgrade + CI/CD (Completed 2026-01-22):**
 - ✅ Next.js 14 → 16.1.4 upgrade
 - ✅ React 18 → 19.2.3 upgrade
@@ -183,7 +191,7 @@ See `.planning/STATE.md` for full status.
 - ✅ Migrated from Azure to Railway
 - ✅ 44 templates stored in PostgreSQL database
 - ✅ 11 categories seeded
-- ✅ Frontend and Backend on Railway
+- ✅ Backend on Railway, Frontend moved to Vercel
 - ✅ Deploys from `main` branch
 
 **V2.6-2.7 Features:**
@@ -204,6 +212,14 @@ Execute in order:
 3. **Builder** → Implementation
 
 Use `/architect`, `/frontend-architect`, `/builder` commands.
+
+### Entra ID Sync Pipeline (Phase 06)
+
+1. **Script Architect** → `.cursor/specs/entra_sync_spec.md`
+2. **Script Builder** → PowerShell implementation
+3. **QA** → Test with dry-run
+
+Use `/entra-architect`, `/entra-builder`, `/entra-qa` commands.
 
 ---
 
@@ -228,6 +244,10 @@ Use `/architect`, `/frontend-architect`, `/builder` commands.
 | `/builder` | Run Builder |
 | `/status` | Check project status |
 | `/scrape-proaktiv` | Run Proaktiv directory scraper |
+| `/entra-architect` | Design Entra ID sync script |
+| `/entra-builder` | Build Entra ID sync script |
+| `/entra-qa` | Test Entra ID sync |
+| `/entra-sync` | Run Entra ID sync (usage docs) |
 
 ---
 
@@ -273,10 +293,10 @@ http://localhost:3000
 docker compose exec db psql -U postgres -d dokument_hub
 ```
 
-### Production (Railway)
-- **Frontend:** https://blissful-quietude-production.up.railway.app
-- **Backend:** https://proaktiv-dokument-hub-production.up.railway.app
-- **Deploy:** Push to `main` branch
+### Production
+- **Frontend (Vercel):** https://proaktiv-dokument-hub.vercel.app
+- **Backend (Railway):** https://proaktiv-dokument-hub-production.up.railway.app
+- **Deploy:** Push to `main` branch (auto-deploys to both Vercel and Railway)
 
 ### Environment Variables (Backend)
 | Variable | Value |
@@ -300,10 +320,17 @@ docker compose exec db psql -U postgres -d dokument_hub
 | `SENTRY_PROJECT` | Sentry project slug (for source maps) |
 | `SENTRY_AUTH_TOKEN` | Sentry auth token (for source map upload) |
 
-### Railway CLI
+### Railway CLI (Backend)
 ```bash
-railway link          # Link to a service
+railway link          # Link to backend service
 railway variables     # View environment variables
 railway redeploy      # Trigger redeploy
 railway logs          # View logs
+```
+
+### Vercel CLI (Frontend)
+```bash
+vercel                # Deploy preview
+vercel --prod         # Deploy to production
+vercel logs           # View logs
 ```
