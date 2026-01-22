@@ -1,0 +1,51 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Next.js: debug server-side",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run dev -- --inspect",
+      "cwd": "${workspaceFolder}/frontend"
+    },
+    {
+      "name": "Next.js: debug client-side",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000"
+    },
+    {
+      "name": "Next.js: debug full stack",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/frontend/node_modules/next/dist/bin/next",
+      "args": ["dev"],
+      "cwd": "${workspaceFolder}/frontend",
+      "runtimeArgs": ["--inspect"],
+      "skipFiles": ["<node_internals>/**"],
+      "serverReadyAction": {
+        "action": "debugWithChrome",
+        "killOnServerStop": true,
+        "pattern": "- Local:.+(https?://.+)",
+        "uriFormat": "%s",
+        "webRoot": "${workspaceFolder}/frontend"
+      }
+    },
+    {
+      "name": "Python: FastAPI Backend",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "uvicorn",
+      "args": ["app.main:app", "--reload", "--port", "8000"],
+      "cwd": "${workspaceFolder}/backend",
+      "jinja": true
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Full Stack: Frontend + Backend",
+      "configurations": ["Next.js: debug server-side", "Python: FastAPI Backend"],
+      "stopAll": true
+    }
+  ]
+}
