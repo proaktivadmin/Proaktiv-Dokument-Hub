@@ -103,6 +103,8 @@ default_origins = [
     # Railway URLs
     "https://blissful-quietude-production.up.railway.app",
     "https://proaktiv-dokument-hub-production.up.railway.app",
+    # Vercel URLs
+    "https://proaktiv-dokument-hub.vercel.app",
 ]
 
 # Merge allowed origins
@@ -111,6 +113,7 @@ all_origins = list(set(allowed_origins + default_origins))
 app.add_middleware(
     CORSMiddleware,
     allow_origins=all_origins,
+    allow_origin_regex=r"https://.*\.vercel\.app",  # All Vercel preview URLs
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

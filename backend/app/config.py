@@ -42,7 +42,7 @@ class Settings(BaseSettings):
     SECRET_KEY: str = ""  # Will be validated below
 
     # CORS
-    ALLOWED_ORIGINS: str = '["http://localhost:3000"]'
+    ALLOWED_ORIGINS: str = '["http://localhost:3000","https://proaktiv-dokument-hub.vercel.app"]'
 
     # Database
     DATABASE_URL: str = "postgresql://postgres:postgres@db:5432/dokument_hub"
