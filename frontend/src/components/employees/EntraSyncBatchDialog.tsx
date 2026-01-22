@@ -4,7 +4,7 @@ import { useState } from "react";
 import {
   Loader2,
   User,
-  Image,
+  ImageIcon,
   Mail,
   Cloud,
   Users,
@@ -149,7 +149,7 @@ export function EntraSyncBatchDialog({
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-2">
-                    <Image className="h-4 w-4" />
+                    <ImageIcon className="h-4 w-4" />
                     Bilder lastet opp
                   </span>
                   <span className="font-medium">{result.photos_uploaded}</span>
@@ -209,7 +209,7 @@ export function EntraSyncBatchDialog({
                     {employees.map((emp) => (
                       <div key={emp.id} className="flex items-center gap-2">
                         <Avatar className="h-6 w-6">
-                          <AvatarImage src={resolveApiUrl(emp.profile_image_url)} alt={emp.name} />
+                          <AvatarImage src={resolveApiUrl(emp.profile_image_url)} alt={emp.full_name} />
                           <AvatarFallback
                             className="text-[10px]"
                             style={{ backgroundColor: emp.office.color }}
@@ -246,7 +246,7 @@ export function EntraSyncBatchDialog({
                       onCheckedChange={(checked) => setSyncPhoto(checked === true)}
                     />
                     <Label htmlFor="batch-sync-photo" className="flex items-center gap-2">
-                      <Image className="h-4 w-4" />
+                      <ImageIcon className="h-4 w-4" />
                       Profilbilder
                     </Label>
                   </div>

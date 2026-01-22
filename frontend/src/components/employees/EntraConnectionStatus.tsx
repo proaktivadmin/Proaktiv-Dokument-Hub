@@ -40,7 +40,7 @@ export function EntraConnectionStatus({
   useEffect(() => {
     entraSyncApi
       .getStatus()
-      .then((s) => {
+      .then((s: EntraStatus) => {
         setStatus(s);
         onStatusChange?.(s.connected);
       })

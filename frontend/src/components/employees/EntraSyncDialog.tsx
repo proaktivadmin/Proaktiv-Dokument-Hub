@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import {
   Loader2,
   User,
-  Image,
+  ImageIcon,
   Mail,
   CheckCircle,
   XCircle,
@@ -276,7 +276,7 @@ export function EntraSyncDialog({
                       htmlFor="sync-photo"
                       className={`flex items-center gap-2 ${!preview.photo_url ? "text-muted-foreground" : ""}`}
                     >
-                      <Image className="h-4 w-4" />
+                      <ImageIcon className="h-4 w-4" />
                       Profilbilde {!preview.photo_url && "(ingen URL)"}
                     </Label>
                   </div>

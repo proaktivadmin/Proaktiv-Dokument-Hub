@@ -12,7 +12,7 @@ import type {
   EntraSyncResult,
   RoamingSignaturesStatus,
   SignaturePreview,
-} from '@/types/entra-sync';
+} from '../../types/entra-sync';
 
 export const entraSyncApi = {
   /**
