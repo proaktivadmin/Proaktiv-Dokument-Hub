@@ -1,24 +1,89 @@
 const { withSentryConfig } = require("@sentry/nextjs");
 
+const isDev = process.env.NODE_ENV === 'development';
+
+/**
+ * Content Security Policy
+ * Protects against XSS, clickjacking, and other code injection attacks.
+ * @see https://nextjs.org/docs/app/guides/content-security-policy
+ */
+const cspHeader = `
+  default-src 'self';
+  script-src 'self' 'unsafe-inline' ${isDev ? "'unsafe-eval'" : ''};
+  style-src 'self' 'unsafe-inline';
+  img-src 'self' blob: data: https://proaktiv.no https://*.proaktiv.no https://*.sentry.io;
+  font-src 'self' data:;
+  connect-src 'self' https://proaktiv-dokument-hub-production.up.railway.app https://*.sentry.io https://*.ingest.sentry.io wss://*.sentry.io ${isDev ? 'ws://localhost:* http://localhost:*' : ''};
+  frame-ancestors 'none';
+  base-uri 'self';
+  form-action 'self';
+  object-src 'none';
+  upgrade-insecure-requests;
+`.replace(/\s{2,}/g, ' ').trim();
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
+  // Use standalone output for non-Vercel deployments (Railway, Docker)
+  // Vercel automatically handles output mode
+  ...(process.env.VERCEL ? {} : { output: 'standalone' }),
   
-  // API proxy rewrites - allows runtime BACKEND_URL configuration
-  // Works with both Railway (production) and localhost (development)
-  async rewrites() {
-    const backendUrl =
-      process.env.BACKEND_URL ||
-      process.env.NEXT_PUBLIC_API_URL ||
-      (process.env.NODE_ENV === "production"
-        ? "https://proaktiv-dokument-hub-production.up.railway.app"
-        : "http://localhost:8000");
+  // API proxy rewrites - only used in non-Vercel environments
+  // Vercel uses vercel.json rewrites instead (more reliable for external API proxying)
+  ...(process.env.VERCEL
+    ? {}
+    : {
+        async rewrites() {
+          const backendUrl =
+            process.env.BACKEND_URL ||
+            process.env.NEXT_PUBLIC_API_URL ||
+            (process.env.NODE_ENV === "production"
+              ? "https://proaktiv-dokument-hub-production.up.railway.app"
+              : "http://localhost:8000");
 
-    const normalizedBackendUrl = backendUrl.replace(/\/+$/, "");
+          const normalizedBackendUrl = backendUrl.replace(/\/+$/, "");
+          return [
+            {
+              source: '/api/:path*',
+              destination: `${normalizedBackendUrl}/api/:path*`,
+            },
+          ];
+        },
+      }),
+
+  /**
+   * Security headers
+   * @see https://nextjs.org/docs/app/guides/content-security-policy
+   */
+  async headers() {
     return [
       {
-        source: '/api/:path*',
-        destination: `${normalizedBackendUrl}/api/:path*`,
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: cspHeader,
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()',
+          },
+        ],
       },
     ];
   },
