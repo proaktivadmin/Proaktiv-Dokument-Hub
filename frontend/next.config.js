@@ -2,10 +2,24 @@ const { withSentryConfig } = require("@sentry/nextjs");
 
 const isDev = process.env.NODE_ENV === 'development';
 
+// Backend URL for CSP connect-src directive
+// In production, this is the Railway backend; in dev, localhost
+// Normalize to remove trailing slashes for consistent CSP formatting
+const backendUrl = (process.env.BACKEND_URL 
+  || process.env.NEXT_PUBLIC_API_URL 
+  || (isDev ? 'http://localhost:8000' : 'https://proaktiv-dokument-hub-production.up.railway.app')
+).replace(/\/+$/, '');
+
 /**
  * Content Security Policy
  * Protects against XSS, clickjacking, and other code injection attacks.
+ * 
+ * IMPORTANT: For Vercel deployments, vercel.json defines its own CSP headers.
+ * Keep both CSPs synchronized! The vercel.json CSP is static and must match
+ * the production version of this CSP (isDev=false).
+ * 
  * @see https://nextjs.org/docs/app/guides/content-security-policy
+ * @see frontend/vercel.json - headers section for Vercel-specific CSP
  */
 const cspHeader = `
   default-src 'self';
@@ -13,12 +27,12 @@ const cspHeader = `
   style-src 'self' 'unsafe-inline';
   img-src 'self' blob: data: https://proaktiv.no https://*.proaktiv.no https://*.sentry.io;
   font-src 'self' data:;
-  connect-src 'self' https://proaktiv-dokument-hub-production.up.railway.app https://*.sentry.io https://*.ingest.sentry.io wss://*.sentry.io ${isDev ? 'ws://localhost:* http://localhost:*' : ''};
+  connect-src 'self' ${backendUrl} https://*.sentry.io https://*.ingest.sentry.io wss://*.sentry.io ${isDev ? 'ws://localhost:* http://localhost:*' : ''};
   frame-ancestors 'none';
   base-uri 'self';
   form-action 'self';
   object-src 'none';
-  upgrade-insecure-requests;
+  ${isDev ? '' : 'upgrade-insecure-requests;'}
 `.replace(/\s{2,}/g, ' ').trim();
 
 /** @type {import('next').NextConfig} */
