@@ -264,3 +264,4 @@ export { storageApi } from "./api/storage";
 export type { StorageItem, BrowseResponse, StorageStatus, ImportToLibraryPayload, ImportResult } from "./api/storage";
 export { vitecApi } from "./api/vitec";
 export type { VitecStatus } from "./api/vitec";
+export { entraSyncApi } from "./api/entra-sync";
