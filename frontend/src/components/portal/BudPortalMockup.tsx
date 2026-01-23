@@ -5,186 +5,466 @@ import { PortalFrame } from "./PortalFrame";
 /**
  * BudPortalMockup Component
  * 
- * Interactive mockup of the Vitec Budportal (bidding portal) with Proaktiv branding.
- * Shows the bid form with consent options configured per Proaktiv requirements:
- * - Verdivurdering: ENABLED
- * - Newsletter: HIDDEN
- * - Financing: HIDDEN
+ * Pixel-accurate mockup of the Vitec Budportal (bidding portal) with Proaktiv branding.
+ * Uses the EXACT HTML structure and CSS classes from the live Vitec portal.
+ * 
+ * Source: Live Vitec portal HTML (MSNOP/Nordvik Bolig)
  */
 
 interface BudPortalMockupProps {
   /** Whether to show financing option (for Voss office demo) */
   showFinancing?: boolean;
+  /** Whether to show in fullscreen mode */
+  fullscreen?: boolean;
 }
 
-export function BudPortalMockup({ showFinancing = false }: BudPortalMockupProps) {
+export function BudPortalMockup({ showFinancing = false, fullscreen = false }: BudPortalMockupProps) {
+  // This HTML mirrors the EXACT Vitec Budportal structure from bud.vitecnext.no
   const mockupHtml = `
-<div class="portal-container">
-  <!-- Header -->
-  <div class="portal-header bg-light">
-    <div class="d-flex align-items-center justify-content-between">
-      <div>
-        <h4 class="mb-1" style="color: #272630; font-weight: 600;">Strandgata 15A</h4>
-        <p class="text-muted mb-0" style="font-size: 14px;">5700 Voss</p>
-      </div>
-      <div style="width: 80px; height: 60px; background: #e9e7dc; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
-        <i class="fas fa-home" style="color: #bcab8a; font-size: 24px;"></i>
-      </div>
+<!-- Fixed header - matches Vitec structure -->
+<header class="navbar navbar-expand-md bg-primary text-light fixed-top">
+    <div class="object-header">
+        <span>Gi bud </span>
+        <span class="d-none d-sm-inline"> på Strandgata 15A</span>
     </div>
-  </div>
-
-  <!-- Progress Steps -->
-  <div class="px-4 py-3 bg-white border-bottom">
-    <div class="d-flex justify-content-between align-items-center" style="max-width: 400px; margin: 0 auto;">
-      <div class="text-center">
-        <div class="circle active" style="width: 36px; height: 36px; border-radius: 50%; border: 3px solid #272630; display: flex; align-items: center; justify-content: center; margin: 0 auto 4px;">
-          <span style="font-weight: 600; color: #272630;">1</span>
-        </div>
-        <small style="font-size: 11px; color: #272630;">Fyll ut</small>
-      </div>
-      <div style="flex: 1; height: 2px; background: #ddd; margin: 0 10px;"></div>
-      <div class="text-center">
-        <div class="circle" style="width: 36px; height: 36px; border-radius: 50%; border: 3px solid #ddd; display: flex; align-items: center; justify-content: center; margin: 0 auto 4px;">
-          <span style="font-weight: 600; color: #999;">2</span>
-        </div>
-        <small style="font-size: 11px; color: #999;">Signer</small>
-      </div>
-      <div style="flex: 1; height: 2px; background: #ddd; margin: 0 10px;"></div>
-      <div class="text-center">
-        <div class="circle" style="width: 36px; height: 36px; border-radius: 50%; border: 3px solid #ddd; display: flex; align-items: center; justify-content: center; margin: 0 auto 4px;">
-          <span style="font-weight: 600; color: #999;">3</span>
-        </div>
-        <small style="font-size: 11px; color: #999;">Levert</small>
-      </div>
-    </div>
-  </div>
-
-  <!-- Form Content -->
-  <div class="portal-content">
-    <!-- Personal Info Section -->
-    <h5 style="color: #272630; font-weight: 600; margin-bottom: 16px;">Dine opplysninger</h5>
-    
-    <div class="form-group">
-      <label style="font-size: 14px; color: #666;">Fullt navn *</label>
-      <input type="text" class="form-control" placeholder="Ola Nordmann" value="Ola Nordmann" style="border-color: #D6D4CD;">
-    </div>
-
-    <div class="row">
-      <div class="col-6">
-        <div class="form-group">
-          <label style="font-size: 14px; color: #666;">Fødselsnummer *</label>
-          <input type="text" class="form-control" placeholder="11 siffer" value="01019012345" style="border-color: #D6D4CD;">
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="form-group">
-          <label style="font-size: 14px; color: #666;">Telefon *</label>
-          <input type="tel" class="form-control" placeholder="+47" value="+47 987 65 432" style="border-color: #D6D4CD;">
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label style="font-size: 14px; color: #666;">E-post *</label>
-      <input type="email" class="form-control" placeholder="din@epost.no" value="ola@eksempel.no" style="border-color: #D6D4CD;">
-    </div>
-
-    <hr style="border-color: #e9e7dc; margin: 24px 0;">
-
-    <!-- Bid Section -->
-    <h5 style="color: #272630; font-weight: 600; margin-bottom: 16px;">Ditt bud</h5>
-    
-    <div class="form-group">
-      <label style="font-size: 14px; color: #666;">Budsum *</label>
-      <div class="input-group">
-        <input type="text" class="form-control" placeholder="0" value="4 500 000" style="border-color: #D6D4CD; font-size: 18px; font-weight: 600;">
-        <div class="input-group-append">
-          <span class="input-group-text" style="background: #f8f9fa; border-color: #D6D4CD;">NOK</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label style="font-size: 14px; color: #666;">Akseptfrist *</label>
-      <input type="text" class="form-control" value="23.01.2026 kl. 12:00" style="border-color: #D6D4CD;">
-    </div>
-
-    <div class="form-group">
-      <label style="font-size: 14px; color: #666;">Overtagelse</label>
-      <input type="text" class="form-control" placeholder="Etter avtale" value="01.03.2026" style="border-color: #D6D4CD;">
-    </div>
-
-    <div class="form-group">
-      <label style="font-size: 14px; color: #666;">Forbehold / betingelser</label>
-      <textarea class="form-control" rows="2" placeholder="Eventuelle forbehold..." style="border-color: #D6D4CD;"></textarea>
-    </div>
-
-    <hr style="border-color: #e9e7dc; margin: 24px 0;">
-
-    <!-- Consent Section -->
-    <h5 style="color: #272630; font-weight: 600; margin-bottom: 16px;">Ønsker</h5>
-    
-    ${showFinancing ? `
-    <div class="form-check mb-3">
-      <input class="form-check-input" type="checkbox" id="consentFinancing">
-      <label class="form-check-label" for="consentFinancing" style="font-size: 14px;">
-        Finansiering
-        <i class="far fa-question-circle text-muted ml-1" style="cursor: pointer;"></i>
-      </label>
-    </div>
-    ` : ''}
-
-    <div class="form-check mb-3">
-      <input class="form-check-input" type="checkbox" id="consentFollowup" checked>
-      <label class="form-check-label" for="consentFollowup" style="font-size: 14px;">
-        Verdivurdering
-        <i class="far fa-question-circle text-muted ml-1" style="cursor: pointer;"></i>
-      </label>
-      <small class="d-block text-muted mt-1">En av våre lokalkjente meglere kontakter deg for å avtale en tid for verdivurdering.</small>
-    </div>
-
-    <div class="form-check mb-3">
-      <input class="form-check-input" type="checkbox" id="consentSearch">
-      <label class="form-check-label" for="consentSearch" style="font-size: 14px;">
-        Søkeprofil
-        <i class="far fa-question-circle text-muted ml-1" style="cursor: pointer;"></i>
-      </label>
-    </div>
-
-    <hr style="border-color: #e9e7dc; margin: 24px 0;">
-
-    <!-- Privacy Link -->
-    <p style="font-size: 13px; color: #666;">
-      <a href="https://proaktiv.no/personvern" target="_blank" style="color: #272630;">
-        <i class="far fa-question-circle mr-1"></i>
-        Les om personvern
-      </a>
-    </p>
-
-    <!-- Submit Button -->
-    <button class="btn btn-primary btn-lg btn-block" style="background-color: #272630; border: none; font-weight: 600; padding: 14px;">
-      Gå videre til signering
-      <i class="fas fa-arrow-right ml-2"></i>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars text-light"></i>
     </button>
-  </div>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <nav id="stepNav">
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <a class="nav-link btn-sm btn-outline-light" href="#Buddetaljer">
+                        <span>Buddetaljer</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn-sm btn-outline-light" href="#Budgiver">
+                        <span>Budgiver</span>
+                    </a>
+                </li>
+                ${showFinancing ? `
+                <li class="nav-item">
+                    <a class="nav-link btn-sm btn-outline-light" href="#Finansiering">
+                        <span>Finansiering</span>
+                    </a>
+                </li>
+                ` : ''}
+            </ul>
+        </nav>
+    </div>
+</header>
 
-  <!-- Footer -->
-  <div class="portal-footer text-center">
-    <small style="color: #666;">
-      Ved å sende inn dette skjemaet aksepterer du våre 
-      <a href="#" style="color: #272630;">vilkår</a> og 
-      <a href="https://proaktiv.no/personvern" style="color: #272630;">personvernerklæring</a>.
-    </small>
-  </div>
-</div>
+<main class="position-relative" id="content" style="padding-top: 60px;">
+    <!-- Property info section - bg-light text-dark matches Vitec -->
+    <article class="info bg-light text-dark">
+        <div class="container">
+            <h1 class="header">
+                <span>Gi bud på Strandgata 15A</span>
+            </h1>
+            <div class="row">
+                <div class="col-12 col-lg-4">
+                    <dl>
+                        <dt>Adresse</dt>
+                        <dd>
+                            <span>Strandgata 15A</span>,
+                            <span class="text-nowrap">
+                                <span>5700</span>
+                                <span>VOSS</span>
+                            </span>
+                        </dd>
+                        <dt>Oppdragsnummer</dt>
+                        <dd>1-0123/26</dd>
+                        <dt>Matrikkel</dt>
+                        <dd>Gnr: 123, Bnr: 45, Snr: 1, i Voss herad</dd>
+                    </dl>
+                </div>
+                <div class="col-12 col-lg-4">
+                    <dl>
+                        <dt>Ansvarlig megler</dt>
+                        <dd>
+                            <span>Per Hansen</span><br>
+                            <span>Eiendomsmegler MNEF</span><br>
+                            <strong>Telefon </strong>
+                            <span>56 52 00 00</span><br>
+                            <strong>E-postadresse </strong>
+                            <a class="break-word" href="mailto:per.hansen@proaktiv.no">per.hansen@proaktiv.no</a>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="col-12 col-lg-4">
+                    <dl>
+                        <dt>Saksbehandler</dt>
+                        <dd>
+                            <span>Per Hansen</span><br>
+                            <span>Eiendomsmegler MNEF</span><br>
+                            <strong>Telefon </strong>
+                            <span>56 52 00 00</span><br>
+                            <strong>E-postadresse </strong>
+                            <a class="break-word" href="mailto:per.hansen@proaktiv.no">per.hansen@proaktiv.no</a>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </article>
 
-<!-- Cookie Banner -->
-<div style="position: fixed; bottom: 0; left: 0; right: 0; background: #272630; color: white; padding: 12px 20px; font-size: 13px; display: flex; align-items: center; justify-content: space-between;">
-  <span>Vi benytter informasjonskapsler for å sikre deg en god brukeropplevelse.</span>
-  <div>
-    <button class="btn btn-sm" style="background: #bcab8a; color: #272630; font-weight: 600; margin-right: 8px;">Innstillinger</button>
-    <button class="btn btn-sm" style="background: white; color: #272630; font-weight: 600;">Godta alle</button>
-  </div>
+    <!-- Important info section - bg-info matches Vitec -->
+    <article class="container primary bg-info status">
+        <h2>Viktig informasjon</h2>
+        <p>
+            <span>Før du gir bud må du</span>
+            <strong>bekrefte at du har lest salgs­oppgave</strong>
+            <span>og sette deg inn i retnings­linjer som beskrevet hos Forbruker­tilsynet.</span>
+        </p>
+        <div class="list-group">
+            <a class="list-group-item list-group-item-action" href="#" target="_blank" rel="noopener" title="PDF-dokument">
+                <span>
+                    <i class="far fa-arrow-alt-square-down" aria-hidden="true"></i>
+                    <span class="link-text">Last ned salgsoppgave</span>
+                </span>
+                <small>
+                    <span>Dokument opprettet </span>
+                    <span>22.01.2026 - 10:00</span>
+                </small>
+            </a>
+            <a class="list-group-item list-group-item-action" target="_blank" rel="noopener" title="Åpne i ny fane" href="https://nef.no/wp-content/uploads/2025/06/Forbrukerinformasjon-om-budgivning_oppdatert-pr.-1.-juli-2025.pdf">
+                <span>
+                    <i class="far fa-external-link-square-alt" aria-hidden="true"></i>
+                    <span class="link-text">Les Forbruker­informasjon om budgivning</span>
+                </span>
+                <small>
+                    <span>nef.no</span>
+                </small>
+            </a>
+        </div>
+    </article>
+
+    <!-- Main form section -->
+    <article class="container primary">
+        <h2 class="header">
+            <span>Lag budskjema</span>
+        </h2>
+        <p>Når budskjemaet er opprettet skal det signeres med bankID av budgiver før budet sendes til megler for godkjenning og journalføring.</p>
+        <p>Signering ved Bank-ID er juridisk bindende signatur og budgiver aksepterer at e-signering med Bank-ID benyttes som signatur i anledning dette budet.</p>
+        <p aria-hidden="true">
+            <span class="required-mark">*</span>
+            <span>Stjernemerkede felt må fylles ut</span>
+        </p>
+
+        <!-- Buddetaljer fieldset -->
+        <fieldset>
+            <legend class="position-relative">
+                <span>Buddetaljer</span>
+                <a class="scroll-target" id="Buddetaljer">&nbsp;</a>
+            </legend>
+            <div class="form-row">
+                <div class="col-12 col-md-12">
+                    <div class="alert alert-info" id="expiresTimeManualInstruction">
+                        <strong>Akseptfrist</strong><br>
+                        <span>Megler formidler ikke bud med kortere akseptfrist enn 12:00 første virkedag etter siste annonserte visning.</span>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4 form-group">
+                    <label for="bidAmount">
+                        <span>Budbeløp</span>
+                        <span class="required-mark" aria-hidden="true">*</span>
+                    </label>
+                    <input class="form-control" id="bidAmount" type="text" value="4 500 000" title="Budbeløp må fylles ut">
+                </div>
+                <div class="col-12 col-md-12 col-lg-8">
+                    <div class="form-row">
+                        <div class="col-12 col-md-6 form-group">
+                            <label for="expiresDateManual">
+                                <span>Akseptfrist dato</span>
+                                <span class="required-mark" aria-hidden="true">*</span>
+                            </label>
+                            <div class="input-group">
+                                <input id="expiresDateManual" type="text" class="form-control" placeholder="dd.mm.åååå" value="24.01.2026">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" title="Velg dato ..."><i class="far fa-calendar-alt"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 form-group">
+                            <label for="expiresTimeManual">
+                                <span>Akseptfrist klokkeslett</span>
+                                <span class="required-mark" aria-hidden="true">*</span>
+                            </label>
+                            <input id="expiresTimeManual" type="text" class="form-control" placeholder="tt:mm" value="12:00">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-12 form-group">
+                    <label for="WantedTakeover">Overtakelse</label><br>
+                    <textarea class="form-control" id="WantedTakeover" placeholder="Maksimalt 63 tegn">01.03.2026</textarea>
+                    <span class="helper-text">Eventuell dato du ønsker å overta eiendommen.</span>
+                </div>
+            </div>
+            <div class="form-row" id="reservationsContainer">
+                <div class="col-12 form-group">
+                    <label for="Reservations">Forbehold</label>
+                    <textarea class="form-control" id="Reservations" placeholder="Forbehold..."></textarea>
+                </div>
+                <div class="col-12">
+                    <div class="alert alert-warning" id="ReservationsInstruction">
+                        <strong>Forbehold</strong><br>
+                        <ul>
+                            <li>Ikke skriv personopplysninger i dette feltet.</li>
+                            <li>Forbehold du oppgir her, blir en del av budet og videreformidles til selger, andre budgivere og interessenter.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <!-- Budgiver fieldset -->
+        <fieldset>
+            <legend class="position-relative">
+                <span>Budgiver </span>
+                <span>1</span>
+                <span> (innsender)</span>
+                <div class="alert alert-warning contact-verification-info mt-3">
+                    <strong>Bekreft mobil eller e-post</strong>
+                    <p>Budgiver 1 må bekrefte registrert mobiltelefon eller e-postadresse. Dette gjøres nederst i skjemaet før budskjema opprettes.</p>
+                </div>
+                <a class="scroll-target" id="Budgiver">&nbsp;</a>
+            </legend>
+
+            <!-- Consumer/business declaration -->
+            <div class="alert alert-outline-bordered">
+                <p>
+                    <strong>Egenerklæring fra budgiver</strong>
+                </p>
+                <div class="form-check mb-2 cb-container">
+                    <input class="form-check-input" type="radio" name="bidderType" id="isConsumer" checked>
+                    <label class="form-check-label" for="isConsumer">Jeg er en fysisk person, og handler som forbruker</label>
+                </div>
+                <div class="form-check mb-2 cb-container">
+                    <input class="form-check-input" type="radio" name="bidderType" id="isBusiness">
+                    <label class="form-check-label" for="isBusiness">Jeg handler som ledd i næringsvirksomhet</label>
+                </div>
+            </div>
+
+            <!-- Personal info -->
+            <div class="alert alert-outline-bordered">
+                <div class="mb-3">
+                    <strong>Personopplysninger</strong>
+                </div>
+                <div class="form-row">
+                    <div class="col-12 col-md-6 form-group">
+                        <label for="FirstName0">
+                            <span>Fornavn</span>
+                            <span class="required-mark" aria-hidden="true">*</span>
+                        </label>
+                        <input class="form-control" type="text" id="FirstName0" value="Ola">
+                    </div>
+                    <div class="col-12 col-md-6 form-group">
+                        <label for="LastName0">
+                            <span>Etternavn</span>
+                            <span class="required-mark" aria-hidden="true">*</span>
+                        </label>
+                        <input class="form-control" type="text" id="LastName0" value="Nordmann">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-12 col-md-6 form-group">
+                        <label for="Ssn0">
+                            <span>Fødselsnummer</span>
+                            <span class="required-mark" aria-hidden="true">*</span>
+                        </label>
+                        <input class="form-control" type="text" id="Ssn0" value="01019012345" autocomplete="off">
+                    </div>
+                    <div class="col-12 col-md-6 form-group">
+                        <label for="Phone0">
+                            <span>Mobiltelefon</span>
+                            <span class="required-mark" aria-hidden="true">*</span>
+                        </label>
+                        <input class="form-control" type="tel" id="Phone0" value="+47 987 65 432">
+                        <span class="helper-text">Må være et norsk mobilnummer</span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-12 form-group">
+                        <label for="Email0">
+                            <span>E-postadresse</span>
+                            <span class="required-mark" aria-hidden="true">*</span>
+                        </label>
+                        <input class="form-control" type="email" id="Email0" value="ola.nordmann@eksempel.no">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-12 form-group">
+                        <label for="Address0">
+                            <span>Adresse</span>
+                            <span class="required-mark" aria-hidden="true">*</span>
+                        </label>
+                        <input class="form-control" type="text" id="Address0" value="Eksempelveien 1">
+                    </div>
+                </div>
+                <div class="form-row form-group">
+                    <div class="col-12 col-md-3 col-lg-2 form-group">
+                        <label for="Zip0">
+                            <span>Postnummer</span>
+                            <span class="required-mark" aria-hidden="true">*</span>
+                        </label>
+                        <input class="form-control" type="text" id="Zip0" value="5700">
+                    </div>
+                    <div class="col-12 col-md-9 col-lg-10 form-group">
+                        <label for="City0">
+                            <span>Poststed</span>
+                        </label>
+                        <input class="form-control" type="text" id="City0" value="VOSS" readonly>
+                    </div>
+                </div>
+
+                <!-- Consent options - EXACT Vitec structure -->
+                <div class="form-row">
+                    ${showFinancing ? `
+                    <div class="col-12 col-lg-6 form-group">
+                        <label class="with-input">
+                            <span>
+                                <input type="checkbox" id="consentFinancing">
+                                <span>Ja, jeg ønsker et tilbud på finansiering</span>
+                            </span>
+                            <a class="consent-link" href="#" title="Les mer">
+                                <span class="link-text">Les mer</span>
+                                <i aria-hidden="true" class="far fa-question-circle"></i>
+                            </a>
+                        </label>
+                    </div>
+                    ` : ''}
+                    <div class="col-12 col-lg-6 form-group">
+                        <label class="with-input">
+                            <span>
+                                <input type="checkbox" id="consentFollowup" checked>
+                                <span>Ja, jeg ønsker en verdivurdering av boligen min</span>
+                            </span>
+                            <a class="consent-link" href="#" title="Les mer">
+                                <span class="link-text">Les mer</span>
+                                <i aria-hidden="true" class="far fa-question-circle"></i>
+                            </a>
+                        </label>
+                    </div>
+                    <!-- Newsletter hidden per Proaktiv config -->
+                    <div class="col-12 col-lg-6 form-group">
+                        <label class="with-input">
+                            <span>
+                                <input type="checkbox" id="consentSearchProfile">
+                                <span>Ja, jeg ønsker å opprette en søkeprofil</span>
+                            </span>
+                            <a class="consent-link" href="#" title="Les mer">
+                                <span class="link-text">Les mer</span>
+                                <i aria-hidden="true" class="far fa-question-circle"></i>
+                            </a>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        ${showFinancing ? `
+        <!-- Finansiering fieldset - only shown for Voss office -->
+        <fieldset>
+            <legend class="position-relative">
+                <span>Finansiering</span>
+                <a class="scroll-target" id="Finansiering">&nbsp;</a>
+            </legend>
+            <div class="form-row">
+                <div class="col-12 form-group">
+                    <label for="usingNorwegianBank" class="with-input">
+                        <input type="checkbox" id="usingNorwegianBank" checked>
+                        <span>Finansiering i norsk bank</span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-12 col-md-4 form-group">
+                    <label for="bank">
+                        <span>Bank</span>
+                        <span class="required-mark" aria-hidden="true">*</span>
+                    </label>
+                    <select class="form-control" id="bank">
+                        <option value="">Velg bank</option>
+                        <option>DNB</option>
+                        <option selected>SPAREBANK 1</option>
+                        <option>NORDEA</option>
+                        <option>HANDELSBANKEN</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-4 form-group">
+                    <label for="bankContactPersonName">
+                        <span>Kontaktperson</span>
+                        <span class="required-mark" aria-hidden="true">*</span>
+                    </label>
+                    <input class="form-control" type="text" id="bankContactPersonName" value="Kari Banksen">
+                </div>
+                <div class="col-12 col-md-4 form-group">
+                    <label for="bankContactPersonPhone">
+                        <span>Telefon</span>
+                        <span class="required-mark" aria-hidden="true">*</span>
+                    </label>
+                    <input class="form-control" type="tel" id="bankContactPersonPhone" value="+47 555 12 345">
+                </div>
+            </div>
+        </fieldset>
+        ` : ''}
+
+        <!-- Add bidder button -->
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <button class="btn btn-primary add-bidder-button">
+                        <span>Legg til budgiver 2</span>
+                    </button>
+                    <div class="mt-2">Undertegnede budgivere (hvis flere) gir hverandre gjensidig representasjonsfullmakt.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Privacy and submit -->
+        <div class="form-row mt-4">
+            <div class="col-12">
+                <p class="small">
+                    Les om hvordan vi behandler personopplysninger på 
+                    <a href="https://proaktiv.no/personvern" target="_blank" rel="noopener">proaktiv.no/personvern</a>
+                </p>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="col-12">
+                <button class="btn btn-primary btn-lg btn-block" type="submit">
+                    <span>Opprett budskjema</span>
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </article>
+</main>
+
+<!-- Modal for consent info (example) -->
+<div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title">Personvern</h1>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Eiendomsmeglerforetaket behandler personopplysninger som er nødvendige for å oppfylle avtalen med deg. Les mer om hvordan vi behandler personopplysninger i personvernserklæringen på <a rel="noopener" target="_blank" href="https://proaktiv.no/personvern">proaktiv.no/personvern</a></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <span>Lukk</span>
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 `;
 
@@ -193,7 +473,8 @@ export function BudPortalMockup({ showFinancing = false }: BudPortalMockupProps)
       content={mockupHtml}
       skinCssHref="/skins/proaktiv-bud.css"
       title="Budportal - Proaktiv"
-      minHeight="900px"
+      minHeight={fullscreen ? "100vh" : "1200px"}
+      portalType="bud"
     />
   );
 }

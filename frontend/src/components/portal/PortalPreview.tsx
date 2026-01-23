@@ -8,11 +8,15 @@ import { Button } from "@/components/ui/button";
 import { 
   FileText, 
   Users, 
-  Download,
+  Download, 
+  ExternalLink,
   CheckCircle2,
   XCircle,
   Building2,
-  Monitor
+  Smartphone,
+  Monitor,
+  Maximize2,
+  X
 } from "lucide-react";
 import { BudPortalMockup } from "./BudPortalMockup";
 import { VisningPortalMockup } from "./VisningPortalMockup";
@@ -27,6 +31,61 @@ import { VisningPortalMockup } from "./VisningPortalMockup";
 export function PortalPreview() {
   const [activeTab, setActiveTab] = useState("bud");
   const [showVossMode, setShowVossMode] = useState(false);
+  const [fullscreenPortal, setFullscreenPortal] = useState<"bud" | "visning" | null>(null);
+
+  // Fullscreen overlay
+  if (fullscreenPortal) {
+    return (
+      <div className="fixed inset-0 z-50 bg-gray-100">
+        {/* Fullscreen Header */}
+        <div className="absolute top-0 left-0 right-0 bg-white border-b shadow-sm z-10">
+          <div className="flex items-center justify-between px-4 py-3">
+            <div className="flex items-center gap-3">
+              <Badge variant="outline" className="bg-[#272630] text-white border-0">
+                PROAKTIV
+              </Badge>
+              <span className="font-medium">
+                {fullscreenPortal === "bud" ? "Budportal" : "Visningsportal"} — Fullskjerm forhåndsvisning
+              </span>
+              {showVossMode && (
+                <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-300">
+                  <Building2 className="h-3 w-3 mr-1" />
+                  Voss-modus
+                </Badge>
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowVossMode(!showVossMode)}
+              >
+                <Building2 className="h-4 w-4 mr-2" />
+                {showVossMode ? "Deaktiver" : "Aktiver"} Voss-modus
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setFullscreenPortal(null)}
+              >
+                <X className="h-4 w-4 mr-2" />
+                Lukk fullskjerm
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Fullscreen Content */}
+        <div className="pt-14 h-full overflow-auto">
+          {fullscreenPortal === "bud" ? (
+            <BudPortalMockup showFinancing={showVossMode} fullscreen />
+          ) : (
+            <VisningPortalMockup showFinancing={showVossMode} fullscreen />
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -141,9 +200,19 @@ export function PortalPreview() {
             </TabsTrigger>
           </TabsList>
 
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <Monitor className="h-4 w-4" />
-            <span>Desktop forhåndsvisning</span>
+          <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setFullscreenPortal(activeTab as "bud" | "visning")}
+            >
+              <Maximize2 className="h-4 w-4 mr-2" />
+              Fullskjerm
+            </Button>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Monitor className="h-4 w-4" />
+              <span>Desktop</span>
+            </div>
           </div>
         </div>
 
@@ -157,7 +226,16 @@ export function PortalPreview() {
                     Portal for innsending av bud på eiendommer
                   </CardDescription>
                 </div>
-                <Badge variant="secondary">PROAKTIV-bud.zip</Badge>
+                <div className="flex items-center gap-2">
+                  <Badge variant="secondary">PROAKTIV-bud.zip</Badge>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setFullscreenPortal("bud")}
+                  >
+                    <Maximize2 className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
             </CardHeader>
             <CardContent className="p-0 border-t">
@@ -178,7 +256,16 @@ export function PortalPreview() {
                     Portal for påmelding til visninger
                   </CardDescription>
                 </div>
-                <Badge variant="secondary">PROAKTIV-visning.zip</Badge>
+                <div className="flex items-center gap-2">
+                  <Badge variant="secondary">PROAKTIV-visning.zip</Badge>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setFullscreenPortal("visning")}
+                  >
+                    <Maximize2 className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
             </CardHeader>
             <CardContent className="p-0 border-t">
@@ -221,6 +308,23 @@ export function PortalPreview() {
                 <li>• 2 SMS-maler</li>
                 <li>• blacklist.json</li>
               </ul>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Accuracy Note */}
+      <Card className="bg-emerald-50 border-emerald-200">
+        <CardContent className="py-3">
+          <div className="flex items-start gap-3">
+            <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-0.5" />
+            <div>
+              <p className="text-sm font-medium text-emerald-900">Autentisk forhåndsvisning</p>
+              <p className="text-xs text-emerald-700 mt-1">
+                Denne forhåndsvisningen bruker den <strong>eksakte HTML-strukturen</strong> fra Vitecs live portaler,
+                kombinert med Proaktiv-skinnet. Farger, knapper, skjemaelementer og samtykke-opsjoner vil
+                se identiske ut i produksjon. Bruk fullskjerm-modus for beste opplevelse.
+              </p>
             </div>
           </div>
         </CardContent>

@@ -103,12 +103,31 @@ backend/
 frontend/
 ├── src/
 │   ├── app/         # Next.js pages
-│   │   └── storage/ # WebDAV browser page
+│   │   ├── storage/ # WebDAV browser page
+│   │   └── portal/  # Portal skins preview page
 │   ├── components/  # React components
-│   │   └── storage/ # Storage browser components
+│   │   ├── storage/ # Storage browser components
+│   │   └── portal/  # Portal mockup components
 │   ├── hooks/       # Custom hooks
 │   ├── lib/         # API wrapper, utilities
 │   └── types/       # TypeScript interfaces
+
+skins/                    # Vitec portal skin packages
+├── proaktiv-bud/         # Budportal skin files
+│   ├── PROAKTIV.scss     # Source SCSS
+│   ├── PROAKTIV.css      # Compiled CSS
+│   ├── PROAKTIV.min.css  # Minified CSS
+│   └── PROAKTIV.json     # Portal configuration
+├── proaktiv-visning/     # Visningsportal skin files
+│   ├── PROAKTIV.scss/css/min.css/json
+│   ├── email_*.txt       # Email templates
+│   ├── sms_*.txt         # SMS templates
+│   └── blacklist.json    # Blocked domains
+├── .specs/               # Skin specifications
+│   ├── SKIN-SPEC.md      # Design spec document
+│   └── QA-REPORT.md      # QA validation report
+├── PROAKTIV-bud.zip      # Deployment package
+└── PROAKTIV-visning.zip  # Deployment package
 ```
 
 ---
@@ -149,6 +168,17 @@ See `.planning/STATE.md` for full status.
 - 🔲 2-way sync: Vitec Next → Local DB → Entra ID
 - Plans: `.planning/phases/06-entra-signature-sync/`
 - Commands: `/entra-architect`, `/entra-builder`, `/entra-qa`
+
+**V3.4 Portal Skins Preview (Completed 2026-01-23):**
+- ✅ Vitec Budportal and Visningsportal skin packages created
+- ✅ PROAKTIV skin with company branding (colors, fonts, privacy URLs)
+- ✅ Authentic mockup preview using exact Vitec HTML structure
+- ✅ Fullscreen preview mode for accurate representation
+- ✅ Voss office mode toggle (financing option enabled)
+- ✅ Consent options: Verdivurdering ✓, Budvarsel ✓, Newsletter ✗, Finansiering (Voss only)
+- ✅ Navigation: Verktøy → Portal Skins
+- Files: `skins/proaktiv-bud/`, `skins/proaktiv-visning/`, `skins/*.zip`
+- Preview: `/portal/preview`
 
 **V3.3 API Proxy Fix (Completed 2026-01-23):**
 - ✅ Fixed 401 Unauthorized errors on all authenticated API endpoints
