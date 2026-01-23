@@ -382,6 +382,111 @@ const VITEC_BASE_STYLES = `
     background: #f8f9fa;
     border-top: 1px solid #dee2e6;
   }
+  
+  /* ===== VISNINGSPORTAL SPECIFIC STYLES ===== */
+  
+  /* Background image - full page cover */
+  .background-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+  }
+  
+  .background-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  /* Main container for visning - white card overlay */
+  .container.main {
+    background: rgba(255, 255, 255, 0.97);
+    padding: 2rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 4px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    max-width: 800px;
+  }
+  
+  /* Visning title */
+  .container.main h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .container.main h1 strong {
+    font-weight: 600;
+    margin-right: 0.5rem;
+  }
+  
+  /* Participant selection buttons */
+  .participants + div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+  
+  /* Check option styling for consents */
+  .check-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .check-option input[type="checkbox"] {
+    margin-top: 0.25rem;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+  
+  .check-option label {
+    margin-bottom: 0;
+    font-weight: 400;
+    cursor: pointer;
+  }
+  
+  .check-option .consent-link {
+    margin-left: 0.5rem;
+  }
+  
+  /* Footer for visning */
+  footer.footer {
+    background: transparent;
+    border-top: none;
+    text-align: center;
+    padding: 1rem;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  }
+  
+  footer.footer a {
+    color: #fff;
+    text-decoration: underline;
+  }
+  
+  /* Required field styling */
+  .required-field small {
+    color: #6c757d;
+  }
+  
+  /* Screen reader only */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
 `;
 
 /**

@@ -4,9 +4,11 @@ import { PortalFrame } from "./PortalFrame";
 
 /**
  * VisningPortalMockup Component
- * 
+ *
  * Pixel-accurate mockup of the Vitec Visningsportal (viewing registration portal) with Proaktiv branding.
- * Uses HTML structure consistent with Vitec's meglervisning.no portal.
+ * Uses the EXACT HTML structure scraped from the live meglervisning.no portal.
+ *
+ * Source: Live Vitec portal HTML (MSPROA/Proaktiv)
  */
 
 interface VisningPortalMockupProps {
@@ -18,291 +20,249 @@ interface VisningPortalMockupProps {
   useVanillaSkin?: boolean;
 }
 
-export function VisningPortalMockup({ showFinancing = false, fullscreen = false, useVanillaSkin = false }: VisningPortalMockupProps) {
-  // This HTML mirrors the Vitec Visningsportal structure from meglervisning.no
+export function VisningPortalMockup({
+  showFinancing = false,
+  fullscreen = false,
+  useVanillaSkin = false,
+}: VisningPortalMockupProps) {
+  // This HTML mirrors the EXACT Vitec Visningsportal structure from meglervisning.no
   const mockupHtml = `
-<!-- Fixed header - matches Vitec structure -->
-<header class="navbar navbar-expand-md bg-primary text-light fixed-top">
-    <div class="object-header">
-        <span>Visningspåmelding </span>
-        <span class="d-none d-sm-inline"> - Fjellveien 42</span>
-    </div>
-</header>
+<!-- Background image from property listing -->
+<picture class="background-image">
+    <source media="(min-width: 1025px)" srcset="/assets/visning-demo-bg.jpg">
+    <source media="(max-width: 1024px)" srcset="/assets/visning-demo-bg.jpg">
+    <img src="/assets/visning-demo-bg.jpg" alt="" aria-hidden="true">
+</picture>
 
-<main class="position-relative" id="content" style="padding-top: 60px;">
-    <!-- Property info section - bg-light text-dark matches Vitec -->
-    <article class="info bg-light text-dark">
-        <div class="container">
-            <h1 class="header">
-                <span>Meld deg på visning</span>
+<div class="container main" aria-live="polite" aria-busy="false">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1 class="text-left">
+                <strong>Visning</strong>
+                <span>Dyrnesvika 18</span>
             </h1>
-            <div class="row">
-                <div class="col-12 col-lg-6">
-                    <dl>
-                        <dt>Adresse</dt>
-                        <dd>
-                            <span>Fjellveien 42</span>,
-                            <span class="text-nowrap">
-                                <span>5700</span>
-                                <span>VOSS</span>
-                            </span>
-                        </dd>
-                        <dt>Oppdragsnummer</dt>
-                        <dd>1-0456/26</dd>
-                    </dl>
-                </div>
-                <div class="col-12 col-lg-6">
-                    <dl>
-                        <dt>Ansvarlig megler</dt>
-                        <dd>
-                            <span>Per Hansen</span><br>
-                            <span>Eiendomsmegler MNEF</span><br>
-                            <strong>Telefon </strong>
-                            <span>56 52 00 00</span>
-                        </dd>
-                    </dl>
-                </div>
-            </div>
         </div>
-    </article>
+    </div>
 
-    <!-- Viewing info section - bg-info matches Vitec -->
-    <article class="container primary bg-info status">
-        <h2>Visningsinformasjon</h2>
-        <div class="list-group">
-            <div class="list-group-item">
-                <div class="d-flex align-items-center">
-                    <i class="far fa-calendar-alt mr-3" style="font-size: 24px;"></i>
-                    <div>
-                        <strong>Søndag 26. januar 2026</strong><br>
-                        <span>kl. 12:00 - 13:00</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <p class="mt-3 small">
-            <i class="fas fa-info-circle mr-1"></i>
-            Du vil motta en bekreftelse på e-post etter påmelding.
-        </p>
-    </article>
-
-    <!-- Registration form section -->
-    <article class="container primary">
-        <h2 class="header">
-            <span>Dine opplysninger</span>
-        </h2>
-        <p aria-hidden="true">
-            <span class="required-mark">*</span>
-            <span>Stjernemerkede felt må fylles ut</span>
-        </p>
-
+    <!-- Visningstid selection -->
+    <div class="form-group">
         <fieldset>
-            <legend class="position-relative">
-                <span>Personopplysninger</span>
+            <legend>
+                <span>Visningstid</span>
             </legend>
-
-            <div class="alert alert-outline-bordered">
-                <div class="form-row">
-                    <div class="col-12 col-md-6 form-group">
-                        <label for="FirstName">
-                            <span>Fornavn</span>
-                            <span class="required-mark" aria-hidden="true">*</span>
-                        </label>
-                        <input class="form-control" type="text" id="FirstName" value="Kari">
-                    </div>
-                    <div class="col-12 col-md-6 form-group">
-                        <label for="LastName">
-                            <span>Etternavn</span>
-                            <span class="required-mark" aria-hidden="true">*</span>
-                        </label>
-                        <input class="form-control" type="text" id="LastName" value="Nordmann">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-12 col-md-6 form-group">
-                        <label for="Phone">
-                            <span>Mobiltelefon</span>
-                            <span class="required-mark" aria-hidden="true">*</span>
-                        </label>
-                        <input class="form-control" type="tel" id="Phone" value="+47 912 34 567">
-                        <span class="helper-text">Må være et norsk mobilnummer</span>
-                    </div>
-                    <div class="col-12 col-md-6 form-group">
-                        <label for="NumberOfPeople">
-                            <span>Antall personer</span>
-                            <span class="required-mark" aria-hidden="true">*</span>
-                        </label>
-                        <select class="form-control" id="NumberOfPeople">
-                            <option>1</option>
-                            <option selected>2</option>
-                            <option>3</option>
-                            <option>4+</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-12 form-group">
-                        <label for="Email">
-                            <span>E-postadresse</span>
-                            <span class="required-mark" aria-hidden="true">*</span>
-                        </label>
-                        <input class="form-control" type="email" id="Email" value="kari.nordmann@eksempel.no">
-                    </div>
-                </div>
-            </div>
-        </fieldset>
-
-        <fieldset>
-            <legend class="position-relative">
-                <span>Ønsker</span>
-            </legend>
-
-            <div class="alert alert-outline-bordered">
-                <p class="mb-3">Hvis du ønsker videre oppfølging på eiendommen, kan du krysse av for følgende:</p>
-
-                <!-- Consent options - EXACT Vitec structure -->
-                <div class="form-row">
-                    ${showFinancing ? `
-                    <div class="col-12 form-group">
-                        <label class="with-input">
-                            <span>
-                                <input type="checkbox" id="consentFinancing">
-                                <span>Ja, jeg ønsker et tilbud på finansiering</span>
-                            </span>
-                            <a class="consent-link" href="#" title="Les mer">
-                                <span class="link-text">Les mer</span>
-                                <i aria-hidden="true" class="far fa-question-circle"></i>
-                            </a>
-                        </label>
-                        <small class="form-text text-muted ml-4">Din kontaktinformasjon sendes til en bankrådgiver.</small>
-                    </div>
-                    ` : ''}
-                    <div class="col-12 form-group">
-                        <label class="with-input">
-                            <span>
-                                <input type="checkbox" id="consentFollowup" checked>
-                                <span>Ja, jeg ønsker en verdivurdering av boligen min</span>
-                            </span>
-                            <a class="consent-link" href="#" title="Les mer">
-                                <span class="link-text">Les mer</span>
-                                <i aria-hidden="true" class="far fa-question-circle"></i>
-                            </a>
-                        </label>
-                        <small class="form-text text-muted ml-4">En eiendomsmegler vil kontakte deg for å avtale tid.</small>
-                    </div>
-                    <div class="col-12 form-group">
-                        <label class="with-input">
-                            <span>
-                                <input type="checkbox" id="consentBidInfo" checked>
-                                <span>Ja, jeg ønsker å bli varslet om bud på eiendommen</span>
-                            </span>
-                            <a class="consent-link" href="#" title="Les mer">
-                                <span class="link-text">Les mer</span>
-                                <i aria-hidden="true" class="far fa-question-circle"></i>
-                            </a>
-                        </label>
-                        <small class="form-text text-muted ml-4">Du registreres som interessent og varsles om bud.</small>
-                    </div>
-                    <!-- Newsletter hidden per Proaktiv config -->
-                    <div class="col-12 form-group">
-                        <label class="with-input">
-                            <span>
-                                <input type="checkbox" id="consentSearchProfile">
-                                <span>Ja, jeg ønsker å opprette en søkeprofil</span>
-                            </span>
-                            <a class="consent-link" href="#" title="Les mer">
-                                <span class="link-text">Les mer</span>
-                                <i aria-hidden="true" class="far fa-question-circle"></i>
-                            </a>
-                        </label>
-                        <small class="form-text text-muted ml-4">Få varsel når nye boliger matcher dine ønsker.</small>
-                    </div>
-                </div>
-            </div>
-        </fieldset>
-
-        <fieldset>
-            <legend class="position-relative">
-                <span>Salgsoppgave</span>
-            </legend>
-
-            <div class="alert alert-outline-bordered">
-                <div class="form-row">
-                    <div class="col-12 form-group">
-                        <label class="with-input">
-                            <span>
-                                <input type="checkbox" id="getSalesDoc" checked>
-                                <span>Ja, send meg salgsoppgaven på e-post</span>
-                            </span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </fieldset>
-
-        <!-- Privacy and submit -->
-        <div class="form-row mt-4">
-            <div class="col-12">
-                <p class="small">
-                    Les om hvordan vi behandler personopplysninger på 
-                    <a href="https://proaktiv.no/personvern" target="_blank" rel="noopener">proaktiv.no/personvern</a>
-                </p>
-            </div>
-        </div>
-
-        <div class="form-row">
-            <div class="col-12">
-                <button class="btn btn-primary btn-lg btn-block" type="submit">
-                    <span>Meld meg på visning</span>
-                    <i class="fas fa-check ml-2"></i>
+            <div>
+                <button class="btn btn-sm mb-1 btn-outline-primary btn-primary text-light">
+                    <i class="far mr-1 fa-check-square" aria-hidden="true"></i>
+                    <span>søndag 26. januar kl 12:00 - 13:00</span>
+                    <span class="sr-only"> (valgt)</span>
                 </button>
             </div>
-        </div>
-    </article>
+        </fieldset>
+    </div>
 
-    <!-- Broker info section -->
-    <article class="container primary bg-light">
-        <div class="row align-items-center">
-            <div class="col-auto">
-                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 64px; height: 64px;">
-                    <i class="fas fa-user text-light" style="font-size: 28px;"></i>
+    <!-- Participants selection -->
+    <div class="form-group">
+        <fieldset>
+            <legend class="participants">Hvor mange deltar?</legend>
+            <div>
+                <button class="btn btn-sm mb-1 btn-outline-primary btn-primary text-light">
+                    <i class="far mr-1 fa-check-square" aria-hidden="true"></i>
+                    <span>1 person</span>
+                    <span class="sr-only"> (valgt)</span>
+                </button>
+                <button class="btn btn-sm mb-1 btn-outline-primary">
+                    <i class="far mr-1 fa-square" aria-hidden="true"></i>
+                    <span>2 personer</span>
+                </button>
+                <button class="btn btn-sm mb-1 btn-outline-primary">
+                    <i class="far mr-1 fa-square" aria-hidden="true"></i>
+                    <span>3 personer</span>
+                </button>
+                <button class="btn btn-sm mb-1 btn-outline-primary">
+                    <i class="far mr-1 fa-square" aria-hidden="true"></i>
+                    <span>4 personer</span>
+                </button>
+                <button class="btn btn-sm mb-1 btn-outline-primary">
+                    <i class="far mr-1 fa-square" aria-hidden="true"></i>
+                    <span>5 personer</span>
+                </button>
+            </div>
+        </fieldset>
+    </div>
+
+    <!-- Personal information form -->
+    <div class="row">
+        <div class="col-sm-12">
+            <fieldset>
+                <legend>Dine opplysninger</legend>
+                <div class="form-row">
+                    <div class="col-sm-12 col-md-6 col-lg-4 form-group">
+                        <label for="txt_phone" class="required-field">
+                            <span>Mobiltelefon</span>
+                            <small aria-hidden="true"> (må fylles ut)</small>
+                        </label>
+                        <div class="input-group">
+                            <div class="input-group-prepend" aria-hidden="true">
+                                <div class="input-group-text"><i class="fas fa-search"></i></div>
+                            </div>
+                            <input class="form-control" placeholder="Søk kontakt" autocomplete="off" name="PhoneNumber" id="txt_phone" type="tel" maxlength="12" required value="+47 912 34 567">
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-3 form-group">
+                        <label for="txt_firstname" class="required-field">
+                            <span>Fornavn</span>
+                            <small aria-hidden="true"> (må fylles ut)</small>
+                        </label>
+                        <input class="form-control" name="FirstName" id="txt_firstname" autocomplete="off" type="text" maxlength="63" required value="Kari">
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-5 form-group">
+                        <label for="txt_surname" class="required-field">
+                            <span>Etternavn</span>
+                            <small aria-hidden="true"> (må fylles ut)</small>
+                        </label>
+                        <input class="form-control" name="LastName" id="txt_surname" autocomplete="off" type="text" maxlength="63" required value="Nordmann">
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4 form-group">
+                        <label for="txt_email">E-postadresse</label>
+                        <input class="form-control" name="Email" id="txt_email" type="email" autocomplete="off" maxlength="63" value="kari.nordmann@eksempel.no">
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-3 form-group">
+                        <label for="txt_address">Adresse</label>
+                        <input class="form-control" name="Address" id="txt_address" autocomplete="off" type="text" maxlength="63" value="Eksempelveien 1">
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-5">
+                        <div class="form-row d-none d-sm-block">
+                            <div class="col-sm-12">
+                                <label for="txt_zip">
+                                    <span>Postnummer og -sted</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-sm-4 col-md-5 col-lg-4 form-group">
+                                <label for="txt_zip" class="d-block d-sm-none">
+                                    <span>Postnummer</span>
+                                </label>
+                                <input class="form-control" name="ZipCode" id="txt_zip" autocomplete="off" type="text" maxlength="4" value="5700">
+                            </div>
+                            <div class="col-sm-8 col-md-7 col-lg-8 form-group">
+                                <label for="txt_city" class="d-block d-sm-none">Poststed</label>
+                                <input class="form-control" name="City" id="txt_city" autocomplete="off" type="text" readonly value="VOSS">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+
+    <!-- Consent section -->
+    <fieldset>
+        <legend>Samtykke og valg</legend>
+
+        <div class="form-row">
+            <div class="col-sm-12">
+                <div class="check-option">
+                    <input type="checkbox" id="chk_AcceptTerms" name="AcceptTerms" value="true" checked>
+                    <label for="chk_AcceptTerms">
+                        <span>
+                            <span>Jeg aksepterer at mine opplysninger lagres hos meglerforetaket og at jeg vil motta relevant informasjon om eiendommen.</span>
+                            <a class="consent-link" data-toggle="modal" data-target="#modal1" href="#">
+                                <span class="link-text">Les mer</span> <i aria-hidden="true" class="far fa-question-circle"></i>
+                            </a>
+                        </span>
+                    </label>
                 </div>
             </div>
-            <div class="col">
-                <h4 class="mb-0">Per Hansen</h4>
-                <p class="mb-0 text-muted">Eiendomsmegler MNEF</p>
-                <p class="mb-0">
-                    <i class="fas fa-phone mr-1"></i> 56 52 00 00
-                    <span class="mx-2">|</span>
-                    <i class="fas fa-envelope mr-1"></i> per.hansen@proaktiv.no
-                </p>
+        </div>
+
+        <!-- Newsletter - hidden per Proaktiv config, but shown in mockup for demo -->
+        <div class="form-row" style="display: none;">
+            <div class="col-sm-12">
+                <div class="check-option">
+                    <input type="checkbox" id="chk_NewsLetter" name="NewsLetter" value="true" disabled>
+                    <label for="chk_NewsLetter">
+                        <span>
+                            <span>Jeg ønsker å abonnere på nyhetsbrev</span>
+                        </span>
+                    </label>
+                </div>
             </div>
         </div>
-    </article>
 
-    <!-- Footer -->
-    <footer class="container text-center py-4">
-        <p class="small text-muted mb-0">
-            Proaktiv Eiendomsmegling
-        </p>
-    </footer>
-</main>
+        <!-- Financing - only shown for Voss office -->
+        ${
+          showFinancing
+            ? `
+        <div class="form-row">
+            <div class="col-sm-12">
+                <div class="check-option">
+                    <input type="checkbox" id="chk_consentsContactForFinance" name="consentsContactForFinance" value="true">
+                    <label for="chk_consentsContactForFinance">
+                        <span>
+                            <span>Jeg ønsker tilbud om finansiering</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        `
+            : ""
+        }
 
-<!-- Modal for consent info (example) -->
-<div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-hidden="true">
+        <!-- Verdivurdering -->
+        <div class="form-row">
+            <div class="col-sm-12">
+                <div class="check-option">
+                    <input type="checkbox" id="chk_consentsContactForOwnEstate" name="consentsContactForOwnEstate" value="true" checked>
+                    <label for="chk_consentsContactForOwnEstate">
+                        <span>
+                            <span>Jeg ønsker verdivurdering av min bolig</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="form-row">
+            <div class="col-sm-12 col-md-6 form-group">
+            </div>
+            <div class="col-sm-12 col-md-6 text-right">
+                <button class="btn btn-primary btn-lg">Nullstill</button>
+                <button class="btn btn-primary btn-lg" id="saveContact" name="action">Registrer</button>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+<!-- Footer -->
+<footer class="container footer">
+    <div>
+        © 2026 <span>- Vitec Megler Visningsportal</span>
+        v.1.2.4.3
+        <a href="#" id="reopenCookieBanner">Endre valg for informasjonskapsler</a>
+    </div>
+</footer>
+
+<!-- Privacy modal -->
+<div class="modal" id="modal1" tabindex="-1" role="dialog" aria-labelledby="modal1Label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title">Personvern</h1>
+                <h1 class="modal-title" id="modal1Label">Personvern</h1>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true">×</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p>Eiendomsmeglerforetaket behandler personopplysninger som er nødvendige for å oppfylle avtalen med deg. Les mer om hvordan vi behandler personopplysninger i personvernserklæringen på <a rel="noopener" target="_blank" href="https://proaktiv.no/personvern">proaktiv.no/personvern</a></p>
+                <h2>Mine opplysninger</h2>
+                <p>Hensikten med denne registreringen er å tilby deg relevant og ønsket informasjon fra meglerforetaket.</p>
+                <p>Meglerforetaket plikter å oppbevare dine opplysninger på en forsvarlig måte og følge gjeldende lover og forskrifter om vern av personopplysninger.</p>
+                <p>Les mer om personvern på <a href="https://proaktiv.no/personvern" target="_blank" rel="noopener">proaktiv.no/personvern</a></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">
                     <span>Lukk</span>
                 </button>
             </div>
