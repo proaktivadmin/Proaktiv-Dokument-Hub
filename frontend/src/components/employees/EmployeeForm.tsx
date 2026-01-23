@@ -40,6 +40,8 @@ interface EmployeeFormProps {
   onSuccess: () => void;
 }
 
+type EmployeeType = "internal" | "external" | "system";
+
 type FormData = {
   first_name: string;
   last_name: string;
@@ -48,6 +50,8 @@ type FormData = {
   phone: string;
   office_id: string;
   status: EmployeeStatus;
+  employee_type: EmployeeType;
+  external_company: string;
   start_date: string;
   homepage_profile_url: string;
   linkedin_url: string;
@@ -78,6 +82,8 @@ export function EmployeeForm({
       phone: employee?.phone || "",
       office_id: employee?.office_id || defaultOfficeId || "",
       status: employee?.status || "active",
+      employee_type: (employee?.employee_type as EmployeeType) || "internal",
+      external_company: employee?.external_company || "",
       start_date: employee?.start_date?.split("T")[0] || new Date().toISOString().split("T")[0],
       homepage_profile_url: employee?.homepage_profile_url || "",
       linkedin_url: employee?.linkedin_url || "",
@@ -101,6 +107,8 @@ export function EmployeeForm({
         phone: data.phone || null,
         office_id: data.office_id,
         status: data.status,
+        employee_type: data.employee_type,
+        external_company: data.employee_type === "external" ? data.external_company || null : null,
         start_date: data.start_date || null,
         homepage_profile_url: data.homepage_profile_url || null,
         linkedin_url: data.linkedin_url || null,
@@ -251,6 +259,36 @@ export function EmployeeForm({
                     </SelectContent>
                   </Select>
                 </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="employee_type">Ansatttype</Label>
+                  <Select 
+                    value={watch("employee_type")} 
+                    onValueChange={(value) => setValue("employee_type", value as EmployeeType)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="internal">Intern ansatt</SelectItem>
+                      <SelectItem value="external">Ekstern utvikler/konsulent</SelectItem>
+                      <SelectItem value="system">Systemkonto</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {watch("employee_type") === "external" && (
+                  <div className="space-y-2">
+                    <Label htmlFor="external_company">Eksternt selskap</Label>
+                    <Input
+                      id="external_company"
+                      {...register("external_company")}
+                      placeholder="F.eks. Desti AS"
+                    />
+                  </div>
+                )}
               </div>
 
               <div className="flex items-center space-x-2">

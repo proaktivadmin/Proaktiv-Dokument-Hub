@@ -72,6 +72,7 @@ export interface OfficeSyncResult {
 // =============================================================================
 
 export type EmployeeStatus = 'active' | 'onboarding' | 'offboarding' | 'inactive';
+export type EmployeeType = 'internal' | 'external' | 'system';
 
 export interface Employee {
   id: string;
@@ -92,6 +93,8 @@ export interface Employee {
   description: string | null;
   system_roles: string[];
   status: EmployeeStatus;
+  employee_type: EmployeeType; // internal, external, or system
+  external_company: string | null; // Company name for external developers/consultants
   is_featured_broker: boolean;
   start_date: string | null; // ISO date
 

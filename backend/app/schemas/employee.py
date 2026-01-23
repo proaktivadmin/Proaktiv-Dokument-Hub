@@ -13,6 +13,7 @@ from pydantic import BaseModel, Field
 # =============================================================================
 
 EmployeeStatus = Literal["active", "onboarding", "offboarding", "inactive"]
+EmployeeType = Literal["internal", "external", "system"]
 
 
 # =============================================================================
@@ -41,6 +42,10 @@ class EmployeeBase(BaseModel):
     system_roles: list[str] | None = Field(default_factory=list, description="Vitec Next system roles")
 
     status: EmployeeStatus = Field("active", description="Employment status")
+    employee_type: EmployeeType = Field("internal", description="Employee type: internal, external, or system")
+    external_company: str | None = Field(
+        None, max_length=200, description="Company name for external developers/consultants"
+    )
     is_featured_broker: bool = Field(False, description="Whether the employee is a featured broker")
     start_date: date | None = Field(None, description="Employment start date")
     end_date: date | None = Field(None, description="Employment end date")
@@ -80,6 +85,8 @@ class EmployeeUpdate(BaseModel):
     system_roles: list[str] | None = None
 
     status: EmployeeStatus | None = None
+    employee_type: EmployeeType | None = None
+    external_company: str | None = None
     is_featured_broker: bool | None = None
     start_date: date | None = None
     end_date: date | None = None
