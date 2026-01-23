@@ -44,6 +44,28 @@ const VITEC_BASE_STYLES = `
     padding-bottom: 2rem;
   }
   
+  /* Bootstrap container centering */
+  .container {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+  
+  @media (min-width: 576px) {
+    .container { max-width: 540px; }
+  }
+  @media (min-width: 768px) {
+    .container { max-width: 720px; }
+  }
+  @media (min-width: 992px) {
+    .container { max-width: 960px; }
+  }
+  @media (min-width: 1200px) {
+    .container { max-width: 1140px; }
+  }
+  
   /* Article sections - Vitec specific */
   article.info {
     padding: 1.5rem 0;
@@ -407,6 +429,8 @@ const VITEC_BASE_STYLES = `
     padding: 2rem;
     margin-top: 2rem;
     margin-bottom: 2rem;
+    margin-left: auto;
+    margin-right: auto;
     border-radius: 4px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     max-width: 800px;
