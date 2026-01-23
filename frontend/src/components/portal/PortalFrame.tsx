@@ -424,27 +424,48 @@ const VITEC_BASE_STYLES = `
   }
   
   /* Main container for visning - white card overlay */
+  /* Live portal uses: 1140px max-width, 32px padding, no border-radius/shadow */
   .container.main {
     background: rgba(255, 255, 255, 0.97);
-    padding: 2rem;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
+    padding: 32px 32px 16px;
+    margin-top: 0;
+    margin-bottom: 0;
     margin-left: auto;
     margin-right: auto;
-    border-radius: 4px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    max-width: 800px;
+    border-radius: 0;
+    box-shadow: none;
+    max-width: 1140px;
   }
   
-  /* Visning title */
+  @media (max-width: 1199.98px) {
+    .container.main { max-width: 960px; }
+  }
+  @media (max-width: 991.98px) {
+    .container.main { max-width: 720px; }
+  }
+  @media (max-width: 767.98px) {
+    .container.main { max-width: 540px; padding: 16px; }
+  }
+  
+  /* Visning title - matches live portal (32px, 500 weight) */
   .container.main h1 {
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
+    font-size: 32px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    line-height: 1.2;
   }
   
   .container.main h1 strong {
-    font-weight: 600;
-    margin-right: 0.5rem;
+    font-weight: 500;
+    margin-right: 0.25rem;
+  }
+  
+  /* Section headings (fieldset legends) - 24px, 400 weight */
+  .container.main h2,
+  .container.main legend {
+    font-size: 24px;
+    font-weight: 400;
+    margin-bottom: 8px;
   }
   
   /* Participant selection buttons */
@@ -479,18 +500,28 @@ const VITEC_BASE_STYLES = `
     margin-left: 0.5rem;
   }
   
-  /* Footer for visning */
-  footer.footer {
-    background: transparent;
+  /* Footer for visning - matches live portal styling */
+  footer.footer,
+  footer.container.footer {
+    background: rgba(255, 255, 255, 0.97);
     border-top: none;
     text-align: center;
-    padding: 1rem;
-    color: #fff;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    padding: 8px;
+    color: #212529;
+    text-shadow: none;
+    max-width: 1140px;
+    margin-left: auto;
+    margin-right: auto;
   }
   
-  footer.footer a {
-    color: #fff;
+  footer.footer a,
+  footer.container.footer a {
+    color: #205493;
+    text-decoration: none;
+  }
+  
+  footer.footer a:hover,
+  footer.container.footer a:hover {
     text-decoration: underline;
   }
   
