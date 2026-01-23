@@ -17,28 +17,23 @@ function normalizeBaseUrl(url: string): string {
 /**
  * Get the API base URL based on the environment.
  * 
+ * IMPORTANT: We use relative URLs (empty base) so that:
+ * - All API requests go through Vercel's rewrite proxy (/api/* → Railway)
+ * - Session cookies remain first-party (same origin as frontend)
+ * - Third-party cookie blocking doesn't break authentication
+ * 
  * Priority:
- * 1. NEXT_PUBLIC_API_URL environment variable (if set)
- * 2. Check if we're on the client side and use window.location
- * 3. Empty string (use relative URLs with Next.js rewrites)
+ * 1. NEXT_PUBLIC_API_URL environment variable (if set for special cases)
+ * 2. Empty string (use relative URLs with Next.js/Vercel rewrites)
  */
 export function getApiBaseUrl(): string {
-  // If explicitly set, use it
+  // If explicitly set, use it (for special debugging/testing scenarios)
   if (process.env.NEXT_PUBLIC_API_URL) {
     return normalizeBaseUrl(process.env.NEXT_PUBLIC_API_URL);
   }
   
-  // On client side, check if we're on Vercel production
-  if (typeof window !== 'undefined') {
-    const hostname = window.location.hostname;
-    
-    // If on Vercel domain, use direct backend URL (Railway backend)
-    if (hostname.includes('vercel.app') || hostname.includes('proaktiv-dokument-hub')) {
-      return 'https://proaktiv-dokument-hub-production.up.railway.app';
-    }
-  }
-  
-  // Default: use relative URLs (works with Next.js rewrites for localhost)
+  // Always use relative URLs - Vercel/Next.js rewrites handle routing to Railway
+  // This keeps cookies first-party and avoids third-party cookie blocking
   return "";
 }
 
