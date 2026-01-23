@@ -2,25 +2,32 @@
 
 A modern document template management system for Norwegian real estate brokers, integrated with Vitec Next.
 
-![Version](https://img.shields.io/badge/version-3.x-blue)
-![Stack](https://img.shields.io/badge/stack-Next.js%20%2B%20FastAPI-green)
+![Version](https://img.shields.io/badge/version-3.5-blue)
+![Stack](https://img.shields.io/badge/stack-Next.js%2016%20%2B%20FastAPI-green)
 ![Status](https://img.shields.io/badge/status-production-success)
-![Platform](https://img.shields.io/badge/platform-Railway-purple)
+![Platform](https://img.shields.io/badge/platform-Vercel%20%2B%20Railway-purple)
 
 ---
 
-## ✨ What’s New (2026-01-18)
+## ✨ What's New (2026-01-23)
 
-### Template workflow parity with Vitec Next
-- **Origin marker** (Vitec Next vs Kundemal) and list grouping
-- **Attachments** (paperclip count + names) in list/cards/detail
-- **Kategorisering fields** available in the Settings UI (type/receiver/phases/etc.)
-- **Pagination fixes** in list view
+### V3.5 Navigation & Logo Library
+- **Reorganized navigation** - Ressurser (files/docs) and Selskap (HR/org) dropdowns
+- **Logo Library** - Proaktiv logos with preview, copy URL, and download
+- **Avatar resizing** - Server-side image cropping for proper profile pictures
+- **Sub-offices** - Parent-child office hierarchy with display on cards
 
-### Import tooling for Vitec Next templates
-- `backend/scripts/import_vitec_next_export.py`
-- `docs/vitec-next-export-format.md`
-- `docs/vitec-next-mcp-scrape-and-import.md`
+### V3.4 Portal Skins Preview
+- **Vitec portal skins** - Budportal and Visningsportal with Proaktiv branding
+- **Fullscreen preview** - Accurate representation of live portals
+
+### V3.3 API Proxy Fix
+- **Fixed auth cookies** - All API calls now use relative URLs through Vercel proxy
+
+### V3.2 Stack Upgrade + CI/CD
+- **Next.js 16** + React 19 + Tailwind CSS 4 + TypeScript 5.9
+- **GitHub Actions** - ESLint, TypeScript, Vitest, Ruff, Pyright, Pytest
+- **Sentry** - Error tracking for frontend and backend
 
 ---
 
@@ -33,8 +40,10 @@ A modern document template management system for Norwegian real estate brokers, 
 | **Smart Sanitizer** | Strip inline CSS and normalize HTML for Vitec compatibility |
 | **Merge Field Library** | 142+ flettekoder with one-click copy |
 | **Code Patterns** | Pre-built Vitec logic snippets (if/else, loops) |
-| **Template Settings** | Configure margins, headers/footers, and Vitec “Kategorisering” fields |
+| **Template Settings** | Configure margins, headers/footers, and Vitec "Kategorisering" fields |
 | **Variable Simulator** | Test documents with sample data before deployment |
+| **Logo Library** | Proaktiv logos with preview, copy URL, and download |
+| **Portal Skins** | Preview Vitec Budportal and Visningsportal with custom branding |
 
 ---
 
@@ -42,20 +51,18 @@ A modern document template management system for Norwegian real estate brokers, 
 
 ```
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│   Next.js 14    │────▶│    FastAPI      │────▶│   PostgreSQL    │
-│   (Frontend)    │     │    (Backend)    │     │   (Database)    │
+│   Next.js 16    │────▶│    FastAPI      │────▶│   PostgreSQL    │
+│   (Vercel)      │     │   (Railway)     │     │   (Railway)     │
 └─────────────────┘     └─────────────────┘     └─────────────────┘
-        │                       │                       │
-        └───────────────────────┴───────────────────────┘
-                            Railway
 ```
 
 ### Tech Stack
-- **Frontend:** Next.js 14 (App Router), React, Tailwind CSS, Shadcn/UI
+- **Frontend:** Next.js 16 (App Router), React 19, Tailwind CSS 4, Shadcn/UI
 - **Backend:** FastAPI, Pydantic, SQLAlchemy (async)
 - **Database:** PostgreSQL with JSONB fields
-- **Hosting:** Railway (all services)
-- **Editor:** Monaco Editor for code viewing/editing
+- **Hosting:** Vercel (frontend) + Railway (backend + database)
+- **CI/CD:** GitHub Actions
+- **Monitoring:** Sentry
 
 ---
 
@@ -70,7 +77,7 @@ A modern document template management system for Norwegian real estate brokers, 
 
 ```bash
 # Clone the repository
-git clone https://github.com/Adrian12341234-code/Proaktiv-Dokument-Hub.git
+git clone https://github.com/proaktivadmin/Proaktiv-Dokument-Hub.git
 cd Proaktiv-Dokument-Hub
 
 # Start all services
@@ -92,8 +99,8 @@ curl http://localhost:3000
 
 ### Production URLs
 
-- **Frontend:** https://blissful-quietude-production.up.railway.app
-- **Backend API:** https://proaktiv-dokument-hub-production.up.railway.app
+- **Frontend (Vercel):** https://proaktiv-dokument-hub.vercel.app
+- **Backend (Railway):** https://proaktiv-admin.up.railway.app
 
 ---
 
@@ -103,113 +110,96 @@ curl http://localhost:3000
 proaktiv-dokument-hub/
 ├── frontend/                 # Next.js application
 │   ├── src/
-│   │   ├── app/             # Pages (templates, flettekoder, sanitizer)
+│   │   ├── app/             # Pages (templates, assets, offices, employees)
 │   │   ├── components/      # React components
+│   │   │   ├── assets/      # Asset gallery, LogoLibrary
 │   │   │   ├── shelf/       # Template card and shelf components
 │   │   │   ├── templates/   # Document viewer, settings, simulator
-│   │   │   ├── flettekoder/ # Merge field library components
-│   │   │   └── editor/      # Monaco code editor
+│   │   │   ├── offices/     # Office cards and management
+│   │   │   ├── employees/   # Employee cards and Entra sync
+│   │   │   └── portal/      # Portal mockup components
 │   │   ├── hooks/           # Custom React hooks
 │   │   ├── lib/             # API client and utilities
 │   │   └── types/           # TypeScript interfaces
-│   └── public/              # Static assets (vitec-theme.css)
-│
+│   └── public/              # Static assets
+
 ├── backend/                  # FastAPI application
 │   ├── app/
 │   │   ├── models/          # SQLAlchemy models
 │   │   ├── services/        # Business logic (async)
+│   │   │   ├── image_service.py    # Avatar resizing
+│   │   │   └── ...
 │   │   ├── routers/         # API endpoints
 │   │   └── schemas/         # Pydantic models
-│   └── alembic/             # Database migrations
-│
-└── .cursor/                  # Agent context and specs
-    ├── active_context.md    # Current project status
-    ├── specs/               # Architecture specifications
-    └── agents/              # Agent prompts
+│   ├── alembic/             # Database migrations
+│   └── scripts/             # Utility scripts (sync, import)
+
+├── skins/                    # Vitec portal skin packages
+│   ├── proaktiv-bud/        # Budportal skin
+│   └── proaktiv-visning/    # Visningsportal skin
+
+└── .planning/                # Project planning
+    ├── STATE.md             # Current status
+    ├── ROADMAP.md           # Phase breakdown
+    └── phases/              # Phase plans
 ```
 
 ---
 
-## 🔧 Core Concepts
+## 🔧 Navigation Structure
 
-### Flettekoder (Merge Fields)
-Templates use a custom merge field syntax compatible with Vitec Next:
+### Ressurser (Files & Documents)
+- **Maler** - Document templates
+- **Kategorier** - Template categories
+- **Mediefiler** - Assets, logos (includes Proaktiv Logoer tab)
+- **WebDAV Lagring** - WebDAV file browser
 
-```html
-<!-- Simple field -->
-<p>Kjøper: [[kjøper.navn]]</p>
+### Selskap (HR & Organization)
+- **Kontorer** - Offices/departments
+- **Ansatte** - Employees
+- **Markedsområder** - Market territories
+- **Mottakere** - Recipients
 
-<!-- Required field (asterisk) -->
-<p>Pris: [[*eiendom.pris]]</p>
-
-<!-- Conditional content -->
-<div vitec-if="eiendom.fellesgjeld > 0">
-  Fellesgjeld: [[eiendom.fellesgjeld]]
-</div>
-
-<!-- Loop -->
-<ul vitec-foreach="selger in selgere">
-  <li>[[selger.navn]]</li>
-</ul>
-```
-
-### Template Channels
-- **PDF** - Print-ready documents
-- **Email** - HTML emails with inline styles
-- **SMS** - Plain text messages
-- **PDF + Email** - Dual-purpose templates
+### Verktøy (Tools)
+- **Sanitizer** - HTML cleanup
+- **Synkronisering** - Vitec sync
+- **Portal Skins** - Portal preview
 
 ---
 
 ## 🚀 Deployment
 
-The app deploys automatically to Railway when you push to the `main` branch.
-
-### Railway Services
-1. **proaktiv-dokument-hub** - Backend (FastAPI)
-2. **blissful-quietude** - Frontend (Next.js)
-3. **PostgreSQL** - Database
+The app deploys automatically when you push to the `main` branch:
+- Frontend → Vercel
+- Backend → Railway
 
 ### Environment Variables
-Backend requires:
+
+**Backend (Railway):**
 - `DATABASE_URL` - PostgreSQL connection string
 - `SECRET_KEY` - Application secret
-- `APP_ENV` - Environment (production)
-- `VITEC_INSTALLATION_ID` - Vitec Hub installation ID (e.g., MSPROATEST)
-- `VITEC_HUB_BASE_URL` - Hub base URL (QA: https://proatest.qa.vitecnext.no)
-- `VITEC_HUB_PRODUCT_LOGIN` - Product login username
-- `VITEC_HUB_ACCESS_KEY` - Product access key
+- `APP_PASSWORD_HASH` - bcrypt hash for auth
+- `VITEC_HUB_*` - Vitec API credentials
+- `SENTRY_DSN` - Error tracking
 
-Frontend requires:
-- `BACKEND_URL` - Backend API URL
-
-### Vitec Hub QA Sync (Manual)
-```bash
-# Verify product login access (QA)
-curl -u "$VITEC_HUB_PRODUCT_LOGIN:$VITEC_HUB_ACCESS_KEY" \
-  https://proatest.qa.vitecnext.no/Account/Methods
-
-# Sync offices (departments)
-curl -X POST http://localhost:8000/api/offices/sync
-
-# Sync employees
-curl -X POST http://localhost:8000/api/employees/sync
-```
+**Frontend (Vercel):**
+- `BACKEND_URL` - Railway backend URL (for rewrites)
+- `NEXT_PUBLIC_SENTRY_DSN` - Error tracking
 
 ---
 
 ## 📝 Documentation
 
 - [CLAUDE.md](CLAUDE.md) - Project conventions for AI agents
-- [.cursor/active_context.md](.cursor/active_context.md) - Current project status
-- [docs/vitec-next-mcp-scrape-and-import.md](docs/vitec-next-mcp-scrape-and-import.md) - Vitec export + import workflow
+- [.planning/STATE.md](.planning/STATE.md) - Current project status
+- [docs/](docs/) - Additional documentation
 
 ---
 
 ## 🤝 Contributing
 
 1. Read `CLAUDE.md` for project conventions
-2. Check `.cursor/active_context.md` for current status
+2. Check `.planning/STATE.md` for current status
 3. Follow the agent pipeline for major features
 4. Push to `main` for production deployment
 

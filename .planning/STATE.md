@@ -12,12 +12,12 @@ See: .planning/PROJECT.md (updated 2026-01-22)
 
 ## Current Position
 
-Phase: 5 of 5 (Vercel Migration)
-Plan: 2 of 5 in current phase (05-01, 05-02 complete)
-Status: In progress - ready for deployment
-Last activity: 2026-01-22 — Plans 05-01 (CORS) and 05-02 (Vercel Config) complete
+Phase: 3.5 (Navigation Reorganized, Logo Library)
+Plan: V3.5 complete
+Status: Production live
+Last activity: 2026-01-23 — Navigation reorganization, LogoLibrary, avatar resizing
 
-Progress: [████████░░] 80% (2 of 5 phases complete, Phase 5 in progress)
+Progress: [█████████░] 90% (V3.5 features complete, Phase 06 ready for testing)
 
 ## Performance Metrics
 
@@ -69,19 +69,104 @@ None.
 ## Session Continuity
 
 Last session: 2026-01-23
-Stopped at: V3.3 API Proxy Fix complete - production auth working
+Stopped at: V3.5 Navigation & Logo Library complete
 Resume file: None (ready for new work)
 Next step: Continue with Phase 06 Entra ID testing OR Phase 07 Office Enhancements
 
-### Session Summary (2026-01-23)
+### Session Summary (2026-01-23 - Latest)
+**Changes:**
+1. **Navigation Reorganization:**
+   - Ressurser dropdown: Maler, Kategorier, Mediefiler, WebDAV Lagring
+   - Selskap dropdown: Kontorer, Ansatte, Markedsområder, Mottakere
+   - Verktøy dropdown: Sanitizer, Synkronisering, Portal Skins
+
+2. **Logo Library:**
+   - New `LogoLibrary` component at `/assets` → Proaktiv Logoer tab
+   - Preview cards with copy URL, download, open in new tab
+   - 6 logo assets from proaktiv.no/assets/logos/
+
+3. **Avatar Image Resizing:**
+   - Backend `ImageService` for server-side cropping/resizing
+   - `/api/vitec/employees/{id}/picture?size=128&crop=top`
+   - Frontend `resolveAvatarUrl()` helper
+   - All avatar components updated
+
+4. **Office Enhancements:**
+   - Sub-offices display on office cards and detail pages
+   - Parent-child office hierarchy (`office_type`, `parent_office_id`)
+   - Dashboard office tags removed for cleaner UI
+
+5. **Employee Data Cleanup:**
+   - `employee_type` field (internal/external/system)
+   - Entra sync filters to only internal employees
+   - Cleanup script for Vitec as single source of truth
+
+### Previous Session Summary (2026-01-23)
 **Issue:** 401 Unauthorized errors on all authenticated API endpoints after login
 **Root Cause:** Frontend made direct cross-origin requests to Railway backend. Browsers blocked third-party cookies, so session cookie wasn't sent with API requests.
 **Fix:** Modified `frontend/src/lib/api/config.ts` to use relative URLs (`/api/*`) for all API calls. Vercel rewrites proxy these to Railway, making cookies first-party.
-**Key Files Changed:**
-- `frontend/src/lib/api/config.ts` - Removed direct Railway URL logic
-- Force-deployed to Vercel with `vercel --prod --force` (cache bypass required)
 
 ## Recent Changes (2026-01-23)
+
+### V3.5 Navigation & Logo Library
+**Navigation Reorganization:**
+- Renamed "Dokumenter" dropdown to "Ressurser" (files/documents focus)
+- Renamed "Selskap" dropdown to include HR/organization items
+- Moved Assets from Selskap to Ressurser
+- Moved WebDAV Storage from Verktøy to Ressurser
+- Moved Mottakere from Dokumenter to Selskap
+
+**New Ressurser menu:**
+- Maler → `/templates`
+- Kategorier → `/categories`
+- Mediefiler → `/assets` (includes Proaktiv Logoer tab)
+- WebDAV Lagring → `/storage`
+
+**New Selskap menu:**
+- Kontorer → `/offices`
+- Ansatte → `/employees`
+- Markedsområder → `/territories`
+- Mottakere → `/mottakere`
+
+**Logo Library (`/assets` → Proaktiv Logoer tab):**
+- New `LogoLibrary` component with preview cards
+- Copy URL button with tooltip showing full URL
+- Download button for saving logos locally
+- Open in new tab button
+- 6 logo assets: logo.svg, logo-white.svg, logo-dark.svg, icon.svg, icon-white.svg, favicon.png
+- Proper background preview (dark for white logos, checkered for transparent)
+
+**Avatar Image Resizing:**
+- New `ImageService` in `backend/app/services/image_service.py`
+- Server-side cropping and resizing using Pillow
+- `resize_for_avatar(image_data, size, crop_mode)` method
+- Crop modes: "top" (faces), "center", "face" (not implemented)
+- API endpoint: `/api/vitec/employees/{id}/picture?size=128&crop=top`
+- Frontend helper: `resolveAvatarUrl(url, size, crop)` in `lib/api/config.ts`
+- All avatar components updated to use proper sizes
+
+**Office Sub-departments:**
+- New `office_type` field: main, sub, regional
+- New `parent_office_id` foreign key for hierarchy
+- Sub-offices displayed on parent office cards
+- Sub-offices section on office detail pages
+- Offices list excludes sub-offices by default (`include_sub: false`)
+
+**Dashboard Cleanup:**
+- Removed office tags section from main dashboard
+- Cleaner, more focused layout
+
+**Employee Type System:**
+- New `employee_type` field: internal, external, system
+- New `external_company` field for contractor details
+- Entra sync filters to only sync internal employees
+- `should_sync_to_entra` property on Employee model
+
+### V3.4 Portal Skins Preview
+- Vitec Budportal and Visningsportal skin packages
+- Authentic mockup preview with Proaktiv branding
+- Fullscreen preview mode
+- Voss office mode toggle
 
 ### V3.3 API Proxy Fix (Critical Production Fix)
 **Problem:** After login, all API calls returned 401 Unauthorized

@@ -10,7 +10,7 @@ A document template management system for Norwegian real estate brokers, integra
 
 | Aspect | Details |
 |--------|---------|
-| **Phase** | 3.2 (Stack Upgraded, CI/CD Active) |
+| **Phase** | 3.5 (Navigation Reorganized, Logo Library) |
 | **Stack** | Next.js 16 + React 19 + FastAPI + PostgreSQL (Railway) |
 | **UI** | Shadcn/UI + Tailwind CSS 4 |
 | **Hosting** | Vercel (Frontend) + Railway (Backend + PostgreSQL) |
@@ -96,20 +96,24 @@ backend/
 │   ├── services/    # Business logic (async)
 │   │   ├── sanitizer_service.py   # Vitec Stilark compliance
 │   │   ├── webdav_service.py      # WebDAV client
-│   │   └── inventory_service.py   # Template sync stats
+│   │   ├── inventory_service.py   # Template sync stats
+│   │   └── image_service.py       # Avatar resizing/cropping
 │   ├── routers/     # FastAPI endpoints
 │   └── schemas/     # Pydantic models
 
 frontend/
 ├── src/
 │   ├── app/         # Next.js pages
+│   │   ├── assets/  # Mediefiler page (logos, global assets)
 │   │   ├── storage/ # WebDAV browser page
 │   │   └── portal/  # Portal skins preview page
 │   ├── components/  # React components
+│   │   ├── assets/  # Asset gallery, LogoLibrary
 │   │   ├── storage/ # Storage browser components
 │   │   └── portal/  # Portal mockup components
 │   ├── hooks/       # Custom hooks
 │   ├── lib/         # API wrapper, utilities
+│   │   └── api/config.ts  # resolveApiUrl, resolveAvatarUrl
 │   └── types/       # TypeScript interfaces
 
 skins/                    # Vitec portal skin packages
@@ -161,7 +165,18 @@ skins/                    # Vitec portal skin packages
 
 See `.planning/STATE.md` for full status.
 
-**Phase 06: Entra ID Signature Sync (Ready for Implementation):**
+**V3.5 Navigation & Logo Library (Completed 2026-01-23):**
+- ✅ Reorganized navigation into **Ressurser** (files/docs) and **Selskap** (HR/org)
+- ✅ Added **LogoLibrary** component with Proaktiv logos preview and copy URL
+- ✅ Server-side image resizing with `ImageService` for employee avatars
+- ✅ New `resolveAvatarUrl()` helper for proper avatar cropping
+- ✅ Removed office tags from dashboard for cleaner UI
+- ✅ Sub-offices display on office cards and detail pages
+- Navigation: Ressurser → Mediefiler → Proaktiv Logoer tab
+- Files: `frontend/src/components/assets/LogoLibrary.tsx`, `backend/app/services/image_service.py`
+
+**Phase 06: Entra ID Signature Sync (Ready for Testing):**
+- ✅ Implementation complete - all files created
 - 🔲 Sync employee data from PostgreSQL to Microsoft Entra ID
 - 🔲 Upload profile photos to Entra ID
 - 🔲 Push email signatures to Exchange Online
