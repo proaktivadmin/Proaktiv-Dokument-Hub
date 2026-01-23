@@ -23,7 +23,7 @@ export function useOffices(params?: OfficeListParams) {
     } finally {
       setIsLoading(false);
     }
-  }, [params?.city, params?.is_active, params?.skip, params?.limit]);
+  }, [params?.city, params?.is_active, params?.office_type, params?.include_sub, params?.skip, params?.limit]);
 
   useEffect(() => {
     fetch();

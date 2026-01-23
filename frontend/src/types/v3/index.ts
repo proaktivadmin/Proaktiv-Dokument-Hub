@@ -6,6 +6,8 @@
 // Office Types
 // =============================================================================
 
+export type OfficeType = 'main' | 'sub' | 'regional';
+
 export interface Office {
   id: string;
   name: string; // Marketing/display name
@@ -13,6 +15,8 @@ export interface Office {
   short_code: string;
   organization_number: string | null; // Norwegian org number for matching/merging
   vitec_department_id: number | null;
+  office_type: OfficeType; // main, sub, or regional
+  parent_office_id: string | null; // For sub-departments
   email: string | null;
   phone: string | null;
   street_address: string | null;
@@ -32,10 +36,19 @@ export interface Office {
   updated_at: string;
 }
 
+export interface SubOfficeSummary {
+  id: string;
+  name: string;
+  short_code: string;
+  employee_count: number;
+  is_active: boolean;
+}
+
 export interface OfficeWithStats extends Office {
   employee_count: number;
   active_employee_count: number;
   territory_count: number;
+  sub_offices: SubOfficeSummary[];
 }
 
 export type OfficeCreatePayload = Omit<Office, 'id' | 'created_at' | 'updated_at'>;

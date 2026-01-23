@@ -14,6 +14,8 @@ import type {
 export interface OfficeListParams {
   city?: string;
   is_active?: boolean;
+  office_type?: 'main' | 'sub' | 'regional';
+  include_sub?: boolean;
   skip?: number;
   limit?: number;
 }
@@ -24,6 +26,10 @@ export const officesApi = {
     if (params?.city) searchParams.set('city', params.city);
     if (params?.is_active !== undefined) {
       searchParams.set('is_active', String(params.is_active));
+    }
+    if (params?.office_type) searchParams.set('office_type', params.office_type);
+    if (params?.include_sub !== undefined) {
+      searchParams.set('include_sub', String(params.include_sub));
     }
     if (params?.skip) searchParams.set('skip', String(params.skip));
     if (params?.limit) searchParams.set('limit', String(params.limit));
