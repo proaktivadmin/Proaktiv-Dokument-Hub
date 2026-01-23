@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { BudPortalMockup } from "./BudPortalMockup";
 import { VisningPortalMockup } from "./VisningPortalMockup";
+import { SalgsoppgavePortalMockup } from "./SalgsoppgavePortalMockup";
 
 /**
  * PortalPreview Component
@@ -31,7 +32,7 @@ import { VisningPortalMockup } from "./VisningPortalMockup";
 export function PortalPreview() {
   const [activeTab, setActiveTab] = useState("bud");
   const [showVossMode, setShowVossMode] = useState(false);
-  const [fullscreenPortal, setFullscreenPortal] = useState<"bud" | "visning" | null>(null);
+  const [fullscreenPortal, setFullscreenPortal] = useState<"bud" | "visning" | "salgsoppgave" | null>(null);
   const [useVanillaSkin, setUseVanillaSkin] = useState(false);
 
   // Fullscreen overlay
@@ -46,7 +47,7 @@ export function PortalPreview() {
                 {useVanillaSkin ? "VANILLA" : "PROAKTIV"}
               </Badge>
               <span className="font-medium">
-                {fullscreenPortal === "bud" ? "Budportal" : "Visningsportal"} — Fullskjerm forhåndsvisning
+                {fullscreenPortal === "bud" ? "Budportal" : fullscreenPortal === "visning" ? "Visningsportal" : "Bestill salgsoppgave"} — Fullskjerm forhåndsvisning
               </span>
               {showVossMode && (
                 <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-300">
@@ -89,8 +90,10 @@ export function PortalPreview() {
         <div className="pt-14 h-full overflow-auto">
           {fullscreenPortal === "bud" ? (
             <BudPortalMockup showFinancing={showVossMode} fullscreen useVanillaSkin={useVanillaSkin} />
-          ) : (
+          ) : fullscreenPortal === "visning" ? (
             <VisningPortalMockup showFinancing={showVossMode} fullscreen useVanillaSkin={useVanillaSkin} />
+          ) : (
+            <SalgsoppgavePortalMockup showFinancing={showVossMode} fullscreen useVanillaSkin={useVanillaSkin} />
           )}
         </div>
       </div>
@@ -240,13 +243,17 @@ export function PortalPreview() {
               <Users className="h-4 w-4" />
               Visningsportal
             </TabsTrigger>
+            <TabsTrigger value="salgsoppgave" className="gap-2">
+              <Download className="h-4 w-4" />
+              Salgsoppgave
+            </TabsTrigger>
           </TabsList>
 
           <div className="flex items-center gap-3">
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setFullscreenPortal(activeTab as "bud" | "visning")}
+              onClick={() => setFullscreenPortal(activeTab as "bud" | "visning" | "salgsoppgave")}
             >
               <Maximize2 className="h-4 w-4 mr-2" />
               Fullskjerm
@@ -317,6 +324,38 @@ export function PortalPreview() {
             <CardContent className="p-0 border-t">
               <div className="bg-gray-100 rounded-b-lg overflow-hidden">
                 <VisningPortalMockup showFinancing={showVossMode} useVanillaSkin={useVanillaSkin} />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="salgsoppgave" className="mt-0">
+          <Card>
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-lg">Bestill salgsoppgave</CardTitle>
+                  <CardDescription>
+                    Portal for å bestille salgsoppgave på e-post
+                  </CardDescription>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Badge variant={useVanillaSkin ? "outline" : "secondary"}>
+                    {useVanillaSkin ? "VANILLA" : "PROAKTIV-visning.zip"}
+                  </Badge>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setFullscreenPortal("salgsoppgave")}
+                  >
+                    <Maximize2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="p-0 border-t">
+              <div className="bg-gray-100 rounded-b-lg overflow-hidden">
+                <SalgsoppgavePortalMockup showFinancing={showVossMode} useVanillaSkin={useVanillaSkin} />
               </div>
             </CardContent>
           </Card>
