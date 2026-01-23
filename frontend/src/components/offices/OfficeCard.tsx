@@ -43,11 +43,11 @@ export function OfficeCard({ office, employees = [], onClick, onEdit, onDeactiva
     >
       {/* Banner Image */}
       {bannerImage ? (
-        <div className="relative h-32 w-full overflow-hidden">
+        <div className="relative h-40 w-full overflow-hidden">
           <img 
             src={resolveApiUrl(bannerImage) ?? bannerImage} 
             alt={office.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
           />
           <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
 
@@ -68,7 +68,7 @@ export function OfficeCard({ office, employees = [], onClick, onEdit, onDeactiva
         </div>
       ) : (
         <div 
-          className="relative h-32 w-full"
+          className="relative h-40 w-full"
           style={{ backgroundColor: office.color }}
         >
           <div className="absolute inset-0 bg-linear-to-br from-white/10 to-transparent" />

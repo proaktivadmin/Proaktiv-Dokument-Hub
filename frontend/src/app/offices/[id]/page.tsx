@@ -125,7 +125,7 @@ export default function OfficeDetailPage() {
             <img 
               src={resolveApiUrl(office.profile_image_url) ?? office.profile_image_url} 
               alt={office.name}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover object-top"
             />
             <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent" />
             
