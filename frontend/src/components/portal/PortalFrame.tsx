@@ -3,6 +3,388 @@
 import { useEffect, useRef, useCallback } from "react";
 
 /**
+ * Vitec base styles that complement the skin CSS
+ * These are derived from analyzing Vitec's site.min.css
+ * 
+ * Defined outside component to prevent recreation on each render.
+ */
+const VITEC_BASE_STYLES = `
+  /* ===== VITEC BASE STYLES ===== */
+  /* Derived from Vitec's site.min.css to ensure accurate preview */
+  
+  body {
+    font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Fixed header styling */
+  header.navbar.fixed-top {
+    padding: 0.75rem 1rem;
+    z-index: 1030;
+  }
+  
+  header .object-header {
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  
+  header .nav-pills .nav-link {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+    margin-left: 0.5rem;
+  }
+  
+  /* Main content area */
+  main {
+    padding-bottom: 2rem;
+  }
+  
+  /* Article sections - Vitec specific */
+  article.info {
+    padding: 1.5rem 0;
+    margin-bottom: 0;
+  }
+  
+  article.info .header {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  
+  article.info dl {
+    margin-bottom: 0;
+  }
+  
+  article.info dt {
+    font-weight: 600;
+    margin-top: 0.75rem;
+  }
+  
+  article.info dt:first-child {
+    margin-top: 0;
+  }
+  
+  article.info dd {
+    margin-bottom: 0;
+    margin-left: 0;
+  }
+  
+  article.container.primary {
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    background: white;
+    border-radius: 0;
+  }
+  
+  article.container.primary.status {
+    border-radius: 0;
+  }
+  
+  article.container.primary h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  
+  /* Fieldset and legend styling */
+  fieldset {
+    border: none;
+    padding: 0;
+    margin: 0 0 1.5rem 0;
+  }
+  
+  legend {
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 0;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 0.5rem;
+    width: 100%;
+  }
+  
+  .scroll-target {
+    position: absolute;
+    top: -80px;
+  }
+  
+  /* Alert boxes - Vitec style */
+  .alert-outline-bordered {
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .alert.alert-info {
+    border-radius: 0.25rem;
+  }
+  
+  .alert.alert-warning {
+    border-radius: 0.25rem;
+  }
+  
+  /* List group - Vitec style */
+  .list-group-item {
+    border: 1px solid rgba(0,0,0,0.125);
+    padding: 0.75rem 1.25rem;
+  }
+  
+  .list-group-item .link-text {
+    margin-left: 0.5rem;
+  }
+  
+  .list-group-item small {
+    display: block;
+    margin-top: 0.25rem;
+    color: #6c757d;
+  }
+  
+  /* Form styling */
+  .form-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -5px;
+    margin-left: -5px;
+  }
+  
+  .form-row > .col,
+  .form-row > [class*="col-"] {
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .form-group label {
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+  }
+  
+  .form-control {
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+  
+  .form-control:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+  
+  textarea.form-control {
+    min-height: 80px;
+  }
+  
+  select.form-control {
+    height: calc(1.5em + 0.75rem + 2px);
+  }
+  
+  .helper-text {
+    font-size: 0.8rem;
+    color: #6c757d;
+    display: block;
+    margin-top: 0.25rem;
+  }
+  
+  .required-mark {
+    color: #dc3545;
+    margin-left: 2px;
+  }
+  
+  /* Consent options - Vitec specific */
+  label.with-input {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    cursor: pointer;
+    margin-bottom: 0;
+    font-weight: 400;
+  }
+  
+  label.with-input > span {
+    display: flex;
+    align-items: flex-start;
+  }
+  
+  label.with-input input[type="checkbox"] {
+    margin-right: 0.5rem;
+    margin-top: 0.25rem;
+    width: 18px;
+    height: 18px;
+  }
+  
+  label.with-input .consent-link {
+    margin-left: auto;
+    font-size: 0.875rem;
+    color: inherit;
+    text-decoration: none;
+  }
+  
+  label.with-input .consent-link:hover {
+    text-decoration: underline;
+  }
+  
+  label.with-input .consent-link .link-text {
+    margin-right: 0.25rem;
+  }
+  
+  /* Input group */
+  .input-group {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    width: 100%;
+  }
+  
+  .input-group > .form-control {
+    position: relative;
+    flex: 1 1 auto;
+    width: 1%;
+    min-width: 0;
+  }
+  
+  .input-group-append {
+    margin-left: -1px;
+    display: flex;
+  }
+  
+  .input-group-text {
+    display: flex;
+    align-items: center;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    text-align: center;
+    white-space: nowrap;
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+  }
+  
+  .input-group > .form-control:not(:last-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  
+  .input-group-append .input-group-text {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  
+  /* Buttons */
+  .btn {
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+    cursor: pointer;
+  }
+  
+  .btn-lg {
+    padding: 0.5rem 1rem;
+    font-size: 1.25rem;
+    border-radius: 0.3rem;
+  }
+  
+  .btn-block {
+    display: block;
+    width: 100%;
+  }
+  
+  .btn i {
+    margin-left: 0.5rem;
+  }
+  
+  /* Modal styling */
+  .modal-content {
+    border-radius: 0.3rem;
+  }
+  
+  .modal-header {
+    padding: 1rem;
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .modal-header .modal-title {
+    font-size: 1.25rem;
+    margin: 0;
+  }
+  
+  .modal-header .close {
+    padding: 1rem;
+    margin: -1rem -1rem -1rem auto;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  
+  .modal-body {
+    padding: 1rem;
+  }
+  
+  .modal-footer {
+    padding: 1rem;
+    border-top: 1px solid #dee2e6;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 767.98px) {
+    article.container.primary {
+      padding: 1rem;
+    }
+    
+    .form-row > [class*="col-"] {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+    
+    header .d-none.d-sm-inline {
+      display: none !important;
+    }
+  }
+  
+  /* Break word for long emails */
+  .break-word {
+    word-break: break-all;
+  }
+  
+  /* Footer */
+  footer {
+    background: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+  }
+`;
+
+/**
  * PortalFrame Component
  * 
  * Renders HTML content in an isolated iframe with the specified skin CSS.
@@ -14,8 +396,8 @@ import { useEffect, useRef, useCallback } from "react";
 interface PortalFrameProps {
   /** HTML content to render inside the iframe */
   content: string;
-  /** Path to the skin CSS file (e.g., "/skins/proaktiv-bud.css") */
-  skinCssHref: string;
+  /** Path to the skin CSS file (e.g., "/skins/proaktiv-bud.css"). If undefined, uses vanilla Bootstrap. */
+  skinCssHref?: string;
   /** Title for the iframe */
   title?: string;
   /** Additional class names */
@@ -37,390 +419,15 @@ export function PortalFrame({
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   /**
-   * Vitec base styles that complement the skin CSS
-   * These are derived from analyzing Vitec's site.min.css
-   */
-  const vitecBaseStyles = `
-    /* ===== VITEC BASE STYLES ===== */
-    /* Derived from Vitec's site.min.css to ensure accurate preview */
-    
-    body {
-      font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: 14px;
-      line-height: 1.5;
-      color: #212529;
-      background-color: #f8f9fa;
-      margin: 0;
-      padding: 0;
-    }
-    
-    /* Fixed header styling */
-    header.navbar.fixed-top {
-      padding: 0.75rem 1rem;
-      z-index: 1030;
-    }
-    
-    header .object-header {
-      font-weight: 600;
-      font-size: 1rem;
-    }
-    
-    header .nav-pills .nav-link {
-      padding: 0.25rem 0.75rem;
-      font-size: 0.875rem;
-      margin-left: 0.5rem;
-    }
-    
-    /* Main content area */
-    main {
-      padding-bottom: 2rem;
-    }
-    
-    /* Article sections - Vitec specific */
-    article.info {
-      padding: 1.5rem 0;
-      margin-bottom: 0;
-    }
-    
-    article.info .header {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-    }
-    
-    article.info dl {
-      margin-bottom: 0;
-    }
-    
-    article.info dt {
-      font-weight: 600;
-      margin-top: 0.75rem;
-    }
-    
-    article.info dt:first-child {
-      margin-top: 0;
-    }
-    
-    article.info dd {
-      margin-bottom: 0;
-      margin-left: 0;
-    }
-    
-    article.container.primary {
-      padding: 1.5rem;
-      margin-bottom: 1rem;
-      background: white;
-      border-radius: 0;
-    }
-    
-    article.container.primary.status {
-      border-radius: 0;
-    }
-    
-    article.container.primary h2 {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-    }
-    
-    /* Fieldset and legend styling */
-    fieldset {
-      border: none;
-      padding: 0;
-      margin: 0 0 1.5rem 0;
-    }
-    
-    legend {
-      font-size: 1.1rem;
-      font-weight: 600;
-      padding: 0;
-      margin-bottom: 1rem;
-      border-bottom: 2px solid #e9ecef;
-      padding-bottom: 0.5rem;
-      width: 100%;
-    }
-    
-    .scroll-target {
-      position: absolute;
-      top: -80px;
-    }
-    
-    /* Alert boxes - Vitec style */
-    .alert-outline-bordered {
-      background: #fff;
-      border: 1px solid #dee2e6;
-      border-radius: 0.25rem;
-      padding: 1rem;
-      margin-bottom: 1rem;
-    }
-    
-    .alert.alert-info {
-      border-radius: 0.25rem;
-    }
-    
-    .alert.alert-warning {
-      border-radius: 0.25rem;
-    }
-    
-    /* List group - Vitec style */
-    .list-group-item {
-      border: 1px solid rgba(0,0,0,0.125);
-      padding: 0.75rem 1.25rem;
-    }
-    
-    .list-group-item .link-text {
-      margin-left: 0.5rem;
-    }
-    
-    .list-group-item small {
-      display: block;
-      margin-top: 0.25rem;
-      color: #6c757d;
-    }
-    
-    /* Form styling */
-    .form-row {
-      display: flex;
-      flex-wrap: wrap;
-      margin-right: -5px;
-      margin-left: -5px;
-    }
-    
-    .form-row > .col,
-    .form-row > [class*="col-"] {
-      padding-right: 5px;
-      padding-left: 5px;
-    }
-    
-    .form-group {
-      margin-bottom: 1rem;
-    }
-    
-    .form-group label {
-      margin-bottom: 0.25rem;
-      font-weight: 500;
-    }
-    
-    .form-control {
-      display: block;
-      width: 100%;
-      padding: 0.375rem 0.75rem;
-      font-size: 1rem;
-      line-height: 1.5;
-      color: #495057;
-      background-color: #fff;
-      border: 1px solid #ced4da;
-      border-radius: 0.25rem;
-      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-    }
-    
-    .form-control:focus {
-      border-color: #80bdff;
-      outline: 0;
-      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-    }
-    
-    textarea.form-control {
-      min-height: 80px;
-    }
-    
-    select.form-control {
-      height: calc(1.5em + 0.75rem + 2px);
-    }
-    
-    .helper-text {
-      font-size: 0.8rem;
-      color: #6c757d;
-      display: block;
-      margin-top: 0.25rem;
-    }
-    
-    .required-mark {
-      color: #dc3545;
-      margin-left: 2px;
-    }
-    
-    /* Consent options - Vitec specific */
-    label.with-input {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-start;
-      cursor: pointer;
-      margin-bottom: 0;
-      font-weight: 400;
-    }
-    
-    label.with-input > span {
-      display: flex;
-      align-items: flex-start;
-    }
-    
-    label.with-input input[type="checkbox"] {
-      margin-right: 0.5rem;
-      margin-top: 0.25rem;
-      width: 18px;
-      height: 18px;
-    }
-    
-    label.with-input .consent-link {
-      margin-left: auto;
-      font-size: 0.875rem;
-      color: inherit;
-      text-decoration: none;
-    }
-    
-    label.with-input .consent-link:hover {
-      text-decoration: underline;
-    }
-    
-    label.with-input .consent-link .link-text {
-      margin-right: 0.25rem;
-    }
-    
-    /* Input group */
-    .input-group {
-      position: relative;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: stretch;
-      width: 100%;
-    }
-    
-    .input-group > .form-control {
-      position: relative;
-      flex: 1 1 auto;
-      width: 1%;
-      min-width: 0;
-    }
-    
-    .input-group-append {
-      margin-left: -1px;
-      display: flex;
-    }
-    
-    .input-group-text {
-      display: flex;
-      align-items: center;
-      padding: 0.375rem 0.75rem;
-      font-size: 1rem;
-      font-weight: 400;
-      line-height: 1.5;
-      color: #495057;
-      text-align: center;
-      white-space: nowrap;
-      background-color: #e9ecef;
-      border: 1px solid #ced4da;
-      border-radius: 0.25rem;
-    }
-    
-    .input-group > .form-control:not(:last-child) {
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-    
-    .input-group-append .input-group-text {
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
-    }
-    
-    /* Buttons */
-    .btn {
-      display: inline-block;
-      font-weight: 400;
-      text-align: center;
-      white-space: nowrap;
-      vertical-align: middle;
-      user-select: none;
-      border: 1px solid transparent;
-      padding: 0.375rem 0.75rem;
-      font-size: 1rem;
-      line-height: 1.5;
-      border-radius: 0.25rem;
-      transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
-      cursor: pointer;
-    }
-    
-    .btn-lg {
-      padding: 0.5rem 1rem;
-      font-size: 1.25rem;
-      border-radius: 0.3rem;
-    }
-    
-    .btn-block {
-      display: block;
-      width: 100%;
-    }
-    
-    .btn i {
-      margin-left: 0.5rem;
-    }
-    
-    /* Modal styling */
-    .modal-content {
-      border-radius: 0.3rem;
-    }
-    
-    .modal-header {
-      padding: 1rem;
-      border-bottom: 1px solid #dee2e6;
-    }
-    
-    .modal-header .modal-title {
-      font-size: 1.25rem;
-      margin: 0;
-    }
-    
-    .modal-header .close {
-      padding: 1rem;
-      margin: -1rem -1rem -1rem auto;
-      background: transparent;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
-    
-    .modal-body {
-      padding: 1rem;
-    }
-    
-    .modal-footer {
-      padding: 1rem;
-      border-top: 1px solid #dee2e6;
-    }
-    
-    /* Responsive adjustments */
-    @media (max-width: 767.98px) {
-      article.container.primary {
-        padding: 1rem;
-      }
-      
-      .form-row > [class*="col-"] {
-        flex: 0 0 100%;
-        max-width: 100%;
-      }
-      
-      header .d-none.d-sm-inline {
-        display: none !important;
-      }
-    }
-    
-    /* Break word for long emails */
-    .break-word {
-      word-break: break-all;
-    }
-    
-    /* Footer */
-    footer {
-      background: #f8f9fa;
-      border-top: 1px solid #dee2e6;
-    }
-  `;
-
-  /**
    * Build the complete HTML document for the iframe
    * Loads Bootstrap 4 (used by Vitec portals) and the custom skin CSS
    */
   const buildDocument = useCallback((): string => {
+    // Only include custom skin CSS if provided (not vanilla mode)
+    const skinCssLink = skinCssHref 
+      ? `<!-- Custom Skin CSS (Proaktiv branding) -->\n  <link rel="stylesheet" href="${skinCssHref}">`
+      : `<!-- Vanilla mode - no custom skin CSS -->`;
+
     return `<!DOCTYPE html>
 <html lang="no">
 <head>
@@ -433,10 +440,9 @@ export function PortalFrame({
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <!-- Google Fonts - Open Sans (Proaktiv font) -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap">
-  <!-- Custom Skin CSS (Proaktiv branding) -->
-  <link rel="stylesheet" href="${skinCssHref}">
+  ${skinCssLink}
   <!-- Vitec base styles -->
-  <style>${vitecBaseStyles}</style>
+  <style>${VITEC_BASE_STYLES}</style>
 </head>
 <body data-portal-type="${portalType}">
   ${content}
@@ -445,7 +451,7 @@ export function PortalFrame({
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>`;
-  }, [title, skinCssHref, content, portalType, vitecBaseStyles]);
+  }, [title, skinCssHref, content, portalType]);
 
   // Update iframe content when content or CSS changes
   useEffect(() => {

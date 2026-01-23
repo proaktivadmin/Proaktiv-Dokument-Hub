@@ -9,14 +9,14 @@ import {
   FileText, 
   Users, 
   Download, 
-  ExternalLink,
   CheckCircle2,
   XCircle,
   Building2,
-  Smartphone,
   Monitor,
   Maximize2,
-  X
+  X,
+  Palette,
+  Eye
 } from "lucide-react";
 import { BudPortalMockup } from "./BudPortalMockup";
 import { VisningPortalMockup } from "./VisningPortalMockup";
@@ -32,6 +32,7 @@ export function PortalPreview() {
   const [activeTab, setActiveTab] = useState("bud");
   const [showVossMode, setShowVossMode] = useState(false);
   const [fullscreenPortal, setFullscreenPortal] = useState<"bud" | "visning" | null>(null);
+  const [useVanillaSkin, setUseVanillaSkin] = useState(false);
 
   // Fullscreen overlay
   if (fullscreenPortal) {
@@ -41,8 +42,8 @@ export function PortalPreview() {
         <div className="absolute top-0 left-0 right-0 bg-white border-b shadow-sm z-10">
           <div className="flex items-center justify-between px-4 py-3">
             <div className="flex items-center gap-3">
-              <Badge variant="outline" className="bg-[#272630] text-white border-0">
-                PROAKTIV
+              <Badge variant="outline" className={useVanillaSkin ? "bg-gray-500 text-white border-0" : "bg-[#272630] text-white border-0"}>
+                {useVanillaSkin ? "VANILLA" : "PROAKTIV"}
               </Badge>
               <span className="font-medium">
                 {fullscreenPortal === "bud" ? "Budportal" : "Visningsportal"} — Fullskjerm forhåndsvisning
@@ -55,6 +56,15 @@ export function PortalPreview() {
               )}
             </div>
             <div className="flex items-center gap-2">
+              <Button
+                variant={useVanillaSkin ? "default" : "outline"}
+                size="sm"
+                onClick={() => setUseVanillaSkin(!useVanillaSkin)}
+                className={useVanillaSkin ? "bg-gray-600 hover:bg-gray-700" : ""}
+              >
+                <Palette className="h-4 w-4 mr-2" />
+                {useVanillaSkin ? "Vis Proaktiv" : "Vis Vanilla"}
+              </Button>
               <Button
                 variant="outline"
                 size="sm"
@@ -78,9 +88,9 @@ export function PortalPreview() {
         {/* Fullscreen Content */}
         <div className="pt-14 h-full overflow-auto">
           {fullscreenPortal === "bud" ? (
-            <BudPortalMockup showFinancing={showVossMode} fullscreen />
+            <BudPortalMockup showFinancing={showVossMode} fullscreen useVanillaSkin={useVanillaSkin} />
           ) : (
-            <VisningPortalMockup showFinancing={showVossMode} fullscreen />
+            <VisningPortalMockup showFinancing={showVossMode} fullscreen useVanillaSkin={useVanillaSkin} />
           )}
         </div>
       </div>
@@ -162,6 +172,38 @@ export function PortalPreview() {
         </Card>
       </div>
 
+      {/* Skin Toggle */}
+      <Card className={useVanillaSkin ? "bg-gray-100 border-gray-300" : "bg-[#272630]/5 border-[#272630]/20"}>
+        <CardContent className="py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Palette className={useVanillaSkin ? "h-5 w-5 text-gray-600" : "h-5 w-5 text-[#272630]"} />
+              <div>
+                <p className={useVanillaSkin ? "text-sm font-medium text-gray-900" : "text-sm font-medium text-[#272630]"}>
+                  {useVanillaSkin ? "Vanilla Skin (Bootstrap standard)" : "Proaktiv Skin (Tilpasset)"}
+                </p>
+                <p className={useVanillaSkin ? "text-xs text-gray-600" : "text-xs text-[#272630]/70"}>
+                  {useVanillaSkin 
+                    ? "Viser standard Bootstrap-farger for sammenligning med live portaler" 
+                    : "Viser Proaktiv-merkede farger, knapper og elementer"}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant={useVanillaSkin ? "default" : "outline"}
+                size="sm"
+                onClick={() => setUseVanillaSkin(!useVanillaSkin)}
+                className={useVanillaSkin ? "bg-gray-600 hover:bg-gray-700" : "border-[#272630] text-[#272630] hover:bg-[#272630]/10"}
+              >
+                <Eye className="h-4 w-4 mr-2" />
+                {useVanillaSkin ? "Bytt til Proaktiv" : "Bytt til Vanilla"}
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Voss Office Toggle */}
       <Card className="bg-amber-50 border-amber-200">
         <CardContent className="py-3">
@@ -227,7 +269,9 @@ export function PortalPreview() {
                   </CardDescription>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge variant="secondary">PROAKTIV-bud.zip</Badge>
+                  <Badge variant={useVanillaSkin ? "outline" : "secondary"}>
+                    {useVanillaSkin ? "VANILLA" : "PROAKTIV-bud.zip"}
+                  </Badge>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -240,7 +284,7 @@ export function PortalPreview() {
             </CardHeader>
             <CardContent className="p-0 border-t">
               <div className="bg-gray-100 rounded-b-lg overflow-hidden">
-                <BudPortalMockup showFinancing={showVossMode} />
+                <BudPortalMockup showFinancing={showVossMode} useVanillaSkin={useVanillaSkin} />
               </div>
             </CardContent>
           </Card>
@@ -257,7 +301,9 @@ export function PortalPreview() {
                   </CardDescription>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge variant="secondary">PROAKTIV-visning.zip</Badge>
+                  <Badge variant={useVanillaSkin ? "outline" : "secondary"}>
+                    {useVanillaSkin ? "VANILLA" : "PROAKTIV-visning.zip"}
+                  </Badge>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -270,7 +316,7 @@ export function PortalPreview() {
             </CardHeader>
             <CardContent className="p-0 border-t">
               <div className="bg-gray-100 rounded-b-lg overflow-hidden">
-                <VisningPortalMockup showFinancing={showVossMode} />
+                <VisningPortalMockup showFinancing={showVossMode} useVanillaSkin={useVanillaSkin} />
               </div>
             </CardContent>
           </Card>

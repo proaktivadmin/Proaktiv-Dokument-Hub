@@ -16,9 +16,11 @@ interface BudPortalMockupProps {
   showFinancing?: boolean;
   /** Whether to show in fullscreen mode */
   fullscreen?: boolean;
+  /** Whether to use vanilla (default) skin instead of Proaktiv skin */
+  useVanillaSkin?: boolean;
 }
 
-export function BudPortalMockup({ showFinancing = false, fullscreen = false }: BudPortalMockupProps) {
+export function BudPortalMockup({ showFinancing = false, fullscreen = false, useVanillaSkin = false }: BudPortalMockupProps) {
   // This HTML mirrors the EXACT Vitec Budportal structure from bud.vitecnext.no
   const mockupHtml = `
 <!-- Fixed header - matches Vitec structure -->
@@ -468,11 +470,15 @@ export function BudPortalMockup({ showFinancing = false, fullscreen = false }: B
 </div>
 `;
 
+  // Vanilla skin uses no custom CSS (just Bootstrap defaults)
+  // Proaktiv skin uses the custom branded CSS
+  const skinCssHref = useVanillaSkin ? undefined : "/skins/proaktiv-bud.css";
+
   return (
     <PortalFrame
       content={mockupHtml}
-      skinCssHref="/skins/proaktiv-bud.css"
-      title="Budportal - Proaktiv"
+      skinCssHref={skinCssHref}
+      title={useVanillaSkin ? "Budportal - Vanilla" : "Budportal - Proaktiv"}
       minHeight={fullscreen ? "100vh" : "1200px"}
       portalType="bud"
     />

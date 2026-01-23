@@ -14,9 +14,11 @@ interface VisningPortalMockupProps {
   showFinancing?: boolean;
   /** Whether to show in fullscreen mode */
   fullscreen?: boolean;
+  /** Whether to use vanilla (default) skin instead of Proaktiv skin */
+  useVanillaSkin?: boolean;
 }
 
-export function VisningPortalMockup({ showFinancing = false, fullscreen = false }: VisningPortalMockupProps) {
+export function VisningPortalMockup({ showFinancing = false, fullscreen = false, useVanillaSkin = false }: VisningPortalMockupProps) {
   // This HTML mirrors the Vitec Visningsportal structure from meglervisning.no
   const mockupHtml = `
 <!-- Fixed header - matches Vitec structure -->
@@ -309,11 +311,15 @@ export function VisningPortalMockup({ showFinancing = false, fullscreen = false 
 </div>
 `;
 
+  // Vanilla skin uses no custom CSS (just Bootstrap defaults)
+  // Proaktiv skin uses the custom branded CSS
+  const skinCssHref = useVanillaSkin ? undefined : "/skins/proaktiv-visning.css";
+
   return (
     <PortalFrame
       content={mockupHtml}
-      skinCssHref="/skins/proaktiv-visning.css"
-      title="Visningsportal - Proaktiv"
+      skinCssHref={skinCssHref}
+      title={useVanillaSkin ? "Visningsportal - Vanilla" : "Visningsportal - Proaktiv"}
       minHeight={fullscreen ? "100vh" : "1000px"}
       portalType="visning"
     />
