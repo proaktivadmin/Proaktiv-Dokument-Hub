@@ -68,10 +68,51 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-01-22
-Stopped at: Phase 5 - Plans 05-01 and 05-02 complete (CORS + Vercel config)
-Resume file: `.planning/phases/05-vercel-migration/05-03-PLAN.md`
-Next step: Deploy frontend to Vercel using `/vercel-builder`
+Last session: 2026-01-23
+Stopped at: V3.3 API Proxy Fix complete - production auth working
+Resume file: None (ready for new work)
+Next step: Continue with Phase 06 Entra ID testing OR Phase 07 Office Enhancements
+
+### Session Summary (2026-01-23)
+**Issue:** 401 Unauthorized errors on all authenticated API endpoints after login
+**Root Cause:** Frontend made direct cross-origin requests to Railway backend. Browsers blocked third-party cookies, so session cookie wasn't sent with API requests.
+**Fix:** Modified `frontend/src/lib/api/config.ts` to use relative URLs (`/api/*`) for all API calls. Vercel rewrites proxy these to Railway, making cookies first-party.
+**Key Files Changed:**
+- `frontend/src/lib/api/config.ts` - Removed direct Railway URL logic
+- Force-deployed to Vercel with `vercel --prod --force` (cache bypass required)
+
+## Recent Changes (2026-01-23)
+
+### V3.3 API Proxy Fix (Critical Production Fix)
+**Problem:** After login, all API calls returned 401 Unauthorized
+**Symptoms:**
+- `/api/auth/check` returned 200 OK (public route)
+- All other endpoints returned 401 with "Not authenticated"
+- Session cookie was set correctly but not sent with API requests
+
+**Root Cause:**
+- `frontend/src/lib/api/config.ts` detected Vercel domains and returned direct Railway URL
+- API requests went directly to `https://proaktiv-admin.up.railway.app` (cross-origin)
+- Browsers treat cross-origin cookies as third-party and block them
+- Session cookie wasn't included in requests
+
+**Solution:**
+- Modified `getApiBaseUrl()` to always return empty string
+- All API calls now use relative URLs (`/api/templates`, `/api/offices`, etc.)
+- Vercel's rewrite rules (in `vercel.json`) proxy `/api/*` to Railway
+- Requests appear same-origin to browser, cookies are first-party
+
+**Key Files:**
+- `frontend/src/lib/api/config.ts` - Removed hostname detection, always use relative URLs
+- `frontend/vercel.json` - Contains rewrite rules (already correct)
+- `frontend/src/lib/api/auth.ts` - Uses separate axios instance with relative URLs
+
+**Lessons Learned:**
+1. Never make direct cross-origin requests when using cookies for auth
+2. Always proxy API requests through frontend's domain
+3. Vercel build cache can persist old code - use `vercel --prod --force` when debugging
+
+---
 
 ## Recent Changes (2026-01-22)
 

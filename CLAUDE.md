@@ -57,12 +57,19 @@ A document template management system for Norwegian real estate brokers, integra
 
 ### Authentication (V2.9)
 - Simple password-based authentication (single user)
-- JWT session tokens with 7-day expiry
+- JWT session tokens with 7-day expiry stored in `session` cookie
 - Auth middleware protects all `/api/*` routes
 - Login page at `/login`
 - Logout button in header
 - **Disabled by default** - set `APP_PASSWORD_HASH` to enable
 - Generate hash: `python backend/scripts/generate_password_hash.py`
+
+### API Proxy Architecture (Critical)
+- Frontend makes API calls to `/api/*` (relative URLs)
+- Vercel rewrites `/api/*` → `https://proaktiv-admin.up.railway.app/api/*`
+- This keeps session cookies **first-party** (same origin)
+- **Never use direct Railway URLs from frontend** - browsers block third-party cookies
+- See `frontend/vercel.json` for rewrite rules and `frontend/src/lib/api/config.ts` for URL handling
 
 ---
 
@@ -142,6 +149,13 @@ See `.planning/STATE.md` for full status.
 - 🔲 2-way sync: Vitec Next → Local DB → Entra ID
 - Plans: `.planning/phases/06-entra-signature-sync/`
 - Commands: `/entra-architect`, `/entra-builder`, `/entra-qa`
+
+**V3.3 API Proxy Fix (Completed 2026-01-23):**
+- ✅ Fixed 401 Unauthorized errors on all authenticated API endpoints
+- ✅ Frontend now uses relative URLs (`/api/*`) for all API calls
+- ✅ Vercel rewrites proxy requests to Railway backend
+- ✅ Session cookies now first-party (same-origin), avoiding browser blocking
+- ✅ Removed direct Railway URL usage from `frontend/src/lib/api/config.ts`
 
 **V3.2 Stack Upgrade + CI/CD (Completed 2026-01-22):**
 - ✅ Next.js 14 → 16.1.4 upgrade
@@ -295,7 +309,7 @@ docker compose exec db psql -U postgres -d dokument_hub
 
 ### Production
 - **Frontend (Vercel):** https://proaktiv-dokument-hub.vercel.app
-- **Backend (Railway):** https://proaktiv-dokument-hub-production.up.railway.app
+- **Backend (Railway):** https://proaktiv-admin.up.railway.app
 - **Deploy:** Push to `main` branch (auto-deploys to both Vercel and Railway)
 
 ### Environment Variables (Backend)
@@ -313,12 +327,13 @@ docker compose exec db psql -U postgres -d dokument_hub
 ### Environment Variables (Frontend)
 | Variable | Value |
 |----------|-------|
-| `BACKEND_URL` | `https://proaktiv-dokument-hub-production.up.railway.app` |
-| `NEXT_PUBLIC_API_URL` | Same as BACKEND_URL |
+| `BACKEND_URL` | `https://proaktiv-admin.up.railway.app` (for Next.js rewrites) |
 | `NEXT_PUBLIC_SENTRY_DSN` | Sentry DSN for error tracking (optional) |
 | `SENTRY_ORG` | Sentry organization slug (for source maps) |
 | `SENTRY_PROJECT` | Sentry project slug (for source maps) |
 | `SENTRY_AUTH_TOKEN` | Sentry auth token (for source map upload) |
+
+**IMPORTANT:** Do NOT set `NEXT_PUBLIC_API_URL` in production. The frontend uses relative URLs (`/api/*`) which Vercel rewrites to Railway. This keeps session cookies first-party and avoids third-party cookie blocking.
 
 ### Railway CLI (Backend)
 ```bash
