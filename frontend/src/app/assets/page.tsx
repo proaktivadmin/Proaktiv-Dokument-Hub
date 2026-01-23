@@ -1,17 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { Image as ImageIcon, Building2, User } from "lucide-react";
+import { Image as ImageIcon, Building2, User, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { Header } from "@/components/layout/Header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AssetGallery } from "@/components/assets";
+import { AssetGallery, LogoLibrary } from "@/components/assets";
 import { useAssets } from "@/hooks/v3/useAssets";
 import { useOffices } from "@/hooks/v3/useOffices";
 
 export default function AssetsPage() {
-  const [scope, setScope] = useState<"global" | "office" | "employee">("global");
+  const [scope, setScope] = useState<"global" | "office" | "employee" | "logos">("global");
 
   const { 
     assets: globalAssets, 
@@ -35,11 +35,15 @@ export default function AssetsPage() {
       </div>
 
       {/* Scope tabs */}
-      <Tabs value={scope} onValueChange={(v) => setScope(v as "global" | "office" | "employee")} className="space-y-6">
+      <Tabs value={scope} onValueChange={(v) => setScope(v as "global" | "office" | "employee" | "logos")} className="space-y-6">
         <TabsList>
           <TabsTrigger value="global" className="gap-2">
             <ImageIcon className="h-4 w-4" />
             Globalt ({globalAssets.length})
+          </TabsTrigger>
+          <TabsTrigger value="logos" className="gap-2">
+            <Sparkles className="h-4 w-4" />
+            Proaktiv Logoer
           </TabsTrigger>
           <TabsTrigger value="office" className="gap-2">
             <Building2 className="h-4 w-4" />
@@ -59,6 +63,10 @@ export default function AssetsPage() {
             scope="global"
             onRefresh={refetchGlobal}
           />
+        </TabsContent>
+
+        <TabsContent value="logos">
+          <LogoLibrary />
         </TabsContent>
 
         <TabsContent value="office">

@@ -27,7 +27,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { entraSyncApi } from "@/lib/api";
-import { resolveApiUrl } from "@/lib/api/config";
+import { resolveAvatarUrl } from "@/lib/api/config";
 import type { EntraSyncPreview, EntraSyncResult, SyncScope } from "@/types/entra-sync";
 import type { EmployeeWithOffice } from "@/types/v3";
 
@@ -133,7 +133,7 @@ export function EntraSyncDialog({
         {employee && (
           <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg">
             <Avatar className="h-12 w-12">
-              <AvatarImage src={resolveApiUrl(employee.profile_image_url)} />
+              <AvatarImage src={resolveAvatarUrl(employee.profile_image_url, 96)} />
               <AvatarFallback style={{ backgroundColor: employee.office.color }}>
                 {employee.initials}
               </AvatarFallback>

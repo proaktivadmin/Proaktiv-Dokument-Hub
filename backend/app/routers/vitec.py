@@ -6,7 +6,7 @@ Provides endpoints for checking Vitec Hub API configuration and connection statu
 
 import logging
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import Response
 from pydantic import BaseModel
 
@@ -90,12 +90,21 @@ async def get_vitec_status():
 
 
 @router.get("/employees/{employee_id}/picture")
-async def get_employee_picture(employee_id: str):
+async def get_employee_picture(
+    employee_id: str,
+    size: int | None = Query(None, ge=32, le=1024, description="Resize to square (32-1024px)"),
+    crop: str = Query("top", description="Crop mode: top, center"),
+):
     """
     Fetch employee profile picture from Vitec Hub.
 
+    Supports optional resizing for avatars. When size is specified,
+    the image is cropped to a square and resized.
+
     Args:
         employee_id: Vitec employee ID
+        size: Optional size for square resize (e.g., 256 for 256x256)
+        crop: Crop mode - "top" for portraits, "center" for general
 
     Returns:
         Image bytes with appropriate content-type
@@ -113,6 +122,23 @@ async def get_employee_picture(employee_id: str):
 
     if not image_data:
         raise HTTPException(status_code=404, detail="Employee picture not found.")
+
+    # Apply resizing if requested
+    if size:
+        from app.services.image_service import ImageService
+
+        try:
+            crop_mode = "center" if crop == "center" else "top"
+            image_data = ImageService.resize_for_avatar(
+                image_data,
+                size=size,
+                crop_mode=crop_mode,  # type: ignore
+            )
+        except Exception as e:
+            # Log error but return original image
+            import logging
+
+            logging.warning(f"Failed to resize image for {employee_id}: {e}")
 
     return Response(content=image_data, media_type="image/jpeg")
 

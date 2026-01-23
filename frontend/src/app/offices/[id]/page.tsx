@@ -28,7 +28,7 @@ import { useOffice } from "@/hooks/v3/useOffices";
 import { useEmployees } from "@/hooks/v3/useEmployees";
 import { useAssets } from "@/hooks/v3/useAssets";
 import { officesApi } from "@/lib/api/offices";
-import { resolveApiUrl } from "@/lib/api/config";
+import { resolveApiUrl, resolveAvatarUrl } from "@/lib/api/config";
 import type { EmployeeWithOffice } from "@/types/v3";
 
 export default function OfficeDetailPage() {
@@ -247,7 +247,7 @@ export default function OfficeDetailPage() {
                     }}
                   >
                     <Avatar className="h-8 w-8 mr-2">
-                      <AvatarImage src={resolveApiUrl(emp.profile_image_url)} alt={emp.full_name} />
+                      <AvatarImage src={resolveAvatarUrl(emp.profile_image_url, 64)} alt={emp.full_name} />
                       <AvatarFallback 
                         className="text-xs font-medium text-white"
                         style={{ backgroundColor: office.color }}
@@ -257,6 +257,33 @@ export default function OfficeDetailPage() {
                     </Avatar>
                     <span className="text-xs">{emp.full_name}</span>
                   </Button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Sub-offices (Næring, Næringsoppgjør) */}
+          {office.sub_offices && office.sub_offices.length > 0 && (
+            <div className="mt-6 pt-6 border-t">
+              <h3 className="text-sm font-medium text-muted-foreground mb-3">Avdelinger</h3>
+              <div className="space-y-2">
+                {office.sub_offices.map((sub) => (
+                  <div 
+                    key={sub.id} 
+                    className="flex items-center justify-between p-3 rounded-lg bg-muted/50"
+                  >
+                    <div>
+                      <p className="font-medium text-sm">
+                        {sub.name.replace(office.name + ' - ', '').replace(office.name + ' ', '')}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {sub.employee_count} ansatte
+                      </p>
+                    </div>
+                    <Badge variant={sub.is_active ? "default" : "secondary"} className="text-xs">
+                      {sub.is_active ? "Aktiv" : "Inaktiv"}
+                    </Badge>
+                  </div>
                 ))}
               </div>
             </div>

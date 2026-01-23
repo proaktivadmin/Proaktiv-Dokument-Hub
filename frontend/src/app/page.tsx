@@ -162,24 +162,6 @@ export default function Dashboard() {
                 {offices.filter(o => o.is_active).length} aktive kontorer
               </p>
             )}
-            {!officesLoading && offices.length > 0 && (
-              <div className="flex flex-wrap gap-1 mt-3">
-                {offices.slice(0, 4).map((office) => (
-                  <span 
-                    key={office.id}
-                    className="px-2 py-0.5 text-xs rounded-full text-white"
-                    style={{ backgroundColor: office.color }}
-                  >
-                    {office.short_code}
-                  </span>
-                ))}
-                {offices.length > 4 && (
-                  <span className="px-2 py-0.5 text-xs rounded-full bg-[#E5E5E5] text-[#272630]/60">
-                    +{offices.length - 4}
-                  </span>
-                )}
-              </div>
-            )}
           </Link>
 
           {/* Employees Card */}

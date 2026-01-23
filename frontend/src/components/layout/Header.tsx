@@ -50,31 +50,32 @@ export function Header({ onUploadSuccess }: HeaderProps) {
     { href: "/flettekoder", label: "Flettekoder", icon: Code2 },
   ];
 
-  const documentsItems = [
+  // Ressurser - all files, documents, assets
+  const ressurserItems = [
     { href: "/templates", label: "Maler", icon: FileText },
     { href: "/categories", label: "Kategorier", icon: FolderTree },
-    { href: "/mottakere", label: "Mottakere", icon: Users },
+    { href: "/assets", label: "Mediefiler", icon: Image },
+    { href: "/storage", label: "WebDAV Lagring", icon: HardDrive },
   ];
 
-  // Company Hub dropdown items
-  const companyHubItems = [
+  // Selskap - HR/organization
+  const selskapItems = [
     { href: "/offices", label: "Kontorer", icon: Building2 },
     { href: "/employees", label: "Ansatte", icon: Users },
-    { href: "/assets", label: "Filer", icon: Image },
     { href: "/territories", label: "Markedsområder", icon: Map },
+    { href: "/mottakere", label: "Mottakere", icon: Users },
   ];
 
   // Tools dropdown items
   const toolsItems = [
-    { href: "/storage", label: "WebDAV Lagring", icon: HardDrive },
     { href: "/sanitizer", label: "Sanitizer", icon: Sparkles },
     { href: "/sync", label: "Synkronisering", icon: RefreshCcw },
     { href: "/portal/preview", label: "Portal Skins", icon: Palette },
   ];
 
-  const isDocumentsActive = ["/templates", "/categories", "/mottakere"].some(p => pathname.startsWith(p));
-  const isCompanyHubActive = ["/offices", "/employees", "/assets", "/territories"].some(p => pathname.startsWith(p));
-  const isToolsActive = ["/storage", "/sanitizer", "/sync", "/portal"].some(p => pathname.startsWith(p));
+  const isRessurserActive = ["/templates", "/categories", "/assets", "/storage"].some(p => pathname.startsWith(p));
+  const isSelskapActive = ["/offices", "/employees", "/territories", "/mottakere"].some(p => pathname.startsWith(p));
+  const isToolsActive = ["/sanitizer", "/sync", "/portal"].some(p => pathname.startsWith(p));
 
   return (
     <>
@@ -111,24 +112,24 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                 );
               })}
 
-              {/* Documents Dropdown */}
+              {/* Ressurser Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
                     className={cn(
                       "px-4 py-2 text-sm font-medium rounded-md transition-colors inline-flex items-center gap-2",
-                      isDocumentsActive
+                      isRessurserActive
                         ? "bg-white/60 text-[#272630]"
                         : "text-[#272630]/70 hover:text-[#272630] hover:bg-white/40"
                     )}
                   >
                     <FolderTree className="h-4 w-4" />
-                    Dokumenter
+                    Ressurser
                     <ChevronDown className="h-3 w-3" />
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-48 bg-white">
-                  {documentsItems.map((item) => {
+                  {ressurserItems.map((item) => {
                     const Icon = item.icon;
                     return (
                       <DropdownMenuItem key={item.href} asChild>
@@ -142,13 +143,13 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              {/* Company Hub Dropdown */}
+              {/* Selskap Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
                     className={cn(
                       "px-4 py-2 text-sm font-medium rounded-md transition-colors inline-flex items-center gap-2",
-                      isCompanyHubActive
+                      isSelskapActive
                         ? "bg-white/60 text-[#272630]"
                         : "text-[#272630]/70 hover:text-[#272630] hover:bg-white/40"
                     )}
@@ -159,7 +160,7 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-48 bg-white">
-                  {companyHubItems.map((item) => {
+                  {selskapItems.map((item) => {
                     const Icon = item.icon;
                     return (
                       <DropdownMenuItem key={item.href} asChild>

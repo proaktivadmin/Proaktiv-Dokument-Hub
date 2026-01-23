@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { OfficeWithStats, EmployeeWithOffice } from "@/types/v3";
-import { resolveApiUrl } from "@/lib/api/config";
+import { resolveApiUrl, resolveAvatarUrl } from "@/lib/api/config";
 
 interface OfficeCardProps {
   office: OfficeWithStats;
@@ -175,7 +175,7 @@ export function OfficeCard({ office, employees = [], onClick, onEdit, onDeactiva
                     onEmployeeClick?.(emp);
                   }}
                 >
-                  <AvatarImage src={resolveApiUrl(emp.profile_image_url)} alt={emp.full_name} />
+                  <AvatarImage src={resolveAvatarUrl(emp.profile_image_url, 64)} alt={emp.full_name} />
                   <AvatarFallback 
                     className="text-xs font-medium text-white"
                     style={{ backgroundColor: office.color }}
@@ -190,6 +190,24 @@ export function OfficeCard({ office, employees = [], onClick, onEdit, onDeactiva
                 +{office.employee_count - 6} flere
               </span>
             )}
+          </div>
+        )}
+
+        {/* Sub-offices (Næring, Næringsoppgjør) */}
+        {office.sub_offices && office.sub_offices.length > 0 && (
+          <div className="mb-3 pb-3 border-b">
+            <p className="text-xs text-muted-foreground mb-2">Avdelinger</p>
+            <div className="flex flex-wrap gap-1">
+              {office.sub_offices.map((sub) => (
+                <span
+                  key={sub.id}
+                  className="px-2 py-0.5 text-xs rounded bg-muted text-muted-foreground"
+                >
+                  {sub.name.replace(office.name + ' - ', '').replace(office.name + ' ', '')}
+                  {sub.employee_count > 0 && ` (${sub.employee_count})`}
+                </span>
+              ))}
+            </div>
           </div>
         )}
 

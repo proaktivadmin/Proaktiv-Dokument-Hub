@@ -59,6 +59,33 @@ export function resolveApiUrl(url: string | null | undefined): string | undefine
 }
 
 /**
+ * Resolve an image URL with optional resizing for avatars.
+ * 
+ * When the URL is a Vitec picture endpoint, appends size and crop parameters
+ * to get a properly cropped square image.
+ * 
+ * @param url - The image URL (e.g., /api/vitec/employees/ABCD/picture)
+ * @param size - Desired square size in pixels (e.g., 64, 128, 256)
+ * @param crop - Crop mode: "top" for portraits, "center" for general
+ */
+export function resolveAvatarUrl(
+  url: string | null | undefined,
+  size: number = 128,
+  crop: "top" | "center" = "top"
+): string | undefined {
+  const resolved = resolveApiUrl(url);
+  if (!resolved) return undefined;
+
+  // Only add params to Vitec picture endpoints
+  if (resolved.includes("/vitec/employees/") && resolved.includes("/picture")) {
+    const separator = resolved.includes("?") ? "&" : "?";
+    return `${resolved}${separator}size=${size}&crop=${crop}`;
+  }
+
+  return resolved;
+}
+
+/**
  * Create an axios instance with dynamic base URL support.
  * Uses a request interceptor to set the correct base URL on each request,
  * which is necessary because the module loads during SSR when window is undefined.

@@ -28,6 +28,9 @@ python-jose[cryptography]==3.3.0
 beautifulsoup4==4.12.3
 lxml==5.1.0
 
+# Image Processing
+Pillow>=10.0.0
+
 # Note: WebDAV uses httpx with DigestAuth (no separate webdav library needed)
 
 # Web crawling / scraping (Firecrawl)

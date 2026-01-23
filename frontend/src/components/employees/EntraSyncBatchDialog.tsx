@@ -26,7 +26,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { entraSyncApi } from "@/lib/api";
-import { resolveApiUrl } from "@/lib/api/config";
+import { resolveAvatarUrl } from "@/lib/api/config";
 import type { EntraSyncBatchResult, SyncScope } from "@/types/entra-sync";
 import type { EmployeeWithOffice } from "@/types/v3";
 
@@ -209,7 +209,7 @@ export function EntraSyncBatchDialog({
                     {employees.map((emp) => (
                       <div key={emp.id} className="flex items-center gap-2">
                         <Avatar className="h-6 w-6">
-                          <AvatarImage src={resolveApiUrl(emp.profile_image_url)} alt={emp.full_name} />
+                          <AvatarImage src={resolveAvatarUrl(emp.profile_image_url, 48)} alt={emp.full_name} />
                           <AvatarFallback
                             className="text-[10px]"
                             style={{ backgroundColor: emp.office.color }}

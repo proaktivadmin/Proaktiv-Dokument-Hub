@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { EmployeeWithOffice, EmployeeStatus } from "@/types/v3";
-import { resolveApiUrl } from "@/lib/api/config";
+import { resolveAvatarUrl } from "@/lib/api/config";
 import { cn } from "@/lib/utils";
 
 interface EmployeeCardProps {
@@ -82,7 +82,7 @@ export function EmployeeCard({
 
           {/* Avatar with profile image */}
           <Avatar className="w-12 h-12 shrink-0">
-            <AvatarImage src={resolveApiUrl(employee.profile_image_url)} alt={employee.full_name} />
+            <AvatarImage src={resolveAvatarUrl(employee.profile_image_url, 128)} alt={employee.full_name} />
             <AvatarFallback 
               className="text-white font-semibold"
               style={{ backgroundColor: employee.office.color }}
