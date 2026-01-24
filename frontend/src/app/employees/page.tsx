@@ -27,6 +27,7 @@ export default function EmployeesPage() {
 
   const [selectedOfficeId, setSelectedOfficeId] = useState<string | null>(null);
   const [statusFilters, setStatusFilters] = useState<EmployeeStatus[]>(["active"]);
+  const [showExternalDevelopers, setShowExternalDevelopers] = useState(false);
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [formOpen, setFormOpen] = useState(false);
 
@@ -49,6 +50,7 @@ export default function EmployeesPage() {
   const { employees, statusCounts, isLoading: employeesLoading, refetch: refetchEmployees } = useEmployees({
     office_id: selectedOfficeId || undefined,
     status: statusFilters.length > 0 ? statusFilters : undefined,
+    employee_type: showExternalDevelopers ? ["external", "system"] : ["internal"],
     role: selectedRole || undefined,
   });
   const [isSyncing, setIsSyncing] = useState(false);
@@ -222,6 +224,8 @@ export default function EmployeesPage() {
             showOffice={!selectedOfficeId}
             showInactive={showInactive}
             onToggleShowInactive={handleToggleInactive}
+            showExternalDevelopers={showExternalDevelopers}
+            onToggleShowExternalDevelopers={() => setShowExternalDevelopers(!showExternalDevelopers)}
             onEmployeeClick={handleEmployeeClick}
             onCreateNew={() => setFormOpen(true)}
             onSync={handleSync}

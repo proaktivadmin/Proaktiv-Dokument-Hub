@@ -26,6 +26,7 @@ export function useEmployees(params?: EmployeeListParams) {
   }, [
     params?.office_id,
     JSON.stringify(params?.status),
+    JSON.stringify(params?.employee_type),
     params?.role,
     params?.is_featured,
     params?.search,

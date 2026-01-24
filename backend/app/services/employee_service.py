@@ -31,6 +31,7 @@ class EmployeeService:
         *,
         office_id: UUID | None = None,
         status: list[str] | None = None,
+        employee_type: list[str] | None = None,
         role: str | None = None,
         is_featured: bool | None = None,
         search: str | None = None,
@@ -44,6 +45,7 @@ class EmployeeService:
             db: Database session
             office_id: Filter by office
             status: Filter by status(es)
+            employee_type: Filter by employee type(s) - internal, external, system
             role: Filter by Vitec system role
             is_featured: Filter by featured broker flag
             search: Search by name or email
@@ -64,6 +66,11 @@ class EmployeeService:
         if status:
             query = query.where(Employee.status.in_(status))
             count_query = count_query.where(Employee.status.in_(status))
+
+        # Employee type filter (internal, external, system)
+        if employee_type:
+            query = query.where(Employee.employee_type.in_(employee_type))
+            count_query = count_query.where(Employee.employee_type.in_(employee_type))
 
         if is_featured is not None:
             query = query.where(Employee.is_featured_broker == is_featured)

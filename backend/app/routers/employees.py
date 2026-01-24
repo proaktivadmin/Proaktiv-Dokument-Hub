@@ -89,6 +89,7 @@ def _to_employee_with_office(employee) -> EmployeeWithOffice:
 async def list_employees(
     office_id: UUID | None = Query(None, description="Filter by office"),
     status: list[str] | None = Query(None, description="Filter by status(es)"),
+    employee_type: list[str] | None = Query(None, description="Filter by employee type(s): internal, external, system"),
     role: str | None = Query(None, description="Filter by Vitec system role"),
     is_featured: bool | None = Query(None, description="Filter by featured status"),
     search: str | None = Query(None, description="Search by name or email"),
@@ -100,6 +101,7 @@ async def list_employees(
     List all employees with optional filtering.
 
     - **status**: active, onboarding, offboarding, inactive
+    - **employee_type**: internal (Proaktiv staff), external (vendors/contractors), system (service accounts)
     - **role**: Vitec Next role (eiendomsmegler, superbruker, etc.)
     - **is_featured**: Filter by featured brokers
     - **search**: Partial match on name or email
@@ -108,6 +110,7 @@ async def list_employees(
         db,
         office_id=office_id,
         status=status,
+        employee_type=employee_type,
         role=role,
         is_featured=is_featured,
         search=search,

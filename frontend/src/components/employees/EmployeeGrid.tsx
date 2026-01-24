@@ -17,6 +17,8 @@ interface EmployeeGridProps {
   showOffice?: boolean;
   showInactive?: boolean;
   onToggleShowInactive?: () => void;
+  showExternalDevelopers?: boolean;
+  onToggleShowExternalDevelopers?: () => void;
   onEmployeeClick: (employee: EmployeeWithOffice) => void;
   onCreateNew?: () => void;
   onEdit?: (employee: EmployeeWithOffice) => void;
@@ -43,6 +45,8 @@ export function EmployeeGrid({
   showOffice = true,
   showInactive = false,
   onToggleShowInactive,
+  showExternalDevelopers = false,
+  onToggleShowExternalDevelopers,
   onEmployeeClick,
   onCreateNew,
   onEdit,
@@ -138,6 +142,15 @@ export function EmployeeGrid({
         {onToggleShowInactive && (
           <Button variant="outline" onClick={onToggleShowInactive}>
             {showInactive ? "Skjul inaktive" : "Vis inaktive"}
+          </Button>
+        )}
+
+        {onToggleShowExternalDevelopers && (
+          <Button 
+            variant={showExternalDevelopers ? "secondary" : "outline"} 
+            onClick={onToggleShowExternalDevelopers}
+          >
+            {showExternalDevelopers ? "Vis Proaktiv-ansatte" : "Vis eksterne utviklere"}
           </Button>
         )}
 

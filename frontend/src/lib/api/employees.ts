@@ -13,9 +13,12 @@ import type {
   EmployeeSyncResult
 } from '@/types/v3';
 
+export type EmployeeType = 'internal' | 'external' | 'system';
+
 export interface EmployeeListParams {
   office_id?: string;
   status?: EmployeeStatus | EmployeeStatus[];
+  employee_type?: EmployeeType | EmployeeType[];
   role?: string;
   is_featured?: boolean;
   search?: string;
@@ -31,6 +34,10 @@ export const employeesApi = {
     if (params?.status) {
       const statuses = Array.isArray(params.status) ? params.status : [params.status];
       statuses.forEach(s => searchParams.append('status', s));
+    }
+    if (params?.employee_type) {
+      const types = Array.isArray(params.employee_type) ? params.employee_type : [params.employee_type];
+      types.forEach(t => searchParams.append('employee_type', t));
     }
     if (params?.skip) searchParams.set('skip', String(params.skip));
     if (params?.limit) searchParams.set('limit', String(params.limit));
