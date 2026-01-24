@@ -2,7 +2,7 @@
 
 A modern document template management system for Norwegian real estate brokers, integrated with Vitec Next.
 
-![Version](https://img.shields.io/badge/version-3.5-blue)
+![Version](https://img.shields.io/badge/version-3.6-blue)
 ![Stack](https://img.shields.io/badge/stack-Next.js%2016%20%2B%20FastAPI-green)
 ![Status](https://img.shields.io/badge/status-production-success)
 ![Platform](https://img.shields.io/badge/platform-Vercel%20%2B%20Railway-purple)
@@ -10,6 +10,13 @@ A modern document template management system for Norwegian real estate brokers, 
 ---
 
 ## ✨ What's New (2026-01-23)
+
+### V3.6 Design System Enhancement
+- **Design token system** - Centralized shadows, transitions, colors
+- **Premium UI polish** - Brand-aligned components with micro-interactions
+- **Consistent patterns** - Card hover, selection glow, avatar scaling
+- **Typography hierarchy** - Serif headings for premium feel
+- **Design guide** - `.planning/codebase/DESIGN-SYSTEM.md`
 
 ### V3.5 Navigation & Logo Library
 - **Reorganized navigation** - Ressurser (files/docs) and Selskap (HR/org) dropdowns
@@ -20,9 +27,6 @@ A modern document template management system for Norwegian real estate brokers, 
 ### V3.4 Portal Skins Preview
 - **Vitec portal skins** - Budportal and Visningsportal with Proaktiv branding
 - **Fullscreen preview** - Accurate representation of live portals
-
-### V3.3 API Proxy Fix
-- **Fixed auth cookies** - All API calls now use relative URLs through Vercel proxy
 
 ### V3.2 Stack Upgrade + CI/CD
 - **Next.js 16** + React 19 + Tailwind CSS 4 + TypeScript 5.9
@@ -63,6 +67,7 @@ A modern document template management system for Norwegian real estate brokers, 
 - **Hosting:** Vercel (frontend) + Railway (backend + database)
 - **CI/CD:** GitHub Actions
 - **Monitoring:** Sentry
+- **Design:** Custom design token system (see `.planning/codebase/DESIGN-SYSTEM.md`)
 
 ---
 
@@ -192,6 +197,7 @@ The app deploys automatically when you push to the `main` branch:
 
 - [CLAUDE.md](CLAUDE.md) - Project conventions for AI agents
 - [.planning/STATE.md](.planning/STATE.md) - Current project status
+- [.planning/codebase/DESIGN-SYSTEM.md](.planning/codebase/DESIGN-SYSTEM.md) - Frontend design guidelines
 - [docs/](docs/) - Additional documentation
 
 ---
@@ -200,8 +206,9 @@ The app deploys automatically when you push to the `main` branch:
 
 1. Read `CLAUDE.md` for project conventions
 2. Check `.planning/STATE.md` for current status
-3. Follow the agent pipeline for major features
-4. Push to `main` for production deployment
+3. **For UI work**: Follow `.planning/codebase/DESIGN-SYSTEM.md`
+4. Follow the agent pipeline for major features
+5. Push to `main` for production deployment
 
 ---
 

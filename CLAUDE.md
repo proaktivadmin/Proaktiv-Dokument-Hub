@@ -10,9 +10,9 @@ A document template management system for Norwegian real estate brokers, integra
 
 | Aspect | Details |
 |--------|---------|
-| **Phase** | 3.5 (Navigation Reorganized, Logo Library) |
+| **Phase** | 3.6 (Design System Enhancement) |
 | **Stack** | Next.js 16 + React 19 + FastAPI + PostgreSQL (Railway) |
-| **UI** | Shadcn/UI + Tailwind CSS 4 |
+| **UI** | Shadcn/UI + Tailwind CSS 4 + Custom Design Tokens |
 | **Hosting** | Vercel (Frontend) + Railway (Backend + PostgreSQL) |
 | **Storage** | WebDAV (proaktiv.no/d/) |
 | **Auth** | Password + JWT sessions (7-day expiry) |
@@ -152,6 +152,7 @@ skins/                    # Vitec portal skin packages
 - Use `lib/api.ts` for all API calls
 - Prefer Shadcn components over custom
 - No `any` in TypeScript
+- **Follow `.planning/codebase/DESIGN-SYSTEM.md`** for all UI work
 
 ### Component Naming
 - Viewer components: `*Frame.tsx` (A4Frame, SMSFrame)
@@ -159,28 +160,42 @@ skins/                    # Vitec portal skin packages
 - Inspector: `ElementInspector.tsx`
 - Storage components: `StorageBrowser.tsx`, `ImportToLibraryDialog.tsx`
 
+### Design System (Critical)
+- **Use design tokens** — Never hardcode shadows, transitions, colors
+- **Cards**: `shadow-card` base, `shadow-card-hover` + `hover:-translate-y-0.5` on hover
+- **Selection**: `ring-strong` + `shadow-glow` (bronze accent)
+- **Typography**: Serif (`font-serif`) for headings, sans for body
+- **Transitions**: Always use `duration-*` and `ease-standard`
+- **Colors**: Navy `#272630`, Bronze `#BCAB8A`, Beige `#E9E7DC`
+- See full guide: `.planning/codebase/DESIGN-SYSTEM.md`
+
 ---
 
 ## Current Status
 
 See `.planning/STATE.md` for full status.
 
+**V3.6 Design System Enhancement (Completed 2026-01-23):**
+- ✅ Comprehensive design token system (shadows, transitions, colors)
+- ✅ Brand-aligned UI with premium feel
+- ✅ Micro-interactions (avatar scale, chevron rotation, shimmer)
+- ✅ Consistent card hover patterns across all components
+- ✅ Bronze accent for selection states and focus rings
+- ✅ Typography hierarchy with serif headings
+- Design Guide: `.planning/codebase/DESIGN-SYSTEM.md`
+
 **V3.5 Navigation & Logo Library (Completed 2026-01-23):**
 - ✅ Reorganized navigation into **Ressurser** (files/docs) and **Selskap** (HR/org)
 - ✅ Added **LogoLibrary** component with Proaktiv logos preview and copy URL
 - ✅ Server-side image resizing with `ImageService` for employee avatars
 - ✅ New `resolveAvatarUrl()` helper for proper avatar cropping
-- ✅ Removed office tags from dashboard for cleaner UI
 - ✅ Sub-offices display on office cards and detail pages
-- Navigation: Ressurser → Mediefiler → Proaktiv Logoer tab
-- Files: `frontend/src/components/assets/LogoLibrary.tsx`, `backend/app/services/image_service.py`
 
 **Phase 06: Entra ID Signature Sync (Ready for Testing):**
 - ✅ Implementation complete - all files created
 - 🔲 Sync employee data from PostgreSQL to Microsoft Entra ID
 - 🔲 Upload profile photos to Entra ID
 - 🔲 Push email signatures to Exchange Online
-- 🔲 2-way sync: Vitec Next → Local DB → Entra ID
 - Plans: `.planning/phases/06-entra-signature-sync/`
 - Commands: `/entra-architect`, `/entra-builder`, `/entra-qa`
 
@@ -290,6 +305,10 @@ Use `/entra-architect`, `/entra-builder`, `/entra-qa` commands.
 - Skip the specs when building
 - Use Monaco as the primary view (document preview is primary)
 - Hide filtered cards (dim them instead)
+- Hardcode colors, shadows, or transitions (use design tokens)
+- Use harsh blues for status (use emerald/sky instead)
+- Skip hover states on interactive elements
+- Use `opacity-50` directly (use `opacity-disabled` token)
 
 ---
 

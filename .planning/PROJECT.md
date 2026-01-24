@@ -69,18 +69,20 @@ A document template management system for Norwegian real estate brokers, integra
 ## Context
 
 **Current State:**
-- V3.1 complete with Office & Employee Hub
+- V3.6 complete with Design System Enhancement
 - 6 offices, 23 employees in database (from proaktiv.no)
 - 44 templates across 11 categories
-- Production live on Railway (frontend + backend + PostgreSQL)
+- Production live on Vercel (frontend) + Railway (backend + PostgreSQL)
 - CI/CD pipeline operational (GitHub Actions)
 - Full testing infrastructure (Vitest + Pytest)
+- Comprehensive design token system implemented
 
-**Stack Versions (as of 2026-01-22):**
+**Stack Versions (as of 2026-01-23):**
 - Next.js 16.1.4, React 19.2.3, Tailwind 4.1.18
 - TypeScript 5.9.3
 - FastAPI 0.109.0, SQLAlchemy 2.0.46
 - Sentry error tracking enabled
+- Custom design tokens (shadows, transitions, colors)
 
 **Vitec Integration:**
 - API credentials configured in `.env` and Railway variables
@@ -115,6 +117,9 @@ A document template management system for Norwegian real estate brokers, integra
 | Vercel for frontend | Better Next.js DX, preview deployments, keep backend on Railway | — Pending |
 | xfail incomplete tests | Don't block CI, track features that need implementation | ✅ Done |
 | Lenient Pyright config | Disable strict type checks for pre-existing issues | ✅ Done |
+| Design token system | Centralized shadows, transitions, colors for consistency | ✅ Done |
+| Bronze for accents | Use bronze instead of blue for selection/focus states | ✅ Done |
+| Serif for headings | Premium feel with Playfair Display for headings | ✅ Done |
 
 ---
-*Last updated: 2026-01-22 after Phase 4 completion*
+*Last updated: 2026-01-23 after V3.6 Design System Enhancement*

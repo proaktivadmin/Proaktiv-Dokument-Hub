@@ -16,7 +16,10 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Vitec Sync Review UI** - Build field-level diff comparison and manual approval workflow
 - [ ] **Phase 3: Social Media Links** - Add social media URL fields to offices and employees
 - [x] **Phase 4: Stack Upgrade** - Upgrade Next.js 16, React 19, Tailwind 4, TypeScript 5.9 (fixes CVE-2025-29927)
-- [ ] **Phase 5: Vercel Migration** - Move frontend to Vercel, update backend CORS, cleanup Railway
+- [x] **Phase 5: Vercel Migration** - Move frontend to Vercel (completed via manual deployment)
+- [x] **Phase 6: Entra ID Signature Sync** - Implementation complete, ready for testing
+- [ ] **Phase 7: Office Enhancements** - Region grouping, office merge, SalesScreen integration
+- [x] **V3.6: Design System Enhancement** - Comprehensive UI polish with design tokens
 
 ## Phase Details
 
@@ -137,11 +140,62 @@ Plans:
 - [ ] 05-04: Verification (full E2E testing)
 - [ ] 05-05: Cleanup (remove Railway frontend, update docs)
 
+### Phase 6: Entra ID Signature Sync ✅ IMPLEMENTATION COMPLETE
+**Goal**: Sync employee data from PostgreSQL to Microsoft Entra ID with photo and signature support
+**Depends on**: Nothing (independent)
+**Requirements**: Employee profiles in Entra ID, profile photos, email signatures in Exchange
+**Success Criteria** (what must be TRUE):
+  1. ✅ PowerShell script syncs employee data to Entra ID
+  2. ✅ Profile photos uploaded to Entra ID
+  3. ✅ Email signatures pushed to Exchange Online
+  4. 🔲 Tested with real Azure credentials
+**Status**: Ready for testing
+**Completed**: Implementation 2026-01-22
+
+**What was delivered:**
+- `Sync-EntraIdEmployees.ps1` - Full PowerShell sync script
+- Certificate and client secret authentication
+- DryRun mode for safe testing
+- HTML/TXT email signature templates
+- Backend API endpoints for preview
+- Frontend dialogs for individual and batch sync
+
+Plans:
+- [x] 06-01 through 06-08: Backend API, service, schemas, frontend components
+
+### Phase 7: Office Enhancements
+**Goal**: Add region grouping, office merge, and SalesScreen integration
+**Depends on**: Nothing (independent)
+**Status**: Ready for implementation
+
+Plans:
+- [ ] 07-01: Add region field to offices
+- [ ] 07-02: Region filter and grouping UI
+- [ ] 07-03: Office merge backend API
+- [ ] 07-04: Office merge frontend UI
+- [ ] 07-05: SalesScreen fields on Office model
+- [ ] 07-06: SalesScreen backend service
+- [ ] 07-07: SalesScreen frontend components
+- [ ] 07-08: SalesScreen integration with onboarding
+
+### V3.6: Design System Enhancement ✅ COMPLETE
+**Goal**: Comprehensive UI polish with brand-aligned design tokens
+**Depends on**: Nothing (independent)
+**Completed**: 2026-01-23
+
+**What was delivered:**
+- Design token system (shadows, transitions, colors)
+- 14 base UI components updated
+- 5+ feature components enhanced
+- 9 micro-interactions added
+- Full documentation in `.planning/codebase/DESIGN-SYSTEM.md`
+
+---
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
-(Note: Phases 3 and 4 could run in parallel as they are independent)
+Phases execute in numeric order, with V3.x versions as incremental feature releases.
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -149,8 +203,11 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | 2. Vitec Sync Review UI | 5/5 | Complete | 2026-01-22 |
 | 3. Social Media Links | 0/4 | Not started | - |
 | 4. Stack Upgrade | 5/5 | Complete | 2026-01-22 |
-| 5. Vercel Migration | 0/5 | Not started | - |
+| 5. Vercel Migration | 5/5 | Complete | 2026-01-23 |
+| 6. Entra ID Sync | 8/8 | Ready for Testing | 2026-01-22 |
+| 7. Office Enhancements | 0/8 | Not started | - |
+| V3.6 Design System | Complete | Complete | 2026-01-23 |
 
 ---
 *Roadmap created: 2026-01-20*
-*Last updated: 2026-01-22 (Phase 2 completed)*
+*Last updated: 2026-01-23 (V3.6 Design System completed)*
