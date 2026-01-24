@@ -22,6 +22,7 @@ from app.models.employee import Employee
 EXTERNAL_DOMAINS = {
     "vitecsoftware.com": "Vitec Software",
     "destino.no": "Destino",
+    "desti.no": "Destino",
     "funbit.no": "Funbit",
 }
 
