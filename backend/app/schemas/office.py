@@ -88,6 +88,15 @@ class OfficeResponse(OfficeBase):
     id: UUID
     created_at: datetime
     updated_at: datetime
+    # Entra ID sync fields (secondary source)
+    entra_group_id: str | None = None
+    entra_group_name: str | None = None
+    entra_group_mail: str | None = None
+    entra_group_description: str | None = None
+    entra_sharepoint_url: str | None = None
+    entra_member_count: int | None = None
+    entra_mismatch_fields: list[str] = Field(default_factory=list)
+    entra_last_synced_at: datetime | None = None
 
     class Config:
         from_attributes = True

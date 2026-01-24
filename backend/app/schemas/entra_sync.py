@@ -69,6 +69,34 @@ class EntraImportRequest(BaseModel):
     filter_email: str | None = Field(None, description="Only update a specific employee email")
 
 
+# =============================================================================
+# Office Import Schemas
+# =============================================================================
+
+
+class EntraOfficeImportRequest(BaseModel):
+    """Request to import Entra ID M365 Groups into local office records."""
+
+    dry_run: bool = Field(False, description="Preview changes without updating database")
+    filter_office_id: UUID | None = Field(None, description="Only update a specific office")
+    fetch_details: bool = Field(
+        False,
+        description="Fetch additional details (member count, SharePoint). Slower.",
+    )
+
+
+class EntraOfficeImportResult(BaseModel):
+    """Result of importing Entra ID M365 Groups into local database."""
+
+    success: bool = Field(..., description="Whether the import completed successfully")
+    dry_run: bool = Field(False, description="Whether this was a dry run")
+    offices_loaded: int | None = Field(None, description="Offices loaded from database")
+    matched_updated: int | None = Field(None, description="Offices matched and updated")
+    offices_not_matched: int | None = Field(None, description="Offices without Entra match")
+    groups_not_matched: int | None = Field(None, description="M365 Groups without office match")
+    error: str | None = Field(None, description="Error message if import failed")
+
+
 class EntraSyncRequest(BaseModel):
     """Request to sync a single employee to Entra ID."""
 

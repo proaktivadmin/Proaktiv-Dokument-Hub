@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { 
   Building2, ChevronRight, Home, MapPin, Phone, Mail, 
-  Globe, Users, Map, ExternalLink, Edit, Power
+  Globe, Users, Map, ExternalLink, Edit, Power, Cloud
 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import {
@@ -288,6 +288,76 @@ export default function OfficeDetailPage() {
               </div>
             </div>
           )}
+
+          {/* Entra ID Section (secondary data source) */}
+          <div className="mt-6 pt-6 border-t">
+            <h3 className="text-sm font-medium text-muted-foreground mb-3 flex items-center gap-2">
+              <Cloud className="h-4 w-4" />
+              Entra ID (sekundær)
+            </h3>
+            
+            {office.entra_group_id ? (
+              <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                <dt className="text-muted-foreground">M365 Gruppe</dt>
+                <dd className="font-medium">{office.entra_group_name}</dd>
+                
+                <dt className="text-muted-foreground">Gruppe-ID</dt>
+                <dd className="font-mono text-xs truncate" title={office.entra_group_id}>
+                  {office.entra_group_id.slice(0, 8)}...
+                </dd>
+                
+                {office.entra_group_mail && (
+                  <>
+                    <dt className="text-muted-foreground">E-post</dt>
+                    <dd>{office.entra_group_mail}</dd>
+                  </>
+                )}
+                
+                {office.entra_member_count !== null && office.entra_member_count !== undefined && (
+                  <>
+                    <dt className="text-muted-foreground">Medlemmer</dt>
+                    <dd>{office.entra_member_count}</dd>
+                  </>
+                )}
+                
+                {office.entra_sharepoint_url && (
+                  <>
+                    <dt className="text-muted-foreground">SharePoint</dt>
+                    <dd>
+                      <a 
+                        href={office.entra_sharepoint_url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        Åpne site
+                      </a>
+                    </dd>
+                  </>
+                )}
+                
+                {office.entra_last_synced_at && (
+                  <>
+                    <dt className="text-muted-foreground">Sist synkronisert</dt>
+                    <dd>{new Date(office.entra_last_synced_at).toLocaleString('nb-NO')}</dd>
+                  </>
+                )}
+                
+                {office.entra_mismatch_fields && office.entra_mismatch_fields.length > 0 && (
+                  <>
+                    <dt className="text-muted-foreground">Avvik</dt>
+                    <dd className="text-amber-600">
+                      {office.entra_mismatch_fields.join(', ')}
+                    </dd>
+                  </>
+                )}
+              </dl>
+            ) : (
+              <p className="text-sm text-muted-foreground italic">
+                Ikke synkronisert med Entra ID. Klikk &quot;Hent Entra&quot; på kontorsiden for å synkronisere.
+              </p>
+            )}
+          </div>
 
           {/* Online links */}
           {(office.homepage_url || office.google_my_business_url || office.facebook_url || office.instagram_url || office.linkedin_url) && (

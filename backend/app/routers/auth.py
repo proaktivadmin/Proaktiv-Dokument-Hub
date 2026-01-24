@@ -20,6 +20,15 @@ settings = get_settings()
 ALGORITHM = "HS256"
 
 
+def get_auth_cookie_settings() -> dict[str, str | bool]:
+    """Return cookie settings for local vs production environments."""
+    env = (settings.APP_ENV or "").lower()
+    is_dev = env in ("development", "dev", "local") or settings.DEBUG
+    if is_dev:
+        return {"secure": False, "samesite": "lax"}
+    return {"secure": True, "samesite": "none"}
+
+
 class LoginRequest(BaseModel):
     password: str
 
@@ -80,12 +89,13 @@ async def login(login_request: LoginRequest, response: Response):
 
     # Set cookie - use samesite="none" for cross-origin requests between Railway services
     expires = datetime.now(UTC) + timedelta(days=settings.AUTH_SESSION_EXPIRE_DAYS)
+    cookie_settings = get_auth_cookie_settings()
     response.set_cookie(
         key="session",
         value=token,
         httponly=True,
-        secure=True,  # Required for samesite="none"
-        samesite="none",  # Allow cross-origin (frontend/backend on different domains)
+        secure=cookie_settings["secure"],  # Required for samesite="none" in production
+        samesite=cookie_settings["samesite"],  # Lax for local dev, None for production
         expires=expires.strftime("%a, %d %b %Y %H:%M:%S GMT"),
         path="/",
     )
@@ -98,7 +108,14 @@ async def logout(response: Response):
     """
     Log out by clearing the session cookie.
     """
-    response.delete_cookie(key="session", httponly=True, secure=True, samesite="none", path="/")
+    cookie_settings = get_auth_cookie_settings()
+    response.delete_cookie(
+        key="session",
+        httponly=True,
+        secure=cookie_settings["secure"],
+        samesite=cookie_settings["samesite"],
+        path="/",
+    )
     return {"success": True, "message": "Logged out successfully"}
 
 

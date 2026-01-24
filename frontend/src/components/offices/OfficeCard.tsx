@@ -20,6 +20,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { OfficeWithStats, EmployeeWithOffice } from "@/types/v3";
 import { resolveApiUrl, resolveAvatarUrl } from "@/lib/api/config";
+import { cn } from "@/lib/utils";
 
 interface OfficeCardProps {
   office: OfficeWithStats;
@@ -35,6 +36,41 @@ export function OfficeCard({ office, employees = [], onClick, onEdit, onDeactiva
   // Prefer banner_image_url, fall back to profile_image_url
   const bannerImage = office.banner_image_url || office.profile_image_url;
   const statusIndicatorClass = office.is_active ? "bg-emerald-500" : "bg-red-500";
+
+  // Entra status bubble logic (same pattern as EmployeeCard)
+  const entraHasData = Boolean(office.entra_group_id);
+  const mismatchCount = office.entra_mismatch_fields?.length ?? 0;
+  const entraStatus = !entraHasData ? "missing" : mismatchCount > 0 ? "mismatch" : "match";
+  const vitecStatus = entraHasData ? entraStatus : "primary";
+
+  const entraTitle =
+    entraStatus === "missing"
+      ? "Entra: ikke synkronisert"
+      : entraStatus === "mismatch"
+        ? `Entra: ${mismatchCount} avvik`
+        : "Entra: i sync";
+
+  const vitecTitle =
+    vitecStatus === "primary"
+      ? "Vitec: primærkilde (Entra ikke synkronisert)"
+      : vitecStatus === "mismatch"
+        ? "Vitec: avvik mot Entra"
+        : "Vitec: i sync med Entra";
+
+  const bubbleBase = "h-2.5 w-2.5 rounded-full shadow-soft";
+  const bubbleClass = (source: "entra" | "vitec", state: "missing" | "match" | "mismatch" | "primary") => {
+    const baseColor = source === "entra" ? "bg-sky-500" : "bg-emerald-500";
+    if (state === "missing") {
+      return cn(bubbleBase, `${baseColor}/30 ring-1 ring-slate-200`);
+    }
+    if (state === "mismatch") {
+      return cn(bubbleBase, baseColor, "ring-2 ring-amber-500/60");
+    }
+    if (state === "primary") {
+      return cn(bubbleBase, baseColor, "ring-1 ring-emerald-500/30");
+    }
+    return cn(bubbleBase, baseColor, "ring-1 ring-emerald-500/30");
+  };
   
   return (
     <Card 
@@ -93,32 +129,39 @@ export function OfficeCard({ office, employees = [], onClick, onEdit, onDeactiva
       <CardContent className="p-4">
         <div className="flex items-start justify-between mb-3">
           <div className="flex-1 min-w-0">
-            {office.legal_name && office.legal_name !== office.name ? (
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <h3 className="font-semibold text-lg mb-1 group-hover:text-primary transition-colors truncate cursor-help">
-                      {office.name}
-                    </h3>
-                  </TooltipTrigger>
-                  <TooltipContent side="top" className="max-w-xs">
-                    <div className="flex items-center gap-1.5 text-xs">
-                      <Building className="h-3 w-3" />
-                      <span>Juridisk navn: {office.legal_name}</span>
-                    </div>
-                    {office.organization_number && (
-                      <div className="text-xs text-muted-foreground mt-1">
-                        Org.nr: {office.organization_number}
+            <div className="flex items-center gap-2">
+              {office.legal_name && office.legal_name !== office.name ? (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <h3 className="font-semibold text-lg group-hover:text-primary transition-colors truncate cursor-help">
+                        {office.name}
+                      </h3>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="max-w-xs">
+                      <div className="flex items-center gap-1.5 text-xs">
+                        <Building className="h-3 w-3" />
+                        <span>Juridisk navn: {office.legal_name}</span>
                       </div>
-                    )}
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            ) : (
-              <h3 className="font-semibold text-lg mb-1 group-hover:text-primary transition-colors truncate">
-                {office.name}
-              </h3>
-            )}
+                      {office.organization_number && (
+                        <div className="text-xs text-muted-foreground mt-1">
+                          Org.nr: {office.organization_number}
+                        </div>
+                      )}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ) : (
+                <h3 className="font-semibold text-lg group-hover:text-primary transition-colors truncate">
+                  {office.name}
+                </h3>
+              )}
+              {/* Status bubbles - Vitec (primary) + Entra (secondary) */}
+              <div className="flex items-center gap-1 shrink-0" title="Datakilde-status">
+                <span className={bubbleClass("vitec", vitecStatus)} title={vitecTitle} />
+                <span className={bubbleClass("entra", entraStatus)} title={entraTitle} />
+              </div>
+            </div>
           </div>
           
           <DropdownMenu>

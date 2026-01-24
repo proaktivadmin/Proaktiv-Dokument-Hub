@@ -9,6 +9,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 from sqlalchemy import Boolean, DateTime, ForeignKey, Index, Integer, String, Text
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
@@ -72,6 +73,16 @@ class Office(Base):
     teams_group_id: Mapped[str | None] = mapped_column(String(100), nullable=True)
     sharepoint_folder_url: Mapped[str | None] = mapped_column(Text, nullable=True)
 
+    # Entra ID sync fields (secondary source - Group data from Microsoft Graph)
+    entra_group_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    entra_group_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    entra_group_mail: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    entra_group_description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    entra_sharepoint_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+    entra_member_count: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    entra_mismatch_fields: Mapped[list[str] | None] = mapped_column(JSONB, nullable=False, default=list)
+    entra_last_synced_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
     # Territory Map Color (hex)
     color: Mapped[str] = mapped_column(String(7), nullable=False, default="#4A90D9")
 
@@ -130,6 +141,7 @@ class Office(Base):
         Index("idx_offices_organization_number", "organization_number"),
         Index("idx_offices_parent_office_id", "parent_office_id"),
         Index("idx_offices_office_type", "office_type"),
+        Index("idx_offices_entra_group_id", "entra_group_id"),
     )
 
     def __repr__(self) -> str:

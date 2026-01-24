@@ -34,6 +34,15 @@ export interface Office {
   is_active: boolean;
   created_at: string;
   updated_at: string;
+  // Entra ID sync fields (secondary source)
+  entra_group_id: string | null;
+  entra_group_name: string | null;
+  entra_group_mail: string | null;
+  entra_group_description: string | null;
+  entra_sharepoint_url: string | null;
+  entra_member_count: number | null;
+  entra_mismatch_fields: string[];
+  entra_last_synced_at: string | null;
 }
 
 export interface SubOfficeSummary {

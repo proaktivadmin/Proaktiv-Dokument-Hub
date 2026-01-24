@@ -19,6 +19,8 @@ from app.schemas.entra_sync import (
     EntraConnectionStatus,
     EntraImportRequest,
     EntraImportResult,
+    EntraOfficeImportRequest,
+    EntraOfficeImportResult,
     EntraSyncBatchRequest,
     EntraSyncBatchResult,
     EntraSyncPreview,
@@ -63,6 +65,22 @@ async def import_entra_employees(request: EntraImportRequest):
     result = EntraSyncService.import_entra_employees(
         dry_run=request.dry_run,
         filter_email=request.filter_email,
+    )
+    return result
+
+
+@router.post("/import-offices", response_model=EntraOfficeImportResult)
+async def import_entra_offices(request: EntraOfficeImportRequest):
+    """
+    Import Entra ID M365 Groups into the local office database (read-only to Entra).
+
+    Fetches M365 Groups from Microsoft Graph, matches them to local offices,
+    and stores the Entra data in secondary columns. Vitec data is never modified.
+    """
+    result = EntraSyncService.import_entra_offices(
+        dry_run=request.dry_run,
+        filter_office_id=str(request.filter_office_id) if request.filter_office_id else None,
+        fetch_details=request.fetch_details if hasattr(request, "fetch_details") else False,
     )
     return result
 

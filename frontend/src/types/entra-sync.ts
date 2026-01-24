@@ -119,3 +119,23 @@ export interface RoamingSignaturesStatus {
   enabled: boolean;
   warning: string | null;
 }
+
+// =============================================================================
+// Office Import Types
+// =============================================================================
+
+export interface EntraOfficeImportRequest {
+  dry_run?: boolean;
+  filter_office_id?: string | null;
+  fetch_details?: boolean;
+}
+
+export interface EntraOfficeImportResult {
+  success: boolean;
+  dry_run: boolean;
+  offices_loaded?: number | null;
+  matched_updated?: number | null;
+  offices_not_matched?: number | null;
+  groups_not_matched?: number | null;
+  error?: string | null;
+}

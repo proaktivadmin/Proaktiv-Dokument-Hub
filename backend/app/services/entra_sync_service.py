@@ -29,6 +29,7 @@ from app.models.employee import Employee
 from app.schemas.entra_sync import (
     EntraConnectionStatus,
     EntraImportResult,
+    EntraOfficeImportResult,
     EntraSyncBatchResult,
     EntraSyncPreview,
     EntraSyncResult,
@@ -47,6 +48,7 @@ class EntraSyncService:
     # Template directory path
     TEMPLATES_DIR = Path(__file__).parent.parent.parent / "scripts" / "templates"
     IMPORT_SCRIPT_PATH = Path(__file__).parent.parent.parent / "scripts" / "import_entra_employees.py"
+    OFFICE_IMPORT_SCRIPT_PATH = Path(__file__).parent.parent.parent / "scripts" / "import_entra_offices.py"
 
     @staticmethod
     def is_enabled() -> bool:
@@ -170,6 +172,91 @@ class EntraSyncService:
             matched_updated=payload.get("matched_updated"),
             employees_not_matched=payload.get("employees_not_matched"),
             entra_users_not_matched=payload.get("entra_users_not_matched"),
+            error=None,
+        )
+
+    @staticmethod
+    def import_entra_offices(
+        *,
+        dry_run: bool = False,
+        filter_office_id: str | None = None,
+        fetch_details: bool = False,
+    ) -> EntraOfficeImportResult:
+        """Import Entra ID M365 Groups into local office records (read-only to Entra)."""
+        script_path = EntraSyncService.OFFICE_IMPORT_SCRIPT_PATH
+        if not script_path.exists():
+            return EntraOfficeImportResult(
+                success=False,
+                dry_run=dry_run,
+                error=f"Import script not found at {script_path}",
+            )
+
+        env = os.environ.copy()
+        if settings.DATABASE_URL and not env.get("DATABASE_URL"):
+            env["DATABASE_URL"] = settings.DATABASE_URL
+        if settings.ENTRA_TENANT_ID and not env.get("ENTRA_TENANT_ID"):
+            env["ENTRA_TENANT_ID"] = settings.ENTRA_TENANT_ID
+        if settings.ENTRA_CLIENT_ID and not env.get("ENTRA_CLIENT_ID"):
+            env["ENTRA_CLIENT_ID"] = settings.ENTRA_CLIENT_ID
+        if settings.ENTRA_CLIENT_SECRET and not env.get("ENTRA_CLIENT_SECRET"):
+            env["ENTRA_CLIENT_SECRET"] = settings.ENTRA_CLIENT_SECRET
+
+        if not env.get("ENTRA_TENANT_ID") or not env.get("ENTRA_CLIENT_ID"):
+            return EntraOfficeImportResult(
+                success=False,
+                dry_run=dry_run,
+                error="ENTRA_TENANT_ID and ENTRA_CLIENT_ID must be configured",
+            )
+        if not env.get("ENTRA_CLIENT_SECRET"):
+            return EntraOfficeImportResult(
+                success=False,
+                dry_run=dry_run,
+                error="ENTRA_CLIENT_SECRET must be configured for Entra import",
+            )
+
+        cmd = [sys.executable, str(script_path), "--json"]
+        if dry_run:
+            cmd.append("--dry-run")
+        if filter_office_id:
+            cmd.extend(["--filter-office-id", filter_office_id])
+        if fetch_details:
+            cmd.append("--fetch-details")
+
+        try:
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=300,
+                cwd=str(script_path.parent.parent),
+                env=env,
+            )
+        except subprocess.TimeoutExpired:
+            return EntraOfficeImportResult(success=False, dry_run=dry_run, error="Import timed out after 5 minutes")
+        except Exception as exc:
+            logger.exception("Error running Entra office import")
+            return EntraOfficeImportResult(success=False, dry_run=dry_run, error=str(exc))
+
+        if result.returncode != 0:
+            error_message = result.stderr.strip() or result.stdout.strip() or "Import failed"
+            return EntraOfficeImportResult(success=False, dry_run=dry_run, error=error_message)
+
+        try:
+            payload = json.loads(result.stdout.strip())
+        except json.JSONDecodeError:
+            return EntraOfficeImportResult(
+                success=False,
+                dry_run=dry_run,
+                error="Import completed but returned invalid JSON",
+            )
+
+        return EntraOfficeImportResult(
+            success=True,
+            dry_run=payload.get("dry_run", False),
+            offices_loaded=payload.get("offices_loaded"),
+            matched_updated=payload.get("matched_updated"),
+            offices_not_matched=payload.get("offices_not_matched"),
+            groups_not_matched=payload.get("groups_not_matched"),
             error=None,
         )
 

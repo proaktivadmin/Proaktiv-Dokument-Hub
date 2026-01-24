@@ -14,6 +14,8 @@ import type {
   EntraSyncResult,
   RoamingSignaturesStatus,
   SignaturePreview,
+  EntraOfficeImportRequest,
+  EntraOfficeImportResult,
 } from '../../types/entra-sync';
 
 export const entraSyncApi = {
@@ -70,6 +72,14 @@ export const entraSyncApi = {
    */
   async importEmployees(request: EntraImportRequest): Promise<EntraImportResult> {
     const response = await apiClient.post('/entra-sync/import', request);
+    return response.data;
+  },
+
+  /**
+   * Import Entra ID M365 Groups into local office records (read-only to Entra)
+   */
+  async importOffices(request: EntraOfficeImportRequest): Promise<EntraOfficeImportResult> {
+    const response = await apiClient.post('/entra-sync/import-offices', request);
     return response.data;
   },
 };

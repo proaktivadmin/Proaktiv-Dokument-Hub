@@ -1,6 +1,6 @@
 "use client";
 
-import { Building2, Plus, Search, RefreshCcw } from "lucide-react";
+import { Building2, Plus, Search, RefreshCcw, Cloud, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -27,6 +27,8 @@ interface OfficeGridProps {
   onDeactivate?: (office: OfficeWithStats) => void;
   onSync?: () => void;
   isSyncing?: boolean;
+  onEntraImport?: () => void;
+  isEntraImporting?: boolean;
   onEmployeeClick?: (employee: EmployeeWithOffice) => void;
 }
 
@@ -40,6 +42,8 @@ export function OfficeGrid({
   onDeactivate,
   onSync,
   isSyncing = false,
+  onEntraImport,
+  isEntraImporting = false,
   onEmployeeClick,
 }: OfficeGridProps) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -47,7 +51,7 @@ export function OfficeGrid({
   const [showInactive, setShowInactive] = useState(false);
   const [employeesByOffice, setEmployeesByOffice] = useState<Record<string, EmployeeWithOffice[]>>({});
   const [vitecConnected, setVitecConnected] = useState<boolean | null>(null);
-  const showActions = Boolean(onCreateNew || onSync);
+  const showActions = Boolean(onCreateNew || onSync || onEntraImport);
 
   // Fetch employees for all offices
   useEffect(() => {
@@ -159,6 +163,20 @@ export function OfficeGrid({
               >
                 <RefreshCcw className="h-4 w-4 mr-2" />
                 {isSyncing ? "Synkroniserer..." : "Synkroniser Vitec"}
+              </Button>
+            )}
+            {onEntraImport && (
+              <Button
+                variant="outline"
+                onClick={onEntraImport}
+                disabled={isEntraImporting}
+              >
+                {isEntraImporting ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Cloud className="h-4 w-4 mr-2" />
+                )}
+                {isEntraImporting ? "Henter..." : "Hent Entra"}
               </Button>
             )}
             {onCreateNew && (

@@ -7,6 +7,7 @@ import { Header } from "@/components/layout/Header";
 import { OfficeGrid, OfficeForm } from "@/components/offices";
 import { useOffices } from "@/hooks/v3/useOffices";
 import { officesApi } from "@/lib/api/offices";
+import { entraSyncApi } from "@/lib/api/entra-sync";
 import { useToast } from "@/hooks/use-toast";
 import type { OfficeWithStats } from "@/types/v3";
 
@@ -18,6 +19,7 @@ export default function OfficesPage() {
   const [formOpen, setFormOpen] = useState(false);
   const [editingOffice, setEditingOffice] = useState<OfficeWithStats | null>(null);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [isEntraImporting, setIsEntraImporting] = useState(false);
 
   const handleOfficeClick = (office: OfficeWithStats) => {
     router.push(`/offices/${office.id}`);
@@ -79,6 +81,43 @@ export default function OfficesPage() {
     }
   };
 
+  const handleEntraImport = async () => {
+    setIsEntraImporting(true);
+    try {
+      const result = await entraSyncApi.importOffices({ dry_run: false });
+      if (result.success) {
+        await refetch();
+        toast({
+          title: "Entra-import fullført",
+          description: `${result.matched_updated ?? 0} kontorer oppdatert${result.offices_not_matched ? `, ${result.offices_not_matched} uten match` : ''}.`,
+        });
+      } else {
+        toast({
+          title: "Entra-import feilet",
+          description: result.error ?? "Ukjent feil",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Failed to import from Entra:", error);
+      
+      let errorMessage = "Kunne ikke importere fra Entra ID.";
+      if (error instanceof AxiosError && error.response?.data?.detail) {
+        errorMessage = error.response.data.detail;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      
+      toast({
+        title: "Entra-import feilet",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    } finally {
+      setIsEntraImporting(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -100,6 +139,8 @@ export default function OfficesPage() {
         onCreateNew={() => setFormOpen(true)}
         onSync={handleSync}
         isSyncing={isSyncing}
+        onEntraImport={handleEntraImport}
+        isEntraImporting={isEntraImporting}
         onEdit={handleEdit}
         onDeactivate={handleDeactivate}
         onEmployeeClick={(emp) => router.push(`/employees/${emp.id}`)}

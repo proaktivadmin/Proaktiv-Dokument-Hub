@@ -152,6 +152,27 @@ class Settings(BaseSettings):
 
         return v
 
+    @field_validator("APP_PASSWORD_HASH", mode="before")
+    @classmethod
+    def normalize_password_hash(cls, v: str) -> str:
+        """
+        Normalize APP_PASSWORD_HASH for local and docker-compose usage.
+
+        - Strip whitespace
+        - Remove surrounding quotes
+        - Convert $$ to $ (docker-compose interpolation escape)
+        """
+        if v is None:
+            return ""
+        if not isinstance(v, str):
+            v = str(v)
+
+        value = v.strip()
+        if (value.startswith('"') and value.endswith('"')) or (value.startswith("'") and value.endswith("'")):
+            value = value[1:-1].strip()
+
+        return value.replace("$$", "$")
+
 
 @lru_cache
 def get_settings() -> Settings:

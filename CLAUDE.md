@@ -200,6 +200,16 @@ Railway's internal networking causes Alembic migrations to fail silently during 
 
 See `.planning/STATE.md` for full status.
 
+**V3.10 Office Entra ID Sync (Completed 2026-01-24):**
+- ✅ Fetch M365 Groups from Microsoft Graph API
+- ✅ Match groups to offices by email/name patterns
+- ✅ Store Entra data in secondary `entra_*` columns (never overwrite Vitec)
+- ✅ Status bubbles on OfficeCard (green=Vitec, blue=Entra)
+- ✅ "Entra ID (sekundær)" section on office detail page
+- ✅ "Hent Entra" button on offices page
+- ✅ Import script: `import_entra_offices.py` (--dry-run, --fetch-details)
+- Plans: `.planning/phases/10-office-entra-sync/`
+
 **V3.9 Self-Service Signature Portal (Completed 2026-01-24):**
 - ✅ Backend SignatureService renders personalized HTML signatures (with-photo/no-photo)
 - ✅ Backend GraphService sends notification emails via Microsoft Graph API
