@@ -1,0 +1,156 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
+import { Loader2, Mail } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  useSendSignature,
+  useSignature,
+  type SignatureVersion,
+} from "@/hooks/v3/useSignature";
+
+const versionLabels: Record<SignatureVersion, string> = {
+  "with-photo": "Med bilde",
+  "no-photo": "Uten bilde",
+};
+
+interface SignaturePreviewProps {
+  employeeId: string;
+  employeeEmail: string;
+  employeeName: string;
+}
+
+const buildSignatureDoc = (html: string) => `<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        margin: 0;
+        padding: 12px;
+        background: white;
+        font-family: Arial, sans-serif;
+      }
+    </style>
+  </head>
+  <body>${html}</body>
+</html>`;
+
+export function SignaturePreview({
+  employeeId,
+  employeeEmail,
+  employeeName,
+}: SignaturePreviewProps) {
+  const [version, setVersion] = useState<SignatureVersion>("with-photo");
+  const { signature, isLoading, error } = useSignature(employeeId, version);
+  const { send, isSending } = useSendSignature(employeeId);
+
+  const signatureHtml = signature?.html;
+  const signatureDoc = useMemo(() => {
+    if (!signatureHtml) return "";
+    return buildSignatureDoc(signatureHtml);
+  }, [signatureHtml]);
+
+  const canSend = Boolean(employeeEmail?.trim());
+
+  const handleSend = async () => {
+    if (!canSend) {
+      toast.error("Ingen mottakeradresse registrert");
+      return;
+    }
+
+    try {
+      const result = await send();
+      if (result.success) {
+        toast.success(`Signatur sendt til ${result.sent_to}`);
+      } else {
+        toast.error(result.message || "Kunne ikke sende signatur");
+      }
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "Kunne ikke sende signatur"
+      );
+    }
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Signatur</CardTitle>
+        <CardDescription>
+          Forhåndsvisning for {employeeName}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Mail className="h-4 w-4" />
+            <span>
+              Sendes til{" "}
+              <span className="font-medium text-foreground">
+                {employeeEmail || "Ikke registrert"}
+              </span>
+            </span>
+          </div>
+          <Button onClick={handleSend} disabled={!canSend || isSending}>
+            {isSending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Sender...
+              </>
+            ) : (
+              "Send signatur til ansatt"
+            )}
+          </Button>
+        </div>
+
+        <Tabs
+          value={version}
+          onValueChange={(value) => setVersion(value as SignatureVersion)}
+        >
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="with-photo">{versionLabels["with-photo"]}</TabsTrigger>
+            <TabsTrigger value="no-photo">{versionLabels["no-photo"]}</TabsTrigger>
+          </TabsList>
+
+          {(["with-photo", "no-photo"] as SignatureVersion[]).map(
+            (tabVersion) => (
+              <TabsContent key={tabVersion} value={tabVersion} className="mt-4">
+                {isLoading ? (
+                  <Skeleton className="h-[240px] w-full" />
+                ) : error ? (
+                  <div className="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+                    {error}
+                  </div>
+                ) : signature ? (
+                  <iframe
+                    title={`Signatur ${versionLabels[version]}`}
+                    sandbox=""
+                    srcDoc={signatureDoc}
+                    className="h-[240px] w-full rounded-md border bg-white"
+                  />
+                ) : (
+                  <div className="rounded-md border border-dashed p-4 text-sm text-muted-foreground">
+                    Ingen signatur tilgjengelig.
+                  </div>
+                )}
+              </TabsContent>
+            )
+          )}
+        </Tabs>
+      </CardContent>
+      <Toaster position="top-right" />
+    </Card>
+  );
+}

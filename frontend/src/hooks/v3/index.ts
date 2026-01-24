@@ -7,3 +7,4 @@ export { useEmployees, useEmployee } from './useEmployees';
 export { useAssets, useAsset } from './useAssets';
 export { useChecklistTemplates, useChecklistInstances, useChecklistInstance } from './useChecklists';
 export { useExternalListings, useExternalListing } from './useExternalListings';
+export { useSignature, useSendSignature } from './useSignature';

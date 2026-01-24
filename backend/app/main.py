@@ -50,8 +50,10 @@ from app.routers import (
     health,
     layout_partials,
     merge_fields,
+    notifications,
     offices,
     sanitizer,
+    signatures,
     storage,
     sync,
     tags,
@@ -144,6 +146,8 @@ app.include_router(storage.router, tags=["Storage"])
 # V3 Routers - Office & Employee Hub
 app.include_router(offices.router, prefix="/api", tags=["Offices"])
 app.include_router(employees.router, prefix="/api", tags=["Employees"])
+app.include_router(notifications.router, prefix="/api", tags=["Notifications"])
+app.include_router(signatures.router, prefix="/api", tags=["Signatures"])
 app.include_router(assets.router, prefix="/api", tags=["Assets"])
 app.include_router(external_listings.router, prefix="/api", tags=["External Listings"])
 app.include_router(checklists.router, prefix="/api", tags=["Checklists"])

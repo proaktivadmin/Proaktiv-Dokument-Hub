@@ -11,6 +11,16 @@ interface AuthProviderProps {
 
 // Routes that don't require authentication
 const PUBLIC_ROUTES = ["/login"];
+const PUBLIC_ROUTE_PREFIXES = ["/signature"];
+
+function isPublicRoute(pathname: string): boolean {
+  if (PUBLIC_ROUTES.includes(pathname)) {
+    return true;
+  }
+  return PUBLIC_ROUTE_PREFIXES.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`)
+  );
+}
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const router = useRouter();
@@ -21,7 +31,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     const checkAuth = async () => {
       // Skip check for public routes
-      if (PUBLIC_ROUTES.includes(pathname)) {
+      if (isPublicRoute(pathname)) {
         setIsChecking(false);
         return;
       }
@@ -53,7 +63,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [pathname, router]);
 
   // Show loading spinner while checking auth
-  if (isChecking && !PUBLIC_ROUTES.includes(pathname)) {
+  if (isChecking && !isPublicRoute(pathname)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
@@ -65,7 +75,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   // For public routes, always render
-  if (PUBLIC_ROUTES.includes(pathname)) {
+  if (isPublicRoute(pathname)) {
     return <>{children}</>;
   }
 

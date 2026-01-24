@@ -43,6 +43,7 @@
     "react-dom": "^19.2.3",
     "react-dropzone": "^14.3.8",
     "react-hook-form": "^7.71.1",
+    "react-hot-toast": "^2.6.0",
     "tailwind-merge": "^2.2.0",
     "use-sync-external-store": "^1.6.0",
     "zod": "^4.3.5",

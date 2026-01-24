@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { 
   Users, ChevronRight, Home, Phone, Mail,
-  Globe, Calendar, Edit, AlertTriangle, ExternalLink,
+  Globe, Calendar, Edit, PenLine, AlertTriangle, ExternalLink,
   Building2, Clock, CheckSquare,
   Facebook, Instagram, Linkedin, Twitter
 } from "lucide-react";
@@ -23,7 +23,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AssetGallery } from "@/components/assets";
-import { EmployeeForm } from "@/components/employees";
+import { EmployeeForm, SignaturePreview } from "@/components/employees";
 import { useEmployee } from "@/hooks/v3/useEmployees";
 import { useAssets } from "@/hooks/v3/useAssets";
 import { useChecklistInstances } from "@/hooks/v3/useChecklists";
@@ -374,6 +374,10 @@ export default function EmployeeDetailPage() {
             <CheckSquare className="h-4 w-4" />
             Sjekklister ({checklists.length})
           </TabsTrigger>
+          <TabsTrigger value="signature" className="gap-2">
+            <PenLine className="h-4 w-4" />
+            Signatur
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview">
@@ -548,6 +552,13 @@ export default function EmployeeDetailPage() {
               )}
             </CardContent>
           </Card>
+        </TabsContent>
+        <TabsContent value="signature">
+          <SignaturePreview
+            employeeId={employeeId}
+            employeeEmail={employee.email || ""}
+            employeeName={employee.full_name}
+          />
         </TabsContent>
       </Tabs>
 

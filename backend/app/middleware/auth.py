@@ -18,6 +18,7 @@ PUBLIC_ROUTES = [
     "/api/auth/status",
     "/api/auth/check",
     "/api/health",
+    "/api/signatures",
     "/health",
     "/docs",
     "/redoc",
