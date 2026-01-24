@@ -18,7 +18,6 @@ PUBLIC_ROUTES = [
     "/api/auth/status",
     "/api/auth/check",
     "/api/health",
-    "/api/signatures",
     "/health",
     "/docs",
     "/redoc",
@@ -29,6 +28,12 @@ PUBLIC_ROUTES = [
     "/api/sanitize/validate",
     "/api/sanitize/strip-styles",
     "/api/sanitize/normalize",
+]
+
+# Routes with partial public access (only GET is public, POST requires auth)
+# These are checked separately with method-aware logic
+PARTIAL_PUBLIC_ROUTES = [
+    "/api/signatures",  # GET /{id} is public, POST /{id}/send requires auth
 ]
 
 # CORS headers to add to 401 responses
@@ -63,11 +68,19 @@ class AuthMiddleware(BaseHTTPMiddleware):
 
         # Check if this is a public route
         path = request.url.path
+        method = request.method
 
-        # Allow public routes
+        # Allow fully public routes
         for public_route in PUBLIC_ROUTES:
             if path == public_route or path.startswith(public_route + "/"):
                 return await call_next(request)
+
+        # Allow partial public routes (GET only, other methods require auth)
+        for partial_route in PARTIAL_PUBLIC_ROUTES:
+            if path == partial_route or path.startswith(partial_route + "/"):
+                if method == "GET":
+                    return await call_next(request)
+                # POST/PUT/DELETE etc. fall through to auth check below
 
         # Allow non-API routes (static files, etc.)
         if not path.startswith("/api"):
