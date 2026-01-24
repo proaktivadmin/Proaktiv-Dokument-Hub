@@ -95,6 +95,8 @@ export interface Employee {
   status: EmployeeStatus;
   employee_type: EmployeeType; // internal, external, or system
   external_company: string | null; // Company name for external developers/consultants
+  entra_upn: string | null; // User Principal Name in Entra ID
+  entra_upn_mismatch: boolean; // True if Entra UPN differs from email (SSO will fail)
   is_featured_broker: boolean;
   start_date: string | null; // ISO date
 

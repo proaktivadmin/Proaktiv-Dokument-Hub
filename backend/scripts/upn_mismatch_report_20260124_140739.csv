@@ -1,0 +1,168 @@
+employee_id,name,database_email,entra_upn,entra_mail,status,issue,office,vitec_id
+c2887d5b-f9de-4512-b48e-f199d0855f9e,Michael ,michael@desti.no,michael_desti.no#EXT#@proaktivno.onmicrosoft.com,michael@desti.no,UPN_MISMATCH,UPN (michael_desti.no#ext#@proaktivno.onmicrosoft.com) differs from DB email - SSO will FAIL,Proaktiv Briskeby,MI
+b84f0e4c-5b96-4100-ac44-511e9ab25ce8,Nghia ,nghia@desti.no,,,NOT_FOUND,No Entra ID account found,Proaktiv Briskeby,NG
+a59c2295-7467-4eb5-8446-dc3df1a91046,Nina Aamodt,nina@proaktiv.no,nina@proaktiv.no,nina@proaktiv.no,OK,,Proaktiv Sarpsborg Næringsoppgjør,NIAA
+7849ca89-42a5-47f0-915a-5525e5e10b2b,Malin Aanerud Eriksen,mae@proaktiv.no,mae@proaktiv.no,mae@proaktiv.no,OK,,Proaktiv Lillestrøm,MAER
+78f4e2ba-b3f8-4357-9e2e-c3c86f394076,Alexander Abelseth,alexander.abelseth@proaktiv.no,alexander.abelseth@proaktiv.no,alexander.abelseth@proaktiv.no,OK,,"Proaktiv Drammen, Lier og Holmestrand",ALAB
+512bb7c9-a5cd-4a1f-8e1f-b76831c2307e,Ammar Ahmed,ammar.ahmed@vitecsoftware.com,,,NOT_FOUND,No Entra ID account found,Proaktiv Gruppen,VITAAHD
+f5d75dde-ce3f-4271-bc21-ad1a9a9665f2,Marte Aho Syversen,msy@proaktiv.no,msy@proaktiv.no,msy@proaktiv.no,OK,,Proaktiv Sandviken og Bergen Nord,MASY
+19874983-4f1c-4b9d-ae3a-3f77d412743d,Amalie Aimée Thorkildsen,amalie@proaktiv.no,Amalie@proaktiv.no,Amalie@proaktiv.no,OK,,Proaktiv Bergen Sentrum,AMTH
+ee853a21-29de-494a-93bf-b078131fa73a,Markus Alm Thoen,markus.thoen@proaktiv.no,markus.thoen@proaktiv.no,markus.thoen@proaktiv.no,OK,,"Proaktiv Drammen, Lier og Holmestrand",MATH
+e18987b6-ff26-4d9c-aa92-55e55a9c1fe1,Christina Amundsen,ca@proaktiv.no,ca@proaktiv.no,ca@proaktiv.no,OK,,Aktiv oppgjør,CHAM
+526f93d6-7b2e-4e93-a12a-4b15eb9156c1,Daniel Anderl Midttveit,dam@proaktiv.no,,,NOT_FOUND,No Entra ID account found,Proaktiv Bergen Sentrum,DAMI
+022bced9-bfcb-4f90-bc05-fdeb45bee1cc,Ariel Andrea Fagerbakk,aaf@proaktiv.no,aaf@proaktiv.no,aaf@proaktiv.no,OK,,Proaktiv Trondheim Øst,ARFA
+164eb683-c084-487c-ada7-bdc5a6ecd348,Petter Andre Aure,paa@proaktiv.no,paa@proaktiv.no,paa@proaktiv.no,OK,,Proaktiv Lillestrøm,PEAU
+8d8ddb92-7ffc-4b87-a2cb-580c8a28ed7f,Erik Andre Engebretsen,erik.andre.engebretsen@proaktiv.no,erik.andre.engebretsen@proaktiv.no,erik.andre.engebretsen@proaktiv.no,OK,,Proaktiv Sarpsborg Næringsoppgjør,EREN
+a5137715-943b-48fa-902b-af3588023a59,Georg André Gade,gag@proaktiv.no,gag@proaktiv.no,gag@proaktiv.no,OK,,Proaktiv Bergen Sentrum,GEGA
+84262cc6-09af-414a-8858-df7c1c59f497,Chris Andre Skorjanc,cas@proaktiv.no,cas@proaktiv.no,cas@proaktiv.no,OK,,Proaktiv Sandviken og Bergen Nord,CHSK
+ec13e76f-d4d4-4cc2-b306-a1501a9b011d,Christer A. Pedersen,cap@proaktiv.no,cap@proaktiv.no,cap@proaktiv.no,OK,,Proaktiv Trondheim Øst,CHAPE
+00f80161-ca37-41c6-928f-3d010fce5e5e,Alexander Berg,alexander.berg@vitecsoftware.com,,,NOT_FOUND,No Entra ID account found,Proaktiv Gruppen,VITABG
+5dc80a36-7178-4f54-bb33-b6d04428893b,Alexander Bergheim,alexander.bergheim@proaktiv.no,alexander.bergheim@proaktiv.no,alexander.bergheim@proaktiv.no,OK,,Proaktiv Bergen Sentrum,ALBE
+82d21501-ad7f-469c-b33f-317b8d28231f,Andrea Birkeland,ab@proaktiv.no,ab@proaktiv.no,ab@proaktiv.no,OK,,Proaktiv Bergen Sentrum,ANBI
+5e50de88-b93c-4582-9535-d9e159d50430,Kjersti Birkeland,birkeland@proaktiv.no,birkeland@proaktiv.no,birkeland@proaktiv.no,OK,,Proaktiv Jæren,KJBI
+fd031fd7-0ce3-427b-a1e5-89710dc5ba39,Kristian Bjørnstad Hansen,kbh@proaktiv.no,kbh@proaktiv.no,kbh@proaktiv.no,OK,,Proaktiv Lillestrøm,KRHA
+5245dabf-476d-4636-ab26-7e0684e2b0f4,Silje Bjørseth Stålen,sbs@proaktiv.no,sbs@proaktiv.no,sbs@proaktiv.no,OK,,Proaktiv Trondheim Sentrum - Oppgjør,SIST
+48796504-5ec5-4e4f-82b9-11b9e3319824,Lasse Bøen,lasse@proaktiv.no,lasse@proaktiv.no,lasse@proaktiv.no,OK,,Proaktiv Trondheim Sentrum - Oppgjør,LABO
+e6ec6cb3-1ffc-4dc2-bec1-56358435a78f,Anders Brendehaug Østlie,abo@proaktiv.no,abo@proaktiv.no,abo@proaktiv.no,OK,,Proaktiv Voss,ANOS
+6f08c394-70b6-4676-8dca-c9fd57749da2,Elisabeth Brenne Nilsson,elisabeth@proaktiv.no,ebn@proaktiv.no,ebn@proaktiv.no,UPN_MISMATCH,Neither UPN (ebn@proaktiv.no) nor Mail (ebn@proaktiv.no) match DB email,Proaktiv Trondheim Sentrum - Oppgjør,
+eaef0370-b495-4270-82e7-952aff053c83,Elisabeth Brenne Nilsson,ebn@proaktiv.no,ebn@proaktiv.no,ebn@proaktiv.no,OK,,Proaktiv Trondheim Sentrum - Oppgjør,ELNI
+26125295-af6e-4d9c-9f40-39213b886de8,Linn Cathrine Karlsen,lck@proaktiv.no,l1@proaktiv.no,lck@proaktiv.no,UPN_MISMATCH,UPN (l1@proaktiv.no) differs from DB email - SSO will FAIL,Aktiv oppgjør,LIKA
+aeeb4c01-c3ed-4ca0-bd37-b9a71f3689e7,Olav Dalhaug,olav@proaktiv.no,olav@proaktiv.no,olav@proaktiv.no,OK,,Proaktiv Trondheim Sentrum - Oppgjør,OLDA
+6eda26a4-6ec5-4ed5-830e-fd95b9907d6a,Sonja Damcevski Johansen,sdj@proaktiv.no,sdj@proaktiv.no,sdj@proaktiv.no,OK,,Proaktiv Briskeby,SOJO
+34c983e1-78f3-4f5b-a13f-413acf693e8c,Elin Dølvik Lier,edl@proaktiv.no,edl@proaktiv.no,edl@proaktiv.no,OK,,Aure Valskaar & Odden,ELLI
+a539fd1f-6b25-4dbc-8f3d-98343bb2227f,Eirik Døsen,ed@proaktiv.no,ed@proaktiv.no,ed@proaktiv.no,OK,,Proaktiv Trondheim Sentrum - Oppgjør,EIDO
+0f4d78f4-b8be-4a1f-85fd-17f2921dc576,Ingrid Drevvatne,id@proaktiv.no,id@proaktiv.no,id@proaktiv.no,OK,,Proaktiv Trondheim Øst,INDR
+6161ed12-0e8d-42a5-879c-f5e2963101ba,Sebastian Duun,sebastian@proaktiv.no,sebastian@proaktiv.no,sebastian@proaktiv.no,OK,,Proaktiv Trondheim Sentrum - Oppgjør,SEDU
+853004bc-2de8-4917-a753-319b73dbe889,Bjarne Edland,edland@proaktiv.no,edland@proaktiv.no,edland@proaktiv.no,OK,,Proaktiv Sandnes,BJED
+f5c6c829-64fb-4e61-8c35-6dde4e3869c4,Øystein Edsbergløkken,oystein@proaktiv.no,oystein@proaktiv.no,oystein@proaktiv.no,OK,,Proaktiv Briskeby,OYED
+379ad67b-3c0d-439b-91f4-b7fdc3cd82b6,Andreas Eidsli Liland,ae@proaktiv.no,ae@proaktiv.no,ae@proaktiv.no,OK,,Proaktiv Trondheim Syd,ANEI
+7f396e6c-511b-43f1-b5ff-e752e9e2e6fd,Rune Emilsen,re@proaktiv.no,re@proaktiv.no,re@proaktiv.no,OK,,Proaktiv Lillestrøm,RUEM
+02a1e7a2-96ef-4411-88e1-82a694dd540f,Svein Eng,svein.eng@proaktiv.no,svein.eng@proaktiv.no,svein.eng@proaktiv.no,OK,,Proaktiv Sarpsborg Næringsoppgjør,SVEN
+90acbd23-a940-492c-86a0-7e5dd0619224,Fredrik Engebråten,fredrik.e@proaktiv.no,fredrik.e@proaktiv.no,fredrik.e@proaktiv.no,OK,,"Proaktiv Drammen, Lier og Holmestrand",FREN
+80f5263c-c5a6-4cdd-af6c-bd0bd5518fa7,Hans Erik Engebretsen,hans.erik.engebretsen@proaktiv.no,hans.erik.engebretsen@proaktiv.no,hans.erik.engebretsen@proaktiv.no,OK,,Proaktiv Sarpsborg Næringsoppgjør,HAEN
+2d34e808-bb3a-47d4-b35a-bef46c39e421,Stein Erik Lie,lie@proaktiv.no,lie@proaktiv.no,lie@proaktiv.no,OK,,"Proaktiv Drammen, Lier og Holmestrand",STLI
+b1709119-3cd2-4c19-95ff-46491cbf956d,Arvid Eriksen Johansen,aj@proaktiv.no,aj@proaktiv.no,aj@proaktiv.no,OK,,Proaktiv Trondheim Syd,ARJO
+70f2d5e3-9771-4ee4-869e-5611b91f0e17,Jim Esben Andersen,jim@desti.no,,,NOT_FOUND,No Entra ID account found,Proaktiv Briskeby,JIAN
+1988576f-0a93-46ee-a791-0be3a21bfb29,Ordin Fikstvedt,of@proaktiv.no,of@proaktiv.no,of@proaktiv.no,OK,,Proaktiv Stavanger,ORFI
+6d982f3a-702b-41ed-8b90-15f6fc4f4bac,Sander Finnanger,sander@proaktiv.no,Sander@proaktiv.no,Sander@proaktiv.no,OK,,Proaktiv Trondheim Sentrum - Oppgjør,SAFI
+baeba128-eb3d-4fa4-b2a0-3558fc456d00,Geir Flaa Johansen,geir@proaktiv.no,geir@proaktiv.no,geir@proaktiv.no,OK,,Proaktiv Kristiansand,
+cdc45d46-7d42-4ac2-ad72-e14dcf497008,Sondre Fostervold,sf@proaktiv.no,sf@proaktiv.no,sf@proaktiv.no,OK,,Proaktiv Bergen Sentrum,SOFO
+c017ebaf-77e7-4526-895f-25d112849e85,Cathrine Frostjord,cathrine.frostjord@vitecsoftware.com,,,NOT_FOUND,No Entra ID account found,Proaktiv Gruppen,VITCFD
+a472c97a-4ee6-4e55-9043-784e65baef1b,Adrian Frøyland,froyland@proaktiv.no,froyland@proaktiv.no,froyland@proaktiv.no,OK,,Proaktiv Gruppen,ADFR
+ebaaed25-ac16-47cf-b6fb-9c919f3e825e,Mauricio Funbit,mauricio@funbit.no,mauricio_funbit.no#EXT#@proaktivno.onmicrosoft.com,mauricio@funbit.no,UPN_MISMATCH,UPN (mauricio_funbit.no#ext#@proaktivno.onmicrosoft.com) differs from DB email - SSO will FAIL,Proaktiv Gruppen,MAFU
+5cb322ac-1561-4769-a0bd-b152108685ef,Lene Gaarder,lene.gaarder@vitecsoftware.com,,,NOT_FOUND,No Entra ID account found,Proaktiv Gruppen,VITLGAR
+07acc232-0c84-4340-828d-5f210d1d99da,Kristin Gåsland,kg@proaktiv.no,kg@proaktiv.no,kg@proaktiv.no,OK,,Proaktiv Stavanger,
+48e5c5e1-e896-41cc-9c6d-a964da4b47dd,Marius Giskeødegård,mgi@proaktiv.no,mgi@proaktiv.no,mgi@proaktiv.no,OK,,Proaktiv Bergen Sentrum,MAGI
+bb0627ae-4491-4ea8-a529-3487f4366944,Inge-Andrè Godø,inge@proaktiv.no,inge@proaktiv.no,inge@proaktiv.no,OK,,Proaktiv Ålesund,INGO
+3d9b9c77-24cc-434f-927f-cf8556c67944,Simen Grefsrud,sg@proaktiv.no,sg@proaktiv.no,sg@proaktiv.no,OK,,Proaktiv Lørenskog,SIGR
+bb9bfaae-08b9-49db-97cd-f5382cbeb96d,Vidar Grette,vidar.grette@vitecsoftware.com,,,NOT_FOUND,No Entra ID account found,Proaktiv Gruppen,VITVGRE
+b3be3d79-5966-4c6f-b9a4-63a55219f63f,Kine Grønbech Rasmussen,kine@proaktiv.no,kine@proaktiv.no,kine@proaktiv.no,OK,,Aktiv oppgjør,KIRA
+0a060212-4825-4a13-b7de-740400fd8865,Håkon Grønlund,hakon.gronlund@proaktiv.no,hakon.gronlund@proaktiv.no,hakon.gronlund@proaktiv.no,OK,,Proaktiv Sarpsborg Næringsoppgjør,HAGR
+2ea7b7c5-b464-4930-b8b2-5c1963c5f259,Svein Gunnar Hansen,svein.gunnar.hansen@proaktiv.no,svein.gunnar.hansen@proaktiv.no,svein.gunnar.hansen@proaktiv.no,OK,,Proaktiv Sarpsborg Næringsoppgjør,SVHA
+6d9bea6d-a3d3-462f-8e30-753ad11cc0ad,Henrik Hammersborg,hh@proa.no,,,NOT_FOUND,No Entra ID account found,Proaktiv Lillestrøm,
+d4e371df-15f3-4e4d-9a10-79a3a1fa98a4,Jan Harald Moen,jan.harald.moen@vitecsoftware.com,,,NOT_FOUND,No Entra ID account found,Proaktiv Gruppen,VITJMN
+b38fa201-784c-461d-8281-b735faaee2a8,Brynjulf Hardang,bh@proaktiv.no,bh@proaktiv.no,bh@proaktiv.no,OK,,Proaktiv Bergen Sentrum,BRHA
+d862374e-c650-48b7-bfb8-09e15bd312a8,Bendik Haug,bendik@proaktiv.no,bendik@proaktiv.no,bendik@proaktiv.no,OK,,Proaktiv Briskeby,BEHA
+e8f0a0f1-b8e8-4e19-9d5a-e2c7d35c9581,Truls Hauge,th@proaktiv.no,th@proaktiv.no,th@proaktiv.no,OK,,Proaktiv Lørenskog,TRHA
+c6be9deb-3f43-4a3e-9d01-4478e0f40905,Inger Haugo Bryn,ihb@proaktiv.no,ihb@proaktiv.no,ihb@proaktiv.no,OK,,Proaktiv Voss,INBR
+d8a1c107-cf96-4af9-8c98-424648c4482c,Oliver Heldal Johansen,oliver@proaktiv.no,oliver@proaktiv.no,oliver@proaktiv.no,OK,,Proaktiv Trondheim Sentrum - Oppgjør,OLJO
+2fc02755-8445-44aa-8b3f-e637e470283c,Ann Helen Lauvskar Ommundsen,ommundsen@proaktiv.no,Ommundsen@proaktiv.no,Ommundsen@proaktiv.no,OK,,Proaktiv Jæren,ANOM
+25f51849-a3d2-4cd0-bb86-fb9cc168bb5c,Geir Inge Rangøy Johannessen,geir.johannessen@proaktiv.no,geir.johannessen@proaktiv.no,geir.johannessen@proaktiv.no,OK,,Proaktiv Sarpsborg Næringsoppgjør,GEJO
+3d88fd21-44e9-4bb5-9655-64d61814b5ee,Sofie Johanne Berge Matthiesen,sm@proaktiv.no,sm@proaktiv.no,sm@proaktiv.no,OK,,Proaktiv Sandviken og Bergen Nord,
+fba3ed0a-c394-4826-bc29-7c3e58462238,Fredrik Jordal,fj@proaktiv.no,fj@proaktiv.no,fj@proaktiv.no,OK,,Proaktiv Voss,FRJO
+f6238255-1c12-45a8-91ba-c3695e7b499b,Hilde Jystad Haugane,hjh@proaktiv.no,hjh@proaktiv.no,hjh@proaktiv.no,OK,,Proaktiv Trondheim Syd,HIHA
+3f472b81-ca90-47f7-88e5-b0351bfcaf73,Jonas Kindgren,jk@proaktiv.no,jk@proaktiv.no,jk@proaktiv.no,OK,,Proaktiv Lillestrøm,JOKI
+51f0a078-924e-4964-aa19-9517433da70d,Mads Kirkeslett,mk@proaktiv.no,mads@proaktiv.no,mads@proaktiv.no,UPN_MISMATCH,Neither UPN (mads@proaktiv.no) nor Mail (mads@proaktiv.no) match DB email,Proaktiv Trondheim Sentrum - Oppgjør,
+04da0868-12cb-46e6-aca8-0cad1e07ef08,Mads Kirkeslett,mads@proaktiv.no,mads@proaktiv.no,mads@proaktiv.no,OK,,Proaktiv Trondheim Sentrum - Oppgjør,MAKI
+6371b6f7-131f-4135-b0b0-3087d8bd72a2,Oscar Kirkevollen,ok@proaktiv.no,ok@proaktiv.no,ok@proaktiv.no,OK,,Proaktiv Trondheim Syd,OSKI
+dde7006a-3947-491c-80a1-f3a5bbba0b72,Christian Klingenberg,christian.klingenberg@vitecsoftware.com,,,NOT_FOUND,No Entra ID account found,Proaktiv Gruppen,VITCKG
+f9297b4a-eb2a-4a34-a400-ebc69e6de5b9,Mathias Kokes,mathias.kokes@proaktiv.no,,,NOT_FOUND,No Entra ID account found,Proaktiv Bergen Sentrum,MAKO
+5d408ff2-0844-4802-9159-a097bb991f08,Lisbeth Kristengård,lk@proaktiv.no,lk@proaktiv.no,lk@proaktiv.no,OK,,Proaktiv Trondheim Sentrum - Oppgjør,LIKR
+fe85a8ed-6eec-4701-adb7-3a00a152128a,Jon Kristian Røsok,jon@proaktiv.no,jon@proaktiv.no,jon@proaktiv.no,OK,,Proaktiv Ålesund,JORO
+8e6a8ec5-9363-4f09-a5d0-b7ce91857463,Knut Kristian Schatvet,kks@proaktiv.no,,,NOT_FOUND,No Entra ID account found,Proaktiv Lillestrøm,
+9c2dd599-7a87-4251-bcd6-eab626f78146,Camilla Krokeide,camilla@proaktiv.no,camilla.krokeide@proaktiv.no,camilla.krokeide@proaktiv.no,UPN_MISMATCH,Neither UPN (camilla.krokeide@proaktiv.no) nor Mail (camilla.krokeide@proaktiv.no) match DB email,Proaktiv Gruppen,
+74112714-503c-4b22-b0dd-7798b753ec9b,Camilla Krokeide,camilla.krokeide@proaktiv.no,camilla.krokeide@proaktiv.no,camilla.krokeide@proaktiv.no,OK,,Proaktiv Gruppen,CAKR
+339e6fef-dc62-4cbd-8a8b-a12c5abfd96a,Svein Kvamme Bergum,skb@proaktiv.no,skb@proaktiv.no,skb@proaktiv.no,OK,,Proaktiv Gruppen,SVBE
+c68e8faf-4607-4df8-902f-d4dd169e0ac2,Marcus Langeland,langeland@proaktiv.no,langeland@proaktiv.no,langeland@proaktiv.no,OK,,Proaktiv Sola,MALA
+72aef958-8b37-425d-979b-06542dbf71bd,Thea Langeland Solheim,tls@proaktiv.no,tls@proaktiv.no,tls@proaktiv.no,OK,,Proaktiv Sandnes,THSO
+dadfeac4-918d-4e7c-8189-a38310c8cada,Ida-Amalie Larsen,ial@proaktiv.no,ial@proaktiv.no,ial@proaktiv.no,OK,,Proaktiv Briskeby,IDLA
+17798d3c-65fc-4ddd-8dc8-d93caf813a04,Anne Lie Odden,alo@proaktiv.no,alo@proaktiv.no,alo@proaktiv.no,OK,,Aure Valskaar & Odden,ANOD
+8e396173-48f7-40fa-882b-71fb2ff7cc6b,Even Lindseth,el@proaktiv.no,el@proaktiv.no,el@proaktiv.no,OK,,Proaktiv Voss,EVLI
+d33984d2-6736-4a1f-aea0-8de04b053113,Lars Lofthus,lofthus@proaktiv.no,lofthus@proaktiv.no,lofthus@proaktiv.no,OK,,Proaktiv Stavanger,LALO
+6086d2fe-04dd-48dc-9979-82dc7e678c82,Monica Løvjomås,ml@proaktiv.no,ml@proaktiv.no,ml@proaktiv.no,OK,,Proaktiv Stavanger,MOLO
+dbe5cf56-7a20-408e-8a38-75088f79a67e,Hege Lund Madtsen,hege@proaktiv.no,hege@proaktiv.no,hege@proaktiv.no,OK,,Proaktiv Haugesund,HEMA
+838b8c90-c02d-486b-9cd1-e02141bde9cd,Trude Lund Madtsen,trude@proaktiv.no,trude@proaktiv.no,trude@proaktiv.no,OK,,Proaktiv Haugesund,TRMA
+fd9f8f9a-277a-4eab-9d84-3b35c8738924,Jonas Maalø,jonas.maalo@proaktiv.no,jonas.maalo@proaktiv.no,jonas.maalo@proaktiv.no,OK,,Proaktiv Trondheim Sentrum - Oppgjør,JOMA
+4003346b-349c-40f4-adf1-173419b037d8,Alexander Magelssen,am@proaktiv.no,am@proaktiv.no,am@proaktiv.no,OK,,Proaktiv Lillestrøm,ALMA
+3b252a72-5b88-436e-9d5a-e85783ae2c76,Torbjørn Mannes Johansen,mannes@proaktiv.no,mannes@proaktiv.no,mannes@proaktiv.no,OK,,Proaktiv Sandnes,TOJO
+aa27c8b4-b45c-4ef5-baee-e2fe77b380cf,Aurora Marie Fredriksen,aurora@proaktiv.no,aurora@proaktiv.no,aurora@proaktiv.no,OK,,Proaktiv Trondheim Øst,AUFR
+f6f920db-db8d-481e-84e1-3141f1903fc2,Mina Marie Lillelien,mml@proaktiv.no,MML@proaktiv.no,MML@proaktiv.no,OK,,Proaktiv Lillestrøm,MILI
+84a0a61f-d5e5-4bf1-9c53-4ac337cd0a08,Adrian Marthinsen,marthinsen@proaktiv.no,marthinsen@proaktiv.no,marthinsen@proaktiv.no,OK,,Proaktiv Sola,ADMA
+52e40253-6e08-47f9-b885-06b1c1b43c7d,Ken Martin Wigand,kmw@proaktiv.no,kmw@proaktiv.no,kmw@proaktiv.no,OK,,Proaktiv Sandviken og Bergen Nord,KEWI
+5d1af991-cd25-4e30-9b53-43703629b790,Anne May Halvorsen,amh@proaktiv.no,amh@proaktiv.no,amh@proaktiv.no,OK,,Proaktiv Skien - Næringsoppgjør,ANHA
+07da67e0-39cc-4fc9-b8ef-b33ab4f6b5e7,Ole-Martin Meland,omm@proaktiv.no,omm@proaktiv.no,omm@proaktiv.no,OK,,Proaktiv Skien - Næringsoppgjør,OLME
+d2ba7101-6ad2-48ef-9d7f-141c704c8a9c,Kristoffer Menne,km@proaktiv.no,km@proaktiv.no,km@proaktiv.no,OK,,Proaktiv Trondheim Sentrum - Oppgjør,KRME
+cb484d2f-305e-42dd-8bbf-2636e8e61128,Stephan Michael Erichsen,erichsen@proaktiv.no,erichsen@proaktiv.no,erichsen@proaktiv.no,OK,,Proaktiv Sola,STER
+d5732925-6f2e-40a5-88bd-73f1ac70b320,Mari Mjølhus,mjolhus@proaktiv.no,mjolhus@proaktiv.no,mjolhus@proaktiv.no,OK,,Proaktiv Sandnes,MAMJ
+115bafc7-c413-438a-8eea-dd4dcda3ce34,Julia Mogerhagen,julia@proaktiv.no,julia@proaktiv.no,julia@proaktiv.no,OK,,Proaktiv Briskeby,JUMO
+1b381aed-026d-4933-9045-ba07480034aa,Jørgen Molvik,jorgen@proaktiv.no,jorgen.molvik@proaktiv.no,jorgen.molvik@proaktiv.no,UPN_MISMATCH,Neither UPN (jorgen.molvik@proaktiv.no) nor Mail (jorgen.molvik@proaktiv.no) match DB email,Proaktiv Gruppen,
+85cbd854-146b-480f-ac67-2306598aed77,Jørgen Molvik,jorgen.molvik@proaktiv.no,jorgen.molvik@proaktiv.no,jorgen.molvik@proaktiv.no,OK,,Proaktiv Gruppen,JOMO
+c855c9f9-125d-41a2-8a0a-96083aa86a93,Zuzanna Muszkiet,zuzanna@proaktiv.no,zuzanna@proaktiv.no,zuzanna@proaktiv.no,OK,,Proaktiv Trondheim Sentrum - Oppgjør,ZUMU
+edf37dc6-20c5-46f2-8b63-dff240dbbd3a,Eirik Nådland,eirik.nadland@vitecsoftware.com,,,NOT_FOUND,No Entra ID account found,Proaktiv Gruppen,VITENA
+2330b4de-ffee-4d24-ab52-3479cc6365ba,Phuong Nguyen Thanh,phuong@desti.no,Desti@proaktivno.onmicrosoft.com,phuong@desti.no,UPN_MISMATCH,UPN (desti@proaktivno.onmicrosoft.com) differs from DB email - SSO will FAIL,Proaktiv Briskeby,PH
+65e65952-99f6-42a9-8ff1-51156f0cd66e,Terje Nicolaysen,terje.nicolaysen@proaktiv.no,terje.nicolaysen@proaktiv.no,terje.nicolaysen@proaktiv.no,OK,,Proaktiv Sarpsborg Næringsoppgjør,TENI
+9bbeaf47-5adf-4303-b659-7da7a28be84c,Edvard Nyberg,en@proaktiv.no,en@proaktiv.no,en@proaktiv.no,OK,,Proaktiv Lillestrøm,EDNY
+85ae7b49-fa4d-4808-93b8-6bdf69acc491,Alexandra Nygård,an@proaktiv.no,an@proaktiv.no,an@proaktiv.no,OK,,Proaktiv Briskeby,ALNY
+c00865d7-f621-4abb-9ede-6f04c317864d,Satvinder Pal Singh Jhooti,sj@proaktiv.no,sj@proaktiv.no,sj@proaktiv.no,OK,,"Proaktiv Drammen, Lier og Holmestrand",SAJH
+a031c8f6-cc35-4c13-8b37-a2b1b95bf232,Christina Pedersen,cp@proaktiv.no,cp@proaktiv.no,cp@proaktiv.no,OK,,Proaktiv Gruppen,CHPE
+f77d2c19-01be-42bb-bf70-494a8ddfb942,Hans Petter Naumann,hanspetter.naumann@vitecsoftware.com,,,NOT_FOUND,No Entra ID account found,Proaktiv Gruppen,VITHNAN
+61afe35b-78dd-4685-acc1-6b9d501edbd2,Jørgen Ranum,jorgen.ranum@proaktiv.no,jorgen.ranum@proaktiv.no,jorgen.ranum@proaktiv.no,OK,,Proaktiv Trondheim Syd,JORA
+4adf265f-e909-439f-a230-eea5861ef6ef,Randi Rasmussen,randi.rasmussen@vitecsoftware.com,,,NOT_FOUND,No Entra ID account found,Proaktiv Gruppen,VITRRAN
+b2a9107f-2176-4b75-90af-dbbaf1b93b18,Louise Reeh Øvretveit,lr@proaktiv.no,,,NOT_FOUND,No Entra ID account found,Proaktiv Sandviken og Bergen Nord,LOOV
+b0149b50-bb91-463d-b340-52ce3602550b,Øyvind Rege,rege@proaktiv.no,rege@proaktiv.no,rege@proaktiv.no,OK,,Proaktiv Sandnes,OYRE
+dfaaa0c9-f7bb-41f1-b6c2-408b3cf8ed74,Tore Resell,tore@proaktiv.no,tore@proaktiv.no,tore@proaktiv.no,OK,,Proaktiv Trondheim Sentrum - Oppgjør,TORE
+d7bf988e-01be-4802-89ed-abf9ea87efbd,Caroline Ringså Ask,cr@proaktiv.no,cr@proaktiv.no,cr@proaktiv.no,OK,,Proaktiv Briskeby,CAAS
+d7e2b28b-e797-4757-9d63-e1255ea9b586,Christophe Roblin,christophe.roblin@vitecsoftware.com,,,NOT_FOUND,No Entra ID account found,Proaktiv Gruppen,VITCRI
+a0a1deda-3cc5-4e81-bde3-8b57f8b91d89,Kai Roger Hagen,kai.roger.hagen@proaktiv.no,kai.roger.hagen@proaktiv.no,kai.roger.hagen@proaktiv.no,OK,,Proaktiv Sarpsborg Næringsoppgjør,KAHA
+1a066c5a-fcb0-4fd6-9252-e186b41a41a1,Sindre Sælid,sindre.saelid@vitecsoftware.com,,,NOT_FOUND,No Entra ID account found,Proaktiv Gruppen,VITSSD
+efa4fd8b-fd40-4d9e-90de-a779ec61c764,Christian Schjetne,cs@proaktiv.no,cs@proaktiv.no,cs@proaktiv.no,OK,,Proaktiv Trondheim Øst,CHSC
+e6d728a2-9b18-4cd9-88b9-b3f8cc6df1ee,Madelen Simonsen Rekkebo,madelen@proaktiv.no,Madelen@proaktiv.no,Madelen@proaktiv.no,OK,,Proaktiv Trondheim Sentrum - Oppgjør,MARE
+7cdb29ac-f8f5-42ae-8316-0b212804d13d,Alex Simpson,alex.simpson@funbit.no,alex_funbit@proaktivno.onmicrosoft.com,alex.simpson@funbit.no,UPN_MISMATCH,UPN (alex_funbit@proaktivno.onmicrosoft.com) differs from DB email - SSO will FAIL,Proaktiv Gruppen,ALSI
+598bd5fa-2761-465e-bdcd-a48c3bca4817,Steinar Skaanes,steinar@proaktiv.no,steinar@proaktiv.no,steinar@proaktiv.no,OK,,Proaktiv Trondheim Øst,STSK
+17cfc421-8e64-4b73-9fba-d70b884db96b,Line Skancke (regnskapsfører),line.skancke@azets.com,,,NOT_FOUND,No Entra ID account found,Proaktiv Skien - Næringsoppgjør,
+6b413d79-0614-4383-aa74-576f8aa2bdbb,Ola Skarra Arnesen,ola@proaktiv.no,ola@proaktiv.no,ola@proaktiv.no,OK,,"Proaktiv Drammen, Lier og Holmestrand",OLAR
+d6e47149-45d0-4756-a7d7-15076a9a5af7,Malin Skevik,msk@proaktiv.no,msk@proaktiv.no,msk@proaktiv.no,OK,,Proaktiv Trondheim Øst,MASK
+1427e102-22ff-4d10-adb7-ba916f51fe84,Grunde Skillebekk,gs@proa.no,,,NOT_FOUND,No Entra ID account found,Proaktiv Lillestrøm,
+ba3ebb92-5bb5-41f0-a6f9-e12f36417307,Torill Sneve,ts@proaktiv.no,ts@proaktiv.no,ts@proaktiv.no,OK,,Proaktiv Trondheim Syd,TOSN
+3ed26fde-b2dd-47e3-920d-f40fe1e7c7bc,Marcus Solberg Røed,marcus@proaktiv.no,marcus@proaktiv.no,marcus@proaktiv.no,OK,,Proaktiv Trondheim Sentrum - Oppgjør,MARO
+557b1032-bdfa-4b39-a061-385cf6161115,Jarle Sørensen,jas@proaktiv.no,jas@proaktiv.no,jas@proaktiv.no,OK,,Proaktiv Skien - Næringsoppgjør,JASO
+3718b456-35cf-49d4-94ff-7d5dbda3918e,Julianne Sørheim,julianne@proaktiv.no,julianne@proaktiv.no,julianne@proaktiv.no,OK,,Proaktiv Ålesund,JUSO
+67d2e888-ad4f-4836-bc32-dfe9b8d9da11,Rakel Søvik,rhs@proaktiv.no,rhs@proaktiv.no,rhs@proaktiv.no,OK,,Proaktiv Voss,RASO
+ab44c120-3f3d-4807-b9c3-9be87a2cc0a1,Vibeke Stavenes,vs@proaktiv.no,vs@proaktiv.no,vs@proaktiv.no,OK,,Proaktiv Gruppen,VIST
+fddd104e-f39e-41ad-809f-b129f655b1e2,Kay Stian Espeland,kse@proaktiv.no,kse@proaktiv.no,kse@proaktiv.no,OK,,Proaktiv Stavanger,KAES
+53a35c54-6d5a-4b42-8006-45fbea4fe3b0,Tim Stormark Aamodt,timstormark.aamodt@vitecsoftware.com,,,NOT_FOUND,No Entra ID account found,Proaktiv Gruppen,VITTAAT
+8d80095f-9ce8-4196-be05-55d3bd86e830,Frida Stormyr,frida@proaktiv.no,frida@proaktiv.no,frida@proaktiv.no,OK,,Proaktiv Ålesund,FRST
+ab729023-d94d-4c0e-b52f-6ef411bd57a7,Maria Strand,maria.strand@vitecsoftware.com,,,NOT_FOUND,No Entra ID account found,Proaktiv Gruppen,VITMSTD
+9f529651-59e0-4384-944b-abc91d4490b9,Asbjørn Svaland,asbjorn@proaktiv.no,asbjorn@proaktiv.no,asbjorn@proaktiv.no,OK,,Proaktiv Kristiansand,
+072ba33e-e6e1-4c90-b283-ea0cde41fd0e,Kristin Svarstad,ks@proaktiv.no,ks@proaktiv.no,ks@proaktiv.no,OK,,Proaktiv Sandviken og Bergen Nord,KRSV
+cfa36990-962d-4262-b225-e5d7ecaf3e4e,Christian Syvertsen,christian.syvertsen@vitecsoftware.com,,,NOT_FOUND,No Entra ID account found,Proaktiv Gruppen,VITCSYN
+44b8ff21-fa83-44d4-a96b-e63b0c6af187,Justyna Szabla,justyna.szabla@proaktiv.no,justyna.szabla@proaktiv.no,justyna.szabla@proaktiv.no,OK,,Proaktiv Lørenskog,JUSZ
+3e8fa917-906a-4f86-8328-b92558932dfd,Annelin Tangen Mjølne,mjolne@proaktiv.no,mjolne@proaktiv.no,mjolne@proaktiv.no,OK,,Proaktiv Sandnes,ANMJ
+54f5b1a3-ed10-4b6d-8be8-58e3373577fa,Marius Telle Rygh,mry@proaktiv.no,mry@proaktiv.no,mry@proaktiv.no,OK,,Proaktiv Sandviken og Bergen Nord,MARY
+bb7ec980-a242-4aa0-a864-4596835f33bd,Celine Tøen Olsen,celine.olsen@proaktiv.no,celine.olsen@proaktiv.no,celine.olsen@proaktiv.no,OK,,Proaktiv Lørenskog,CEOL
+fe38f402-a887-44bb-b401-b2c8de8d38f0,Jonas Toftemo,jt@proaktiv.no,jt@proaktiv.no,jt@proaktiv.no,OK,,Proaktiv Trondheim Syd,JOTO
+51de256d-8d32-4245-befa-6f9d908a3859,Kjersti Tunestveit Dyre,ktd@proaktiv.no,ktd@proaktiv.no,ktd@proaktiv.no,OK,,Proaktiv Bergen Sentrum,KJDY
+379e427c-3030-41fc-8424-5daa341c29df,Lasse Ullereng,lu@proaktiv.no,lu@proaktiv.no,lu@proaktiv.no,OK,,Proaktiv Lillestrøm,LAUL
+8291c249-6cf3-4a91-91f2-1d120fc2d3ae,Magdalena Urbanik,mu@proaktiv.no,magdalena.urbanik@proaktiv.no,magdalena.urbanik@proaktiv.no,UPN_MISMATCH,Neither UPN (magdalena.urbanik@proaktiv.no) nor Mail (magdalena.urbanik@proaktiv.no) match DB email,Proaktiv Lillestrøm,MAUR
+4fec290e-6e8d-4f4d-b81d-34dda5c57905,Stig Valskaar,sv@proaktiv.no,sv@proaktiv.no,sv@proaktiv.no,OK,,Proaktiv Lillestrøm,STVA
+59ba4c6f-40cd-4625-b8bd-e3ef0c91c85d,Kenneth Vårvik,kv@proaktiv.no,kv@proaktiv.no,kv@proaktiv.no,OK,,Proaktiv Trondheim Syd,KEVA
+dbe8f1e9-7436-4b1d-8ea8-7fbcb2457e17,Christian Vehn Breida,christian@proaktiv.no,christian@proaktiv.no,christian@proaktiv.no,OK,,Proaktiv Trondheim Sentrum - Oppgjør,CHBR
+b5362c22-09b3-4160-bd09-ece02be1c74c,Idar Vendelborg Selsvold,idar.selsvold@vitecsoftware.com,,,NOT_FOUND,No Entra ID account found,Proaktiv Gruppen,VITIVD
+15435a4c-505d-4bf9-b733-011f2297a0b0,Veslemøy Vidvei Isaksen,vvi@proaktiv.no,vvi@proaktiv.no,vvi@proaktiv.no,OK,,Proaktiv Skien - Næringsoppgjør,
+4dd46166-0a6a-4b6d-b3a3-23591e95614d,Lisa Vinje Bakke,liba@proaktiv.no,liba@proaktiv.no,liba@proaktiv.no,OK,,Proaktiv Trondheim Sentrum - Oppgjør,LIBA
+c430169b-752f-4093-a3ef-c0b3b4a8edb0,Sirianne Voie Brochmann,svb@proaktiv.no,svb@proaktiv.no,svb@proaktiv.no,OK,,Proaktiv Voss,SIBR
+929b76b4-746f-4755-bb09-e8807ce1edcd,Karina von Mehren,karina.vonmehren@proaktiv.no,karina.vonmehren@proaktiv.no,karina.vonmehren@proaktiv.no,OK,,Proaktiv Sandviken og Bergen Nord,KAME
+135514d8-1c39-4bd2-80b3-d0ae2bed7ac2,Anders Waagan,aw@proaktiv.no,aw@proaktiv.no,aw@proaktiv.no,OK,,Proaktiv Ålesund,ANWA
+e4cfd1e9-ed7a-4576-85a9-420738d6b7e0,Karianne Westby Jensen,karianne@proaktiv.no,Karianne@proaktiv.no,Karianne@proaktiv.no,OK,,Proaktiv Sarpsborg Næringsoppgjør,KAJE
+90ef443b-606e-4676-91c7-db2f43db7078,Klaus Westersund,klaus.westersund@proaktiv.no,,,NOT_FOUND,No Entra ID account found,Proaktiv Lillestrøm,
+32039b4a-0b79-472e-a076-48d6d93867f9,Ole Westfal-Larsen,owl@proaktiv.no,owl@proaktiv.no,owl@proaktiv.no,OK,,Proaktiv Bergen Sentrum,

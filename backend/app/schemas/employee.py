@@ -46,6 +46,8 @@ class EmployeeBase(BaseModel):
     external_company: str | None = Field(
         None, max_length=200, description="Company name for external developers/consultants"
     )
+    entra_upn: str | None = Field(None, max_length=255, description="User Principal Name in Entra ID")
+    entra_upn_mismatch: bool = Field(False, description="True if Entra UPN differs from email (SSO will fail)")
     is_featured_broker: bool = Field(False, description="Whether the employee is a featured broker")
     start_date: date | None = Field(None, description="Employment start date")
     end_date: date | None = Field(None, description="Employment end date")
@@ -87,6 +89,8 @@ class EmployeeUpdate(BaseModel):
     status: EmployeeStatus | None = None
     employee_type: EmployeeType | None = None
     external_company: str | None = None
+    entra_upn: str | None = None
+    entra_upn_mismatch: bool | None = None
     is_featured_broker: bool | None = None
     start_date: date | None = None
     end_date: date | None = None

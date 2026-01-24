@@ -172,6 +172,14 @@ export function EmployeeCard({
               ))}
             </div>
 
+            {/* UPN Mismatch warning - SSO will fail */}
+            {employee.entra_upn_mismatch && (
+              <div className="flex items-center gap-1.5 mt-2 text-xs text-red-600 bg-red-50 rounded px-2 py-1">
+                <AlertTriangle className="h-3 w-3 shrink-0" />
+                <span>UPN-avvik: SSO-pålogging vil feile</span>
+              </div>
+            )}
+
             {/* Offboarding warning */}
             {employee.status === "offboarding" && employee.days_until_end !== null && (
               <div className="flex items-center gap-1.5 mt-2 text-xs text-amber-600">

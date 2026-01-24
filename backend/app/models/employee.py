@@ -42,6 +42,10 @@ class Employee(Base):
     employee_type: Mapped[str] = mapped_column(String(20), nullable=False, default="internal")
     external_company: Mapped[str | None] = mapped_column(String(200), nullable=True)
 
+    # Entra ID sync status
+    entra_upn: Mapped[str | None] = mapped_column(String(255), nullable=True)  # User Principal Name in Entra ID
+    entra_upn_mismatch: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)  # True if UPN != email
+
     # Foreign key
     office_id: Mapped[uuid.UUID] = mapped_column(GUID, ForeignKey("offices.id", ondelete="CASCADE"), nullable=False)
 

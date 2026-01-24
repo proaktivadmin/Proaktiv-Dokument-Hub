@@ -1,0 +1,15 @@
+meta {
+  name: Get Listings
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{hubBaseUrl}}/{{installationId}}/listings
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

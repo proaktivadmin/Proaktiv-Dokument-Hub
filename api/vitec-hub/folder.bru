@@ -1,0 +1,18 @@
+meta {
+  name: vitec-hub
+  seq: 2
+}
+
+auth {
+  mode: basic
+}
+
+auth:basic {
+  username: {{VITEC_HUB_PRODUCT_LOGIN}}
+  password: {{VITEC_HUB_ACCESS_KEY}}
+}
+
+vars:pre-request {
+  VITEC_HUB_PRODUCT_LOGIN: destino
+  VITEC_HUB_ACCESS_KEY: yxKKtAmBk2uVq2tHtvmHm2VbzLlTDjb5HyL6tBcqT8wYAqkqzt
+}

@@ -2,14 +2,18 @@
 Office Service - Business logic for office management.
 """
 
+import json
 import logging
 import re
+import time
 from uuid import UUID
 
 from fastapi import HTTPException
 from sqlalchemy import func, select
+from sqlalchemy import inspect as sa_inspect
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
+from sqlalchemy.orm.attributes import NO_VALUE
 
 from app.config import settings
 from app.models.employee import Employee
@@ -19,6 +23,15 @@ from app.schemas.office import OfficeCreate, OfficeUpdate, OfficeWithStats
 from app.services.vitec_hub_service import VitecHubService
 
 logger = logging.getLogger(__name__)
+DEBUG_LOG_PATH = "c:\\Users\\Adrian\\Documents\\Proaktiv-Dokument-Hub\\.cursor\\debug.log"
+
+
+def _write_debug_log(payload: dict) -> None:
+    try:
+        with open(DEBUG_LOG_PATH, "a", encoding="utf-8") as log_file:
+            log_file.write(json.dumps(payload, ensure_ascii=True) + "\n")
+    except Exception:
+        pass
 
 
 class OfficeService:
@@ -53,7 +66,7 @@ class OfficeService:
         query = select(Office).options(
             selectinload(Office.employees),
             selectinload(Office.territories),
-            selectinload(Office.sub_offices),
+            selectinload(Office.sub_offices).selectinload(Office.employees),
         )
         count_query = select(func.count()).select_from(Office)
 
@@ -97,6 +110,19 @@ class OfficeService:
         Returns:
             Office or None
         """
+        # region agent log
+        _write_debug_log(
+            {
+                "sessionId": "debug-session",
+                "runId": "pre-fix",
+                "hypothesisId": "B",
+                "location": "office_service.py:get_by_id:entry",
+                "message": "get_by_id called",
+                "data": {"office_id": str(office_id)},
+                "timestamp": int(time.time() * 1000),
+            }
+        )
+        # endregion
         result = await db.execute(
             select(Office)
             .options(
@@ -104,10 +130,54 @@ class OfficeService:
                 selectinload(Office.territories),
                 selectinload(Office.assets),
                 selectinload(Office.external_listings),
+                selectinload(Office.sub_offices).selectinload(Office.employees),
             )
             .where(Office.id == str(office_id))
         )
-        return result.scalar_one_or_none()
+        office = result.scalar_one_or_none()
+        if office:
+            sub_result = await db.execute(
+                select(Office).options(selectinload(Office.employees)).where(Office.parent_office_id == office.id)
+            )
+            office.sub_offices = list(sub_result.scalars().all())
+            # region agent log
+            _write_debug_log(
+                {
+                    "sessionId": "debug-session",
+                    "runId": "pre-fix",
+                    "hypothesisId": "A",
+                    "location": "office_service.py:get_by_id:sub_offices",
+                    "message": "explicit sub_offices load",
+                    "data": {
+                        "office_id": str(office.id),
+                        "sub_offices_count": len(office.sub_offices),
+                    },
+                    "timestamp": int(time.time() * 1000),
+                }
+            )
+            # endregion
+        state = sa_inspect(office) if office else None
+        # region agent log
+        _write_debug_log(
+            {
+                "sessionId": "debug-session",
+                "runId": "pre-fix",
+                "hypothesisId": "A",
+                "location": "office_service.py:get_by_id:result",
+                "message": "get_by_id result state",
+                "data": {
+                    "found": bool(office),
+                    "has_session": bool(state.session) if state else None,
+                    "is_detached": bool(state.detached) if state else None,
+                    "employees_loaded": (state.attrs.employees.loaded_value is not NO_VALUE if state else None),
+                    "territories_loaded": (state.attrs.territories.loaded_value is not NO_VALUE if state else None),
+                    "sub_offices_loaded": (state.attrs.sub_offices.loaded_value is not NO_VALUE if state else None),
+                },
+                "timestamp": int(time.time() * 1000),
+            }
+        )
+        # endregion
+        return office
 
     @staticmethod
     async def get_by_short_code(db: AsyncSession, short_code: str) -> Office | None:
@@ -288,13 +358,52 @@ class OfficeService:
         """
         from app.schemas.office import SubOfficeSummary
 
+        state = sa_inspect(office)
+        sub_loaded = state.attrs.sub_offices.loaded_value is not NO_VALUE
+        emp_loaded = state.attrs.employees.loaded_value is not NO_VALUE
+        terr_loaded = state.attrs.territories.loaded_value is not NO_VALUE
+        # region agent log
+        _write_debug_log(
+            {
+                "sessionId": "debug-session",
+                "runId": "pre-fix",
+                "hypothesisId": "A",
+                "location": "office_service.py:to_response_with_stats:entry",
+                "message": "to_response_with_stats entry",
+                "data": {
+                    "office_id": str(office.id),
+                    "employees_loaded": emp_loaded,
+                    "territories_loaded": terr_loaded,
+                    "sub_offices_loaded": sub_loaded,
+                },
+                "timestamp": int(time.time() * 1000),
+            }
+        )
+        # endregion
+
         employee_count = len(office.employees) if office.employees else 0
         active_count = len([e for e in (office.employees or []) if e.status == "active"])
         territory_count = len([t for t in (office.territories or []) if not t.is_blacklisted])
 
         # Build sub-offices list
         sub_offices_list = []
-        if hasattr(office, "sub_offices") and office.sub_offices:
+        # region agent log
+        _write_debug_log(
+            {
+                "sessionId": "debug-session",
+                "runId": "pre-fix",
+                "hypothesisId": "A",
+                "location": "office_service.py:to_response_with_stats:before_sub_offices",
+                "message": "before sub_offices access",
+                "data": {
+                    "office_id": str(office.id),
+                    "sub_offices_loaded": sub_loaded,
+                },
+                "timestamp": int(time.time() * 1000),
+            }
+        )
+        # endregion
+        if sub_loaded and office.sub_offices:
             for sub in office.sub_offices:
                 sub_emp_count = len(sub.employees) if sub.employees else 0
                 sub_offices_list.append(
@@ -306,6 +415,19 @@ class OfficeService:
                         is_active=sub.is_active,
                     )
                 )
+        # region agent log
+        _write_debug_log(
+            {
+                "sessionId": "debug-session",
+                "runId": "pre-fix",
+                "hypothesisId": "C",
+                "location": "office_service.py:to_response_with_stats:after_sub_offices",
+                "message": "sub_offices list built",
+                "data": {"office_id": str(office.id), "sub_offices_count": len(sub_offices_list)},
+                "timestamp": int(time.time() * 1000),
+            }
+        )
+        # endregion
 
         return OfficeWithStats(
             id=office.id,
