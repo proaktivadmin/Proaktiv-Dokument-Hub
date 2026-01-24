@@ -10,7 +10,7 @@ A document template management system for Norwegian real estate brokers, integra
 
 | Aspect | Details |
 |--------|---------|
-| **Phase** | 3.6 (Design System Enhancement) |
+| **Phase** | 3.7 (UPN Mismatch Detection) |
 | **Stack** | Next.js 16 + React 19 + FastAPI + PostgreSQL (Railway) |
 | **UI** | Shadcn/UI + Tailwind CSS 4 + Custom Design Tokens |
 | **Hosting** | Vercel (Frontend) + Railway (Backend + PostgreSQL) |
@@ -177,6 +177,14 @@ skins/                    # Vitec portal skin packages
 ## Current Status
 
 See `.planning/STATE.md` for full status.
+
+**V3.7 UPN Mismatch Detection (Completed 2026-01-24):**
+- ✅ Detect employees with Entra ID UPN different from Vitec Next email
+- ✅ `entra_upn` and `entra_upn_mismatch` fields added to Employee model
+- ✅ EmployeeCard shows red warning banner for affected employees
+- ✅ Detection scripts: `check_upn_mismatch.py` (Python), `Check-UPNMismatch.ps1` (PowerShell)
+- ✅ Scripts query Graph API, compare UPN with DB email, update flags
+- Note: Currently on QA system; flags persist until production switch
 
 **V3.6 Design System Enhancement (Completed 2026-01-23):**
 - ✅ Comprehensive design token system (shadows, transitions, colors)
@@ -382,7 +390,7 @@ docker compose exec db psql -U postgres -d dokument_hub
 ### Environment Variables (Backend)
 | Variable | Value |
 |----------|-------|
-| `DATABASE_URL` | Railway PostgreSQL connection |
+| `DATABASE_URL` | Railway PostgreSQL **public** URL (use `${{Postgres.DATABASE_PUBLIC_URL}}`) |
 | `SECRET_KEY` | Random string (32+ chars) for JWT signing |
 | `APP_PASSWORD_HASH` | bcrypt hash - enables auth when set |
 | `WEBDAV_URL` | `http://proaktiv.no/d/` |
@@ -401,6 +409,8 @@ docker compose exec db psql -U postgres -d dokument_hub
 | `SENTRY_AUTH_TOKEN` | Sentry auth token (for source map upload) |
 
 **IMPORTANT:** Do NOT set `NEXT_PUBLIC_API_URL` in production. The frontend uses relative URLs (`/api/*`) which Vercel rewrites to Railway. This keeps session cookies first-party and avoids third-party cookie blocking.
+
+**IMPORTANT:** The backend's `DATABASE_URL` must use the **public** Postgres URL (`shuttle.proxy.rlwy.net`), not the internal URL (`postgres.railway.internal`). Railway's internal networking between services can be unreliable. Set it to `${{Postgres.DATABASE_PUBLIC_URL}}` in Railway variables.
 
 ### Railway CLI (Backend)
 ```bash

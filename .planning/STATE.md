@@ -12,12 +12,12 @@ See: .planning/PROJECT.md (updated 2026-01-23)
 
 ## Current Position
 
-Phase: 3.6 (Design System Enhancement)
-Plan: V3.6 complete
+Phase: 3.7 (UPN Mismatch Detection)
+Plan: V3.7 complete
 Status: Production live
-Last activity: 2026-01-23 — Design system enhancement, comprehensive UI polish
+Last activity: 2026-01-24 — UPN mismatch detection for Entra ID SSO
 
-Progress: [█████████░] 95% (V3.6 design complete, Phase 06 ready for testing)
+Progress: [█████████░] 95% (V3.7 UPN detection complete, Phase 06 ready for testing)
 
 ## Performance Metrics
 
@@ -68,12 +68,34 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-01-23
-Stopped at: V3.6 Design System Enhancement complete
+Last session: 2026-01-24
+Stopped at: V3.7 UPN Mismatch Detection complete
 Resume file: None (ready for new work)
 Next step: Continue with Phase 06 Entra ID testing OR Phase 07 Office Enhancements
 
-### Session Summary (2026-01-23 - Latest)
+### Session Summary (2026-01-24 - Latest)
+**V3.7 UPN Mismatch Detection:**
+
+1. **Problem Identified:**
+   - Employees with Entra ID UPN different from Vitec Next email fail SSO login
+   - Validation error occurs when UPN != email in Vitec Next
+
+2. **Solution Implemented:**
+   - Added `entra_upn` field to Employee model (stores Entra UPN)
+   - Added `entra_upn_mismatch` boolean flag (true when UPN != email)
+   - Database migration: `20260124_0001_add_entra_upn_fields.py`
+   - Frontend EmployeeCard shows red warning for affected employees
+
+3. **Detection Scripts:**
+   - `backend/scripts/check_upn_mismatch.py` - Python script
+   - `backend/scripts/Check-UPNMismatch.ps1` - PowerShell alternative
+   - Scripts query Entra ID via Graph API, compare with DB, update flags
+
+4. **Note:**
+   - Connected to QA system, not production
+   - Flagged employees persist until production switch
+
+### Previous Session (2026-01-23)
 **V3.6 Design System Enhancement:**
 
 1. **Design Token System:**
@@ -133,6 +155,7 @@ Next step: Continue with Phase 06 Entra ID testing OR Phase 07 Office Enhancemen
 
 | Version | Date | Key Changes |
 |---------|------|-------------|
+| V3.7 | 2026-01-24 | UPN mismatch detection for Entra ID SSO |
 | V3.6 | 2026-01-23 | Design system enhancement, UI polish |
 | V3.5 | 2026-01-23 | Navigation reorganization, Logo Library |
 | V3.4 | 2026-01-23 | Portal skins preview |
