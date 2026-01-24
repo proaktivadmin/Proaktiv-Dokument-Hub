@@ -12,12 +12,12 @@ See: .planning/PROJECT.md (updated 2026-01-23)
 
 ## Current Position
 
-Phase: 3.7 (UPN Mismatch Detection)
-Plan: V3.7 complete
-Status: Production live
-Last activity: 2026-01-24 — UPN mismatch detection for Entra ID SSO
+Phase: 3.9 (Self-Service Signature Portal)
+Plan: V3.9 complete
+Status: Deployed to production
+Last activity: 2026-01-24 — signature portal commit and push
 
-Progress: [█████████░] 95% (V3.7 UPN detection complete, Phase 06 ready for testing)
+Progress: [██████████] 100% (V3.9 signature portal complete)
 
 ## Performance Metrics
 
@@ -69,11 +69,33 @@ None.
 ## Session Continuity
 
 Last session: 2026-01-24
-Stopped at: V3.7 UPN Mismatch Detection complete
+Stopped at: V3.9 Self-Service Signature Portal complete
 Resume file: None (ready for new work)
-Next step: Continue with Phase 06 Entra ID testing OR Phase 07 Office Enhancements
+Next step: Deploy signature emails to employees, test roaming signatures, or continue with Phase 07
 
 ### Session Summary (2026-01-24 - Latest)
+**V3.9 Self-Service Signature Portal (Completed 2026-01-24):**
+- ✅ Backend SignatureService renders personalized HTML signatures (with-photo/no-photo)
+- ✅ Backend GraphService sends notification emails via Microsoft Graph API
+- ✅ GET /api/signatures/{id} endpoint (public, returns HTML/text)
+- ✅ POST /api/signatures/{id}/send endpoint (sends signature link email)
+- ✅ Frontend SignaturePreview component on employee detail page (Signatur tab)
+- ✅ Public /signature/{id} page for employees to copy signatures
+- ✅ Copy-to-clipboard with HTML formatting for email clients
+- ✅ Instructions accordion for Outlook, Gmail, Apple Mail
+- ✅ PowerShell bulk sender script (Send-SignatureEmails.ps1)
+- Plans: `.planning/phases/09-signature-portal/`
+- Commit: `4241eb8`
+
+**V3.8 Sync Notification System (Completed 2026-01-24):**
+- ✅ Notification bell dropdown in header
+- ✅ Unread count badge with polling (30s)
+- ✅ Notification types: employee/office added/updated/removed, UPN mismatch, sync error
+- ✅ Click to navigate to related entity
+- ✅ Mark as read, mark all read, clear all actions
+- ✅ Integration with employee and office sync services
+- Plans: `.planning/phases/08-sync-notifications/`
+
 **V3.7 UPN Mismatch Detection:**
 
 1. **Problem Identified:**
@@ -155,6 +177,8 @@ Next step: Continue with Phase 06 Entra ID testing OR Phase 07 Office Enhancemen
 
 | Version | Date | Key Changes |
 |---------|------|-------------|
+| V3.9 | 2026-01-24 | Self-service signature portal with 6-agent pipeline |
+| V3.8 | 2026-01-24 | Sync notification system + QA tests |
 | V3.7 | 2026-01-24 | UPN mismatch detection for Entra ID SSO |
 | V3.6 | 2026-01-23 | Design system enhancement, UI polish |
 | V3.5 | 2026-01-23 | Navigation reorganization, Logo Library |
@@ -167,12 +191,18 @@ Next step: Continue with Phase 06 Entra ID testing OR Phase 07 Office Enhancemen
 
 ## Ready for Next Steps
 
-### Option A: Phase 06 Testing (Entra ID Sync)
+### Option A: Deploy Signature Emails
+- Set environment variables (SIGNATURE_SENDER_EMAIL, FRONTEND_URL)
+- Add Mail.Send permission in Azure Portal
+- Run `.\backend\scripts\Send-SignatureEmails.ps1 -DryRun` to test
+- Run `.\backend\scripts\Send-SignatureEmails.ps1` for full rollout
+
+### Option B: Phase 06 Testing (Entra ID Sync)
 - Run `/entra-qa` command
 - Test with real Azure credentials
 - Verify profile, photo, and signature sync
 
-### Option B: Phase 07 (Office Enhancements)
+### Option C: Phase 07 (Office Enhancements)
 - 8 execution plans ready
 - Region grouping, office merge, SalesScreen
 - Can run in parallel with Phase 06 testing

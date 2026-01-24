@@ -10,7 +10,7 @@ A document template management system for Norwegian real estate brokers, integra
 
 | Aspect | Details |
 |--------|---------|
-| **Phase** | 3.7 (UPN Mismatch Detection) |
+| **Phase** | 3.9 (Self-Service Signature Portal) |
 | **Stack** | Next.js 16 + React 19 + FastAPI + PostgreSQL (Railway) |
 | **UI** | Shadcn/UI + Tailwind CSS 4 + Custom Design Tokens |
 | **Hosting** | Vercel (Frontend) + Railway (Backend + PostgreSQL) |
@@ -195,6 +195,24 @@ Railway's internal networking causes Alembic migrations to fail silently during 
 ## Current Status
 
 See `.planning/STATE.md` for full status.
+
+**V3.9 Self-Service Signature Portal (Completed 2026-01-24):**
+- ✅ Backend SignatureService renders personalized HTML signatures (with-photo/no-photo)
+- ✅ Backend GraphService sends notification emails via Microsoft Graph API
+- ✅ GET /api/signatures/{id} endpoint (public, returns HTML/text)
+- ✅ POST /api/signatures/{id}/send endpoint (sends signature link email)
+- ✅ Frontend SignaturePreview component on employee detail page (Signatur tab)
+- ✅ Public /signature/{id} page for employees to copy signatures
+- ✅ Copy-to-clipboard with HTML formatting for email clients
+- ✅ PowerShell bulk sender: `Send-SignatureEmails.ps1` (supports -DryRun, -FilterEmails)
+- Built using 6-agent pipeline (see `.planning/codebase/AGENT-PIPELINE.md`)
+- Plans: `.planning/phases/09-signature-portal/`
+
+**V3.8 Sync Notification System (Completed 2026-01-24):**
+- ✅ Notification bell dropdown in header with unread count badge
+- ✅ Notification types: employee/office added/updated/removed, UPN mismatch, sync error
+- ✅ Click to navigate, mark as read, clear all actions
+- Plans: `.planning/phases/08-sync-notifications/`
 
 **V3.7 UPN Mismatch Detection (Completed 2026-01-24):**
 - ✅ Detect employees with Entra ID UPN different from Vitec Next email
