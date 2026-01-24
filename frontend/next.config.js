@@ -8,7 +8,7 @@ const isDev = process.env.NODE_ENV === 'development';
 // Note: Frontend is on Vercel, backend remains on Railway
 const backendUrl = (process.env.BACKEND_URL 
   || process.env.NEXT_PUBLIC_API_URL 
-  || (isDev ? 'http://localhost:8000' : 'https://proaktiv-dokument-hub-production.up.railway.app')
+  || (isDev ? 'http://localhost:8000' : 'https://proaktiv-admin.up.railway.app')
 ).replace(/\/+$/, '');
 
 /**
@@ -51,7 +51,7 @@ const nextConfig = {
             process.env.BACKEND_URL ||
             process.env.NEXT_PUBLIC_API_URL ||
             (process.env.NODE_ENV === "production"
-              ? "https://proaktiv-dokument-hub-production.up.railway.app"
+              ? "https://proaktiv-admin.up.railway.app"
               : "http://localhost:8000");
 
           const normalizedBackendUrl = backendUrl.replace(/\/+$/, "");

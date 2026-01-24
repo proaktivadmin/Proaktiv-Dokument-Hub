@@ -332,9 +332,12 @@ Session = sessionmaker(bind=engine)
 db = Session()
 
 try:
+    # Only sync internal, active employees with email
+    # External contractors and system accounts are excluded from Entra ID sync
     query = db.query(Employee).join(Office).filter(
         Employee.status == 'active',
-        Employee.email.isnot(None)
+        Employee.email.isnot(None),
+        Employee.employee_type == 'internal'  # Exclude external/system accounts
     )
     
     filter_email = sys.argv[1] if len(sys.argv) > 1 and sys.argv[1] else None
@@ -345,6 +348,12 @@ try:
     
     result = []
     for e in employees:
+        # Office data extraction
+        office = e.office
+        office_org_number = office.organization_number if office else None
+        office_legal = office.legal_name if office else None
+        office_marketing = office.name if office else None
+        
         result.append({
             'id': str(e.id),
             'email': e.email,
@@ -353,12 +362,14 @@ try:
             'title': e.title,
             'phone': e.phone,
             'profile_image_url': e.profile_image_url,
-            'office_name': e.office.name if e.office else None,
-            'office_city': e.office.city if e.office else None,
-            'office_street': e.office.street_address if e.office else None,
-            'office_postal': e.office.postal_code if e.office else None,
-            'office_phone': e.office.phone if e.office else None,
-            'office_email': e.office.email if e.office else None,
+            'office_name': office_marketing,
+            'office_legal_name': office_legal,
+            'office_organization_number': office_org_number,
+            'office_city': office.city if office else None,
+            'office_street': office.street_address if office else None,
+            'office_postal': office.postal_code if office else None,
+            'office_phone': office.phone if office else None,
+            'office_email': office.email if office else None,
         })
     
     print(json.dumps(result))
@@ -499,10 +510,13 @@ function Sync-UserProfile {
             $changes += "mobilePhone: '$($currentUser.MobilePhone)' -> '$($Employee.phone)'"
         }
         
-        # Department (office name)
-        if ($Employee.office_name -and $currentUser.Department -ne $Employee.office_name) {
-            $updates["department"] = $Employee.office_name
-            $changes += "department: '$($currentUser.Department)' -> '$($Employee.office_name)'"
+        # Department (use legal name if available, otherwise marketing name)
+        # Organization number is the matching key between Vitec Next and Entra ID
+        $departmentValue = if ($Employee.office_legal_name) { $Employee.office_legal_name } else { $Employee.office_name }
+        if ($departmentValue -and $currentUser.Department -ne $departmentValue) {
+            $updates["department"] = $departmentValue
+            $orgNum = if ($Employee.office_organization_number) { " (org: $($Employee.office_organization_number))" } else { "" }
+            $changes += "department: '$($currentUser.Department)' -> '$departmentValue'$orgNum"
         }
         
         # Office location (city)
@@ -914,7 +928,7 @@ try {
 
     # Get employees from database
     Write-Log "Retrieving employees from database..."
-    $employees = Get-EmployeesFromDatabase -FilterEmail $FilterEmail
+    $employees = @(Get-EmployeesFromDatabase -FilterEmail $FilterEmail)
     Write-Log "Found $($employees.Count) active employees"
 
     if ($employees.Count -eq 0) {

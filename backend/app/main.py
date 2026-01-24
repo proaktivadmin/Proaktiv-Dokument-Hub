@@ -104,6 +104,7 @@ default_origins = [
     # Railway URLs
     "https://blissful-quietude-production.up.railway.app",
     "https://proaktiv-dokument-hub-production.up.railway.app",
+    "https://proaktiv-admin.up.railway.app",
     # Vercel URLs
     "https://proaktiv-dokument-hub.vercel.app",
 ]

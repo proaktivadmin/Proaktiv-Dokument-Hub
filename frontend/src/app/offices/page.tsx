@@ -12,7 +12,8 @@ import type { OfficeWithStats } from "@/types/v3";
 
 export default function OfficesPage() {
   const router = useRouter();
-  const { offices, cities, isLoading, refetch } = useOffices();
+  // Exclude sub-offices from main list - they appear under their parent
+  const { offices, cities, isLoading, refetch } = useOffices({ include_sub: false });
   const { toast } = useToast();
   const [formOpen, setFormOpen] = useState(false);
   const [editingOffice, setEditingOffice] = useState<OfficeWithStats | null>(null);

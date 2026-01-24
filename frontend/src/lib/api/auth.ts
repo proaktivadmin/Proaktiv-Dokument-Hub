@@ -2,34 +2,20 @@
  * Auth API Client
  * 
  * Handles authentication with the backend.
- * Always uses the full backend URL for cross-origin cookie handling.
+ * Uses relative URLs (/api/*) so Vercel rewrites them to Railway,
+ * making session cookies first-party (same origin).
  */
 
 import axios from "axios";
-import { getApiBaseUrl } from "./config";
-
-// Railway backend URL - must use full URL for cross-origin cookies
-const BACKEND_URL = "https://proaktiv-dokument-hub-production.up.railway.app";
 
 // Create axios instance with credentials enabled
+// Using relative URLs so Vercel's rewrite handles routing to Railway
+// This makes cookies first-party, avoiding third-party cookie blocking
 const authClient = axios.create({
   withCredentials: true, // Required for cookies
   headers: {
     "Content-Type": "application/json",
   },
-});
-
-// Add request interceptor to set base URL dynamically
-// For auth, we ALWAYS use the full backend URL to ensure cookies work cross-origin
-authClient.interceptors.request.use((config) => {
-  if (config.url && !config.url.startsWith('http')) {
-    // Use getApiBaseUrl for local dev, hardcoded for production reliability
-    const baseUrl = typeof window !== 'undefined' && window.location.hostname === 'localhost'
-      ? getApiBaseUrl()
-      : BACKEND_URL;
-    config.url = `${baseUrl}${config.url}`;
-  }
-  return config;
 });
 
 export interface AuthStatus {

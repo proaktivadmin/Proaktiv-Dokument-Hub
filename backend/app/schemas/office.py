@@ -22,6 +22,8 @@ class OfficeBase(BaseModel):
         None, max_length=20, description="Norwegian organization number (organisasjonsnummer)"
     )
     vitec_department_id: int | None = Field(None, description="Vitec Hub departmentId")
+    office_type: str = Field("main", description="Office type: main, sub, or regional")
+    parent_office_id: UUID | None = Field(None, description="Parent office ID for sub-departments")
     email: str | None = Field(None, max_length=255, description="Office email")
     phone: str | None = Field(None, max_length=50, description="Office phone")
     street_address: str | None = Field(None, max_length=255, description="Street address")
@@ -91,12 +93,26 @@ class OfficeResponse(OfficeBase):
         from_attributes = True
 
 
+class SubOfficeSummary(BaseModel):
+    """Simplified schema for sub-offices in parent response."""
+
+    id: UUID
+    name: str
+    short_code: str
+    employee_count: int = 0
+    is_active: bool = True
+
+    class Config:
+        from_attributes = True
+
+
 class OfficeWithStats(OfficeResponse):
     """Schema for office with computed statistics."""
 
     employee_count: int = Field(0, description="Total employees at this office")
     active_employee_count: int = Field(0, description="Active employees at this office")
     territory_count: int = Field(0, description="Number of postal codes covered")
+    sub_offices: list[SubOfficeSummary] = Field(default_factory=list, description="Sub-departments")
 
     class Config:
         from_attributes = True

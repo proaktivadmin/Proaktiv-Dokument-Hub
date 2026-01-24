@@ -30,6 +30,8 @@ class OfficeService:
         *,
         city: str | None = None,
         is_active: bool | None = None,
+        office_type: str | None = None,
+        include_sub: bool = True,
         skip: int = 0,
         limit: int = 100,
     ) -> tuple[list[Office], int]:
@@ -40,13 +42,19 @@ class OfficeService:
             db: Database session
             city: Filter by city
             is_active: Filter by active status
+            office_type: Filter by office type ('main', 'sub', 'regional')
+            include_sub: If False, exclude sub-offices from the list
             skip: Offset for pagination
             limit: Max results
 
         Returns:
             Tuple of (offices, total_count)
         """
-        query = select(Office).options(selectinload(Office.employees), selectinload(Office.territories))
+        query = select(Office).options(
+            selectinload(Office.employees),
+            selectinload(Office.territories),
+            selectinload(Office.sub_offices),
+        )
         count_query = select(func.count()).select_from(Office)
 
         # Apply filters
@@ -57,6 +65,14 @@ class OfficeService:
         if is_active is not None:
             query = query.where(Office.is_active == is_active)
             count_query = count_query.where(Office.is_active == is_active)
+
+        if office_type:
+            query = query.where(Office.office_type == office_type)
+            count_query = count_query.where(Office.office_type == office_type)
+        elif not include_sub:
+            # Exclude sub-offices (show only main and regional)
+            query = query.where(Office.office_type != "sub")
+            count_query = count_query.where(Office.office_type != "sub")
 
         # Execute count
         count_result = await db.execute(count_query)
@@ -270,9 +286,26 @@ class OfficeService:
         Returns:
             OfficeWithStats schema
         """
+        from app.schemas.office import SubOfficeSummary
+
         employee_count = len(office.employees) if office.employees else 0
         active_count = len([e for e in (office.employees or []) if e.status == "active"])
         territory_count = len([t for t in (office.territories or []) if not t.is_blacklisted])
+
+        # Build sub-offices list
+        sub_offices_list = []
+        if hasattr(office, "sub_offices") and office.sub_offices:
+            for sub in office.sub_offices:
+                sub_emp_count = len(sub.employees) if sub.employees else 0
+                sub_offices_list.append(
+                    SubOfficeSummary(
+                        id=sub.id,
+                        name=sub.name,
+                        short_code=sub.short_code,
+                        employee_count=sub_emp_count,
+                        is_active=sub.is_active,
+                    )
+                )
 
         return OfficeWithStats(
             id=office.id,
@@ -281,6 +314,8 @@ class OfficeService:
             short_code=office.short_code,
             organization_number=office.organization_number,
             vitec_department_id=office.vitec_department_id,
+            office_type=office.office_type,
+            parent_office_id=office.parent_office_id,
             email=office.email,
             phone=office.phone,
             street_address=office.street_address,
@@ -301,6 +336,7 @@ class OfficeService:
             employee_count=employee_count,
             active_employee_count=active_count,
             territory_count=territory_count,
+            sub_offices=sub_offices_list,
         )
 
     # =============================================================================
@@ -338,8 +374,12 @@ class OfficeService:
         display_name = market_name or OfficeService._normalize_text(raw.get("name")) or legal_name or fallback_name
 
         # Organization number for matching/merging (Norwegian: organisasjonsnummer)
+        # Note: Vitec Hub uses British spelling "organisationNumber"
         org_number = OfficeService._normalize_text(
-            raw.get("organizationNumber") or raw.get("orgNumber") or raw.get("orgnr")
+            raw.get("organisationNumber")  # Vitec Hub (British spelling)
+            or raw.get("organizationNumber")  # American spelling fallback
+            or raw.get("orgNumber")
+            or raw.get("orgnr")
         )
 
         # Image URLs

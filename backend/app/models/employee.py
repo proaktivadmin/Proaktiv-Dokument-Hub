@@ -38,6 +38,10 @@ class Employee(Base):
     # Vitec Hub identifiers
     vitec_employee_id: Mapped[str | None] = mapped_column(String(100), nullable=True)
 
+    # Employee type: 'internal' (default), 'external' (contractors), 'system' (service accounts)
+    employee_type: Mapped[str] = mapped_column(String(20), nullable=False, default="internal")
+    external_company: Mapped[str | None] = mapped_column(String(200), nullable=True)
+
     # Foreign key
     office_id: Mapped[uuid.UUID] = mapped_column(GUID, ForeignKey("offices.id", ondelete="CASCADE"), nullable=False)
 
@@ -114,6 +118,7 @@ class Employee(Base):
         Index("idx_employees_status", "status"),
         Index("idx_employees_email", "email"),
         Index("idx_employees_vitec_employee_id", "vitec_employee_id"),
+        Index("idx_employees_employee_type", "employee_type"),
     )
 
     def __repr__(self) -> str:
@@ -159,3 +164,22 @@ class Employee(Base):
         if not self.system_roles:
             return False
         return role.lower() in [r.lower() for r in self.system_roles]
+
+    @property
+    def is_external(self) -> bool:
+        """Check if employee is an external contractor."""
+        return self.employee_type == "external"
+
+    @property
+    def is_internal(self) -> bool:
+        """Check if employee is an internal Proaktiv employee."""
+        return self.employee_type == "internal"
+
+    @property
+    def should_sync_to_entra(self) -> bool:
+        """Check if employee should be synced to Entra ID.
+
+        Only internal, active employees should be synced.
+        External contractors and system accounts are excluded.
+        """
+        return self.is_internal and self.status == "active"

@@ -8,7 +8,7 @@ import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Boolean, DateTime, Index, Integer, String, Text
+from sqlalchemy import Boolean, DateTime, ForeignKey, Index, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
@@ -40,6 +40,12 @@ class Office(Base):
     short_code: Mapped[str] = mapped_column(String(10), nullable=False, unique=True)
     organization_number: Mapped[str | None] = mapped_column(String(20), nullable=True)
     vitec_department_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+
+    # Office hierarchy: 'main' (top-level), 'sub' (sub-department), 'regional' (regional grouping)
+    office_type: Mapped[str] = mapped_column(String(20), nullable=False, default="main")
+    parent_office_id: Mapped[uuid.UUID | None] = mapped_column(
+        GUID, ForeignKey("offices.id", ondelete="SET NULL"), nullable=True
+    )
 
     # Contact
     email: Mapped[str | None] = mapped_column(String(255), nullable=True)
@@ -83,6 +89,19 @@ class Office(Base):
         "Employee", back_populates="office", cascade="all, delete-orphan", lazy="selectin"
     )
 
+    # Parent-child office hierarchy (for sub-departments like Næring, Næringsoppgjør)
+    parent_office: Mapped["Office | None"] = relationship(
+        "Office",
+        back_populates="sub_offices",
+        remote_side="Office.id",
+        lazy="selectin",
+    )
+    sub_offices: Mapped[list["Office"]] = relationship(
+        "Office",
+        back_populates="parent_office",
+        lazy="selectin",
+    )
+
     assets: Mapped[list["CompanyAsset"]] = relationship(
         "CompanyAsset",
         back_populates="office",
@@ -109,6 +128,8 @@ class Office(Base):
         Index("idx_offices_is_active", "is_active"),
         Index("idx_offices_vitec_department_id", "vitec_department_id"),
         Index("idx_offices_organization_number", "organization_number"),
+        Index("idx_offices_parent_office_id", "parent_office_id"),
+        Index("idx_offices_office_type", "office_type"),
     )
 
     def __repr__(self) -> str:
@@ -137,3 +158,18 @@ class Office(Base):
         if not self.employees:
             return 0
         return len([e for e in self.employees if e.status == "active"])
+
+    @property
+    def is_main_office(self) -> bool:
+        """Check if this is a main (top-level) office."""
+        return self.office_type == "main"
+
+    @property
+    def is_sub_office(self) -> bool:
+        """Check if this is a sub-department."""
+        return self.office_type == "sub"
+
+    @property
+    def has_sub_offices(self) -> bool:
+        """Check if this office has sub-departments."""
+        return bool(self.sub_offices)

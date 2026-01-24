@@ -1,0 +1,15 @@
+2026-01-23T21:18:03.2254204+01:00 | INFO  | Script started
+2026-01-23T21:18:03.2568316+01:00 | INFO  | Parameters: {"DryRun":{"IsPresent":true},"Organization":"proaktiv.onmicrosoft.com","ClientId":"24a035cc-10da-41e2-a6e6-47e18d375151","FilterEmail":"froyland@proaktiv.no","TenantId":"3ab32277-d1e6-4acf-858b-665156ffa3c5","ClientSecret":"***REDACTED***","SkipSignature":{"IsPresent":true}}
+2026-01-23T21:18:03.2590706+01:00 | INFO  | Checking dependencies...
+2026-01-23T21:18:03.3787605+01:00 | DEBUG | Python: Python 3.12.10
+2026-01-23T21:18:03.3803158+01:00 | INFO  | Dependencies OK
+2026-01-23T21:18:03.3813153+01:00 | INFO  | Connecting to Microsoft Graph...
+2026-01-23T21:18:04.4347377+01:00 | INFO  | Microsoft Graph connected
+2026-01-23T21:18:04.4372612+01:00 | INFO  | Retrieving employees from database...
+2026-01-23T21:18:05.0317153+01:00 | INFO  | Found 1 active employees
+2026-01-23T21:18:05.0397340+01:00 | INFO  |   Finding user in Entra ID...
+2026-01-23T21:18:07.3256062+01:00 | INFO  |   Found: 51486e76-5cca-4bd0-b3c7-4187410723ed
+2026-01-23T21:18:07.4460036+01:00 | INFO  |   [DRY RUN] Would update profile:
+2026-01-23T21:18:07.4482913+01:00 | INFO  |     - officeLocation: 'Sandnes' -> 'Bergen'
+2026-01-23T21:18:07.4492904+01:00 | INFO  |     - country: 'Norway' -> 'NO'
+2026-01-23T21:18:07.7078118+01:00 | INFO  | Sync completed successfully

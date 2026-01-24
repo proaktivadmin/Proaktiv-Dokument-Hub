@@ -24,6 +24,8 @@ router = APIRouter(prefix="/offices", tags=["Offices"])
 async def list_offices(
     city: str | None = Query(None, description="Filter by city"),
     is_active: bool | None = Query(None, description="Filter by active status"),
+    office_type: str | None = Query(None, description="Filter by type (main, sub, regional)"),
+    include_sub: bool = Query(True, description="Include sub-offices in list"),
     skip: int = Query(0, ge=0, description="Offset for pagination"),
     limit: int = Query(100, ge=1, le=500, description="Max results"),
     db: AsyncSession = Depends(get_db),
@@ -32,11 +34,14 @@ async def list_offices(
     List all offices with optional filtering.
 
     Returns offices with computed statistics (employee counts, territory count).
+    Set include_sub=false to hide sub-departments from the list.
     """
     offices, total = await OfficeService.list(
         db,
         city=city,
         is_active=is_active,
+        office_type=office_type,
+        include_sub=include_sub,
         skip=skip,
         limit=limit,
     )

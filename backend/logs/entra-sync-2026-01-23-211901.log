@@ -1,0 +1,12 @@
+2026-01-23T21:19:01.7651590+01:00 | INFO  | Script started
+2026-01-23T21:19:01.7886410+01:00 | INFO  | Parameters: {"ClientSecret":"***REDACTED***","ClientId":"24a035cc-10da-41e2-a6e6-47e18d375151","Organization":"proaktiv.onmicrosoft.com","TenantId":"3ab32277-d1e6-4acf-858b-665156ffa3c5","FilterEmail":"froyland@proaktiv.no","DryRun":{"IsPresent":true}}
+2026-01-23T21:19:01.7966709+01:00 | INFO  | Checking dependencies...
+2026-01-23T21:19:01.9633999+01:00 | DEBUG | Python: Python 3.12.10
+2026-01-23T21:19:01.9703278+01:00 | INFO  | Dependencies OK
+2026-01-23T21:19:01.9765511+01:00 | INFO  | Connecting to Microsoft Graph...
+2026-01-23T21:19:02.8326653+01:00 | INFO  | Microsoft Graph connected
+2026-01-23T21:19:02.8400445+01:00 | INFO  | Connecting to Exchange Online...
+2026-01-23T21:19:03.8285055+01:00 | ERROR | Fatal error: A window handle must be configured. See https://aka.ms/msal-net-wam#parent-window-handles
+2026-01-23T21:19:03.8360477+01:00 | ERROR | Stack trace: at Connect-ExchangeOnline<Process>, C:\Users\Adrian\Documents\PowerShell\Modules\ExchangeOnlineManagement\3.9.2\netCore\ExchangeOnlineManagement.psm1: line 591
+at <ScriptBlock>, C:\Users\Adrian\Documents\Proaktiv-Dokument-Hub\backend\scripts\Sync-EntraIdEmployees.ps1: line 910
+at <ScriptBlock>, <No file>: line 7

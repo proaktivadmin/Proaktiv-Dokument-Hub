@@ -1,0 +1,20 @@
+2026-01-22T23:39:46.7091226+01:00 | INFO  | Script started
+2026-01-22T23:39:46.7229306+01:00 | INFO  | Parameters: {"ClientId":"24a035cc-10da-41e2-a6e6-47e18d375151","Organization":"proaktiv.onmicrosoft.com","ClientSecret":"***REDACTED***","FilterEmail":"froyland@proaktiv.no","DryRun":{"IsPresent":true},"SkipSignature":{"IsPresent":true},"Force":{"IsPresent":true},"TenantId":"3ab32277-d1e6-4acf-858b-665156ffa3c5"}
+2026-01-22T23:39:46.7310631+01:00 | INFO  | Checking dependencies...
+2026-01-22T23:39:46.8296645+01:00 | DEBUG | Python: Python 3.12.10
+2026-01-22T23:39:46.8377059+01:00 | INFO  | Dependencies OK
+2026-01-22T23:39:46.8445678+01:00 | INFO  | Connecting to Microsoft Graph...
+2026-01-22T23:39:47.6574531+01:00 | INFO  | Microsoft Graph connected
+2026-01-22T23:39:47.6698047+01:00 | INFO  | Retrieving employees from database...
+2026-01-22T23:39:48.3320982+01:00 | INFO  | Found 1 active employees
+2026-01-22T23:39:48.3485578+01:00 | INFO  |   Finding user in Entra ID...
+2026-01-22T23:39:49.9390460+01:00 | INFO  |   Found: 51486e76-5cca-4bd0-b3c7-4187410723ed
+2026-01-22T23:39:50.0434881+01:00 | INFO  |   [DRY RUN] Would update profile:
+2026-01-22T23:39:50.0520255+01:00 | INFO  |     - jobTitle: 'IT & IKT Ansvarlig' -> 'IT- & IKT Ansvarlig'
+2026-01-22T23:39:50.0607926+01:00 | INFO  |     - mobilePhone: '+4746747509' -> '46 74 75 09'
+2026-01-22T23:39:50.0680955+01:00 | INFO  |     - officeLocation: 'Sandnes' -> 'Bergen'
+2026-01-22T23:39:50.0785802+01:00 | INFO  |     - country: 'Norway' -> 'NO'
+2026-01-22T23:39:50.2928420+01:00 | ERROR | Fatal error: The property 'Count' cannot be found on this object. Verify that the property exists.
+2026-01-22T23:39:50.3012193+01:00 | ERROR | Stack trace: at Format-SummaryReport, C:\Users\Adrian\Documents\Proaktiv-Dokument-Hub\backend\scripts\Sync-EntraIdEmployees.ps1: line 806
+at <ScriptBlock>, C:\Users\Adrian\Documents\Proaktiv-Dokument-Hub\backend\scripts\Sync-EntraIdEmployees.ps1: line 1017
+at <ScriptBlock>, C:\Users\Adrian\Documents\Proaktiv-Dokument-Hub\backend\scripts\run-entra-test.ps1: line 29
