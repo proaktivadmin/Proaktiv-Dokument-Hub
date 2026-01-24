@@ -3,7 +3,7 @@ REM ============================================================================
 REM Entra ID Employee Sync - Windows Launcher
 REM 
 REM Syncs employee data from PostgreSQL to Microsoft Entra ID and Exchange Online.
-REM Run with -DryRun first to preview changes!
+REM Read-only audit mode by default. Writes are forbidden unless explicitly unlocked.
 REM
 REM Prerequisites:
 REM   - PowerShell 7+ (pwsh)
@@ -16,12 +16,14 @@ REM   - ENTRA_TENANT_ID: Azure AD tenant ID
 REM   - ENTRA_CLIENT_ID: App registration client ID
 REM   - ENTRA_CLIENT_SECRET: App registration secret (or use certificate)
 REM   - ENTRA_ORGANIZATION: Microsoft 365 organization (e.g., proaktiv.onmicrosoft.com)
+REM   - ENTRA_ALLOW_WRITES: Set to "true" ONLY when write mode is approved
 REM   - DATABASE_URL: PostgreSQL connection string (optional, uses backend/.env if not set)
 REM
 REM Usage:
-REM   run-entra-sync.bat                     - Interactive mode (prompts for parameters)
-REM   run-entra-sync.bat --dry-run           - Dry run with env vars
-REM   run-entra-sync.bat --filter ola@x.com  - Single user test
+REM   run-entra-sync.bat                     - Read-only audit (default)
+REM   run-entra-sync.bat --dry-run           - Explicit read-only (same behavior)
+REM   run-entra-sync.bat --filter ola@x.com  - Single user audit
+REM   run-entra-sync.bat --allow-writes      - BLOCKED by policy unless approved
 REM ============================================================================
 
 setlocal enabledelayedexpansion
@@ -48,6 +50,7 @@ set FILTER_EMAIL=
 set SKIP_PROFILE=
 set SKIP_PHOTO=
 set SKIP_SIGNATURE=
+set ALLOW_WRITES=
 
 :parse_args
 if "%~1"=="" goto :done_parsing
@@ -77,6 +80,11 @@ if /i "%~1"=="--skip-signature" (
     shift
     goto :parse_args
 )
+if /i "%~1"=="--allow-writes" (
+    set ALLOW_WRITES=-AllowWrites
+    shift
+    goto :parse_args
+)
 shift
 goto :parse_args
 
@@ -103,7 +111,7 @@ if defined ENTRA_TENANT_ID set PS_ARGS=!PS_ARGS! -TenantId "%ENTRA_TENANT_ID%"
 if defined ENTRA_CLIENT_ID set PS_ARGS=!PS_ARGS! -ClientId "%ENTRA_CLIENT_ID%"
 if defined ENTRA_ORGANIZATION set PS_ARGS=!PS_ARGS! -Organization "%ENTRA_ORGANIZATION%"
 if defined ENTRA_CERT_THUMBPRINT set PS_ARGS=!PS_ARGS! -CertificateThumbprint "%ENTRA_CERT_THUMBPRINT%"
-set PS_ARGS=!PS_ARGS! %DRY_RUN% %FILTER_EMAIL% %SKIP_PROFILE% %SKIP_PHOTO% %SKIP_SIGNATURE%
+set PS_ARGS=!PS_ARGS! %DRY_RUN% %FILTER_EMAIL% %SKIP_PROFILE% %SKIP_PHOTO% %SKIP_SIGNATURE% %ALLOW_WRITES%
 
 REM Execute PowerShell script
 pwsh -ExecutionPolicy Bypass -File "%~dp0backend\scripts\Sync-EntraIdEmployees.ps1" !PS_ARGS!

@@ -97,6 +97,21 @@ export interface Employee {
   external_company: string | null; // Company name for external developers/consultants
   entra_upn: string | null; // User Principal Name in Entra ID
   entra_upn_mismatch: boolean; // True if Entra UPN differs from email (SSO will fail)
+  entra_user_id: string | null;
+  entra_mail: string | null;
+  entra_display_name: string | null;
+  entra_given_name: string | null;
+  entra_surname: string | null;
+  entra_job_title: string | null;
+  entra_mobile_phone: string | null;
+  entra_department: string | null;
+  entra_office_location: string | null;
+  entra_street_address: string | null;
+  entra_postal_code: string | null;
+  entra_country: string | null;
+  entra_account_enabled: boolean | null;
+  entra_mismatch_fields: string[];
+  entra_last_synced_at: string | null;
   is_featured_broker: boolean;
   start_date: string | null; // ISO date
 

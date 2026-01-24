@@ -28,6 +28,7 @@ import { useEmployee } from "@/hooks/v3/useEmployees";
 import { useAssets } from "@/hooks/v3/useAssets";
 import { useChecklistInstances } from "@/hooks/v3/useChecklists";
 import { useOffices } from "@/hooks/v3/useOffices";
+import { cn } from "@/lib/utils";
 import type { EmployeeStatus } from "@/types/v3";
 
 const statusConfig: Record<EmployeeStatus, { label: string; className: string }> = {
@@ -86,6 +87,47 @@ export default function EmployeeDetailPage() {
     employee.twitter_url ||
     employee.linkedin_url
   );
+  const mismatchCount =
+    (employee.entra_mismatch_fields?.length ?? 0) + (employee.entra_upn_mismatch ? 1 : 0);
+  const entraHasData = Boolean(employee.entra_user_id || employee.entra_mail || employee.entra_upn);
+  const entraStatus = !entraHasData ? "missing" : mismatchCount > 0 ? "mismatch" : "match";
+  const vitecStatus = entraHasData ? entraStatus : "primary";
+  const bubbleBase = "h-2.5 w-2.5 rounded-full shadow-soft";
+  const bubbleClass = (source: "entra" | "vitec", state: "missing" | "match" | "mismatch" | "primary") => {
+    const baseColor = source === "entra" ? "bg-sky-500" : "bg-emerald-500";
+    if (state === "missing") {
+      return cn(bubbleBase, `${baseColor}/30 ring-1 ring-slate-200`);
+    }
+    if (state === "mismatch") {
+      return cn(bubbleBase, baseColor, "ring-2 ring-amber-500/60");
+    }
+    if (state === "primary") {
+      return cn(bubbleBase, baseColor, "ring-1 ring-emerald-500/30");
+    }
+    return cn(bubbleBase, baseColor, "ring-1 ring-emerald-500/30");
+  };
+  const mismatchLabels = [
+    ...(employee.entra_mismatch_fields ?? []),
+    ...(employee.entra_upn_mismatch ? ["entra_upn"] : []),
+  ]
+    .map((field) => {
+      const labelMap: Record<string, string> = {
+        display_name: "Visningsnavn",
+        first_name: "Fornavn",
+        last_name: "Etternavn",
+        title: "Tittel",
+        email: "E-post",
+        phone: "Mobil",
+        office_name: "Avdeling",
+        office_location: "Kontorsted",
+        office_street: "Adresse",
+        office_postal: "Postnummer",
+        country: "Land",
+        entra_upn: "UPN",
+      };
+      return labelMap[field] ?? field;
+    })
+    .join(", ");
 
   return (
     <div className="min-h-screen bg-background">
@@ -135,6 +177,22 @@ export default function EmployeeDetailPage() {
                 <div className="flex items-center gap-2 mb-1">
                   <h1 className="text-2xl font-bold">{employee.full_name}</h1>
                   <Badge className={status.className}>{status.label}</Badge>
+                  <div className="flex items-center gap-1">
+                    <span
+                      className={bubbleClass("vitec", vitecStatus)}
+                      title={vitecStatus === "primary" ? "Vitec: primærkilde" : "Vitec: status"}
+                    />
+                    <span
+                      className={bubbleClass("entra", entraStatus)}
+                      title={
+                        entraStatus === "missing"
+                          ? "Entra: ikke synkronisert"
+                          : entraStatus === "mismatch"
+                            ? `Entra: ${mismatchCount} avvik`
+                            : "Entra: i sync"
+                      }
+                    />
+                  </div>
                 </div>
 
                 {employee.title && (
@@ -362,6 +420,78 @@ export default function EmployeeDetailPage() {
                   <Clock className="h-4 w-4 text-muted-foreground" />
                   <span>Status: {status.label}</span>
                 </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Entra ID (sekundær)</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {!entraHasData && (
+                  <p className="text-muted-foreground text-sm">Ingen Entra-data synkronisert ennå.</p>
+                )}
+                {entraHasData && (
+                  <>
+                    {employee.entra_upn && (
+                      <div className="flex items-center gap-3">
+                        <Mail className="h-4 w-4 text-muted-foreground" />
+                        <span>UPN: {employee.entra_upn}</span>
+                      </div>
+                    )}
+                    {employee.entra_mail && (
+                      <div className="flex items-center gap-3">
+                        <Mail className="h-4 w-4 text-muted-foreground" />
+                        <span>E-post: {employee.entra_mail}</span>
+                      </div>
+                    )}
+                    {employee.entra_job_title && (
+                      <div className="flex items-center gap-3">
+                        <Building2 className="h-4 w-4 text-muted-foreground" />
+                        <span>Tittel: {employee.entra_job_title}</span>
+                      </div>
+                    )}
+                    {employee.entra_mobile_phone && (
+                      <div className="flex items-center gap-3">
+                        <Phone className="h-4 w-4 text-muted-foreground" />
+                        <span>Mobil: {employee.entra_mobile_phone}</span>
+                      </div>
+                    )}
+                    {employee.entra_department && (
+                      <div className="flex items-center gap-3">
+                        <Building2 className="h-4 w-4 text-muted-foreground" />
+                        <span>Avdeling: {employee.entra_department}</span>
+                      </div>
+                    )}
+                    {employee.entra_office_location && (
+                      <div className="flex items-center gap-3">
+                        <Home className="h-4 w-4 text-muted-foreground" />
+                        <span>Kontorsted: {employee.entra_office_location}</span>
+                      </div>
+                    )}
+                    {employee.entra_last_synced_at && (
+                      <div className="flex items-center gap-3">
+                        <Clock className="h-4 w-4 text-muted-foreground" />
+                        <span>
+                          Sist synkronisert:{" "}
+                          {new Date(employee.entra_last_synced_at).toLocaleString("nb-NO")}
+                        </span>
+                      </div>
+                    )}
+                    {employee.entra_account_enabled !== null && (
+                      <div className="flex items-center gap-3">
+                        <CheckSquare className="h-4 w-4 text-muted-foreground" />
+                        <span>Konto: {employee.entra_account_enabled ? "Aktiv" : "Deaktivert"}</span>
+                      </div>
+                    )}
+                  </>
+                )}
+                {mismatchCount > 0 && (
+                  <div className="flex items-center gap-2 text-xs text-amber-700 bg-amber-50 rounded px-2 py-1">
+                    <AlertTriangle className="h-3 w-3 shrink-0" />
+                    <span>Avvik mellom Vitec og Entra: {mismatchLabels}</span>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>

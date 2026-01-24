@@ -1,10 +1,11 @@
-# Entra ID Employee Sync & Email Signature Deployment
+# Entra ID Employee Sync - Read-Only Audit
 
-This document describes how to set up and use the Entra ID sync script to:
+This document describes how to set up and use the Entra ID sync script in read-only audit mode. It compares local employee data with Entra ID and reports changes that would be applied. Writes to Entra ID or Exchange Online are forbidden.
 
-1. Sync employee profiles from the local database to Microsoft Entra ID
-2. Upload profile photos to Entra ID
-3. Deploy email signatures to Exchange Online
+## Read-Only Policy (Writes Forbidden)
+
+- Update-MgUser, Set-MgUserPhotoContent, and Set-MailboxMessageConfiguration are not allowed
+- Write mode is blocked unless `ENTRA_ALLOW_WRITES=true` and `-AllowWrites` are explicitly set (future only)
 
 ## Prerequisites
 
@@ -13,7 +14,7 @@ This document describes how to set up and use the Entra ID sync script to:
 - **PowerShell 7+** - [Install PowerShell](https://aka.ms/powershell)
 - **Python 3.12+** - [Install Python](https://python.org)
 - **Microsoft Graph PowerShell SDK 2.0+**
-- **Exchange Online Management 3.0+**
+- **Exchange Online Management 3.0+** (optional; write mode only, currently forbidden)
 
 ### Install PowerShell Modules
 
@@ -22,7 +23,7 @@ This document describes how to set up and use the Entra ID sync script to:
 Install-Module Microsoft.Graph.Authentication -Scope CurrentUser
 Install-Module Microsoft.Graph.Users -Scope CurrentUser
 
-# Install Exchange Online module
+# Install Exchange Online module (write mode only; currently forbidden)
 Install-Module ExchangeOnlineManagement -Scope CurrentUser
 ```
 
@@ -31,16 +32,16 @@ Install-Module ExchangeOnlineManagement -Scope CurrentUser
 You need an Azure App Registration with the following:
 
 1. **API Permissions (Application type)**:
-   - `User.ReadWrite.All` - Read/write user profiles
-   - `Exchange.ManageAsApp` - Manage Exchange Online
+   - `User.Read.All` - Read user profiles
+   - Do **NOT** grant `User.ReadWrite.All` or `Exchange.ManageAsApp` until write mode is approved
 
 2. **Authentication**:
    - Certificate (recommended for production)
    - OR Client Secret (for development/testing)
 
 3. **Exchange Online Admin Role**:
-   - The app needs "Exchange Administrator" role in Azure AD
-   - OR use Application Access Policy in Exchange Online
+   - Not required in read-only mode
+   - Only needed if write mode is approved in the future
 
 See `.planning/phases/06-entra-signature-sync/06-01-PLAN.md` for detailed setup instructions.
 
@@ -58,6 +59,7 @@ Set these environment variables before running:
 | `ENTRA_CERT_THUMBPRINT` | Certificate thumbprint (if not using secret) | Conditional |
 | `ENTRA_ORGANIZATION` | Microsoft 365 domain (e.g., `proaktiv.onmicrosoft.com`) | Yes |
 | `DATABASE_URL` | PostgreSQL connection string | No (uses backend/.env) |
+| `ENTRA_ALLOW_WRITES` | Enable write mode (future only) | No (must remain unset) |
 
 ### Example: Setting Environment Variables
 
@@ -67,6 +69,7 @@ $env:ENTRA_TENANT_ID = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 $env:ENTRA_CLIENT_ID = "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy"
 $env:ENTRA_CLIENT_SECRET = "your-client-secret"
 $env:ENTRA_ORGANIZATION = "proaktiv.onmicrosoft.com"
+# Do NOT set ENTRA_ALLOW_WRITES in read-only mode
 ```
 
 **Windows Command Prompt:**
@@ -75,6 +78,7 @@ set ENTRA_TENANT_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 set ENTRA_CLIENT_ID=yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy
 set ENTRA_CLIENT_SECRET=your-client-secret
 set ENTRA_ORGANIZATION=proaktiv.onmicrosoft.com
+rem Do NOT set ENTRA_ALLOW_WRITES in read-only mode
 ```
 
 ## Usage
@@ -82,13 +86,13 @@ set ENTRA_ORGANIZATION=proaktiv.onmicrosoft.com
 ### Quick Start (Windows)
 
 ```cmd
-run-entra-sync.bat --dry-run
+run-entra-sync.bat
 ```
 
 ### PowerShell Direct
 
 ```powershell
-# Dry run with single user (test mode)
+# Read-only audit with single user (test mode)
 .\backend\scripts\Sync-EntraIdEmployees.ps1 `
     -TenantId "xxx" `
     -ClientId "yyy" `
@@ -97,14 +101,7 @@ run-entra-sync.bat --dry-run
     -FilterEmail "ola@proaktiv.no" `
     -DryRun
 
-# Full sync (all employees)
-.\backend\scripts\Sync-EntraIdEmployees.ps1 `
-    -TenantId "xxx" `
-    -ClientId "yyy" `
-    -CertificateThumbprint "zzz" `
-    -Organization "proaktiv.onmicrosoft.com"
-
-# Profile only (skip photos and signatures)
+# Profile comparison only (skip photos and signatures)
 .\backend\scripts\Sync-EntraIdEmployees.ps1 `
     -TenantId "xxx" `
     -ClientId "yyy" `
@@ -113,6 +110,27 @@ run-entra-sync.bat --dry-run
     -SkipPhoto `
     -SkipSignature
 ```
+
+### Entra Import (Read-Only, DB only)
+
+This import reads Entra ID users and stores them as secondary fields on employees.
+It never writes to Entra ID.
+
+```powershell
+# Full import
+py -3.12 .\backend\scripts\import_entra_employees.py
+
+# Dry run (no DB writes)
+py -3.12 .\backend\scripts\import_entra_employees.py --dry-run
+
+# Single user
+py -3.12 .\backend\scripts\import_entra_employees.py --filter-email "user@proaktiv.no"
+```
+
+### UI Trigger (Employees page)
+
+The Employees page includes a **Hent Entra** button in the header.
+It calls `/entra-sync/import` and refreshes the list with updated Entra fields.
 
 ### Parameters
 
@@ -127,10 +145,11 @@ run-entra-sync.bat --dry-run
 | `-SkipProfile` | Skip profile updates | False |
 | `-SkipPhoto` | Skip photo uploads | False |
 | `-SkipSignature` | Skip signature deployment | False |
-| `-DryRun` | Preview changes only | False |
+| `-DryRun` | Force read-only mode | False |
 | `-Force` | Skip confirmation prompts | False |
 | `-DelayMs` | Delay between API calls | 150 |
 | `-LogPath` | Custom log file path | Auto-generated |
+| `-AllowWrites` | **FORBIDDEN** unless explicitly approved | False |
 
 *Either `-CertificateThumbprint` or `-ClientSecret` is required.
 
@@ -148,12 +167,24 @@ Sync-EntraIdEmployees.ps1
 ┌─────────────────────────────┐
 │  For each employee:        │
 │  1. Find in Entra ID       │
-│  2. Update profile         │
-│  3. Upload photo           │
-│  4. Set email signature    │
+│  2. Compare profile fields │
+│  3. Report photo changes   │
+│  4. Preview signature      │
 └─────────────────────────────┘
       ↓
 Microsoft Entra ID + Exchange Online
+```
+
+## Entra Import Flow (Read-Only)
+
+```
+Microsoft Graph (Entra ID)
+      ↓
+import_entra_employees.py (GET only)
+      ↓
+PostgreSQL: employees.entra_* (secondary fields)
+      ↓
+UI bubbles + Entra panel
 ```
 
 ## Field Mappings
@@ -171,9 +202,21 @@ Microsoft Entra ID + Exchange Online
 | `office.postal_code` | `postalCode` |
 | (constant) | `country` = "NO" |
 
+## Entra Snapshot Fields (Secondary)
+
+Stored on `employees` as read-only Entra snapshots:
+- `entra_user_id`, `entra_upn`, `entra_mail`
+- `entra_display_name`, `entra_given_name`, `entra_surname`
+- `entra_job_title`, `entra_mobile_phone`
+- `entra_department`, `entra_office_location`, `entra_street_address`, `entra_postal_code`, `entra_country`
+- `entra_account_enabled`
+- `entra_mismatch_fields`, `entra_last_synced_at`
+
+Vitec Next remains the primary source of truth; Entra values are secondary.
+
 ## Signature Templates
 
-The email signature is built from templates in `backend/scripts/templates/`:
+The email signature is built from templates in `backend/scripts/templates/` (read-only mode uses this for preview only; no signatures are deployed):
 
 - `email-signature.html` - HTML signature (for rich email clients)
 - `email-signature.txt` - Plain text signature (fallback)
@@ -234,14 +277,7 @@ The profile image URL may be invalid or the image too large. Check:
 
 #### Signatures not appearing
 
-If roaming signatures are enabled, server-side signatures may be overridden. Check:
-- Run `Get-OrganizationConfig | Select PostponeRoamingSignaturesUntilLater`
-- If enabled, signatures set by this script will not appear
-
-To disable roaming signatures:
-```powershell
-Set-OrganizationConfig -PostponeRoamingSignaturesUntilLater $true
-```
+Expected in read-only mode. Signatures are never deployed until write mode is approved.
 
 ### Logs
 
@@ -256,9 +292,16 @@ Get-ChildItem backend/logs/entra-sync-*.log | Sort-Object LastWriteTime -Descend
 
 1. **Never commit secrets** - Use environment variables or Key Vault
 2. **Use certificates in production** - More secure than client secrets
-3. **Least privilege** - Only grant required permissions
-4. **Audit logging** - All changes are logged
-5. **Dry run first** - Always preview before live sync
+3. **Least privilege** - Read-only permissions until write mode is approved
+4. **Audit logging** - All comparisons are logged
+5. **Writes disabled** - Write mode is forbidden by policy
+
+## UI Status Indicators
+
+Employee cards and detail pages show:
+- **Green bubble** = Vitec (primary source)
+- **Blue bubble** = Entra (secondary source)
+- Amber ring indicates mismatch between sources
 
 ## Related Commands
 

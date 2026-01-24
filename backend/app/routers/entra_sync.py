@@ -17,6 +17,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.schemas.entra_sync import (
     EntraConnectionStatus,
+    EntraImportRequest,
+    EntraImportResult,
     EntraSyncBatchRequest,
     EntraSyncBatchResult,
     EntraSyncPreview,
@@ -49,6 +51,20 @@ async def get_roaming_signatures_status():
     Note: This requires an active Exchange connection to check properly.
     """
     return EntraSyncService.get_roaming_signatures_status()
+
+
+@router.post("/import", response_model=EntraImportResult)
+async def import_entra_employees(request: EntraImportRequest):
+    """
+    Import Entra ID users into the local database (read-only to Entra).
+
+    Writes only to local database; Entra is never modified.
+    """
+    result = EntraSyncService.import_entra_employees(
+        dry_run=request.dry_run,
+        filter_email=request.filter_email,
+    )
+    return result
 
 
 @router.get("/preview/{employee_id}", response_model=EntraSyncPreview)

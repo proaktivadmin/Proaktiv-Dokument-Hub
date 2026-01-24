@@ -12,9 +12,11 @@ Note: The actual sync is performed via the PowerShell script for full functional
 This service provides preview and status functionality for the UI.
 """
 
+import json
 import logging
 import os
 import subprocess
+import sys
 from pathlib import Path
 from uuid import UUID
 
@@ -26,6 +28,7 @@ from app.config import settings
 from app.models.employee import Employee
 from app.schemas.entra_sync import (
     EntraConnectionStatus,
+    EntraImportResult,
     EntraSyncBatchResult,
     EntraSyncPreview,
     EntraSyncResult,
@@ -43,6 +46,7 @@ class EntraSyncService:
 
     # Template directory path
     TEMPLATES_DIR = Path(__file__).parent.parent.parent / "scripts" / "templates"
+    IMPORT_SCRIPT_PATH = Path(__file__).parent.parent.parent / "scripts" / "import_entra_employees.py"
 
     @staticmethod
     def is_enabled() -> bool:
@@ -89,6 +93,84 @@ class EntraSyncService:
                 "If roaming signatures are enabled in your organization, "
                 "server-side signatures may be overridden by client signatures."
             ),
+        )
+
+    @staticmethod
+    def import_entra_employees(*, dry_run: bool = False, filter_email: str | None = None) -> EntraImportResult:
+        """Import Entra ID users into local database (read-only to Entra)."""
+        script_path = EntraSyncService.IMPORT_SCRIPT_PATH
+        if not script_path.exists():
+            return EntraImportResult(
+                success=False,
+                dry_run=dry_run,
+                error=f"Import script not found at {script_path}",
+            )
+
+        env = os.environ.copy()
+        if settings.DATABASE_URL and not env.get("DATABASE_URL"):
+            env["DATABASE_URL"] = settings.DATABASE_URL
+        if settings.ENTRA_TENANT_ID and not env.get("ENTRA_TENANT_ID"):
+            env["ENTRA_TENANT_ID"] = settings.ENTRA_TENANT_ID
+        if settings.ENTRA_CLIENT_ID and not env.get("ENTRA_CLIENT_ID"):
+            env["ENTRA_CLIENT_ID"] = settings.ENTRA_CLIENT_ID
+        if settings.ENTRA_CLIENT_SECRET and not env.get("ENTRA_CLIENT_SECRET"):
+            env["ENTRA_CLIENT_SECRET"] = settings.ENTRA_CLIENT_SECRET
+
+        if not env.get("ENTRA_TENANT_ID") or not env.get("ENTRA_CLIENT_ID"):
+            return EntraImportResult(
+                success=False,
+                dry_run=dry_run,
+                error="ENTRA_TENANT_ID and ENTRA_CLIENT_ID must be configured",
+            )
+        if not env.get("ENTRA_CLIENT_SECRET"):
+            return EntraImportResult(
+                success=False,
+                dry_run=dry_run,
+                error="ENTRA_CLIENT_SECRET must be configured for Entra import",
+            )
+
+        cmd = [sys.executable, str(script_path), "--json"]
+        if dry_run:
+            cmd.append("--dry-run")
+        if filter_email:
+            cmd.extend(["--filter-email", filter_email])
+
+        try:
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=300,
+                cwd=str(script_path.parent.parent),
+                env=env,
+            )
+        except subprocess.TimeoutExpired:
+            return EntraImportResult(success=False, dry_run=dry_run, error="Import timed out after 5 minutes")
+        except Exception as exc:
+            logger.exception("Error running Entra import")
+            return EntraImportResult(success=False, dry_run=dry_run, error=str(exc))
+
+        if result.returncode != 0:
+            error_message = result.stderr.strip() or result.stdout.strip() or "Import failed"
+            return EntraImportResult(success=False, dry_run=dry_run, error=error_message)
+
+        try:
+            payload = json.loads(result.stdout.strip())
+        except json.JSONDecodeError:
+            return EntraImportResult(
+                success=False,
+                dry_run=dry_run,
+                error="Import completed but returned invalid JSON",
+            )
+
+        return EntraImportResult(
+            success=True,
+            dry_run=payload.get("dry_run", False),
+            employees_loaded=payload.get("employees_loaded"),
+            matched_updated=payload.get("matched_updated"),
+            employees_not_matched=payload.get("employees_not_matched"),
+            entra_users_not_matched=payload.get("entra_users_not_matched"),
+            error=None,
         )
 
     @staticmethod

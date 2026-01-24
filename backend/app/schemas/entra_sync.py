@@ -62,6 +62,13 @@ class SignaturePreview(BaseModel):
 # =============================================================================
 
 
+class EntraImportRequest(BaseModel):
+    """Request to import Entra ID users into local database (read-only to Entra)."""
+
+    dry_run: bool = Field(False, description="Preview changes without updating database")
+    filter_email: str | None = Field(None, description="Only update a specific employee email")
+
+
 class EntraSyncRequest(BaseModel):
     """Request to sync a single employee to Entra ID."""
 
@@ -86,6 +93,18 @@ class EntraSyncBatchRequest(BaseModel):
 # =============================================================================
 # Sync Result Schemas
 # =============================================================================
+
+
+class EntraImportResult(BaseModel):
+    """Result of importing Entra ID users into local database."""
+
+    success: bool = Field(..., description="Whether the import completed successfully")
+    dry_run: bool = Field(False, description="Whether this was a dry run")
+    employees_loaded: int | None = Field(None, description="Employees loaded from database")
+    matched_updated: int | None = Field(None, description="Employees matched and updated")
+    employees_not_matched: int | None = Field(None, description="Employees without Entra match")
+    entra_users_not_matched: int | None = Field(None, description="Entra users without employee match")
+    error: str | None = Field(None, description="Error message if import failed")
 
 
 class EntraSyncResult(BaseModel):

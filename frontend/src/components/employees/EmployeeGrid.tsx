@@ -24,6 +24,8 @@ interface EmployeeGridProps {
   onDeactivate?: (employee: EmployeeWithOffice) => void;
   onSync?: () => void;
   isSyncing?: boolean;
+  onEntraImport?: () => void;
+  isEntraImporting?: boolean;
   currentFilters?: {
     office_id?: string;
     role?: string;
@@ -48,6 +50,8 @@ export function EmployeeGrid({
   onDeactivate,
   onSync,
   isSyncing = false,
+  onEntraImport,
+  isEntraImporting = false,
   currentFilters,
   onEntraSync,
   onSignaturePreview,
@@ -58,7 +62,7 @@ export function EmployeeGrid({
   const [entraConnected, setEntraConnected] = useState<boolean | null>(null);
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  const showActions = Boolean(onCreateNew || onSync);
+  const showActions = Boolean(onCreateNew || onSync || onEntraImport || onBatchEntraSync);
 
   // Filter employees by search
   const filteredEmployees = employees.filter((employee) => {
@@ -168,6 +172,18 @@ export function EmployeeGrid({
               >
                 <RefreshCcw className="h-4 w-4 mr-2" />
                 {isSyncing ? "Synkroniserer..." : "Synkroniser Vitec"}
+              </Button>
+            )}
+
+            {onEntraImport && (
+              <Button
+                variant="outline"
+                onClick={onEntraImport}
+                disabled={isEntraImporting || entraConnected === false}
+                title={entraConnected === false ? "Entra ID ikke konfigurert" : undefined}
+              >
+                <Cloud className="h-4 w-4 mr-2" />
+                {isEntraImporting ? "Henter Entra..." : "Hent Entra"}
               </Button>
             )}
             {/* Email Group Button */}

@@ -7,6 +7,8 @@ import type {
   EntraConnectionStatus,
   EntraSyncBatchRequest,
   EntraSyncBatchResult,
+  EntraImportRequest,
+  EntraImportResult,
   EntraSyncPreview,
   EntraSyncRequest,
   EntraSyncResult,
@@ -60,6 +62,14 @@ export const entraSyncApi = {
    */
   async pushBatch(request: EntraSyncBatchRequest): Promise<EntraSyncBatchResult> {
     const response = await apiClient.post('/entra-sync/push-batch', request);
+    return response.data;
+  },
+
+  /**
+   * Import Entra ID users into local database (read-only to Entra)
+   */
+  async importEmployees(request: EntraImportRequest): Promise<EntraImportResult> {
+    const response = await apiClient.post('/entra-sync/import', request);
     return response.data;
   },
 };

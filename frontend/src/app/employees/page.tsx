@@ -19,6 +19,7 @@ import { useOffices } from "@/hooks/v3/useOffices";
 import { useToast } from "@/hooks/use-toast";
 import { employeesApi } from "@/lib/api/employees";
 import { officesApi } from "@/lib/api/offices";
+import { entraSyncApi } from "@/lib/api/entra-sync";
 import type { EmployeeWithOffice, EmployeeStatus } from "@/types/v3";
 
 export default function EmployeesPage() {
@@ -51,6 +52,7 @@ export default function EmployeesPage() {
     role: selectedRole || undefined,
   });
   const [isSyncing, setIsSyncing] = useState(false);
+  const [isEntraImporting, setIsEntraImporting] = useState(false);
 
 
   const handleEmployeeClick = (employee: EmployeeWithOffice) => {
@@ -112,6 +114,39 @@ export default function EmployeesPage() {
       });
     } finally {
       setIsSyncing(false);
+    }
+  };
+
+  const handleEntraImport = async () => {
+    setIsEntraImporting(true);
+    try {
+      const result = await entraSyncApi.importEmployees({ dry_run: false });
+      if (!result.success) {
+        throw new Error(result.error ?? "Entra-import feilet.");
+      }
+      await refetchEmployees();
+
+      const updated = result.matched_updated ?? 0;
+      const notMatched = result.employees_not_matched ?? 0;
+      toast({
+        title: "Entra-import fullført",
+        description: `Oppdatert: ${updated}. Uten match: ${notMatched}.`,
+      });
+    } catch (error) {
+      console.error("Failed to import Entra users:", error);
+      let errorMessage = "Kunne ikke hente data fra Entra ID.";
+      if (error instanceof AxiosError && error.response?.data?.detail) {
+        errorMessage = error.response.data.detail;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      toast({
+        title: "Entra-import feilet",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    } finally {
+      setIsEntraImporting(false);
     }
   };
 
@@ -191,6 +226,8 @@ export default function EmployeesPage() {
             onCreateNew={() => setFormOpen(true)}
             onSync={handleSync}
             isSyncing={isSyncing}
+            onEntraImport={handleEntraImport}
+            isEntraImporting={isEntraImporting}
             onEdit={handleEdit}
             currentFilters={{
               office_id: selectedOfficeId || undefined,

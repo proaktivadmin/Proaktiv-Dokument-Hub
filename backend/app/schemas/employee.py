@@ -48,6 +48,24 @@ class EmployeeBase(BaseModel):
     )
     entra_upn: str | None = Field(None, max_length=255, description="User Principal Name in Entra ID")
     entra_upn_mismatch: bool = Field(False, description="True if Entra UPN differs from email (SSO will fail)")
+    entra_user_id: str | None = Field(None, max_length=64, description="Entra ID object ID")
+    entra_mail: str | None = Field(None, max_length=255, description="Entra mail attribute")
+    entra_display_name: str | None = Field(None, max_length=255, description="Entra display name")
+    entra_given_name: str | None = Field(None, max_length=100, description="Entra given name")
+    entra_surname: str | None = Field(None, max_length=100, description="Entra surname")
+    entra_job_title: str | None = Field(None, max_length=100, description="Entra job title")
+    entra_mobile_phone: str | None = Field(None, max_length=50, description="Entra mobile phone")
+    entra_department: str | None = Field(None, max_length=200, description="Entra department")
+    entra_office_location: str | None = Field(None, max_length=100, description="Entra office location")
+    entra_street_address: str | None = Field(None, max_length=255, description="Entra street address")
+    entra_postal_code: str | None = Field(None, max_length=20, description="Entra postal code")
+    entra_country: str | None = Field(None, max_length=10, description="Entra country code")
+    entra_account_enabled: bool | None = Field(None, description="Whether Entra account is enabled")
+    entra_mismatch_fields: list[str] = Field(
+        default_factory=list,
+        description="List of field names where Entra differs from Vitec",
+    )
+    entra_last_synced_at: datetime | None = Field(None, description="Last time Entra data was synced")
     is_featured_broker: bool = Field(False, description="Whether the employee is a featured broker")
     start_date: date | None = Field(None, description="Employment start date")
     end_date: date | None = Field(None, description="Employment end date")
@@ -91,6 +109,21 @@ class EmployeeUpdate(BaseModel):
     external_company: str | None = None
     entra_upn: str | None = None
     entra_upn_mismatch: bool | None = None
+    entra_user_id: str | None = None
+    entra_mail: str | None = None
+    entra_display_name: str | None = None
+    entra_given_name: str | None = None
+    entra_surname: str | None = None
+    entra_job_title: str | None = None
+    entra_mobile_phone: str | None = None
+    entra_department: str | None = None
+    entra_office_location: str | None = None
+    entra_street_address: str | None = None
+    entra_postal_code: str | None = None
+    entra_country: str | None = None
+    entra_account_enabled: bool | None = None
+    entra_mismatch_fields: list[str] | None = None
+    entra_last_synced_at: datetime | None = None
     is_featured_broker: bool | None = None
     start_date: date | None = None
     end_date: date | None = None

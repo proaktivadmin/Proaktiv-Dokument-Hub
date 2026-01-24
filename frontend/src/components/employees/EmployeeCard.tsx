@@ -56,6 +56,37 @@ export function EmployeeCard({
   onSignaturePreview,
 }: EmployeeCardProps) {
   const status = statusConfig[employee.status];
+  const mismatchCount =
+    (employee.entra_mismatch_fields?.length ?? 0) + (employee.entra_upn_mismatch ? 1 : 0);
+  const entraHasData = Boolean(employee.entra_user_id || employee.entra_mail || employee.entra_upn);
+  const entraStatus = !entraHasData ? "missing" : mismatchCount > 0 ? "mismatch" : "match";
+  const vitecStatus = entraHasData ? entraStatus : "primary";
+  const entraTitle =
+    entraStatus === "missing"
+      ? "Entra: ikke synkronisert"
+      : entraStatus === "mismatch"
+        ? `Entra: ${mismatchCount} avvik`
+        : "Entra: i sync";
+  const vitecTitle =
+    vitecStatus === "primary"
+      ? "Vitec: primærkilde (Entra ikke synkronisert)"
+      : vitecStatus === "mismatch"
+        ? "Vitec: avvik mot Entra"
+        : "Vitec: i sync med Entra";
+  const bubbleBase = "h-2.5 w-2.5 rounded-full shadow-soft";
+  const bubbleClass = (source: "entra" | "vitec", state: "missing" | "match" | "mismatch" | "primary") => {
+    const baseColor = source === "entra" ? "bg-sky-500" : "bg-emerald-500";
+    if (state === "missing") {
+      return cn(bubbleBase, `${baseColor}/30 ring-1 ring-slate-200`);
+    }
+    if (state === "mismatch") {
+      return cn(bubbleBase, baseColor, "ring-2 ring-amber-500/60");
+    }
+    if (state === "primary") {
+      return cn(bubbleBase, baseColor, "ring-1 ring-emerald-500/30");
+    }
+    return cn(bubbleBase, baseColor, "ring-1 ring-emerald-500/30");
+  };
 
   return (
     <Card
@@ -102,58 +133,64 @@ export function EmployeeCard({
                 )}
               </div>
 
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 shrink-0">
-                    <MoreVertical className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onClick(); }}>
-                    Se profil
-                  </DropdownMenuItem>
-                  {onEdit && (
-                    <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onEdit(); }}>
-                      Rediger
+              <div className="flex items-start gap-2 shrink-0">
+                <div className="flex items-center gap-1 pt-1">
+                  <span className={bubbleClass("vitec", vitecStatus)} title={vitecTitle} />
+                  <span className={bubbleClass("entra", entraStatus)} title={entraTitle} />
+                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 shrink-0">
+                      <MoreVertical className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onClick(); }}>
+                      Se profil
                     </DropdownMenuItem>
-                  )}
-                  {/* Entra ID sync options */}
-                  {entraConnected && (
-                    <>
-                      <DropdownMenuSeparator />
-                      {onEntraSync && (
-                        <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onEntraSync(); }}>
-                          <Cloud className="h-4 w-4 mr-2" />
-                          Synkroniser til Entra ID
-                        </DropdownMenuItem>
-                      )}
-                      {onSignaturePreview && (
-                        <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onSignaturePreview(); }}>
-                          <FileSignature className="h-4 w-4 mr-2" />
-                          Forhåndsvis signatur
-                        </DropdownMenuItem>
-                      )}
-                    </>
-                  )}
-                  <DropdownMenuSeparator />
-                  {onStartOffboarding && employee.status === "active" && (
-                    <DropdownMenuItem
-                      className="text-amber-600"
-                      onClick={(e) => { e.stopPropagation(); onStartOffboarding(); }}
-                    >
-                      Start offboarding
-                    </DropdownMenuItem>
-                  )}
-                  {onDeactivate && (
-                    <DropdownMenuItem
-                      className="text-destructive"
-                      onClick={(e) => { e.stopPropagation(); onDeactivate(); }}
-                    >
-                      Deaktiver
-                    </DropdownMenuItem>
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
+                    {onEdit && (
+                      <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onEdit(); }}>
+                        Rediger
+                      </DropdownMenuItem>
+                    )}
+                    {/* Entra ID sync options */}
+                    {entraConnected && (
+                      <>
+                        <DropdownMenuSeparator />
+                        {onEntraSync && (
+                          <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onEntraSync(); }}>
+                            <Cloud className="h-4 w-4 mr-2" />
+                            Synkroniser til Entra ID
+                          </DropdownMenuItem>
+                        )}
+                        {onSignaturePreview && (
+                          <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onSignaturePreview(); }}>
+                            <FileSignature className="h-4 w-4 mr-2" />
+                            Forhåndsvis signatur
+                          </DropdownMenuItem>
+                        )}
+                      </>
+                    )}
+                    <DropdownMenuSeparator />
+                    {onStartOffboarding && employee.status === "active" && (
+                      <DropdownMenuItem
+                        className="text-amber-600"
+                        onClick={(e) => { e.stopPropagation(); onStartOffboarding(); }}
+                      >
+                        Start offboarding
+                      </DropdownMenuItem>
+                    )}
+                    {onDeactivate && (
+                      <DropdownMenuItem
+                        className="text-destructive"
+                        onClick={(e) => { e.stopPropagation(); onDeactivate(); }}
+                      >
+                        Deaktiver
+                      </DropdownMenuItem>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
 
             <div className="flex items-center gap-2 mt-2 flex-wrap">

@@ -58,6 +58,11 @@ export interface EntraSyncBatchRequest {
   dry_run?: boolean;
 }
 
+export interface EntraImportRequest {
+  dry_run?: boolean;
+  filter_email?: string;
+}
+
 // =============================================================================
 // Result Types
 // =============================================================================
@@ -86,6 +91,16 @@ export interface EntraSyncBatchResult {
   profiles_updated: number;
   photos_uploaded: number;
   signatures_pushed: number;
+}
+
+export interface EntraImportResult {
+  success: boolean;
+  dry_run: boolean;
+  employees_loaded: number | null;
+  matched_updated: number | null;
+  employees_not_matched: number | null;
+  entra_users_not_matched: number | null;
+  error: string | null;
 }
 
 // =============================================================================

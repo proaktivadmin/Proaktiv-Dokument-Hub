@@ -3,14 +3,15 @@
     Syncs employee data from PostgreSQL to Microsoft Entra ID and Exchange Online.
 
 .DESCRIPTION
-    This script:
+    This script (read-only by default):
     1. Reads active employees from the local PostgreSQL database
-    2. Updates their profiles in Microsoft Entra ID (job title, phone, etc.)
-    3. Uploads profile photos to Entra ID
-    4. Deploys email signatures to Exchange Online
+    2. Fetches matching users from Entra ID
+    3. Computes and logs profile/photo/signature changes that would be applied
+    4. Does NOT write to Entra ID or Exchange Online unless explicitly unlocked
 
-    Supports both certificate and client secret authentication.
-    Always use -DryRun first to preview changes.
+    Writes are forbidden by default. To enable writes (future use), set
+    ENTRA_ALLOW_WRITES=true and pass -AllowWrites.
+    Use -DryRun to force read-only even when writes are enabled.
 
 .PARAMETER TenantId
     Azure AD tenant ID (GUID). Required for authentication.
@@ -29,7 +30,7 @@
 
 .PARAMETER Organization
     Microsoft 365 organization domain (e.g., "proaktiv.onmicrosoft.com").
-    Required for Exchange Online connection.
+    Required for Exchange Online connection (write mode only).
 
 .PARAMETER DatabaseUrl
     PostgreSQL connection string.
@@ -48,6 +49,10 @@
 .PARAMETER SkipSignature
     Skip Exchange Online signature deployment.
 
+.PARAMETER AllowWrites
+    Explicitly enable write operations to Entra ID/Exchange Online.
+    Requires ENTRA_ALLOW_WRITES=true. Without this, the script is read-only.
+
 .PARAMETER SignatureTemplate
     Path to custom HTML signature template.
     Defaults to templates/email-signature.html.
@@ -57,8 +62,8 @@
     Default: 150. Increase if hitting rate limits.
 
 .PARAMETER DryRun
-    Preview changes without making any updates.
-    Strongly recommended for first runs.
+    Force read-only mode even when writes are enabled.
+    Strongly recommended for all runs.
 
 .PARAMETER Force
     Skip confirmation prompts.
@@ -74,12 +79,12 @@
         -FilterEmail "ola@proaktiv.no" -DryRun
 
 .EXAMPLE
-    # Full sync with certificate auth
+    # Read-only audit (default; writes forbidden)
     .\Sync-EntraIdEmployees.ps1 -TenantId "xxx" -ClientId "yyy" `
         -CertificateThumbprint "zzz" -Organization "proaktiv.onmicrosoft.com"
 
 .EXAMPLE
-    # Profile only sync (skip photos and signatures)
+    # Read-only audit (profile only; skip photos and signatures)
     .\Sync-EntraIdEmployees.ps1 -TenantId "xxx" -ClientId "yyy" `
         -CertificateThumbprint "zzz" -Organization "proaktiv.onmicrosoft.com" `
         -SkipPhoto -SkipSignature
@@ -143,6 +148,9 @@ param(
 
     # === Safety ===
     [Parameter()]
+    [switch]$AllowWrites,
+
+    [Parameter()]
     [switch]$DryRun,
 
     [Parameter()]
@@ -169,9 +177,9 @@ $script:Results = @()
 # Required PowerShell modules
 $RequiredModules = @(
     @{ Name = "Microsoft.Graph.Authentication"; MinVersion = "2.0.0" },
-    @{ Name = "Microsoft.Graph.Users"; MinVersion = "2.0.0" },
-    @{ Name = "ExchangeOnlineManagement"; MinVersion = "3.0.0" }
+    @{ Name = "Microsoft.Graph.Users"; MinVersion = "2.0.0" }
 )
+$ExchangeModule = @{ Name = "ExchangeOnlineManagement"; MinVersion = "3.0.0" }
 
 # ============================================================================
 # LOGGING FUNCTIONS
@@ -277,8 +285,17 @@ function Invoke-WithRetry {
 # ============================================================================
 
 function Test-Dependencies {
+    param(
+        [switch]$IncludeExchange
+    )
+
+    $modulesToCheck = @($RequiredModules)
+    if ($IncludeExchange) {
+        $modulesToCheck += $ExchangeModule
+    }
+
     $missing = @()
-    foreach ($module in $RequiredModules) {
+    foreach ($module in $modulesToCheck) {
         $installed = Get-Module -ListAvailable -Name $module.Name | 
             Where-Object { $_.Version -ge [version]$module.MinVersion }
         if (-not $installed) {
@@ -806,11 +823,14 @@ function Format-SummaryReport {
         [datetime]$StartTime,
 
         [Parameter(Mandatory)]
-        [datetime]$EndTime
+        [datetime]$EndTime,
+
+        [switch]$ReadOnly
     )
 
     $duration = $EndTime - $StartTime
     $durationStr = "{0:mm\:ss}" -f $duration
+    $modeText = if ($ReadOnly) { "READ-ONLY (writes disabled)" } else { "WRITE MODE" }
     
     # Ensure Results is an array
     $ResultsArray = @($Results)
@@ -829,20 +849,25 @@ function Format-SummaryReport {
     $sigSet = @($ResultsArray | Where-Object { $_.SignatureSync.Action -in @("set", "would_set") }).Count
     $sigFailed = @($ResultsArray | Where-Object { $_.SignatureSync.Action -eq "failed" }).Count
 
+    $profileLabel = if ($ReadOnly) { "would update" } else { "updated" }
+    $photoLabel = if ($ReadOnly) { "would upload" } else { "uploaded" }
+    $signatureLabel = if ($ReadOnly) { "would set" } else { "set" }
+
     $report = @"
 
 ================================================================================
                            SYNC SUMMARY
 ================================================================================
 Duration:      $durationStr
+Mode:          $modeText
 Total Users:   $total
 --------------------------------------------------------------------------------
   Processed:   $processed
   Skipped:     $skipped  (not found in Entra ID)
 --------------------------------------------------------------------------------
-  Profile:     $profileSuccess updated, $profileFailed failed
-  Photo:       $photoUploaded uploaded, $photoSkipped skipped, $photoFailed failed
-  Signature:   $sigSet set, $sigFailed failed
+  Profile:     $profileSuccess $profileLabel, $profileFailed failed
+  Photo:       $photoUploaded $photoLabel, $photoSkipped skipped, $photoFailed failed
+  Signature:   $sigSet $signatureLabel, $sigFailed failed
 ================================================================================
 "@
 
@@ -866,15 +891,25 @@ try {
     }
     $script:LogFile = $LogPath
 
+    $writePolicyEnabled = $AllowWrites -and ($env:ENTRA_ALLOW_WRITES -eq "true")
+    if ($AllowWrites -and -not $writePolicyEnabled) {
+        throw "Write operations are disabled by policy. Set ENTRA_ALLOW_WRITES=true and pass -AllowWrites to enable."
+    }
+    $effectiveDryRun = $DryRun -or -not $writePolicyEnabled
+    $shouldConnectExchange = (-not $SkipSignature) -and (-not $effectiveDryRun)
+
     # Print banner
     Write-Host ""
     Write-Host "================================================================================" -ForegroundColor Cyan
     Write-Host "                     ENTRA ID EMPLOYEE SYNC" -ForegroundColor Cyan
     Write-Host "================================================================================" -ForegroundColor Cyan
     
-    $modeText = if ($DryRun) { "DRY RUN (no changes will be made)" } else { "LIVE (changes will be applied)" }
-    $modeColor = if ($DryRun) { "Yellow" } else { "Green" }
+    $modeText = if ($effectiveDryRun) { "READ-ONLY (writes disabled)" } else { "WRITE MODE (changes will be applied)" }
+    $modeColor = if ($effectiveDryRun) { "Yellow" } else { "Green" }
+    $writePolicyText = if ($writePolicyEnabled) { "ENABLED" } else { "FORBIDDEN (set ENTRA_ALLOW_WRITES=true + -AllowWrites to enable)" }
+    $writePolicyColor = if ($writePolicyEnabled) { "Green" } else { "Red" }
     Write-Host "Mode:        $modeText" -ForegroundColor $modeColor
+    Write-Host "Writes:      $writePolicyText" -ForegroundColor $writePolicyColor
     Write-Host "Tenant:      $TenantId"
     Write-Host "Client:      $ClientId"
     Write-Host "Organization: $Organization"
@@ -886,10 +921,13 @@ try {
 
     Write-Log "Script started"
     Write-Log "Parameters: $(Write-SafeParameters $PSBoundParameters | ConvertTo-Json -Compress)"
+    $writePolicyLabel = if ($writePolicyEnabled) { "enabled" } else { "forbidden" }
+    Write-Log "Write policy: $writePolicyLabel"
+    Write-Log "Effective dry run: $effectiveDryRun"
 
     # Check dependencies
     Write-Log "Checking dependencies..."
-    Test-Dependencies
+    Test-Dependencies -IncludeExchange:$shouldConnectExchange
     Write-Log "Dependencies OK"
 
     # Connect to Microsoft Graph
@@ -913,8 +951,8 @@ try {
     }
     Write-Log "Microsoft Graph connected"
 
-    # Connect to Exchange Online (only if signatures are enabled)
-    if (-not $SkipSignature) {
+    # Connect to Exchange Online (only if signatures are enabled and writes allowed)
+    if ($shouldConnectExchange) {
         Write-Log "Connecting to Exchange Online..."
         if ($CertificateThumbprint) {
             Connect-ExchangeOnline -CertificateThumbprint $CertificateThumbprint -AppId $ClientId -Organization $Organization -ShowBanner:$false
@@ -924,6 +962,9 @@ try {
             Connect-ExchangeOnline -AppId $ClientId -Organization $Organization -ShowBanner:$false
         }
         Write-Log "Exchange Online connected"
+    }
+    else {
+        Write-Log "Skipping Exchange Online connection (read-only mode or signatures disabled)" -Level INFO
     }
 
     # Get employees from database
@@ -936,8 +977,8 @@ try {
         exit 0
     }
 
-    # Confirmation prompt (unless -Force or -DryRun)
-    if (-not $Force -and -not $DryRun) {
+    # Confirmation prompt (unless -Force or read-only mode)
+    if (-not $Force -and -not $effectiveDryRun) {
         $confirm = Read-Host "Process $($employees.Count) employees? (y/N)"
         if ($confirm -ne "y" -and $confirm -ne "Y") {
             Write-Log "Cancelled by user"
@@ -988,13 +1029,13 @@ try {
             
             # Profile sync
             if (-not $SkipProfile) {
-                $userResult.ProfileSync = Sync-UserProfile -EntraUserId $entraUser.Id -Employee $employee -DryRun:$DryRun
+                $userResult.ProfileSync = Sync-UserProfile -EntraUserId $entraUser.Id -Employee $employee -DryRun:$effectiveDryRun
                 Start-Sleep -Milliseconds $DelayMs
             }
             
             # Photo sync
             if (-not $SkipPhoto -and $employee.profile_image_url) {
-                $userResult.PhotoSync = Sync-UserPhoto -EntraUserId $entraUser.Id -PhotoUrl $employee.profile_image_url -DryRun:$DryRun
+                $userResult.PhotoSync = Sync-UserPhoto -EntraUserId $entraUser.Id -PhotoUrl $employee.profile_image_url -DryRun:$effectiveDryRun
                 Start-Sleep -Milliseconds $DelayMs
             }
             
@@ -1008,7 +1049,7 @@ try {
                         # Generate plain text from HTML
                         $htmlSig -replace "<[^>]+>", "" -replace "\s+", " "
                     }
-                    $userResult.SignatureSync = Set-UserSignature -Email $employee.email -HtmlSignature $htmlSig -TextSignature $textSig -DryRun:$DryRun
+                    $userResult.SignatureSync = Set-UserSignature -Email $employee.email -HtmlSignature $htmlSig -TextSignature $textSig -DryRun:$effectiveDryRun
                 }
                 catch {
                     $userResult.SignatureSync.Error = $_.Exception.Message
@@ -1031,7 +1072,7 @@ try {
 
     # Generate summary
     $endTime = Get-Date
-    $report = Format-SummaryReport -Results $script:Results -StartTime $script:StartTime -EndTime $endTime
+    $report = Format-SummaryReport -Results $script:Results -StartTime $script:StartTime -EndTime $endTime -ReadOnly:$effectiveDryRun
     Write-Host $report
 
     # Determine exit code

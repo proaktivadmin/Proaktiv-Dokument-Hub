@@ -45,6 +45,21 @@ class Employee(Base):
     # Entra ID sync status
     entra_upn: Mapped[str | None] = mapped_column(String(255), nullable=True)  # User Principal Name in Entra ID
     entra_upn_mismatch: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)  # True if UPN != email
+    entra_user_id: Mapped[str | None] = mapped_column(String(64), nullable=True)  # Entra ID object ID
+    entra_mail: Mapped[str | None] = mapped_column(String(255), nullable=True)  # Entra mail attribute
+    entra_display_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    entra_given_name: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    entra_surname: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    entra_job_title: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    entra_mobile_phone: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    entra_department: Mapped[str | None] = mapped_column(String(200), nullable=True)
+    entra_office_location: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    entra_street_address: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    entra_postal_code: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    entra_country: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    entra_account_enabled: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
+    entra_mismatch_fields: Mapped[list[str] | None] = mapped_column(JSONB, nullable=False, default=list)
+    entra_last_synced_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     # Foreign key
     office_id: Mapped[uuid.UUID] = mapped_column(GUID, ForeignKey("offices.id", ondelete="CASCADE"), nullable=False)
