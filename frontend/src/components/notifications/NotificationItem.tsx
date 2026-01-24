@@ -85,8 +85,8 @@ export function NotificationItem({
       className={cn(
         "flex items-start gap-3 px-4 py-3 cursor-pointer transition-colors duration-fast ease-standard",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-strong",
-        "hover:bg-secondary/60",
-        !notification.is_read && "bg-secondary/40"
+        "hover:bg-[#f5f5f0]",
+        !notification.is_read && "bg-[#f8f8f5]"
       )}
     >
       <div
@@ -129,7 +129,7 @@ export function NotificationItem({
       <button
         type="button"
         onClick={handleDelete}
-        className="shrink-0 rounded-md p-1 text-muted-foreground transition-colors duration-fast ease-standard hover:bg-secondary/60 hover:text-primary"
+        className="shrink-0 rounded-md p-1 text-muted-foreground transition-colors duration-fast ease-standard hover:bg-[#f0f0eb] hover:text-primary"
         title="Fjern varsling"
         aria-label="Fjern varsling"
       >

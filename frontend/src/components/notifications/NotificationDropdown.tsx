@@ -57,7 +57,7 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
 
       <DropdownMenuContent
         align="end"
-        className="w-80 max-h-[480px] overflow-hidden bg-card p-0"
+        className="w-80 max-h-[480px] overflow-hidden bg-white p-0"
       >
         <div className="flex items-center justify-between border-b border-border px-4 py-3">
           <h3 className="font-serif text-sm font-semibold text-primary">
@@ -67,7 +67,7 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
             <button
               type="button"
               onClick={() => void refresh()}
-              className="rounded-md p-1.5 text-muted-foreground transition-colors duration-fast ease-standard hover:bg-secondary/70 hover:text-foreground"
+              className="rounded-md p-1.5 text-muted-foreground transition-colors duration-fast ease-standard hover:bg-[#f0f0eb] hover:text-foreground"
               title="Oppdater"
               aria-label="Oppdater"
             >
@@ -79,7 +79,7 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
               <button
                 type="button"
                 onClick={() => void markAllAsRead()}
-                className="rounded-md p-1.5 text-muted-foreground transition-colors duration-fast ease-standard hover:bg-secondary/70 hover:text-foreground"
+                className="rounded-md p-1.5 text-muted-foreground transition-colors duration-fast ease-standard hover:bg-[#f0f0eb] hover:text-foreground"
                 title="Merk alle som lest"
                 aria-label="Merk alle som lest"
               >
@@ -90,7 +90,7 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
               <button
                 type="button"
                 onClick={() => void clearAll()}
-                className="rounded-md p-1.5 text-muted-foreground transition-colors duration-fast ease-standard hover:bg-destructive/10 hover:text-destructive"
+                className="rounded-md p-1.5 text-muted-foreground transition-colors duration-fast ease-standard hover:bg-red-50 hover:text-destructive"
                 title="Fjern alle"
                 aria-label="Fjern alle"
               >
