@@ -33,7 +33,7 @@ Progress: [█████████░] 95% (V3.7 UPN detection complete, Pha
 | 1. Vitec API Connection | 3/3 | Complete | 2026-01-20 |
 | 4. Stack Upgrade | 5/5 | Complete | 2026-01-22 |
 | 5. Vercel Migration | 2/5 | In Progress | - |
-| 6. Entra ID Signature Sync | 8/8 | Ready for Testing | 2026-01-22 |
+| 6. Entra ID Signature Sync | 8/8 | Profile Sync ✅ / Exchange ⏸️ | 2026-01-24 |
 | 7. Office Enhancements + SalesScreen | 0/8 | Ready | - |
 
 **Recent Trend:**

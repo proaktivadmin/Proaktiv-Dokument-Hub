@@ -202,13 +202,14 @@ See `.planning/STATE.md` for full status.
 - ✅ New `resolveAvatarUrl()` helper for proper avatar cropping
 - ✅ Sub-offices display on office cards and detail pages
 
-**Phase 06: Entra ID Signature Sync (Ready for Testing):**
-- ✅ Implementation complete - all files created
-- 🔲 Sync employee data from PostgreSQL to Microsoft Entra ID
-- 🔲 Upload profile photos to Entra ID
-- 🔲 Push email signatures to Exchange Online
+**Phase 06: Entra ID Signature Sync (Profile Sync Complete):**
+- ✅ Microsoft Graph authentication works
+- ✅ Sync employee profiles to Entra ID (jobTitle, department, officeLocation)
+- ✅ Photo upload ready (script complete)
+- ⏸️ Exchange Online signatures on hold (requires certificate auth)
+- QA verified: 2026-01-23 dry-run successful
 - Plans: `.planning/phases/06-entra-signature-sync/`
-- Commands: `/entra-architect`, `/entra-builder`, `/entra-qa`
+- Commands: `/entra-sync` (usage docs)
 
 **V3.4 Portal Skins Preview (Completed 2026-01-23):**
 - ✅ Vitec Budportal and Visningsportal skin packages created
