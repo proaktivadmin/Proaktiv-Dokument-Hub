@@ -18,6 +18,7 @@ from app.models.employee import Employee
 from app.models.office import Office
 from app.models.office_territory import OfficeTerritory
 from app.schemas.office import OfficeCreate, OfficeUpdate, OfficeWithStats
+from app.services.notification_service import NotificationService
 from app.services.vitec_hub_service import VitecHubService
 
 logger = logging.getLogger(__name__)
@@ -466,19 +467,26 @@ class OfficeService:
             db.add(office)
             await db.flush()
             await db.refresh(office)
+            try:
+                await NotificationService.notify_office_added(db, office)
+            except Exception as exc:
+                logger.warning("Failed to create office added notification: %s", exc)
             return office, "created"
 
         updated = False
+        changed_fields: list[str] = []
 
         # Update organization_number if we now have it
         if org_number and existing.organization_number != org_number:
             existing.organization_number = org_number
             updated = True
+            changed_fields.append("organization_number")
 
         # Update department_id if we now have it
         if department_id is not None and existing.vitec_department_id != department_id:
             existing.vitec_department_id = department_id
             updated = True
+            changed_fields.append("vitec_department_id")
 
         # Update other fields
         for field in [
@@ -499,14 +507,21 @@ class OfficeService:
             if getattr(existing, field) != value:
                 setattr(existing, field, value)
                 updated = True
+                changed_fields.append(field)
 
         if payload.get("is_active") is not None and existing.is_active != payload.get("is_active"):
             existing.is_active = payload.get("is_active")
             updated = True
+            changed_fields.append("is_active")
 
         if updated:
             await db.flush()
             await db.refresh(existing)
+            if changed_fields:
+                try:
+                    await NotificationService.notify_office_updated(db, existing, changed_fields)
+                except Exception as exc:
+                    logger.warning("Failed to create office updated notification: %s", exc)
             return existing, "updated"
 
         return existing, "skipped"
@@ -524,10 +539,12 @@ class OfficeService:
 
         departments = await hub.get_departments(install_id)
         created = updated = skipped = 0
+        sync_errors: list[str] = []
         for raw in departments:
             payload = OfficeService._map_department_payload(raw or {})
             if not payload.get("name"):
                 skipped += 1
+                sync_errors.append("missing_office_name")
                 continue
             _, action = await OfficeService.upsert_from_hub(db, payload)
             if action == "created":
@@ -538,6 +555,15 @@ class OfficeService:
                 skipped += 1
 
         # Explicitly commit all changes
+        if sync_errors:
+            try:
+                await NotificationService.notify_sync_error(
+                    db,
+                    operation="office_sync",
+                    error=f"{len(sync_errors)} offices failed to sync",
+                )
+            except Exception as exc:
+                logger.warning("Failed to create office sync error notification: %s", exc)
         await db.commit()
 
         total = len(departments)

@@ -17,6 +17,7 @@ from app.models.firecrawl_scrape import FirecrawlScrape
 from app.models.layout_partial import LayoutPartial
 from app.models.layout_partial_version import LayoutPartialDefault, LayoutPartialVersion
 from app.models.merge_field import MergeField
+from app.models.notification import Notification
 
 # V3 Models
 from app.models.office import Office
@@ -40,6 +41,7 @@ __all__ = [
     "Category",
     # Audit
     "AuditLog",
+    "Notification",
     # V2 Features
     "MergeField",
     "CodePattern",

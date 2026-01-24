@@ -1,314 +1,279 @@
-# Multi-Agent Pipeline Pattern
+# Multi-Agent Pipeline Architecture
 
-> Technical reference for orchestrating parallel agent workflows in Cursor.
-
----
+> Technical reference for implementing features using phased agent execution.
 
 ## Overview
 
-The agent pipeline pattern enables complex features to be built by multiple specialized agents working in sequence, with a human orchestrator managing handoffs and final integration.
+The multi-agent pipeline is a methodology for breaking complex features into discrete, sequentially-executed plans. Each plan is self-contained with explicit context, scope, and success criteria, enabling independent agents to execute without full project knowledge.
 
-**Key Benefits:**
-- Parallel workstreams where dependencies allow
-- Clear scope boundaries prevent agents from overreaching
-- Structured handoffs ensure nothing is missed
-- Single commit at the end maintains clean git history
-- Human QA between stages catches issues early
-
----
-
-## Architecture
+## Pipeline Structure
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      ORCHESTRATOR (Human)                        │
-│  - Creates specification document                                │
-│  - Designs agent pipeline with dependencies                      │
-│  - Triggers agents in sequence                                   │
-│  - Reviews handover summaries                                    │
-│  - Runs linters and fixes issues                                 │
-│  - Commits and pushes final result                               │
-└─────────────────────────────────────────────────────────────────┘
-         │                    │                    │
-         ▼                    ▼                    ▼
-┌─────────────┐      ┌─────────────┐      ┌─────────────┐
-│   Agent 1   │      │   Agent 2   │      │   Agent 3   │
-│  (Backend)  │ ───► │  (Backend)  │      │  (Frontend) │
-│             │      │  Depends:1  │      │  Depends:1  │
-└─────────────┘      └─────────────┘      └─────────────┘
-                            │                    │
-                            ▼                    ▼
-                     ┌─────────────┐      ┌─────────────┐
-                     │   Agent 4   │      │   Agent 5   │
-                     │  (Frontend) │      │  (Frontend) │
-                     │  Depends:3  │      │  Depends:3  │
-                     └─────────────┘      └─────────────┘
+.planning/phases/{phase-number}-{feature-name}/
+├── HANDOVER.md           # Master prompt + execution order
+├── {phase}-RESEARCH.md   # Optional: Background research
+├── {phase}-01-PLAN.md    # Wave 1: Foundation
+├── {phase}-02-PLAN.md    # Wave 2: Core implementation
+├── {phase}-03-PLAN.md    # Wave 3: Integration
+├── ...
+└── {phase}-NN-PLAN.md    # Wave N: Testing/QA
 ```
 
----
+## File Formats
 
-## Pipeline Components
+### HANDOVER.md (Master Prompt)
 
-### 1. Specification Document
-
-Create a single source of truth that all agents reference:
-
-```
-.planning/phases/{phase-name}/SPEC.md
-```
-
-**Contents:**
-- Architecture diagram (ASCII)
-- API endpoint definitions with request/response schemas
-- Template placeholders and data sources
-- Files to create (with exact paths)
-- Files to modify (with specific changes)
-- Environment variables needed
-- External permissions required
-- Agent assignment table with dependencies
-- Success criteria
-
-### 2. Agent Assignment Table
-
-Map work to agents with explicit dependencies:
-
-| Agent | Scope | Dependencies | Files |
-|-------|-------|--------------|-------|
-| 1 | Backend service + router | None | service.py, router.py |
-| 2 | Backend external API | Agent 1 | graph_service.py |
-| 3 | Frontend hooks + component | Agent 1, 2 | hook.ts, Component.tsx |
-| 4 | Page integration | Agent 3 | page.tsx |
-| 5 | Public page | Agent 1, 3 | public/page.tsx |
-| 6 | Scripts/automation | Agent 1, 2 | script.ps1 |
-
-**Parallel execution:** Agents with no dependencies (or same dependencies) can run in parallel.
-
-### 3. Agent Command Structure
-
-Each agent receives a structured prompt stored in `.cursor/commands/`:
+The HANDOVER file provides context that applies to ALL plans in the phase.
 
 ```markdown
-# {Feature} - Agent {N}: {Description}
+# Phase XX: Feature Name - HANDOVER
 
-You are building {feature context}. {One sentence scope}.
+**Created:** YYYY-MM-DD
+**Status:** Ready for Implementation
 
-## READ SPEC FIRST
-- .planning/phases/{phase}/SPEC.md (full technical specification)
+## MASTER PROMPT
 
-## READ THESE FILES (mandatory)
-- {file1} - {why}
-- {file2} - {why}
-- {file3} - {why}
+You are implementing Phase XX: Feature Name.
 
-## DELIVERABLES
+**Objective:** High-level goal statement
 
-### 1. {Deliverable Name}
-File: {exact/path/to/file.ext}
+**Data Flow:**
+```
+Source → Step 1 → Step 2 → Destination
+```
 
-{Detailed requirements with code examples if helpful}
+## CONTEXT FILES (READ FIRST)
 
-### 2. {Deliverable Name}
+1. `CLAUDE.md` - Project conventions
+2. `file.py` - Relevant existing code
+3. ...
+
+## EXECUTION ORDER
+
+### Wave 1: Foundation
+1. **XX-01-PLAN.md** - Description
+
+### Wave 2: Implementation
+2. **XX-02-PLAN.md** - Description
 ...
 
-## RULES
-- {Constraint 1}
-- {Constraint 2}
-- DO NOT commit or push any code
-- ASK for clarification if anything is unclear
+## KEY PATTERNS
 
-## HANDOVER FORMAT
-When complete, respond with:
+### Pattern Name
+Code examples and conventions to follow
 
-**AGENT {N} COMPLETE**
+## COMMANDS
 
-Files created:
-- {file1}
-- {file2}
-
-{Key endpoint/component/feature ready}
-
-Issues: (list any or "None")
+### `/command-01` - Description
+```
+Execute .planning/phases/XX-feature/XX-01-PLAN.md
+Context: Read HANDOVER.md first. Pattern from X.
+Return: Execution summary with specific outputs.
+```
 ```
 
+### PLAN.md Files
+
+Each PLAN file is a self-contained task specification.
+
+```markdown
+---
+phase: XX-feature-name
+plan: 01
+type: execute | verify
+wave: 1
+depends_on: []
+files_modified:
+  - path/to/file.ext
+autonomous: true
 ---
 
-## Agent Prompt Best Practices
+<objective>
+Brief objective description.
+</objective>
 
-### DO
+<context>
+Read these files first:
+- File 1 - Purpose
+- File 2 - Purpose
+</context>
 
-1. **Reference the spec first** - Every agent should read SPEC.md before starting
-2. **List exact file paths** - No ambiguity about where files go
-3. **Provide code examples** - Show expected patterns, not just describe them
-4. **Explicit dependencies** - "Just created by Agent 1" makes sequencing clear
-5. **Structured handover** - Consistent format makes orchestration easy
-6. **No commit rule** - Agents should never commit; orchestrator handles this
-7. **Ask-first rule** - Agents should ask rather than assume
+<tasks>
+<task type="auto">
+  <name>Task 1: Name</name>
+  <files>path/to/file.ext</files>
+  <action>
+    Detailed instructions with code examples.
+  </action>
+</task>
 
-### DON'T
+<task type="manual">
+  <name>Task 2: Manual Step</name>
+  <files>-</files>
+  <action>
+    Instructions for human execution.
+  </action>
+</task>
+</tasks>
 
-1. **Don't give full context** - Agents don't need project history, just their scope
-2. **Don't allow scope creep** - "Minimal changes only" prevents over-engineering
-3. **Don't skip file reads** - Mandatory reads ensure agents understand patterns
-4. **Don't use vague deliverables** - "Create a service" → "Create signature_service.py with async render_signature() method"
-
----
-
-## Handover Protocol
-
-### Agent → Orchestrator
-
-Each agent returns a structured summary:
-
-```
-**AGENT {N} COMPLETE**
-
-Files created:
-- backend/app/services/example_service.py
-- backend/app/routers/example.py
-
-Files modified:
-- backend/app/main.py
-
-Endpoint ready: GET /api/example/{id}
-
-Issues: None
+<success_criteria>
+- Criterion 1
+- Criterion 2
+</success_criteria>
 ```
 
-### Orchestrator Actions
+## Agent Command Files
 
-After each handover:
+Commands live in `.cursor/commands/` as `.md` files.
 
-1. **Verify files exist** - Quick check that deliverables were created
-2. **Run linters** - Catch issues before next agent starts
-3. **Fix lint errors** - Don't let them accumulate
-4. **Trigger next agent** - Only if dependencies are satisfied
+```markdown
+# /command-name - Brief Description
 
----
+## Execute
 
-## Parallel Execution Strategy
+`.planning/phases/XX-feature/XX-01-PLAN.md`
 
-### Dependency Graph
+## Context (Read First)
 
-```
-Agent 1 ──┬──► Agent 2 ──► Agent 4
-          │
-          └──► Agent 3 ──► Agent 5
-                      │
-                      └──► Agent 6
-```
+1. `HANDOVER.md` - Master context
+2. `file.py` - Relevant pattern
 
-**Parallel groups:**
-- Group 1: Agent 1 (no deps)
-- Group 2: Agent 2, Agent 3 (both depend on 1)
-- Group 3: Agent 4, Agent 5, Agent 6 (depend on 2 or 3)
+## Objective
 
-### Execution Timeline
+Clear statement of what the agent should accomplish.
 
-```
-Time    Agent 1    Agent 2    Agent 3    Agent 4    Agent 5    Agent 6
-────────────────────────────────────────────────────────────────────────
-T0      [START]
-T1      [DONE]     [START]    [START]
-T2                 [DONE]     [DONE]     [START]    [START]    [START]
-T3                                       [DONE]     [DONE]     [DONE]
-T4      [ORCHESTRATOR: Lint, Fix, Commit, Push]
-```
+## Files to Create/Modify
 
----
+- `path/to/new/file.ext` - Description
+- `path/to/existing/file.ext` - What to change
 
-## Post-Pipeline Checklist
+## Key Requirements
 
-After all agents complete:
+- Requirement 1
+- Requirement 2
 
-- [ ] Verify all files created/modified
-- [ ] Run frontend linter: `npm run lint`
-- [ ] Run backend linter: `ruff check backend/`
-- [ ] Fix any lint errors introduced by agents
-- [ ] Test locally if possible
-- [ ] Stage only relevant files (avoid unrelated changes)
-- [ ] Single commit with comprehensive message
-- [ ] Push to remote
+## Return Format
 
----
-
-## Commit Message Template
+After completing, return this summary:
 
 ```
-feat({scope}): {Short description}
+## EXECUTION SUMMARY
 
-Backend:
-- {Backend change 1}
-- {Backend change 2}
+**Plan:** XX-01-PLAN.md
+**Status:** COMPLETE | PARTIAL | BLOCKED
 
-Frontend:
-- {Frontend change 1}
-- {Frontend change 2}
+### Completed Tasks
+- [x] Task 1: Description
 
-Scripts:
-- {Script change 1}
+### Files Created/Modified
+- `path/to/file.ext` - Description
 
-{Phase} planning docs included.
+### Verification
+- [ ] Criterion: PASS/FAIL
+
+### Notes for Review
+- Deviations, decisions, issues
+
+### Next Steps
+- What next agent should do
+```
 ```
 
----
+## Execution Flow
 
-## Example: Signature Portal Pipeline
+### 1. Planning Phase
 
-**Feature:** Self-service email signature portal  
-**Agents:** 6  
-**Duration:** ~3-4 hours
+1. Create phase directory in `.planning/phases/`
+2. Write HANDOVER.md with master context
+3. Break feature into sequential waves
+4. Create PLAN.md for each wave
+5. Create command files in `.cursor/commands/`
 
-| Agent | Scope | Time |
-|-------|-------|------|
-| 1 | SignatureService + GET endpoint | 20 min |
-| 2 | GraphService + POST send endpoint | 25 min |
-| 3 | useSignature hook + SignaturePreview | 30 min |
-| 4 | Employee page tab integration | 10 min |
-| 5 | Public /signature/[id] page | 25 min |
-| 6 | PowerShell bulk sender | 20 min |
-| QA | Lint fixes, testing, commit | 30 min |
+### 2. Execution Phase
 
-**Key learnings:**
-- Agents 2 and 3 can run in parallel after Agent 1
-- Agents 4, 5, 6 can all run in parallel after their dependencies
-- Lint fixes are usually minor (unused variables, HTML entities)
-- Single commit keeps git history clean
+For each wave:
 
----
+1. **Invoke agent** with command reference: `@.cursor/commands/command-01.md`
+2. **Agent reads** HANDOVER.md for context
+3. **Agent executes** PLAN.md tasks
+4. **Agent returns** structured execution summary
+5. **Human reviews** summary for correctness
+6. **Proceed to next wave** or fix issues
 
-## Troubleshooting
+### 3. Completion Phase
 
-### Agent Creates Wrong Files
+1. Move phase to `.planning/phases/_complete/`
+2. Merge command files into archive
+3. Create maintenance command for future updates
+4. Update project documentation (CLAUDE.md, STATE.md)
 
-**Solution:** Be explicit about file paths in the prompt. Include the full path from project root.
+## Wave Dependencies
 
-### Agent Scope Creep
+Waves are designed to build on each other:
 
-**Solution:** Add explicit constraints: "Minimal changes only - just add the tab" or "Do NOT modify other files."
+| Wave | Purpose | Dependencies |
+|------|---------|--------------|
+| 1 | Database/Model | None |
+| 2 | Backend Service | Wave 1 |
+| 3 | API Endpoints | Wave 2 |
+| 4 | Frontend Types | Wave 3 |
+| 5 | Frontend Components | Wave 4 |
+| 6 | Integration | Waves 2, 5 |
+| 7 | Testing/QA | All previous |
 
-### Agent Makes Bad Assumptions
+## Best Practices
 
-**Solution:** Add "ASK for clarification if anything is unclear" and list mandatory files to read first.
+### Plan Design
 
-### Lint Errors After Agent
+- **Single responsibility**: Each plan does one thing well
+- **Explicit context**: List all files agent must read
+- **Code examples**: Show patterns, don't just describe
+- **Success criteria**: Measurable, verifiable outcomes
+- **No assumptions**: Agent knows only what's in the plan
 
-**Solution:** Run linters after each agent, not just at the end. Fix immediately before context is lost.
+### Agent Commands
 
-### Agent Commits Code
+- **Self-contained**: Include all necessary context
+- **Structured output**: Define exact return format
+- **Review checkpoints**: Enable human verification
+- **Next steps**: Tell agent what comes after
 
-**Solution:** Every prompt must include: "DO NOT commit or push any code."
+### Error Handling
 
----
+- **Partial completion**: Agent reports what succeeded
+- **Blockers**: Agent identifies dependencies not met
+- **Deviations**: Agent documents why plan was modified
+- **Human review**: Summary enables quick verification
 
-## Template Files
-
-Store reusable templates in:
+## Example: 6-Wave Feature Pipeline
 
 ```
-.planning/templates/
-├── agent-prompt-template.md
-├── spec-template.md
-└── handover-template.md
+Wave 1: Database Model + Migration
+  └── Creates foundation data structures
+
+Wave 2: Backend Service
+  └── Business logic layer
+  
+Wave 3: API Endpoints
+  └── REST interface to service
+
+Wave 4: Frontend Types + API Client
+  └── TypeScript types + fetch wrapper
+
+Wave 5: Frontend Components
+  └── UI implementation
+
+Wave 6: Testing + QA
+  └── Verification and documentation
 ```
 
-Reference these when creating new pipelines to maintain consistency.
+## Maintenance Commands
+
+After completion, create a single maintenance command that:
+
+1. References all relevant code locations
+2. Explains the feature architecture
+3. Provides patterns for modifications
+4. Enables future agents to safely update the feature
+
+Example: `/notification` for sync notification system maintenance.

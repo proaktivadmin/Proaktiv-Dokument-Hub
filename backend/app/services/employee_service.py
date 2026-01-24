@@ -16,6 +16,7 @@ from app.config import settings
 from app.models.employee import Employee
 from app.models.office import Office
 from app.schemas.employee import EmployeeCreate, EmployeeUpdate, StartOffboarding
+from app.services.notification_service import NotificationService
 from app.services.office_service import OfficeService
 from app.services.vitec_hub_service import VitecHubService
 
@@ -493,15 +494,22 @@ class EmployeeService:
             db.add(employee)
             await db.flush()
             await db.refresh(employee)
+            try:
+                await NotificationService.notify_employee_added(db, employee)
+            except Exception as exc:
+                logger.warning("Failed to create employee added notification: %s", exc)
             return employee, "created"
 
         updated = False
+        changed_fields: list[str] = []
         if vitec_employee_id and existing.vitec_employee_id != vitec_employee_id:
             existing.vitec_employee_id = vitec_employee_id
             updated = True
+            changed_fields.append("vitec_employee_id")
         if existing.office_id != str(office.id):
             existing.office_id = str(office.id)
             updated = True
+            changed_fields.append("office_id")
 
         for field in [
             "first_name",
@@ -519,15 +527,22 @@ class EmployeeService:
             if getattr(existing, field) != value:
                 setattr(existing, field, value)
                 updated = True
+                changed_fields.append(field)
 
         roles = payload.get("system_roles") or []
         if roles and existing.system_roles != roles:
             existing.system_roles = roles
             updated = True
+            changed_fields.append("system_roles")
 
         if updated:
             await db.flush()
             await db.refresh(existing)
+            if changed_fields:
+                try:
+                    await NotificationService.notify_employee_updated(db, existing, changed_fields)
+                except Exception as exc:
+                    logger.warning("Failed to create employee updated notification: %s", exc)
             return existing, "updated"
 
         return existing, "skipped"
@@ -545,6 +560,7 @@ class EmployeeService:
 
         employees = await hub.get_employees(install_id)
         created = updated = skipped = missing_office = 0
+        sync_errors: list[str] = []
 
         for raw in employees:
             payload = EmployeeService._map_employee_payload(raw or {})
@@ -555,11 +571,13 @@ class EmployeeService:
             department_id = payload.get("department_id")
             if department_id is None:
                 skipped += 1
+                sync_errors.append("missing_department_id")
                 continue
 
             office = await OfficeService.get_by_vitec_department_id(db, department_id)
             if not office:
                 missing_office += 1
+                sync_errors.append(f"missing_office:{department_id}")
                 continue
 
             _, action = await EmployeeService.upsert_from_hub(db, payload, office)
@@ -571,6 +589,15 @@ class EmployeeService:
                 skipped += 1
 
         # Explicitly commit all changes
+        if sync_errors:
+            try:
+                await NotificationService.notify_sync_error(
+                    db,
+                    operation="employee_sync",
+                    error=f"{len(sync_errors)} employees failed to sync",
+                )
+            except Exception as exc:
+                logger.warning("Failed to create employee sync error notification: %s", exc)
         await db.commit()
 
         total = len(employees)

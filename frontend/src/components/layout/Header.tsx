@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { UploadTemplateDialog } from "@/components/templates/UploadTemplateDialog";
 import { NewTemplateDialog } from "@/components/templates/NewTemplateDialog";
+import { NotificationDropdown } from "@/components/notifications/NotificationDropdown";
 import { cn } from "@/lib/utils";
 import { authApi } from "@/lib/api/auth";
 
@@ -238,6 +239,9 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+
+              {/* Notification Dropdown */}
+              <NotificationDropdown className="ml-2" />
 
               <Button
                 variant="ghost"

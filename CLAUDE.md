@@ -106,15 +106,19 @@ frontend/
 │   ├── app/         # Next.js pages
 │   │   ├── assets/  # Mediefiler page (logos, global assets)
 │   │   ├── storage/ # WebDAV browser page
-│   │   └── portal/  # Portal skins preview page
+│   │   ├── portal/  # Portal skins preview page
+│   │   └── signature/[id]/ # Public signature copy page
 │   ├── components/  # React components
 │   │   ├── assets/  # Asset gallery, LogoLibrary
 │   │   ├── storage/ # Storage browser components
-│   │   └── portal/  # Portal mockup components
+│   │   ├── portal/  # Portal mockup components
+│   │   └── notifications/ # NotificationDropdown, NotificationItem
 │   ├── hooks/       # Custom hooks
+│   │   └── use-notifications.ts # Notification polling hook
 │   ├── lib/         # API wrapper, utilities
 │   │   └── api/config.ts  # resolveApiUrl, resolveAvatarUrl
 │   └── types/       # TypeScript interfaces
+│       └── notification.ts # Notification types
 
 skins/                    # Vitec portal skin packages
 ├── proaktiv-bud/         # Budportal skin files
@@ -377,6 +381,7 @@ Use `/entra-architect`, `/entra-builder`, `/entra-qa` commands.
 | `/entra-builder` | Build Entra ID sync script |
 | `/entra-qa` | Test Entra ID sync |
 | `/entra-sync` | Run Entra ID sync (usage docs) |
+| `/notification` | Maintain/update notification system |
 
 ---
 

@@ -39,7 +39,8 @@ const cspHeader = `
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Vercel automatically handles output mode; standalone only needed for local Docker
-  ...(process.env.VERCEL ? {} : { output: 'standalone' }),
+  // Disabled on Windows due to EINVAL error with colons in chunk filenames (node:inspector)
+  ...(process.env.VERCEL || process.platform === 'win32' ? {} : { output: 'standalone' }),
   
   // API proxy rewrites - only used for local development
   // Vercel uses vercel.json rewrites for production
