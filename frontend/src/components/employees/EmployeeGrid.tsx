@@ -179,8 +179,8 @@ export function EmployeeGrid({
               <Button
                 variant="outline"
                 onClick={onEntraImport}
-                disabled={isEntraImporting || entraConnected === false}
-                title={entraConnected === false ? "Entra ID ikke konfigurert" : undefined}
+                disabled={isEntraImporting}
+                title={entraConnected === false ? "Entra ID ikke konfigurert (vil feile)" : undefined}
               >
                 <Cloud className="h-4 w-4 mr-2" />
                 {isEntraImporting ? "Henter Entra..." : "Hent Entra"}
