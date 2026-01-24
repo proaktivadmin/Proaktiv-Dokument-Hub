@@ -161,13 +161,16 @@ skins/                    # Vitec portal skin packages
 - Storage components: `StorageBrowser.tsx`, `ImportToLibraryDialog.tsx`
 
 ### Design System (Critical)
+
+**⚠️ BEFORE any frontend work, READ `.planning/codebase/DESIGN-SYSTEM.md`**
+
 - **Use design tokens** — Never hardcode shadows, transitions, colors
 - **Cards**: `shadow-card` base, `shadow-card-hover` + `hover:-translate-y-0.5` on hover
 - **Selection**: `ring-strong` + `shadow-glow` (bronze accent)
 - **Typography**: Serif (`font-serif`) for headings, sans for body
 - **Transitions**: Always use `duration-*` and `ease-standard`
 - **Colors**: Navy `#272630`, Bronze `#BCAB8A`, Beige `#E9E7DC`
-- See full guide: `.planning/codebase/DESIGN-SYSTEM.md`
+- Rule file: `.cursor/rules/frontend-design.mdc` (auto-applies to frontend files)
 
 ---
 
