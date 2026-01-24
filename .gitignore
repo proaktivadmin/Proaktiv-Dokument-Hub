@@ -21,7 +21,10 @@ dist/
 
 # IDEs
 .idea/
-.cursor/
+
+# Cursor - ignore most but track rules (shared agent instructions)
+.cursor/*
+!.cursor/rules/
 
 # VS Code - allow shared settings but ignore personal ones
 .vscode/*

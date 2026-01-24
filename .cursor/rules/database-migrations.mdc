@@ -1,0 +1,103 @@
+---
+description: Database migration rules - CRITICAL for Railway deployment
+globs:
+  - backend/alembic/versions/*.py
+  - backend/app/models/*.py
+alwaysApply: false
+---
+
+# Database Migration Rules
+
+## ⚠️ CRITICAL: Railway Migration Issue
+
+**Railway's internal networking is unreliable.** Alembic migrations run during deployment often:
+- Fail silently (no error shown, but columns not created)
+- Appear to succeed but don't persist changes
+- Timeout due to network issues between services
+
+### The Problem
+
+When the backend deploys on Railway, the startup script runs `alembic upgrade head`. This frequently fails because:
+1. Railway uses internal hostnames (`postgres.railway.internal`) that are unreliable
+2. The connection may timeout or fail silently
+3. Alembic may report success but the transaction doesn't commit
+
+This causes **500 errors** with messages like:
+- `UndefinedColumnError: column X does not exist`
+- `MissingGreenlet` (when ORM tries to access non-existent columns)
+
+### Required Steps After Creating/Modifying Migrations
+
+**After creating any Alembic migration, you MUST:**
+
+1. **Apply locally first:**
+   ```bash
+   cd backend
+   alembic upgrade head
+   ```
+
+2. **Apply to Railway production manually:**
+   ```powershell
+   # Set the PUBLIC database URL (not internal!)
+   $env:DATABASE_URL = "postgresql://postgres:PASSWORD@shuttle.proxy.rlwy.net:51557/railway"
+   cd backend
+   python -m alembic upgrade head
+   ```
+
+3. **Verify the migration applied:**
+   ```powershell
+   python -m alembic current
+   # Should show: YOUR_REVISION_ID (head)
+   ```
+
+4. **If migration didn't persist, apply manually:**
+   Create a temporary Python script to add columns directly:
+   ```python
+   from sqlalchemy import create_engine, text
+   engine = create_engine(DATABASE_URL)
+   with engine.connect() as conn:
+       conn.execute(text("ALTER TABLE x ADD COLUMN IF NOT EXISTS y TYPE"))
+       conn.execute(text("UPDATE alembic_version SET version_num = 'NEW_VERSION'"))
+       conn.commit()
+   ```
+
+### Environment Variable Note
+
+The backend's `DATABASE_URL` on Railway **must use the public URL**, not the internal one:
+- ❌ `postgres.railway.internal:5432` - UNRELIABLE
+- ✅ `shuttle.proxy.rlwy.net:51557` - RELIABLE
+
+This is already configured, but verify if you see connection errors.
+
+### Checklist for Migration PRs
+
+Before merging any PR with database migrations:
+
+- [ ] Migration tested locally with `alembic upgrade head`
+- [ ] Migration applied to Railway production manually
+- [ ] Verified with `alembic current` showing correct version
+- [ ] Tested API endpoints that use the new columns
+- [ ] Updated `CLAUDE.md` if adding significant schema changes
+
+### Getting the Public Database URL
+
+```powershell
+# From Railway dashboard: Postgres service → Variables → DATABASE_PUBLIC_URL
+# Or construct from these values:
+# - Host: shuttle.proxy.rlwy.net (or similar)
+# - Port: 51557 (external port)
+# - User: postgres
+# - Password: (from POSTGRES_PASSWORD)
+# - Database: railway
+```
+
+### Common Symptoms of Failed Migration
+
+If you see any of these errors after a deployment, the migration likely failed:
+
+1. `asyncpg.exceptions.UndefinedColumnError: column X does not exist`
+2. `sqlalchemy.exc.MissingGreenlet` when accessing relationships
+3. 500 errors on endpoints that worked before the migration
+4. API health check passes but specific endpoints fail
+
+**Solution:** Run the migration manually using the steps above.

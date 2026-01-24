@@ -172,6 +172,24 @@ skins/                    # Vitec portal skin packages
 - **Colors**: Navy `#272630`, Bronze `#BCAB8A`, Beige `#E9E7DC`
 - Rule file: `.cursor/rules/frontend-design.mdc` (auto-applies to frontend files)
 
+### Database Migrations (CRITICAL)
+
+**⚠️ Railway migrations are UNRELIABLE. Read `.cursor/rules/database-migrations.mdc` before any DB work!**
+
+Railway's internal networking causes Alembic migrations to fail silently during deployment. After creating ANY migration:
+
+1. **Apply locally:** `cd backend && alembic upgrade head`
+2. **Apply to Railway manually:**
+   ```powershell
+   $env:DATABASE_URL = "postgresql://postgres:PASSWORD@shuttle.proxy.rlwy.net:51557/railway"
+   cd backend
+   python -m alembic upgrade head
+   ```
+3. **Verify:** `python -m alembic current` should show `YOUR_VERSION (head)`
+4. **If it didn't persist:** Create a Python script to add columns with `ALTER TABLE ... ADD COLUMN IF NOT EXISTS`
+
+**Symptoms of failed migration:** `UndefinedColumnError`, `MissingGreenlet`, 500 errors on previously working endpoints.
+
 ---
 
 ## Current Status
@@ -321,6 +339,9 @@ Use `/entra-architect`, `/entra-builder`, `/entra-qa` commands.
 - Use harsh blues for status (use emerald/sky instead)
 - Skip hover states on interactive elements
 - Use `opacity-50` directly (use `opacity-disabled` token)
+- **Create DB migrations without applying them manually to Railway** (see "Database Migrations" section)
+- Assume `alembic upgrade head` ran successfully during Railway deployment
+- Use Railway's internal database hostname (`postgres.railway.internal`) - use public URL instead
 
 ---
 
@@ -420,6 +441,17 @@ railway variables     # View environment variables
 railway redeploy      # Trigger redeploy
 railway logs          # View logs
 ```
+
+### Apply Migrations to Railway (Required for DB changes)
+```powershell
+# Use the PUBLIC database URL (not internal!)
+$env:DATABASE_URL = "postgresql://postgres:PASSWORD@shuttle.proxy.rlwy.net:51557/railway"
+cd backend
+python -m alembic upgrade head
+python -m alembic current  # Verify: should show VERSION (head)
+```
+
+**⚠️ DO NOT rely on Railway deployment to run migrations.** Always apply manually after creating migrations.
 
 ### Vercel CLI (Frontend)
 ```bash

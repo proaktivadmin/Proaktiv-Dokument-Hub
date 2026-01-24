@@ -1,0 +1,76 @@
+---
+description: Frontend design work - components, styling, UI changes
+globs:
+  - frontend/src/components/**/*.tsx
+  - frontend/src/app/**/*.tsx
+  - frontend/src/app/**/*.css
+  - frontend/tailwind.config.ts
+alwaysApply: false
+---
+
+# Frontend Design Rules
+
+## REQUIRED: Read Design System First
+
+Before planning or implementing ANY frontend design work, you MUST read:
+
+1. **`.planning/codebase/DESIGN-SYSTEM.md`** - Complete design system guide
+   - Brand colors (Navy, Bronze, Beige, Cream)
+   - Typography hierarchy (serif headings, sans body)
+   - Shadow tokens (soft, medium, elevated, glow, card, card-hover)
+   - Transition patterns (fast, normal, slow, ease-standard)
+   - Component patterns (cards, selection, avatars, buttons)
+   - Golden rules (DO/DON'T)
+
+2. **`.cursor/specs/frontend-design-enhancement-status.md`** - Implementation reference
+   - Which components have been enhanced
+   - Specific class patterns used
+   - Technical notes for Tailwind CSS 4
+
+## Design Token Requirements
+
+### Shadows
+- Cards: `shadow-card` base, `shadow-card-hover` on hover
+- Dialogs/dropdowns: `shadow-elevated`
+- Selection: `shadow-glow` (bronze glow)
+- Always add `ring-1 ring-black/[0.03]` for subtle depth
+
+### Transitions
+- Always use `duration-fast`, `duration-normal`, or `duration-slow`
+- Always use `ease-standard` for interactive transitions
+- Never use instant transitions on interactive elements
+
+### Colors
+- Primary: Navy `#272630` (buttons, text)
+- Accent: Bronze `#BCAB8A` (links, focus, selection)
+- Background: White for cards, Beige `#E9E7DC` for header
+- NEVER use harsh blues - use emerald/sky for status colors
+
+### Typography
+- Headings: `font-serif` class (Playfair Display)
+- Body: Default sans (Inter)
+
+## Component Patterns
+
+### Interactive Cards
+```tsx
+className="hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-slow"
+```
+
+### Selection State
+```tsx
+className={cn("...", selected && "ring-2 ring-strong shadow-glow")}
+```
+
+### Avatar Hover
+```tsx
+className="transition-transform duration-fast ease-standard hover:scale-105"
+```
+
+## DO NOT
+
+- Hardcode colors, shadows, or transition values
+- Use `opacity-50` directly (use `opacity-disabled`)
+- Skip hover states on interactive elements
+- Use blue for accents (use bronze)
+- Create components without checking existing patterns
