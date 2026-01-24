@@ -85,7 +85,7 @@ export default function AssetsPage() {
                     <Link
                       key={office.id}
                       href={`/offices/${office.id}`}
-                      className="p-4 border rounded-lg hover:border-primary transition-colors flex items-center gap-3"
+                      className="p-4 border rounded-lg bg-white shadow-card ring-1 ring-black/3 hover:border-[#BCAB8A] hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-slow flex items-center gap-3"
                     >
                       <div 
                         className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-sm"

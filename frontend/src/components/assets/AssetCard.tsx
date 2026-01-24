@@ -49,7 +49,7 @@ export function AssetCard({ asset, onClick, onDelete }: AssetCardProps) {
 
   return (
     <Card 
-      className="group cursor-pointer hover:shadow-md transition-all duration-200 overflow-hidden"
+      className="group cursor-pointer hover:shadow-card-hover hover:-translate-y-0.5 hover:border-[#BCAB8A] transition-all duration-slow overflow-hidden"
       onClick={onClick}
     >
       {/* Preview area */}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -26,8 +26,18 @@ interface HeaderProps {
 export function Header({ onUploadSuccess }: HeaderProps) {
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [newTemplateDialogOpen, setNewTemplateDialogOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+
+  // Scroll shadow effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleUploadSuccess = () => {
     setUploadDialogOpen(false);
@@ -79,7 +89,10 @@ export function Header({ onUploadSuccess }: HeaderProps) {
 
   return (
     <>
-      <header className="border-b border-[#E5E5E5] bg-[#E9E7DC] sticky top-0 z-50">
+      <header className={cn(
+        "border-b border-[#E5E5E5] bg-[#E9E7DC] sticky top-0 z-50 transition-shadow duration-normal",
+        isScrolled && "shadow-medium"
+      )}>
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center">
@@ -117,7 +130,7 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                 <DropdownMenuTrigger asChild>
                   <button
                     className={cn(
-                      "px-4 py-2 text-sm font-medium rounded-md transition-colors inline-flex items-center gap-2",
+                      "px-4 py-2 text-sm font-medium rounded-md transition-colors inline-flex items-center gap-2 group",
                       isRessurserActive
                         ? "bg-white/60 text-[#272630]"
                         : "text-[#272630]/70 hover:text-[#272630] hover:bg-white/40"
@@ -125,7 +138,7 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                   >
                     <FolderTree className="h-4 w-4" />
                     Ressurser
-                    <ChevronDown className="h-3 w-3" />
+                    <ChevronDown className="h-3 w-3 transition-transform duration-fast ease-standard group-data-[state=open]:rotate-180" />
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-48 bg-white">
@@ -148,7 +161,7 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                 <DropdownMenuTrigger asChild>
                   <button
                     className={cn(
-                      "px-4 py-2 text-sm font-medium rounded-md transition-colors inline-flex items-center gap-2",
+                      "px-4 py-2 text-sm font-medium rounded-md transition-colors inline-flex items-center gap-2 group",
                       isSelskapActive
                         ? "bg-white/60 text-[#272630]"
                         : "text-[#272630]/70 hover:text-[#272630] hover:bg-white/40"
@@ -156,7 +169,7 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                   >
                     <Building2 className="h-4 w-4" />
                     Selskap
-                    <ChevronDown className="h-3 w-3" />
+                    <ChevronDown className="h-3 w-3 transition-transform duration-fast ease-standard group-data-[state=open]:rotate-180" />
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-48 bg-white">
@@ -179,7 +192,7 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                 <DropdownMenuTrigger asChild>
                   <button
                     className={cn(
-                      "px-4 py-2 text-sm font-medium rounded-md transition-colors inline-flex items-center gap-2",
+                      "px-4 py-2 text-sm font-medium rounded-md transition-colors inline-flex items-center gap-2 group",
                       isToolsActive
                         ? "bg-white/60 text-[#272630]"
                         : "text-[#272630]/70 hover:text-[#272630] hover:bg-white/40"
@@ -187,7 +200,7 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                   >
                     <Sparkles className="h-4 w-4" />
                     Verktøy
-                    <ChevronDown className="h-3 w-3" />
+                    <ChevronDown className="h-3 w-3 transition-transform duration-fast ease-standard group-data-[state=open]:rotate-180" />
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-48 bg-white">
@@ -208,10 +221,10 @@ export function Header({ onUploadSuccess }: HeaderProps) {
               {/* New Template Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button className="ml-3 bg-[#272630] text-white hover:bg-[#272630]/90 rounded-md">
+                  <Button className="ml-3 bg-[#272630] text-white hover:bg-[#272630]/90 rounded-md group">
                     <Plus className="h-4 w-4 mr-2" />
                     Ny mal
-                    <ChevronDown className="h-3 w-3 ml-2" />
+                    <ChevronDown className="h-3 w-3 ml-2 transition-transform duration-fast ease-standard group-data-[state=open]:rotate-180" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48 bg-white">

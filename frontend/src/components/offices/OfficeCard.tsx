@@ -38,7 +38,7 @@ export function OfficeCard({ office, employees = [], onClick, onEdit, onDeactiva
   
   return (
     <Card 
-      className="group cursor-pointer hover:shadow-lg transition-all duration-200 overflow-hidden"
+      className="group cursor-pointer hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-slow overflow-hidden"
       onClick={onClick}
     >
       {/* Banner Image */}
@@ -49,7 +49,7 @@ export function OfficeCard({ office, employees = [], onClick, onEdit, onDeactiva
             alt={office.name}
             className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
           />
-          <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
           <div
             className={`absolute top-2 right-2 h-3 w-3 rounded-full ring-2 ring-white/80 ${statusIndicatorClass}`}
@@ -169,7 +169,7 @@ export function OfficeCard({ office, employees = [], onClick, onEdit, onDeactiva
               {activeEmployees.map((emp) => (
                 <Avatar 
                   key={emp.id}
-                  className="h-8 w-8 border-2 border-background cursor-pointer hover:scale-110 transition-transform"
+                  className="h-8 w-8 border-2 border-background cursor-pointer hover:scale-110 transition-transform duration-fast ease-standard"
                   onClick={(e) => {
                     e.stopPropagation();
                     onEmployeeClick?.(emp);

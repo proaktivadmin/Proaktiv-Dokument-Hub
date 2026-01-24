@@ -109,26 +109,26 @@ export default function Dashboard() {
             </>
           ) : (
             <>
-              <div className="bg-[#272630] text-white rounded-md p-6">
+              <div className="bg-[#272630] text-white rounded-lg p-6 shadow-medium ring-1 ring-black/10">
                 <p className="text-white/70 text-sm font-sans">Totalt maler</p>
                 <p className="text-4xl font-serif font-bold mt-2">{stats?.total ?? 0}</p>
               </div>
 
-              <div className="bg-white rounded-md p-6 border border-[#E5E5E5]">
+              <div className="bg-white rounded-lg p-6 border border-[#E5E5E5] shadow-card ring-1 ring-black/[0.03] hover:shadow-medium transition-shadow duration-normal">
                 <p className="text-[#272630]/60 text-sm font-sans">Publisert</p>
                 <p className="text-4xl font-serif font-bold text-[#272630] mt-2">
                   {stats?.published ?? 0}
                 </p>
               </div>
 
-              <div className="bg-white rounded-md p-6 border border-[#E5E5E5]">
+              <div className="bg-white rounded-lg p-6 border border-[#E5E5E5] shadow-card ring-1 ring-black/[0.03] hover:shadow-medium transition-shadow duration-normal">
                 <p className="text-[#272630]/60 text-sm font-sans">Utkast</p>
                 <p className="text-4xl font-serif font-bold text-[#272630] mt-2">
                   {stats?.draft ?? 0}
                 </p>
               </div>
 
-              <div className="bg-white rounded-md p-6 border border-[#E5E5E5]">
+              <div className="bg-white rounded-lg p-6 border border-[#E5E5E5] shadow-card ring-1 ring-black/[0.03] hover:shadow-medium transition-shadow duration-normal">
                 <div className="flex items-center gap-2 text-[#272630]/60 text-sm font-sans">
                   <Download className="h-4 w-4 text-[#272630]/50" />
                   Nedlastinger (30d)
@@ -146,15 +146,15 @@ export default function Dashboard() {
           {/* Offices Card */}
           <Link 
             href="/offices" 
-            className="group bg-white rounded-md p-6 border border-[#E5E5E5] hover:border-[#BCAB8A] hover:shadow-md transition-all"
+            className="group bg-white rounded-lg p-6 border border-[#E5E5E5] shadow-card ring-1 ring-black/[0.03] hover:border-[#BCAB8A] hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-slow"
           >
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-lg bg-[#E9E7DC]">
+              <div className="p-3 rounded-lg bg-[#E9E7DC] group-hover:bg-[#BCAB8A]/20 transition-colors duration-normal">
                 <Building2 className="h-6 w-6 text-[#272630]" />
               </div>
-              <ArrowRight className="h-5 w-5 text-[#272630]/30 group-hover:text-[#BCAB8A] group-hover:translate-x-1 transition-all" />
+              <ArrowRight className="h-5 w-5 text-[#272630]/30 group-hover:text-[#BCAB8A] group-hover:translate-x-1 transition-all duration-normal" />
             </div>
-            <h3 className="text-lg font-semibold text-[#272630] mb-1">Kontorer</h3>
+            <h3 className="text-lg font-semibold text-[#272630] mb-1 font-serif">Kontorer</h3>
             {officesLoading ? (
               <Skeleton className="h-4 w-32" />
             ) : (
@@ -167,15 +167,15 @@ export default function Dashboard() {
           {/* Employees Card */}
           <Link 
             href="/employees" 
-            className="group bg-white rounded-md p-6 border border-[#E5E5E5] hover:border-[#BCAB8A] hover:shadow-md transition-all"
+            className="group bg-white rounded-lg p-6 border border-[#E5E5E5] shadow-card ring-1 ring-black/[0.03] hover:border-[#BCAB8A] hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-slow"
           >
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-lg bg-[#E9E7DC]">
+              <div className="p-3 rounded-lg bg-[#E9E7DC] group-hover:bg-[#BCAB8A]/20 transition-colors duration-normal">
                 <Users className="h-6 w-6 text-[#272630]" />
               </div>
-              <ArrowRight className="h-5 w-5 text-[#272630]/30 group-hover:text-[#BCAB8A] group-hover:translate-x-1 transition-all" />
+              <ArrowRight className="h-5 w-5 text-[#272630]/30 group-hover:text-[#BCAB8A] group-hover:translate-x-1 transition-all duration-normal" />
             </div>
-            <h3 className="text-lg font-semibold text-[#272630] mb-1">Ansatte</h3>
+            <h3 className="text-lg font-semibold text-[#272630] mb-1 font-serif">Ansatte</h3>
             {employeesLoading ? (
               <Skeleton className="h-4 w-32" />
             ) : (
@@ -193,15 +193,15 @@ export default function Dashboard() {
           {/* Assets Card */}
           <Link 
             href="/assets" 
-            className="group bg-white rounded-md p-6 border border-[#E5E5E5] hover:border-[#BCAB8A] hover:shadow-md transition-all"
+            className="group bg-white rounded-lg p-6 border border-[#E5E5E5] shadow-card ring-1 ring-black/[0.03] hover:border-[#BCAB8A] hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-slow"
           >
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-lg bg-[#E9E7DC]">
+              <div className="p-3 rounded-lg bg-[#E9E7DC] group-hover:bg-[#BCAB8A]/20 transition-colors duration-normal">
                 <ImageIcon className="h-6 w-6 text-[#272630]" />
               </div>
-              <ArrowRight className="h-5 w-5 text-[#272630]/30 group-hover:text-[#BCAB8A] group-hover:translate-x-1 transition-all" />
+              <ArrowRight className="h-5 w-5 text-[#272630]/30 group-hover:text-[#BCAB8A] group-hover:translate-x-1 transition-all duration-normal" />
             </div>
-            <h3 className="text-lg font-semibold text-[#272630] mb-1">Filer</h3>
+            <h3 className="text-lg font-semibold text-[#272630] mb-1 font-serif">Filer</h3>
             {assetsLoading ? (
               <Skeleton className="h-4 w-32" />
             ) : (

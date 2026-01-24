@@ -40,10 +40,10 @@ export function FeaturedBrokers({ officeId }: FeaturedBrokersProps) {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {employees.map((employee) => (
-          <Card key={employee.id} className="hover:shadow-md transition-shadow">
+          <Card key={employee.id} className="hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-slow">
             <CardContent className="p-4">
               <div className="flex items-start gap-3">
-                <Avatar className="h-12 w-12 shrink-0">
+                <Avatar className="h-12 w-12 shrink-0 transition-transform duration-fast ease-standard hover:scale-105">
                   <AvatarImage src={resolveAvatarUrl(employee.profile_image_url, 96)} alt={employee.full_name} />
                   <AvatarFallback
                     className="text-white font-semibold"

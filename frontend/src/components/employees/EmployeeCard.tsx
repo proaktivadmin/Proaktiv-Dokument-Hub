@@ -60,8 +60,8 @@ export function EmployeeCard({
   return (
     <Card
       className={cn(
-        "group cursor-pointer hover:shadow-md transition-all duration-200",
-        selected && "ring-2 ring-primary"
+        "group cursor-pointer hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-slow",
+        selected && "ring-2 ring-primary shadow-glow"
       )}
       onClick={onClick}
     >
@@ -81,7 +81,7 @@ export function EmployeeCard({
           )}
 
           {/* Avatar with profile image */}
-          <Avatar className="w-12 h-12 shrink-0">
+          <Avatar className="w-12 h-12 shrink-0 transition-transform duration-fast ease-standard hover:scale-105">
             <AvatarImage src={resolveAvatarUrl(employee.profile_image_url, 128)} alt={employee.full_name} />
             <AvatarFallback 
               className="text-white font-semibold"

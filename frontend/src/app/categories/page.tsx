@@ -136,7 +136,7 @@ export default function CategoriesPage() {
         </div>
 
         {/* Categories List */}
-        <div className="bg-white rounded-lg shadow-sm border">
+        <div className="bg-white rounded-lg border shadow-card ring-1 ring-black/3">
           {isLoading ? (
             <div className="p-4">
               <CategorySkeleton />

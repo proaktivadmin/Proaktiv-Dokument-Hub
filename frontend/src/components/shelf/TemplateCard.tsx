@@ -252,10 +252,10 @@ export function TemplateCard({
     <div
       ref={cardRef}
       className={cn(
-        "flex flex-col rounded-lg border bg-white transition-all duration-200 cursor-pointer",
-        "hover:shadow-lg hover:border-primary/50",
+        "flex flex-col rounded-lg border bg-white shadow-card ring-1 ring-black/[0.03] transition-all duration-slow cursor-pointer",
+        "hover:shadow-card-hover hover:-translate-y-0.5 hover:border-[#BCAB8A]",
         isDimmed && "opacity-30",
-        isSelected && "ring-2 ring-primary border-primary"
+        isSelected && "ring-2 ring-strong border-[#BCAB8A] shadow-glow"
       )}
       style={{ width, height }}
       onClick={onClick}
