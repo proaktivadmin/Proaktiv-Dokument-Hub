@@ -1,9 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { ChevronDown, Copy } from "lucide-react";
+import { ChevronDown, Copy, Mail, Keyboard } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -50,37 +50,108 @@ export default function SignaturePage() {
   const { signature, isLoading, error } = useSignature(employeeId, version);
   const { toast } = useToast();
 
+  const signatureHtml = signature?.html;
   const signatureDoc = useMemo(() => {
-    if (!signature?.html) return "";
-    return buildSignatureDoc(signature.html);
-  }, [signature?.html]);
+    if (!signatureHtml) return "";
+    return buildSignatureDoc(signatureHtml);
+  }, [signatureHtml]);
 
   const showError = !isLoading && (!signature || error || !employeeId);
 
-  const handleCopy = async () => {
+  // Detect mobile device
+  const isMobile = useMemo(() => {
+    if (typeof window === "undefined") return false;
+    return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  }, []);
+
+  const handleCopy = useCallback(async () => {
     if (!signature?.html) return;
 
     try {
-      if (!navigator.clipboard?.write || typeof ClipboardItem === "undefined") {
-        throw new Error("ClipboardItem not supported");
+      // Try modern ClipboardItem API first (works on desktop browsers)
+      if (navigator.clipboard?.write && typeof ClipboardItem !== "undefined") {
+        const blob = new Blob([signature.html], { type: "text/html" });
+        const clipboardItem = new ClipboardItem({ "text/html": blob });
+        await navigator.clipboard.write([clipboardItem]);
+
+        toast({
+          title: "Signatur kopiert som HTML!",
+          description: "Lim inn i e-postprogrammet ditt for full formatering.",
+        });
+        return;
       }
 
-      const blob = new Blob([signature.html], { type: "text/html" });
-      const clipboardItem = new ClipboardItem({ "text/html": blob });
-      await navigator.clipboard.write([clipboardItem]);
+      // Fallback: Try copying plain text (works on mobile)
+      if (signature.text && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(signature.text);
+        toast({
+          title: "Signatur kopiert som tekst",
+          description: "HTML-formatering er ikke støttet på denne enheten. Lim inn i e-postprogrammet.",
+        });
+        return;
+      }
+
+      // Final fallback: Use execCommand (legacy but wider support)
+      const textArea = document.createElement("textarea");
+      textArea.value = signature.text || signature.html;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-9999px";
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textArea);
 
       toast({
-        title: "Signatur kopiert!",
+        title: "Signatur kopiert som tekst",
         description: "Lim inn i e-postprogrammet ditt.",
       });
     } catch {
       toast({
         title: "Kunne ikke kopiere signaturen",
-        description: "Prøv igjen eller kopier fra forhåndsvisningen.",
+        description: "Prøv å markere og kopiere teksten manuelt.",
         variant: "destructive",
       });
     }
-  };
+  }, [signature, toast]);
+
+  // Open default email client with signature instructions
+  const handleOpenEmailApp = useCallback(() => {
+    const subject = encodeURIComponent("Sett opp ny e-postsignatur");
+    const body = encodeURIComponent(
+      `Hei!\n\nJeg har hentet min nye e-postsignatur fra Proaktiv Dokument Hub.\n\nGå til denne lenken for å kopiere signaturen:\n${window.location.href}\n\n---\n${signature?.text || ""}`
+    );
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+  }, [signature?.text]);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ctrl/Cmd + C when not in an input field - copy signature
+      if ((e.ctrlKey || e.metaKey) && e.key === "c") {
+        const activeElement = document.activeElement;
+        const isInInput =
+          activeElement instanceof HTMLInputElement ||
+          activeElement instanceof HTMLTextAreaElement ||
+          activeElement?.getAttribute("contenteditable") === "true";
+
+        // Only intercept if no text is selected
+        const selection = window.getSelection();
+        if (!isInInput && (!selection || selection.toString().length === 0)) {
+          e.preventDefault();
+          handleCopy();
+        }
+      }
+
+      // Ctrl/Cmd + M - open email app
+      if ((e.ctrlKey || e.metaKey) && e.key === "m") {
+        e.preventDefault();
+        handleOpenEmailApp();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleCopy, handleOpenEmailApp]);
 
   const handleTabChange = (value: string) => {
     if (value === "with-photo" || value === "no-photo") {
@@ -161,13 +232,13 @@ export default function SignaturePage() {
                       <Card>
                         <CardContent className="p-4">
                           {isLoading ? (
-                            <Skeleton className="h-[240px] w-full" />
+                            <Skeleton className="h-[320px] w-full sm:h-[240px]" />
                           ) : signature ? (
                             <iframe
                               title={`Signatur ${versionLabels[version]}`}
                               sandbox=""
                               srcDoc={signatureDoc}
-                              className="h-[240px] w-full rounded-md border bg-white"
+                              className="h-[320px] w-full rounded-md border bg-white sm:h-[240px]"
                             />
                           ) : (
                             <div className="rounded-md border border-dashed p-4 text-sm text-muted-foreground">
@@ -181,13 +252,35 @@ export default function SignaturePage() {
                 )}
               </Tabs>
 
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                <Button onClick={handleCopy} disabled={!signature?.html}>
-                  <Copy className="mr-2 h-4 w-4" />
-                  Kopier signatur
-                </Button>
+              <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                  <Button onClick={handleCopy} disabled={!signature?.html} className="w-full sm:w-auto">
+                    <Copy className="mr-2 h-4 w-4" />
+                    Kopier signatur
+                    {!isMobile && (
+                      <kbd className="ml-2 hidden rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground sm:inline-block">
+                        ⌘C
+                      </kbd>
+                    )}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={handleOpenEmailApp}
+                    className="w-full sm:w-auto"
+                  >
+                    <Mail className="mr-2 h-4 w-4" />
+                    Åpne e-post
+                    {!isMobile && (
+                      <kbd className="ml-2 hidden rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground sm:inline-block">
+                        ⌘M
+                      </kbd>
+                    )}
+                  </Button>
+                </div>
                 <p className="text-sm text-muted-foreground">
-                  Signaturen kopieres som HTML for best mulig utseende.
+                  {isMobile
+                    ? "På mobil kopieres signaturen som ren tekst."
+                    : "Signaturen kopieres som HTML for best mulig utseende."}
                 </p>
               </div>
 
@@ -223,8 +316,32 @@ export default function SignaturePage() {
                       <li>Lim inn signaturen og fjern standardtekst.</li>
                     </ol>
                   </div>
+                  <div className="space-y-2">
+                    <p className="font-medium text-foreground">
+                      📱 iPhone / Android
+                    </p>
+                    <ol className="list-decimal space-y-1 pl-4">
+                      <li>Åpne denne siden på PC for best resultat.</li>
+                      <li>Mobilapper støtter ofte kun tekstsignaturer.</li>
+                      <li>For Outlook-appen: Innstillinger → Signatur.</li>
+                      <li>For Gmail-appen: Innstillinger → konto → Mobilsignatur.</li>
+                    </ol>
+                  </div>
                 </div>
               </details>
+
+              {/* Keyboard shortcuts info (desktop only) */}
+              {!isMobile && (
+                <div className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex">
+                  <Keyboard className="h-3.5 w-3.5" />
+                  <span>Hurtigtaster:</span>
+                  <kbd className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">⌘C</kbd>
+                  <span>kopier</span>
+                  <span className="text-muted-foreground/50">•</span>
+                  <kbd className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">⌘M</kbd>
+                  <span>åpne e-post</span>
+                </div>
+              )}
             </div>
           )}
         </div>
