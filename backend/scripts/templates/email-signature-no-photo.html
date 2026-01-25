@@ -50,21 +50,21 @@
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" class="dark-mode-bg" style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#000 !important;background-color:#ffffff !important;mso-table-lspace:0pt;mso-table-rspace:0pt;">
         <tr><td colspan="3" class="dark-mode-bg dark-mode-text" style="font-size:12px;padding-bottom:6px;color:#000 !important;background-color:#ffffff !important;">Med vennlig hilsen</td></tr>
         <tr>
-          <!-- Employee info: table-based layout for precise icon-text baseline alignment -->
-          <td valign="middle" class="dark-mode-bg" style="padding-right:14px;background-color:#ffffff !important;">
-            <!-- Name: 20px bold -->
+          <!-- Employee info: 96px total height -->
+          <td valign="top" class="dark-mode-bg" style="padding-right:14px;background-color:#ffffff !important;">
+            <!-- Name: 24px line-height + 4px padding = 28px -->
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;">
               <tr>
-                <td class="dark-mode-text" style="font-size:20px;font-weight:bold;line-height:24px;padding-bottom:4px;color:#000 !important;">{{DisplayName}}</td>
+                <td class="dark-mode-text" style="font-size:20px;font-weight:bold;line-height:24px;height:24px;padding-bottom:4px;color:#000 !important;">{{DisplayName}}</td>
               </tr>
             </table>
-            <!-- Title: 12px bronze -->
+            <!-- Title: 16px line-height + 10px padding = 26px -->
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;">
               <tr>
-                <td style="font-size:12px;line-height:16px;padding-bottom:10px;color:#bcab8a;"><b>{{JobTitle}}</b></td>
+                <td style="font-size:12px;line-height:16px;height:16px;padding-bottom:10px;color:#bcab8a;"><b>{{JobTitle}}</b></td>
               </tr>
             </table>
-            <!-- Phone: icon + text in table cells for baseline alignment -->
+            <!-- Phone: 18px height -->
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;">
               <tr>
                 <td valign="middle" style="width:14px;height:18px;padding-right:6px;">
@@ -75,9 +75,9 @@
                 </td>
               </tr>
             </table>
-            <!-- Spacing between phone and email: 6px (golden ratio: 11/1.618 ≈ 6.8) -->
+            <!-- Gap: 6px -->
             <div style="height:6px;font-size:1px;line-height:1px;">&nbsp;</div>
-            <!-- Email: icon + text in table cells for baseline alignment -->
+            <!-- Email: 18px height -->
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;">
               <tr>
                 <td valign="middle" style="width:14px;height:18px;padding-right:6px;">
@@ -88,45 +88,52 @@
                 </td>
               </tr>
             </table>
+            <!-- Total: 28 + 26 + 18 + 6 + 18 = 96px -->
           </td>
-          <!-- Vertical divider (bronze) - asymmetric padding for golden ratio (22:14) -->
-          <td valign="middle" class="dark-mode-bg" style="padding-left:22px;padding-right:14px;background-color:#ffffff !important;">
+          <!-- Vertical divider (bronze) - height 96px to match content -->
+          <td valign="top" class="dark-mode-bg" style="padding-left:22px;padding-right:14px;background-color:#ffffff !important;">
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;">
-              <tr><td style="width:1px;height:95px;background-color:#bcab8a;font-size:1px;line-height:1px;">&nbsp;</td></tr>
+              <tr><td style="width:1px;height:96px;background-color:#bcab8a;font-size:1px;line-height:1px;">&nbsp;</td></tr>
             </table>
           </td>
-          <!-- Logo and social icons: 155px width = 4×26px icons + 3×16px gaps (golden ratio) -->
-          <td valign="middle" align="center" class="dark-mode-bg" style="width:155px;padding-left:14px;background-color:#ffffff !important;">
+          <!-- Logo and social icons: 155px width, 96px total height -->
+          <td valign="top" align="center" class="dark-mode-bg" style="width:155px;padding-left:14px;background-color:#ffffff !important;">
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="155" style="width:155px;mso-table-lspace:0pt;mso-table-rspace:0pt;">
+              <!-- Logo: 54px row (Name 28px + Title 26px = 54px) -->
               <tr>
-                <td align="center" class="dark-mode-bg" style="padding-bottom:16px;background-color:#ffffff !important;">
-                  <img src="https://proaktiv.no/assets/logos/Proaktiv_sort.png" width="155" height="auto" alt="Proaktiv Eiendomsmegling" style="display:block;border:0;max-width:100%;">
+                <td align="center" class="dark-mode-bg" style="height:54px;padding-bottom:0;background-color:#ffffff !important;">
+                  <img src="https://proaktiv.no/assets/logos/Proaktiv_sort.png" width="155" height="48" alt="Proaktiv Eiendomsmegling" style="display:block;border:0;">
                 </td>
               </tr>
+              <!-- Gap: 6px (aligns with phone/email section start) -->
               <tr>
-                <!-- Social icons: 4×32 + 3×9 = 155px (matches logo width, 32px height aligns with phone+email 42px) -->
-                <td align="center" class="dark-mode-bg" style="background-color:#ffffff !important;">
+                <td style="height:6px;font-size:1px;line-height:1px;">&nbsp;</td>
+              </tr>
+              <!-- Social icons: 36px row (aligns with Phone+Email: 18+6+18=42px, minus 6px spacer = 36px) -->
+              <!-- Icons: 4×32 + 3×9 = 155px (exactly matches logo width) -->
+              <tr>
+                <td align="center" class="dark-mode-bg" style="height:36px;background-color:#ffffff !important;">
                   <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="mso-table-lspace:0pt;mso-table-rspace:0pt;">
                     <tr>
-                      <td style="width:32px;">
+                      <td valign="middle" style="width:32px;height:36px;">
                         <a href="{{EmployeeUrl}}" target="_blank" rel="noopener">
                           <img src="https://proaktiv.no/assets/logos/lilje_clean_52.png" width="32" height="32" alt="Proaktiv" style="display:block;border:0;">
                         </a>
                       </td>
-                      <td style="width:9px;"></td>
-                      <td style="width:32px;">
+                      <td style="width:9px;height:36px;"></td>
+                      <td valign="middle" style="width:32px;height:36px;">
                         <a href="{{InstagramUrl}}" target="_blank" rel="noopener">
                           <img src="https://proaktiv.no/assets/logos/instagram.png" width="32" height="32" alt="Instagram" style="display:block;border:0;">
                         </a>
                       </td>
-                      <td style="width:9px;"></td>
-                      <td style="width:32px;">
+                      <td style="width:9px;height:36px;"></td>
+                      <td valign="middle" style="width:32px;height:36px;">
                         <a href="{{LinkedInUrl}}" target="_blank" rel="noopener">
                           <img src="https://proaktiv.no/assets/logos/linkedin.png" width="32" height="32" alt="LinkedIn" style="display:block;border:0;">
                         </a>
                       </td>
-                      <td style="width:9px;"></td>
-                      <td style="width:32px;">
+                      <td style="width:9px;height:36px;"></td>
+                      <td valign="middle" style="width:32px;height:36px;">
                         <a href="{{FacebookUrl}}" target="_blank" rel="noopener">
                           <img src="https://proaktiv.no/assets/logos/facebook.png" width="32" height="32" alt="Facebook" style="display:block;border:0;">
                         </a>
@@ -135,6 +142,7 @@
                   </table>
                 </td>
               </tr>
+              <!-- Total: 54 + 6 + 36 = 96px -->
             </table>
           </td>
         </tr>
