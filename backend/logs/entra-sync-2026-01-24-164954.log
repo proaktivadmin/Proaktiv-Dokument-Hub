@@ -1,0 +1,19 @@
+2026-01-24T16:49:54.5250965+01:00 | INFO  | Script started
+2026-01-24T16:49:54.5581283+01:00 | INFO  | Parameters: {"DryRun":{"IsPresent":true},"Organization":"proaktiv.onmicrosoft.com","ClientId":"24a035cc-10da-41e2-a6e6-47e18d375151","FilterEmail":"froyland@proaktiv.no","TenantId":"3ab32277-d1e6-4acf-858b-665156ffa3c5","ClientSecret":"***REDACTED***"}
+2026-01-24T16:49:54.5591314+01:00 | INFO  | Write policy: forbidden
+2026-01-24T16:49:54.5620648+01:00 | INFO  | Effective dry run: True
+2026-01-24T16:49:54.5630814+01:00 | INFO  | Checking dependencies...
+2026-01-24T16:49:54.6691985+01:00 | DEBUG | Python: Python 3.12.10
+2026-01-24T16:49:54.6701986+01:00 | INFO  | Dependencies OK
+2026-01-24T16:49:54.6717023+01:00 | INFO  | Connecting to Microsoft Graph...
+2026-01-24T16:49:56.0149015+01:00 | INFO  | Microsoft Graph connected
+2026-01-24T16:49:56.0164542+01:00 | INFO  | Skipping Exchange Online connection (read-only mode or signatures disabled)
+2026-01-24T16:49:56.0175594+01:00 | INFO  | Retrieving employees from database...
+2026-01-24T16:49:56.8019421+01:00 | INFO  | Found 1 active employees
+2026-01-24T16:49:56.8083071+01:00 | INFO  |   Finding user in Entra ID...
+2026-01-24T16:49:59.5457986+01:00 | INFO  |   Found: 51486e76-5cca-4bd0-b3c7-4187410723ed
+2026-01-24T16:49:59.6644377+01:00 | INFO  |   [DRY RUN] Would update profile:
+2026-01-24T16:49:59.6664467+01:00 | INFO  |     - officeLocation: 'Sandnes' -> 'Bergen'
+2026-01-24T16:49:59.6684523+01:00 | INFO  |     - country: 'Norway' -> 'NO'
+2026-01-24T16:49:59.8526776+01:00 | INFO  |   [DRY RUN] Would set email signature (4670 bytes)
+2026-01-24T16:49:59.9918249+01:00 | INFO  | Sync completed successfully
