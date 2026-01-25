@@ -1,6 +1,6 @@
 "use client";
 
-import { Phone, Mail, AlertTriangle, MoreVertical, Cloud, FileSignature } from "lucide-react";
+import { Phone, Mail, AlertTriangle, MoreVertical, Cloud, FileSignature, ExternalLink } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -125,9 +125,24 @@ export function EmployeeCard({
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2">
               <div>
-                <h3 className="font-semibold group-hover:text-primary transition-colors truncate">
-                  {employee.full_name}
-                </h3>
+                <div className="flex items-center gap-2 min-w-0">
+                  <h3 className="font-semibold group-hover:text-primary transition-colors truncate">
+                    {employee.full_name}
+                  </h3>
+                  {employee.homepage_profile_url && (
+                    <a
+                      href={employee.homepage_profile_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(event) => event.stopPropagation()}
+                      className="inline-flex items-center text-muted-foreground hover:text-primary transition-colors duration-fast ease-standard shrink-0"
+                      aria-label="Åpne profilside på proaktiv.no"
+                      title="Åpne profilside på proaktiv.no"
+                    >
+                      <ExternalLink className="h-3.5 w-3.5" />
+                    </a>
+                  )}
+                </div>
                 {employee.title && (
                   <p className="text-sm text-muted-foreground truncate">{employee.title}</p>
                 )}

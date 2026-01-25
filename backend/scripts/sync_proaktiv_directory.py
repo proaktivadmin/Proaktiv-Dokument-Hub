@@ -340,6 +340,26 @@ def extract_name_title_map(soup: BeautifulSoup, base_url: str) -> dict[str, str]
 
 
 def extract_image_url(soup: BeautifulSoup, base_url: str, name: str | None) -> str | None:
+    """Extract profile image URL from page.
+
+    Priority:
+    1. og:image meta tag (most reliable for employee profile pages)
+    2. img tag with alt matching employee name
+    3. img tag with profile/agent class
+    """
+    # First check og:image meta tag - most reliable source for profile images
+    og_image = soup.find("meta", property="og:image")
+    if og_image:
+        content = og_image.get("content", "")
+        if content and not any(
+            skip in content.lower() for skip in ("logo", "favicon", "icon", "placeholder", "default")
+        ):
+            # Strip query params for cleaner URL, but keep the base
+            parsed = urlparse(content)
+            clean_url = f"{parsed.scheme}://{parsed.netloc}{parsed.path}"
+            return clean_url
+
+    # Fall back to img tag scanning
     candidates: list[str] = []
     for img in soup.find_all("img"):
         alt = clean_text(img.get("alt", ""))

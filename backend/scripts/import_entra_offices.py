@@ -113,38 +113,135 @@ def normalize_text(value: str | None) -> str | None:
     return value if value else None
 
 
-def find_matching_office(group: dict, offices: list[Office]) -> Office | None:
-    """Find the best matching office for a group using priority matching."""
+def normalize_org_number(value: str | None) -> str | None:
+    """Normalize organization number by removing spaces and non-digits."""
+    if value is None:
+        return None
+    # Keep only digits
+    digits = "".join(c for c in value if c.isdigit())
+    return digits if len(digits) >= 9 else None  # Norwegian org numbers are 9 digits
+
+
+def extract_org_numbers_from_text(text: str | None) -> list[str]:
+    """Extract potential organization numbers from text (9 consecutive digits)."""
+    if not text:
+        return []
+    import re
+
+    # Find 9-digit sequences (Norwegian org number format)
+    # Also match with spaces like "123 456 789" or "123 45 678"
+    # First remove common separators and find 9-digit sequences
+    cleaned = re.sub(r"[\s\-\.]", "", text)
+    matches = re.findall(r"\d{9}", cleaned)
+    return matches
+
+
+def find_matching_office(group: dict, offices: list[Office]) -> tuple[Office | None, str]:
+    """Find the best matching office for a group using priority matching.
+
+    Priority order:
+    0. Direct mapping table (HIGHEST - manually curated)
+    1. Organization number match (unique identifier)
+    2. Email exact match
+    3. Legal name exact match
+    4. Legal name in group name
+    5. Group name in legal name (reverse)
+    6. Email prefix match (with df- prefix stripped)
+    7. City name in group name
+    8. Office name in group name (lowest)
+
+    Returns:
+        Tuple of (Office or None, match_reason string)
+    """
+    # Import mapping table
+    from office_entra_mapping import get_office_for_group
+
+    group_id = group.get("id", "")
     group_mail = group.get("mail", "").lower()
     group_name = group.get("displayName", "").lower()
+    group_description = group.get("description", "") or ""
 
-    # 1. Email exact match (highest priority)
+    # 0. Direct mapping table (HIGHEST priority - manually curated)
+    office, reason = get_office_for_group(group_id, offices)
+    if office:
+        return office, reason
+    if reason == "skipped":
+        return None, "skipped"
+
+    # Build searchable text from group (name + description + mail)
+    group_searchable = f"{group_name} {group_description} {group_mail}".lower()
+
+    # 1. Organization number match (unique identifier)
+    # Extract potential org numbers from group's displayName and description
+    group_org_numbers = set()
+    group_org_numbers.update(extract_org_numbers_from_text(group.get("displayName")))
+    group_org_numbers.update(extract_org_numbers_from_text(group.get("description")))
+
+    if group_org_numbers:
+        for office in offices:
+            if office.organization_number:
+                office_org = normalize_org_number(office.organization_number)
+                if office_org and office_org in group_org_numbers:
+                    return office, "org_number"
+
+    # Also check if office org number appears anywhere in group's searchable text
+    for office in offices:
+        if office.organization_number:
+            office_org = normalize_org_number(office.organization_number)
+            if office_org and office_org in group_searchable.replace(" ", ""):
+                return office, "org_number_in_text"
+
+    # 2. Email exact match
     if group_mail:
         for office in offices:
             if office.email and office.email.lower() == group_mail:
-                return office
+                return office, "email_exact"
 
-    # 2. Email prefix match
+    # 3. Legal name exact match (high priority - often used in Entra)
+    for office in offices:
+        if office.legal_name:
+            legal_name_norm = normalize_text(office.legal_name)
+            if legal_name_norm and legal_name_norm == group_name:
+                return office, "legal_name_exact"
+
+    # 4. Legal name contained in group name (high priority)
+    for office in offices:
+        if office.legal_name:
+            legal_name_norm = normalize_text(office.legal_name)
+            if legal_name_norm and legal_name_norm in group_name:
+                return office, "legal_name_in_group"
+
+    # 5. Group name contained in legal name (reverse match)
+    for office in offices:
+        if office.legal_name:
+            legal_name_norm = normalize_text(office.legal_name)
+            if legal_name_norm and group_name in legal_name_norm:
+                return office, "group_in_legal_name"
+
+    # 6. Email prefix match
     if group_mail and "@" in group_mail:
-        group_prefix = group_mail.split("@")[0]
+        group_prefix = group_mail.split("@")[0].lower()
+        # Remove common prefixes like "df-" from group mail
+        if group_prefix.startswith("df-"):
+            group_prefix = group_prefix[3:]
         for office in offices:
             if office.email and "@" in office.email:
                 office_prefix = office.email.split("@")[0].lower()
                 if office_prefix == group_prefix:
-                    return office
+                    return office, "email_prefix"
 
-    # 3. City name in group name
+    # 7. City name in group name
     for office in offices:
         if office.city and normalize_text(office.city) in group_name:
-            return office
+            return office, "city_in_group"
 
-    # 4. Office name in group name
+    # 8. Office name in group name
     for office in offices:
         office_name_norm = normalize_text(office.name)
         if office_name_norm and office_name_norm in group_name:
-            return office
+            return office, "office_name_in_group"
 
-    return None
+    return None, "no_match"
 
 
 def build_mismatch_fields(office: Office, group: dict) -> list[str]:
@@ -244,12 +341,19 @@ def main() -> None:
         groups_list = list(fetch_entra_groups(access_token))
         log(f"Found {len(groups_list)} M365 Groups")
 
+        skipped_groups = 0
+
         for group in groups_list:
-            office = find_matching_office(group, offices)
+            office, match_reason = find_matching_office(group, offices)
+
+            if match_reason == "skipped":
+                skipped_groups += 1
+                log(f"  Skipped: {group.get('displayName')} (regional/corporate group)")
+                continue
 
             if not office:
                 not_matched_groups += 1
-                log(f"  No match: {group.get('displayName')} ({group.get('mail')})")
+                log(f"  No match: {group.get('displayName')} ({group.get('mail')}) [{match_reason}]")
                 continue
 
             matched_ids.add(str(office.id))
@@ -275,7 +379,7 @@ def main() -> None:
             office.entra_last_synced_at = datetime.now(UTC)
 
             updated += 1
-            log(f"  Matched: {group.get('displayName')} -> {office.name}")
+            log(f"  Matched: {group.get('displayName')} -> {office.name} [{match_reason}]")
             if mismatch_fields:
                 log(f"    Mismatches: {', '.join(mismatch_fields)}")
 
@@ -293,6 +397,7 @@ def main() -> None:
             "matched_updated": updated,
             "offices_not_matched": offices_not_matched,
             "groups_not_matched": not_matched_groups,
+            "groups_skipped": skipped_groups,
             "dry_run": args.dry_run,
         }
 
@@ -307,6 +412,7 @@ def main() -> None:
         print(f"Matched & updated:    {summary['matched_updated']}{' (dry-run)' if args.dry_run else ''}")
         print(f"Offices not matched:  {summary['offices_not_matched']}")
         print(f"Groups not matched:   {summary['groups_not_matched']}")
+        print(f"Groups skipped:       {summary['groups_skipped']} (regional/corporate)")
         print("-" * 70)
 
 

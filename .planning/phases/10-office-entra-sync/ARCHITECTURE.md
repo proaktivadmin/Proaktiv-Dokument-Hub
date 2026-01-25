@@ -71,60 +71,79 @@
 
 ### Priority Order
 
-1. **Email Exact Match** (highest confidence)
+1. **Organization Number Match** (highest confidence - unique identifier)
+   ```python
+   # Extract 9-digit org numbers from group displayName/description
+   # Match against office.organization_number
+   # Norwegian org numbers are 9 digits, e.g., "123456789" or "123 456 789"
+   ```
+
+2. **Email Exact Match** (high confidence)
    ```python
    # Group mail matches office email exactly
    group.mail.lower() == office.email.lower()
-   # Example: "bergen@proaktiv.no" == "bergen@proaktiv.no"
    ```
 
-2. **Email Prefix Match** (high confidence)
+3. **Legal Name Exact Match** (high confidence)
    ```python
-   # Group mail prefix matches office short_code
-   group.mail.split('@')[0].lower() == office.short_code.lower()
-   # Example: "bergen@proaktiv.no" → "bergen" == "BERG" → no match
-   # But: "bergen@proaktiv.no" → "bergen" == "bergen" → match
+   # Group displayName matches office legal_name exactly
+   # M365 Groups often use legal company names
+   office.legal_name.lower() == group.displayName.lower()
+   # Example: "Trondheim Syd Eiendom AS" == "Trondheim Syd Eiendom AS"
    ```
 
-3. **Name Contains City** (medium confidence)
+4. **Legal Name in Group Name** (high confidence)
+   ```python
+   # Office legal name contained in group displayName
+   office.legal_name.lower() in group.displayName.lower()
+   ```
+
+5. **Group Name in Legal Name** (medium confidence)
+   ```python
+   # Reverse match: group name appears in office legal name
+   group.displayName.lower() in office.legal_name.lower()
+   ```
+
+6. **Email Prefix Match** (medium confidence)
+   ```python
+   # Group mail prefix matches office email prefix
+   # Strips common prefixes like "df-" from group mail
+   group.mail.split('@')[0].replace('df-', '') == office.email.split('@')[0]
+   ```
+
+7. **City Name in Group Name** (low confidence)
    ```python
    # Group displayName contains office city
    office.city.lower() in group.displayName.lower()
-   # Example: "Proaktiv Bergen Team" contains "Bergen"
    ```
 
-4. **Name Contains Office Name** (low confidence)
+8. **Office Name in Group Name** (lowest confidence)
    ```python
    # Group displayName contains office name
    office.name.lower() in group.displayName.lower()
-   # Example: "Bergen Eiendom Team" contains "Bergen"
    ```
 
 ### Match Resolution
 
 ```python
 def find_matching_office(group: dict, offices: list[Office]) -> Office | None:
-    # 1. Try email exact match
+    # 1. Organization number match (HIGHEST priority)
+    group_org_numbers = extract_org_numbers_from_text(group.displayName + group.description)
     for office in offices:
-        if office.email and group.get('mail'):
-            if office.email.lower() == group['mail'].lower():
-                return office
+        if office.organization_number in group_org_numbers:
+            return office
     
-    # 2. Try email prefix match
-    group_prefix = group.get('mail', '').split('@')[0].lower()
+    # 2. Email exact match
     for office in offices:
-        if office.email:
-            office_prefix = office.email.split('@')[0].lower()
-            if office_prefix == group_prefix:
-                return office
+        if office.email == group.mail:
+            return office
     
-    # 3. Try city match
+    # 3. Legal name exact match
     for office in offices:
-        if office.city:
-            if office.city.lower() in group.get('displayName', '').lower():
-                return office
+        if office.legal_name.lower() == group.displayName.lower():
+            return office
     
-    # 4. No match found
+    # 4-8. Continue with other matching strategies...
     return None
 ```
 
