@@ -1,14 +1,52 @@
 # Phase 09: Self-Service Signature Portal
 
 **Status:** ✅ Completed  
-**Completed:** 2026-01-24  
-**Commit:** `4241eb8`
+**Completed:** 2026-01-24 (V3.9 Core), 2026-01-25 (V3.9.1 Enhancements)  
+**Commit:** `4241eb8` (V3.9), latest `main` (V3.9.1)
 
 ---
 
 ## Summary
 
 A self-service email signature system for 120+ employees. Admins preview and send personalized signature links from the dashboard. Employees visit their personal page to copy and paste the signature into their email client.
+
+---
+
+## V3.9.1 Mobile & UX Enhancements (2026-01-25)
+
+| Feature | Description |
+|---------|-------------|
+| **Mobile Compatibility** | "Åpne e-post" button opens mailto: link on mobile devices |
+| **Plain Text Fallback** | Mobile browsers get text copy when HTML clipboard unavailable |
+| **Phone Formatting** | Norwegian format `XX XX XX XX` for display, E.164 for `tel:` links |
+| **Keyboard Shortcuts** | Desktop hints: Ctrl/⌘+C (copy), Ctrl/⌘+M (email) |
+| **Support Contact** | IT contact section: it@proaktiv.no, froyland@proaktiv.no |
+| **Toast Clarity** | Messages indicate HTML vs text copy format |
+
+**Session Log:** `.planning/phases/09-signature-portal/SESSION-2026-01-25.md`
+
+---
+
+## Photo Integration (2026-01-25)
+
+The signature template now supports dynamic employee photos via `{{EmployeePhotoUrl}}` placeholder.
+
+**Photo Source:** Employee photos are scraped from proaktiv.no and uploaded to WebDAV at:
+```
+https://proaktiv.no/d/photos/employees/{email}.jpg
+```
+
+**Related Scripts:**
+| Script | Purpose |
+|--------|---------|
+| `backend/scripts/export_homepage_employee_photos.py` | Crawl proaktiv.no, download employee photos |
+| `backend/scripts/export_office_banners.py` | Crawl proaktiv.no, download office banners |
+
+**Photo Resolution Priority in SignatureService:**
+1. `employee.profile_image_url` (if not empty and not Vitec API path)
+2. Fallback: `https://proaktiv.no/assets/logos/lilje_clean_52.png`
+
+See: `docs/features/photo-export/HANDOVER.md` for full photo export documentation.
 
 ---
 
@@ -112,6 +150,25 @@ Add to Entra app `PROAKTIV-Entra-Sync`:
 
 ---
 
+## Template Placeholders
+
+| Placeholder | Source | Notes |
+|-------------|--------|-------|
+| `{{DisplayName}}` | `employee.full_name` | Required |
+| `{{JobTitle}}` | `employee.title` | Optional |
+| `{{MobilePhone}}` | `employee.phone` | Formatted as XX XX XX XX |
+| `{{MobilePhoneRaw}}` | `employee.phone` | Raw digits for tel: links |
+| `{{Email}}` | `employee.email` | Required |
+| `{{EmployeePhotoUrl}}` | `employee.profile_image_url` | Falls back to placeholder |
+| `{{FacebookUrl}}` | Office → Company default | Social media link |
+| `{{InstagramUrl}}` | Office → Company default | Social media link |
+| `{{LinkedInUrl}}` | Office → Company default | Social media link |
+| `{{OfficeName}}` | `employee.office.name` | Office display name |
+| `{{OfficeAddress}}` | `employee.office.street_address` | Street address |
+| `{{OfficePostal}}` | Computed | `{postal_code} {city}` |
+
+---
+
 ## Agent Pipeline
 
 This feature was built using a 6-agent pipeline:
@@ -126,3 +183,55 @@ This feature was built using a 6-agent pipeline:
 | 6 | PowerShell bulk sender | Send-SignatureEmails.ps1 |
 
 See `.planning/codebase/AGENT-PIPELINE.md` for reusable pipeline documentation.
+
+---
+
+## QA Testing
+
+A comprehensive 5-stage QA testing plan was created:
+
+**Plan File:** `.cursor/plans/signature_qa_testing_01ae0f96.plan.md`
+
+| Stage | Description | Status |
+|-------|-------------|--------|
+| 1 | Signature Page UI Compatibility | ✅ Passed with fixes |
+| 2 | Copy/Paste Functionality | ✅ Passed with fixes |
+| 3 | Email Client Rendering | ⏳ Pending |
+| 4 | Mobile Device Testing | ⏳ Pending |
+| 5 | Edge Cases and Error States | ⏳ Pending |
+
+**Test Clients:** Outlook (New/Classic), Gmail, Apple Mail, Thunderbird
+
+---
+
+## Pending Work
+
+### WebDAV Photo Migration (High Priority)
+
+Replace Vitec API base64 images with WebDAV-hosted photos.
+
+**Scripts Ready:**
+- `backend/scripts/upload_employee_photos.py` - Upload to WebDAV
+- `backend/scripts/update_photo_urls_webdav.py` - Update database URLs
+
+**Photos Downloaded:** 184 in `C:\Users\Adrian\Documents\ProaktivPhotos\webdav-upload\`
+
+**Commands:**
+```powershell
+# Upload photos
+cd backend
+python scripts/upload_employee_photos.py --photos-dir "C:\Users\Adrian\Documents\ProaktivPhotos\webdav-upload" --dry-run
+
+# Update database
+python scripts/update_photo_urls_webdav.py --dry-run
+python scripts/update_photo_urls_webdav.py
+```
+
+### Bulk Email Rollout
+
+Send signature links to all employees:
+
+```powershell
+.\backend\scripts\Send-SignatureEmails.ps1 -DryRun      # Test
+.\backend\scripts\Send-SignatureEmails.ps1              # Production
+```

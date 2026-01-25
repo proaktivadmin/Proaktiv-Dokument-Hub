@@ -10,7 +10,7 @@ A document template management system for Norwegian real estate brokers, integra
 
 | Aspect | Details |
 |--------|---------|
-| **Phase** | 3.9 (Self-Service Signature Portal) |
+| **Phase** | 3.9.1 (Signature Portal Enhancements) |
 | **Stack** | Next.js 16 + React 19 + FastAPI + PostgreSQL (Railway) |
 | **UI** | Shadcn/UI + Tailwind CSS 4 + Custom Design Tokens |
 | **Hosting** | Vercel (Frontend) + Railway (Backend + PostgreSQL) |
@@ -210,6 +210,31 @@ See `.planning/STATE.md` for full status.
 - ✅ Import script: `import_entra_offices.py` (--dry-run, --fetch-details)
 - Plans: `.planning/phases/10-office-entra-sync/`
 
+**V3.9.2 Photo Export for Signatures (2026-01-25 - In Progress):**
+- ✅ Created `export_homepage_employee_photos.py` - crawls proaktiv.no, downloads employee photos
+- ✅ Created `export_office_banners.py` - crawls proaktiv.no, downloads office banners
+- ✅ Updated signature template with `{{EmployeePhotoUrl}}` placeholder
+- ✅ Added `_resolve_employee_photo_url()` to SignatureService
+- ✅ Added external link to proaktiv.no profile on EmployeeCard
+- ⏳ Pending: Manual WebDAV upload to `proaktiv.no/d/photos/`
+- ⏳ Pending: Database update for `profile_image_url` fields
+- Handover: `docs/features/photo-export/HANDOVER.md`
+
+**V3.9.1 Signature Portal Enhancements (Completed 2026-01-25):**
+- ✅ Mobile compatibility with "Åpne e-post" button
+- ✅ Norwegian phone formatting (XX XX XX XX)
+- ✅ Keyboard shortcut hints for desktop users
+- ✅ Support contact section with IT email addresses
+
+**V3.9.1 Signature Portal Enhancements (Completed 2026-01-25):**
+- ✅ Mobile compatibility: "Åpne e-post" button, plain text clipboard fallback
+- ✅ Norwegian phone formatting: `XX XX XX XX` display, E.164 for `tel:` links
+- ✅ Keyboard shortcut hints: Ctrl/⌘+C (copy), Ctrl/⌘+M (email)
+- ✅ Support contact section with IT email addresses
+- ✅ Toast messages indicate HTML vs text copy format
+- ✅ QA testing plan created (5 stages), Stages 1-2 executed with fixes
+- Session log: `.planning/phases/09-signature-portal/SESSION-2026-01-25.md`
+
 **V3.9 Self-Service Signature Portal (Completed 2026-01-24):**
 - ✅ Backend SignatureService renders personalized HTML signatures (with-photo/no-photo)
 - ✅ Backend GraphService sends notification emails via Microsoft Graph API
@@ -392,6 +417,7 @@ Use `/entra-architect`, `/entra-builder`, `/entra-qa` commands.
 | `/entra-qa` | Test Entra ID sync |
 | `/entra-sync` | Run Entra ID sync (usage docs) |
 | `/notification` | Maintain/update notification system |
+| `/signature-qa` | Run signature QA testing stages |
 
 ---
 

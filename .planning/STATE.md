@@ -12,12 +12,12 @@ See: .planning/PROJECT.md (updated 2026-01-23)
 
 ## Current Position
 
-Phase: 3.9 (Self-Service Signature Portal)
-Plan: V3.9 complete
+Phase: 3.9.1 (Signature Portal Enhancements)
+Plan: V3.9.1 QA + Mobile Fixes
 Status: Deployed to production
-Last activity: 2026-01-24 — signature portal commit and push
+Last activity: 2026-01-25 — Mobile compatibility, phone formatting, QA testing
 
-Progress: [██████████] 100% (V3.9 signature portal complete)
+Progress: [██████████] 100% (V3.9.1 enhancements complete)
 
 ## Performance Metrics
 
@@ -68,12 +68,45 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-01-24
-Stopped at: V3.9 Self-Service Signature Portal complete
-Resume file: None (ready for new work)
-Next step: Deploy signature emails to employees, test roaming signatures, or continue with Phase 07
+Last session: 2026-01-25
+Stopped at: V3.9.2 Photo export scripts complete
+Resume file: `docs/features/photo-export/HANDOVER.md`
+Next step: Upload photos to WebDAV, update database records, verify signature rendering
 
-### Session Summary (2026-01-24 - Latest)
+### Session Summary (2026-01-25 - Latest)
+**V3.9.2 Photo Export for Signatures (In Progress):**
+- ✅ Created `export_homepage_employee_photos.py` - crawls proaktiv.no, downloads employee photos
+- ✅ Created `export_office_banners.py` - crawls proaktiv.no, downloads office banners
+- ✅ Fixed og:image extraction in `sync_proaktiv_directory.py` for profile photos
+- ✅ Updated `email-signature.html` template with `{{EmployeePhotoUrl}}` placeholder
+- ✅ Updated `signature_service.py` with `_resolve_employee_photo_url()` method
+- ✅ Added external link to proaktiv.no profile on EmployeeCard component
+- ✅ Generated photo mapping files (manifest.json, CSV maps)
+- ⏳ Pending: Manual WebDAV upload of `photos/employees/` and `photos/offices/`
+- ⏳ Pending: Database update scripts for `profile_image_url` fields
+- Handover: `docs/features/photo-export/HANDOVER.md`
+
+**Output Files Generated:**
+- `C:\Users\Adrian\Documents\ProaktivPhotos\webdav-upload\photos\employees\` (~100 photos)
+- `C:\Users\Adrian\Documents\ProaktivPhotos\webdav-upload\photos\offices\` (21 banners)
+
+**V3.9.1 Signature Portal Enhancements (Completed earlier today):**
+- ✅ Mobile compatibility: "Åpne e-post" button, plain text fallback
+- ✅ Norwegian phone formatting: `XX XX XX XX` display format
+- ✅ Keyboard shortcut hints for desktop users (Ctrl/⌘+C, Ctrl/⌘+M)
+- ✅ Support contact section with IT email addresses
+- ✅ Toast messages now indicate copy format (HTML vs text)
+- ✅ QA testing plan created (5 stages), Stages 1-2 executed with fixes
+- ✅ Deployment verification and Vercel cache fix
+- Session log: `.planning/phases/09-signature-portal/SESSION-2026-01-25.md`
+
+**Pending Work (for Next Agent):**
+- ⏳ WebDAV upload: Upload photos to `proaktiv.no/d/photos/employees/` and `photos/offices/`
+- ⏳ Database update: Set `profile_image_url` from CSV mapping files
+- ⏳ QA testing: Stages 3-5 pending (email clients, mobile, edge cases)
+- ⏳ Transport rule signatures: Agent 3-4 pending (POC test, docs)
+
+### Session Summary (2026-01-24)
 **V3.9 Self-Service Signature Portal (Completed 2026-01-24):**
 - ✅ Backend SignatureService renders personalized HTML signatures (with-photo/no-photo)
 - ✅ Backend GraphService sends notification emails via Microsoft Graph API
@@ -177,6 +210,7 @@ Next step: Deploy signature emails to employees, test roaming signatures, or con
 
 | Version | Date | Key Changes |
 |---------|------|-------------|
+| V3.9.1 | 2026-01-25 | Signature mobile compatibility, phone formatting, QA fixes |
 | V3.9 | 2026-01-24 | Self-service signature portal with 6-agent pipeline |
 | V3.8 | 2026-01-24 | Sync notification system + QA tests |
 | V3.7 | 2026-01-24 | UPN mismatch detection for Entra ID SSO |
@@ -191,21 +225,38 @@ Next step: Deploy signature emails to employees, test roaming signatures, or con
 
 ## Ready for Next Steps
 
-### Option A: Deploy Signature Emails
+### Option A: WebDAV Employee Photos (RECOMMENDED)
+Replace Vitec API base64 images with WebDAV-hosted photos for faster loading.
+
+```powershell
+# 1. Upload photos to WebDAV
+cd backend
+python scripts/upload_employee_photos.py --photos-dir "C:\Users\Adrian\Documents\ProaktivPhotos\webdav-upload" --dry-run
+
+# 2. Update database URLs
+python scripts/update_photo_urls_webdav.py --dry-run   # Preview
+python scripts/update_photo_urls_webdav.py             # Apply
+```
+
+**Scripts ready:** `upload_employee_photos.py`, `update_photo_urls_webdav.py`  
+**Photos downloaded:** 184 in `C:\Users\Adrian\Documents\ProaktivPhotos\webdav-upload\`
+
+### Option B: Complete Signature QA
+- QA plan: `.cursor/plans/signature_qa_testing_01ae0f96.plan.md`
+- Stage 3: Email client rendering (Outlook, Gmail, Apple Mail)
+- Stage 4: Mobile device testing
+- Stage 5: Edge cases and error states
+
+### Option C: Deploy Signature Emails
 - Set environment variables (SIGNATURE_SENDER_EMAIL, FRONTEND_URL)
 - Add Mail.Send permission in Azure Portal
 - Run `.\backend\scripts\Send-SignatureEmails.ps1 -DryRun` to test
 - Run `.\backend\scripts\Send-SignatureEmails.ps1` for full rollout
 
-### Option B: Phase 06 Testing (Entra ID Sync)
-- Run `/entra-qa` command
-- Test with real Azure credentials
-- Verify profile, photo, and signature sync
-
-### Option C: Phase 07 (Office Enhancements)
+### Option D: Phase 07 (Office Enhancements)
 - 8 execution plans ready
 - Region grouping, office merge, SalesScreen
-- Can run in parallel with Phase 06 testing
+- Can run in parallel with other work
 
 ---
 

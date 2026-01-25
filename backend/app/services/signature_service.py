@@ -143,6 +143,9 @@ class SignatureService:
         employee_photo_url = SignatureService._resolve_employee_photo_url(employee)
         social_urls = SignatureService._resolve_social_urls(employee)
 
+        # Use employee's homepage URL if available, otherwise default to proaktiv.no
+        employee_url = employee.homepage_url or "https://proaktiv.no/"
+
         replacements = {
             "{{DisplayName}}": employee.full_name,
             "{{JobTitle}}": employee.title or "",
@@ -150,6 +153,7 @@ class SignatureService:
             "{{MobilePhoneRaw}}": raw_phone,
             "{{Email}}": employee.email or "",
             "{{EmployeePhotoUrl}}": employee_photo_url,
+            "{{EmployeeUrl}}": employee_url,
             "{{FacebookUrl}}": social_urls["facebook_url"],
             "{{InstagramUrl}}": social_urls["instagram_url"],
             "{{LinkedInUrl}}": social_urls["linkedin_url"],

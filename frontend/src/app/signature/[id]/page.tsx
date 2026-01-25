@@ -114,14 +114,10 @@ export default function SignaturePage() {
     }
   }, [signature, toast]);
 
-  // Open default email client with signature instructions
+  // Open default email client
   const handleOpenEmailApp = useCallback(() => {
-    const subject = encodeURIComponent("Sett opp ny e-postsignatur");
-    const body = encodeURIComponent(
-      `Hei!\n\nJeg har hentet min nye e-postsignatur fra Proaktiv Dokument Hub.\n\nGå til denne lenken for å kopiere signaturen:\n${window.location.href}\n\n---\n${signature?.text || ""}`
-    );
-    window.location.href = `mailto:?subject=${subject}&body=${body}`;
-  }, [signature?.text]);
+    window.location.href = `mailto:`;
+  }, []);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -167,9 +163,9 @@ export default function SignaturePage() {
             <Image
               src="/assets/proaktiv-logo-black.png"
               alt="Proaktiv"
-              width={200}
-              height={56}
-              className="h-10 w-auto"
+              width={280}
+              height={78}
+              className="h-14 w-auto"
               priority
             />
           </div>
