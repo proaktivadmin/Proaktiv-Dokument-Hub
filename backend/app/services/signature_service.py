@@ -144,7 +144,7 @@ class SignatureService:
         social_urls = SignatureService._resolve_social_urls(employee)
 
         # Use employee's homepage URL if available, otherwise default to proaktiv.no
-        employee_url = employee.homepage_url or "https://proaktiv.no/"
+        employee_url = employee.homepage_profile_url or "https://proaktiv.no/"
 
         replacements = {
             "{{DisplayName}}": employee.full_name,
