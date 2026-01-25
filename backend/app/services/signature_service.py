@@ -18,6 +18,13 @@ from app.models.employee import Employee
 
 logger = logging.getLogger(__name__)
 
+PLACEHOLDER_PHOTO = "https://proaktiv.no/assets/logos/lilje_clean_52.png"
+
+# Company-wide social media defaults (used when office/employee doesn't have specific URLs)
+DEFAULT_FACEBOOK = "https://www.facebook.com/proaktiveiendom"
+DEFAULT_INSTAGRAM = "https://www.instagram.com/proaktiveiendomsmegling/"
+DEFAULT_LINKEDIN = "https://no.linkedin.com/company/proaktiv-eiendomsmegling"
+
 
 class SignatureService:
     """Service for rendering email signatures."""
@@ -86,6 +93,39 @@ class SignatureService:
         return SignatureService.TEMPLATES_DIR / template_name
 
     @staticmethod
+    def _resolve_employee_photo_url(employee: Employee) -> str:
+        photo_url = (employee.profile_image_url or "").strip()
+        if photo_url and not photo_url.startswith("/api/vitec"):
+            return photo_url
+        return PLACEHOLDER_PHOTO
+
+    @staticmethod
+    def _resolve_social_urls(employee: Employee) -> dict[str, str]:
+        """Resolve social media URLs with priority: employee > office > company default."""
+        office = employee.office
+
+        # Facebook: employee -> office -> default
+        facebook = (
+            getattr(employee, "facebook_url", None) or (office.facebook_url if office else None) or DEFAULT_FACEBOOK
+        )
+
+        # Instagram: employee -> office -> default
+        instagram = (
+            getattr(employee, "instagram_url", None) or (office.instagram_url if office else None) or DEFAULT_INSTAGRAM
+        )
+
+        # LinkedIn: employee -> office -> default
+        linkedin = (
+            getattr(employee, "linkedin_url", None) or (office.linkedin_url if office else None) or DEFAULT_LINKEDIN
+        )
+
+        return {
+            "facebook_url": facebook,
+            "instagram_url": instagram,
+            "linkedin_url": linkedin,
+        }
+
+    @staticmethod
     def _render_template(template_content: str, employee: Employee) -> str:
         office = employee.office
         office_postal = ""
@@ -100,12 +140,19 @@ class SignatureService:
             raw_phone = f"47{raw_phone}"  # Add Norwegian country code
         raw_phone = f"+{raw_phone}" if raw_phone else ""
 
+        employee_photo_url = SignatureService._resolve_employee_photo_url(employee)
+        social_urls = SignatureService._resolve_social_urls(employee)
+
         replacements = {
             "{{DisplayName}}": employee.full_name,
             "{{JobTitle}}": employee.title or "",
             "{{MobilePhone}}": formatted_phone,
             "{{MobilePhoneRaw}}": raw_phone,
             "{{Email}}": employee.email or "",
+            "{{EmployeePhotoUrl}}": employee_photo_url,
+            "{{FacebookUrl}}": social_urls["facebook_url"],
+            "{{InstagramUrl}}": social_urls["instagram_url"],
+            "{{LinkedInUrl}}": social_urls["linkedin_url"],
             "{{OfficeName}}": office.name if office else "",
             "{{OfficeAddress}}": office.street_address if office else "",
             "{{OfficePostal}}": office_postal,
