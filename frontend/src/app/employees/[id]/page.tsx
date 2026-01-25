@@ -374,10 +374,12 @@ export default function EmployeeDetailPage() {
             <CheckSquare className="h-4 w-4" />
             Sjekklister ({checklists.length})
           </TabsTrigger>
-          <TabsTrigger value="signature" className="gap-2">
-            <PenLine className="h-4 w-4" />
-            Signatur
-          </TabsTrigger>
+          {employee.employee_type === "internal" && (
+            <TabsTrigger value="signature" className="gap-2">
+              <PenLine className="h-4 w-4" />
+              Signatur
+            </TabsTrigger>
+          )}
         </TabsList>
 
         <TabsContent value="overview">
@@ -553,13 +555,15 @@ export default function EmployeeDetailPage() {
             </CardContent>
           </Card>
         </TabsContent>
-        <TabsContent value="signature">
-          <SignaturePreview
-            employeeId={employeeId}
-            employeeEmail={employee.email || ""}
-            employeeName={employee.full_name}
-          />
-        </TabsContent>
+        {employee.employee_type === "internal" && (
+          <TabsContent value="signature">
+            <SignaturePreview
+              employeeId={employeeId}
+              employeeEmail={employee.email || ""}
+              employeeName={employee.full_name}
+            />
+          </TabsContent>
+        )}
       </Tabs>
 
       {/* Edit form */}

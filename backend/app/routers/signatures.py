@@ -95,7 +95,16 @@ async def get_signature(
 ):
     """
     Render a personalized email signature for an employee.
+    Only available for internal Proaktiv employees (not external contractors).
     """
+    employee = await EmployeeService.get_by_id(db, employee_id)
+    if not employee:
+        raise HTTPException(status_code=404, detail="Employee not found")
+
+    # Only internal employees get signatures
+    if employee.employee_type != "internal":
+        raise HTTPException(status_code=403, detail="Signatures are only available for internal Proaktiv employees")
+
     signature = await SignatureService.render_signature(db, employee_id, version)
     if not signature:
         raise HTTPException(status_code=404, detail="Employee not found")
@@ -111,12 +120,18 @@ async def send_signature_email(
 ):
     """
     Send a signature notification email to the employee.
+    Only available for internal Proaktiv employees (not external contractors).
     """
     _require_auth(request)
 
     employee = await EmployeeService.get_by_id(db, employee_id)
     if not employee:
         raise HTTPException(status_code=404, detail="Employee not found")
+
+    # Only internal employees get signatures
+    if employee.employee_type != "internal":
+        raise HTTPException(status_code=403, detail="Signatures are only available for internal Proaktiv employees")
+
     if not employee.email:
         raise HTTPException(status_code=400, detail="Employee email not set")
 
