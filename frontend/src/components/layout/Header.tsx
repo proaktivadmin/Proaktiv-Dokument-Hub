@@ -82,11 +82,12 @@ export function Header({ onUploadSuccess }: HeaderProps) {
     { href: "/sanitizer", label: "Sanitizer", icon: Sparkles },
     { href: "/sync", label: "Synkronisering", icon: RefreshCcw },
     { href: "/portal/preview", label: "Portal Skins", icon: Palette },
+    { href: "/tools/image-optimizer", label: "Bildeoptimalisering", icon: Image },
   ];
 
   const isRessurserActive = ["/templates", "/categories", "/assets", "/storage"].some(p => pathname.startsWith(p));
   const isSelskapActive = ["/offices", "/employees", "/territories", "/mottakere"].some(p => pathname.startsWith(p));
-  const isToolsActive = ["/sanitizer", "/sync", "/portal"].some(p => pathname.startsWith(p));
+  const isToolsActive = ["/sanitizer", "/sync", "/portal", "/tools"].some(p => pathname.startsWith(p));
 
   return (
     <>
