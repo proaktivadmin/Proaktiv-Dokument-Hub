@@ -166,12 +166,20 @@ export default function EmployeeDetailPage() {
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
             <div className="flex items-start gap-4">
               {/* Avatar */}
-              <div 
-                className="w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-2xl shrink-0"
-                style={{ backgroundColor: employee.office.color }}
-              >
-                {employee.initials}
-              </div>
+              {employee.profile_image_url ? (
+                <img
+                  src={employee.profile_image_url}
+                  alt={employee.full_name}
+                  className="w-20 h-20 rounded-full object-cover shrink-0"
+                />
+              ) : (
+                <div 
+                  className="w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-2xl shrink-0"
+                  style={{ backgroundColor: employee.office.color }}
+                >
+                  {employee.initials}
+                </div>
+              )}
 
               <div>
                 <div className="flex items-center gap-2 mb-1">
