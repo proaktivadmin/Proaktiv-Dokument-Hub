@@ -342,6 +342,27 @@ export default function SignaturePage() {
                   <span>åpne e-post</span>
                 </div>
               )}
+
+              {/* Support contact section */}
+              <div className="mt-4 rounded-lg border bg-muted/30 p-4 text-sm">
+                <p className="font-medium text-foreground mb-2">Trenger du hjelp?</p>
+                <p className="text-muted-foreground mb-3">
+                  Opplever du problemer med signaturen din eller har behov for tilpasninger,
+                  ta kontakt med Adrian per e-post.
+                </p>
+                <Button variant="outline" size="sm" asChild>
+                  <a
+                    href={`mailto:adrian@proaktiv.no?subject=${encodeURIComponent(
+                      `Signatur - ${signature?.employee_name || "Ansatt"}`
+                    )}&body=${encodeURIComponent(
+                      `Ønsker du tilpasninger av din signatur?\nBeskriv:\n\n\nOpplever du tekniske problemer med din signatur?\nBeskriv:\n\n\nSkjermbilde (Win+Shift+S):\n`
+                    )}`}
+                  >
+                    <Mail className="mr-2 h-4 w-4" />
+                    Kontakt Adrian
+                  </a>
+                </Button>
+              </div>
             </div>
           )}
         </div>
