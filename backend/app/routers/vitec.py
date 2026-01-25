@@ -7,7 +7,6 @@ Provides endpoints for checking Vitec Hub API configuration and connection statu
 import logging
 
 from fastapi import APIRouter, HTTPException, Query
-from fastapi.responses import Response
 from pydantic import BaseModel
 
 from app.config import settings
@@ -96,7 +95,12 @@ async def get_employee_picture(
     crop: str = Query("top", description="Crop mode: top, center"),
 ):
     """
-    Fetch employee profile picture from Vitec Hub.
+    DISABLED: Fetch employee profile picture from Vitec Hub.
+
+    This endpoint is temporarily disabled to identify employees missing WebDAV photos.
+    All employee photos should now be served from https://proaktiv.no/photos/employees/
+
+    If you see broken images, the employee needs their photo uploaded to WebDAV.
 
     Supports optional resizing for avatars. When size is specified,
     the image is cropped to a square and resized.
@@ -109,44 +113,23 @@ async def get_employee_picture(
     Returns:
         Image bytes with appropriate content-type
     """
-    hub = VitecHubService()
-    installation_id = settings.VITEC_INSTALLATION_ID
-
-    if not installation_id:
-        raise HTTPException(
-            status_code=500,
-            detail="VITEC_INSTALLATION_ID is not configured.",
-        )
-
-    image_data = await hub.get_employee_picture(installation_id, employee_id)
-
-    if not image_data:
-        raise HTTPException(status_code=404, detail="Employee picture not found.")
-
-    # Apply resizing if requested
-    if size:
-        from app.services.image_service import ImageService
-
-        try:
-            crop_mode = "center" if crop == "center" else "top"
-            image_data = ImageService.resize_for_avatar(
-                image_data,
-                size=size,
-                crop_mode=crop_mode,  # type: ignore
-            )
-        except Exception as e:
-            # Log error but return original image
-            import logging
-
-            logging.warning(f"Failed to resize image for {employee_id}: {e}")
-
-    return Response(content=image_data, media_type="image/jpeg")
+    # DISABLED: Return 410 Gone to indicate this endpoint is deprecated
+    raise HTTPException(
+        status_code=410,
+        detail="This endpoint is disabled. Employee photos are now served from WebDAV at https://proaktiv.no/photos/employees/. "
+        "If you see this error, the employee's profile_image_url needs to be updated to the WebDAV URL.",
+    )
 
 
 @router.get("/departments/{department_id}/picture")
 async def get_department_picture(department_id: str):
     """
-    Fetch department banner/logo picture from Vitec Hub.
+    DISABLED: Fetch department banner/logo picture from Vitec Hub.
+
+    This endpoint is temporarily disabled to identify offices missing WebDAV banners.
+    All office banners should now be served from https://proaktiv.no/photos/offices/
+
+    If you see broken images, the office needs their banner uploaded to WebDAV.
 
     Args:
         department_id: Vitec department ID
@@ -154,21 +137,12 @@ async def get_department_picture(department_id: str):
     Returns:
         Image bytes with appropriate content-type
     """
-    hub = VitecHubService()
-    installation_id = settings.VITEC_INSTALLATION_ID
-
-    if not installation_id:
-        raise HTTPException(
-            status_code=500,
-            detail="VITEC_INSTALLATION_ID is not configured.",
-        )
-
-    image_data = await hub.get_department_picture(installation_id, department_id)
-
-    if not image_data:
-        raise HTTPException(status_code=404, detail="Department picture not found.")
-
-    return Response(content=image_data, media_type="image/jpeg")
+    # DISABLED: Return 410 Gone to indicate this endpoint is deprecated
+    raise HTTPException(
+        status_code=410,
+        detail="This endpoint is disabled. Office banners are now served from WebDAV at https://proaktiv.no/photos/offices/. "
+        "If you see this error, the office's banner_image_url needs to be updated to the WebDAV URL.",
+    )
 
 
 class SyncPicturesResponse(BaseModel):
