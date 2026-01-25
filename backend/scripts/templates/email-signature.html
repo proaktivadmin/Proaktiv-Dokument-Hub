@@ -1,70 +1,148 @@
 <!DOCTYPE html>
-<html>
+<html lang="no" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!--[if !mso]><!-->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!--<![endif]-->
+  <!-- Dark Mode Protection: Force light mode to prevent color inversion -->
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+  <meta name="x-apple-color-scheme" content="light">
+  <!--[if gte mso 9]>
+  <xml>
+    <o:OfficeDocumentSettings>
+      <o:AllowPNG/>
+      <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings>
+  </xml>
+  <style type="text/css">
+    table, td, div, p, a, span {
+      color: #000000 !important;
+      background-color: #ffffff !important;
+    }
+    a { color: #000000 !important; }
+  </style>
+  <![endif]-->
+  <style type="text/css">
+    /* Dark mode protection for email clients */
+    :root { color-scheme: light; supported-color-schemes: light; }
+    @media (prefers-color-scheme: dark) {
+      .dark-mode-bg { background-color: #ffffff !important; }
+      .dark-mode-text { color: #000000 !important; }
+    }
+    /* Outlook.com dark mode */
+    [data-ogsc] .dark-mode-bg { background-color: #ffffff !important; }
+    [data-ogsc] .dark-mode-text { color: #000000 !important; }
+    /* Gmail dark mode */
+    u + .body .dark-mode-bg { background-color: #ffffff !important; }
+    u + .body .dark-mode-text { color: #000000 !important; }
+  </style>
 </head>
-<body>
-<table cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:540px;min-width:360px;">
+<body class="body" style="margin:0;padding:0;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;background-color:#ffffff;">
+<!--[if mso]>
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="540" align="center" style="width:540px;"><tr><td>
+<![endif]-->
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" class="dark-mode-bg" style="max-width:540px;min-width:360px;background-color:#ffffff !important;mso-table-lspace:0pt;mso-table-rspace:0pt;">
   <tr>
-    <td>
-      <table cellpadding="0" cellspacing="0" border="0" width="100%" style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#333333;">
-        <tr><td colspan="4" style="font-size:12px;padding-bottom:6px;color:#333333;">Med vennlig hilsen</td></tr>
+    <td class="dark-mode-bg" style="background-color:#ffffff !important;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" class="dark-mode-bg" style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#000 !important;background-color:#ffffff !important;mso-table-lspace:0pt;mso-table-rspace:0pt;">
+        <tr><td colspan="4" class="dark-mode-bg dark-mode-text" style="font-size:12px;padding-bottom:6px;color:#000 !important;background-color:#ffffff !important;">Med vennlig hilsen</td></tr>
         <tr>
-          <td valign="middle" style="padding-right:18px;">
-            <img src="{{EmployeePhotoUrl}}" width="80" height="80" alt="{{DisplayName}}" style="display:block;border:0;background-color:#f5f5f5;object-fit:cover;">
-          </td>
-          <td valign="middle" style="padding-right:22px;">
-            <div style="font-size:20px;font-weight:bold;margin-bottom:4px;color:#333333;">{{DisplayName}}</div>
-            <div style="color:#bcab8a;font-size:12px;margin-bottom:10px;"><b>{{JobTitle}}</b></div>
-            <div style="font-size:11px;margin-bottom:4px;">
-              <a href="tel:{{MobilePhoneRaw}}" style="color:#333333;text-decoration:none;">
-                <img src="https://proaktiv.no/assets/logos/phone.png" width="14" height="14" style="vertical-align:middle;border:0;margin-right:6px;">{{MobilePhone}}
-              </a>
+          <!-- Employee photo: 3:4 portrait ratio (80x107) with cropping frame -->
+          <td valign="middle" class="dark-mode-bg" style="width:80px;padding-right:14px;background-color:#ffffff !important;">
+            <!--[if mso]>
+            <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width:80px;height:107px;">
+              <v:fill type="frame" src="{{EmployeePhotoUrl}}" />
+              <v:textbox inset="0,0,0,0" style="mso-fit-shape-to-text:false;"></v:textbox>
+            </v:rect>
+            <![endif]-->
+            <!--[if !mso]><!-->
+            <div style="width:80px;height:107px;overflow:hidden;background:url('{{EmployeePhotoUrl}}') center top/cover no-repeat;">
+              <img src="{{EmployeePhotoUrl}}" width="80" alt="{{DisplayName}}" style="display:block;border:0;width:80px;height:107px;object-fit:cover;object-position:center top;">
             </div>
-            <div style="font-size:11px;">
-              <a href="mailto:{{Email}}" style="color:#333333;text-decoration:none;">
-                <img src="https://proaktiv.no/assets/logos/email.png" width="14" height="14" style="vertical-align:middle;border:0;margin-right:6px;">{{Email}}
-              </a>
-            </div>
+            <!--<![endif]-->
           </td>
-          <td valign="middle" style="padding:0 18px;">
-            <table cellpadding="0" cellspacing="0" border="0">
-              <tr><td style="width:1px;height:95px;background-color:#bcab8a;font-size:1px;line-height:1px;">&nbsp;</td></tr>
+          <!-- Employee info: table-based layout for precise icon-text baseline alignment -->
+          <td valign="middle" class="dark-mode-bg" style="padding-right:14px;background-color:#ffffff !important;">
+            <!-- Name: 20px bold -->
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;">
+              <tr>
+                <td class="dark-mode-text" style="font-size:20px;font-weight:bold;line-height:24px;padding-bottom:4px;color:#000 !important;">{{DisplayName}}</td>
+              </tr>
+            </table>
+            <!-- Title: 12px bronze -->
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;">
+              <tr>
+                <td style="font-size:12px;line-height:16px;padding-bottom:10px;color:#bcab8a;"><b>{{JobTitle}}</b></td>
+              </tr>
+            </table>
+            <!-- Phone: icon + text in table cells for baseline alignment -->
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;">
+              <tr>
+                <td valign="middle" style="width:14px;height:18px;padding-right:6px;">
+                  <img src="https://proaktiv.no/assets/logos/phone.png" width="14" height="14" alt="Telefon" style="display:block;border:0;">
+                </td>
+                <td valign="middle" style="font-size:11px;line-height:18px;height:18px;">
+                  <a href="tel:{{MobilePhoneRaw}}" class="dark-mode-text" style="color:#000 !important;text-decoration:none;">{{MobilePhone}}</a>
+                </td>
+              </tr>
+            </table>
+            <!-- Spacing between phone and email: 6px (golden ratio: 11/1.618 ≈ 6.8) -->
+            <div style="height:6px;font-size:1px;line-height:1px;">&nbsp;</div>
+            <!-- Email: icon + text in table cells for baseline alignment -->
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;">
+              <tr>
+                <td valign="middle" style="width:14px;height:18px;padding-right:6px;">
+                  <img src="https://proaktiv.no/assets/logos/email.png" width="14" height="14" alt="E-post" style="display:block;border:0;">
+                </td>
+                <td valign="middle" style="font-size:11px;line-height:18px;height:18px;">
+                  <a href="mailto:{{Email}}" class="dark-mode-text" style="color:#000 !important;text-decoration:none;">{{Email}}</a>
+                </td>
+              </tr>
             </table>
           </td>
-          <td valign="middle" align="center" style="padding-left:18px;">
-            <!-- Logo and icons container with fixed width and light background for dark mode -->
-            <table cellpadding="0" cellspacing="0" border="0" width="155" style="width:155px;">
+          <!-- Vertical divider (bronze) - height matches photo height for alignment -->
+          <td valign="middle" class="dark-mode-bg" style="padding-left:22px;padding-right:14px;background-color:#ffffff !important;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;">
+              <tr><td style="width:1px;height:107px;background-color:#bcab8a;font-size:1px;line-height:1px;">&nbsp;</td></tr>
+            </table>
+          </td>
+          <!-- Logo and social icons: 155px width = 4×26px icons + 3×16px gaps (golden ratio) -->
+          <td valign="middle" align="center" class="dark-mode-bg" style="width:155px;padding-left:14px;background-color:#ffffff !important;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="155" style="width:155px;mso-table-lspace:0pt;mso-table-rspace:0pt;">
               <tr>
-                <td align="center" style="padding:8px;padding-bottom:16px;background-color:#ffffff;border-radius:4px;">
-                  <img src="https://proaktiv.no/assets/logos/Proaktiv_sort_310_transparent.png" width="155" height="auto" style="display:block;border:0;max-width:100%;">
+                <td align="center" class="dark-mode-bg" style="padding-bottom:16px;background-color:#ffffff !important;">
+                  <img src="https://proaktiv.no/assets/logos/Proaktiv_sort.png" width="155" height="auto" alt="Proaktiv Eiendomsmegling" style="display:block;border:0;max-width:100%;">
                 </td>
               </tr>
               <tr>
-                <td align="center" style="padding-top:8px;">
-                  <table cellpadding="0" cellspacing="0" border="0" align="center">
+                <!-- Social icons: 4×32 + 3×9 = 155px (matches logo width, 32px height aligns with phone+email 42px) -->
+                <td align="center" class="dark-mode-bg" style="background-color:#ffffff !important;">
+                  <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="mso-table-lspace:0pt;mso-table-rspace:0pt;">
                     <tr>
-                      <td>
-                        <a href="{{EmployeeUrl}}" target="_blank">
-                          <img src="https://proaktiv.no/assets/logos/lilje_clean_52.png" width="26" height="26" style="display:block;border:0;">
+                      <td style="width:32px;">
+                        <a href="{{EmployeeUrl}}" target="_blank" rel="noopener">
+                          <img src="https://proaktiv.no/assets/logos/lilje_clean_52.png" width="32" height="32" alt="Proaktiv" style="display:block;border:0;">
                         </a>
                       </td>
-                      <td style="width:17px;"></td>
-                      <td>
-                        <a href="{{InstagramUrl}}" target="_blank">
-                          <img src="https://proaktiv.no/assets/logos/instagram.png" width="26" height="26" style="display:block;border:0;">
+                      <td style="width:9px;"></td>
+                      <td style="width:32px;">
+                        <a href="{{InstagramUrl}}" target="_blank" rel="noopener">
+                          <img src="https://proaktiv.no/assets/logos/instagram.png" width="32" height="32" alt="Instagram" style="display:block;border:0;">
                         </a>
                       </td>
-                      <td style="width:17px;"></td>
-                      <td>
-                        <a href="{{LinkedInUrl}}" target="_blank">
-                          <img src="https://proaktiv.no/assets/logos/linkedin.png" width="26" height="26" style="display:block;border:0;">
+                      <td style="width:9px;"></td>
+                      <td style="width:32px;">
+                        <a href="{{LinkedInUrl}}" target="_blank" rel="noopener">
+                          <img src="https://proaktiv.no/assets/logos/linkedin.png" width="32" height="32" alt="LinkedIn" style="display:block;border:0;">
                         </a>
                       </td>
-                      <td style="width:17px;"></td>
-                      <td>
-                        <a href="{{FacebookUrl}}" target="_blank">
-                          <img src="https://proaktiv.no/assets/logos/facebook.png" width="26" height="26" style="display:block;border:0;">
+                      <td style="width:9px;"></td>
+                      <td style="width:32px;">
+                        <a href="{{FacebookUrl}}" target="_blank" rel="noopener">
+                          <img src="https://proaktiv.no/assets/logos/facebook.png" width="32" height="32" alt="Facebook" style="display:block;border:0;">
                         </a>
                       </td>
                     </tr>
@@ -75,12 +153,12 @@
           </td>
         </tr>
         <tr>
-          <td colspan="4" style="padding-top:12px;font-size:11px;color:#333333;">
+          <td colspan="4" class="dark-mode-bg dark-mode-text" style="padding-top:12px;font-size:11px;color:#000 !important;background-color:#ffffff !important;">
             {{OfficeName}} – Org. nr. 912 404 447 | {{OfficeAddress}}, {{OfficePostal}}
           </td>
         </tr>
         <tr>
-          <td colspan="4" style="padding-top:8px;">
+          <td colspan="4" class="dark-mode-bg" style="padding-top:8px;background-color:#ffffff !important;">
             <div style="color:#888888;font-size:9px;line-height:1.4;max-width:516px;">Denne e-posten og eventuelle vedlegg er kun ment for mottaker(e) og kan inneholde konfidensiell informasjon. Dersom du har mottatt denne meldingen ved en feil, vennligst slett den og gi beskjed til avsender.</div>
           </td>
         </tr>
@@ -88,5 +166,8 @@
     </td>
   </tr>
 </table>
+<!--[if mso]>
+</td></tr></table>
+<![endif]-->
 </body>
 </html>
