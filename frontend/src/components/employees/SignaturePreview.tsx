@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { Loader2, Mail } from "lucide-react";
+import { Loader2, Mail, ExternalLink } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -63,6 +63,7 @@ export function SignaturePreview({
   }, [signatureHtml]);
 
   const canSend = Boolean(employeeEmail?.trim());
+  const publicSignatureUrl = `/signature/${employeeId}`;
 
   const handleSend = async () => {
     if (!canSend) {
@@ -84,6 +85,10 @@ export function SignaturePreview({
     }
   };
 
+  const handleOpenPublicPage = () => {
+    window.open(publicSignatureUrl, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -93,26 +98,38 @@ export function SignaturePreview({
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Mail className="h-4 w-4" />
-            <span>
-              Sendes til{" "}
-              <span className="font-medium text-foreground">
-                {employeeEmail || "Ikke registrert"}
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Mail className="h-4 w-4" />
+              <span>
+                Sendes til{" "}
+                <span className="font-medium text-foreground">
+                  {employeeEmail || "Ikke registrert"}
+                </span>
               </span>
-            </span>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={handleOpenPublicPage}
+                className="gap-2"
+              >
+                <ExternalLink className="h-4 w-4" />
+                Åpne ansattvisning
+              </Button>
+              <Button onClick={handleSend} disabled={!canSend || isSending}>
+                {isSending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Sender...
+                  </>
+                ) : (
+                  "Send signatur til ansatt"
+                )}
+              </Button>
+            </div>
           </div>
-          <Button onClick={handleSend} disabled={!canSend || isSending}>
-            {isSending ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Sender...
-              </>
-            ) : (
-              "Send signatur til ansatt"
-            )}
-          </Button>
         </div>
 
         <Tabs
