@@ -64,7 +64,10 @@ export function resolveApiUrl(url: string | null | undefined): string | undefine
  * When the URL is a Vitec picture endpoint, appends size and crop parameters
  * to get a properly cropped square image.
  * 
- * @param url - The image URL (e.g., /api/vitec/employees/ABCD/picture)
+ * For WebDAV-hosted photos (proaktiv.no), returns the URL directly since
+ * these are pre-optimized and benefit from browser/CDN caching.
+ * 
+ * @param url - The image URL (e.g., /api/vitec/employees/ABCD/picture or https://proaktiv.no/...)
  * @param size - Desired square size in pixels (e.g., 64, 128, 256)
  * @param crop - Crop mode: "top" for portraits, "center" for general
  */
@@ -76,7 +79,13 @@ export function resolveAvatarUrl(
   const resolved = resolveApiUrl(url);
   if (!resolved) return undefined;
 
-  // Only add params to Vitec picture endpoints
+  // WebDAV-hosted photos (proaktiv.no) - return as-is, they're pre-optimized
+  // and benefit from browser/CDN caching without API round-trips
+  if (resolved.includes("proaktiv.no/")) {
+    return resolved;
+  }
+
+  // Only add params to Vitec picture endpoints (legacy/fallback)
   if (resolved.includes("/vitec/employees/") && resolved.includes("/picture")) {
     const separator = resolved.includes("?") ? "&" : "?";
     return `${resolved}${separator}size=${size}&crop=${crop}`;
