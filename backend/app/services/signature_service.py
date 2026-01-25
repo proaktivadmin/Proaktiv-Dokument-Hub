@@ -27,6 +27,51 @@ class SignatureService:
     TEMPLATE_NO_PHOTO = "email-signature-no-photo.html"
 
     @staticmethod
+    def _format_phone_number(phone: str | None) -> str:
+        """Format phone number as Norwegian style: XX XX XX XX.
+
+        Handles various input formats:
+        - 12345678 -> 12 34 56 78
+        - +4712345678 -> +47 12 34 56 78
+        - 004712345678 -> +47 12 34 56 78
+        - Already formatted numbers are normalized
+        """
+        if not phone:
+            return ""
+
+        # Remove all non-digit characters except leading +
+        has_plus = phone.startswith("+")
+        digits = re.sub(r"\D", "", phone)
+
+        if not digits:
+            return phone  # Return original if no digits
+
+        # Handle Norwegian country code
+        if digits.startswith("47") and len(digits) >= 10:
+            # +47 or 0047 prefix
+            country_code = "+47"
+            local_number = digits[2:]
+        elif digits.startswith("0047") and len(digits) >= 12:
+            country_code = "+47"
+            local_number = digits[4:]
+        elif has_plus and len(digits) >= 10:
+            # Other country code with +
+            country_code = f"+{digits[:2]}"
+            local_number = digits[2:]
+        else:
+            # No country code, assume local Norwegian number
+            country_code = ""
+            local_number = digits
+
+        # Format local number as double-digit groups (XX XX XX XX)
+        # Norwegian mobile: 8 digits, landline: 8 digits
+        formatted_local = " ".join(local_number[i : i + 2] for i in range(0, len(local_number), 2))
+
+        if country_code:
+            return f"{country_code} {formatted_local}"
+        return formatted_local
+
+    @staticmethod
     async def _get_employee_with_office(db: AsyncSession, employee_id: UUID) -> Employee | None:
         result = await db.execute(
             select(Employee).options(selectinload(Employee.office)).where(Employee.id == str(employee_id))
@@ -47,10 +92,19 @@ class SignatureService:
         if office and (office.postal_code or office.city):
             office_postal = f"{office.postal_code or ''} {office.city or ''}".strip()
 
+        # Format phone number as Norwegian style (XX XX XX XX)
+        formatted_phone = SignatureService._format_phone_number(employee.phone)
+        # Raw phone for tel: links (digits only, with country code)
+        raw_phone = re.sub(r"\D", "", employee.phone or "")
+        if raw_phone and not raw_phone.startswith("47"):
+            raw_phone = f"47{raw_phone}"  # Add Norwegian country code
+        raw_phone = f"+{raw_phone}" if raw_phone else ""
+
         replacements = {
             "{{DisplayName}}": employee.full_name,
             "{{JobTitle}}": employee.title or "",
-            "{{MobilePhone}}": employee.phone or "",
+            "{{MobilePhone}}": formatted_phone,
+            "{{MobilePhoneRaw}}": raw_phone,
             "{{Email}}": employee.email or "",
             "{{OfficeName}}": office.name if office else "",
             "{{OfficeAddress}}": office.street_address if office else "",
