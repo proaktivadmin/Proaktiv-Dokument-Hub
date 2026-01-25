@@ -24,7 +24,7 @@ from sqlalchemy import create_engine, text
 from app.config import settings
 
 # Default manifest location
-DEFAULT_MANIFEST = Path.home() / "Documents" / "ProaktivPhotos" / "homepage-webdav" / "manifest.json"
+DEFAULT_MANIFEST = Path.home() / "Documents" / "ProaktivPhotos" / "webdav-upload" / "manifest.json"
 
 
 def update_photo_urls(manifest_path: Path, dry_run: bool = False) -> None:
@@ -68,17 +68,17 @@ def update_photo_urls(manifest_path: Path, dry_run: bool = False) -> None:
                 continue
 
             # Only process successfully downloaded photos
-            if download_status not in ("success", "dry-run", "copied"):
+            if download_status not in ("success", "dry-run", "copied", "downloaded", "skipped"):
                 skipped_count += 1
                 continue
 
-            # Find employee in database
+            # Find employee in database (case-insensitive email match)
             result = conn.execute(
                 text(
                     """
                     SELECT id, first_name, last_name, profile_image_url
                     FROM employees
-                    WHERE email = :email AND status = 'active'
+                    WHERE LOWER(email) = LOWER(:email) AND status = 'active'
                     """
                 ),
                 {"email": email},
