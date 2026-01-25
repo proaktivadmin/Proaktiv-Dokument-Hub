@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Upload, FileText, FolderTree, LayoutDashboard, Sparkles, Code2, HardDrive, LogOut,
-  Building2, Users, Image, ChevronDown, FileCode, Plus, Map, RefreshCcw, Palette
+  Building2, Users, Image, ChevronDown, FileCode, Plus, Map, RefreshCcw, Palette, ClipboardList
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -79,6 +79,7 @@ export function Header({ onUploadSuccess }: HeaderProps) {
 
   // Tools dropdown items
   const toolsItems = [
+    { href: "/tools/office-overview", label: "Kontor-oversikt", icon: ClipboardList },
     { href: "/sanitizer", label: "Sanitizer", icon: Sparkles },
     { href: "/sync", label: "Synkronisering", icon: RefreshCcw },
     { href: "/portal/preview", label: "Portal Skins", icon: Palette },
