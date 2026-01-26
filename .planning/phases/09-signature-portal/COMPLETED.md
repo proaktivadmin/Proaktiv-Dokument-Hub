@@ -16,7 +16,8 @@ A self-service email signature system for 120+ employees. Admins preview and sen
 
 | Feature | Description |
 |---------|-------------|
-| **Photo Cropping Fix** | Uses `object-fit:cover` with `object-position:center top` for proper portrait cropping |
+| **Photo Cropping Fix** | Uses `object-fit:cover` with `object-position:center top` for proper 80x96 portrait cropping |
+| **Outlook Classic Alignment** | Changed MSO table from `align="center"` to `align="left"` for proper left alignment |
 | **Apple Mail Support** | Added `a[x-apple-data-detectors]` CSS to prevent blue link styling |
 | **Mac Outlook Support** | Font smoothing with `-webkit-font-smoothing:antialiased` |
 | **Gmail Compatibility** | Enhanced dark mode protection with `u + .body` selectors |

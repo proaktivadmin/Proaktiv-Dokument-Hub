@@ -338,6 +338,8 @@ All assets are hosted on the Proaktiv CDN:
 ## Changelog
 
 ### v3.0 (2026-01-26)
+- Fixed photo cropping with `object-fit:cover` and explicit 80x96 dimensions
+- Fixed Outlook Classic centering: MSO table uses `align="left"` instead of `align="center"`
 - Added `object-position:center top` for face-preserving photo crop
 - Added Apple Mail `a[x-apple-data-detectors]` link override
 - Added Mac Outlook `-webkit-font-smoothing:antialiased`

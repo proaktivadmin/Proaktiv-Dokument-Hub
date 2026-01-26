@@ -20,7 +20,8 @@ The Self-Service Signature Portal allows 120+ employees to copy their personaliz
 ## What's Complete
 
 ### V3.9.3 Cross-Client Polish (2026-01-26)
-- ✅ Photo cropping with `object-fit:cover; object-position:center top`
+- ✅ Photo cropping with `object-fit:cover; object-position:center top` (80x96px frame)
+- ✅ Outlook Classic left-alignment fix (`align="left"` on MSO wrapper table)
 - ✅ Apple Mail `a[x-apple-data-detectors]` link color override
 - ✅ Mac Outlook `-webkit-font-smoothing:antialiased`
 - ✅ Gmail `u + .body` dark mode protection
