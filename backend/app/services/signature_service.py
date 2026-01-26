@@ -101,23 +101,21 @@ class SignatureService:
 
     @staticmethod
     def _resolve_social_urls(employee: Employee) -> dict[str, str]:
-        """Resolve social media URLs with priority: employee > office > company default."""
+        """Resolve social media URLs with priority: office > company default.
+
+        Note: Employee-level social links are stored but not used in signatures yet.
+        Future feature will allow employees to add personal links below the email line.
+        """
         office = employee.office
 
-        # Facebook: employee -> office -> default
-        facebook = (
-            getattr(employee, "facebook_url", None) or (office.facebook_url if office else None) or DEFAULT_FACEBOOK
-        )
+        # Facebook: office -> default
+        facebook = (office.facebook_url if office else None) or DEFAULT_FACEBOOK
 
-        # Instagram: employee -> office -> default
-        instagram = (
-            getattr(employee, "instagram_url", None) or (office.instagram_url if office else None) or DEFAULT_INSTAGRAM
-        )
+        # Instagram: office -> default
+        instagram = (office.instagram_url if office else None) or DEFAULT_INSTAGRAM
 
-        # LinkedIn: employee -> office -> default
-        linkedin = (
-            getattr(employee, "linkedin_url", None) or (office.linkedin_url if office else None) or DEFAULT_LINKEDIN
-        )
+        # LinkedIn: office -> default
+        linkedin = (office.linkedin_url if office else None) or DEFAULT_LINKEDIN
 
         return {
             "facebook_url": facebook,
