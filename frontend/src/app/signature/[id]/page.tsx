@@ -189,8 +189,8 @@ export default function SignaturePage() {
                   Signatur ikke funnet
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                  Lenken kan være utløpt eller feil. Ta kontakt med Proaktiv
-                  Administrasjonen hvis du trenger ny signatur.
+                  Lenken kan være utløpt eller feil. Ta kontakt med Adrian
+                  Frøyland, IT Ansvarlig, hvis du trenger ny signatur.
                 </p>
               </CardContent>
             </Card>
