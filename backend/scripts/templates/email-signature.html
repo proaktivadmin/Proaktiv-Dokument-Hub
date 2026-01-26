@@ -22,7 +22,11 @@
       color: #000000 !important;
       background-color: #ffffff !important;
     }
-    a { color: #000000 !important; }
+    a, a:link, a:visited, a:hover, a:active {
+      color: #000000 !important;
+      text-decoration: none !important;
+    }
+    a span { color: #000000 !important; }
   </style>
   <![endif]-->
   <style type="text/css">
@@ -59,7 +63,9 @@
             </v:rect>
             <![endif]-->
             <!--[if !mso]><!-->
-            <img src="{{EmployeePhotoUrl}}" alt="{{DisplayName}}" style="display:block;border:0;width:80px;height:96px;object-fit:cover;object-position:center top;">
+            <div style="width:80px;height:96px;overflow:hidden;">
+              <img src="{{EmployeePhotoUrl}}" alt="{{DisplayName}}" style="display:block;border:0;width:80px;height:auto;">
+            </div>
             <!--<![endif]-->
           </td>
           <!-- Employee info: 96px total height to match photo -->

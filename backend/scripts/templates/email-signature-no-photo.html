@@ -22,7 +22,11 @@
       color: #000000 !important;
       background-color: #ffffff !important;
     }
-    a { color: #000000 !important; }
+    a, a:link, a:visited, a:hover, a:active {
+      color: #000000 !important;
+      text-decoration: none !important;
+    }
+    a span { color: #000000 !important; }
   </style>
   <![endif]-->
   <style type="text/css">
@@ -55,7 +59,7 @@
             <!-- Name: 24px line-height + 4px padding = 28px -->
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;">
               <tr>
-                <td class="dark-mode-text" style="font-size:20px;font-weight:bold;line-height:24px;height:24px;padding-bottom:4px;color:#000 !important;">{{DisplayName}}</td>
+                <td class="dark-mode-text" style="font-size:20px;font-weight:bold;line-height:24px;height:24px;padding-bottom:4px;color:#000 !important;white-space:nowrap;">{{DisplayName}}</td>
               </tr>
             </table>
             <!-- Title: 16px line-height + 10px padding = 26px -->
@@ -71,7 +75,7 @@
                   <img src="https://proaktiv.no/assets/logos/phone.png" width="14" height="14" alt="Telefon" style="display:block;border:0;">
                 </td>
                 <td valign="middle" style="font-size:11px;line-height:18px;height:18px;">
-                  <a href="tel:{{MobilePhoneRaw}}" class="dark-mode-text" style="color:#000 !important;text-decoration:none;">{{MobilePhone}}</a>
+                  <a href="tel:{{MobilePhoneRaw}}" class="dark-mode-text" style="color:#000000 !important;text-decoration:none;mso-line-height-rule:exactly;"><span style="color:#000000 !important;">{{MobilePhone}}</span></a>
                 </td>
               </tr>
             </table>
@@ -84,7 +88,7 @@
                   <img src="https://proaktiv.no/assets/logos/email.png" width="14" height="14" alt="E-post" style="display:block;border:0;">
                 </td>
                 <td valign="middle" style="font-size:11px;line-height:18px;height:18px;">
-                  <a href="mailto:{{Email}}" class="dark-mode-text" style="color:#000 !important;text-decoration:none;">{{Email}}</a>
+                  <a href="mailto:{{Email}}" class="dark-mode-text" style="color:#000000 !important;text-decoration:none;mso-line-height-rule:exactly;"><span style="color:#000000 !important;">{{Email}}</span></a>
                 </td>
               </tr>
             </table>
