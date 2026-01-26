@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import Image from "next/image";
 import { useParams } from "next/navigation";
 import { ChevronDown, Copy, Mail, Keyboard } from "lucide-react";
 
@@ -160,13 +159,11 @@ export default function SignaturePage() {
       <main className="container mx-auto px-6 py-10">
         <div className="mx-auto flex max-w-3xl flex-col gap-6">
           <div className="flex justify-center sm:justify-start">
-            <Image
-              src="/assets/proaktiv-logo-black.png"
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="https://proaktiv.no/assets/logos/proaktiv_sort.png"
               alt="Proaktiv"
-              width={280}
-              height={78}
               className="h-14 w-auto"
-              priority
             />
           </div>
 
