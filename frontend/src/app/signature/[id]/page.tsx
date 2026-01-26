@@ -189,8 +189,8 @@ export default function SignaturePage() {
                   Signatur ikke funnet
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                  Lenken kan være utløpt eller feil. Ta kontakt med IT hvis du
-                  trenger ny signatur.
+                  Lenken kan være utløpt eller feil. Ta kontakt med Proaktiv
+                  Administrasjonen hvis du trenger ny signatur.
                 </p>
               </CardContent>
             </Card>
@@ -338,18 +338,18 @@ export default function SignaturePage() {
                 <p className="font-medium text-foreground mb-2">Trenger du hjelp?</p>
                 <p className="text-muted-foreground mb-3">
                   Opplever du problemer med signaturen din eller har behov for tilpasninger,
-                  ta kontakt med Adrian per e-post.
+                  ta kontakt med Proaktiv Administrasjonen per e-post.
                 </p>
                 <Button variant="outline" size="sm" asChild>
                   <a
                     href={`mailto:adrian@proaktiv.no?subject=${encodeURIComponent(
                       `Signatur - ${signature?.employee_name || "Ansatt"}`
                     )}&body=${encodeURIComponent(
-                      `Ønsker du tilpasninger av din signatur?\nBeskriv:\n\n\nOpplever du tekniske problemer med din signatur?\nBeskriv:\n\n\nSkjermbilde (Win+Shift+S):\n`
+                      `Med vennlig hilsen\nProaktiv Administrasjonen\n\n---\n\nØnsker du tilpasninger av din signatur?\nBeskriv:\n\n\nOpplever du tekniske problemer med din signatur?\nBeskriv:\n\n\nSkjermbilde (Win+Shift+S):\n`
                     )}`}
                   >
                     <Mail className="mr-2 h-4 w-4" />
-                    Kontakt Adrian
+                    Kontakt oss
                   </a>
                 </Button>
               </div>
