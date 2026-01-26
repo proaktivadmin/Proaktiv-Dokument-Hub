@@ -42,9 +42,21 @@
     /* Gmail dark mode */
     u + .body .dark-mode-bg { background-color: #ffffff !important; }
     u + .body .dark-mode-text { color: #000000 !important; }
+    /* Apple Mail and Mac Outlook - force black links */
+    a[x-apple-data-detectors] {
+      color: #000000 !important;
+      text-decoration: none !important;
+      font-size: inherit !important;
+      font-family: inherit !important;
+      font-weight: inherit !important;
+      line-height: inherit !important;
+    }
+    /* General link styling for all clients */
+    a { color: #000000 !important; text-decoration: none !important; }
+    a:link, a:visited, a:hover, a:active { color: #000000 !important; text-decoration: none !important; }
   </style>
 </head>
-<body class="body" style="margin:0;padding:0;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;background-color:#ffffff;">
+<body class="body" style="margin:0;padding:0;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;background-color:#ffffff;">
 <!--[if mso]>
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="446" align="center" style="width:446px;"><tr><td>
 <![endif]-->
