@@ -259,24 +259,21 @@ export default function SignaturePage() {
                       </kbd>
                     )}
                   </Button>
-                  <Button
-                    variant="outline"
-                    onClick={handleOpenEmailApp}
-                    className="w-full sm:w-auto"
-                  >
-                    <Mail className="mr-2 h-4 w-4" />
-                    Åpne e-post
-                    {!isMobile && (
-                      <kbd className="ml-2 hidden rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground sm:inline-block">
-                        ⌘M
-                      </kbd>
-                    )}
-                  </Button>
+                  {isMobile && (
+                    <Button
+                      variant="outline"
+                      onClick={handleOpenEmailApp}
+                      className="w-full sm:w-auto"
+                    >
+                      <Mail className="mr-2 h-4 w-4" />
+                      Åpne e-post
+                    </Button>
+                  )}
                 </div>
                 <p className="text-sm text-muted-foreground">
                   {isMobile
-                    ? "På mobil kopieres signaturen som ren tekst."
-                    : "Signaturen kopieres som HTML for best mulig utseende."}
+                    ? "Om du er på telefon kan du benytte knappen over for å åpne e-posten din etter at signaturen er kopiert."
+                    : "For å sikre at signaturen fremkommer riktig er det viktig at du benytter «Kopier signatur»-knappen og limer inn som ny signatur. Ikke kopier signaturen manuelt."}
                 </p>
               </div>
 
