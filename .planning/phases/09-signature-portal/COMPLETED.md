@@ -1,14 +1,40 @@
 # Phase 09: Self-Service Signature Portal
 
 **Status:** ✅ Completed  
-**Completed:** 2026-01-24 (V3.9 Core), 2026-01-25 (V3.9.1 Enhancements)  
-**Commit:** `4241eb8` (V3.9), latest `main` (V3.9.1)
+**Completed:** 2026-01-24 (V3.9 Core), 2026-01-26 (V3.9.3 Cross-Client Polish)  
+**Latest Commit:** See `main` branch
 
 ---
 
 ## Summary
 
 A self-service email signature system for 120+ employees. Admins preview and send personalized signature links from the dashboard. Employees visit their personal page to copy and paste the signature into their email client.
+
+---
+
+## V3.9.3 Cross-Client Polish & Branding (2026-01-26)
+
+| Feature | Description |
+|---------|-------------|
+| **Photo Cropping Fix** | Uses `object-fit:cover` with `object-position:center top` for proper portrait cropping |
+| **Apple Mail Support** | Added `a[x-apple-data-detectors]` CSS to prevent blue link styling |
+| **Mac Outlook Support** | Font smoothing with `-webkit-font-smoothing:antialiased` |
+| **Gmail Compatibility** | Enhanced dark mode protection with `u + .body` selectors |
+| **Black Link Colors** | Aggressive link color override with `<span>` wrappers for all clients |
+| **Name Nowrap** | Added `white-space:nowrap` to prevent name wrapping in narrow layouts |
+| **Logo from WebDAV** | Public signature page now uses `proaktiv.no/assets/logos/proaktiv_sort.png` |
+| **Branding Updates** | "Proaktiv Administrasjonen" for contact, "Adrian Frøyland, IT Ansvarlig" for errors |
+| **Improved UX Copy** | Clear instructions about using copy button, not manual selection |
+
+---
+
+## V3.9.2 Photo Export (2026-01-25)
+
+| Feature | Description |
+|---------|-------------|
+| **Photo Export Scripts** | `export_homepage_employee_photos.py`, `export_office_banners.py` |
+| **Template Photo Support** | `{{EmployeePhotoUrl}}` placeholder in signature templates |
+| **WebDAV Photo URLs** | Photos hosted at `proaktiv.no/d/photos/employees/{email}.jpg` |
 
 ---
 
@@ -20,33 +46,8 @@ A self-service email signature system for 120+ employees. Admins preview and sen
 | **Plain Text Fallback** | Mobile browsers get text copy when HTML clipboard unavailable |
 | **Phone Formatting** | Norwegian format `XX XX XX XX` for display, E.164 for `tel:` links |
 | **Keyboard Shortcuts** | Desktop hints: Ctrl/⌘+C (copy), Ctrl/⌘+M (email) |
-| **Support Contact** | IT contact section: it@proaktiv.no, froyland@proaktiv.no |
+| **Support Contact** | IT contact section with email link |
 | **Toast Clarity** | Messages indicate HTML vs text copy format |
-
-**Session Log:** `.planning/phases/09-signature-portal/SESSION-2026-01-25.md`
-
----
-
-## Photo Integration (2026-01-25)
-
-The signature template now supports dynamic employee photos via `{{EmployeePhotoUrl}}` placeholder.
-
-**Photo Source:** Employee photos are scraped from proaktiv.no and uploaded to WebDAV at:
-```
-https://proaktiv.no/d/photos/employees/{email}.jpg
-```
-
-**Related Scripts:**
-| Script | Purpose |
-|--------|---------|
-| `backend/scripts/export_homepage_employee_photos.py` | Crawl proaktiv.no, download employee photos |
-| `backend/scripts/export_office_banners.py` | Crawl proaktiv.no, download office banners |
-
-**Photo Resolution Priority in SignatureService:**
-1. `employee.profile_image_url` (if not empty and not Vitec API path)
-2. Fallback: `https://proaktiv.no/assets/logos/lilje_clean_52.png`
-
-See: `docs/features/photo-export/HANDOVER.md` for full photo export documentation.
 
 ---
 
@@ -59,6 +60,7 @@ See: `docs/features/photo-export/HANDOVER.md` for full photo export documentatio
 | `backend/app/services/signature_service.py` | Renders personalized HTML signatures |
 | `backend/app/services/graph_service.py` | Microsoft Graph API client for sending emails |
 | `backend/app/routers/signatures.py` | GET/POST API endpoints |
+| `backend/scripts/templates/email-signature.html` | With-photo signature (Outlook/Gmail/Apple Mail compatible) |
 | `backend/scripts/templates/email-signature-no-photo.html` | No-photo signature variant |
 | `backend/scripts/templates/signature-notification-email.html` | Email template for notifications |
 
@@ -98,6 +100,54 @@ Sends signature notification email to employee.
 
 ---
 
+## Email Client Compatibility
+
+| Client | Status | Notes |
+|--------|--------|-------|
+| **Outlook Classic (Windows)** | ✅ Verified | VML for photo cropping, MSO conditional styles |
+| **Outlook New (Windows)** | ✅ Verified | Standard HTML with dark mode protection |
+| **Outlook for Mac** | ✅ Supported | WebKit font smoothing, standard link styling |
+| **Outlook.com** | ✅ Supported | `[data-ogsc]` dark mode protection |
+| **Gmail (Web/App)** | ✅ Supported | `u + .body` dark mode protection |
+| **Apple Mail (macOS)** | ✅ Supported | `x-apple-data-detectors` link override |
+| **iOS Mail** | ✅ Supported | Light mode meta tags, Apple-specific CSS |
+
+---
+
+## Template Features
+
+### Photo Handling
+- **Dimensions:** 80×96px (5:6 portrait ratio)
+- **Cropping:** `object-fit:cover; object-position:center top`
+- **Outlook:** VML `v:rect` with `v:fill type="frame"` for proper cropping
+- **Fallback:** Uses placeholder lily icon if no photo
+
+### Link Color Protection
+- Inline `color:#000000 !important` on all `<a>` tags
+- `<span>` wrapper with explicit color for extra specificity
+- MSO-specific styles in `<style>` block for Outlook
+- `a[x-apple-data-detectors]` rule for Apple Mail
+
+### Dark Mode Protection
+- `<meta name="color-scheme" content="light">`
+- `<meta name="x-apple-color-scheme" content="light">`
+- `.dark-mode-bg` and `.dark-mode-text` classes with `!important`
+- Client-specific selectors for Outlook.com and Gmail
+
+---
+
+## Social Media Link Priority
+
+**Current behavior:** Office → Company default
+
+The signature service resolves social media URLs in this order:
+1. Office-level URLs (if office has `facebook_url`, `instagram_url`, `linkedin_url`)
+2. Company default URLs (fallback)
+
+**Note:** Employee-level social links are stored in the database but not used in signatures yet. This is planned as a future feature where employees can add personal links below the email line.
+
+---
+
 ## Environment Variables
 
 Required on Railway backend:
@@ -106,15 +156,6 @@ Required on Railway backend:
 SIGNATURE_SENDER_EMAIL=froyland@proaktiv.no
 FRONTEND_URL=https://proaktiv-dokument-hub.vercel.app
 ```
-
----
-
-## Azure Permissions
-
-Add to Entra app `PROAKTIV-Entra-Sync`:
-
-- **Microsoft Graph** → **Application permissions** → **Mail.Send**
-- Grant admin consent
 
 ---
 
@@ -160,6 +201,7 @@ Add to Entra app `PROAKTIV-Entra-Sync`:
 | `{{MobilePhoneRaw}}` | `employee.phone` | Raw digits for tel: links |
 | `{{Email}}` | `employee.email` | Required |
 | `{{EmployeePhotoUrl}}` | `employee.profile_image_url` | Falls back to placeholder |
+| `{{EmployeeUrl}}` | Employee proaktiv.no profile | From `homepage_url` |
 | `{{FacebookUrl}}` | Office → Company default | Social media link |
 | `{{InstagramUrl}}` | Office → Company default | Social media link |
 | `{{LinkedInUrl}}` | Office → Company default | Social media link |
@@ -169,69 +211,32 @@ Add to Entra app `PROAKTIV-Entra-Sync`:
 
 ---
 
-## Agent Pipeline
+## Documentation
 
-This feature was built using a 6-agent pipeline:
-
-| Agent | Scope | Files |
-|-------|-------|-------|
-| 1 | Backend signature service + router | signature_service.py, signatures.py |
-| 2 | Backend graph service + send endpoint | graph_service.py, notification template |
-| 3 | Frontend hooks + SignaturePreview | useSignature.ts, SignaturePreview.tsx |
-| 4 | Employee page tab integration | page.tsx modification |
-| 5 | Public signature page | /signature/[id]/page.tsx |
-| 6 | PowerShell bulk sender | Send-SignatureEmails.ps1 |
-
-See `.planning/codebase/AGENT-PIPELINE.md` for reusable pipeline documentation.
-
----
-
-## QA Testing
-
-A comprehensive 5-stage QA testing plan was created:
-
-**Plan File:** `.cursor/plans/signature_qa_testing_01ae0f96.plan.md`
-
-| Stage | Description | Status |
-|-------|-------------|--------|
-| 1 | Signature Page UI Compatibility | ✅ Passed with fixes |
-| 2 | Copy/Paste Functionality | ✅ Passed with fixes |
-| 3 | Email Client Rendering | ⏳ Pending |
-| 4 | Mobile Device Testing | ⏳ Pending |
-| 5 | Edge Cases and Error States | ⏳ Pending |
-
-**Test Clients:** Outlook (New/Classic), Gmail, Apple Mail, Thunderbird
+| Document | Path |
+|----------|------|
+| Email template spec | `docs/features/signatures/EMAIL-SIGNATURE-SPEC.md` |
+| Handover document | `.planning/phases/09-signature-portal/HANDOVER.md` |
+| Agent command | `.cursor/commands/signature.md` |
+| QA plan | `.cursor/plans/signature_qa_testing_01ae0f96.plan.md` |
+| Project reference | `CLAUDE.md` |
 
 ---
 
 ## Pending Work
 
-### WebDAV Photo Migration (High Priority)
+### QA Testing Stages 3-5
 
-Replace Vitec API base64 images with WebDAV-hosted photos.
-
-**Scripts Ready:**
-- `backend/scripts/upload_employee_photos.py` - Upload to WebDAV
-- `backend/scripts/update_photo_urls_webdav.py` - Update database URLs
-
-**Photos Downloaded:** 184 in `C:\Users\Adrian\Documents\ProaktivPhotos\webdav-upload\`
-
-**Commands:**
-```powershell
-# Upload photos
-cd backend
-python scripts/upload_employee_photos.py --photos-dir "C:\Users\Adrian\Documents\ProaktivPhotos\webdav-upload" --dry-run
-
-# Update database
-python scripts/update_photo_urls_webdav.py --dry-run
-python scripts/update_photo_urls_webdav.py
-```
+| Stage | Description | Status |
+|-------|-------------|--------|
+| 3 | Email Client Rendering | ⏳ Pending |
+| 4 | Mobile Device Testing | ⏳ Pending |
+| 5 | Edge Cases and Error States | ⏳ Pending |
 
 ### Bulk Email Rollout
 
-Send signature links to all employees:
+Send signature links to all employees after final approval.
 
-```powershell
-.\backend\scripts\Send-SignatureEmails.ps1 -DryRun      # Test
-.\backend\scripts\Send-SignatureEmails.ps1              # Production
-```
+### Future: Employee Social Links
+
+Allow employees to add personal social media links below the email line.
