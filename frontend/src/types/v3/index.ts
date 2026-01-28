@@ -392,7 +392,15 @@ export interface CompanyAssetListResponse {
 // Territory Types
 // =============================================================================
 
-export type TerritorySource = 'vitec_next' | 'finn' | 'anbudstjenester' | 'homepage' | 'other';
+export type TerritorySource =
+  | 'vitec_next'
+  | 'finn'
+  | 'anbudstjenester'
+  | 'homepage'
+  | 'other'
+  | 'tjenestetorget'
+  | 'eiendomsmegler'
+  | 'meglersmart';
 
 export interface PostalCode {
   postal_code: string;

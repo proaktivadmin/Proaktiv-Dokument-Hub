@@ -26,7 +26,7 @@ const cspHeader = `
   default-src 'self';
   script-src 'self' 'unsafe-inline' ${isDev ? "'unsafe-eval'" : ''};
   style-src 'self' 'unsafe-inline';
-  img-src 'self' blob: data: https://proaktiv.no https://*.proaktiv.no https://*.sentry.io;
+  img-src 'self' blob: data: https://proaktiv.no https://*.proaktiv.no https://*.sentry.io https://*.openstreetmap.org;
   font-src 'self' data:;
   connect-src 'self' ${backendUrl} https://*.sentry.io https://*.ingest.sentry.io wss://*.sentry.io ${isDev ? 'ws://localhost:* http://localhost:*' : ''};
   frame-ancestors 'none';
@@ -103,7 +103,19 @@ const nextConfig = {
     ];
   },
   
+  // Transpile Leaflet which has issues with standard Next.js bundling
+  transpilePackages: ['leaflet', 'react-leaflet'],
+  
+  // Turbopack specific configuration for Leaflet
+  turbo: {
+    resolveAlias: {
+      leaflet: 'leaflet/dist/leaflet-src.js',
+    },
+  },
+  
   // Note: Azure Blob Storage patterns removed.
+
+
   // Template content is now stored in the database and served via API.
 };
 

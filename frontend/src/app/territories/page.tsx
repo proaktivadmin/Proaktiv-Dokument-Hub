@@ -12,8 +12,19 @@ import { Header } from "@/components/layout/Header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import dynamic from "next/dynamic";
+import type { Geometry } from "geojson";
 import { territoriesApi } from "@/lib/api/territories";
 import type { TerritoryMapData, TerritorySource } from "@/types/v3";
+
+// Dynamically import Leaflet with no SSR
+const TerritoryMap = dynamic(
+  () => import("@/components/territories/TerritoryMap"),
+  { 
+    ssr: false,
+    loading: () => <div className="h-[500px] w-full bg-[#FAFAF7] flex items-center justify-center border border-dashed border-[#E5E5E5] rounded-lg">Laster kartbase...</div>
+  }
+);
 
 type TerritoryStats = {
   total_territories: number;
@@ -24,10 +35,13 @@ type TerritoryStats = {
 
 const SOURCE_LABELS: Record<TerritorySource, string> = {
   vitec_next: "Vitec Next",
-  finn: "Finn",
+  finn: "Finn.no",
   anbudstjenester: "Anbudstjenester",
   homepage: "Hjemmeside",
-  other: "Andre",
+  tjenestetorget: "Tjenestetorget.no",
+  eiendomsmegler: "Eiendomsmegler.no",
+  meglersmart: "MeglerSmart.no",
+  other: "Annen kilde",
 };
 
 export default function TerritoriesPage() {
@@ -35,8 +49,10 @@ export default function TerritoriesPage() {
   const [layers, setLayers] = useState<TerritorySource[]>([]);
   const [selectedLayers, setSelectedLayers] = useState<TerritorySource[]>([]);
   const [mapData, setMapData] = useState<TerritoryMapData | null>(null);
+  const [geometryData, setGeometryData] = useState<Record<string, Geometry> | null>(null);
   const [statsLoading, setStatsLoading] = useState(true);
   const [layersLoading, setLayersLoading] = useState(true);
+  const [geometryLoading, setGeometryLoading] = useState(true);
   const [mapLoading, setMapLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -76,6 +92,25 @@ export default function TerritoriesPage() {
     };
 
     loadLayers();
+  }, []);
+
+  useEffect(() => {
+    const loadGeometry = async () => {
+      setGeometryLoading(true);
+      try {
+        const response = await fetch("/territory-geometry.json");
+        if (response.ok) {
+          const data = await response.json();
+          setGeometryData(data);
+        }
+      } catch (err) {
+        console.error("Failed to load territory geometry:", err);
+      } finally {
+        setGeometryLoading(false);
+      }
+    };
+
+    loadGeometry();
   }, []);
 
   useEffect(() => {
@@ -253,24 +288,34 @@ export default function TerritoriesPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="rounded-lg border border-dashed border-[#E5E5E5] bg-[#FAFAF7] p-10 text-center text-sm text-muted-foreground">
-              {mapLoading ? (
+            {mapLoading || geometryLoading ? (
+               <div className="rounded-lg border border-dashed border-[#E5E5E5] bg-[#FAFAF7] p-10 text-center text-sm text-muted-foreground min-h-[500px] flex items-center justify-center">
                 <div className="flex items-center justify-center gap-2 text-[#272630]/60">
                   <RefreshCw className="h-4 w-4 animate-spin" />
                   Laster kartdata...
                 </div>
-              ) : (
+              </div>
+            ) : mapData && geometryData ? (
+              <div className="space-y-4">
+                <TerritoryMap mapData={mapData} geometryData={geometryData} />
+                <div className="text-center text-xs text-[#272630]/60">
+                   {mapData.features.length} tildelinger funnet i valgte lag.
+                </div>
+              </div>
+            ) : (
+              <div className="rounded-lg border border-dashed border-[#E5E5E5] bg-[#FAFAF7] p-10 text-center text-sm text-muted-foreground">
                 <div className="space-y-2">
-                  <p>Heatmap og postnummer-kart kommer her.</p>
+                  <p>Velg kilde-lag over for å vise tildelinger i kartet.</p>
                   <p className="text-xs text-[#272630]/60">
-                    {mapData?.features?.length ?? 0} tildelinger lastet
+                    Sørg for at kilder har aktive tildelinger lastet.
                   </p>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       </main>
     </div>
   );
 }
+ 

@@ -1,7 +1,7 @@
 """
 Seed Territory Data Script
 
-Seeds postal codes from Bring API and office territories from CSV data.
+Seeds office territories from CSV data.
 Run with: python -m scripts.seed_territories
 """
 
@@ -17,13 +17,30 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
-from app.database import async_session_factory
 from app.models.office import Office
 from app.models.office_territory import OfficeTerritory
 from app.models.postal_code import PostalCode
-from app.services.territory_service import PostalCodeService
+
+
+# Use a custom setup for the engine to handle public/private URLs
+def get_engine_and_session():
+    db_url = os.environ.get("DATABASE_PUBLIC_URL") or os.environ.get("DATABASE_URL")
+
+    if not db_url:
+        raise RuntimeError("No DATABASE_URL found in environment")
+
+    # Transform postgresql:// to postgresql+asyncpg:// for SQLAlchemy async
+    if db_url.startswith("postgresql://") and not db_url.startswith("postgresql+asyncpg://"):
+        db_url = db_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+
+    print(f"Connecting to: {db_url.split('@')[-1]}")
+
+    engine = create_async_engine(db_url)
+    session_factory = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+    return engine, session_factory
+
 
 # Source mappings from CSV columns to database source types
 SOURCE_MAPPING = {
@@ -33,33 +50,28 @@ SOURCE_MAPPING = {
 }
 
 # Manual mapping from CSV office names to database office names
-# CSV names use short form, database uses full legal names
 CSV_TO_DB_OFFICE_MAPPING = {
-    # Bergen region - map to Småstrandgaten (main Bergen office)
     "Proaktiv Bergen Sentrum": "Proaktiv Eiendomsmegling Småstrandgaten",
-    # Trondheim region
     "Proaktiv Trondheim Sentrum": "Proaktiv Trondheim Sentrum",
     "Proaktiv Trondheim Syd": "Proaktiv Trondheim Syd",
-    "Proaktiv Trondheim Øst": "Proaktiv Eiendomsmegling Moholt",  # Øst = Moholt
-    # Rogaland region
+    "Proaktiv Trondheim Øst": "Proaktiv Eiendomsmegling Moholt",
     "Proaktiv Haugesund": "Proaktiv Eiendomsmegling Haugesund",
     "Proaktiv Jæren": "Proaktiv Eiendomsmegling Jæren",
     "Proaktiv Sandnes": "Proaktiv Eiendomsmegling Sandnes",
     "Proaktiv Sola": "Proaktiv Eiendomsmegling Sola",
-    # Vestlandet
     "Proaktiv Voss": "Proaktiv Eiendomsmegling Voss",
-    # Østlandet
     "Proaktiv Drammen, Lier & Holmestrand": "Proaktiv Drammen Lier Holmestrand",
     "Proaktiv Lillestrøm": "Proaktiv Lillestrøm",
     "Proaktiv Lørenskog": "Proaktiv Lørenskog",
-    # Vestlandet/Others
     "Proaktiv Ålesund": "Proaktiv Ålesund",
-    # Not in database - inactive
-    # "Proaktiv Bodø": None,
 }
 
-# CSV file path
-CSV_PATH = Path(r"C:\Users\Adrian\Documents\postalcode data\Alle_postnummer.csv")
+# CSV file path - Try relative first, then absolute
+CSV_PATH = Path("backend/scripts/Alle_postnummer.csv")
+if not CSV_PATH.exists():
+    CSV_PATH = Path("scripts/Alle_postnummer.csv")
+if not CSV_PATH.exists():
+    CSV_PATH = Path(r"C:\Users\Adrian\Documents\postalcode data\Alle_postnummer.csv")
 
 
 async def get_office_mapping(db: AsyncSession) -> dict[str, str]:
@@ -67,20 +79,15 @@ async def get_office_mapping(db: AsyncSession) -> dict[str, str]:
     result = await db.execute(select(Office.id, Office.name))
     offices = result.all()
 
-    # Build mapping from database office names to IDs
-    db_name_to_id = {}
-    for office_id, name in offices:
-        db_name_to_id[name] = str(office_id)
-        db_name_to_id[name.lower().strip()] = str(office_id)
-
-    # Build final mapping that includes CSV name -> database ID translation
     mapping = {}
+    db_name_to_id = {name: str(office_id) for office_id, name in offices}
+    db_name_to_id.update({name.lower().strip(): str(office_id) for office_id, name in offices})
+
     for csv_name, db_name in CSV_TO_DB_OFFICE_MAPPING.items():
-        if db_name and db_name in db_name_to_id:
+        if db_name in db_name_to_id:
             mapping[csv_name] = db_name_to_id[db_name]
             mapping[csv_name.lower()] = db_name_to_id[db_name]
 
-    # Also include direct database name mappings for any that match exactly
     for office_id, name in offices:
         mapping[name] = str(office_id)
         mapping[name.lower()] = str(office_id)
@@ -92,32 +99,7 @@ def normalize_office_name(name: str) -> str:
     """Normalize office name for matching."""
     if not name:
         return ""
-    # Handle encoding issues with Norwegian characters (Latin-1 to proper UTF-8)
-    replacements = {
-        "ø": "ø",
-        "Ø": "Ø",
-        "å": "å",
-        "Å": "Å",
-        "æ": "æ",
-        "Æ": "Æ",
-    }
-    for bad, good in replacements.items():
-        name = name.replace(bad, good)
     return name.strip()
-
-
-async def seed_postal_codes(db: AsyncSession) -> int:
-    """Seed postal codes from Bring API."""
-    print("📮 Syncing postal codes from Bring API...")
-    try:
-        result = await PostalCodeService.sync_from_bring(db)
-        await db.commit()
-        synced = result.get("synced", 0)
-        print(f"  ✓ Synced {synced} postal codes")
-        return synced
-    except Exception as e:
-        print(f"  ✗ Failed to sync postal codes: {e}")
-        return 0
 
 
 async def seed_territories_from_csv(db: AsyncSession, office_mapping: dict[str, str]) -> dict:
@@ -128,20 +110,11 @@ async def seed_territories_from_csv(db: AsyncSession, office_mapping: dict[str, 
         print(f"  ✗ CSV file not found: {CSV_PATH}")
         return {"created": 0, "errors": 0}
 
-    stats = {
-        "created": 0,
-        "skipped": 0,
-        "errors": 0,
-        "office_not_found": set(),
-        "postal_not_found": set(),
-    }
-
+    stats = {"created": 0, "skipped": 0, "errors": 0, "office_not_found": set(), "postal_not_found": set()}
     territories_to_insert = []
 
-    # Read CSV with ANSI encoding for Norwegian characters
     with open(CSV_PATH, encoding="latin-1") as f:
-        reader = csv.DictReader(f)
-        rows = list(reader)
+        rows = list(csv.DictReader(f))
 
     print(f"  Found {len(rows)} rows in CSV")
 
@@ -152,24 +125,17 @@ async def seed_territories_from_csv(db: AsyncSession, office_mapping: dict[str, 
 
     for row in rows:
         postal_code = row.get("Postnummer", "").strip()
-        if not postal_code:
+        if not postal_code or postal_code not in valid_postal_codes:
+            if postal_code:
+                stats["postal_not_found"].add(postal_code)
             continue
 
-        # Validate postal code exists
-        if postal_code not in valid_postal_codes:
-            stats["postal_not_found"].add(postal_code)
-            continue
-
-        # Process each source column
         for csv_col, db_source in SOURCE_MAPPING.items():
-            office_name = row.get(csv_col, "").strip()
+            office_name = normalize_office_name(row.get(csv_col, ""))
             if not office_name:
                 continue
 
-            # Normalize and lookup office
-            office_name = normalize_office_name(office_name)
             office_id = office_mapping.get(office_name) or office_mapping.get(office_name.lower())
-
             if not office_id:
                 stats["office_not_found"].add(office_name)
                 continue
@@ -185,11 +151,8 @@ async def seed_territories_from_csv(db: AsyncSession, office_mapping: dict[str, 
                 }
             )
 
-    # Batch insert with upsert (on conflict do nothing)
     if territories_to_insert:
         print(f"\n  Inserting {len(territories_to_insert)} territory assignments...")
-
-        # Insert in batches of 500
         batch_size = 500
         for i in range(0, len(territories_to_insert), batch_size):
             batch = territories_to_insert[i : i + batch_size]
@@ -198,34 +161,26 @@ async def seed_territories_from_csv(db: AsyncSession, office_mapping: dict[str, 
             await db.execute(stmt)
             stats["created"] += len(batch)
             print(f"    Inserted batch {i // batch_size + 1}...")
-
         await db.commit()
-
-    # Report issues
-    if stats["office_not_found"]:
-        print(f"\n  ⚠ Offices not found in database ({len(stats['office_not_found'])}):")
-        for name in sorted(stats["office_not_found"])[:10]:
-            print(f"    - {name}")
-        if len(stats["office_not_found"]) > 10:
-            print(f"    ... and {len(stats['office_not_found']) - 10} more")
-
-    if stats["postal_not_found"]:
-        print(f"\n  ⚠ Postal codes not in database ({len(stats['postal_not_found'])}): ", end="")
-        print(", ".join(sorted(stats["postal_not_found"])[:5]), "...")
 
     return stats
 
 
 async def main():
     """Run the territory seeding script."""
-    print("🌱 Territory Data Seeding Script")
-    print("=" * 50)
+    print("🌱 Territory Data Seeding Script (Production Ready)")
+    print("=" * 60)
 
-    async with async_session_factory() as db:
-        # Step 1: Sync postal codes from Bring
-        postal_count = await seed_postal_codes(db)
+    try:
+        engine, session_factory = get_engine_and_session()
+    except Exception as e:
+        print(f"✗ Configuration error: {e}")
+        return
 
-        # Step 2: Build office mapping
+    async with session_factory() as db:
+        # SKIP postal logic as it's already verified in prod
+        print("📮 Skipping postal code sync (already verified in prod)")
+
         print("\n🏢 Loading office mapping...")
         office_mapping = await get_office_mapping(db)
         print(f"  Found {len(office_mapping) // 2} offices in database")
@@ -234,16 +189,15 @@ async def main():
             print("  ✗ No offices found! Please seed offices first.")
             return
 
-        # Step 3: Seed territories from CSV
         stats = await seed_territories_from_csv(db, office_mapping)
 
-        # Summary
-        print("\n" + "=" * 50)
+        print("\n" + "=" * 60)
         print("✅ Seeding Complete!")
-        print(f"   Postal codes synced: {postal_count}")
-        print(f"   Territories created: {stats['created']}")
+        print(f"   Territories processed: {stats['created']}")
         if stats["office_not_found"]:
             print(f"   ⚠ Offices not found: {len(stats['office_not_found'])}")
+
+    await engine.dispose()
 
 
 if __name__ == "__main__":
