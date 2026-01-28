@@ -12,35 +12,37 @@ See: .planning/PROJECT.md (updated 2026-01-23)
 
 ## Current Position
 
-Phase: 3.9.1 (Signature Portal Enhancements)
-Plan: V3.9.1 QA + Mobile Fixes
-Status: Deployed to production
-Last activity: 2026-01-25 — Mobile compatibility, phone formatting, QA testing
+Phase: 3.11 (Territory Seeding & Dashboard Fixes)
+Plan: Territory Seeding + CSV Import + UI Fixes
+Status: Deployed to production (via main branch push)
+Last activity: 2026-01-28 — Territory seeding (1732 assignments), office sync, 500 error fix
 
-Progress: [██████████] 100% (V3.9.1 enhancements complete)
+Progress: [██████████] 100% (Completed seeding and dashboard fixes)
 
 ## Performance Metrics
 
 **Velocity:**
+
 - Total plans completed: 8 (Phase 1: 3, Phase 4: 5)
 - Average duration: ~2 hours per plan
 - Total execution time: ~16 hours
 
 **By Phase:**
 
-| Phase | Plans | Status | Completed |
-|-------|-------|--------|-----------|
-| 1. Vitec API Connection | 3/3 | Complete | 2026-01-20 |
-| 4. Stack Upgrade | 5/5 | Complete | 2026-01-22 |
-| 5. Vercel Migration | 2/5 | In Progress | - |
-| 6. Entra ID Signature Sync | 8/8 | Profile Sync ✅ / Exchange ⏸️ | 2026-01-24 |
-| 7. Office Enhancements + SalesScreen | 0/8 | Ready | - |
+| Phase                                | Plans | Status                        | Completed  |
+| ------------------------------------ | ----- | ----------------------------- | ---------- |
+| 1. Vitec API Connection              | 3/3   | Complete                      | 2026-01-20 |
+| 4. Stack Upgrade                     | 5/5   | Complete                      | 2026-01-22 |
+| 5. Vercel Migration                  | 2/5   | In Progress                   | -          |
+| 6. Entra ID Signature Sync           | 8/8   | Profile Sync ✅ / Exchange ⏸️ | 2026-01-24 |
+| 7. Office Enhancements + SalesScreen | 0/8   | Ready                         | -          |
 
 **Recent Trend:**
+
 - Phase 4 completed rapidly (same day)
 - CI/CD pipeline now operational
 
-*Updated after each plan completion*
+_Updated after each plan completion_
 
 ## Accumulated Context
 
@@ -74,7 +76,9 @@ Resume file: `docs/features/photo-export/HANDOVER.md`
 Next step: Upload photos to WebDAV, update database records, verify signature rendering
 
 ### Session Summary (2026-01-25 - Latest)
+
 **V3.9.2 Photo Export for Signatures (In Progress):**
+
 - ✅ Created `export_homepage_employee_photos.py` - crawls proaktiv.no, downloads employee photos
 - ✅ Created `export_office_banners.py` - crawls proaktiv.no, downloads office banners
 - ✅ Fixed og:image extraction in `sync_proaktiv_directory.py` for profile photos
@@ -87,10 +91,12 @@ Next step: Upload photos to WebDAV, update database records, verify signature re
 - Handover: `docs/features/photo-export/HANDOVER.md`
 
 **Output Files Generated:**
+
 - `C:\Users\Adrian\Documents\ProaktivPhotos\webdav-upload\photos\employees\` (~100 photos)
 - `C:\Users\Adrian\Documents\ProaktivPhotos\webdav-upload\photos\offices\` (21 banners)
 
 **V3.9.1 Signature Portal Enhancements (Completed earlier today):**
+
 - ✅ Mobile compatibility: "Åpne e-post" button, plain text fallback
 - ✅ Norwegian phone formatting: `XX XX XX XX` display format
 - ✅ Keyboard shortcut hints for desktop users (Ctrl/⌘+C, Ctrl/⌘+M)
@@ -101,13 +107,16 @@ Next step: Upload photos to WebDAV, update database records, verify signature re
 - Session log: `.planning/phases/09-signature-portal/SESSION-2026-01-25.md`
 
 **Pending Work (for Next Agent):**
+
 - ⏳ WebDAV upload: Upload photos to `proaktiv.no/d/photos/employees/` and `photos/offices/`
 - ⏳ Database update: Set `profile_image_url` from CSV mapping files
 - ⏳ QA testing: Stages 3-5 pending (email clients, mobile, edge cases)
 - ⏳ Transport rule signatures: Agent 3-4 pending (POC test, docs)
 
 ### Session Summary (2026-01-24)
+
 **V3.9 Self-Service Signature Portal (Completed 2026-01-24):**
+
 - ✅ Backend SignatureService renders personalized HTML signatures (with-photo/no-photo)
 - ✅ Backend GraphService sends notification emails via Microsoft Graph API
 - ✅ GET /api/signatures/{id} endpoint (public, returns HTML/text)
@@ -121,6 +130,7 @@ Next step: Upload photos to WebDAV, update database records, verify signature re
 - Commit: `4241eb8`
 
 **V3.8 Sync Notification System (Completed 2026-01-24):**
+
 - ✅ Notification bell dropdown in header
 - ✅ Unread count badge with polling (30s)
 - ✅ Notification types: employee/office added/updated/removed, UPN mismatch, sync error
@@ -151,6 +161,7 @@ Next step: Upload photos to WebDAV, update database records, verify signature re
    - Flagged employees persist until production switch
 
 ### Previous Session (2026-01-23)
+
 **V3.6 Design System Enhancement:**
 
 1. **Design Token System:**
@@ -183,7 +194,9 @@ Next step: Upload photos to WebDAV, update database records, verify signature re
    - Component patterns and golden rules
 
 ### Previous Session (2026-01-23)
+
 **V3.5 Navigation & Logo Library:**
+
 - Navigation reorganization (Ressurser, Selskap, Verktøy)
 - LogoLibrary component with preview cards
 - Avatar image resizing with ImageService
@@ -195,37 +208,39 @@ Next step: Upload photos to WebDAV, update database records, verify signature re
 
 ## Key Documentation
 
-| Document | Purpose |
-|----------|---------|
-| `CLAUDE.md` | Quick reference for AI agents |
-| `.planning/STATE.md` | This file - current status |
-| `.planning/PROJECT.md` | Requirements and context |
-| `.planning/ROADMAP.md` | Phase breakdown |
+| Document                              | Purpose                        |
+| ------------------------------------- | ------------------------------ |
+| `CLAUDE.md`                           | Quick reference for AI agents  |
+| `.planning/STATE.md`                  | This file - current status     |
+| `.planning/PROJECT.md`                | Requirements and context       |
+| `.planning/ROADMAP.md`                | Phase breakdown                |
 | `.planning/codebase/DESIGN-SYSTEM.md` | **Frontend design guidelines** |
-| `.planning/codebase/STACK.md` | Technology stack details |
+| `.planning/codebase/STACK.md`         | Technology stack details       |
 
 ---
 
 ## Version History
 
-| Version | Date | Key Changes |
-|---------|------|-------------|
-| V3.9.1 | 2026-01-25 | Signature mobile compatibility, phone formatting, QA fixes |
-| V3.9 | 2026-01-24 | Self-service signature portal with 6-agent pipeline |
-| V3.8 | 2026-01-24 | Sync notification system + QA tests |
-| V3.7 | 2026-01-24 | UPN mismatch detection for Entra ID SSO |
-| V3.6 | 2026-01-23 | Design system enhancement, UI polish |
-| V3.5 | 2026-01-23 | Navigation reorganization, Logo Library |
-| V3.4 | 2026-01-23 | Portal skins preview |
-| V3.3 | 2026-01-23 | API proxy fix for auth cookies |
-| V3.2 | 2026-01-22 | Stack upgrade (Next.js 16, React 19) + CI/CD |
-| V3.1 | 2026-01-22 | Office & Employee Hub |
+| Version | Date       | Key Changes                                                |
+| ------- | ---------- | ---------------------------------------------------------- |
+| V3.11   | 2026-01-28 | Territory seeding (1732), dashboard 500 fixes, office sync |
+| V3.9.1  | 2026-01-25 | Signature mobile compatibility, phone formatting, QA fixes |
+| V3.9    | 2026-01-24 | Self-service signature portal with 6-agent pipeline        |
+| V3.8    | 2026-01-24 | Sync notification system + QA tests                        |
+| V3.7    | 2026-01-24 | UPN mismatch detection for Entra ID SSO                    |
+| V3.6    | 2026-01-23 | Design system enhancement, UI polish                       |
+| V3.5    | 2026-01-23 | Navigation reorganization, Logo Library                    |
+| V3.4    | 2026-01-23 | Portal skins preview                                       |
+| V3.3    | 2026-01-23 | API proxy fix for auth cookies                             |
+| V3.2    | 2026-01-22 | Stack upgrade (Next.js 16, React 19) + CI/CD               |
+| V3.1    | 2026-01-22 | Office & Employee Hub                                      |
 
 ---
 
 ## Ready for Next Steps
 
 ### Option A: WebDAV Employee Photos (RECOMMENDED)
+
 Replace Vitec API base64 images with WebDAV-hosted photos for faster loading.
 
 ```powershell
@@ -242,18 +257,21 @@ python scripts/update_photo_urls_webdav.py             # Apply
 **Photos downloaded:** 184 in `C:\Users\Adrian\Documents\ProaktivPhotos\webdav-upload\`
 
 ### Option B: Complete Signature QA
+
 - QA plan: `.cursor/plans/signature_qa_testing_01ae0f96.plan.md`
 - Stage 3: Email client rendering (Outlook, Gmail, Apple Mail)
 - Stage 4: Mobile device testing
 - Stage 5: Edge cases and error states
 
 ### Option C: Deploy Signature Emails
+
 - Set environment variables (SIGNATURE_SENDER_EMAIL, FRONTEND_URL)
 - Add Mail.Send permission in Azure Portal
 - Run `.\backend\scripts\Send-SignatureEmails.ps1 -DryRun` to test
 - Run `.\backend\scripts\Send-SignatureEmails.ps1` for full rollout
 
 ### Option D: Phase 07 (Office Enhancements)
+
 - 8 execution plans ready
 - Region grouping, office merge, SalesScreen
 - Can run in parallel with other work
@@ -262,11 +280,11 @@ python scripts/update_photo_urls_webdav.py             # Apply
 
 ## Office Regions Reference
 
-| Region | Areas |
-|--------|-------|
-| Trøndelag | Trondheim |
-| Romerike | Lillestrøm, Lørenskog |
+| Region       | Areas                    |
+| ------------ | ------------------------ |
+| Trøndelag    | Trondheim                |
+| Romerike     | Lillestrøm, Lørenskog    |
 | Sør-Rogaland | Stavanger, Sandnes, Sola |
-| Vest | Bergen, Voss |
-| Sør | Kristiansand, Skien |
-| Øst | Oslo, Drammen |
+| Vest         | Bergen, Voss             |
+| Sør          | Kristiansand, Skien      |
+| Øst          | Oslo, Drammen            |

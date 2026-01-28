@@ -8,47 +8,52 @@ A document template management system for Norwegian real estate brokers, integra
 
 ## Quick Context
 
-| Aspect | Details |
-|--------|---------|
-| **Phase** | 3.9.1 (Signature Portal Enhancements) |
-| **Stack** | Next.js 16 + React 19 + FastAPI + PostgreSQL (Railway) |
-| **UI** | Shadcn/UI + Tailwind CSS 4 + Custom Design Tokens |
-| **Hosting** | Vercel (Frontend) + Railway (Backend + PostgreSQL) |
-| **Storage** | WebDAV (proaktiv.no/d/) |
-| **Auth** | Password + JWT sessions (7-day expiry) |
-| **CI/CD** | GitHub Actions (lint, typecheck, test, build) |
-| **Monitoring** | Sentry (frontend + backend) |
-| **Status** | ✅ Production Live |
+| Aspect         | Details                                                |
+| -------------- | ------------------------------------------------------ |
+| **Phase**      | 3.9.1 (Signature Portal Enhancements)                  |
+| **Stack**      | Next.js 16 + React 19 + FastAPI + PostgreSQL (Railway) |
+| **UI**         | Shadcn/UI + Tailwind CSS 4 + Custom Design Tokens      |
+| **Hosting**    | Vercel (Frontend) + Railway (Backend + PostgreSQL)     |
+| **Storage**    | WebDAV (proaktiv.no/d/)                                |
+| **Auth**       | Password + JWT sessions (7-day expiry)                 |
+| **CI/CD**      | GitHub Actions (lint, typecheck, test, build)          |
+| **Monitoring** | Sentry (frontend + backend)                            |
+| **Status**     | ✅ Production Live                                     |
 
 ---
 
 ## Core Concepts
 
 ### Document-First Paradigm
+
 - **Preview is PRIMARY**, code is SECONDARY
 - Users see rendered documents, not code
 - Click elements to inspect underlying HTML (ElementInspector)
 - Code editing is a power-user escape hatch, not the default
 
 ### Shelf Layout
+
 - Templates displayed as cards in horizontal shelves
 - Default grouping: **Channel** (PDF, Email, SMS)
 - Filtering **dims** non-matching cards (opacity 0.3), doesn't hide them
 - **Live document preview thumbnails** on cards for visual recognition
 
 ### Template Viewer Features (V2.6+)
+
 - **A4 Page Break Visualization** - Toggle to see where pages break
 - **Simulator Test Data Persistence** - Save default test values to localStorage
 - **Quick Test Data Toggle** - Switch between original and processed content
 - **Visual Code Generator** - Build Vitec snippets without coding
 
 ### Flettekoder (Merge Fields)
+
 - Syntax: `[[field.name]]` or `[[*field.name]]` (with asterisk for required)
 - Conditions: `vitec-if="expression"`
 - Loops: `vitec-foreach="item in collection"`
 - All operations through `MergeFieldService`
 
 ### Vitec Integration (V2.9)
+
 - Full reference in `.cursor/vitec-reference.md`
 - SanitizerService enforces Vitec Stilark compliance
 - Layout partials for headers/footers/signatures
@@ -56,6 +61,7 @@ A document template management system for Norwegian real estate brokers, integra
 - Vitec export + import workflow docs in `docs/`
 
 ### Authentication (V2.9)
+
 - Simple password-based authentication (single user)
 - JWT session tokens with 7-day expiry stored in `session` cookie
 - Auth middleware protects all `/api/*` routes
@@ -65,6 +71,7 @@ A document template management system for Norwegian real estate brokers, integra
 - Generate hash: `python backend/scripts/generate_password_hash.py`
 
 ### API Proxy Architecture (Critical)
+
 - Frontend makes API calls to `/api/*` (relative URLs)
 - Vercel rewrites `/api/*` → `https://proaktiv-admin.up.railway.app/api/*`
 - This keeps session cookies **first-party** (same origin)
@@ -143,6 +150,7 @@ skins/                    # Vitec portal skin packages
 ## Patterns to Follow
 
 ### Backend
+
 - Business logic in `services/`, never in routers
 - All services must be `async`
 - Use `Depends()` for dependency injection
@@ -151,6 +159,7 @@ skins/                    # Vitec portal skin packages
 - Pydantic for all data validation
 
 ### Frontend
+
 - Server Components by default
 - `"use client"` only when hooks needed
 - Use `lib/api.ts` for all API calls
@@ -159,6 +168,7 @@ skins/                    # Vitec portal skin packages
 - **Follow `.planning/codebase/DESIGN-SYSTEM.md`** for all UI work
 
 ### Component Naming
+
 - Viewer components: `*Frame.tsx` (A4Frame, SMSFrame)
 - Library components: `*Library.tsx`, `*Card.tsx`
 - Inspector: `ElementInspector.tsx`
@@ -196,11 +206,17 @@ Railway's internal networking causes Alembic migrations to fail silently during 
 
 ---
 
-## Current Status
+**V3.7 Territory Seeding & Dashboard Fixes (Completed 2026-01-28):**
 
-See `.planning/STATE.md` for full status.
+- ✅ Imported 1732 territory assignments from `Alle_postnummer.csv`
+- ✅ Added missing offices: Lillestrøm, Ålesund, Lørenskog (using prod UUIDs)
+- ✅ Enhanced `TerritorySource` with `tjenestetorget`, `eiendomsmegler`, `meglersmart`
+- ✅ Fixed 500 Dashboard error by initializing all source stats
+- ✅ Added integration tests in `backend/tests/test_territories_endpoint.py`
+- ✅ Created `fix_schema.py` for manual production DB synchronization
 
 **V3.10 Office Entra ID Sync (Completed 2026-01-24):**
+
 - ✅ Fetch M365 Groups from Microsoft Graph API
 - ✅ Match groups to offices by email/name patterns
 - ✅ Store Entra data in secondary `entra_*` columns (never overwrite Vitec)
@@ -211,6 +227,7 @@ See `.planning/STATE.md` for full status.
 - Plans: `.planning/phases/10-office-entra-sync/`
 
 **V3.9.2 Photo Export for Signatures (2026-01-25 - In Progress):**
+
 - ✅ Created `export_homepage_employee_photos.py` - crawls proaktiv.no, downloads employee photos
 - ✅ Created `export_office_banners.py` - crawls proaktiv.no, downloads office banners
 - ✅ Updated signature template with `{{EmployeePhotoUrl}}` placeholder
@@ -221,12 +238,14 @@ See `.planning/STATE.md` for full status.
 - Handover: `docs/features/photo-export/HANDOVER.md`
 
 **V3.9.1 Signature Portal Enhancements (Completed 2026-01-25):**
+
 - ✅ Mobile compatibility with "Åpne e-post" button
 - ✅ Norwegian phone formatting (XX XX XX XX)
 - ✅ Keyboard shortcut hints for desktop users
 - ✅ Support contact section with IT email addresses
 
 **V3.9.1 Signature Portal Enhancements (Completed 2026-01-25):**
+
 - ✅ Mobile compatibility: "Åpne e-post" button, plain text clipboard fallback
 - ✅ Norwegian phone formatting: `XX XX XX XX` display, E.164 for `tel:` links
 - ✅ Keyboard shortcut hints: Ctrl/⌘+C (copy), Ctrl/⌘+M (email)
@@ -236,6 +255,7 @@ See `.planning/STATE.md` for full status.
 - Session log: `.planning/phases/09-signature-portal/SESSION-2026-01-25.md`
 
 **V3.9 Self-Service Signature Portal (Completed 2026-01-24):**
+
 - ✅ Backend SignatureService renders personalized HTML signatures (with-photo/no-photo)
 - ✅ Backend GraphService sends notification emails via Microsoft Graph API
 - ✅ GET /api/signatures/{id} endpoint (public, returns HTML/text)
@@ -248,12 +268,14 @@ See `.planning/STATE.md` for full status.
 - Plans: `.planning/phases/09-signature-portal/`
 
 **V3.8 Sync Notification System (Completed 2026-01-24):**
+
 - ✅ Notification bell dropdown in header with unread count badge
 - ✅ Notification types: employee/office added/updated/removed, UPN mismatch, sync error
 - ✅ Click to navigate, mark as read, clear all actions
 - Plans: `.planning/phases/08-sync-notifications/`
 
 **V3.7 UPN Mismatch Detection (Completed 2026-01-24):**
+
 - ✅ Detect employees with Entra ID UPN different from Vitec Next email
 - ✅ `entra_upn` and `entra_upn_mismatch` fields added to Employee model
 - ✅ EmployeeCard shows red warning banner for affected employees
@@ -262,6 +284,7 @@ See `.planning/STATE.md` for full status.
 - Note: Currently on QA system; flags persist until production switch
 
 **V3.6 Design System Enhancement (Completed 2026-01-23):**
+
 - ✅ Comprehensive design token system (shadows, transitions, colors)
 - ✅ Brand-aligned UI with premium feel
 - ✅ Micro-interactions (avatar scale, chevron rotation, shimmer)
@@ -271,6 +294,7 @@ See `.planning/STATE.md` for full status.
 - Design Guide: `.planning/codebase/DESIGN-SYSTEM.md`
 
 **V3.5 Navigation & Logo Library (Completed 2026-01-23):**
+
 - ✅ Reorganized navigation into **Ressurser** (files/docs) and **Selskap** (HR/org)
 - ✅ Added **LogoLibrary** component with Proaktiv logos preview and copy URL
 - ✅ Server-side image resizing with `ImageService` for employee avatars
@@ -278,6 +302,7 @@ See `.planning/STATE.md` for full status.
 - ✅ Sub-offices display on office cards and detail pages
 
 **Phase 06: Entra ID Signature Sync (Profile Sync Complete):**
+
 - ✅ Microsoft Graph authentication works
 - ✅ Sync employee profiles to Entra ID (jobTitle, department, officeLocation)
 - ✅ Photo upload ready (script complete)
@@ -287,6 +312,7 @@ See `.planning/STATE.md` for full status.
 - Commands: `/entra-sync` (usage docs)
 
 **V3.4 Portal Skins Preview (Completed 2026-01-23):**
+
 - ✅ Vitec Budportal and Visningsportal skin packages created
 - ✅ PROAKTIV skin with company branding (colors, fonts, privacy URLs)
 - ✅ Authentic mockup preview using exact Vitec HTML structure
@@ -298,6 +324,7 @@ See `.planning/STATE.md` for full status.
 - Preview: `/portal/preview`
 
 **V3.3 API Proxy Fix (Completed 2026-01-23):**
+
 - ✅ Fixed 401 Unauthorized errors on all authenticated API endpoints
 - ✅ Frontend now uses relative URLs (`/api/*`) for all API calls
 - ✅ Vercel rewrites proxy requests to Railway backend
@@ -305,6 +332,7 @@ See `.planning/STATE.md` for full status.
 - ✅ Removed direct Railway URL usage from `frontend/src/lib/api/config.ts`
 
 **V3.2 Stack Upgrade + CI/CD (Completed 2026-01-22):**
+
 - ✅ Next.js 14 → 16.1.4 upgrade
 - ✅ React 18 → 19.2.3 upgrade
 - ✅ Tailwind CSS 3 → 4.1.18 upgrade
@@ -320,6 +348,7 @@ See `.planning/STATE.md` for full status.
 - ✅ CVE-2025-29927 security vulnerability fixed
 
 **V3.1 Office & Employee Hub (Completed):**
+
 - ✅ Office management with banner images and employee avatars
 - ✅ Employee profile pictures with circular avatars (Radix UI)
 - ✅ Office cards with background images from `profile_image_url`
@@ -338,6 +367,7 @@ See `.planning/STATE.md` for full status.
   - Command: `/scrape-proaktiv` (see `.cursor/commands/scrape-proaktiv.md`)
 
 **V2.9 Vitec Integration (Completed):**
+
 - ✅ Full Vitec reference documentation
 - ✅ Enhanced SanitizerService with Vitec Stilark compliance
 - ✅ WebDAV storage integration
@@ -349,6 +379,7 @@ See `.planning/STATE.md` for full status.
 - ✅ Alembic migration auto-repair in start-prod.sh
 
 **V2.8 Railway Migration (Completed):**
+
 - ✅ Migrated from Azure to Railway
 - ✅ 44 templates stored in PostgreSQL database
 - ✅ 11 categories seeded
@@ -356,6 +387,7 @@ See `.planning/STATE.md` for full status.
 - ✅ Deploys from `main` branch
 
 **V2.6-2.7 Features:**
+
 - ✅ Live document preview thumbnails on template cards
 - ✅ A4 page break visualization in document viewer
 - ✅ Simulator test data persistence with save/reset/clear
@@ -404,26 +436,27 @@ Use `/entra-architect`, `/entra-builder`, `/entra-qa` commands.
 
 ## Quick Commands
 
-| Command | Purpose |
-|---------|---------|
-| `/start-dev` | Start Docker environment |
-| `/architect` | Run Systems Architect |
-| `/frontend-architect` | Run Frontend Architect |
-| `/builder` | Run Builder |
-| `/status` | Check project status |
-| `/scrape-proaktiv` | Run Proaktiv directory scraper |
-| `/entra-architect` | Design Entra ID sync script |
-| `/entra-builder` | Build Entra ID sync script |
-| `/entra-qa` | Test Entra ID sync |
-| `/entra-sync` | Run Entra ID sync (usage docs) |
-| `/notification` | Maintain/update notification system |
-| `/signature-qa` | Run signature QA testing stages |
+| Command               | Purpose                             |
+| --------------------- | ----------------------------------- |
+| `/start-dev`          | Start Docker environment            |
+| `/architect`          | Run Systems Architect               |
+| `/frontend-architect` | Run Frontend Architect              |
+| `/builder`            | Run Builder                         |
+| `/status`             | Check project status                |
+| `/scrape-proaktiv`    | Run Proaktiv directory scraper      |
+| `/entra-architect`    | Design Entra ID sync script         |
+| `/entra-builder`      | Build Entra ID sync script          |
+| `/entra-qa`           | Test Entra ID sync                  |
+| `/entra-sync`         | Run Entra ID sync (usage docs)      |
+| `/notification`       | Maintain/update notification system |
+| `/signature-qa`       | Run signature QA testing stages     |
 
 ---
 
 ## Testing
 
 ### Run Tests Locally
+
 ```bash
 # Frontend
 cd frontend
@@ -437,7 +470,9 @@ pytest -v                 # Verbose
 ```
 
 ### CI/CD Pipeline
+
 Push to `main` triggers GitHub Actions:
+
 1. **Lint Frontend** - ESLint + TypeScript
 2. **Lint Backend** - Ruff + Pyright
 3. **Test Frontend** - Vitest
@@ -449,6 +484,7 @@ Push to `main` triggers GitHub Actions:
 ## Environment
 
 ### Local Development
+
 ```bash
 # Start development
 docker compose up -d
@@ -464,36 +500,40 @@ docker compose exec db psql -U postgres -d dokument_hub
 ```
 
 ### Production
+
 - **Frontend (Vercel):** https://proaktiv-dokument-hub.vercel.app
 - **Backend (Railway):** https://proaktiv-admin.up.railway.app
 - **Deploy:** Push to `main` branch (auto-deploys to both Vercel and Railway)
 
 ### Environment Variables (Backend)
-| Variable | Value |
-|----------|-------|
-| `DATABASE_URL` | Railway PostgreSQL **public** URL (use `${{Postgres.DATABASE_PUBLIC_URL}}`) |
-| `SECRET_KEY` | Random string (32+ chars) for JWT signing |
-| `APP_PASSWORD_HASH` | bcrypt hash - enables auth when set |
-| `WEBDAV_URL` | `http://proaktiv.no/d/` |
-| `WEBDAV_USERNAME` | (your username) |
-| `WEBDAV_PASSWORD` | (your password) |
-| `SENTRY_DSN` | Sentry DSN for error tracking (optional) |
-| `SENTRY_ENVIRONMENT` | Environment name: `production`, `staging`, etc. |
+
+| Variable             | Value                                                                       |
+| -------------------- | --------------------------------------------------------------------------- |
+| `DATABASE_URL`       | Railway PostgreSQL **public** URL (use `${{Postgres.DATABASE_PUBLIC_URL}}`) |
+| `SECRET_KEY`         | Random string (32+ chars) for JWT signing                                   |
+| `APP_PASSWORD_HASH`  | bcrypt hash - enables auth when set                                         |
+| `WEBDAV_URL`         | `http://proaktiv.no/d/`                                                     |
+| `WEBDAV_USERNAME`    | (your username)                                                             |
+| `WEBDAV_PASSWORD`    | (your password)                                                             |
+| `SENTRY_DSN`         | Sentry DSN for error tracking (optional)                                    |
+| `SENTRY_ENVIRONMENT` | Environment name: `production`, `staging`, etc.                             |
 
 ### Environment Variables (Frontend)
-| Variable | Value |
-|----------|-------|
-| `BACKEND_URL` | `https://proaktiv-admin.up.railway.app` (for Next.js rewrites) |
-| `NEXT_PUBLIC_SENTRY_DSN` | Sentry DSN for error tracking (optional) |
-| `SENTRY_ORG` | Sentry organization slug (for source maps) |
-| `SENTRY_PROJECT` | Sentry project slug (for source maps) |
-| `SENTRY_AUTH_TOKEN` | Sentry auth token (for source map upload) |
+
+| Variable                 | Value                                                          |
+| ------------------------ | -------------------------------------------------------------- |
+| `BACKEND_URL`            | `https://proaktiv-admin.up.railway.app` (for Next.js rewrites) |
+| `NEXT_PUBLIC_SENTRY_DSN` | Sentry DSN for error tracking (optional)                       |
+| `SENTRY_ORG`             | Sentry organization slug (for source maps)                     |
+| `SENTRY_PROJECT`         | Sentry project slug (for source maps)                          |
+| `SENTRY_AUTH_TOKEN`      | Sentry auth token (for source map upload)                      |
 
 **IMPORTANT:** Do NOT set `NEXT_PUBLIC_API_URL` in production. The frontend uses relative URLs (`/api/*`) which Vercel rewrites to Railway. This keeps session cookies first-party and avoids third-party cookie blocking.
 
 **IMPORTANT:** The backend's `DATABASE_URL` must use the **public** Postgres URL (`shuttle.proxy.rlwy.net`), not the internal URL (`postgres.railway.internal`). Railway's internal networking between services can be unreliable. Set it to `${{Postgres.DATABASE_PUBLIC_URL}}` in Railway variables.
 
 ### Railway CLI (Backend)
+
 ```bash
 railway link          # Link to backend service
 railway variables     # View environment variables
@@ -502,6 +542,7 @@ railway logs          # View logs
 ```
 
 ### Apply Migrations to Railway (Required for DB changes)
+
 ```powershell
 # Use the PUBLIC database URL (not internal!)
 $env:DATABASE_URL = "postgresql://postgres:PASSWORD@shuttle.proxy.rlwy.net:51557/railway"
@@ -513,6 +554,7 @@ python -m alembic current  # Verify: should show VERSION (head)
 **⚠️ DO NOT rely on Railway deployment to run migrations.** Always apply manually after creating migrations.
 
 ### Vercel CLI (Frontend)
+
 ```bash
 vercel                # Deploy preview
 vercel --prod         # Deploy to production

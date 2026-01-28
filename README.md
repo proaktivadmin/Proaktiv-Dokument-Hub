@@ -9,9 +9,18 @@ A modern document template management system for Norwegian real estate brokers, 
 
 ---
 
-## ✨ What's New (2026-01-23)
+## ✨ What's New (2026-01-28)
+
+### V3.7 Territory Seeding & Dashboard Fixes
+
+- **Territory Seeding**: Imported 1732 assignments from CSV data with 5122 postal codes synced from Bring API.
+- **Enhanced Sources**: Added support for new territory sources (`tjenestetorget`, `eiendomsmegler`, `meglersmart`).
+- **Dashboard Stability**: Resolved 500 errors on the `/territories` dashboard by correctly initializing source statistics.
+- **Office Synchronization**: Added missing offices (Lillestrøm, Ålesund, Lørenskog) to match production data.
+- **Integration Testing**: New test suite for territory endpoints.
 
 ### V3.6 Design System Enhancement
+
 - **Design token system** - Centralized shadows, transitions, colors
 - **Premium UI polish** - Brand-aligned components with micro-interactions
 - **Consistent patterns** - Card hover, selection glow, avatar scaling
@@ -19,16 +28,19 @@ A modern document template management system for Norwegian real estate brokers, 
 - **Design guide** - `.planning/codebase/DESIGN-SYSTEM.md`
 
 ### V3.5 Navigation & Logo Library
+
 - **Reorganized navigation** - Ressurser (files/docs) and Selskap (HR/org) dropdowns
 - **Logo Library** - Proaktiv logos with preview, copy URL, and download
 - **Avatar resizing** - Server-side image cropping for proper profile pictures
 - **Sub-offices** - Parent-child office hierarchy with display on cards
 
 ### V3.4 Portal Skins Preview
+
 - **Vitec portal skins** - Budportal and Visningsportal with Proaktiv branding
 - **Fullscreen preview** - Accurate representation of live portals
 
 ### V3.2 Stack Upgrade + CI/CD
+
 - **Next.js 16** + React 19 + Tailwind CSS 4 + TypeScript 5.9
 - **GitHub Actions** - ESLint, TypeScript, Vitest, Ruff, Pyright, Pytest
 - **Sentry** - Error tracking for frontend and backend
@@ -37,17 +49,17 @@ A modern document template management system for Norwegian real estate brokers, 
 
 ## 🎯 Key Features
 
-| Feature | Description |
-|---------|-------------|
-| **Document-First View** | Preview templates as rendered documents, not code |
-| **Shelf Layout** | Templates organized in visual card shelves by channel |
-| **Smart Sanitizer** | Strip inline CSS and normalize HTML for Vitec compatibility |
-| **Merge Field Library** | 142+ flettekoder with one-click copy |
-| **Code Patterns** | Pre-built Vitec logic snippets (if/else, loops) |
-| **Template Settings** | Configure margins, headers/footers, and Vitec "Kategorisering" fields |
-| **Variable Simulator** | Test documents with sample data before deployment |
-| **Logo Library** | Proaktiv logos with preview, copy URL, and download |
-| **Portal Skins** | Preview Vitec Budportal and Visningsportal with custom branding |
+| Feature                 | Description                                                           |
+| ----------------------- | --------------------------------------------------------------------- |
+| **Document-First View** | Preview templates as rendered documents, not code                     |
+| **Shelf Layout**        | Templates organized in visual card shelves by channel                 |
+| **Smart Sanitizer**     | Strip inline CSS and normalize HTML for Vitec compatibility           |
+| **Merge Field Library** | 142+ flettekoder with one-click copy                                  |
+| **Code Patterns**       | Pre-built Vitec logic snippets (if/else, loops)                       |
+| **Template Settings**   | Configure margins, headers/footers, and Vitec "Kategorisering" fields |
+| **Variable Simulator**  | Test documents with sample data before deployment                     |
+| **Logo Library**        | Proaktiv logos with preview, copy URL, and download                   |
+| **Portal Skins**        | Preview Vitec Budportal and Visningsportal with custom branding       |
 
 ---
 
@@ -61,6 +73,7 @@ A modern document template management system for Norwegian real estate brokers, 
 ```
 
 ### Tech Stack
+
 - **Frontend:** Next.js 16 (App Router), React 19, Tailwind CSS 4, Shadcn/UI
 - **Backend:** FastAPI, Pydantic, SQLAlchemy (async)
 - **Database:** PostgreSQL with JSONB fields
@@ -74,6 +87,7 @@ A modern document template management system for Norwegian real estate brokers, 
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Docker & Docker Compose
 - Node.js 18+ (for local development)
 - Python 3.11+ (for local development)
@@ -154,18 +168,21 @@ proaktiv-dokument-hub/
 ## 🔧 Navigation Structure
 
 ### Ressurser (Files & Documents)
+
 - **Maler** - Document templates
 - **Kategorier** - Template categories
 - **Mediefiler** - Assets, logos (includes Proaktiv Logoer tab)
 - **WebDAV Lagring** - WebDAV file browser
 
 ### Selskap (HR & Organization)
+
 - **Kontorer** - Offices/departments
 - **Ansatte** - Employees
 - **Markedsområder** - Market territories
 - **Mottakere** - Recipients
 
 ### Verktøy (Tools)
+
 - **Sanitizer** - HTML cleanup
 - **Synkronisering** - Vitec sync
 - **Portal Skins** - Portal preview
@@ -175,12 +192,14 @@ proaktiv-dokument-hub/
 ## 🚀 Deployment
 
 The app deploys automatically when you push to the `main` branch:
+
 - Frontend → Vercel
 - Backend → Railway
 
 ### Environment Variables
 
 **Backend (Railway):**
+
 - `DATABASE_URL` - PostgreSQL connection string
 - `SECRET_KEY` - Application secret
 - `APP_PASSWORD_HASH` - bcrypt hash for auth
@@ -188,6 +207,7 @@ The app deploys automatically when you push to the `main` branch:
 - `SENTRY_DSN` - Error tracking
 
 **Frontend (Vercel):**
+
 - `BACKEND_URL` - Railway backend URL (for rewrites)
 - `NEXT_PUBLIC_SENTRY_DSN` - Error tracking
 
