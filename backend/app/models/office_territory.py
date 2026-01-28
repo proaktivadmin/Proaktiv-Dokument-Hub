@@ -99,6 +99,9 @@ class OfficeTerritory(Base):
             "finn": "Finn.no",
             "anbudstjenester": "Anbudstjenester",
             "homepage": "Hjemmeside",
+            "tjenestetorget": "Tjenestetorget.no",
+            "eiendomsmegler": "Eiendomsmegler.no",
+            "meglersmart": "MeglerSmart.no",
             "other": "Annen kilde",
         }
         return names.get(self.source, self.source)

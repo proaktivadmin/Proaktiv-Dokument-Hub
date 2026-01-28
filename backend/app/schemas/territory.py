@@ -12,7 +12,16 @@ from pydantic import BaseModel, Field
 # Type Aliases
 # =============================================================================
 
-TerritorySource = Literal["vitec_next", "finn", "anbudstjenester", "homepage", "other"]
+TerritorySource = Literal[
+    "vitec_next",
+    "finn",
+    "anbudstjenester",
+    "homepage",
+    "other",
+    "tjenestetorget",
+    "eiendomsmegler",
+    "meglersmart",
+]
 
 
 # =============================================================================

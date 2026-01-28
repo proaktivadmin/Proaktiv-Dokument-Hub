@@ -192,6 +192,9 @@ async def get_territory_stats(
         "anbudstjenester": 0,
         "homepage": 0,
         "other": 0,
+        "tjenestetorget": 0,
+        "eiendomsmegler": 0,
+        "meglersmart": 0,
     }
     by_source_result = await db.execute(select(OfficeTerritory.source, func.count()).group_by(OfficeTerritory.source))
     for source, count in by_source_result.all():
