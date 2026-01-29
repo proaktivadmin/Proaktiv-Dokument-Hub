@@ -158,8 +158,8 @@ class SignatureService:
             "{{FacebookUrl}}": social_urls["facebook_url"],
             "{{InstagramUrl}}": social_urls["instagram_url"],
             "{{LinkedInUrl}}": social_urls["linkedin_url"],
-            "{{OfficeName}}": esc(office.name if office else ""),
-            "{{OfficeAddress}}": esc(office.street_address if office else ""),
+            "{{OfficeName}}": esc((office.name or "") if office else ""),
+            "{{OfficeAddress}}": esc((office.street_address or "") if office else ""),
             "{{OfficePostal}}": esc(office_postal),
         }
 
