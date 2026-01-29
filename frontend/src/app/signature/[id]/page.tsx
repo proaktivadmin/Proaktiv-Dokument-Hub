@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { useParams } from "next/navigation";
 import { ChevronDown, Copy, Mail, Keyboard } from "lucide-react";
 
@@ -14,27 +14,7 @@ import {
   useSignature,
   type SignatureVersion,
 } from "@/hooks/v3/useSignature";
-
-const versionLabels: Record<SignatureVersion, string> = {
-  "with-photo": "Med bilde",
-  "no-photo": "Uten bilde",
-};
-
-const buildSignatureDoc = (html: string) => `<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <style>
-      body {
-        margin: 0;
-        padding: 12px;
-        background: white;
-        font-family: Arial, sans-serif;
-      }
-    </style>
-  </head>
-  <body>${html}</body>
-</html>`;
+import { buildSignatureDoc, VERSION_LABELS } from "@/lib/signature";
 
 export default function SignaturePage() {
   const params = useParams();
@@ -49,6 +29,14 @@ export default function SignaturePage() {
   const { signature, isLoading, error } = useSignature(employeeId, version);
   const { toast } = useToast();
 
+  // SSR-safe client detection via useSyncExternalStore.
+  // Returns false during SSR (server snapshot), reads UA on client.
+  const subscribe = useCallback((cb: () => void) => { cb(); return () => {}; }, []);
+  const isMobile = useSyncExternalStore(subscribe, () => /iPhone|iPad|iPod|Android/i.test(navigator.userAgent), () => false);
+  const isMac = useSyncExternalStore(subscribe, () => /Mac|iPhone|iPad|iPod/i.test(navigator.platform || navigator.userAgent), () => false);
+
+  const modKey = isMac ? "\u2318" : "Ctrl+";
+
   const signatureHtml = signature?.html;
   const signatureDoc = useMemo(() => {
     if (!signatureHtml) return "";
@@ -56,12 +44,6 @@ export default function SignaturePage() {
   }, [signatureHtml]);
 
   const showError = !isLoading && (!signature || error || !employeeId);
-
-  // Detect mobile device
-  const isMobile = useMemo(() => {
-    if (typeof window === "undefined") return false;
-    return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  }, []);
 
   const handleCopy = useCallback(async () => {
     if (!signature?.html) return;
@@ -212,10 +194,10 @@ export default function SignaturePage() {
               >
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="with-photo">
-                    {versionLabels["with-photo"]}
+                    {VERSION_LABELS["with-photo"]}
                   </TabsTrigger>
                   <TabsTrigger value="no-photo">
-                    {versionLabels["no-photo"]}
+                    {VERSION_LABELS["no-photo"]}
                   </TabsTrigger>
                 </TabsList>
 
@@ -228,7 +210,7 @@ export default function SignaturePage() {
                             <Skeleton className="h-[320px] w-full sm:h-[240px]" />
                           ) : signature ? (
                             <iframe
-                              title={`Signatur ${versionLabels[version]}`}
+                              title={`Signatur ${VERSION_LABELS[version]}`}
                               sandbox=""
                               srcDoc={signatureDoc}
                               className="h-[320px] w-full rounded-md border bg-white sm:h-[240px]"
@@ -252,7 +234,7 @@ export default function SignaturePage() {
                     Kopier signatur
                     {!isMobile && (
                       <kbd className="ml-2 hidden rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground sm:inline-block">
-                        ⌘C
+                        {modKey}C
                       </kbd>
                     )}
                   </Button>
@@ -270,7 +252,7 @@ export default function SignaturePage() {
                 <p className="text-sm text-muted-foreground">
                   {isMobile
                     ? "Om du er på telefon kan du benytte knappen over for å åpne e-posten din etter at signaturen er kopiert."
-                    : "For å sikre at signaturen fremkommer riktig er det viktig at du benytter «Kopier signatur»-knappen og limer inn som ny signatur. Ikke kopier signaturen manuelt."}
+                    : "For å sikre at signaturen fremkommer riktig er det viktig at du benytter \u00ABKopier signatur\u00BB-knappen og limer inn som ny signatur. Ikke kopier signaturen manuelt."}
                 </p>
               </div>
 
@@ -308,7 +290,7 @@ export default function SignaturePage() {
                   </div>
                   <div className="space-y-2">
                     <p className="font-medium text-foreground">
-                      📱 iPhone / Android
+                      iPhone / Android
                     </p>
                     <ol className="list-decimal space-y-1 pl-4">
                       <li>Åpne denne siden på PC for best resultat.</li>
@@ -325,10 +307,10 @@ export default function SignaturePage() {
                 <div className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex">
                   <Keyboard className="h-3.5 w-3.5" />
                   <span>Hurtigtaster:</span>
-                  <kbd className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">⌘C</kbd>
+                  <kbd className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">{modKey}C</kbd>
                   <span>kopier</span>
-                  <span className="text-muted-foreground/50">•</span>
-                  <kbd className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">⌘M</kbd>
+                  <span className="text-muted-foreground/50">&bull;</span>
+                  <kbd className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">{modKey}M</kbd>
                   <span>åpne e-post</span>
                 </div>
               )}

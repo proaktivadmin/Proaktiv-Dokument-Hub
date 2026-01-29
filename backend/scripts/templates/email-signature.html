@@ -79,7 +79,7 @@
             <!-- Name: 24px line-height + 4px padding = 28px -->
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;">
               <tr>
-                <td class="dark-mode-text" style="font-size:20px;font-weight:bold;line-height:24px;height:24px;padding-bottom:4px;color:#000 !important;white-space:nowrap;">{{DisplayName}}</td>
+                <td class="dark-mode-text" style="font-size:20px;font-weight:bold;line-height:24px;height:24px;padding-bottom:4px;color:#000 !important;">{{DisplayName}}</td>
               </tr>
             </table>
             <!-- Title: 16px line-height + 10px padding = 26px -->
@@ -99,8 +99,8 @@
                 </td>
               </tr>
             </table>
-            <!-- Gap: 6px -->
-            <div style="height:6px;font-size:1px;line-height:1px;">&nbsp;</div>
+            <!-- Gap: 6px (table-based for Outlook compatibility) -->
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;"><tr><td style="height:6px;font-size:1px;line-height:1px;">&nbsp;</td></tr></table>
             <!-- Email: 18px height -->
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;">
               <tr>

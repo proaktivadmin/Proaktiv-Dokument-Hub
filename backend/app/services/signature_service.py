@@ -108,14 +108,14 @@ class SignatureService:
         """
         office = employee.office
 
-        # Facebook: office -> default
-        facebook = (office.facebook_url if office else None) or DEFAULT_FACEBOOK
+        # Facebook: office -> default (strip to catch empty strings)
+        facebook = ((office.facebook_url or "").strip() if office else "") or DEFAULT_FACEBOOK
 
         # Instagram: office -> default
-        instagram = (office.instagram_url if office else None) or DEFAULT_INSTAGRAM
+        instagram = ((office.instagram_url or "").strip() if office else "") or DEFAULT_INSTAGRAM
 
         # LinkedIn: office -> default
-        linkedin = (office.linkedin_url if office else None) or DEFAULT_LINKEDIN
+        linkedin = ((office.linkedin_url or "").strip() if office else "") or DEFAULT_LINKEDIN
 
         return {
             "facebook_url": facebook,
@@ -144,20 +144,23 @@ class SignatureService:
         # Use employee's homepage URL if available, otherwise default to proaktiv.no
         employee_url = employee.homepage_profile_url or "https://proaktiv.no/"
 
+        # HTML-escape text values to prevent broken rendering (e.g. & in names)
+        # URLs are not escaped — they go into href attributes and must remain valid
+        esc = html_lib.escape
         replacements = {
-            "{{DisplayName}}": employee.full_name,
-            "{{JobTitle}}": employee.title or "",
-            "{{MobilePhone}}": formatted_phone,
+            "{{DisplayName}}": esc(employee.full_name or ""),
+            "{{JobTitle}}": esc(employee.title or ""),
+            "{{MobilePhone}}": esc(formatted_phone),
             "{{MobilePhoneRaw}}": raw_phone,
-            "{{Email}}": employee.email or "",
+            "{{Email}}": esc(employee.email or ""),
             "{{EmployeePhotoUrl}}": employee_photo_url,
             "{{EmployeeUrl}}": employee_url,
             "{{FacebookUrl}}": social_urls["facebook_url"],
             "{{InstagramUrl}}": social_urls["instagram_url"],
             "{{LinkedInUrl}}": social_urls["linkedin_url"],
-            "{{OfficeName}}": office.name if office else "",
-            "{{OfficeAddress}}": office.street_address if office else "",
-            "{{OfficePostal}}": office_postal,
+            "{{OfficeName}}": esc(office.name if office else ""),
+            "{{OfficeAddress}}": esc(office.street_address if office else ""),
+            "{{OfficePostal}}": esc(office_postal),
         }
 
         rendered = template_content

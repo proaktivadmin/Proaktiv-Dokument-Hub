@@ -19,33 +19,13 @@ import {
   useSignature,
   type SignatureVersion,
 } from "@/hooks/v3/useSignature";
-
-const versionLabels: Record<SignatureVersion, string> = {
-  "with-photo": "Med bilde",
-  "no-photo": "Uten bilde",
-};
+import { buildSignatureDoc, VERSION_LABELS } from "@/lib/signature";
 
 interface SignaturePreviewProps {
   employeeId: string;
   employeeEmail: string;
   employeeName: string;
 }
-
-const buildSignatureDoc = (html: string) => `<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <style>
-      body {
-        margin: 0;
-        padding: 12px;
-        background: white;
-        font-family: Arial, sans-serif;
-      }
-    </style>
-  </head>
-  <body>${html}</body>
-</html>`;
 
 export function SignaturePreview({
   employeeId,
@@ -137,8 +117,8 @@ export function SignaturePreview({
           onValueChange={(value) => setVersion(value as SignatureVersion)}
         >
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="with-photo">{versionLabels["with-photo"]}</TabsTrigger>
-            <TabsTrigger value="no-photo">{versionLabels["no-photo"]}</TabsTrigger>
+            <TabsTrigger value="with-photo">{VERSION_LABELS["with-photo"]}</TabsTrigger>
+            <TabsTrigger value="no-photo">{VERSION_LABELS["no-photo"]}</TabsTrigger>
           </TabsList>
 
           {(["with-photo", "no-photo"] as SignatureVersion[]).map(
@@ -152,7 +132,7 @@ export function SignaturePreview({
                   </div>
                 ) : signature ? (
                   <iframe
-                    title={`Signatur ${versionLabels[version]}`}
+                    title={`Signatur ${VERSION_LABELS[version]}`}
                     sandbox=""
                     srcDoc={signatureDoc}
                     className="h-[240px] w-full rounded-md border bg-white"
