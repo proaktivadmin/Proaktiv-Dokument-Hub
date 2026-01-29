@@ -84,6 +84,49 @@ class ImageService:
         return output.getvalue()
 
     @staticmethod
+    def crop_for_signature(
+        image_data: bytes,
+        width: int = 80,
+        height: int = 96,
+        output_format: str = "JPEG",
+    ) -> bytes:
+        """Crop an image to exact dimensions for email signatures.
+
+        Uses center-horizontal, top-biased crop to keep faces visible.
+        The image is scaled so the smaller target dimension is filled,
+        then excess is cropped from the sides (centered) or bottom.
+        """
+        img = Image.open(io.BytesIO(image_data))
+
+        if img.mode in ("RGBA", "P") and output_format.upper() == "JPEG":
+            img = img.convert("RGB")
+
+        src_w, src_h = img.size
+        target_ratio = width / height  # 80/96 = 0.833
+        src_ratio = src_w / src_h
+
+        if src_ratio > target_ratio:
+            # Source is wider — scale by height, crop sides
+            new_h = height
+            new_w = round(src_w * (height / src_h))
+        else:
+            # Source is taller — scale by width, crop bottom
+            new_w = width
+            new_h = round(src_h * (width / src_w))
+
+        img = img.resize((new_w, new_h), Image.Resampling.LANCZOS)
+
+        # Crop: center horizontally, top-biased vertically
+        left = (new_w - width) // 2
+        top = 0  # Keep top for face visibility
+        img = img.crop((left, top, left + width, top + height))
+
+        output = io.BytesIO()
+        img.save(output, format=output_format.upper(), quality=90, optimize=True)
+        output.seek(0)
+        return output.getvalue()
+
+    @staticmethod
     def get_image_dimensions(image_data: bytes) -> tuple[int, int]:
         """
         Get dimensions of an image.

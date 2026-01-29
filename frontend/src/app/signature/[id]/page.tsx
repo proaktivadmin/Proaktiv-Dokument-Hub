@@ -211,7 +211,7 @@ export default function SignaturePage() {
                           ) : signature ? (
                             <iframe
                               title={`Signatur ${VERSION_LABELS[version]}`}
-                              sandbox=""
+                              sandbox="allow-same-origin"
                               srcDoc={signatureDoc}
                               className="h-[320px] w-full rounded-md border bg-white sm:h-[240px]"
                             />

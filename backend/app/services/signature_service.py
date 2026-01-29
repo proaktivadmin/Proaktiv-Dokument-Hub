@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import html as html_lib
 import logging
+import os
 import re
 from pathlib import Path
 from uuid import UUID
@@ -94,9 +95,19 @@ class SignatureService:
 
     @staticmethod
     def _resolve_employee_photo_url(employee: Employee) -> str:
+        """Return the signature photo URL as an absolute URL.
+
+        Uses the server-side crop endpoint so the image is always
+        exactly 80×96 — no client-side CSS tricks needed.
+        Falls back to the placeholder logo when no photo is available.
+
+        The URL must be absolute because the signature HTML is pasted
+        into email clients which cannot resolve relative paths.
+        """
         photo_url = (employee.profile_image_url or "").strip()
         if photo_url and not photo_url.startswith("/api/vitec"):
-            return photo_url
+            base = os.getenv("FRONTEND_URL", "https://proaktiv-dokument-hub.vercel.app").strip().rstrip("/")
+            return f"{base}/api/signatures/{employee.id}/photo"
         return PLACEHOLDER_PHOTO
 
     @staticmethod

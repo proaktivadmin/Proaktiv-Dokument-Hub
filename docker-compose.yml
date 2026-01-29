@@ -33,6 +33,7 @@ services:
       - DEBUG=true
       - DB_HOST=db
       - DB_PORT=5432
+      - FRONTEND_URL=http://localhost:3000
     volumes:
       - ./backend/app:/app/app
       - ./backend/alembic:/app/alembic

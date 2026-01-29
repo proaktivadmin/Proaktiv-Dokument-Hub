@@ -8,7 +8,9 @@ import os
 from typing import Literal
 from uuid import UUID
 
+import httpx
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
+from fastapi.responses import Response
 from pydantic import BaseModel, Field
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -17,7 +19,8 @@ from app.database import get_db
 from app.routers.auth import verify_session_token
 from app.services.employee_service import EmployeeService
 from app.services.graph_service import GraphService
-from app.services.signature_service import SignatureService
+from app.services.image_service import ImageService
+from app.services.signature_service import PLACEHOLDER_PHOTO, SignatureService
 
 logger = logging.getLogger(__name__)
 
@@ -159,3 +162,30 @@ async def send_signature_email(
     message = "Signature email sent successfully" if sent else "Failed to send signature email"
 
     return SignatureSendResponse(success=sent, sent_to=employee.email, message=message)
+
+
+@router.get("/{employee_id}/photo")
+async def get_signature_photo(
+    employee_id: UUID,
+    db: AsyncSession = Depends(get_db),
+):
+    """Return employee photo pre-cropped to 80×96 for email signatures."""
+    employee = await EmployeeService.get_by_id(db, employee_id)
+    if not employee:
+        raise HTTPException(status_code=404, detail="Employee not found")
+
+    photo_url = (employee.profile_image_url or "").strip()
+    if not photo_url or photo_url.startswith("/api/vitec"):
+        photo_url = PLACEHOLDER_PHOTO
+
+    try:
+        async with httpx.AsyncClient(timeout=15.0, follow_redirects=True) as client:
+            resp = await client.get(photo_url)
+            resp.raise_for_status()
+            image_data = resp.content
+    except httpx.HTTPError:
+        logger.warning("Failed to fetch photo for signature crop: %s", photo_url)
+        raise HTTPException(status_code=502, detail="Could not fetch employee photo")
+
+    cropped = ImageService.crop_for_signature(image_data, width=80, height=96)
+    return Response(content=cropped, media_type="image/jpeg", headers={"Cache-Control": "public, max-age=86400"})
