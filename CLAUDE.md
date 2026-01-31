@@ -226,6 +226,22 @@ Railway's internal networking causes Alembic migrations to fail silently during 
 - ✅ Import script: `import_entra_offices.py` (--dry-run, --fetch-details)
 - Plans: `.planning/phases/10-office-entra-sync/`
 
+**V3.9.3 Signature Template Production Hardening (Completed 2026-02-01):**
+
+- ✅ Complete template rewrite for reply-chain resilience (both with-photo and no-photo)
+- ✅ Single unified table layout — no MSO/non-MSO conditional branching for structure
+- ✅ All inline styles, no media queries (stripped in reply chains)
+- ✅ 7-layer blue hyperlink defense (`a[x-apple-data-detectors]`, `#MessageViewBody a`, `#outlook a`, `.ExternalClass a`, `u + .body a`, etc.)
+- ✅ `<font color="#000000">` wrapping on phone/email links (proven Outlook Classic fix)
+- ✅ `format-detection` meta tags to prevent iOS auto-linking (telephone, date, address, email)
+- ✅ `&zwnj;` zero-width non-joiners in org number to break pattern detection
+- ✅ Explicit Google Maps `<a href>` for office address (full address query, cross-platform)
+- ✅ `width:100%` + `max-width` outer table for iOS Mail fill, MSO wrapper for Outlook Classic
+- ✅ Dark mode prevention removed — natural inversion works across all clients
+- ✅ No-photo template fully aligned with production with-photo version
+- QA verified: Outlook Classic, Outlook New, iOS Mail (light/dark), reply chains
+- Known limitation: Outlook New injects blue link color via `!important` (Microsoft bug, no HTML fix)
+
 **V3.9.2 Photo Export for Signatures (2026-01-25 - In Progress):**
 
 - ✅ Created `export_homepage_employee_photos.py` - crawls proaktiv.no, downloads employee photos
@@ -236,13 +252,6 @@ Railway's internal networking causes Alembic migrations to fail silently during 
 - ⏳ Pending: Manual WebDAV upload to `proaktiv.no/d/photos/`
 - ⏳ Pending: Database update for `profile_image_url` fields
 - Handover: `docs/features/photo-export/HANDOVER.md`
-
-**V3.9.1 Signature Portal Enhancements (Completed 2026-01-25):**
-
-- ✅ Mobile compatibility with "Åpne e-post" button
-- ✅ Norwegian phone formatting (XX XX XX XX)
-- ✅ Keyboard shortcut hints for desktop users
-- ✅ Support contact section with IT email addresses
 
 **V3.9.1 Signature Portal Enhancements (Completed 2026-01-25):**
 

@@ -12,12 +12,12 @@ See: .planning/PROJECT.md (updated 2026-01-23)
 
 ## Current Position
 
-Phase: 3.11 (Territory Seeding & Dashboard Fixes)
-Plan: Territory Seeding + CSV Import + UI Fixes
+Phase: 3.9.3 (Signature Template Production Hardening)
+Plan: Cross-platform signature template rewrite + QA
 Status: Deployed to production (via main branch push)
-Last activity: 2026-01-28 — Territory seeding (1732 assignments), office sync, 500 error fix
+Last activity: 2026-02-01 — Signature template hardening, reply-chain resilience, no-photo alignment
 
-Progress: [██████████] 100% (Completed seeding and dashboard fixes)
+Progress: [██████████] 100% (Production-ready signature templates)
 
 ## Performance Metrics
 
@@ -70,47 +70,50 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-01-25
-Stopped at: V3.9.2 Photo export scripts complete
-Resume file: `docs/features/photo-export/HANDOVER.md`
-Next step: Upload photos to WebDAV, update database records, verify signature rendering
+Last session: 2026-02-01
+Stopped at: V3.9.3 Signature template production hardening complete
+Resume file: N/A (templates are production-ready)
+Next step: Deploy signature emails to employees, or continue with photo WebDAV upload
 
-### Session Summary (2026-01-25 - Latest)
+### Session Summary (2026-02-01 - Latest)
 
-**V3.9.2 Photo Export for Signatures (In Progress):**
+**V3.9.3 Signature Template Production Hardening (Completed):**
 
-- ✅ Created `export_homepage_employee_photos.py` - crawls proaktiv.no, downloads employee photos
-- ✅ Created `export_office_banners.py` - crawls proaktiv.no, downloads office banners
-- ✅ Fixed og:image extraction in `sync_proaktiv_directory.py` for profile photos
-- ✅ Updated `email-signature.html` template with `{{EmployeePhotoUrl}}` placeholder
-- ✅ Updated `signature_service.py` with `_resolve_employee_photo_url()` method
-- ✅ Added external link to proaktiv.no profile on EmployeeCard component
-- ✅ Generated photo mapping files (manifest.json, CSV maps)
-- ⏳ Pending: Manual WebDAV upload of `photos/employees/` and `photos/offices/`
-- ⏳ Pending: Database update scripts for `profile_image_url` fields
-- Handover: `docs/features/photo-export/HANDOVER.md`
+Complete rewrite of both with-photo and no-photo email signature templates for cross-platform compatibility and reply-chain resilience.
 
-**Output Files Generated:**
+Key changes:
+- ✅ Single unified table layout (no MSO/non-MSO conditional branching for structure)
+- ✅ All inline styles, removed all media queries (stripped in reply chains)
+- ✅ 7-layer blue hyperlink defense in `<style>` block
+- ✅ `<font color="#000000">` wrapping on phone/email links (Outlook Classic fix)
+- ✅ `format-detection` meta tags (telephone, date, address, email = no)
+- ✅ `&zwnj;` zero-width non-joiners in org number to break iOS auto-detection
+- ✅ Explicit Google Maps `<a href>` for office address with full query string
+- ✅ `width:100%` + `max-width` outer table for iOS Mail fill
+- ✅ MSO conditional wrapper for fixed width on Outlook Classic
+- ✅ Dark mode prevention removed (natural inversion across all clients)
+- ✅ No-photo template fully aligned with production with-photo version
 
-- `C:\Users\Adrian\Documents\ProaktivPhotos\webdav-upload\photos\employees\` (~100 photos)
-- `C:\Users\Adrian\Documents\ProaktivPhotos\webdav-upload\photos\offices\` (21 banners)
+QA Results:
+- Outlook Classic (dark mode): Perfect — black text inverts to white naturally
+- Outlook New (desktop): Perfect layout, known Microsoft bug on link color
+- iOS Mail (light + dark): Correct layout, phone link shows blue (acceptable)
+- Reply chains: Signature survives intact on all tested clients
+- Org number: No longer auto-linked as phone number
 
-**V3.9.1 Signature Portal Enhancements (Completed earlier today):**
+Known Limitation:
+- Outlook New injects `color: rgb(0, 120, 212) !important` on links — Microsoft bug, no HTML fix
 
-- ✅ Mobile compatibility: "Åpne e-post" button, plain text fallback
-- ✅ Norwegian phone formatting: `XX XX XX XX` display format
-- ✅ Keyboard shortcut hints for desktop users (Ctrl/⌘+C, Ctrl/⌘+M)
-- ✅ Support contact section with IT email addresses
-- ✅ Toast messages now indicate copy format (HTML vs text)
-- ✅ QA testing plan created (5 stages), Stages 1-2 executed with fixes
-- ✅ Deployment verification and Vercel cache fix
-- Session log: `.planning/phases/09-signature-portal/SESSION-2026-01-25.md`
+Files modified:
+- `backend/scripts/templates/email-signature.html` (complete rewrite)
+- `backend/scripts/templates/email-signature-no-photo.html` (aligned to match)
+- `backend/app/services/signature_service.py` (added `{{OfficeMapUrl}}` variable)
 
 **Pending Work (for Next Agent):**
 
 - ⏳ WebDAV upload: Upload photos to `proaktiv.no/d/photos/employees/` and `photos/offices/`
 - ⏳ Database update: Set `profile_image_url` from CSV mapping files
-- ⏳ QA testing: Stages 3-5 pending (email clients, mobile, edge cases)
+- ⏳ Deploy signature emails to employees via `Send-SignatureEmails.ps1`
 - ⏳ Transport rule signatures: Agent 3-4 pending (POC test, docs)
 
 ### Session Summary (2026-01-24)
@@ -223,6 +226,7 @@ Next step: Upload photos to WebDAV, update database records, verify signature re
 
 | Version | Date       | Key Changes                                                |
 | ------- | ---------- | ---------------------------------------------------------- |
+| V3.9.3  | 2026-02-01 | Signature template hardening, reply-chain resilience, Maps link |
 | V3.11   | 2026-01-28 | Territory seeding (1732), dashboard 500 fixes, office sync |
 | V3.9.1  | 2026-01-25 | Signature mobile compatibility, phone formatting, QA fixes |
 | V3.9    | 2026-01-24 | Self-service signature portal with 6-agent pipeline        |
