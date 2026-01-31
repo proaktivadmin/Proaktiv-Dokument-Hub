@@ -8,6 +8,7 @@
   <!--<![endif]-->
   <meta name="color-scheme" content="light">
   <meta name="supported-color-schemes" content="light">
+  <meta name="x-apple-disable-message-reformatting">
   <!--[if gte mso 9]>
   <xml>
     <o:OfficeDocumentSettings>
@@ -16,12 +17,11 @@
     </o:OfficeDocumentSettings>
   </xml>
   <style type="text/css">
-    table, td, div, p, a, span {
+    table, td, th, div, p, a, span, font {
       font-family: Arial, Helvetica, sans-serif !important;
-      color: #000000 !important;
       mso-line-height-rule: exactly;
     }
-    a, a:link, a:visited, a:hover, a span {
+    a, a:link, a:visited, a:hover {
       color: #000000 !important;
       text-decoration: none !important;
       mso-style-textfill-fill-color: #000000;
@@ -31,14 +31,12 @@
   <![endif]-->
   <style type="text/css">
     :root { color-scheme: light; supported-color-schemes: light; }
-    @media (prefers-color-scheme: dark) {
-      .sig-bg { background-color: #ffffff !important; }
-      .sig-text { color: #000000 !important; }
-    }
-    [data-ogsc] .sig-bg { background-color: #ffffff !important; }
-    [data-ogsc] .sig-text { color: #000000 !important; }
-    u + .body .sig-bg { background-color: #ffffff !important; }
-    u + .body .sig-text { color: #000000 !important; }
+
+    /* Reset th to look like td */
+    th { font-weight: normal; text-align: left; }
+
+    /* === Blue hyperlink override — multi-layer defense === */
+    /* Apple Mail auto-detected links (phone numbers, addresses, dates) */
     a[x-apple-data-detectors] {
       color: #000000 !important;
       text-decoration: none !important;
@@ -47,11 +45,19 @@
       font-weight: inherit !important;
       line-height: inherit !important;
     }
+    /* Samsung Mail */
+    #MessageViewBody a { color: #000000 !important; text-decoration: none !important; }
+    /* Outlook.com / Outlook New webmail */
+    #outlook a { color: #000000 !important; text-decoration: none !important; }
+    .ExternalClass a { color: #000000 !important; text-decoration: none !important; }
+    /* Universal link color */
     a { color: #000000 !important; text-decoration: none !important; }
     a:link, a:visited, a:hover, a:active { color: #000000 !important; text-decoration: none !important; }
+    /* Gmail targeting */
+    u + .body a { color: #000000 !important; text-decoration: none !important; }
 
     /* Mobile responsive: stack logo/social below on narrow screens */
-    /* No 'screen and' prefix — Apple Mail requires bare @media */
+    /* Uses th elements for Outlook mobile app compatibility */
     @media (max-width: 480px) {
       .sig-col-photo,
       .sig-col-spacer-photo,
@@ -101,13 +107,17 @@
         max-height: 1px !important;
         overflow: hidden !important;
       }
-      /* Brand column stacks full width */
+      /* Brand column stacks full width on mobile */
       .sig-col-brand {
-        padding-top: 12px !important;
         text-align: left !important;
       }
       .sig-col-brand table {
         margin: 0 !important;
+        width: auto !important;
+      }
+      /* Add spacing above brand section when stacked */
+      .sig-mobile-hr {
+        margin-top: 8px !important;
       }
     }
   </style>
@@ -123,36 +133,36 @@
   </tr>
   <!-- Signature content row -->
   <tr>
-    <td>
+    <td style="padding:0;">
       <!--[if mso]>
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="540" style="width:540px;font-family:Arial,Helvetica,sans-serif;mso-table-lspace:0pt;mso-table-rspace:0pt;">
       <tr>
-        <td valign="top" width="80" style="width:80px;">
+        <td valign="top" width="80" style="width:80px;padding:0;">
       <![endif]-->
       <!--[if !mso]><!-->
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:540px;font-family:Arial,Helvetica,sans-serif;mso-table-lspace:0pt;mso-table-rspace:0pt;">
       <tr>
-        <td class="sig-col-photo" valign="top" style="width:80px;">
+        <th class="sig-col-photo" valign="top" style="width:80px;padding:0;font-weight:normal;text-align:left;">
       <!--<![endif]-->
           <img src="{{EmployeePhotoUrl}}" alt="{{DisplayName}}" width="80" height="96" style="display:block;border:0;width:80px;height:96px;outline:none;text-decoration:none;">
       <!--[if mso]>
         </td>
-        <td width="14" style="width:14px;font-size:0;mso-line-height-rule:exactly;">&nbsp;</td>
-        <td valign="top">
+        <td width="14" style="width:14px;font-size:0;mso-line-height-rule:exactly;padding:0;">&nbsp;</td>
+        <td valign="top" style="padding:0;">
       <![endif]-->
       <!--[if !mso]><!-->
-        </td>
-        <td class="sig-col-spacer-photo" style="width:14px;min-width:14px;max-width:14px;font-size:0;">&nbsp;</td>
-        <td class="sig-col-info" valign="top">
+        </th>
+        <th class="sig-col-spacer-photo" style="width:14px;min-width:14px;max-width:14px;font-size:0;padding:0;font-weight:normal;">&nbsp;</th>
+        <th class="sig-col-info" valign="top" style="padding:0;font-weight:normal;text-align:left;">
       <!--<![endif]-->
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="font-family:Arial,Helvetica,sans-serif;mso-table-lspace:0pt;mso-table-rspace:0pt;">
             <!-- Name -->
             <tr>
-              <td colspan="2" style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:bold;mso-line-height-rule:exactly;line-height:26px;padding-bottom:4px;color:#000000;white-space:nowrap;">{{DisplayName}}</td>
+              <td colspan="2" style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:bold;mso-line-height-rule:exactly;line-height:24px;padding-bottom:2px;color:#000000;white-space:nowrap;">{{DisplayName}}</td>
             </tr>
             <!-- Title -->
             <tr>
-              <td colspan="2" class="sig-title" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;mso-line-height-rule:exactly;line-height:18px;padding-bottom:10px;color:#bcab8a;white-space:nowrap;"><b>{{JobTitle}}</b></td>
+              <td colspan="2" class="sig-title" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;mso-line-height-rule:exactly;line-height:16px;padding-bottom:8px;color:#bcab8a;white-space:nowrap;"><b>{{JobTitle}}</b></td>
             </tr>
             <!-- Phone -->
             <tr>
@@ -160,14 +170,12 @@
                 <img src="https://proaktiv.no/assets/logos/phone.png" width="14" height="14" alt="Telefon" style="display:block;border:0;">
               </td>
               <td valign="middle" style="font-family:Arial,Helvetica,sans-serif;font-size:11px;mso-line-height-rule:exactly;line-height:20px;color:#000000;">
-                <!--[if mso]><span style="color:#000000;mso-style-textfill-fill-color:#000000;"><![endif]-->
-                <a href="tel:{{MobilePhoneRaw}}" style="color:#000000;text-decoration:none;font-family:Arial,Helvetica,sans-serif;white-space:nowrap;"><span style="color:#000000;text-decoration:none;">{{MobilePhone}}</span></a>
-                <!--[if mso]></span><![endif]-->
+                <a href="tel:{{MobilePhoneRaw}}" style="color:#000000;text-decoration:none;white-space:nowrap;"><font face="Arial, Helvetica, sans-serif" color="#000000" style="text-decoration:none;">{{MobilePhone}}</font></a>
               </td>
             </tr>
-            <!-- 6px gap -->
+            <!-- 4px gap -->
             <tr>
-              <td colspan="2" style="height:6px;font-size:1px;mso-line-height-rule:exactly;line-height:1px;">&nbsp;</td>
+              <td colspan="2" style="height:4px;font-size:1px;mso-line-height-rule:exactly;line-height:1px;">&nbsp;</td>
             </tr>
             <!-- Email -->
             <tr>
@@ -175,25 +183,23 @@
                 <img src="https://proaktiv.no/assets/logos/email.png" width="14" height="14" alt="E-post" style="display:block;border:0;">
               </td>
               <td valign="middle" style="font-family:Arial,Helvetica,sans-serif;font-size:11px;mso-line-height-rule:exactly;line-height:20px;color:#000000;">
-                <!--[if mso]><span style="color:#000000;mso-style-textfill-fill-color:#000000;"><![endif]-->
-                <a href="mailto:{{Email}}" style="color:#000000;text-decoration:none;font-family:Arial,Helvetica,sans-serif;white-space:nowrap;"><span style="color:#000000;text-decoration:none;">{{Email}}</span></a>
-                <!--[if mso]></span><![endif]-->
+                <a href="mailto:{{Email}}" style="color:#000000;text-decoration:none;white-space:nowrap;"><font face="Arial, Helvetica, sans-serif" color="#000000" style="text-decoration:none;">{{Email}}</font></a>
               </td>
             </tr>
           </table>
       <!--[if mso]>
         </td>
-        <td width="14" style="width:14px;font-size:0;mso-line-height-rule:exactly;">&nbsp;</td>
-        <td width="1" style="width:1px;background-color:#bcab8a;font-size:0;mso-line-height-rule:exactly;">&nbsp;</td>
-        <td width="20" style="width:20px;font-size:0;mso-line-height-rule:exactly;">&nbsp;</td>
-        <td valign="top" align="center" width="149" style="width:149px;">
+        <td width="14" style="width:14px;font-size:0;mso-line-height-rule:exactly;padding:0;">&nbsp;</td>
+        <td width="1" style="width:1px;background-color:#bcab8a;font-size:0;mso-line-height-rule:exactly;padding:0;">&nbsp;</td>
+        <td width="20" style="width:20px;font-size:0;mso-line-height-rule:exactly;padding:0;">&nbsp;</td>
+        <td valign="top" align="center" width="149" style="width:149px;padding:0;">
       <![endif]-->
       <!--[if !mso]><!-->
-        </td>
-        <td class="sig-col-spacer-pre" style="width:14px;min-width:14px;max-width:14px;font-size:0;">&nbsp;</td>
-        <td class="sig-col-divider" style="width:1px;min-width:1px;max-width:1px;background-color:#bcab8a;font-size:0;">&nbsp;</td>
-        <td class="sig-col-spacer-post" style="width:20px;min-width:20px;max-width:20px;font-size:0;">&nbsp;</td>
-        <td class="sig-col-brand" valign="top" align="center" style="width:149px;">
+        </th>
+        <th class="sig-col-spacer-pre" style="width:14px;min-width:14px;max-width:14px;font-size:0;padding:0;font-weight:normal;">&nbsp;</th>
+        <th class="sig-col-divider" style="width:1px;min-width:1px;max-width:1px;background-color:#bcab8a;font-size:0;padding:0;font-weight:normal;">&nbsp;</th>
+        <th class="sig-col-spacer-post" style="width:20px;min-width:20px;max-width:20px;font-size:0;padding:0;font-weight:normal;">&nbsp;</th>
+        <th class="sig-col-brand" valign="top" align="center" style="width:149px;padding:0;font-weight:normal;text-align:center;">
       <!--<![endif]-->
           <!-- Mobile horizontal rule (hidden on desktop, shown on mobile) -->
           <!--[if !mso]><!-->
@@ -206,7 +212,7 @@
                 <img src="https://proaktiv.no/assets/logos/Proaktiv_sort.png" width="149" height="34" alt="Proaktiv Eiendomsmegling" style="display:block;border:0;">
               </td>
             </tr>
-            <!-- Social icons row — height increased to 46px to prevent clipping -->
+            <!-- Social icons row -->
             <tr>
               <td align="center" style="height:46px;padding-top:4px;">
                 <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="mso-table-lspace:0pt;mso-table-rspace:0pt;">
@@ -245,7 +251,7 @@
       </table>
       <![endif]-->
       <!--[if !mso]><!-->
-        </td>
+        </th>
       </tr>
       </table>
       <!--<![endif]-->
@@ -254,9 +260,7 @@
   <!-- Office info -->
   <tr>
     <td style="font-family:Arial,Helvetica,sans-serif;padding-top:12px;font-size:11px;mso-line-height-rule:exactly;line-height:16px;color:#000000;">
-      <!--[if mso]><span style="color:#000000;mso-style-textfill-fill-color:#000000;"><![endif]-->
-      <span style="color:#000000;">{{OfficeName}} &mdash; Org.&nbsp;nr.&nbsp;912&nbsp;404&nbsp;447 | {{OfficeAddress}}, {{OfficePostal}}</span>
-      <!--[if mso]></span><![endif]-->
+      <font face="Arial, Helvetica, sans-serif" color="#000000">{{OfficeName}} &mdash; Org.&nbsp;nr.&nbsp;912&nbsp;404&nbsp;447 | {{OfficeAddress}}, {{OfficePostal}}</font>
     </td>
   </tr>
   <!-- Disclaimer -->
