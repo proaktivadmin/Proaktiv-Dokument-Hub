@@ -19,9 +19,14 @@
     table, td, div, p, a, span {
       font-family: Arial, Helvetica, sans-serif !important;
       color: #000000 !important;
+      mso-line-height-rule: exactly;
     }
-    a { color: #000000 !important; text-decoration: none !important; }
-    .sig-title { color: #bcab8a !important; }
+    a, a:link, a:visited, a:hover, a span {
+      color: #000000 !important;
+      text-decoration: none !important;
+      mso-style-textfill-fill-color: #000000;
+    }
+    .sig-title, .sig-title b { color: #bcab8a !important; }
   </style>
   <![endif]-->
   <style type="text/css">
@@ -46,7 +51,8 @@
     a:link, a:visited, a:hover, a:active { color: #000000 !important; text-decoration: none !important; }
 
     /* Mobile responsive: stack logo/social below on narrow screens */
-    @media screen and (max-width: 480px) {
+    /* No 'screen and' prefix — Apple Mail requires bare @media */
+    @media (max-width: 480px) {
       .sig-col-photo,
       .sig-col-spacer-photo,
       .sig-col-info,
@@ -142,19 +148,21 @@
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="font-family:Arial,Helvetica,sans-serif;mso-table-lspace:0pt;mso-table-rspace:0pt;">
             <!-- Name -->
             <tr>
-              <td colspan="2" style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:bold;mso-line-height-rule:exactly;line-height:24px;padding-bottom:4px;color:#000000;white-space:nowrap;">{{DisplayName}}</td>
+              <td colspan="2" style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:bold;mso-line-height-rule:exactly;line-height:26px;padding-bottom:4px;color:#000000;white-space:nowrap;">{{DisplayName}}</td>
             </tr>
             <!-- Title -->
             <tr>
-              <td colspan="2" class="sig-title" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;mso-line-height-rule:exactly;line-height:16px;padding-bottom:10px;color:#bcab8a;white-space:nowrap;"><b>{{JobTitle}}</b></td>
+              <td colspan="2" class="sig-title" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;mso-line-height-rule:exactly;line-height:18px;padding-bottom:10px;color:#bcab8a;white-space:nowrap;"><b>{{JobTitle}}</b></td>
             </tr>
             <!-- Phone -->
             <tr>
-              <td valign="middle" style="width:14px;padding-right:6px;mso-line-height-rule:exactly;line-height:18px;">
+              <td valign="middle" style="width:14px;padding-right:6px;mso-line-height-rule:exactly;line-height:20px;">
                 <img src="https://proaktiv.no/assets/logos/phone.png" width="14" height="14" alt="Telefon" style="display:block;border:0;">
               </td>
-              <td valign="middle" style="font-family:Arial,Helvetica,sans-serif;font-size:11px;mso-line-height-rule:exactly;line-height:18px;color:#000000;">
-                <a href="tel:{{MobilePhoneRaw}}" style="color:#000000;text-decoration:none;font-family:Arial,Helvetica,sans-serif;white-space:nowrap;"><span style="color:#000000;">{{MobilePhone}}</span></a>
+              <td valign="middle" style="font-family:Arial,Helvetica,sans-serif;font-size:11px;mso-line-height-rule:exactly;line-height:20px;color:#000000;">
+                <!--[if mso]><span style="color:#000000;mso-style-textfill-fill-color:#000000;"><![endif]-->
+                <a href="tel:{{MobilePhoneRaw}}" style="color:#000000;text-decoration:none;font-family:Arial,Helvetica,sans-serif;white-space:nowrap;"><span style="color:#000000;text-decoration:none;">{{MobilePhone}}</span></a>
+                <!--[if mso]></span><![endif]-->
               </td>
             </tr>
             <!-- 6px gap -->
@@ -163,11 +171,13 @@
             </tr>
             <!-- Email -->
             <tr>
-              <td valign="middle" style="width:14px;padding-right:6px;mso-line-height-rule:exactly;line-height:18px;">
+              <td valign="middle" style="width:14px;padding-right:6px;mso-line-height-rule:exactly;line-height:20px;">
                 <img src="https://proaktiv.no/assets/logos/email.png" width="14" height="14" alt="E-post" style="display:block;border:0;">
               </td>
-              <td valign="middle" style="font-family:Arial,Helvetica,sans-serif;font-size:11px;mso-line-height-rule:exactly;line-height:18px;color:#000000;">
-                <a href="mailto:{{Email}}" style="color:#000000;text-decoration:none;font-family:Arial,Helvetica,sans-serif;white-space:nowrap;"><span style="color:#000000;">{{Email}}</span></a>
+              <td valign="middle" style="font-family:Arial,Helvetica,sans-serif;font-size:11px;mso-line-height-rule:exactly;line-height:20px;color:#000000;">
+                <!--[if mso]><span style="color:#000000;mso-style-textfill-fill-color:#000000;"><![endif]-->
+                <a href="mailto:{{Email}}" style="color:#000000;text-decoration:none;font-family:Arial,Helvetica,sans-serif;white-space:nowrap;"><span style="color:#000000;text-decoration:none;">{{Email}}</span></a>
+                <!--[if mso]></span><![endif]-->
               </td>
             </tr>
           </table>
@@ -196,30 +206,30 @@
                 <img src="https://proaktiv.no/assets/logos/Proaktiv_sort.png" width="149" height="34" alt="Proaktiv Eiendomsmegling" style="display:block;border:0;">
               </td>
             </tr>
-            <!-- Social icons row -->
+            <!-- Social icons row — height increased to 46px to prevent clipping -->
             <tr>
-              <td align="center" style="height:42px;">
+              <td align="center" style="height:46px;padding-top:4px;">
                 <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="mso-table-lspace:0pt;mso-table-rspace:0pt;">
                   <tr>
-                    <td valign="middle" style="width:32px;height:42px;">
+                    <td valign="middle" style="width:32px;height:36px;padding:0 1px;">
                       <a href="{{EmployeeUrl}}" target="_blank" rel="noopener">
                         <img src="https://proaktiv.no/assets/logos/lilje_clean_52.png" width="32" height="32" alt="Proaktiv" style="display:block;border:0;">
                       </a>
                     </td>
-                    <td style="width:9px;height:42px;font-size:1px;">&nbsp;</td>
-                    <td valign="middle" style="width:32px;height:42px;">
+                    <td style="width:9px;height:36px;font-size:1px;">&nbsp;</td>
+                    <td valign="middle" style="width:32px;height:36px;padding:0 1px;">
                       <a href="{{InstagramUrl}}" target="_blank" rel="noopener">
                         <img src="https://proaktiv.no/assets/logos/instagram.png" width="32" height="32" alt="Instagram" style="display:block;border:0;">
                       </a>
                     </td>
-                    <td style="width:9px;height:42px;font-size:1px;">&nbsp;</td>
-                    <td valign="middle" style="width:32px;height:42px;">
+                    <td style="width:9px;height:36px;font-size:1px;">&nbsp;</td>
+                    <td valign="middle" style="width:32px;height:36px;padding:0 1px;">
                       <a href="{{LinkedInUrl}}" target="_blank" rel="noopener">
                         <img src="https://proaktiv.no/assets/logos/linkedin.png" width="32" height="32" alt="LinkedIn" style="display:block;border:0;">
                       </a>
                     </td>
-                    <td style="width:9px;height:42px;font-size:1px;">&nbsp;</td>
-                    <td valign="middle" style="width:32px;height:42px;">
+                    <td style="width:9px;height:36px;font-size:1px;">&nbsp;</td>
+                    <td valign="middle" style="width:32px;height:36px;padding:0 1px;">
                       <a href="{{FacebookUrl}}" target="_blank" rel="noopener">
                         <img src="https://proaktiv.no/assets/logos/facebook.png" width="32" height="32" alt="Facebook" style="display:block;border:0;">
                       </a>
@@ -244,7 +254,9 @@
   <!-- Office info -->
   <tr>
     <td style="font-family:Arial,Helvetica,sans-serif;padding-top:12px;font-size:11px;mso-line-height-rule:exactly;line-height:16px;color:#000000;">
-      {{OfficeName}} &mdash; Org. nr. 912 404 447 | {{OfficeAddress}}, {{OfficePostal}}
+      <!--[if mso]><span style="color:#000000;mso-style-textfill-fill-color:#000000;"><![endif]-->
+      <span style="color:#000000;">{{OfficeName}} &mdash; Org.&nbsp;nr.&nbsp;912&nbsp;404&nbsp;447 | {{OfficeAddress}}, {{OfficePostal}}</span>
+      <!--[if mso]></span><![endif]-->
     </td>
   </tr>
   <!-- Disclaimer -->

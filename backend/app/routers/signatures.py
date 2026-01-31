@@ -169,7 +169,7 @@ async def get_signature_photo(
     employee_id: UUID,
     db: AsyncSession = Depends(get_db),
 ):
-    """Return employee photo pre-cropped to 80×96 for email signatures."""
+    """Return employee photo pre-cropped at 2x (160×192) for HiDPI email signatures."""
     employee = await EmployeeService.get_by_id(db, employee_id)
     if not employee:
         raise HTTPException(status_code=404, detail="Employee not found")
@@ -187,5 +187,5 @@ async def get_signature_photo(
         logger.warning("Failed to fetch photo for signature crop: %s", photo_url)
         raise HTTPException(status_code=502, detail="Could not fetch employee photo")
 
-    cropped = ImageService.crop_for_signature(image_data, width=80, height=96)
+    cropped = ImageService.crop_for_signature(image_data, width=160, height=192)
     return Response(content=cropped, media_type="image/jpeg", headers={"Cache-Control": "public, max-age=86400"})
