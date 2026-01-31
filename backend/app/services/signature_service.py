@@ -155,6 +155,13 @@ class SignatureService:
         # Use employee's homepage URL if available, otherwise default to proaktiv.no
         employee_url = employee.homepage_profile_url or "https://proaktiv.no/"
 
+        # Build Google Maps URL from full address
+        office_address = (office.street_address or "") if office else ""
+        full_address = f"{office_address}, {office_postal}".strip(", ")
+        from urllib.parse import quote
+
+        office_map_url = f"https://maps.google.com/?q={quote(full_address)}" if full_address else ""
+
         # HTML-escape text values to prevent broken rendering (e.g. & in names)
         # URLs are not escaped — they go into href attributes and must remain valid
         esc = html_lib.escape
@@ -170,8 +177,9 @@ class SignatureService:
             "{{InstagramUrl}}": social_urls["instagram_url"],
             "{{LinkedInUrl}}": social_urls["linkedin_url"],
             "{{OfficeName}}": esc((office.name or "") if office else ""),
-            "{{OfficeAddress}}": esc((office.street_address or "") if office else ""),
+            "{{OfficeAddress}}": esc(office_address),
             "{{OfficePostal}}": esc(office_postal),
+            "{{OfficeMapUrl}}": office_map_url,
         }
 
         rendered = template_content
