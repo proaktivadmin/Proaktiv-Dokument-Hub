@@ -10,7 +10,7 @@ A document template management system for Norwegian real estate brokers, integra
 
 | Aspect         | Details                                                |
 | -------------- | ------------------------------------------------------ |
-| **Phase**      | 3.9.1 (Signature Portal Enhancements)                  |
+| **Phase**      | 3.9.4 (Signature Page Self-Service Enhancements)       |
 | **Stack**      | Next.js 16 + React 19 + FastAPI + PostgreSQL (Railway) |
 | **UI**         | Shadcn/UI + Tailwind CSS 4 + Custom Design Tokens      |
 | **Hosting**    | Vercel (Frontend) + Railway (Backend + PostgreSQL)     |
@@ -225,6 +225,25 @@ Railway's internal networking causes Alembic migrations to fail silently during 
 - ✅ "Hent Entra" button on offices page
 - ✅ Import script: `import_entra_offices.py` (--dry-run, --fetch-details)
 - Plans: `.planning/phases/10-office-entra-sync/`
+
+**V3.9.4 Signature Page Self-Service Enhancements (Completed 2026-02-02):**
+
+- ✅ Editable text fields on public signature page (name, title, phone, email, office)
+- ✅ Editable social media links (Facebook, Instagram, LinkedIn, employee homepage URL)
+- ✅ Edit-toggle UX: read-only by default, "Rediger" button to switch to edit mode
+- ✅ Signature overrides stored in separate `signature_overrides` table (never overwrites synced data)
+- ✅ Backend: `SignatureOverrideService` with upsert/delete, override values fed to template rendering
+- ✅ Platform-specific setup instructions with OS/phone filter (Windows/Mac, iPhone/Android)
+- ✅ 8 instruction sets: Outlook New, Outlook Classic, Mac Outlook, Apple Mail, iOS Mail, iOS Outlook, Android Gmail, Android Outlook
+- ✅ Auto-detects user OS from `navigator.userAgent`, persists selection in localStorage
+- ✅ Employee photo hyperlinked to homepage URL in signature HTML template
+- ✅ Photo upload endpoint built (backend ready, frontend hidden pending WebDAV config)
+- ✅ DB fallback: uploaded photos stored as base64 in `metadata_json` when WebDAV unavailable
+- ✅ WebDAV credentials configured on Railway for future photo upload feature
+- Known limitation: Outlook iOS inflates font sizes ~125% (platform limitation, no HTML fix)
+- New files: `SignatureEditForm.tsx`, `SetupInstructions.tsx`, `useSignatureOverrides.ts`, `useSignaturePhotoUpload.ts`, `SignaturePhotoUpload.tsx`
+- New backend: `signature_override.py` (model), `signature_override_service.py`, `signature_override.py` (schema)
+- Migration: `20260201_0001_add_signature_overrides.py`
 
 **V3.9.3 Signature Template Production Hardening (Completed 2026-02-01):**
 
