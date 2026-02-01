@@ -10,7 +10,8 @@ import {
   useSignatureOverrides,
   type SignatureOverrideInput,
 } from "@/hooks/v3/useSignatureOverrides";
-import { SignaturePhotoUpload } from "./SignaturePhotoUpload";
+// Photo upload hidden for now — pending WebDAV configuration
+// import { SignaturePhotoUpload } from "./SignaturePhotoUpload";
 
 interface SignatureEditFormProps {
   employeeId: string;
@@ -165,13 +166,6 @@ export function SignatureEditForm({
       {isEditing && (
         <div className="space-y-6 border-t px-6 py-4">
           {/* Photo upload */}
-          <div className="space-y-2">
-            <p className="text-xs font-semibold uppercase tracking-wider text-foreground/60">
-              Profilbilde
-            </p>
-            <SignaturePhotoUpload employeeId={employeeId} onUploaded={onSaved} />
-          </div>
-
           {/* Contact info */}
           <div className="space-y-3">
             <p className="text-xs font-semibold uppercase tracking-wider text-foreground/60">
