@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Pencil, RotateCcw, Save, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -55,24 +55,23 @@ export function SignatureEditForm({
   const [isEditing, setIsEditing] = useState(false);
   const [fields, setFields] = useState<FormFields>(EMPTY_FIELDS);
 
-  // Populate fields from overrides when they load
-  useEffect(() => {
-    if (overrides) {
-      setFields({
-        display_name: overrides.display_name ?? "",
-        job_title: overrides.job_title ?? "",
-        mobile_phone: overrides.mobile_phone ?? "",
-        email: overrides.email ?? "",
-        office_name: overrides.office_name ?? "",
-        facebook_url: overrides.facebook_url ?? "",
-        instagram_url: overrides.instagram_url ?? "",
-        linkedin_url: overrides.linkedin_url ?? "",
-        employee_url: overrides.employee_url ?? "",
-      });
-    }
-  }, [overrides]);
-
   const hasOverrides = overrides !== null;
+
+  /** Build FormFields from current overrides (or empty) */
+  const fieldsFromOverrides = useCallback((): FormFields => {
+    if (!overrides) return EMPTY_FIELDS;
+    return {
+      display_name: overrides.display_name ?? "",
+      job_title: overrides.job_title ?? "",
+      mobile_phone: overrides.mobile_phone ?? "",
+      email: overrides.email ?? "",
+      office_name: overrides.office_name ?? "",
+      facebook_url: overrides.facebook_url ?? "",
+      instagram_url: overrides.instagram_url ?? "",
+      linkedin_url: overrides.linkedin_url ?? "",
+      employee_url: overrides.employee_url ?? "",
+    };
+  }, [overrides]);
 
   const handleChange = useCallback(
     (field: keyof FormFields) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -122,24 +121,9 @@ export function SignatureEditForm({
   }, [reset, onSaved, toast]);
 
   const handleCancel = useCallback(() => {
-    // Restore from overrides or clear
-    if (overrides) {
-      setFields({
-        display_name: overrides.display_name ?? "",
-        job_title: overrides.job_title ?? "",
-        mobile_phone: overrides.mobile_phone ?? "",
-        email: overrides.email ?? "",
-        office_name: overrides.office_name ?? "",
-        facebook_url: overrides.facebook_url ?? "",
-        instagram_url: overrides.instagram_url ?? "",
-        linkedin_url: overrides.linkedin_url ?? "",
-        employee_url: overrides.employee_url ?? "",
-      });
-    } else {
-      setFields(EMPTY_FIELDS);
-    }
+    setFields(fieldsFromOverrides());
     setIsEditing(false);
-  }, [overrides]);
+  }, [fieldsFromOverrides]);
 
   return (
     <div className="rounded-lg border bg-white shadow-card ring-1 ring-black/3">
@@ -154,7 +138,7 @@ export function SignatureEditForm({
           <Button
             size="sm"
             variant="outline"
-            onClick={() => setIsEditing(true)}
+            onClick={() => { setFields(fieldsFromOverrides()); setIsEditing(true); }}
           >
             <Pencil className="mr-2 h-3 w-3" />
             Rediger
