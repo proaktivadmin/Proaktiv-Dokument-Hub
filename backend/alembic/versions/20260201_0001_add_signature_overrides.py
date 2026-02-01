@@ -6,6 +6,7 @@ Create Date: 2026-02-01
 """
 
 import sqlalchemy as sa
+from sqlalchemy.dialects.postgresql import UUID
 
 from alembic import op
 
@@ -19,10 +20,10 @@ depends_on = None
 def upgrade() -> None:
     op.create_table(
         "signature_overrides",
-        sa.Column("id", sa.String(36), primary_key=True),
+        sa.Column("id", UUID(as_uuid=True), primary_key=True),
         sa.Column(
             "employee_id",
-            sa.String(36),
+            UUID(as_uuid=True),
             sa.ForeignKey("employees.id", ondelete="CASCADE"),
             nullable=False,
             unique=True,
