@@ -2,20 +2,24 @@
 Signatures Router - API endpoints for email signature rendering.
 """
 
+import base64
 import html as html_lib
 import logging
 import os
-from typing import Literal
+import uuid as uuid_mod
+from typing import Any, Literal
 from uuid import UUID
 
 import httpx
 from fastapi import APIRouter, Depends, File, HTTPException, Query, Request, UploadFile
 from fastapi.responses import Response
 from pydantic import BaseModel, Field
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import get_settings
 from app.database import get_db
+from app.models.company_asset import CompanyAsset
 from app.routers.auth import verify_session_token
 from app.schemas.signature_override import SignatureOverrideResponse, SignatureOverrideUpdate
 from app.services.employee_service import EmployeeService
@@ -180,14 +184,29 @@ async def get_signature_photo(
     if not photo_url or photo_url.startswith("/api/vitec"):
         photo_url = PLACEHOLDER_PHOTO
 
-    try:
-        async with httpx.AsyncClient(timeout=15.0, follow_redirects=True) as client:
-            resp = await client.get(photo_url)
-            resp.raise_for_status()
-            image_data = resp.content
-    except httpx.HTTPError:
-        logger.warning("Failed to fetch photo for signature crop: %s", photo_url)
-        raise HTTPException(status_code=502, detail="Could not fetch employee photo")
+    # Handle asset:// URLs — serve photo from database metadata
+    if photo_url.startswith("asset://"):
+        asset_id = photo_url.replace("asset://", "")
+        result = await db.execute(select(CompanyAsset).where(CompanyAsset.id == asset_id))
+        asset = result.scalar_one_or_none()
+        if asset and asset.metadata_json and asset.metadata_json.get("image_base64"):
+            image_data = base64.b64decode(asset.metadata_json["image_base64"])
+        else:
+            logger.warning("Asset %s has no stored image data, falling back to placeholder", asset_id)
+            photo_url = PLACEHOLDER_PHOTO
+            image_data = None
+    else:
+        image_data = None
+
+    if image_data is None:
+        try:
+            async with httpx.AsyncClient(timeout=15.0, follow_redirects=True) as client:
+                resp = await client.get(photo_url)
+                resp.raise_for_status()
+                image_data = resp.content
+        except httpx.HTTPError:
+            logger.warning("Failed to fetch photo for signature crop: %s", photo_url)
+            raise HTTPException(status_code=502, detail="Could not fetch employee photo")
 
     cropped = ImageService.crop_for_signature(image_data, width=160, height=192)
     return Response(content=cropped, media_type="image/jpeg", headers={"Cache-Control": "public, max-age=86400"})
@@ -284,10 +303,6 @@ async def upload_signature_photo(
         raise HTTPException(status_code=400, detail="Empty file")
 
     # Store as CompanyAsset linked to employee
-    import uuid as uuid_mod
-
-    from app.models.company_asset import CompanyAsset
-
     asset_id = str(uuid_mod.uuid4())
     filename = file.filename or f"signature-photo-{asset_id}.jpg"
     storage_path = f"/assets/employee/{employee_id}/signature-photo-{asset_id}_{filename}"
@@ -298,12 +313,17 @@ async def upload_signature_photo(
         from app.services.webdav_service import WebDAVService
 
         webdav = WebDAVService()
-        # Ensure directory exists
         await webdav.create_directory(f"/assets/employee/{employee_id}")
         await webdav.upload_file(storage_path, image_data, file.content_type or "image/jpeg")
         webdav_url = f"{webdav.base_url.rstrip('/')}{storage_path}"
     except Exception:
-        logger.warning("WebDAV upload failed for signature photo, storing reference only")
+        logger.warning("WebDAV upload failed for signature photo, storing in database")
+
+    # Store image bytes as base64 in metadata when WebDAV unavailable
+    asset_metadata: dict[str, Any] = {}
+    if not webdav_url:
+        asset_metadata["image_base64"] = base64.b64encode(image_data).decode("ascii")
+        asset_metadata["content_type"] = file.content_type or "image/jpeg"
 
     # Create CompanyAsset record
     asset = CompanyAsset(
@@ -315,7 +335,8 @@ async def upload_signature_photo(
         category="photo",
         content_type=file.content_type or "image/jpeg",
         file_size=len(image_data),
-        storage_path=storage_path,
+        storage_path=webdav_url or storage_path,
+        metadata_json=asset_metadata if asset_metadata else None,
     )
     db.add(asset)
 
@@ -323,7 +344,6 @@ async def upload_signature_photo(
     if webdav_url:
         employee.profile_image_url = webdav_url
     else:
-        # Store as data reference — the photo endpoint will use it
         employee.profile_image_url = f"asset://{asset_id}"
 
     await db.commit()
