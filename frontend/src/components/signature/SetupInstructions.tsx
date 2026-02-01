@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { ChevronDown, Monitor, Smartphone } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 type PcOs = "windows" | "mac";
 type PhoneOs = "ios" | "android";
@@ -191,18 +190,7 @@ export function SetupInstructions() {
                   "Gå tilbake for å lagre.",
                 ]}
                 note="Merk: iOS Mail støtter kun enkel tekst-formatering. For best resultat, sett opp signaturen på PC først."
-              >
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="mt-2"
-                  asChild
-                >
-                  <a href="App-Prefs:root=MAIL&path=Compose">
-                    Åpne Mail-innstillinger
-                  </a>
-                </Button>
-              </InstructionBlock>
+              />
               <InstructionBlock
                 title="Outlook-appen (iOS)"
                 steps={[
