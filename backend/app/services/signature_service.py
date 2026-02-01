@@ -135,16 +135,23 @@ class SignatureService:
         }
 
     @staticmethod
-    def _render_template(template_content: str, employee: Employee) -> str:
+    def _render_template(
+        template_content: str,
+        employee: Employee,
+        overrides: dict[str, str | None] | None = None,
+    ) -> str:
         office = employee.office
+        ovr = overrides or {}
+
         office_postal = ""
         if office and (office.postal_code or office.city):
             office_postal = f"{office.postal_code or ''} {office.city or ''}".strip()
 
-        # Format phone number as Norwegian style (XX XX XX XX)
-        formatted_phone = SignatureService._format_phone_number(employee.phone)
+        # Resolve phone — use override if provided
+        phone_source = ovr.get("mobile_phone") or employee.phone
+        formatted_phone = SignatureService._format_phone_number(phone_source)
         # Raw phone for tel: links (digits only, with country code)
-        raw_phone = re.sub(r"\D", "", employee.phone or "")
+        raw_phone = re.sub(r"\D", "", phone_source or "")
         if raw_phone and not raw_phone.startswith("47"):
             raw_phone = f"47{raw_phone}"  # Add Norwegian country code
         raw_phone = f"+{raw_phone}" if raw_phone else ""
@@ -153,7 +160,7 @@ class SignatureService:
         social_urls = SignatureService._resolve_social_urls(employee)
 
         # Use employee's homepage URL if available, otherwise default to proaktiv.no
-        employee_url = employee.homepage_profile_url or "https://proaktiv.no/"
+        employee_url = ovr.get("employee_url") or employee.homepage_profile_url or "https://proaktiv.no/"
 
         # Build Google Maps URL from full address
         office_address = (office.street_address or "") if office else ""
@@ -165,18 +172,25 @@ class SignatureService:
         # HTML-escape text values to prevent broken rendering (e.g. & in names)
         # URLs are not escaped — they go into href attributes and must remain valid
         esc = html_lib.escape
+
+        # Apply overrides: prefer override value (if non-null) over employee data
+        display_name = ovr.get("display_name") or employee.full_name or ""
+        job_title = ovr.get("job_title") or employee.title or ""
+        email = ovr.get("email") or employee.email or ""
+        office_name = ovr.get("office_name") or ((office.name or "") if office else "")
+
         replacements = {
-            "{{DisplayName}}": esc(employee.full_name or ""),
-            "{{JobTitle}}": esc(employee.title or ""),
+            "{{DisplayName}}": esc(display_name),
+            "{{JobTitle}}": esc(job_title),
             "{{MobilePhone}}": esc(formatted_phone),
             "{{MobilePhoneRaw}}": raw_phone,
-            "{{Email}}": esc(employee.email or ""),
+            "{{Email}}": esc(email),
             "{{EmployeePhotoUrl}}": employee_photo_url,
             "{{EmployeeUrl}}": employee_url,
-            "{{FacebookUrl}}": social_urls["facebook_url"],
-            "{{InstagramUrl}}": social_urls["instagram_url"],
-            "{{LinkedInUrl}}": social_urls["linkedin_url"],
-            "{{OfficeName}}": esc((office.name or "") if office else ""),
+            "{{FacebookUrl}}": ovr.get("facebook_url") or social_urls["facebook_url"],
+            "{{InstagramUrl}}": ovr.get("instagram_url") or social_urls["instagram_url"],
+            "{{LinkedInUrl}}": ovr.get("linkedin_url") or social_urls["linkedin_url"],
+            "{{OfficeName}}": esc(office_name),
             "{{OfficeAddress}}": esc(office_address),
             "{{OfficePostal}}": esc(office_postal),
             "{{OfficeMapUrl}}": office_map_url,
@@ -206,6 +220,12 @@ class SignatureService:
         if not employee:
             return None
 
+        # Load overrides if any exist
+        from app.services.signature_override_service import SignatureOverrideService
+
+        override = await SignatureOverrideService.get_by_employee_id(db, employee_id)
+        overrides_dict = SignatureOverrideService.to_dict(override)
+
         template_path = SignatureService._resolve_template_path(version)
         try:
             template_content = template_path.read_text(encoding="utf-8")
@@ -213,12 +233,16 @@ class SignatureService:
             logger.warning("Signature template not found: %s", template_path)
             template_content = "<p>{{DisplayName}}<br>{{JobTitle}}<br>{{Email}}</p>"
 
-        html_signature = SignatureService._render_template(template_content, employee)
+        html_signature = SignatureService._render_template(template_content, employee, overrides_dict)
         text_signature = SignatureService._strip_html(html_signature)
+
+        # Use overridden name/email in response if available
+        display_name = (overrides_dict.get("display_name") if overrides_dict else None) or employee.full_name
+        display_email = (overrides_dict.get("email") if overrides_dict else None) or employee.email or ""
 
         return {
             "html": html_signature,
             "text": text_signature,
-            "employee_name": employee.full_name,
-            "employee_email": employee.email or "",
+            "employee_name": display_name,
+            "employee_email": display_email,
         }

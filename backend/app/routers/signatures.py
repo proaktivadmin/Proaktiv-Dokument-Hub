@@ -9,7 +9,7 @@ from typing import Literal
 from uuid import UUID
 
 import httpx
-from fastapi import APIRouter, Depends, HTTPException, Query, Request
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, UploadFile, File
 from fastapi.responses import Response
 from pydantic import BaseModel, Field
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -17,9 +17,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.config import get_settings
 from app.database import get_db
 from app.routers.auth import verify_session_token
+from app.schemas.signature_override import SignatureOverrideResponse, SignatureOverrideUpdate
 from app.services.employee_service import EmployeeService
 from app.services.graph_service import GraphService
 from app.services.image_service import ImageService
+from app.services.signature_override_service import SignatureOverrideService
 from app.services.signature_service import PLACEHOLDER_PHOTO, SignatureService
 
 logger = logging.getLogger(__name__)
@@ -189,3 +191,141 @@ async def get_signature_photo(
 
     cropped = ImageService.crop_for_signature(image_data, width=160, height=192)
     return Response(content=cropped, media_type="image/jpeg", headers={"Cache-Control": "public, max-age=86400"})
+
+
+# --- Signature Override Endpoints (public, scoped by employee UUID) ---
+
+
+@router.get("/{employee_id}/overrides", response_model=SignatureOverrideResponse | None)
+async def get_signature_overrides(
+    employee_id: UUID,
+    db: AsyncSession = Depends(get_db),
+):
+    """Get current signature overrides for an employee. Returns null if none exist."""
+    employee = await EmployeeService.get_by_id(db, employee_id)
+    if not employee:
+        raise HTTPException(status_code=404, detail="Employee not found")
+
+    override = await SignatureOverrideService.get_by_employee_id(db, employee_id)
+    if not override:
+        return None
+    return override
+
+
+@router.put("/{employee_id}/overrides", response_model=SignatureOverrideResponse)
+async def update_signature_overrides(
+    employee_id: UUID,
+    data: SignatureOverrideUpdate,
+    db: AsyncSession = Depends(get_db),
+):
+    """Create or update signature overrides for an employee (public, UUID-scoped)."""
+    employee = await EmployeeService.get_by_id(db, employee_id)
+    if not employee:
+        raise HTTPException(status_code=404, detail="Employee not found")
+
+    if employee.employee_type != "internal":
+        raise HTTPException(status_code=403, detail="Signatures are only available for internal employees")
+
+    override = await SignatureOverrideService.upsert(db, employee_id, data)
+    return override
+
+
+@router.delete("/{employee_id}/overrides")
+async def delete_signature_overrides(
+    employee_id: UUID,
+    db: AsyncSession = Depends(get_db),
+):
+    """Reset signature overrides (delete all overrides for an employee)."""
+    deleted = await SignatureOverrideService.delete(db, employee_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="No overrides found for this employee")
+    return {"success": True, "message": "Overrides reset to original values"}
+
+
+# --- Photo Upload Endpoint (public, UUID-scoped) ---
+
+ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png"}
+MAX_PHOTO_SIZE = 5 * 1024 * 1024  # 5 MB
+
+
+@router.post("/{employee_id}/photo/upload")
+async def upload_signature_photo(
+    employee_id: UUID,
+    file: UploadFile = File(...),
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Upload a new employee photo from the public signature page.
+
+    The photo replaces the active profile_image_url. The old photo
+    CompanyAsset record is preserved and remains visible in the
+    admin dashboard employee files tab.
+    """
+    employee = await EmployeeService.get_by_id(db, employee_id)
+    if not employee:
+        raise HTTPException(status_code=404, detail="Employee not found")
+
+    if employee.employee_type != "internal":
+        raise HTTPException(status_code=403, detail="Photo upload only available for internal employees")
+
+    # Validate content type
+    if file.content_type not in ALLOWED_IMAGE_TYPES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Only JPEG and PNG images are accepted. Got: {file.content_type}",
+        )
+
+    # Read and validate size
+    image_data = await file.read()
+    if len(image_data) > MAX_PHOTO_SIZE:
+        raise HTTPException(status_code=400, detail="Image must be smaller than 5 MB")
+
+    if len(image_data) == 0:
+        raise HTTPException(status_code=400, detail="Empty file")
+
+    # Store as CompanyAsset linked to employee
+    import uuid as uuid_mod
+
+    from app.models.company_asset import CompanyAsset
+
+    asset_id = str(uuid_mod.uuid4())
+    filename = file.filename or f"signature-photo-{asset_id}.jpg"
+    storage_path = f"/assets/employee/{employee_id}/signature-photo-{asset_id}_{filename}"
+
+    # Try WebDAV upload
+    webdav_url = None
+    try:
+        from app.services.webdav_service import WebDAVService
+
+        webdav = WebDAVService()
+        # Ensure directory exists
+        await webdav.create_directory(f"/assets/employee/{employee_id}")
+        await webdav.upload_file(storage_path, image_data, file.content_type or "image/jpeg")
+        webdav_url = f"{webdav.base_url.rstrip('/')}{storage_path}"
+    except Exception:
+        logger.warning("WebDAV upload failed for signature photo, storing reference only")
+
+    # Create CompanyAsset record
+    asset = CompanyAsset(
+        id=asset_id,
+        employee_id=str(employee_id),
+        is_global=False,
+        name=f"Signatur-bilde ({employee.full_name})",
+        filename=filename,
+        category="photo",
+        content_type=file.content_type or "image/jpeg",
+        file_size=len(image_data),
+        storage_path=storage_path,
+    )
+    db.add(asset)
+
+    # Update employee profile image URL
+    if webdav_url:
+        employee.profile_image_url = webdav_url
+    else:
+        # Store as data reference — the photo endpoint will use it
+        employee.profile_image_url = f"asset://{asset_id}"
+
+    await db.commit()
+
+    return {"success": True, "asset_id": asset_id, "message": "Photo uploaded successfully"}

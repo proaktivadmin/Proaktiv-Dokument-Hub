@@ -20,6 +20,7 @@ if TYPE_CHECKING:
     from app.models.company_asset import CompanyAsset
     from app.models.external_listing import ExternalListing
     from app.models.office import Office
+    from app.models.signature_override import SignatureOverride
 
 
 class Employee(Base):
@@ -129,6 +130,10 @@ class Employee(Base):
 
     checklists: Mapped[list["ChecklistInstance"]] = relationship(
         "ChecklistInstance", back_populates="employee", cascade="all, delete-orphan", lazy="selectin"
+    )
+
+    signature_override: Mapped["SignatureOverride | None"] = relationship(
+        "SignatureOverride", back_populates="employee", cascade="all, delete-orphan", uselist=False, lazy="selectin"
     )
 
     # Indexes

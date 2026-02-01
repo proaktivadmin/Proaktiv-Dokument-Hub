@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { useParams } from "next/navigation";
-import { ChevronDown, Copy, Mail, Keyboard } from "lucide-react";
+import { Copy, Mail, Keyboard } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,6 +14,8 @@ import {
   useSignature,
   type SignatureVersion,
 } from "@/hooks/v3/useSignature";
+import { SetupInstructions } from "@/components/signature/SetupInstructions";
+import { SignatureEditForm } from "@/components/signature/SignatureEditForm";
 import { buildSignatureDoc, VERSION_LABELS } from "@/lib/signature";
 
 export default function SignaturePage() {
@@ -26,7 +28,7 @@ export default function SignaturePage() {
         : null;
 
   const [version, setVersion] = useState<SignatureVersion>("with-photo");
-  const { signature, isLoading, error } = useSignature(employeeId, version);
+  const { signature, isLoading, error, refetch } = useSignature(employeeId, version);
   const { toast } = useToast();
 
   // SSR-safe client detection via useSyncExternalStore.
@@ -227,6 +229,15 @@ export default function SignaturePage() {
                 )}
               </Tabs>
 
+              {employeeId && (
+                <SignatureEditForm
+                  employeeId={employeeId}
+                  currentName={signature?.employee_name ?? ""}
+                  currentEmail={signature?.employee_email ?? ""}
+                  onSaved={refetch}
+                />
+              )}
+
               <div className="flex flex-col gap-3">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                   <Button onClick={handleCopy} disabled={!signature?.html} className="w-full sm:w-auto">
@@ -256,51 +267,7 @@ export default function SignaturePage() {
                 </p>
               </div>
 
-              <details className="group rounded-lg border bg-white shadow-card ring-1 ring-black/3">
-                <summary className="flex cursor-pointer items-center justify-between gap-3 px-6 py-4 text-sm font-medium text-foreground transition-colors duration-fast ease-standard hover:text-foreground">
-                  <span>Slik legger du inn signaturen</span>
-                  <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform duration-fast ease-standard group-open:rotate-180" />
-                </summary>
-                <div className="space-y-4 border-t px-6 py-4 text-sm text-muted-foreground">
-                  <div className="space-y-2">
-                    <p className="font-medium text-foreground">
-                      Outlook (Windows/Mac)
-                    </p>
-                    <ol className="list-decimal space-y-1 pl-4">
-                      <li>Gå til Signaturer i Outlook-innstillingene.</li>
-                      <li>Opprett en ny signatur for riktig konto.</li>
-                      <li>Lim inn signaturen og lagre endringene.</li>
-                    </ol>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="font-medium text-foreground">Gmail</p>
-                    <ol className="list-decimal space-y-1 pl-4">
-                      <li>Klikk tannhjulet og velg &quot;Se alle innstillinger&quot;.</li>
-                      <li>Finn &quot;Signatur&quot; under &quot;Generelt&quot;.</li>
-                      <li>Lim inn signaturen og lagre nederst.</li>
-                    </ol>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="font-medium text-foreground">Apple Mail</p>
-                    <ol className="list-decimal space-y-1 pl-4">
-                      <li>Åpne Mail → Innstillinger → Signaturer.</li>
-                      <li>Velg konto og trykk + for ny signatur.</li>
-                      <li>Lim inn signaturen og fjern standardtekst.</li>
-                    </ol>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="font-medium text-foreground">
-                      iPhone / Android
-                    </p>
-                    <ol className="list-decimal space-y-1 pl-4">
-                      <li>Åpne denne siden på PC for best resultat.</li>
-                      <li>Mobilapper støtter ofte kun tekstsignaturer.</li>
-                      <li>For Outlook-appen: Innstillinger → Signatur.</li>
-                      <li>For Gmail-appen: Innstillinger → konto → Mobilsignatur.</li>
-                    </ol>
-                  </div>
-                </div>
-              </details>
+              <SetupInstructions />
 
               {/* Keyboard shortcuts info (desktop only) */}
               {!isMobile && (

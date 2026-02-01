@@ -23,6 +23,7 @@ from app.models.notification import Notification
 from app.models.office import Office
 from app.models.office_territory import OfficeTerritory
 from app.models.postal_code import PostalCode
+from app.models.signature_override import SignatureOverride
 from app.models.sync_session import SyncSession
 from app.models.tag import Tag
 from app.models.template import Template, TemplateVersion, template_categories, template_tags
@@ -62,6 +63,8 @@ __all__ = [
     "LayoutPartialDefault",
     # Web scraping / crawling
     "FirecrawlScrape",
+    # V3.9.4 Signature Overrides
+    "SignatureOverride",
     # Sync review sessions
     "SyncSession",
 ]
