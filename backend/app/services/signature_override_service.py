@@ -22,15 +22,11 @@ class SignatureOverrideService:
     @staticmethod
     async def get_by_employee_id(db: AsyncSession, employee_id: UUID) -> SignatureOverride | None:
         """Fetch override record for an employee, or None if no overrides exist."""
-        result = await db.execute(
-            select(SignatureOverride).where(SignatureOverride.employee_id == str(employee_id))
-        )
+        result = await db.execute(select(SignatureOverride).where(SignatureOverride.employee_id == str(employee_id)))
         return result.scalar_one_or_none()
 
     @staticmethod
-    async def upsert(
-        db: AsyncSession, employee_id: UUID, data: SignatureOverrideUpdate
-    ) -> SignatureOverride:
+    async def upsert(db: AsyncSession, employee_id: UUID, data: SignatureOverrideUpdate) -> SignatureOverride:
         """Create or update signature overrides for an employee."""
         override = await SignatureOverrideService.get_by_employee_id(db, employee_id)
 
