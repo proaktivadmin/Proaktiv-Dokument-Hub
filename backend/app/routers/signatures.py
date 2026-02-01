@@ -302,26 +302,31 @@ async def upload_signature_photo(
     if len(image_data) == 0:
         raise HTTPException(status_code=400, detail="Empty file")
 
+    # Build WebDAV filename from employee email: froyland@proaktiv.no -> froyland@proaktiv_no.jpg
+    email_for_filename = (employee.email or "").lower().replace(".", "_")
+    webdav_filename = f"{email_for_filename}.jpg"
+    webdav_path = f"/photos/employees/{webdav_filename}"
+    public_photo_url = f"https://proaktiv.no/photos/employees/{webdav_filename.replace('@', '%40')}"
+
     # Store as CompanyAsset linked to employee
     asset_id = str(uuid_mod.uuid4())
-    filename = file.filename or f"signature-photo-{asset_id}.jpg"
-    storage_path = f"/assets/employee/{employee_id}/signature-photo-{asset_id}_{filename}"
+    display_filename = file.filename or f"signature-photo-{asset_id}.jpg"
 
-    # Try WebDAV upload
-    webdav_url = None
+    # Try WebDAV upload to proaktiv.no/photos/employees/
+    webdav_success = False
     try:
         from app.services.webdav_service import WebDAVService
 
         webdav = WebDAVService()
-        await webdav.create_directory(f"/assets/employee/{employee_id}")
-        await webdav.upload_file(storage_path, image_data, file.content_type or "image/jpeg")
-        webdav_url = f"{webdav.base_url.rstrip('/')}{storage_path}"
-    except Exception:
-        logger.warning("WebDAV upload failed for signature photo, storing in database")
+        await webdav.upload_file(webdav_path, image_data, "image/jpeg")
+        webdav_success = True
+        logger.info("Photo uploaded to WebDAV: %s", webdav_path)
+    except Exception as e:
+        logger.warning("WebDAV upload failed for signature photo: %s — storing in database", e)
 
     # Store image bytes as base64 in metadata when WebDAV unavailable
     asset_metadata: dict[str, Any] = {}
-    if not webdav_url:
+    if not webdav_success:
         asset_metadata["image_base64"] = base64.b64encode(image_data).decode("ascii")
         asset_metadata["content_type"] = file.content_type or "image/jpeg"
 
@@ -331,18 +336,18 @@ async def upload_signature_photo(
         employee_id=str(employee_id),
         is_global=False,
         name=f"Signatur-bilde ({employee.full_name})",
-        filename=filename,
+        filename=display_filename,
         category="photo",
         content_type=file.content_type or "image/jpeg",
         file_size=len(image_data),
-        storage_path=webdav_url or storage_path,
+        storage_path=public_photo_url if webdav_success else webdav_path,
         metadata_json=asset_metadata if asset_metadata else None,
     )
     db.add(asset)
 
     # Update employee profile image URL
-    if webdav_url:
-        employee.profile_image_url = webdav_url
+    if webdav_success:
+        employee.profile_image_url = public_photo_url
     else:
         employee.profile_image_url = f"asset://{asset_id}"
 
