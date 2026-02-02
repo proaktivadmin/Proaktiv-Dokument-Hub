@@ -154,7 +154,7 @@ export function TemplateCard({
     }
 
     return () => observer.disconnect();
-  }, [canPreview]);
+  }, [canPreview, loadPreviewContent]);
 
   // Write content to iframe when loaded
   useEffect(() => {
@@ -168,7 +168,7 @@ export function TemplateCard({
     }
   }, [previewContent, buildPreviewDocument]);
 
-  const loadPreviewContent = async () => {
+  const loadPreviewContent = useCallback(async () => {
     setIsLoadingPreview(true);
     setPreviewError(false);
     try {
@@ -180,7 +180,7 @@ export function TemplateCard({
     } finally {
       setIsLoadingPreview(false);
     }
-  };
+  }, [template.id]);
 
   // Render the thumbnail content based on state
   const renderThumbnail = () => {
