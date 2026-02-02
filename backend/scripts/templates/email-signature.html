@@ -57,7 +57,7 @@
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%;max-width:540px;background-color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#000000;mso-table-lspace:0pt;mso-table-rspace:0pt;">
   <!-- Greeting -->
   <tr>
-    <td style="font-family:Arial,Helvetica,sans-serif;font-size:12px;padding:0 0 6px 0;color:#000000;mso-line-height-rule:exactly;line-height:16px;mso-margin-top-alt:0;mso-margin-bottom-alt:0;margin:0 !important;">Med vennlig hilsen</td>
+    <td style="font-family:Arial,Helvetica,sans-serif;font-size:12px;padding:0 0 2px 0;color:#000000;mso-line-height-rule:exactly;line-height:16px;mso-margin-top-alt:0;mso-margin-bottom-alt:0;margin:0 !important;">Med vennlig hilsen</td>
   </tr>
   <!-- Signature content row -->
   <tr>
@@ -71,36 +71,45 @@
           <!-- Spacer -->
           <td width="14" style="width:14px;font-size:0;mso-line-height-rule:exactly;line-height:0;padding:0;margin:0;">&nbsp;</td>
           <!-- Employee info -->
+          <!-- Employee info -->
           <td valign="top" style="vertical-align:top;padding:0;margin:0;">
-            <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="font-family:Arial,Helvetica,sans-serif;mso-table-lspace:0pt;mso-table-rspace:0pt;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="mso-table-lspace:0pt; mso-table-rspace:0pt; border-collapse: collapse;">
               <!-- Name -->
               <tr>
-                <td colspan="2" style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:bold;mso-line-height-rule:exactly;line-height:24px;padding:0 0 2px 0;color:#000000;white-space:nowrap;mso-margin-top-alt:0;mso-margin-bottom-alt:0;margin:0 !important;">{{DisplayName}}</td>
+                <td style="font-family:Arial, Helvetica, sans-serif; font-size:18px; font-weight:bold; color:#000000; line-height:20px; mso-line-height-rule:exactly; padding:0; margin:0 !important;">
+                  {{DisplayName}}
+                </td>
               </tr>
               <!-- Title -->
               <tr>
-                <td colspan="2" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;mso-line-height-rule:exactly;line-height:16px;padding:0 0 8px 0;color:#bcab8a;white-space:nowrap;mso-margin-top-alt:0;mso-margin-bottom-alt:0;margin:0 !important;"><b>{{JobTitle}}</b></td>
-              </tr>
-              <!-- Phone -->
-              <tr>
-                <td valign="middle" width="20" style="width:20px;height:20px;padding:0 6px 0 0;mso-line-height-rule:exactly;line-height:20px;margin:0;">
-                  <img src="https://proaktiv.no/assets/logos/phone.png" width="14" height="14" alt="Telefon" style="display:block;border:0;width:14px;height:14px;">
-                </td>
-                <td valign="middle" style="font-family:Arial,Helvetica,sans-serif;font-size:11px;height:20px;mso-line-height-rule:exactly;line-height:20px;color:#000000;padding:0;margin:0;">
-                  <a href="tel:{{MobilePhoneRaw}}" style="color:#000000;text-decoration:none;white-space:nowrap;"><font face="Arial, Helvetica, sans-serif" color="#000000" style="text-decoration:none;">{{MobilePhone}}</font></a>
+                <td style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#bcab8a; line-height:14px; mso-line-height-rule:exactly; padding:0 0 6px 0; margin:0 !important;">
+                  <b style="text-transform: uppercase;">{{JobTitle}}</b>
                 </td>
               </tr>
-              <!-- Gap -->
+              <!-- Phone Row -->
               <tr>
-                <td colspan="2" style="height:4px;font-size:1px;mso-line-height-rule:exactly;line-height:1px;padding:0;margin:0;">&nbsp;</td>
-              </tr>
-              <!-- Email -->
-              <tr>
-                <td valign="middle" width="20" style="width:20px;height:20px;padding:0 6px 0 0;mso-line-height-rule:exactly;line-height:20px;margin:0;">
-                  <img src="https://proaktiv.no/assets/logos/email.png" width="14" height="14" alt="E-post" style="display:block;border:0;width:14px;height:14px;">
+                <td style="padding:0; margin:0;">
+                  <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <td width="20" valign="middle" style="padding:0 4px 0 0;"><img src="https://proaktiv.no/assets/logos/phone.png" width="12" height="12" style="display:block;"></td>
+                      <td style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#000000; line-height:16px; mso-line-height-rule:exactly;">
+                        <a href="tel:{{MobilePhoneRaw}}" style="color:#000000; text-decoration:none;">{{MobilePhone}}</a>
+                      </td>
+                    </tr>
+                  </table>
                 </td>
-                <td valign="middle" style="font-family:Arial,Helvetica,sans-serif;font-size:11px;height:20px;mso-line-height-rule:exactly;line-height:20px;color:#000000;padding:0;margin:0;">
-                  <a href="mailto:{{Email}}" style="color:#000000;text-decoration:none;white-space:nowrap;"><font face="Arial, Helvetica, sans-serif" color="#000000" style="text-decoration:none;">{{Email}}</font></a>
+              </tr>
+              <!-- Email Row -->
+              <tr>
+                <td style="padding:0; margin:0;">
+                  <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <td width="20" valign="middle" style="padding:0 4px 0 0;"><img src="https://proaktiv.no/assets/logos/email.png" width="12" height="12" style="display:block;"></td>
+                      <td style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#000000; line-height:16px; mso-line-height-rule:exactly;">
+                        <a href="mailto:{{Email}}" style="color:#000000; text-decoration:none;">{{Email}}</a>
+                      </td>
+                    </tr>
+                  </table>
                 </td>
               </tr>
             </table>
