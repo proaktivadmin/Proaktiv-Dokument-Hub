@@ -12,12 +12,12 @@ See: .planning/PROJECT.md (updated 2026-01-23)
 
 ## Current Position
 
-Phase: 3.9.3 (Signature Template Production Hardening)
-Plan: Cross-platform signature template rewrite + QA
-Status: Deployed to production (via main branch push)
-Last activity: 2026-02-01 — Signature template hardening, reply-chain resilience, no-photo alignment
+Phase: 3.9.4 (Signature Page Self-Service Enhancements)
+Plan: Editable fields, setup instructions, photo hyperlink on signature landing page
+Status: Deployed to production (Vercel + Railway)
+Last activity: 2026-02-02 — Self-service signature editing, platform instructions, photo upload (hidden)
 
-Progress: [██████████] 100% (Production-ready signature templates)
+Progress: [████████░░] 80% (Photo upload feature on hold, pending WebDAV testing)
 
 ## Performance Metrics
 
@@ -70,12 +70,53 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-01
-Stopped at: V3.9.3 Signature template production hardening complete
-Resume file: N/A (templates are production-ready)
-Next step: Deploy signature emails to employees, or continue with photo WebDAV upload
+Last session: 2026-02-02
+Stopped at: V3.9.4 Self-service signature enhancements deployed, photo upload hidden
+Resume file: N/A
+Next step: Test WebDAV photo upload (credentials configured on Railway), or deploy signature emails
 
-### Session Summary (2026-02-01 - Latest)
+### Session Summary (2026-02-02 - Latest)
+
+**V3.9.4 Signature Page Self-Service Enhancements (Completed):**
+
+Self-service editing on the public `/signature/{id}` page so employees can customize their signature without IT involvement.
+
+Key changes:
+- ✅ **Editable fields**: Name, title, phone, email, office + 4 social links (Facebook, Instagram, LinkedIn, homepage)
+- ✅ **Edit-toggle UX**: Read-only by default, "Rediger" button switches to edit mode with Save/Cancel/Reset
+- ✅ **Signature overrides table**: `signature_overrides` — stores edits separately from synced employee data
+- ✅ **Override rendering**: `SignatureService._render_template()` applies overrides when present, falls back to synced values
+- ✅ **Platform setup instructions**: OS-aware filter (Windows/Mac, iPhone/Android), 8 email clients covered
+- ✅ **Auto-detect OS**: `navigator.userAgent` detection on first visit, persisted in localStorage
+- ✅ **Photo hyperlink**: Employee photo in signature HTML wrapped in `<a href>` to homepage URL
+- ✅ **Photo upload backend**: Endpoint built, WebDAV path convention matches existing photos
+- ✅ **DB fallback**: Base64 storage in `metadata_json` when WebDAV unavailable
+- ⏸️ **Photo upload frontend**: Hidden pending WebDAV integration testing
+- ✅ **WebDAV credentials**: Configured on Railway (`WEBDAV_URL`, `WEBDAV_USERNAME`, `WEBDAV_PASSWORD`)
+- ✅ Removed non-functional iOS Mail deep link button
+- ✅ Restored Adrian's profile photo URL after test upload broke it
+
+New files:
+- `frontend/src/components/signature/SignatureEditForm.tsx`
+- `frontend/src/components/signature/SetupInstructions.tsx`
+- `frontend/src/components/signature/SignaturePhotoUpload.tsx` (hidden)
+- `frontend/src/hooks/v3/useSignatureOverrides.ts`
+- `frontend/src/hooks/v3/useSignaturePhotoUpload.ts`
+- `backend/app/models/signature_override.py`
+- `backend/app/services/signature_override_service.py`
+- `backend/app/schemas/signature_override.py`
+- `backend/alembic/versions/20260201_0001_add_signature_overrides.py`
+
+CI notes:
+- Fixed ruff import sorting (`File` before `UploadFile`)
+- Fixed ruff format (line wrapping in model/service)
+- Fixed React 19 strict hooks: no `setState` in `useEffect`, no ref access during render
+- Solution: on-demand field population via callback in click handler
+
+Known limitation:
+- Outlook iOS inflates signature font sizes ~125% when pasting (platform bug, no HTML fix)
+
+### Session Summary (2026-02-01)
 
 **V3.9.3 Signature Template Production Hardening (Completed):**
 
@@ -226,6 +267,7 @@ Files modified:
 
 | Version | Date       | Key Changes                                                |
 | ------- | ---------- | ---------------------------------------------------------- |
+| V3.9.4  | 2026-02-02 | Signature self-service editing, setup instructions, photo link |
 | V3.9.3  | 2026-02-01 | Signature template hardening, reply-chain resilience, Maps link |
 | V3.11   | 2026-01-28 | Territory seeding (1732), dashboard 500 fixes, office sync |
 | V3.9.1  | 2026-01-25 | Signature mobile compatibility, phone formatting, QA fixes |
