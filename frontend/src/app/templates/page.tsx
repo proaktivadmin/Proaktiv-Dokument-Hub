@@ -79,6 +79,12 @@ const getOriginKey = (template: Template): OriginKey => {
   return "unknown";
 };
 
+const originGroupOrder: { key: OriginKey; label: string }[] = [
+  { key: "vitec", label: "Vitec Next" },
+  { key: "kundemal", label: "Kundemal" },
+  { key: "unknown", label: "Ukjent" },
+];
+
 function TemplatesPageContent() {
   const searchParams = useSearchParams();
   const categoryFromUrl = searchParams.get("category");

@@ -133,6 +133,20 @@ export function TemplateCard({
 </html>`;
   }, []);
 
+  const loadPreviewContent = useCallback(async () => {
+    setIsLoadingPreview(true);
+    setPreviewError(false);
+    try {
+      const response = await templateApi.getContent(template.id);
+      setPreviewContent(response.content);
+    } catch (error) {
+      console.error("Failed to load preview:", error);
+      setPreviewError(true);
+    } finally {
+      setIsLoadingPreview(false);
+    }
+  }, [template.id]);
+
   // Load preview content when card becomes visible
   useEffect(() => {
     if (!canPreview || hasAttemptedLoad.current) return;
@@ -168,19 +182,7 @@ export function TemplateCard({
     }
   }, [previewContent, buildPreviewDocument]);
 
-  const loadPreviewContent = useCallback(async () => {
-    setIsLoadingPreview(true);
-    setPreviewError(false);
-    try {
-      const response = await templateApi.getContent(template.id);
-      setPreviewContent(response.content);
-    } catch (error) {
-      console.error("Failed to load preview:", error);
-      setPreviewError(true);
-    } finally {
-      setIsLoadingPreview(false);
-    }
-  }, [template.id]);
+
 
   // Render the thumbnail content based on state
   const renderThumbnail = () => {
