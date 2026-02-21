@@ -27,6 +27,7 @@ python-jose[cryptography]==3.3.0
 # HTML Processing
 beautifulsoup4==4.12.3
 lxml==5.1.0
+mammoth==1.11.0
 
 # Image Processing
 Pillow>=10.0.0
@@ -35,6 +36,9 @@ Pillow>=10.0.0
 
 # Web crawling / scraping (Firecrawl)
 firecrawl-py==4.11.1
+
+# AI / LLM (template comparison analysis)
+google-generativeai==0.8.6
 
 # Error tracking & performance monitoring
 sentry-sdk[fastapi]>=2.0.0

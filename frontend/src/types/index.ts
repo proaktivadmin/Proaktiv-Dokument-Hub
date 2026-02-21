@@ -31,9 +31,41 @@ export interface Template {
   tags: Tag[];
   categories: Category[];
   attachments?: string[];
+  workflow_status?: WorkflowStatus;
+  is_archived_legacy?: boolean;
+  origin?: string | null;
+  published_version?: number | null;
+  reviewed_at?: string | null;
+  reviewed_by?: string | null;
+  ckeditor_validated?: boolean;
 }
 
 export type TemplateStatus = "draft" | "published" | "archived";
+export type WorkflowStatus = "draft" | "in_review" | "published" | "archived";
+
+export interface WorkflowTransition {
+  action: "submit" | "approve" | "reject" | "unpublish" | "archive" | "restore";
+  reviewer?: string;
+  reason?: string;
+}
+
+export interface WorkflowStatusResponse {
+  template_id: string;
+  workflow_status: WorkflowStatus;
+  published_version: number | null;
+  reviewed_at: string | null;
+  reviewed_by: string | null;
+  ckeditor_validated: boolean;
+  ckeditor_validated_at: string | null;
+}
+
+export interface WorkflowEvent {
+  timestamp: string;
+  from_status: string;
+  to_status: string;
+  actor: string | null;
+  notes: string | null;
+}
 
 export interface TemplateListResponse {
   templates: Template[];
@@ -101,6 +133,54 @@ export interface DashboardStats {
  */
 export interface ApiError {
   detail: string;
+}
+
+/**
+ * Template Comparison Types
+ */
+export interface StructuralChange {
+  category: "cosmetic" | "structural" | "content" | "merge_fields" | "logic" | "breaking";
+  element_path: string;
+  description: string;
+  before: string | null;
+  after: string | null;
+}
+
+export interface ComparisonConflict {
+  section: string;
+  our_change: string;
+  vitec_change: string;
+  severity: "low" | "medium" | "high";
+}
+
+export interface ChangeClassification {
+  cosmetic: number;
+  structural: number;
+  content: number;
+  merge_fields: number;
+  logic: number;
+  breaking: number;
+  total: number;
+}
+
+export interface ComparisonResult {
+  changes: StructuralChange[];
+  classification: ChangeClassification;
+  conflicts: ComparisonConflict[];
+  stored_hash: string;
+  updated_hash: string;
+  hashes_match: boolean;
+}
+
+export interface AnalysisReport {
+  summary: string;
+  changes_by_category: Record<string, string[]>;
+  impact: string;
+  conflicts: ComparisonConflict[];
+  recommendation: "ADOPT" | "IGNORE" | "PARTIAL_MERGE" | "REVIEW_REQUIRED";
+  suggested_actions: string[];
+  ai_powered: boolean;
+  raw_comparison: ComparisonResult;
 }
 
 /**

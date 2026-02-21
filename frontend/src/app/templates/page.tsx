@@ -1,19 +1,22 @@
 "use client";
 
-import { useState, useEffect, useMemo, Suspense } from "react";
+import { useState, useEffect, useMemo, useCallback, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import {
   FileText,
+  FileUp,
   Search,
   Clock,
   Download,
   MoreHorizontal,
   Trash2,
   Pencil,
+  PenLine,
   Eye,
   X,
   LayoutGrid,
   List,
+  Merge,
 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Input } from "@/components/ui/input";
@@ -39,6 +42,7 @@ import {
 import { EditTemplateDialog } from "@/components/templates/EditTemplateDialog";
 import { PreviewDialog } from "@/components/templates/PreviewDialog";
 import { TemplateDetailSheet } from "@/components/templates/TemplateDetailSheet";
+import { WordConversionDialog } from "@/components/templates/WordConversionDialog";
 import { useTemplates } from "@/hooks/useTemplates";
 import { useCategories } from "@/hooks/useCategories";
 import { templateApi } from "@/lib/api";
@@ -114,6 +118,9 @@ function TemplatesPageContent() {
   const { categories } = useCategories();
   const selectedCategory = categories.find((c) => c.id === categoryFilter);
   const selectedReceiver = receiverFilter ?? null;
+
+  // Word conversion dialog state
+  const [conversionDialogOpen, setConversionDialogOpen] = useState(false);
 
   // Edit dialog state
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -267,6 +274,14 @@ function TemplatesPageContent() {
   ];
 
 
+  const getOriginKey = useCallback((template: Template): OriginKey => {
+    const tagNames = (template.tags ?? [])
+      .map((tag) => tag.name.trim().toLowerCase())
+      .filter(Boolean);
+    if (tagNames.some((name) => name.includes("kundemal"))) return "kundemal";
+    if (tagNames.some((name) => name.includes("vitec"))) return "vitec";
+    return "unknown";
+  }, []);
 
   const groupedTemplates = useMemo(() => {
     const grouped: Record<OriginKey, Template[]> = {
@@ -280,7 +295,7 @@ function TemplatesPageContent() {
     });
 
     return grouped;
-  }, [templates]);
+  }, [templates, getOriginKey]);
 
   const renderTemplateRow = (template: Template) => (
     <div
@@ -311,21 +326,34 @@ function TemplatesPageContent() {
       </div>
 
       <div className="col-span-2">
-        <span
-          className={`px-2 py-1 rounded-md text-xs font-medium font-sans ${
-            template.status === "published"
-              ? "bg-green-50 text-green-700 border border-green-200"
-              : template.status === "draft"
-              ? "bg-amber-50 text-amber-700 border border-amber-200"
-              : "bg-[#F5F5F0] text-[#272630]/60"
-          }`}
-        >
-          {template.status === "published"
-            ? "Publisert"
-            : template.status === "draft"
-            ? "Utkast"
-            : template.status}
-        </span>
+        {(() => {
+          const ws = (template as Template & { workflow_status?: string }).workflow_status || template.status;
+          const isLegacy = (template as Template & { is_archived_legacy?: boolean }).is_archived_legacy;
+          const wsStyles: Record<string, string> = {
+            draft: "bg-gray-100 text-gray-600 border border-gray-200",
+            in_review: "bg-amber-50 text-amber-700 border border-amber-200",
+            published: "bg-green-50 text-green-700 border border-green-200",
+            archived: "bg-[#F5F5F0] text-[#272630]/60 border border-[#E5E5E5]",
+          };
+          const wsLabels: Record<string, string> = {
+            draft: "Utkast",
+            in_review: "Til godkjenning",
+            published: "Publisert",
+            archived: "Arkivert",
+          };
+          return (
+            <span className="flex items-center gap-1">
+              <span className={`px-2 py-1 rounded-md text-xs font-medium font-sans ${wsStyles[ws] || wsStyles.draft}`}>
+                {wsLabels[ws] || ws}
+              </span>
+              {isLegacy && (
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-200 text-slate-500">
+                  Arv
+                </span>
+              )}
+            </span>
+          );
+        })()}
       </div>
 
       <div className="col-span-2 flex items-center gap-1 text-sm text-[#272630]/50 font-sans">
@@ -354,8 +382,14 @@ function TemplatesPageContent() {
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => handleEditClick(template)}>
               <Pencil className="mr-2 h-4 w-4" />
-              Rediger
+              Rediger metadata
             </DropdownMenuItem>
+            {canPreview(template.file_type) && (
+              <DropdownMenuItem onClick={() => window.location.href = `/templates/${template.id}/edit`}>
+                <PenLine className="mr-2 h-4 w-4" />
+                Rediger innhold
+              </DropdownMenuItem>
+            )}
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => handleDeleteClick(template)}
@@ -381,6 +415,25 @@ function TemplatesPageContent() {
             <p className="text-muted-foreground">Administrer alle dokumentmaler</p>
           </div>
           
+          <div className="flex items-center gap-3">
+          {/* Dedup link */}
+          <Button
+            variant="outline"
+            onClick={() => window.location.href = "/templates/dedup"}
+          >
+            <Merge className="h-4 w-4 mr-2" />
+            Deduplisering
+          </Button>
+
+          {/* Import Word button */}
+          <Button
+            variant="outline"
+            onClick={() => setConversionDialogOpen(true)}
+          >
+            <FileUp className="h-4 w-4 mr-2" />
+            Importer Word
+          </Button>
+
           {/* View mode toggle */}
           <div className="flex items-center gap-1 p-1 bg-gray-100 rounded-lg">
             <Button
@@ -401,6 +454,7 @@ function TemplatesPageContent() {
               <LayoutGrid className="h-4 w-4" />
               Hylle
             </Button>
+          </div>
           </div>
         </div>
 
@@ -628,6 +682,13 @@ function TemplatesPageContent() {
         onOpenChange={setDetailSheetOpen}
         onEdit={handleSheetEdit}
         onDownload={handleSheetDownload}
+      />
+
+      {/* Word Conversion Dialog */}
+      <WordConversionDialog
+        open={conversionDialogOpen}
+        onOpenChange={setConversionDialogOpen}
+        onSuccess={() => refetch()}
       />
     </div>
   );

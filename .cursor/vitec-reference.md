@@ -515,9 +515,14 @@ Standard maler som brukes av systemet.
 
 ## Vitec Stilark (Base Stylesheet)
 
-Standard CSS som brukes i alle Vitec-maler.
+> **Full Stilark CSS kildekode:** Se `docs/vitec-stilark.md` (autoritativ kilde, kan erstattes med ny kopi når som helst).
 
-### Typografi
+Stilarket brukes i alle Vitec-maler og lastes via:
+```html
+<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+```
+
+### Nøkkelegenskaper
 | Egenskap | Verdi |
 |----------|-------|
 | Font | Open Sans (Google Fonts) |
@@ -525,84 +530,6 @@ Standard CSS som brukes i alle Vitec-maler.
 | Base font size | 10pt |
 | Line height | normal |
 | Font ligatures | none |
-
-### CSS Kildekode
-
-```css
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap');
-
-html, body {
-    margin: 0;
-    padding: 0;
-    font-size: 10pt;
-    line-height: normal;
-    font-family: 'Open sans', sans-serif;
-}
-
-#vitecTemplate * {
-    font-variant-ligatures: none;
-}
-
-#vitecTemplate p,
-#vitecTemplate th p,
-#vitecTemplate td p {
-    font-size: 10pt;
-    line-height: normal;
-    font-family: 'Open sans', sans-serif;
-    margin: 1em 0;
-    padding-bottom: 0;
-}
-
-#vitecTemplate h1,
-#vitecTemplate h2,
-#vitecTemplate h3,
-#vitecTemplate h4,
-#vitecTemplate h5 {
-    font-family: 'Open sans', sans-serif;
-}
-
-#vitecTemplate table {
-    border-collapse: collapse;
-    border-spacing: 0;
-}
-
-#vitecTemplate table th,
-#vitecTemplate table td {
-    vertical-align: top;
-    font-size: 10pt;
-    line-height: normal;
-    font-family: 'Open sans', sans-serif;
-}
-
-#vitecTemplate table th {
-    text-align: left;
-}
-
-#vitecTemplate strong {
-    font-size: 10pt;
-    line-height: normal;
-    font-family: 'Open sans', sans-serif;
-    font-weight: 700;
-}
-
-#vitecTemplate ul li,
-#vitecTemplate ol li {
-    font-size: 10pt;
-    line-height: normal;
-    font-family: 'Open sans', sans-serif;
-}
-
-#vitecTemplate div {
-    font-size: 10pt;
-    line-height: normal;
-    font-family: 'Open sans', sans-serif;
-}
-
-/* Ikke overstyre font-størrelser satt med CK Editor */
-#vitecTemplate span > strong {
-    font-size: inherit;
-}
-```
 
 ### Viktige regler
 1. Alle templates wrappet i `#vitecTemplate`

@@ -8,6 +8,9 @@ import type {
   UpdateTemplateResponse,
   Category,
   DashboardStats,
+  WorkflowTransition,
+  WorkflowStatusResponse,
+  WorkflowEvent,
 } from "@/types";
 import { apiClient } from "./api/config";
 
@@ -249,6 +252,217 @@ export const templateApi = {
       handleError(error, "templateApi.getContent");
     }
   },
+
+  /**
+   * Save template HTML content
+   */
+  async saveContent(
+    templateId: string,
+    content: string,
+    changeNotes?: string,
+    autoSanitize?: boolean
+  ): Promise<{ id: string; version: number; content_hash: string; merge_fields_detected: number }> {
+    try {
+      const { data } = await api.put(`/templates/${templateId}/content`, {
+        content,
+        change_notes: changeNotes,
+        auto_sanitize: autoSanitize ?? false,
+      });
+      return data;
+    } catch (error) {
+      handleError(error, "templateApi.saveContent");
+    }
+  },
+
+  /**
+   * Transition workflow state
+   */
+  async transitionWorkflow(
+    templateId: string,
+    body: WorkflowTransition
+  ): Promise<WorkflowStatusResponse> {
+    try {
+      const { data } = await api.post<WorkflowStatusResponse>(
+        `/templates/${templateId}/workflow`,
+        body
+      );
+      return data;
+    } catch (error) {
+      handleError(error, "templateApi.transitionWorkflow");
+    }
+  },
+
+  /**
+   * Get current workflow status
+   */
+  async getWorkflowStatus(
+    templateId: string
+  ): Promise<WorkflowStatusResponse> {
+    try {
+      const { data } = await api.get<WorkflowStatusResponse>(
+        `/templates/${templateId}/workflow`
+      );
+      return data;
+    } catch (error) {
+      handleError(error, "templateApi.getWorkflowStatus");
+    }
+  },
+
+  /**
+   * Get workflow transition history
+   */
+  async getWorkflowHistory(
+    templateId: string
+  ): Promise<WorkflowEvent[]> {
+    try {
+      const { data } = await api.get<WorkflowEvent[]>(
+        `/templates/${templateId}/workflow/history`
+      );
+      return data;
+    } catch (error) {
+      handleError(error, "templateApi.getWorkflowHistory");
+    }
+  },
+};
+
+/**
+ * Deduplication types
+ */
+export interface DedupMergeCandidate {
+  template_id: string;
+  title: string;
+  property_type: string | null;
+  content_length: number;
+  similarity_score: number;
+}
+
+export interface DedupMergeCandidateGroup {
+  base_title: string;
+  candidates: DedupMergeCandidate[];
+  category: string | null;
+  estimated_reduction: number;
+}
+
+export interface DedupContentSection {
+  path: string;
+  content_hash: string;
+  is_shared: boolean;
+  differs_in: string[];
+  preview: string;
+}
+
+export interface DedupMergeAnalysis {
+  group_title: string;
+  templates: DedupMergeCandidate[];
+  shared_sections: DedupContentSection[];
+  divergent_sections: DedupContentSection[];
+  unique_sections: DedupContentSection[];
+  merge_complexity: "simple" | "moderate" | "complex";
+  auto_mergeable: boolean;
+  warnings: string[];
+}
+
+export interface DedupMergePreview {
+  merged_html: string;
+  primary_template_id: string;
+  templates_to_archive: string[];
+  vitec_if_conditions_added: number;
+  warnings: string[];
+  validation_passed: boolean;
+}
+
+export interface DedupMergeResult {
+  primary_template_id: string;
+  archived_template_ids: string[];
+  new_version: number;
+  property_types_covered: string[];
+}
+
+/**
+ * Deduplication API
+ */
+export const dedupApi = {
+  async candidates(): Promise<DedupMergeCandidateGroup[]> {
+    try {
+      const { data } = await api.get<DedupMergeCandidateGroup[]>("/templates/dedup/candidates");
+      return data;
+    } catch (error) {
+      handleError(error, "dedupApi.candidates");
+    }
+  },
+
+  async analyze(templateIds: string[]): Promise<DedupMergeAnalysis> {
+    try {
+      const { data } = await api.post<DedupMergeAnalysis>("/templates/dedup/analyze", {
+        template_ids: templateIds,
+      });
+      return data;
+    } catch (error) {
+      handleError(error, "dedupApi.analyze");
+    }
+  },
+
+  async preview(templateIds: string[], primaryId: string): Promise<DedupMergePreview> {
+    try {
+      const { data } = await api.post<DedupMergePreview>("/templates/dedup/preview", {
+        template_ids: templateIds,
+        primary_id: primaryId,
+      });
+      return data;
+    } catch (error) {
+      handleError(error, "dedupApi.preview");
+    }
+  },
+
+  async execute(templateIds: string[], primaryId: string, mergedHtml: string): Promise<DedupMergeResult> {
+    try {
+      const { data } = await api.post<DedupMergeResult>("/templates/dedup/execute", {
+        template_ids: templateIds,
+        primary_id: primaryId,
+        merged_html: mergedHtml,
+      });
+      return data;
+    } catch (error) {
+      handleError(error, "dedupApi.execute");
+    }
+  },
+};
+
+/**
+ * Word Conversion types
+ */
+export interface ValidationItem {
+  rule: string;
+  passed: boolean;
+  detail: string | null;
+}
+
+export interface ConversionResult {
+  html: string;
+  warnings: string[];
+  validation: ValidationItem[];
+  merge_fields_detected: string[];
+  is_valid: boolean;
+}
+
+/**
+ * Word Conversion API
+ */
+export const wordConversionApi = {
+  async convertDocx(file: File): Promise<ConversionResult> {
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const { data } = await api.post<ConversionResult>(
+        "/templates/convert-docx",
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+      return data;
+    } catch (error) {
+      handleError(error, "wordConversionApi.convertDocx");
+    }
+  },
 };
 
 /**
@@ -265,3 +479,59 @@ export type { StorageItem, BrowseResponse, StorageStatus, ImportToLibraryPayload
 export { vitecApi } from "./api/vitec";
 export type { VitecStatus } from "./api/vitec";
 export { entraSyncApi } from "./api/entra-sync";
+
+/**
+ * Template Comparison API
+ */
+export const templateComparisonApi = {
+  async compareWithVitec(
+    templateId: string,
+    updatedHtml: string
+  ): Promise<import("@/types").AnalysisReport> {
+    try {
+      const { data } = await api.post<import("@/types").AnalysisReport>(
+        `/templates/${templateId}/compare`,
+        { updated_html: updatedHtml }
+      );
+      return data;
+    } catch (error) {
+      handleError(error, "templateComparisonApi.compareWithVitec");
+    }
+  },
+
+  async applyComparison(
+    templateId: string,
+    action: "adopt" | "ignore",
+    updatedHtml?: string
+  ): Promise<{ status: string; version?: number; new_hash?: string }> {
+    try {
+      const { data } = await api.post<{
+        status: string;
+        version?: number;
+        new_hash?: string;
+      }>(`/templates/${templateId}/compare/apply`, {
+        action,
+        updated_html: updatedHtml,
+      });
+      return data;
+    } catch (error) {
+      handleError(error, "templateComparisonApi.applyComparison");
+    }
+  },
+
+  async compareStandalone(
+    storedHtml: string,
+    updatedHtml: string,
+    title: string
+  ): Promise<import("@/types").AnalysisReport> {
+    try {
+      const { data } = await api.post<import("@/types").AnalysisReport>(
+        "/templates/compare-standalone",
+        { stored_html: storedHtml, updated_html: updatedHtml, template_title: title }
+      );
+      return data;
+    } catch (error) {
+      handleError(error, "templateComparisonApi.compareStandalone");
+    }
+  },
+};
