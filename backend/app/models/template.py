@@ -6,7 +6,7 @@ import uuid
 from datetime import datetime
 from decimal import Decimal
 
-from sqlalchemy import BigInteger, Column, DateTime, ForeignKey, Index, Integer, Numeric, String, Table, Text
+from sqlalchemy import BigInteger, Boolean, Column, DateTime, ForeignKey, Index, Integer, Numeric, String, Table, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
@@ -95,6 +95,20 @@ class Template(Base):
     # Thumbnail
     preview_thumbnail_url: Mapped[str | None] = mapped_column(Text, nullable=True)
 
+    # Publishing workflow columns
+    # `workflow_status` is the canonical publishing pipeline state.
+    # The legacy `status` field above is kept for backward compatibility.
+    workflow_status: Mapped[str] = mapped_column(String(20), default="draft", server_default="draft")
+    reviewed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    reviewed_by: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    published_version: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    is_archived_legacy: Mapped[bool] = mapped_column(Boolean, default=False, server_default="false")
+    origin: Mapped[str | None] = mapped_column(String(30), nullable=True)
+    vitec_source_hash: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    ckeditor_validated: Mapped[bool] = mapped_column(Boolean, default=False, server_default="false")
+    ckeditor_validated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    property_types: Mapped[list | None] = mapped_column(JSONType, nullable=True)
+
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(
@@ -119,6 +133,8 @@ class Template(Base):
     __table_args__ = (
         Index("idx_templates_status", "status"),
         Index("idx_templates_created_at", "created_at"),
+        Index("idx_templates_workflow_status", "workflow_status"),
+        Index("idx_templates_origin", "origin"),
     )
 
     def __repr__(self) -> str:

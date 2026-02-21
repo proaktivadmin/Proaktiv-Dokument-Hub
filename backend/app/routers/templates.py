@@ -16,6 +16,21 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import get_mock_user
 from app.database import get_db
+from app.schemas.template_comparison import (
+    AnalysisReport,
+    CompareApplyRequest,
+    CompareRequest,
+    CompareStandaloneRequest,
+)
+from app.schemas.template_dedup import (
+    AnalyzeRequest,
+    ExecuteRequest,
+    MergeAnalysis,
+    MergeCandidateGroup,
+    MergePreview,
+    MergeResult,
+    PreviewRequest,
+)
 from app.schemas.template_metadata import TemplateAnalysisResult
 from app.schemas.template_settings import (
     TemplateContentResponse,
@@ -23,14 +38,21 @@ from app.schemas.template_settings import (
     TemplateSettingsResponse,
     TemplateSettingsUpdate,
 )
+from app.schemas.template_workflow import WorkflowEvent, WorkflowStatusResponse, WorkflowTransition
+from app.schemas.word_conversion import ConversionResult
 from app.services.audit_service import AuditService
 from app.services.azure_storage_service import get_azure_storage_service
 from app.services.sanitizer_service import get_sanitizer_service
+from app.services.template_analysis_ai_service import get_ai_analysis_service
 from app.services.template_analyzer_service import TemplateAnalyzerService
+from app.services.template_comparison_service import get_comparison_service
 from app.services.template_content_service import TemplateContentService
+from app.services.template_dedup_service import TemplateDedupService
 from app.services.template_service import TemplateService
 from app.services.template_settings_service import TemplateSettingsService
+from app.services.template_workflow_service import TemplateWorkflowService
 from app.services.thumbnail_service import ThumbnailService
+from app.services.word_conversion_service import get_word_conversion_service
 
 logger = logging.getLogger(__name__)
 
@@ -177,6 +199,9 @@ async def list_templates(
                 "tags": [{"id": str(tag.id), "name": tag.name, "color": tag.color} for tag in t.tags],
                 "categories": [{"id": str(cat.id), "name": cat.name, "icon": cat.icon} for cat in t.categories],
                 "attachments": _extract_attachment_names(t.metadata_json),
+                "workflow_status": getattr(t, "workflow_status", t.status),
+                "is_archived_legacy": getattr(t, "is_archived_legacy", False),
+                "origin": getattr(t, "origin", None),
             }
             for t in templates
         ],
@@ -187,6 +212,55 @@ async def list_templates(
             "total_pages": (total + per_page - 1) // per_page if total > 0 else 0,
         },
     }
+
+
+# ---------------------------------------------------------------------------
+# Deduplication endpoints — placed before /{template_id} to avoid path clash
+# ---------------------------------------------------------------------------
+
+
+@router.get("/dedup/candidates", response_model=list[MergeCandidateGroup])
+async def dedup_candidates(db: AsyncSession = Depends(get_db)):
+    """Return all identified merge candidate groups."""
+    return await TemplateDedupService.find_candidates(db)
+
+
+@router.post("/dedup/analyze", response_model=MergeAnalysis)
+async def dedup_analyze(body: AnalyzeRequest, db: AsyncSession = Depends(get_db)):
+    """Deep-analyze a specific group of templates."""
+    return await TemplateDedupService.analyze_group(db, body.template_ids)
+
+
+@router.post("/dedup/preview", response_model=MergePreview)
+async def dedup_preview(body: PreviewRequest, db: AsyncSession = Depends(get_db)):
+    """Generate a preview of the merged template."""
+    return await TemplateDedupService.preview_merge(db, body.template_ids, body.primary_id)
+
+
+@router.post("/dedup/execute", response_model=MergeResult)
+async def dedup_execute(
+    body: ExecuteRequest,
+    db: AsyncSession = Depends(get_db),
+    user: dict = Depends(get_current_user),
+):
+    """Apply the merge: update primary template, archive the rest."""
+    result = await TemplateDedupService.execute_merge(
+        db, body.template_ids, body.primary_id, body.merged_html
+    )
+
+    await AuditService.log(
+        db,
+        entity_type="template",
+        entity_id=result.primary_template_id,
+        action="dedup_merge",
+        user_email=user["email"],
+        details={
+            "archived_ids": [str(tid) for tid in result.archived_template_ids],
+            "property_types": result.property_types_covered,
+        },
+    )
+
+    return result
 
 
 @router.get("/{template_id}")
@@ -219,6 +293,13 @@ async def get_template(template_id: UUID, db: AsyncSession = Depends(get_db)):
         "tags": [{"id": str(tag.id), "name": tag.name, "color": tag.color} for tag in template.tags],
         "categories": [{"id": str(cat.id), "name": cat.name, "icon": cat.icon} for cat in template.categories],
         "attachments": _extract_attachment_names(template.metadata_json),
+        "workflow_status": getattr(template, "workflow_status", template.status),
+        "is_archived_legacy": getattr(template, "is_archived_legacy", False),
+        "origin": getattr(template, "origin", None),
+        "published_version": getattr(template, "published_version", None),
+        "reviewed_at": (template.reviewed_at.isoformat() if getattr(template, "reviewed_at", None) else None),
+        "reviewed_by": getattr(template, "reviewed_by", None),
+        "ckeditor_validated": getattr(template, "ckeditor_validated", False),
     }
 
 
@@ -321,6 +402,48 @@ async def create_template(
         "status": template.status,
         "created_at": template.created_at.isoformat() if template.created_at else None,
     }
+
+
+@router.post("/convert-docx", response_model=ConversionResult)
+async def convert_docx(
+    file: UploadFile = File(...),
+    user: dict = Depends(get_current_user),
+):
+    """Convert a .docx file to Vitec-ready HTML.
+
+    Accepts a multipart file upload (.docx only) and returns the converted
+    HTML along with warnings, validation results, and detected merge fields.
+    Does NOT create a template record — the user reviews the output first.
+    """
+    if not file.filename:
+        raise HTTPException(status_code=400, detail="Filename is required")
+
+    file_ext = file.filename.rsplit(".", 1)[-1].lower() if "." in file.filename else ""
+    if file_ext != "docx":
+        raise HTTPException(
+            status_code=400,
+            detail="Only .docx files are supported. Received: " + (file_ext or "(no extension)"),
+        )
+
+    docx_bytes = await file.read()
+    if not docx_bytes:
+        raise HTTPException(status_code=400, detail="Uploaded file is empty")
+
+    service = get_word_conversion_service()
+    try:
+        result = await service.convert(docx_bytes, filename=file.filename)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
+
+    logger.info(
+        "Converted %s: valid=%s, warnings=%d, merge_fields=%d",
+        file.filename,
+        result.is_valid,
+        len(result.warnings),
+        len(result.merge_fields_detected),
+    )
+
+    return result
 
 
 @router.put("/{template_id}")
@@ -565,3 +688,210 @@ async def generate_thumbnail(
     )
 
     return result
+
+
+# ---------------------------------------------------------------------------
+# Workflow endpoints
+# ---------------------------------------------------------------------------
+
+_workflow_service = TemplateWorkflowService()
+
+
+@router.post("/{template_id}/workflow", response_model=WorkflowStatusResponse)
+async def transition_workflow(
+    template_id: UUID,
+    body: WorkflowTransition,
+    db: AsyncSession = Depends(get_db),
+    user: dict = Depends(get_current_user),
+):
+    """Execute a workflow state transition on a template."""
+    reviewer = body.reviewer or user["email"]
+
+    match body.action:
+        case "submit":
+            template = await _workflow_service.submit_for_review(db, template_id)
+        case "approve":
+            template = await _workflow_service.approve_and_publish(db, template_id, reviewer)
+        case "reject":
+            template = await _workflow_service.reject_review(db, template_id, reviewer, body.reason)
+        case "unpublish":
+            template = await _workflow_service.unpublish(db, template_id)
+        case "archive":
+            template = await _workflow_service.archive(db, template_id)
+        case "restore":
+            template = await _workflow_service.restore(db, template_id)
+        case _:
+            raise HTTPException(status_code=400, detail=f"Unknown action: {body.action}")
+
+    await AuditService.log(
+        db,
+        entity_type="template",
+        entity_id=template_id,
+        action=f"workflow_{body.action}",
+        user_email=user["email"],
+        details={"from": body.action, "reviewer": reviewer},
+    )
+
+    return WorkflowStatusResponse(
+        template_id=template.id,
+        workflow_status=template.workflow_status,
+        published_version=template.published_version,
+        reviewed_at=template.reviewed_at,
+        reviewed_by=template.reviewed_by,
+        ckeditor_validated=template.ckeditor_validated,
+        ckeditor_validated_at=template.ckeditor_validated_at,
+    )
+
+
+@router.get("/{template_id}/workflow", response_model=WorkflowStatusResponse)
+async def get_workflow_status(template_id: UUID, db: AsyncSession = Depends(get_db)):
+    """Return the current workflow state of a template."""
+    template = await TemplateService.get_by_id(db, template_id)
+    if not template:
+        raise HTTPException(status_code=404, detail="Template not found")
+
+    return WorkflowStatusResponse(
+        template_id=template.id,
+        workflow_status=getattr(template, "workflow_status", template.status),
+        published_version=getattr(template, "published_version", None),
+        reviewed_at=getattr(template, "reviewed_at", None),
+        reviewed_by=getattr(template, "reviewed_by", None),
+        ckeditor_validated=getattr(template, "ckeditor_validated", False),
+        ckeditor_validated_at=getattr(template, "ckeditor_validated_at", None),
+    )
+
+
+@router.get("/{template_id}/workflow/history", response_model=list[WorkflowEvent])
+async def get_workflow_history(template_id: UUID, db: AsyncSession = Depends(get_db)):
+    """Return the workflow transition history for a template."""
+    events = await _workflow_service.get_workflow_history(db, template_id)
+    return [WorkflowEvent(**e) for e in events]
+
+
+# ---------------------------------------------------------------------------
+# Comparison endpoints — AI-powered Vitec template change analysis
+# ---------------------------------------------------------------------------
+
+
+@router.post("/{template_id}/compare", response_model=AnalysisReport)
+async def compare_template(
+    template_id: UUID,
+    body: CompareRequest,
+    db: AsyncSession = Depends(get_db),
+):
+    """Compare a stored template against pasted updated Vitec source.
+
+    Returns a structural diff and (if an LLM API key is configured)
+    an AI-generated plain-language analysis with a recommendation.
+    """
+    template = await TemplateService.get_by_id(db, template_id)
+    if not template:
+        raise HTTPException(status_code=404, detail="Template not found")
+
+    if not template.content:
+        raise HTTPException(status_code=400, detail="Template has no stored content to compare against")
+
+    comparison_svc = get_comparison_service()
+    comparison = await comparison_svc.compare(
+        stored_html=template.content,
+        updated_html=body.updated_html,
+        template_id=template_id,
+        template_title=template.title,
+        vitec_source_hash=getattr(template, "vitec_source_hash", None),
+    )
+
+    ai_svc = get_ai_analysis_service()
+    category_name = template.categories[0].name if template.categories else None
+    report = await ai_svc.analyze(comparison, template.title, category_name)
+    return report
+
+
+@router.post("/{template_id}/compare/apply")
+async def apply_comparison(
+    template_id: UUID,
+    body: CompareApplyRequest,
+    db: AsyncSession = Depends(get_db),
+    user: dict = Depends(get_current_user),
+):
+    """Apply a comparison decision: adopt Vitec's version or ignore the update."""
+    template = await TemplateService.get_by_id(db, template_id)
+    if not template:
+        raise HTTPException(status_code=404, detail="Template not found")
+
+    if body.action == "partial":
+        raise HTTPException(status_code=501, detail="Partial merge is not yet implemented")
+
+    if body.action == "adopt":
+        if not body.updated_html:
+            raise HTTPException(status_code=400, detail="updated_html is required for adopt action")
+
+        import hashlib
+        import re
+
+        normalized = re.sub(r"\s+", " ", body.updated_html).strip()
+        new_hash = hashlib.sha256(normalized.encode("utf-8")).hexdigest()
+
+        result = await TemplateContentService.save_content(
+            db,
+            template_id,
+            content=body.updated_html,
+            updated_by=user["email"],
+            change_notes="Overtok oppdatert Vitec-versjon via sammenligning",
+        )
+
+        template = await TemplateService.get_by_id(db, template_id)
+        if template:
+            template.vitec_source_hash = new_hash
+            await db.flush()
+            await db.commit()
+
+        await AuditService.log(
+            db,
+            entity_type="template",
+            entity_id=template_id,
+            action="comparison_adopt",
+            user_email=user["email"],
+            details={"new_hash": new_hash},
+        )
+
+        return {"status": "adopted", "version": result.get("version"), "new_hash": new_hash}
+
+    if body.action == "ignore":
+        if body.updated_html:
+            import hashlib
+            import re
+
+            normalized = re.sub(r"\s+", " ", body.updated_html).strip()
+            new_hash = hashlib.sha256(normalized.encode("utf-8")).hexdigest()
+            template.vitec_source_hash = new_hash
+            await db.flush()
+            await db.commit()
+
+        await AuditService.log(
+            db,
+            entity_type="template",
+            entity_id=template_id,
+            action="comparison_ignore",
+            user_email=user["email"],
+        )
+
+        return {"status": "ignored"}
+
+    raise HTTPException(status_code=400, detail=f"Unknown action: {body.action}")
+
+
+@router.post("/compare-standalone", response_model=AnalysisReport)
+async def compare_standalone(body: CompareStandaloneRequest):
+    """Compare two arbitrary HTML strings without a stored template.
+
+    Useful for ad-hoc analysis outside the template library.
+    """
+    comparison_svc = get_comparison_service()
+    comparison = await comparison_svc.compare(
+        stored_html=body.stored_html,
+        updated_html=body.updated_html,
+    )
+
+    ai_svc = get_ai_analysis_service()
+    report = await ai_svc.analyze(comparison, body.template_title)
+    return report

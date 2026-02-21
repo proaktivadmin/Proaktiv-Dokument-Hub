@@ -6,6 +6,7 @@
 
 import { useState, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import { DocumentViewer } from "@/components/viewer";
 import {
   Sheet,
@@ -102,6 +103,14 @@ export default function TemplateDetailPage() {
 
   return (
     <div className="h-screen bg-[#FAFAF8]">
+      <div className="absolute top-2 right-24 z-50">
+        <Link
+          href={`/templates/${templateId}/edit`}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md bg-[#272630] text-white hover:bg-[#272630]/90 transition-colors shadow-soft"
+        >
+          Rediger innhold
+        </Link>
+      </div>
       <DocumentViewer
         templateId={templateId}
         enableInspector

@@ -73,6 +73,35 @@ const FILE_TYPE_ICONS: Record<string, React.ReactNode> = {
   xls: <FileSpreadsheet className="h-12 w-12 text-green-400" />,
 };
 
+const WORKFLOW_BADGE_STYLES: Record<string, string> = {
+  draft: "bg-gray-100 text-gray-600",
+  in_review: "bg-amber-50 text-amber-700",
+  published: "bg-emerald-50 text-emerald-700",
+  archived: "bg-slate-100 text-slate-600",
+};
+
+const WORKFLOW_LABELS: Record<string, string> = {
+  draft: "Utkast",
+  in_review: "Til godkj.",
+  published: "Publisert",
+  archived: "Arkivert",
+};
+
+function WorkflowBadge({ template }: { template: TemplateWithMetadata }) {
+  const ws = (template as unknown as Record<string, unknown>).workflow_status as string | undefined;
+  const isLegacy = (template as unknown as Record<string, unknown>).is_archived_legacy as boolean | undefined;
+  const status = ws || template.status;
+  const style = WORKFLOW_BADGE_STYLES[status] || WORKFLOW_BADGE_STYLES.draft;
+  const label = WORKFLOW_LABELS[status] || status;
+
+  return (
+    <span className="flex items-center gap-1">
+      <Badge className={cn("text-[10px]", style)}>{label}</Badge>
+      {isLegacy && <Badge className="text-[10px] bg-slate-200 text-slate-500">Arv</Badge>}
+    </span>
+  );
+}
+
 export function TemplateCard({
   template,
   width = 200,
@@ -361,7 +390,7 @@ export function TemplateCard({
               {CHANNEL_ICONS[template.channel]}
               {channelLabel}
             </Badge>
-            <span>{template.status}</span>
+            <WorkflowBadge template={template} />
           </div>
           {hasAttachments && (
             <span
