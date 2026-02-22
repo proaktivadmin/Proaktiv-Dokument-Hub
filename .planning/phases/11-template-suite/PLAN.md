@@ -56,10 +56,40 @@ Execute agents in sequence. Each agent receives a written plan, works only withi
 |---|-------|-----------|-------------|--------|
 | 1 | Documentation Agent | `AGENT-1-DOCUMENTATION.md` | Formal HTML ruleset document (3,208 lines, 14 sections) | **Complete** (Approved) |
 | 2 | Conversion Agent | `AGENT-2-CONVERSION.md` | Word-to-HTML pipeline (mammoth + BeautifulSoup + SanitizerService) | **Complete** |
+| 2B | **Template Builder Agent** | `AGENT-2B-TEMPLATE-BUILDER.md` | Production-ready Vitec Next HTML templates from source documents | **Active** |
 | 3 | Storage & Editor Agent | `AGENT-3-STORAGE-EDITOR.md` | Schema (10 columns), CKEditor sandbox, publishing workflow, library reset | **Complete** |
 | 4 | Comparison Agent | `AGENT-4-COMPARISON.md` | AI-powered template change analysis (structural diff + LLM summary) | **Complete** |
 | 5 | Merge Agent | `AGENT-5-MERGE.md` | Template deduplication using vitec-if logic (5 groups, 10 templates) | **Complete** |
 | 6 | Flettekode Integration Agent | `AGENT-6-FLETTEKODE.md` | Editor merge field integration (panel, autocomplete, highlighting) | **Complete** |
+
+### Agent 2B: Why It Exists
+
+The pilot conversion of "Kjøpekontrakt prosjekt (enebolig med delinnbetalinger)" proved that Agent 2's automated conversion pipeline produces only basic HTML structure. Production-ready Vitec Next templates require domain-specific engineering that a conversion script cannot automate:
+
+- **Merge field mapping:** Legacy `#field.context¤` syntax → modern `[[field.path]]` requires a curated mapping table
+- **Conditional logic:** Red text markers, checkbox alternatives, and section variants must be identified in the source and converted to `vitec-if` expressions with proper escaping
+- **Party loops:** Flat party listings must be restructured into `vitec-foreach` loops with `roles-table` layout
+- **Template shell:** CSS counters, table colspan system, signature blocks, and insert placeholders must be engineered
+- **Content accuracy:** Legal text must be verbatim — no AI paraphrasing allowed
+
+Agent 2B uses the knowledge base in `PRODUCTION-TEMPLATE-PIPELINE.md` to replicate this process efficiently across all remaining templates.
+
+### Agent 2B Knowledge Base
+
+The pipeline guide (`PRODUCTION-TEMPLATE-PIPELINE.md`) contains:
+
+1. Source format comparison and recommendations
+2. The 6-step conversion pipeline
+3. Template style block (CSS counters)
+4. Complete field mapping reference (legacy → modern)
+5. Conditional pattern library (12 patterns)
+6. Party loop patterns (roles-table)
+7. Source document clue recognition table
+8. Validation script reference
+9. Template inventory with effort estimates
+10. Step-by-step agent instructions
+11. File reference
+12. Known issues & edge cases
 
 ---
 
@@ -67,6 +97,9 @@ Execute agents in sequence. Each agent receives a written plan, works only withi
 
 ```
 [Agent 1: Documentation] ──── HUMAN APPROVAL GATE ────┬── [Agent 2: Conversion]
+                                                       │         │
+                                                       │   [Agent 2B: Template Builder]  ← REPEATABLE
+                                                       │     (runs once per template)
                                                        │
                                                        └── [Agent 3: Storage & Editor]
                                                                      │
@@ -78,6 +111,7 @@ Execute agents in sequence. Each agent receives a written plan, works only withi
 
 - Agent 1 has no dependencies and starts immediately
 - Agents 2 and 3 can run in parallel after Agent 1's ruleset is approved
+- **Agent 2B runs after Agent 2** and is invoked once per template. It uses the pipeline knowledge base to produce production templates.
 - Agents 4, 5, and 6 can run in parallel after Agent 3 completes (they depend on the schema extensions and editor UI)
 
 ---
