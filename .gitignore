@@ -22,6 +22,9 @@ dist/
 # IDEs
 .idea/
 
+# Claude Code - contains session data and permitted commands (may include env vars)
+.claude/
+
 # Cursor - ignore most but track rules (shared agent instructions)
 .cursor/*
 !.cursor/rules/
@@ -46,6 +49,14 @@ docker-data/
 
 # Local data exports (may contain proprietary template source)
 data/
+
+# Template conversion script outputs (generated files)
+scripts/converted_html/
+scripts/source_htm/
+scripts/batch_convert_results.json
+
+# Backend log files (may contain tenant IDs and sensitive runtime info)
+backend/logs/
 
 # Legacy (Optional - if you want to ignore the old build artifacts)
 _legacy_v1/node_modules/

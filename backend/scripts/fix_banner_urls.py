@@ -1,8 +1,10 @@
 """Fix office banner URLs to use correct URL-encoded Norwegian characters."""
 
+import os
+
 from sqlalchemy import create_engine, text
 
-DATABASE_URL = "postgresql://postgres:lOZBFAkACyDixRzjSHjRQCrdVTwuDrxA@shuttle.proxy.rlwy.net:51557/railway"
+DATABASE_URL = os.environ["DATABASE_URL"]
 engine = create_engine(DATABASE_URL)
 
 BASE_URL = "https://proaktiv.no/photos/offices/"

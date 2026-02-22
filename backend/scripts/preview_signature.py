@@ -87,7 +87,9 @@ def main():
     # Get database URL
     db_url = args.db_url or os.environ.get("DATABASE_URL")
     if not db_url:
-        db_url = "postgresql://postgres:postgres@localhost:5432/dokument_hub"
+        print("Error: DATABASE_URL environment variable is required.")
+        print("  $env:DATABASE_URL = 'postgresql://...'")
+        sys.exit(1)
 
     print(f"Looking up employee: {args.email}")
 
