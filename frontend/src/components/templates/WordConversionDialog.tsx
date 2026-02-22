@@ -73,9 +73,9 @@ export function WordConversionDialog({
       const selected = acceptedFiles[0];
       const ext = selected.name.split(".").pop()?.toLowerCase();
 
-      if (ext !== "docx") {
+      if (ext !== "docx" && ext !== "rtf") {
         setErrorMessage(
-          "Kun .docx-filer er støttet. Velg et Word-dokument (.docx)."
+          "Kun .docx- og .rtf-filer er støttet."
         );
         return;
       }
@@ -106,6 +106,8 @@ export function WordConversionDialog({
     accept: {
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
         [".docx"],
+      "application/rtf": [".rtf"],
+      "text/rtf": [".rtf"],
     },
     maxFiles: 1,
     multiple: false,
@@ -128,7 +130,7 @@ export function WordConversionDialog({
     const a = document.createElement("a");
     a.href = url;
     a.download = file
-      ? file.name.replace(/\.docx$/i, ".html")
+      ? file.name.replace(/\.(docx|rtf)$/i, ".html")
       : "converted.html";
     a.click();
     URL.revokeObjectURL(url);
@@ -142,20 +144,20 @@ export function WordConversionDialog({
       const htmlBlob = new Blob([result.html], { type: "text/html" });
       const htmlFile = new File(
         [htmlBlob],
-        file.name.replace(/\.docx$/i, ".html"),
+        file.name.replace(/\.(docx|rtf)$/i, ".html"),
         { type: "text/html" }
       );
 
       await templateApi.upload({
         file: htmlFile,
-        title: file.name.replace(/\.docx$/i, ""),
-        description: `Konvertert fra Word-dokument: ${file.name}`,
+        title: file.name.replace(/\.(docx|rtf)$/i, ""),
+        description: `Konvertert fra dokument: ${file.name}`,
         status: "draft",
       });
 
       toast({
         title: "Mal opprettet",
-        description: `"${file.name.replace(/\.docx$/i, "")}" er lagret som utkast.`,
+        description: `"${file.name.replace(/\.(docx|rtf)$/i, "")}" er lagret som utkast.`,
       });
 
       onSuccess?.();
@@ -183,7 +185,7 @@ export function WordConversionDialog({
       <DialogContent className="sm:max-w-[720px] max-h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle className="font-serif text-xl">
-            Konverter Word-dokument
+            Konverter dokument
           </DialogTitle>
         </DialogHeader>
 
@@ -204,7 +206,7 @@ export function WordConversionDialog({
                 <input
                   ref={fileInputRef}
                   type="file"
-                  accept=".docx"
+                  accept=".docx,.rtf"
                   onChange={handleFileInputChange}
                   style={{ display: "none" }}
                 />
@@ -213,10 +215,10 @@ export function WordConversionDialog({
                 <p className="text-sm text-muted-foreground mb-1">
                   {isDragActive
                     ? "Slipp filen her..."
-                    : "Dra og slipp .docx-fil her, eller klikk for å velge"}
+                    : "Dra og slipp fil her, eller klikk for å velge"}
                 </p>
                 <p className="text-xs text-muted-foreground/60">
-                  Kun Word-dokumenter (.docx) er støttet
+                  Word (.docx) og RTF (.rtf) er støttet
                 </p>
               </div>
             )}

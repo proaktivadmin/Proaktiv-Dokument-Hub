@@ -50,9 +50,39 @@ NO_TOUCH_TITLE_PATTERNS = re.compile(
 )
 
 
+TITLE_NOISE_PATTERN = re.compile(
+    r"\s*(?:"
+    r"//\s*Proaktiv\s+QA[^/]*"
+    r"|V\.\d+(?:\.\d+)*"
+    r")\s*$",
+    re.IGNORECASE,
+)
+
+MIN_PREFIX_LENGTH = 15
+SIMILARITY_THRESHOLD = 0.55
+
+
 def _extract_base_title(title: str) -> str:
-    """Strip property type suffixes to get a normalised base title."""
-    return PROPERTY_TYPE_SUFFIX_PATTERN.sub("", title).strip()
+    """Strip property type suffixes and noise to get a normalised base title."""
+    cleaned = title
+    cleaned = PROPERTY_TYPE_SUFFIX_PATTERN.sub("", cleaned).strip()
+    cleaned = TITLE_NOISE_PATTERN.sub("", cleaned).strip()
+    cleaned = cleaned.rstrip(" -\u2013\u2014")
+    return cleaned
+
+
+def _extract_title_prefix(title: str) -> str:
+    """Extract the leading phrase of a title for prefix-based grouping.
+
+    Splits on common delimiters (-, //, fra, from) and returns the first
+    segment if it's long enough to be meaningful.
+    """
+    cleaned = TITLE_NOISE_PATTERN.sub("", title).strip()
+    split = re.split(r"\s+[-\u2013\u2014]\s+|\s*//\s*|\s+fra\s+", cleaned, maxsplit=1)
+    prefix = split[0].strip()
+    if len(prefix) >= MIN_PREFIX_LENGTH:
+        return prefix
+    return cleaned
 
 
 def _extract_property_type(title: str) -> str | None:
@@ -147,12 +177,55 @@ def _vitec_if_property_type(prop_type: str) -> str:
     return f'oppdrag.oppdragstype.key == &quot;{escaped}&quot;'
 
 
+def _build_candidate_group(
+    base_title: str, group_templates: list[Template]
+) -> MergeCandidateGroup:
+    """Build a MergeCandidateGroup from a list of templates with shared purpose."""
+    primary = group_templates[0]
+    candidates: list[MergeCandidate] = []
+    for t in group_templates:
+        sim = (
+            1.0
+            if t.id == primary.id
+            else _content_similarity(primary.content or "", t.content or "")
+        )
+        candidates.append(
+            MergeCandidate(
+                template_id=t.id,
+                title=t.title,
+                property_type=_extract_property_type(t.title),
+                content_length=len(t.content or ""),
+                similarity_score=round(sim, 3),
+            )
+        )
+
+    cat_name: str | None = None
+    for t in group_templates:
+        cats = getattr(t, "categories", [])
+        if cats:
+            cat_name = cats[0].name
+            break
+
+    return MergeCandidateGroup(
+        base_title=base_title,
+        candidates=candidates,
+        category=cat_name,
+        estimated_reduction=len(group_templates) - 1,
+    )
+
+
 class TemplateDedupService:
     """Service for template deduplication analysis and merge operations."""
 
     @staticmethod
     async def find_candidates(db: AsyncSession) -> list[MergeCandidateGroup]:
-        """Scan the library and identify groups of templates that serve the same purpose."""
+        """Scan the library and identify groups of templates that serve the same purpose.
+
+        Uses two strategies:
+        1. Exact base title match (after stripping property type suffixes)
+        2. Prefix-based grouping with content similarity for templates that
+           share a common leading phrase (e.g. "Innhenting av opplysninger")
+        """
         result = await db.execute(
             select(Template).where(
                 Template.content.isnot(None),
@@ -162,54 +235,55 @@ class TemplateDedupService:
         )
         templates = list(result.scalars().all())
 
-        groups: dict[str, list[Template]] = {}
-        for t in templates:
-            if _is_no_touch(t.title, getattr(t, "origin", None)):
-                continue
+        eligible = [
+            t for t in templates
+            if not _is_no_touch(t.title, getattr(t, "origin", None))
+        ]
 
+        # Pass 1: group by exact base title (property type suffix stripping)
+        base_groups: dict[str, list[Template]] = {}
+        for t in eligible:
             base = _extract_base_title(t.title)
-            if base not in groups:
-                groups[base] = []
-            groups[base].append(t)
+            if base not in base_groups:
+                base_groups[base] = []
+            base_groups[base].append(t)
 
+        grouped_ids: set[str] = set()
         candidate_groups: list[MergeCandidateGroup] = []
-        for base_title, group_templates in groups.items():
+
+        for base_title, group_templates in base_groups.items():
+            if len(group_templates) < 2:
+                continue
+            group = _build_candidate_group(base_title, group_templates)
+            candidate_groups.append(group)
+            for t in group_templates:
+                grouped_ids.add(str(t.id))
+
+        # Pass 2: prefix-based grouping for remaining templates
+        remaining = [t for t in eligible if str(t.id) not in grouped_ids]
+        prefix_groups: dict[str, list[Template]] = {}
+        for t in remaining:
+            prefix = _extract_title_prefix(t.title)
+            if prefix not in prefix_groups:
+                prefix_groups[prefix] = []
+            prefix_groups[prefix].append(t)
+
+        for prefix, group_templates in prefix_groups.items():
             if len(group_templates) < 2:
                 continue
 
             primary = group_templates[0]
-            candidates: list[MergeCandidate] = []
-            for t in group_templates:
-                sim = (
-                    1.0
-                    if t.id == primary.id
-                    else _content_similarity(primary.content or "", t.content or "")
-                )
-                candidates.append(
-                    MergeCandidate(
-                        template_id=t.id,
-                        title=t.title,
-                        property_type=_extract_property_type(t.title),
-                        content_length=len(t.content or ""),
-                        similarity_score=round(sim, 3),
-                    )
-                )
+            similar: list[Template] = [primary]
+            for t in group_templates[1:]:
+                sim = _content_similarity(primary.content or "", t.content or "")
+                if sim >= SIMILARITY_THRESHOLD:
+                    similar.append(t)
 
-            cat_name: str | None = None
-            for t in group_templates:
-                cats = getattr(t, "categories", [])
-                if cats:
-                    cat_name = cats[0].name
-                    break
-
-            candidate_groups.append(
-                MergeCandidateGroup(
-                    base_title=base_title,
-                    candidates=candidates,
-                    category=cat_name,
-                    estimated_reduction=len(group_templates) - 1,
-                )
-            )
+            if len(similar) >= 2:
+                group = _build_candidate_group(prefix, similar)
+                candidate_groups.append(group)
+                for t in similar:
+                    grouped_ids.add(str(t.id))
 
         candidate_groups.sort(key=lambda g: len(g.candidates), reverse=True)
         return candidate_groups

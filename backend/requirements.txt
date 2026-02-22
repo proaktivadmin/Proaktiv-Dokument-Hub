@@ -28,6 +28,7 @@ python-jose[cryptography]==3.3.0
 beautifulsoup4==4.12.3
 lxml==5.1.0
 mammoth==1.11.0
+striprtf==0.0.29
 
 # Image Processing
 Pillow>=10.0.0
