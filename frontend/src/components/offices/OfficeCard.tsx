@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { MapPin, Users, Phone, Mail, MoreVertical, Building } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -32,9 +33,9 @@ interface OfficeCardProps {
 }
 
 export function OfficeCard({ office, employees = [], onClick, onEdit, onDeactivate, onEmployeeClick }: OfficeCardProps) {
+  const [bannerError, setBannerError] = useState(false);
   const activeEmployees = employees.filter(e => e.status === 'active').slice(0, 6);
-  // Prefer banner_image_url, fall back to profile_image_url
-  const bannerImage = office.banner_image_url || office.profile_image_url;
+  const bannerImage = !bannerError ? (office.banner_image_url || office.profile_image_url) : null;
   const statusIndicatorClass = office.is_active ? "bg-emerald-500" : "bg-red-500";
 
   // Entra status bubble logic (same pattern as EmployeeCard)
@@ -84,6 +85,7 @@ export function OfficeCard({ office, employees = [], onClick, onEdit, onDeactiva
             src={resolveApiUrl(bannerImage) ?? bannerImage} 
             alt={office.name}
             className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
+            onError={() => setBannerError(true)}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 

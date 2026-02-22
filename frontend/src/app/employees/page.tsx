@@ -20,6 +20,7 @@ import { useToast } from "@/hooks/use-toast";
 import { employeesApi } from "@/lib/api/employees";
 import { officesApi } from "@/lib/api/offices";
 import { entraSyncApi } from "@/lib/api/entra-sync";
+import { vitecApi } from "@/lib/api/vitec";
 import type { EmployeeWithOffice, EmployeeStatus } from "@/types/v3";
 
 export default function EmployeesPage() {
@@ -93,15 +94,27 @@ export default function EmployeesPage() {
     try {
       const officeResult = await officesApi.sync();
       const employeeResult = await employeesApi.sync();
+
+      // Also sync pictures from Vitec Hub
+      let picInfo = "";
+      try {
+        const [officePics, empPics] = await Promise.all([
+          vitecApi.syncOfficePictures(),
+          vitecApi.syncEmployeePictures(),
+        ]);
+        picInfo = ` Bilder: ${officePics.synced + empPics.synced} hentet.`;
+      } catch {
+        picInfo = " Bildesynk feilet.";
+      }
+
       await Promise.all([refetchOffices(), refetchEmployees()]);
       toast({
         title: "Synkronisering fullført",
-        description: `Kontorer: ${officeResult.synced}/${officeResult.total}. Ansatte: ${employeeResult.synced}/${employeeResult.total}.`,
+        description: `Kontorer: ${officeResult.synced}/${officeResult.total}. Ansatte: ${employeeResult.synced}/${employeeResult.total}.${picInfo}`,
       });
     } catch (error) {
       console.error("Failed to sync Vitec Hub data:", error);
       
-      // Extract actual error message from backend response
       let errorMessage = "Kunne ikke hente data fra Vitec Hub.";
       if (error instanceof AxiosError && error.response?.data?.detail) {
         errorMessage = error.response.data.detail;

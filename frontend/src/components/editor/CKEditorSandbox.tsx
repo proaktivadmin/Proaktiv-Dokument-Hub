@@ -45,7 +45,7 @@ interface CKEditorSandboxProps {
 }
 
 const CKEDITOR_CDN =
-  "https://cdn.ckeditor.com/4.25.1/full-all/ckeditor.js";
+  "https://cdn.ckeditor.com/4.25.1-lts/full-all/ckeditor.js";
 
 function buildIframeHtml(readOnly: boolean): string {
   return `<!DOCTYPE html>
