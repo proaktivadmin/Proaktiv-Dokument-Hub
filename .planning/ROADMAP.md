@@ -195,35 +195,48 @@ Plans:
 See STATE.md session summaries for details.
 
 ### Phase 11: HTML Template Management & Publishing Suite 🔧 IN PROGRESS
-**Goal**: Full template lifecycle — import Word/RTF docs, edit in CKEditor 4, compare against Vitec originals, deduplicate, validate merge fields, and publish
+**Goal**: Full template lifecycle — import Word/RTF docs, convert to production HTML, validate, QA test, and publish to Vitec Next
 **Depends on**: Phase 4 (stack upgrade)
-**Status**: Foundation committed (2026-02-22), agents ready for execution
+**Status**: 9 production templates delivered, subagent pipeline operational, 14 in backlog
 **Plans**: `.planning/phases/11-template-suite/`
 
-**6-Agent Architecture:**
+**Subagent Pipeline Architecture (V4.1):**
 
-| Agent | Name | Scope | Status |
-|-------|------|-------|--------|
-| 1 | Documentation | Vitec HTML ruleset, Flettekode reference, Stilark spec | ✅ Docs written |
-| 2 | Conversion | Word/RTF → CKEditor-compliant HTML pipeline | ✅ Backend built |
-| 3 | Storage & Editor | CKEditor 4 iframe sandbox, template workflow, publish states | ✅ Components built |
-| 4 | Comparison | AI-powered diff between customized and Vitec originals | ✅ Service built |
-| 5 | Merge & Dedup | Detect duplicates, consolidate with Vitec if-logic | ✅ Dashboard built |
-| 6 | Flettekode | Merge field autocomplete, validation, panel | ✅ Components built |
+3-phase orchestrator with 6 specialized subagents:
 
-**What was delivered:**
-- Backend: 5 new services, 4 new schemas, 1 migration, 330+ lines of new router endpoints
-- Frontend: 8 new components, 2 new pages, extended API client
-- Documentation: `vitec-html-ruleset.md` (4,087 lines), `Alle-flettekoder-25.9.md` (6,493 lines)
-- Library reset script for clean baseline
+| Phase | Subagents | Model | Purpose |
+|-------|-----------|-------|---------|
+| 1. Analysis | Structure Analyzer, Field Mapper, Logic Mapper | fast (parallel) | Map document structure, merge fields, vitec-if conditions |
+| 2. Construction | Builder | default | Assemble production HTML from analysis outputs |
+| 3. Validation | Static Validator, Content Verifier | fast (parallel) | Run 46-54 automated checks + source comparison |
+
+**Key documentation:**
+- Builder skill: `.agents/skills/vitec-template-builder/SKILL.md`
+- Orchestrator: `.planning/phases/11-template-suite/AGENT-2B-TEMPLATE-BUILDER.md`
+- Subagent prompts: `.planning/phases/11-template-suite/SUBAGENT-PROMPTS.md`
+- Pipeline reference: `.planning/phases/11-template-suite/PRODUCTION-TEMPLATE-PIPELINE.md`
+- Vitec HTML ruleset: `.planning/vitec-html-ruleset/` (15 modular files)
+
+**Production templates delivered (9):**
+- Kjopekontrakt prosjekt (leilighet, enebolig, profesjonell)
+- Generalfullmakt
+- Leieavtale naeringsbygg / naeringslokaler
+- Meglerstandard eiendom
+- Forlengelse av oppdrag (standard + epost)
+
+**File structure:**
+- `scripts/production/` — QA-ready HTML (grab for testing)
+- `scripts/handoffs/` — build summaries
+- `scripts/tools/` — validator, preview, batch scripts
+- `scripts/sources/` — original Word exports
+- `scripts/_analysis/` — subagent outputs + format templates
 
 **Remaining work:**
+- Manual QA of 9 production templates via Testfletting
+- Convert 14 remaining source documents from backlog
 - Apply migration `20260221_0001_template_publishing.py` to Railway
-- Integration testing of conversion pipeline (DOCX/RTF uploads)
-- Wire CKEditor sandbox into template edit page
-- Connect comparison service to frontend
-- End-to-end dedup workflow testing
-- Merge field validation against live template content
+- Vitec Next template library inventory refresh (247 templates scraped, content pending)
+- Integration of CKEditor sandbox, comparison service, dedup workflow in web UI
 
 ### V4.0: Infrastructure & UX Fixes ✅ COMPLETE
 **Goal**: Fix Monaco/CKEditor loading, add notifications page, restore Vitec pictures
@@ -255,9 +268,10 @@ Phases execute in numeric order, with V3.x versions as incremental feature relea
 | 7. Office Enhancements | 0/8 | Not started | - |
 | V3.6 Design System | Complete | Complete | 2026-01-23 |
 | V3.8-3.9.4 Signatures | Complete | Complete | 2026-02-02 |
-| 11. Template Suite | Foundation | In Progress | - |
+| 11. Template Suite | 9 templates + pipeline | In Progress | - |
 | V4.0 Infra & UX | Complete | Complete | 2026-02-22 |
+| V4.1 Template Sprint | Complete | Complete | 2026-02-22 |
 
 ---
 *Roadmap created: 2026-01-20*
-*Last updated: 2026-02-22 (Phase 11 foundation + V4.0 fixes)*
+*Last updated: 2026-02-22 (V4.1 template builder sprint + subagent pipeline)*

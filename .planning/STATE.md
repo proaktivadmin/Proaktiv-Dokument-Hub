@@ -8,16 +8,16 @@
 See: .planning/PROJECT.md (updated 2026-01-23)
 
 **Core value:** Brokers can manage and preview document templates without touching code
-**Current focus:** Phase 06 Testing OR Phase 07 Office Enhancements
+**Current focus:** Phase 11 — Template production pipeline + QA testing
 
 ## Current Position
 
 Phase: 11 (HTML Template Management & Publishing Suite)
-Plan: Multi-agent template suite — documentation, conversion, editor, comparison, dedup, flettekode
-Status: Phase 11 foundation committed + notifications page + CSP fix deployed to Vercel
-Last activity: 2026-02-22 — Template suite, notifications page, Vitec picture proxy, CSP fix
+Plan: Subagent-driven template builder pipeline — 3-phase orchestrator with 6 specialized subagents
+Status: 9 production templates delivered, subagent pipeline designed and validated, file structure reorganized
+Last activity: 2026-02-22 — Template builder sprint complete, preparing for signoff
 
-Progress: [███░░░░░░░] 30% (Phase 11 foundation laid, agents 1-6 planned, partial implementation)
+Progress: [██████░░░░] 60% (9 templates built, pipeline operational, 14 source docs in backlog)
 
 ## Performance Metrics
 
@@ -71,52 +71,79 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-22
-Stopped at: Phase 11 foundation committed, CSP fix deployed, Monaco Editor working
+Stopped at: Template builder sprint complete — 9 production templates, subagent pipeline, file restructure committed
 Resume file: N/A
-Next step: Execute Phase 11 agents (start with Agent 1: Documentation, then Agent 2: Conversion pipeline)
+Next step: Manual QA of production templates via Testfletting, then continue backlog conversion (14 remaining source docs)
 
 ### Session Summary (2026-02-22 - Latest)
+
+**V4.1 Template Builder Sprint + Subagent Pipeline (2026-02-22):**
+
+This session delivered the full template builder sprint: 9 production-ready Vitec Next HTML templates, a new subagent pipeline architecture, comprehensive documentation, and a reorganized file structure.
+
+**Commit: `7e1e7ef` — Template builder pipeline with subagent architecture**
+- 88 files changed, 26,667 insertions
+
+**Production templates delivered (9):**
+
+| Template | Type | Size |
+|----------|------|------|
+| Kjopekontrakt prosjekt (leilighet) | Contract | 51 KB |
+| Kjopekontrakt prosjekt (enebolig) | Contract | 38 KB |
+| Kjopekontrakt prosjekt (profesjonell) | Contract | 51 KB |
+| Generalfullmakt | Legal form | 12 KB |
+| Leieavtale naeringsbygg | Standard form | 70 KB |
+| Leieavtale naeringslokaler | Standard form | 61 KB |
+| Meglerstandard eiendom | Standard form | 102 KB |
+| Forlengelse av oppdrag | Letter | 8 KB |
+| Forlengelse av oppdrag (epost) | Email | 4 KB |
+
+**Subagent pipeline architecture (new):**
+- 3-phase orchestrator: Analysis (3 parallel) → Construction (1 sequential) → Validation (2 parallel)
+- 6 specialized subagents: Structure Analyzer, Field Mapper, Logic Mapper, Builder, Static Validator, Content Verifier
+- Structured output formats for subagent handoffs (`scripts/_analysis/FORMAT_*.md`)
+- Prompt templates in `.planning/phases/11-template-suite/SUBAGENT-PROMPTS.md`
+- Orchestrator spec in `.planning/phases/11-template-suite/AGENT-2B-TEMPLATE-BUILDER.md`
+
+**File structure reorganization:**
+- `scripts/production/` — QA-ready HTML files (grab for testing)
+- `scripts/handoffs/` — build summaries per template
+- `scripts/tools/` — validator, preview, batch scripts
+- `scripts/sources/` — original .htm/.docx files
+- `scripts/intermediates/` — raw extractions
+- `scripts/_analysis/` — subagent outputs + format templates
+
+**Documentation:**
+- Vitec HTML ruleset split into 15 modular files (`.planning/vitec-html-ruleset/`)
+- vitec-if deep analysis, field registry, V2 analysis report
+- Production template pipeline expanded to 15 sections
+- Updated SKILL.md with orchestrator flow and quality checklist
+- Golden standard templates added for reference
+
+**Backlog:** 14 unconverted source documents remain in `scripts/converted_html/`
+
+### Session Summary (2026-02-22 - Earlier)
 
 **V4.0 Phase 11 Foundation + Infrastructure Fixes (2026-02-21 to 2026-02-22):**
 
 This session delivered the Phase 11 HTML Template Management & Publishing Suite foundation, a dedicated notifications page, Vitec picture proxy restoration, editor fixes, and a critical CSP fix.
 
-**Commits in this session (oldest first):**
+**Commits (oldest first):**
 
 1. **`a790f38` — Phase 11: HTML Template Management & Publishing Suite**
    - 39 files changed, 19,352 insertions
    - Full multi-agent plan: 6 agent specs in `.planning/phases/11-template-suite/`
-   - Backend services: `WordConversionService` (DOCX/RTF→HTML), `TemplateComparisonService`, `TemplateDedupService`, `TemplateWorkflowService`, `TemplateAnalysisAIService`
-   - Backend schemas: `template_comparison.py`, `template_dedup.py`, `template_workflow.py`, `word_conversion.py`
-   - Backend migration: `20260221_0001_template_publishing.py` (adds publishing fields to templates)
-   - Frontend pages: `/templates/[id]/edit` (full editor), `/templates/dedup` (deduplication dashboard)
-   - Frontend components: `CKEditorSandbox`, `DeduplicationDashboard`, `MergeFieldAutocomplete`, `MergeFieldHighlighter`, `MergeFieldPanel`, `TemplateComparison`, `WordConversionDialog`
-   - Extended `lib/api.ts` with template workflow, comparison, dedup, and word conversion endpoints
-   - Documentation: `vitec-html-ruleset.md` (4,087 lines), `docs/Alle-flettekoder-25.9.md` (6,493 lines), `docs/vitec-stilark.md`
-   - Library reset script: `backend/scripts/library_reset.py`
+   - Backend services: `WordConversionService`, `TemplateComparisonService`, `TemplateDedupService`, `TemplateWorkflowService`, `TemplateAnalysisAIService`
+   - Frontend pages: `/templates/[id]/edit`, `/templates/dedup`
+   - Documentation: `vitec-html-ruleset.md` (4,087 lines), `Alle-flettekoder-25.9.md` (6,493 lines)
 
 2. **`63a5ff7` — RTF support, A3 validation fix, dedup improvements**
-   - Added RTF-to-HTML conversion via `striprtf` library
-   - Fixed A3 page size validation (was incorrectly flagging valid templates)
-   - Improved deduplication detection with better similarity scoring
 
 3. **`48c7a3b` — Notifications page, Vitec picture proxy, editor fixes**
-   - **New `/notifications` page** (556 lines): Filterable by type/severity/read status, date-grouped, expandable metadata, mark-as-read/delete/clear-all actions
-   - **Vitec picture proxy re-enabled**: `GET /api/vitec/employees/{id}/picture` and `GET /api/vitec/departments/{id}/picture` — proxies images from Vitec Hub API with resize/crop and caching
-   - **Picture sync integration**: Office and employee sync buttons now also trigger picture sync from Vitec Hub
-   - **CKEditor CDN fix**: Updated URL from `4.25.1` to `4.25.1-lts` (old URL 404'd)
-   - **"Normaliser til Vitec" save workflow**: No longer auto-saves; shows persistent unsaved-changes banner with explicit save button
-   - **Office banner fallback**: `onError` handler on `<img>` falls back to colored background
-   - **NotificationDropdown**: Added "Se alle varsler (N)" link to notification page
 
 4. **`ed58bb3` — CSP fix for Monaco Editor and CKEditor CDN**
-   - Added `https://cdn.jsdelivr.net` and `https://cdn.ckeditor.com` to `script-src` in both `next.config.js` and `vercel.json`
-   - Added `'unsafe-eval'` for Monaco Editor's dynamic execution
-   - Added CDN domains to `style-src`, `font-src`, and `connect-src` as needed
-   - **Root cause of "Loading editor..." bug**: CSP blocked external scripts from loading
 
 **Deployed to Vercel:** ✅ Production build successful, all pages rendering
-**Monaco Editor:** ✅ Now loading properly (CSP fix resolved the blocking)
 
 ### Session Summary (2026-02-02 - Previous)
 
@@ -310,6 +337,7 @@ Files modified:
 
 | Version | Date       | Key Changes                                                |
 | ------- | ---------- | ---------------------------------------------------------- |
+| V4.1    | 2026-02-22 | 9 production templates, subagent pipeline, file restructure |
 | V4.0    | 2026-02-22 | Phase 11 Template Suite foundation, notifications page, CSP fix |
 | V3.9.4  | 2026-02-02 | Signature self-service editing, setup instructions, photo link |
 | V3.9.3  | 2026-02-01 | Signature template hardening, reply-chain resilience, Maps link |
@@ -329,60 +357,33 @@ Files modified:
 
 ## Ready for Next Steps
 
-### Option A: Execute Phase 11 Agents (RECOMMENDED)
+### Option A: Manual QA of Production Templates (RECOMMENDED)
 
-Phase 11 foundation is committed. Execute agents in order:
+9 production templates in `scripts/production/`. For each template:
+1. Open in Vitec Next CKEditor (paste HTML)
+2. Run Testfletting against a test property
+3. Verify PDF rendering: page breaks, checkboxes, conditional sections, merge fields
+4. If satisfied, commit to template database
 
-| Agent | Name | Purpose | Status |
-|-------|------|---------|--------|
-| 1 | Documentation | Vitec HTML ruleset validation, Flettekode reference | ✅ Docs written |
-| 2 | Conversion | Word/RTF → HTML pipeline (mammoth + striprtf) | ✅ Backend built, needs testing |
-| 3 | Storage & Editor | CKEditor 4 sandbox, template workflow, publishing | ✅ Components built, needs integration |
-| 4 | Comparison | AI-powered template diff analysis | ✅ Service built, needs frontend wiring |
-| 5 | Merge/Dedup | Duplicate template consolidation | ✅ Service + dashboard built |
-| 6 | Flettekode | Merge field autocomplete & validation | ✅ Components built, needs editor integration |
+### Option B: Continue Template Backlog
 
-**Next action:** Run Agent 1 documentation validation, then Agent 2 conversion pipeline testing.
+14 unconverted source documents in `scripts/converted_html/`. To convert:
+1. Move source to `scripts/sources/`
+2. Open new agent session, reference `.agents/skills/vitec-template-builder/SKILL.md`
+3. Orchestrator launches subagents automatically
+4. Output lands in `scripts/production/`
 
-**Plans:** `.planning/phases/11-template-suite/PLAN.md` (master plan), `AGENT-*.md` (per-agent specs)
+### Option C: Template Library Inventory Refresh
 
-**DB Migration:** `20260221_0001_template_publishing.py` — **needs manual apply to Railway!**
+A Vitec Next export (`vitec-next-export.json`, 247 templates) has metadata but no content.
+Needs a content-fetch pass to backfill HTML bodies before library reset.
 
-```powershell
-$env:DATABASE_URL = "postgresql://postgres:PASSWORD@shuttle.proxy.rlwy.net:51557/railway"
-cd backend
-python -m alembic upgrade head
-python -m alembic current  # Verify
-```
+### Option D: Remaining Infrastructure
 
-### Option B: Notifications Page Polish
-
-The `/notifications` page is live but could benefit from:
-- Sync approval/rejection workflow (approve/deny changes from notification detail)
-- Email notification preferences
-- Batch actions on filtered notifications
-
-### Option C: WebDAV Employee Photos
-
-Replace Vitec API base64 images with WebDAV-hosted photos for faster loading.
-
-```powershell
-cd backend
-python scripts/upload_employee_photos.py --photos-dir "C:\Users\Adrian\Documents\ProaktivPhotos\webdav-upload" --dry-run
-python scripts/update_photo_urls_webdav.py --dry-run
-```
-
-### Option D: Deploy Signature Emails
-
-- Set environment variables (SIGNATURE_SENDER_EMAIL, FRONTEND_URL)
-- Add Mail.Send permission in Azure Portal
-- Run `.\backend\scripts\Send-SignatureEmails.ps1 -DryRun` to test
-
-### Option E: Phase 07 (Office Enhancements)
-
-- 8 execution plans ready
-- Region grouping, office merge, SalesScreen
-- Can run in parallel with other work
+- **DB Migration:** `20260221_0001_template_publishing.py` — needs manual apply to Railway
+- **WebDAV Employee Photos** — replace base64 with hosted photos
+- **Signature Email Deployment** — Send-SignatureEmails.ps1
+- **Notifications Page Polish** — approval workflow, batch actions
 
 ---
 
