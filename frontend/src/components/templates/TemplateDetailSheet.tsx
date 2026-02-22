@@ -235,10 +235,6 @@ export function TemplateDetailSheet({
   const handleNormalize = async () => {
     if (!template || !canPreview(template.file_type)) return;
 
-    const confirmText =
-      "Dette vil normalisere HTML til Vitec-standard og lagre permanent. Fortsette?";
-    if (!window.confirm(confirmText)) return;
-
     setIsNormalizing(true);
     try {
       const sourceHtml = editedContent || originalContent;
@@ -247,21 +243,15 @@ export function TemplateDetailSheet({
       });
       const normalizedHtml = response.data.html;
 
-      const result = await templateSettingsApi.saveContent(template.id, {
-        content: normalizedHtml,
-        auto_sanitize: false,
-      });
-
-      setOriginalContent(normalizedHtml);
       setEditedContent(normalizedHtml);
-      setHasContentChanges(false);
+      setHasContentChanges(normalizedHtml !== originalContent);
       setProcessedContent(null);
       setTestDataEnabled(false);
-      setActiveTab("preview");
+      setActiveTab("code");
 
       toast({
         title: "Normalisert til Vitec",
-        description: `Versjon ${result.version} opprettet. ${result.merge_fields_detected} flettekoder funnet.`,
+        description: "Sjekk resultatet og klikk Lagre for å bekrefte endringene.",
       });
     } catch (error) {
       toast({
@@ -374,6 +364,33 @@ export function TemplateDetailSheet({
             </div>
           </div>
         </DialogHeader>
+
+        {/* Unsaved content changes banner */}
+        {hasContentChanges && (
+          <div className="flex items-center justify-between px-6 py-2 bg-amber-50 border-b border-amber-200 shrink-0">
+            <span className="text-sm text-amber-800">
+              Du har ulagrede innholdsendringer.
+            </span>
+            <Button
+              size="sm"
+              onClick={saveContent}
+              disabled={isSavingContent}
+              className="bg-green-600 hover:bg-green-700"
+            >
+              {isSavingContent ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Lagrer...
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4 mr-2" />
+                  Lagre innhold
+                </>
+              )}
+            </Button>
+          </div>
+        )}
 
         {/* Tabs for different views */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden min-h-0">
