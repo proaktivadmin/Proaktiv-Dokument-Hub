@@ -421,62 +421,7 @@ export default function NotificationsPage() {
                                   </div>
                                 </div>
                               )}
-                              <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-xs">
-                                {metadata.office_name && (
-                                  <div>
-                                    <span className="text-muted-foreground">Kontor: </span>
-                                    <span className="font-medium">{String(metadata.office_name)}</span>
-                                  </div>
-                                )}
-                                {metadata.employee_name && (
-                                  <div>
-                                    <span className="text-muted-foreground">Ansatt: </span>
-                                    <span className="font-medium">{String(metadata.employee_name)}</span>
-                                  </div>
-                                )}
-                                {metadata.email && (
-                                  <div>
-                                    <span className="text-muted-foreground">E-post: </span>
-                                    <span>{String(metadata.email)}</span>
-                                  </div>
-                                )}
-                                {metadata.vitec_department_id && (
-                                  <div>
-                                    <span className="text-muted-foreground">Avdeling ID: </span>
-                                    <span>{String(metadata.vitec_department_id)}</span>
-                                  </div>
-                                )}
-                                {metadata.short_code && (
-                                  <div>
-                                    <span className="text-muted-foreground">Kortkode: </span>
-                                    <span>{String(metadata.short_code)}</span>
-                                  </div>
-                                )}
-                                {metadata.expected_upn && (
-                                  <div>
-                                    <span className="text-muted-foreground">Forventet UPN: </span>
-                                    <span>{String(metadata.expected_upn)}</span>
-                                  </div>
-                                )}
-                                {metadata.actual_upn && (
-                                  <div>
-                                    <span className="text-muted-foreground">Faktisk UPN: </span>
-                                    <span>{String(metadata.actual_upn)}</span>
-                                  </div>
-                                )}
-                                {metadata.operation && (
-                                  <div>
-                                    <span className="text-muted-foreground">Operasjon: </span>
-                                    <span>{String(metadata.operation)}</span>
-                                  </div>
-                                )}
-                                {metadata.error && (
-                                  <div className="col-span-2">
-                                    <span className="text-muted-foreground">Feil: </span>
-                                    <span className="text-red-600">{String(metadata.error)}</span>
-                                  </div>
-                                )}
-                              </div>
+                              <MetadataGrid metadata={metadata} />
                               <p className="text-xs text-muted-foreground">
                                 {format(new Date(notification.created_at), "d. MMMM yyyy 'kl.' HH:mm:ss", { locale: nb })}
                               </p>
@@ -517,6 +462,37 @@ export default function NotificationsPage() {
           </div>
         )}
       </main>
+    </div>
+  );
+}
+
+function MetadataGrid({ metadata }: { metadata: Record<string, unknown> }) {
+  const fields: { key: string; label: string; className?: string }[] = [
+    { key: "office_name", label: "Kontor" },
+    { key: "employee_name", label: "Ansatt" },
+    { key: "email", label: "E-post" },
+    { key: "vitec_department_id", label: "Avdeling ID" },
+    { key: "short_code", label: "Kortkode" },
+    { key: "expected_upn", label: "Forventet UPN" },
+    { key: "actual_upn", label: "Faktisk UPN" },
+    { key: "operation", label: "Operasjon" },
+    { key: "error", label: "Feil", className: "col-span-2 text-red-600" },
+  ];
+
+  return (
+    <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-xs">
+      {fields.map(({ key, label, className }) => {
+        const value = metadata[key];
+        if (!value) return null;
+        return (
+          <div key={key} className={className}>
+            <span className="text-muted-foreground">{label}: </span>
+            <span className={key === "office_name" || key === "employee_name" ? "font-medium" : undefined}>
+              {String(value)}
+            </span>
+          </div>
+        );
+      })}
     </div>
   );
 }
