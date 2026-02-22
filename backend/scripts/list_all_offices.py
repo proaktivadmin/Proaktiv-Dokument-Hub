@@ -1,8 +1,10 @@
 """List all offices with vital signature information."""
 
+import os
+
 from sqlalchemy import create_engine, text
 
-DATABASE_URL = "postgresql://postgres:lOZBFAkACyDixRzjSHjRQCrdVTwuDrxA@shuttle.proxy.rlwy.net:51557/railway"
+DATABASE_URL = os.environ["DATABASE_URL"]
 engine = create_engine(DATABASE_URL)
 
 with engine.connect() as conn:
