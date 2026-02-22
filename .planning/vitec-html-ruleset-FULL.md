@@ -672,18 +672,23 @@ Contracts (Kjøpekontrakt, Oppdragsavtale) use a specific structural pattern wit
         counter-increment: subsection;
     }
 
-    /* h2: "1. ", "2. ", "3. " */
+    /* h2: "1. ", "2. ", ... "10. " — fixed-width prevents double-digit misalignment */
     #vitecTemplate article.item:not(article.item article.item) h2::before {
         content: counter(section) ". ";
+        display: inline-block;
+        width: 26px;
     }
 
     /* h3: "1.1. ", "1.2. ", "2.1. " */
     #vitecTemplate article.item article.item h3::before {
         content: counter(section) "." counter(subsection) ". ";
+        display: inline-block;
+        width: 36px;
     }
 
     #vitecTemplate .avoid-page-break { page-break-inside: avoid; }
-    #vitecTemplate article { padding-left: 20px; }
+    /* padding must match h2 negative margin (26px) for heading/body alignment */
+    #vitecTemplate article { padding-left: 26px; }
     #vitecTemplate article article { padding-left: 0; }
   </style>
   <h1>Contract Title</h1>
@@ -3394,11 +3399,19 @@ The `counters()` function relies on CSS counter scope inheritance, which Chromiu
 }
 #vitecTemplate article.item:not(article.item article.item) h2::before {
     content: counter(section) ". ";
+    display: inline-block;
+    width: 26px;
 }
 #vitecTemplate article.item article.item h3::before {
     content: counter(section) "." counter(subsection) ". ";
+    display: inline-block;
+    width: 36px;
 }
 ```
+
+The `display: inline-block; width: 26px;` on `::before` ensures heading text aligns consistently
+regardless of whether the section number is single-digit ("1. ") or double-digit ("10. ").
+The article `padding-left` must match the h2 `margin-left` negative offset (both 26px).
 
 **(Evidence: Proaktiv custom Kjøpekontrakt FORBRUKER — production fix)**
 
@@ -3509,7 +3522,8 @@ This checklist is for the Word-to-HTML Conversion Agent (Agent 2). Follow each s
 - [ ] CSS counters use the **Chromium-safe** dual-counter pattern (`section`/`subsection`), NOT `counters(item, ".")`
 - [ ] Top-level `<article class="item">` contains `<h2>` (numbered "1. ", "2. ", ...)
 - [ ] Nested `<article class="item">` contains `<h3>` (numbered "1.1. ", "1.2. ", ...)
-- [ ] `<article>` has `padding-left: 20px`; nested `<article article>` has `padding-left: 0`
+- [ ] `<article>` has `padding-left: 26px`; nested `<article article>` has `padding-left: 0`
+- [ ] `h2::before` has `display: inline-block; width: 26px;` (fixed-width for double-digit alignment)
 - [ ] Eieform-conditional sections use `vitec-if` directly on `<article>` or `<div>`
 - [ ] Internal cross-references use `<a id="section-name"></a>` anchors + `<a class="bookmark" href="#section-name">` links
 - [ ] `roles-table` class on party-listing tables with `tbody:last-child tr:last-child td { display: none }` CSS

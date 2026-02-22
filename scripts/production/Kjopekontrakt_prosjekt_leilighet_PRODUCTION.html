@@ -1,0 +1,731 @@
+<div id="vitecTemplate">
+<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">
+/* Counter system */
+#vitecTemplate { counter-reset: section; }
+#vitecTemplate article.item:not(article.item article.item) {
+  counter-increment: section;
+  counter-reset: subsection;
+}
+#vitecTemplate article.item article.item { counter-increment: subsection; }
+#vitecTemplate article.item:not(article.item article.item) h2::before {
+  content: counter(section) ". ";
+  display: inline-block;
+  width: 26px;
+}
+#vitecTemplate article.item article.item h3::before {
+  content: counter(section) "." counter(subsection) ". ";
+  display: inline-block;
+  width: 36px;
+}
+
+/* Heading styles */
+#vitecTemplate h1 { text-align: center; font-size: 14pt; margin: 0; padding: 0; }
+#vitecTemplate h2 { font-size: 11pt; margin: 30px 0 0 -26px; padding: 0; }
+#vitecTemplate h3 { font-size: 10pt; margin: 20px 0 0 -10px; padding: 0; }
+
+/* Article/section layout */
+#vitecTemplate article { padding-left: 26px; }
+#vitecTemplate article article { padding-left: 0; }
+#vitecTemplate .avoid-page-break { page-break-inside: avoid; }
+
+/* Table base styles */
+#vitecTemplate table { width: 100%; table-layout: fixed; }
+#vitecTemplate table .borders {
+  width: 100%; table-layout: fixed;
+  border-bottom: solid 1px black; border-top: solid 1px black;
+}
+
+/* Roles table */
+#vitecTemplate .roles-table { width: 100%; table-layout: fixed; border-collapse: collapse; }
+#vitecTemplate .roles-table th { text-align: left; padding: 4px 6px; border-bottom: 1px solid #000; }
+#vitecTemplate .roles-table td { padding: 4px 6px; vertical-align: top; }
+#vitecTemplate .roles-table tbody:last-child tr:last-child td { display: none; }
+
+/* Costs table */
+#vitecTemplate .costs-table { width: 100%; table-layout: fixed; border-collapse: collapse; }
+#vitecTemplate .costs-table td { padding: 2px 6px; vertical-align: top; }
+#vitecTemplate .costs-table tr.sum-row td { border-top: 1px solid #000; font-weight: bold; }
+
+/* Lists */
+#vitecTemplate ul { list-style-type: disc; margin-left: 0; }
+#vitecTemplate ul li { list-style-position: outside; line-height: 20px; margin-left: 0; }
+#vitecTemplate .liste:last-child .separator { display: none; }
+
+/* Bookmark cross-references */
+#vitecTemplate a.bookmark { color: #000; font-style: italic; text-decoration: none; }
+
+/* Insert fields */
+#vitecTemplate .insert { border-bottom: 1px dotted #999; min-width: 80px; display: inline-block; }
+#vitecTemplate span.insert:empty::before { content: attr(data-label); color: #999; font-style: italic; }
+#vitecTemplate .insert-table { display: inline-table; }
+
+/* SVG checkboxes */
+label.btn {
+  display: inline;
+  text-transform: none;
+  white-space: normal;
+  padding: 0;
+  vertical-align: baseline;
+  outline: none;
+  font-size: inherit;
+}
+label.btn:active,
+label.btn.active {
+  box-shadow: none;
+  outline: none;
+}
+.svg-toggle {
+  display: inline-block !important;
+  width: 16px;
+  height: 16px;
+  margin: 0 5px;
+  vertical-align: bottom;
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none !important;
+  cursor: pointer;
+  white-space: normal;
+  text-align: left;
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+  background-position: center center;
+}
+.svg-toggle.checkbox {
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Crect%20width%3D%2215%22%20height%3D%2215%22%20x%3D%22.5%22%20y%3D%22.5%22%20fill%3D%22%23fff%22%20stroke%3D%22%23000%22%20rx%3D%222%22%20ry%3D%222%22%2F%3E%3C%2Fsvg%3E");
+}
+.svg-toggle.checkbox.active,
+.btn.active > .svg-toggle.checkbox {
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Crect%20width%3D%2215%22%20height%3D%2215%22%20x%3D%22.5%22%20y%3D%22.5%22%20fill%3D%22%23fff%22%20stroke%3D%22%23000%22%20rx%3D%222%22%20ry%3D%222%22%2F%3E%3Cpath%20fill%3D%22%23000%22%20d%3D%22M12.207%204.793a1%201%200%200%201%200%201.414l-5%205a1%201%200%200%201-1.414%200l-2-2a1%201%200%200%201%201.414-1.414L6.5%209.086l4.293-4.293a1%201%200%200%201%201.414%200z%22%2F%3E%3C%2Fsvg%3E");
+  box-shadow: none !important;
+}
+#vitecTemplate [data-toggle="buttons"] input {
+  display: none;
+}
+</style>
+
+<table>
+<tbody>
+<tr>
+  <td colspan="100" style="text-align:right">
+    <small>
+      Meglerforetakets org.nr: <strong>[[meglerkontor.orgnr]]</strong><br />
+      Oppdragsnr.:&nbsp;<strong>[[oppdrag.nr]]</strong><br />
+      Omsetningsnr.:&nbsp;<strong>[[kontrakt.formidling.nr]]</strong>
+    </small>
+  </td>
+</tr>
+<tr><td colspan="100">&nbsp;</td></tr>
+<tr>
+  <td colspan="100">
+
+<h1>Kj&oslash;pekontrakt</h1>
+<p style="text-align:center;">om rett til bolig eller fritidsbolig under oppf&oslash;ring med tomt</p>
+
+<p>Kontraktens bestemmelser utfylles av bustadoppf&oslash;ringslova (bustadoppf&oslash;ringslova) av 13. juni nr. 43 1997 og annen bakgrunnsrett. Kontrakten gjelder avtale etter lovens &sect; 1, f&oslash;rste ledd b), avtale om bolig eller fritidsbolig under oppf&oslash;ring og hvor avtalen ogs&aring; omfatter rett til grunn.</p>
+
+<p>Mellom &laquo;selger&raquo;</p>
+
+<table class="roles-table" vitec-if="Model.selgere.Count &gt; 0">
+<thead>
+<tr>
+  <th colspan="34"><strong>Navn</strong></th>
+  <th colspan="48"><strong>Adresse/Kontaktinfo</strong></th>
+  <th colspan="18"><strong>[[selger.ledetekst_fdato_orgnr]]</strong></th>
+</tr>
+</thead>
+<tbody vitec-foreach="selger in Model.selgere">
+<tr>
+  <td colspan="34" rowspan="2">[[*selger.navnutenfullmektigogkontaktperson]]</td>
+  <td colspan="48">[[*selger.gatenavnognr]], [[*selger.postnr]] [[*selger.poststed]]</td>
+  <td colspan="18" rowspan="2">[[*selger.fdato_orgnr]]</td>
+</tr>
+<tr>
+  <td colspan="48">
+    <span vitec-if="(selger.tlf != &quot;&quot; &amp;&amp; selger.tlf != &quot;Mangler data&quot;)">Mob: [[*selger.tlf]]</span>
+    <span vitec-if="(selger.tlf != &quot;&quot; &amp;&amp; selger.tlf != &quot;Mangler data&quot; &amp;&amp; selger.emailadresse != &quot;&quot; &amp;&amp; selger.emailadresse != &quot;Mangler data&quot;)"> / </span>
+    <span vitec-if="(selger.emailadresse != &quot;&quot; &amp;&amp; selger.emailadresse != &quot;Mangler data&quot;)">E-post: [[*selger.emailadresse]]</span>
+  </td>
+</tr>
+<tr><td colspan="100">&nbsp;</td></tr>
+</tbody>
+</table>
+<div vitec-if="Model.selgere.Count == 0">
+  <p>[Mangler selger]</p>
+</div>
+
+<p>Gyldig legitimasjon: <span class="insert-table"><span class="insert" data-label="tekst"></span></span></p>
+
+<p vitec-if="(Model.selger.fullmektig.navn != &quot;&quot; &amp;&amp; Model.selger.fullmektig.navn != &quot;Mangler data&quot;)">Selger er representert ved fullmektig [[selger.fullmektig.navn]], som ogs&aring; har fremvist gyldig legitimasjon: <span class="insert-table"><span class="insert" data-label="tekst"></span></span></p>
+
+<p>og &laquo;kj&oslash;per&raquo;</p>
+
+<table class="roles-table" vitec-if="Model.kjopere.Count &gt; 0">
+<thead>
+<tr>
+  <th colspan="34"><strong>Navn</strong></th>
+  <th colspan="48"><strong>Adresse/Kontaktinfo</strong></th>
+  <th colspan="18"><strong>[[kjoper.ledetekst_fdato_orgnr]]</strong></th>
+</tr>
+</thead>
+<tbody vitec-foreach="kjoper in Model.kjopere">
+<tr>
+  <td colspan="34" rowspan="2">[[*kjoper.navnutenfullmektigogkontaktperson]]</td>
+  <td colspan="48">[[*kjoper.gatenavnognr]], [[*kjoper.postnr]] [[*kjoper.poststed]]</td>
+  <td colspan="18" rowspan="2">[[*kjoper.fdato_orgnr]]</td>
+</tr>
+<tr>
+  <td colspan="48">
+    <span vitec-if="(kjoper.tlf != &quot;&quot; &amp;&amp; kjoper.tlf != &quot;Mangler data&quot;)">Mob: [[*kjoper.tlf]]</span>
+    <span vitec-if="(kjoper.tlf != &quot;&quot; &amp;&amp; kjoper.tlf != &quot;Mangler data&quot; &amp;&amp; kjoper.emailadresse != &quot;&quot; &amp;&amp; kjoper.emailadresse != &quot;Mangler data&quot;)"> / </span>
+    <span vitec-if="(kjoper.emailadresse != &quot;&quot; &amp;&amp; kjoper.emailadresse != &quot;Mangler data&quot;)">E-post: [[*kjoper.emailadresse]]</span>
+  </td>
+</tr>
+<tr><td colspan="100">&nbsp;</td></tr>
+</tbody>
+</table>
+<div vitec-if="Model.kjopere.Count == 0">
+  <p>[Mangler kj&oslash;per]</p>
+</div>
+
+<p>Gyldig legitimasjon, kj&oslash;pere: <span class="insert-table"><span class="insert" data-label="tekst"></span></span></p>
+
+<p vitec-if="(Model.kjoper.fullmektig.navn != &quot;&quot; &amp;&amp; Model.kjoper.fullmektig.navn != &quot;Mangler data&quot;)">Kj&oslash;per er representert ved fullmektig [[kjoper.fullmektig.navn]]</p>
+
+<p>er i dag inng&aring;tt f&oslash;lgende kj&oslash;pekontrakt:</p>
+
+<!-- ===== SECTION 1A: Selveiet bolig ===== -->
+<div vitec-if="Model.eiendom.eieform != &quot;Eierseksjon&quot;">
+<article class="item">
+<div class="avoid-page-break">
+<h2>SALGSOBJEKT OG TILBEH&Oslash;R</h2>
+<p style="text-align:center;">(selveiet bolig/fritidsbolig)</p>
+
+<p>Kontrakten gjelder kj&oslash;p av</p>
+
+<p><span vitec-if="Model.eiendom.grunntype == &quot;Bolig&quot;"><label class="btn active" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></span><span vitec-if="Model.eiendom.grunntype != &quot;Bolig&quot;"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></span> bolig</p>
+<p><span vitec-if="Model.eiendom.grunntype == &quot;Fritid&quot;"><label class="btn active" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></span><span vitec-if="Model.eiendom.grunntype != &quot;Fritid&quot;"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></span> fritidsbolig</p>
+</div>
+
+<p>p&aring; fradelt tomt fra/med g&aring;rdsnr. <span class="insert-table"><span class="insert" data-label="gnr"></span></span> bruksnr. <span class="insert-table"><span class="insert" data-label="bnr"></span></span> i [[eiendom.kommunenavn]] kommune.</p>
+
+<div class="avoid-page-break">
+<p>Tomten er:</p>
+<p><span vitec-if="Model.eiendom.tomtetype == &quot;eiertomt&quot;"><label class="btn active" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></span><span vitec-if="Model.eiendom.tomtetype != &quot;eiertomt&quot;"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></span> eiet</p>
+<p><span vitec-if="Model.eiendom.tomtetype == &quot;festetomt&quot;"><label class="btn active" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></span><span vitec-if="Model.eiendom.tomtetype != &quot;festetomt&quot;"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></span> festet</p>
+</div>
+
+<p><span vitec-if="Model.eiendom.grunntype == &quot;Bolig&quot;">Boligen</span><span vitec-if="Model.eiendom.grunntype == &quot;Fritid&quot;">Fritidsboligen</span> leveres som angitt i kravspesifikasjoner, tegninger, prospekt mv. som kj&oslash;per er kjent med og som f&oslash;lger som vedlegg til denne kontrakt.</p>
+
+<p>Selger kan foreta n&oslash;dvendige og/eller hensiktsmessige endringer i spesifikasjonene, f.eks. som f&oslash;lge av offentligrettslige krav, manglende tilgjengelighet eller prisendringer, s&aring; lenge dette ikke reduserer <span vitec-if="Model.eiendom.grunntype == &quot;Bolig&quot;">boligens</span><span vitec-if="Model.eiendom.grunntype == &quot;Fritid&quot;">fritidsboligens</span> forutsatte standard. Dette gjelder ogs&aring; for endringer/tilvalg. Slike endringer utgj&oslash;r ikke en mangel, og gir ikke kj&oslash;per rett til prisavslag eller andre sanksjoner.</p>
+
+<p>Tegninger og illustrasjoner i prospektet og tegningsmaterialet er kun av illustrativ karakter. Ved eventuelle avvik gjelder leveransebeskrivelsen foran prospektet og tegninger.</p>
+</article>
+</div>
+
+<!-- ===== SECTION 1B: Eierseksjon/sameie ===== -->
+<div vitec-if="Model.eiendom.eieform == &quot;Eierseksjon&quot;">
+<article class="item">
+<div class="avoid-page-break">
+<h2>SALGSOBJEKT OG TILBEH&Oslash;R</h2>
+<p style="text-align:center;">(bolig/fritidsbolig i sameie)</p>
+
+<p>Kontrakten gjelder kj&oslash;p av</p>
+
+<p><span vitec-if="Model.eiendom.grunntype == &quot;Bolig&quot;"><label class="btn active" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></span><span vitec-if="Model.eiendom.grunntype != &quot;Bolig&quot;"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></span> bolig i eierseksjonssameie</p>
+<p><span vitec-if="Model.eiendom.grunntype == &quot;Fritid&quot;"><label class="btn active" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></span><span vitec-if="Model.eiendom.grunntype != &quot;Fritid&quot;"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></span> fritidsbolig i eierseksjonssameie</p>
+</div>
+
+<p>p&aring; fradelt tomt fra/med g&aring;rdsnr. <span class="insert-table"><span class="insert" data-label="gnr"></span></span> bruksnr. <span class="insert-table"><span class="insert" data-label="bnr"></span></span> i [[eiendom.kommunenavn]] kommune.</p>
+
+<div class="avoid-page-break">
+<p>Tomten er:</p>
+<p><span vitec-if="Model.eiendom.tomtetype == &quot;eiertomt&quot;"><label class="btn active" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></span><span vitec-if="Model.eiendom.tomtetype != &quot;eiertomt&quot;"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></span> eiet</p>
+<p><span vitec-if="Model.eiendom.tomtetype == &quot;festetomt&quot;"><label class="btn active" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></span><span vitec-if="Model.eiendom.tomtetype != &quot;festetomt&quot;"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></span> festet</p>
+</div>
+
+<p>Selger bes&oslash;rger og bekoster seksjonering. Seksjonens endelige seksjonsnummer vil bli tildelt n&aring;r seksjonering er gjennomf&oslash;rt, senest innen overtagelse. Dersom boligen overleveres f&oslash;r eiendommen er seksjonert, gj&oslash;res kj&oslash;per oppmerksom p&aring; at ved evt. utleie risikerer kj&oslash;per krav fra leietakerne om &aring; overta seksjonen til 80% av markedsverdi jfr. Eierseksjonsloven.</p>
+
+<p><span vitec-if="Model.eiendom.grunntype == &quot;Bolig&quot;">Boligen</span><span vitec-if="Model.eiendom.grunntype == &quot;Fritid&quot;">Fritidsboligen</span> er forel&oslash;pig betegnet som leilighet nr. [[eiendom.leilighetsnr]].</p>
+
+<div class="avoid-page-break">
+<p>Til boligen/fritidsboligen medf&oslash;lger:</p>
+<p><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> Garasjeplass(er), antall <span class="insert-table"><span class="insert" data-label="tekst"></span></span></p>
+<p><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> Parkeringsplass(er), antall <span class="insert-table"><span class="insert" data-label="tekst"></span></span></p>
+<p><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> Bruksrett til del av fellesarealer, se vedlegg</p>
+<p><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> Tilleggsareal, se vedlegg</p>
+<p><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> Gjesteparkering, antall plasser <span class="insert-table"><span class="insert" data-label="tekst"></span></span>, felles for sameiet, se vedlegg</p>
+</div>
+
+<p>Hjemmelshaver til eiendommen er</p>
+<p>1) selger(e) <span class="insert-table"><span class="insert" data-label="tekst"></span></span></p>
+<p>2) annen: navn <span class="insert-table"><span class="insert" data-label="tekst"></span></span> f&oslash;dsels- eller foretaksnr. <span class="insert-table"><span class="insert" data-label="tekst"></span></span></p>
+
+<p>Prosjektet er planlagt med [[oppdrag.prosjekt.antallenheter]] enheter.</p>
+
+<p>Boligene/fritidsboligene leveres som angitt i kravspesifikasjoner, tegninger, prospekt mv. som kj&oslash;per er kjent med og som f&oslash;lger som vedlegg til denne kontrakt.</p>
+
+<p>Selger kan foreta n&oslash;dvendige og/eller hensiktsmessige endringer i spesifikasjonene, f.eks. som f&oslash;lge av offentligrettslige krav, manglende tilgjengelighet eller prisendringer, s&aring; lenge dette ikke reduserer boligens/fritidsboligens forutsatte standard. Dette gjelder ogs&aring; for endringer/tilvalg. Slike endringer utgj&oslash;r ikke en mangel, og gir ikke kj&oslash;per rett til prisavslag eller andre sanksjoner.</p>
+
+<p>Tegninger og illustrasjoner i prospektet og tegningsmaterialet er kun av illustrativ karakter. Ved eventuelle avvik gjelder leveransebeskrivelsen foran prospektet og tegninger.</p>
+
+<p>Kj&oslash;per er kjent med at det med boligen/fritidsboligen medf&oslash;lger et ansvar for &aring; dekke eiendommens andel av de m&aring;nedlige felleskostnadene. Seksjonens m&aring;nedlige felleskostnader er ut fra blant annet erfaringstall stipulert til kr. $.UD([[eiendom.fellesutgifter]]) for f&oslash;rste drifts&aring;r. Kj&oslash;per er kjent med at felleskostnadene kan bli justert etter endringer i konsumprisindeks, vedlikeholdsbehov, sameiets egne vedtak mm. Det tas forbehold om at Selger kan justere felleskostnadene som f&oslash;lge av endringer i budsjettpostene.</p>
+</article>
+</div>
+
+<!-- ===== SECTION 2 ===== -->
+<article class="item">
+<div class="avoid-page-break">
+<h2>KJ&Oslash;PESUM OG OMKOSTNINGER</h2>
+
+<p>Eiendommen overdras for en kj&oslash;pesum</p>
+
+<p><u>kr $.UD([[kontrakt.kjopesum]]) &ndash; [[kontrakt.kjopesumibokstaver]], 00/100</u>, heretter kalt &laquo;kj&oslash;pesummen&raquo;</p>
+
+<p>som gj&oslash;res opp p&aring; f&oslash;lgende m&aring;te:</p>
+
+<table class="costs-table">
+<tbody>
+<tr>
+  <td colspan="60">Kj&oslash;per betaler ved kontraktsinng&aring;else 10 % av kj&oslash;pesummen,</td>
+  <td colspan="30" style="text-align:right;">kroner</td>
+  <td colspan="10" style="text-align:right;"><span class="insert-table"><span class="insert" data-label="bel&oslash;p"></span></span></td>
+</tr>
+<tr>
+  <td colspan="60">Sluttoppgj&oslash;r innen dato for overtakelse</td>
+  <td colspan="30">&nbsp;</td>
+  <td colspan="10">&nbsp;</td>
+</tr>
+<tr class="sum-row">
+  <td colspan="60"><u>Kj&oslash;pesum</u></td>
+  <td colspan="30" style="text-align:right;"><u>kroner</u></td>
+  <td colspan="10" style="text-align:right;"><u>$.UD([[kontrakt.kjopesum]])</u></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class="avoid-page-break">
+<p>I tillegg til kj&oslash;pesummen m&aring; kj&oslash;per betale f&oslash;lgende omkostninger:</p>
+
+<table class="costs-table">
+<tbody>
+<tr>
+  <td colspan="70">Dokumentavgift til Staten, 2,5 % av tomteverdien</td>
+  <td colspan="15" style="text-align:right;">kr</td>
+  <td colspan="15" style="text-align:right;"><span class="insert-table"><span class="insert" data-label="bel&oslash;p"></span></span>,-</td>
+</tr>
+<tr>
+  <td colspan="70">Tinglysingsgebyr for skj&oslash;te</td>
+  <td colspan="15" style="text-align:right;">kr</td>
+  <td colspan="15" style="text-align:right;"><span class="insert-table"><span class="insert" data-label="bel&oslash;p"></span></span>,-</td>
+</tr>
+<tr>
+  <td colspan="70">Tinglysingsgebyr for pantedokument</td>
+  <td colspan="15" style="text-align:right;">kr</td>
+  <td colspan="15" style="text-align:right;"><span class="insert-table"><span class="insert" data-label="bel&oslash;p"></span></span>,-</td>
+</tr>
+<tr>
+  <td colspan="70">Attestgebyr</td>
+  <td colspan="15" style="text-align:right;">kr</td>
+  <td colspan="15" style="text-align:right;"><span class="insert-table"><span class="insert" data-label="bel&oslash;p"></span></span>,-</td>
+</tr>
+<tr>
+  <td colspan="70">I tillegg skal kj&oslash;per innbetale forskudd til driftskonto</td>
+  <td colspan="15" style="text-align:right;">kr</td>
+  <td colspan="15" style="text-align:right;"><span class="insert-table"><span class="insert" data-label="bel&oslash;p"></span></span>,-</td>
+</tr>
+<tr class="sum-row">
+  <td colspan="70"><u>Sum omkostninger</u></td>
+  <td colspan="15" style="text-align:right;"><u>Kr</u></td>
+  <td colspan="15" style="text-align:right;"><u>$.UD([[kontrakt.totaleomkostninger]]),-</u></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class="avoid-page-break">
+<table class="costs-table">
+<tbody>
+<tr class="sum-row">
+  <td colspan="70"><u>Kj&oslash;pesum inkl. omkostninger, i alt</u></td>
+  <td colspan="15" style="text-align:right;"><u>Kr</u></td>
+  <td colspan="15" style="text-align:right;"><u>$.UD([[kontrakt.kjopesumogomkostn]]),-</u></td>
+</tr>
+</tbody>
+</table>
+
+<p>Det tas forbehold om endringer i offentlige avgifter/gebyrer.</p>
+</div>
+</article>
+
+<!-- ===== SECTION 3 ===== -->
+<article class="avoid-page-break item">
+<h2>SELGERS PLIKT TIL &Aring; STILLE GARANTIER</h2>
+
+<p>Selger skal, umiddelbart etter at avtale er inng&aring;tt, stille garanti etter bustadoppf&oslash;ringslova &sect; 12. Garantien skal gjelde fra tidspunkt for avtaleinng&aring;else og frem til fem &aring;r etter overtagelse. Garantien skal tilsvare minst 3 % av kj&oslash;pesummen frem til overtagelse, og minst 5 % etter overtagelse.</p>
+
+<p>Er det i avtalen tatt forbehold som beskrevet i bustadoppf&oslash;ringslova &sect; 12 annet ledd, andre setning, er det tilstrekkelig at selger stiller garantien straks etter at forbeholdene er falt bort, men selger skal uansett stille garanti f&oslash;r byggearbeidene starter.</p>
+
+<p>Til det er dokumentert at det foreligger &sect; 12 garanti, har forbrukeren rett til &aring; holde tilbake alt vederlag.</p>
+
+<p>Ved avtale om forskuddsbetaling etter punkt 2 og 4 alternativ 1, skal selger i tillegg stille forskuddsgaranti etter bustadoppf&oslash;ringslova &sect; 47, dersom selger &oslash;nsker &aring; benytte seg av det innbetalte forskuddet.</p>
+</article>
+
+<!-- ===== SECTION 4 ===== -->
+<article class="item">
+<div class="avoid-page-break">
+<h2>OPPGJ&Oslash;R</h2>
+
+<p>Oppgj&oslash;ret mellom partene foretas av megler og gjennomf&oslash;res i henhold til inng&aring;tt avtale mellom kj&oslash;per og selger.</p>
+
+<p>Oppgj&oslash;ret mellom partene foretas av meglerforetakets oppgj&oslash;rsavdeling:</p>
+
+<table style="width:100%; table-layout:fixed;">
+<tbody>
+<tr><td colspan="100">[[oppgjor.kontornavn]]</td></tr>
+<tr><td colspan="100">[[oppgjor.besoksadresse]], [[oppgjor.besokspostnr]] [[oppgjor.besokspoststed]]</td></tr>
+<tr>
+  <td colspan="50">Tlf: [[oppgjor.kontortlf]]</td>
+  <td colspan="50">E-post: [[oppgjor.kontorepost]]</td>
+</tr>
+</tbody>
+</table>
+
+<p>Dette endrer ikke ansvarsforholdet som meglerforetaket har overfor kj&oslash;per og selger.</p>
+</div>
+
+<p>Det er avtalt f&oslash;lgende oppgj&oslash;rsform:</p>
+
+<div class="avoid-page-break">
+<p><strong>Alternativ 1:</strong></p>
+
+<p><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> Forskudd.</p>
+
+<p>Boligen tinglyses i kj&oslash;pers navn f&oslash;rst ved tidspunkt for ferdigstillelse og overtagelse.</p>
+
+<p>Selv om det er avtalt forskuddsbetalinger har kj&oslash;per rett til &aring; holde tilbake alt vederlag inntil det er dokumentert at det er stilt entrepren&oslash;rgaranti i samsvar med bustadoppf&oslash;ringslova &sect; 12.</p>
+
+<p>Det innbetalte bel&oslash;pet tilh&oslash;rer kj&oslash;per, og kan ikke frigis til selger inntil det enten er stilt forskuddsgaranti etter bustadoppf&oslash;ringslova &sect; 47 eller kj&oslash;per har f&aring;tt tinglyst hjemmel til boligen.</p>
+
+<p>Innbetalinger f&oslash;r overtakelse skal v&aelig;re fri egenkapital og kan ikke sikres med pant i den kj&oslash;pte boligen.</p>
+</div>
+
+<div class="avoid-page-break">
+<p><strong>Alternativ 2:</strong></p>
+
+<p><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> Hele kj&oslash;pesummen betales ved overtakelse av boligen.</p>
+
+<p>Boligen tinglyses i kj&oslash;pers navn f&oslash;rst ved tidspunkt for ferdigstillelse og overtagelse.</p>
+
+<p>Det innbetalte bel&oslash;pet tilh&oslash;rer kj&oslash;per, og kan ikke frigis til selger inntil det enten er stilt forskuddsgaranti etter bustadoppf&oslash;ringslova &sect; 47 eller kj&oslash;per har f&aring;tt tinglyst hjemmel til boligen.</p>
+</div>
+
+<p>Uavhengig av om det er alternativ 1 eller 2 som er valgt, skal hele kj&oslash;pesummen med tillegg av omkostninger v&aelig;re kreditert eiendomsmeglers klientkonto <strong>[[kontrakt.klientkonto]]</strong> og merkes med <strong>[[kontrakt.kid]]</strong> innen dato for overtagelse.</p>
+
+<p>Ved omtvistet bel&oslash;p har kj&oslash;per deponeringsrett i henhold til bustadoppf&oslash;ringslovens &sect; 49.</p>
+
+<p>Fordeling av eiendommens driftsutgifter og eventuelle inntekter pr. overtagelsesdato settes opp av kj&oslash;per og selger. &Oslash;nsker partene eiendomsmeglers bistand til dette, inng&aring;s det s&aelig;rskilt avtale om det.</p>
+
+<p>Rentene av innest&aring;ende p&aring; klientkonto tilfaller som hovedregel kj&oslash;per.</p>
+
+<p>N&aring;r det er avtalt at kj&oslash;per skal betale forskudd, er forskuddet &aring; anse som selgers penger n&aring;r lovens vilk&aring;r om &aring; sikre kj&oslash;per er oppfylt. N&aring;r selger har oppfylt vilk&aring;rene om &aring; stille garantier etter bustadoppf&oslash;ringslova &sect;&sect; 12 og 47 godskrives derfor selger renter av innest&aring;ende p&aring; klientkonto til enhver tid. Renter av omkostninger som er innbetalt av kj&oslash;per tilfaller kj&oslash;per. Kj&oslash;per og selger godskrives likevel ikke renter n&aring;r disse for hver av partene utgj&oslash;r mindre enn et halvt rettsgebyr, jf. eiendomsmeglingsforskriften &sect; 3-10 tredje ledd.</p>
+</article>
+
+<!-- ===== SECTION 5 ===== -->
+<article class="item">
+<div class="avoid-page-break">
+<h2>HEFTELSER</h2>
+
+<p>Utskrift av eiendommens grunnbok er forelagt kj&oslash;per. Kj&oslash;per har gjort seg kjent med innholdet i denne.</p>
+
+<p><strong>Pengeheftelser:</strong></p>
+
+<p>
+  <span vitec-if="(Model.eiendom.heftelserogrettigheter == &quot;&quot; || Model.eiendom.heftelserogrettigheter == &quot;Mangler data&quot;)"><label class="btn active" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></span><span vitec-if="(Model.eiendom.heftelserogrettigheter != &quot;&quot; &amp;&amp; Model.eiendom.heftelserogrettigheter != &quot;Mangler data&quot;)"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></span>
+  Eiendommen overdras fri for pengeheftelser.
+</p>
+
+<p>
+  <span vitec-if="(Model.eiendom.heftelserogrettigheter != &quot;&quot; &amp;&amp; Model.eiendom.heftelserogrettigheter != &quot;Mangler data&quot;)"><label class="btn active" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></span><span vitec-if="(Model.eiendom.heftelserogrettigheter == &quot;&quot; || Model.eiendom.heftelserogrettigheter == &quot;Mangler data&quot;)"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></span>
+  Eiendommen overdras fri for pengeheftelser, med unntak for f&oslash;lgende dokumenter:
+</p>
+<p vitec-if="(Model.eiendom.heftelserogrettigheter != &quot;&quot; &amp;&amp; Model.eiendom.heftelserogrettigheter != &quot;Mangler data&quot;)">[[eiendom.heftelserogrettigheter]]</p>
+
+<p>Pengeheftelser som ikke skal f&oslash;lge med eiendommen, skal slettes for selgers regning.</p>
+</div>
+
+<p>Selger opplyser at det ikke eksisterer pengeheftelser av noen art, herunder utleggsforretninger, utover det som grunnboksutskriften viser. Selger forplikter seg til umiddelbart &aring; underrette megler dersom slike forretninger blir avholdt innen tinglysing av skj&oslash;tet skal finne sted. Videre forplikter selger seg til &aring; betale alle avgifter m.v. som vedr&oslash;rer eiendommen og som er forfalt eller forfaller f&oslash;r overtagelsen.</p>
+
+<p>Selger gir herved megler ugjenkallelig fullmakt til &aring; innfri pengeheftelser som fremg&aring;r av bekreftet grunnboksutskrift/oppgj&oslash;rsskjema og som det ikke er avtalt at kj&oslash;per skal overta, og evt. ubetalte avgifter mv. som nevnt over.</p>
+
+<div class="avoid-page-break">
+<p><strong>Andre heftelser:</strong></p>
+
+<p><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> Det er ikke tinglyst andre heftelser p&aring; eiendommen.</p>
+
+<p><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> F&oslash;lgende andre heftelser er tinglyst p&aring; eiendommen, og skal f&oslash;lge med ved salget:</p>
+<p><span class="insert-table"><span class="insert" data-label="heftelser"></span></span></p>
+
+<p>Selger har rett til &aring; tinglyse nye heftelser p&aring; eiendommen som f&oslash;lge av krav fra det offentlige, herunder heftelser som gjelder vei, vann og avl&oslash;p.</p>
+</div>
+</article>
+
+<!-- ===== SECTION 6 ===== -->
+<article class="avoid-page-break item">
+<h2>TINGLYSING/SIKKERHET</h2>
+
+<p>Selger utsteder skj&oslash;te til kj&oslash;per samtidig med denne kontrakts underskrift. Skj&oslash;tet skal oppbevares hos megler, som foretar tinglysing n&aring;r kj&oslash;per har innbetalt fullt oppgj&oslash;r, inklusive omkostninger. Partene gir meglerforetaket fullmakt til &aring; p&aring;f&oslash;re rett matrikkel p&aring; skj&oslash;te n&aring;r dette foreligger.</p>
+
+<p>Selger har utstedt et pantedokument (sikringspantedokument) til megler som lyder p&aring; et bel&oslash;p minst tilsvarende kj&oslash;pesummen. Pantedokumentet inneholder ogs&aring; en ur&aring;dighetserkl&aelig;ring. Pantedokumentet er tinglyst, eller skal tinglyses, av eiendomsmegler. Pantedokumentet tjener som sikkerhet for den til enhver tid utbetalte del av salgssummen.</p>
+
+<p>Eiendomsmegleren skal vederlagsfritt bes&oslash;rge pantedokumentet slettet n&aring;r oppgj&oslash;r mellom partene er avsluttet og skj&oslash;tet er godtatt til tinglysning.</p>
+
+<p>All tinglysing av dokumenter p&aring; eiendommen skal foretas av eiendomsmegler. Dokumenter som skal tinglyses m&aring; snarest, og i god tid f&oslash;r overtakelse, overleveres eiendomsmegler i undertegnet og tinglysingsklar stand.</p>
+</article>
+
+<!-- ===== SECTION 7 ===== -->
+<article class="avoid-page-break item">
+<h2>SELGERS MANGELSANSVAR/KJ&Oslash;PERS REKLAMASJONSSPLIKT</h2>
+
+<p>Det foreligger mangel ved avvik fra avtalt ytelse eller avvik fra offentligrettslige krav som beskrevet i bustadoppf&oslash;ringslova &sect; 25, ved manglende opplysninger som beskrevet i &sect; 26 eller ved uriktige opplysninger som beskrevet i &sect; 27.</p>
+
+<p>Foreligger det mangel, kan kj&oslash;per gj&oslash;re gjeldende slike krav som f&oslash;lger av bustadoppf&oslash;ringslova &sect;&sect; 29 flg., herunder retting av mangel, tilbakeholdel av kj&oslash;pesum, erstatning eller heving, p&aring; n&aelig;rmere vilk&aring;r som beskrevet i bustadoppf&oslash;ringslova.</p>
+
+<p>Kj&oslash;peren mister retten til &aring; gj&oslash;re mangler gjeldende dersom det ikke rettidig er sendt reklamasjon til selger i tr&aring;d med bustadoppf&oslash;ringslova &sect; 30.</p>
+
+<p>Selger er ikke ansvarlig for mangler, skjulte eller &aring;penbare, som skyldes kj&oslash;perens bruk av eiendommen eller krymping av materialer og derav sprekker i tapet, maling eller lignende.</p>
+</article>
+
+<!-- ===== SECTION 8 ===== -->
+<article class="avoid-page-break item">
+<h2>ENDRINGSARBEIDER, TILLEGGSARBEIDER OG TILVALG</h2>
+
+<p>Kj&oslash;per kan kreve endringer, og partene kan kreve justering av vederlaget, i henhold til bustadoppf&oslash;ringslovas regler. Partene har avtalt at kj&oslash;peren ikke kan kreve endringer som vil endre kj&oslash;pesummen med 15 prosent eller mer.</p>
+
+<p>Partene er enige om at alle endringer, tillegg eller tilvalg (kalt &laquo;Endringer&raquo; som fellesbetegnelse) til kontrakten skal skje skriftlig og med kopi til megler, ogs&aring; etter inng&aring;elsen av kj&oslash;pekontrakten.</p>
+
+<p>Endringene blir en del av kj&oslash;pekontrakten, p&aring; samme m&aring;te som de opprinnelig avtalte hovedytelsene: Endringene inneb&aelig;rer at beskrivelsen av salgsobjektet i punkt 1, med vedlegg, justeres i henhold til de avtalte endringer og tilvalg. Det er ogs&aring; etter Endringene selger som er ansvarlig for hele leveransen av boligen/fritidsboligen, og kj&oslash;per kan forholde seg til selger ved eventuell forsinkelse eller mangler knyttet til Endringene. Kj&oslash;per er ansvarlig for &aring; betale hele kj&oslash;pesummen, inkludert betaling for Endringene, til meglers klientkonto. Selgers forpliktelse til &aring; stille forskuddsgaranti etter denne kontrakten og bustadoppf&oslash;ringslova &sect; 47 vil gjelde tilsvarende for Endringene. Utbygger gis anledning til &aring; beregne seg et p&aring;slag p&aring; bestilte tilleggsarbeider gjort med underleverand&oslash;rer.</p>
+</article>
+
+<!-- ===== SECTION 9 ===== -->
+<article class="item" style="page-break-before: always;">
+<div class="avoid-page-break">
+<h2>OVERTAKELSE</h2>
+
+<div vitec-if="Model.kontrakt.overtagelse.dato != &quot;Mangler data&quot;">
+<p><label class="btn active" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> Eiendommen overtas av kj&oslash;per den <strong>[[kontrakt.overtagelse.dato]]</strong> med alle rettigheter og forpliktelser slik den har tilh&oslash;rt selger, forutsatt at kj&oslash;per har oppfylt sine forpliktelser.</p>
+<p><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> Forventet ferdigstillelse er <span class="insert-table"><span class="insert" data-label="dato"></span></span>, men dette tidspunktet er forel&oslash;pig og ikke bindende og utl&oslash;ser ikke dagmulkt.</p>
+</div>
+
+<div vitec-if="Model.kontrakt.overtagelse.dato == &quot;Mangler data&quot;">
+<p><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> Eiendommen overtas av kj&oslash;per den <span class="insert-table"><span class="insert" data-label="dato"></span></span> med alle rettigheter og forpliktelser slik den har tilh&oslash;rt selger, forutsatt at kj&oslash;per har oppfylt sine forpliktelser.</p>
+<p><label class="btn active" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> Forventet ferdigstillelse er <span class="insert-table"><span class="insert" data-label="dato"></span></span>, men dette tidspunktet er forel&oslash;pig og ikke bindende og utl&oslash;ser ikke dagmulkt.</p>
+</div>
+</div>
+
+<p>N&aring;r selger har opphevet forbeholdene stilt i avtalen skal selger fastsette en overtakelsesperiode som ikke skal v&aelig;re lenger enn 3 m&aring;neder. Selger skal skriftlig varsle kj&oslash;per om n&aring;r overtakelsesperioden begynner og slutter. Senest 10 uker f&oslash;r ferdigstillelse av boligen skal selger gi kj&oslash;per skriftlig melding om endelig overtakelsesdato. Den endelige datoen er bindende og dagmulktsutl&oslash;sende, og skal ligge innenfor overtakelsesperioden.</p>
+
+<p>Selger skal innkalle til overtakelsesforretning etter bustadoppf&oslash;ringslova &sect; 15. Selger er ansvarlig for at det skrives protokoll fra overtakelsesforretningen, i henhold til bilag til denne kontrakt.</p>
+
+<p>Kj&oslash;per svarer fra overtagelsen for alle eiendommens utgifter og oppeb&aelig;rer eventuelle inntekter.</p>
+
+<p>Selger skal overlevere eiendommen til kj&oslash;per i ryddig og byggrengjort stand, uten leieforhold av noen art, slik at hele eiendommen leveres ledig for kj&oslash;per. Eiendommen skal ha ferdigattest eller midlertidig brukstillatelse f&oslash;r overlevering til kj&oslash;per.</p>
+
+<p>Kj&oslash;per gj&oslash;res oppmerksom p&aring; at fellesarealene overtas samtidig med boligen p&aring; overtakelsesdagen. Dersom det er mangler ved fellesarealene p&aring; overtakelsestidspunktet, og kj&oslash;per &oslash;nsker &aring; tilbakeholde et bel&oslash;p etter bustadoppf&oslash;ringslovas &sect; 31 for &aring; sikre retting/ferdigstillelse, skal dette protokollf&oslash;res p&aring; overtakelsesprotokollen eller p&aring; annen m&aring;te skriftlig varsles eiendomsmegler og selger f&oslash;r hjemmelsovergang.</p>
+
+<p>P&aring; et senere tidspunkt enn overtakelse kan selger innkalle styret i sameiet for kontrollbefaring av fellesarealene. Kj&oslash;perne skal i s&aring; tilfelle orienteres om utfallet av kontrollbefaringen. Styrets eventuelle konklusjoner vil kun v&aelig;re veiledende for kj&oslash;perne og gir ikke styret anledning til &aring; frigi kj&oslash;pernes eventuelle tilbakeholdte bel&oslash;p, uten at kj&oslash;per skriftlig samtykker til det.</p>
+
+<p>Ved overtakelse mot midlertidig brukstillatelse, for eksempel der fellesarealene ikke er ferdigstilt, er selger forpliktet til &aring; fremskaffe ferdigattest innen rimelig tid og senest f&oslash;r midlertidig brukstillatelse er utl&oslash;pt p&aring; tid. Skulle denne situasjonen oppst&aring;, er megler forpliktet etter eiendomsmeglingsloven til &aring; gj&oslash;re kj&oslash;per oppmerksom p&aring; at det b&oslash;r etableres tilstrekkelig sikkerhet for kj&oslash;pers krav. Megler skal deretter bist&aring; partene med &aring; etablere et tilfredsstillende sikkerhetsarrangement som ivaretar kj&oslash;pers interesser.</p>
+
+<p>Risikoen for eiendommen g&aring;r over p&aring; kj&oslash;per n&aring;r kj&oslash;per har overtatt bruken av eiendommen. Overtar kj&oslash;per ikke til fastsatt tid, og &aring;rsaken ligger hos ham, har kj&oslash;per risikoen fra det tidspunktet eiendommen kunne v&aelig;rt overtatt.</p>
+
+<p>N&aring;r risikoen for eiendommen er g&aring;tt over p&aring; kj&oslash;per, faller ikke kj&oslash;pers plikt til &aring; betale kj&oslash;pesummen bort ved at eiendommen blir &oslash;delagt eller skadet som f&oslash;lge av en hendelse som selger ikke svarer for.</p>
+
+<p>Dersom ikke annet er avtalt, utleveres n&oslash;klene til eiendommen ved overtagelsesbefaringen s&aring;fremt kj&oslash;pesum og omkostninger er bekreftet innbetalt. Dersom selger utleverer n&oslash;kler til kj&oslash;per f&oslash;r innbetaling som ovenfor nevnt er bekreftet, b&aelig;rer selger selv risikoen og oppdragsansvarlig er uten ansvar for dette.</p>
+</article>
+
+<!-- ===== SECTION 10 ===== -->
+<article class="avoid-page-break item">
+<h2>ETT&Aring;RSBEFARING</h2>
+
+<p>Selger skal med rimelig frist s&oslash;rge for at det skriftlig innkalles til ett&aring;rsbefaring n&aring;r det er g&aring;tt om lag ett &aring;r siden overtakelsen, jf. bustadoppf&oslash;ringslova &sect; 16.</p>
+</article>
+
+<!-- ===== SECTION 11 ===== -->
+<article class="avoid-page-break item">
+<h2>SELGERS KONTRAKTSBRUDD</h2>
+
+<p>Er selgers ytelse forsinket etter kj&oslash;pekontraktens bestemmelser sammenholdt med bustadoppf&oslash;ringslova &sect; 17, kan kj&oslash;per kreve sanksjoner som n&aelig;rmere beskrevet i bustadoppf&oslash;ringslova &sect;&sect; 18 flg. Slike sanksjoner kan v&aelig;re &aring; holde igjen hele eller deler av kj&oslash;pesummen, kreve dagmulkt, kreve erstatning eller &aring; heve avtalen, p&aring; n&aelig;rmere vilk&aring;r i bustadoppf&oslash;ringslova.</p>
+</article>
+
+<!-- ===== SECTION 12 ===== -->
+<article class="avoid-page-break item">
+<h2>KJ&Oslash;PERS KONTRAKTSBRUDD</h2>
+
+<p>Er kj&oslash;pers betaling eller annen medvirkning ikke oppfylt til avtalt tid eller til tidspunkt selger kan kreve etter bustadoppf&oslash;ringslova &sect;&sect; 46, 47, 50 og 51 kan selger kreve sanksjoner som n&aelig;rmere beskrevet i bustadoppf&oslash;ringslova &sect;&sect; 56 flg. Slike sanksjoner kan v&aelig;re &aring; stanse arbeidet og kreve tilleggsvederlag, kreve rente og erstatning for rentetap eller heve avtalen og kreve erstatning for tap, p&aring; n&aelig;rmere vilk&aring;r i bustadoppf&oslash;ringslova.</p>
+
+<p>Selger tar forbehold om &aring; heve kontrakten ved kj&oslash;pers vesentlige mislighold, selv om kj&oslash;per har overtatt bruken av boligen/fritidsboligen og/eller skj&oslash;tet er tinglyst f&oslash;r kj&oslash;per har oppfylt sine forpliktelser etter kj&oslash;pekontrakten.</p>
+
+<p>Blir avtalen hevet som f&oslash;lge av manglende oppfyllelse fra kj&oslash;per etter overtagelse, vedtar kj&oslash;per tvangsfravikelse i tr&aring;d med tvangsfullbyrdelsesloven &sect; 13-2.</p>
+</article>
+
+<!-- ===== SECTION 13 ===== -->
+<article class="avoid-page-break item">
+<h2>FORSIKRING</h2>
+
+<p>Eiendommen er fullverdiforsikret i <span class="insert-table"><span class="insert" data-label="tekst"></span></span></p>
+
+<p>Selger er forpliktet til &aring; holde eiendommen fullverdiforsikret frem til overtakelsesdagen. Ved overtakelse g&aring;r forsikringsplikten over p&aring; kj&oslash;per, eller p&aring; sameiet ved kj&oslash;p av eierseksjon.</p>
+
+<p>Dersom eiendommen f&oslash;r overtakelse blir utsatt for skade ved brann eller andre forhold som dekkes av forsikringen, har kj&oslash;per rett til &aring; tre inn i forsikringsavtalen.</p>
+
+<p>Evt. innboforsikring m&aring; betales av kj&oslash;per fra overtakelse.</p>
+</article>
+
+<!-- ===== SECTION 14 ===== -->
+<article class="avoid-page-break item">
+<h2>AVBESTILLING</h2>
+
+<p>Kj&oslash;per kan avbestille i henhold til reglene i bustadoppf&oslash;ringslova &sect;&sect; 52 og 53. Slik avbestilling kan gi selger rett til &oslash;konomisk kompensasjon.</p>
+</article>
+
+<!-- ===== SECTION 15 ===== -->
+<article class="item">
+<div class="avoid-page-break">
+<h2>SELGERS FORBEHOLD</h2>
+
+<p>Selger tar f&oslash;lgende forbehold for gjennomf&oslash;ring av kontrakten:</p>
+
+<p vitec-if="Model.oppdrag.prosjekt.erutbyggersforbeholdsalgsgrad == true"><label class="btn active" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> <span class="insert-table"><span class="insert" data-label="tekst"></span></span> % av boligene er solgt</p>
+<p vitec-if="Model.oppdrag.prosjekt.erutbyggersforbeholdsalgsgrad != true"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> <span class="insert-table"><span class="insert" data-label="tekst"></span></span> % av boligene er solgt</p>
+
+<p vitec-if="Model.oppdrag.prosjekt.erutbyggersforbeholdigangsettelse == true"><label class="btn active" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> kommunen gir igangsettelsestillatelse</p>
+<p vitec-if="Model.oppdrag.prosjekt.erutbyggersforbeholdigangsettelse != true"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> kommunen gir igangsettelsestillatelse</p>
+
+<p vitec-if="Model.oppdrag.prosjekt.erutbyggersforbeholdbyggelaan == true"><label class="btn active" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> byggel&aring;net er &aring;pnet</p>
+<p vitec-if="Model.oppdrag.prosjekt.erutbyggersforbeholdbyggelaan != true"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> byggel&aring;net er &aring;pnet</p>
+
+<p><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> endelig beslutning om igangsetting i utbyggers styre</p>
+</div>
+
+<p>De ovenfor nevnte forbehold gjelder for en periode p&aring; inntil <span class="insert-table"><span class="insert" data-label="tekst"></span></span> m&aring;neder fra salgsstart, og selgers frist for &aring; gj&oslash;re forbehold gjeldende er <span class="insert-table"><span class="insert" data-label="dato"></span></span>. Dersom selger ikke har sendt skriftlig melding til kj&oslash;per om at forbehold gj&oslash;res gjeldende innen fristen, er selger endelig juridisk bundet av kontrakten. Meldingen m&aring; angi hvilket forbehold som gj&oslash;res gjeldende, og m&aring; v&aelig;re kommet frem til kj&oslash;per innen den angitte frist per e-post eller rekommandert brev.</p>
+
+<div class="avoid-page-break">
+<p>Dersom selger gj&oslash;r forbehold gjeldende, gjelder f&oslash;lgende:</p>
+<ul>
+<li>Denne kj&oslash;pekontrakt bortfaller, med den virkning at ingen av partene kan gj&oslash;re krav gjeldende mot den annen part p&aring; grunnlag av kontraktens bestemmelser</li>
+<li>Ethvert bel&oslash;p som kj&oslash;per har innbetalt skal, inkludert opptjente renter, uten ugrunnet opphold tilbakef&oslash;res til kj&oslash;per</li>
+</ul>
+</div>
+</article>
+
+<!-- ===== SECTION 16 ===== -->
+<article class="item">
+<div class="avoid-page-break">
+<h2>ANNET</h2>
+
+<p>Eventuell transport av denne kontrakt skal p&aring; forh&aring;nd aksepteres av selger og kan nektes p&aring; fritt grunnlag. Ved transport av kontrakt p&aring;l&oslash;per et gebyr p&aring;lydende kr. <span class="insert-table"><span class="insert" data-label="bel&oslash;p"></span></span>,- Dersom denne kj&oslash;pekontrakt transporteres f&oslash;r ferdigstillelse, plikter den nye kj&oslash;peren &aring; tre inn i alle de avtaler som er etablert, herunder endringsavtaler og tilvalgs bestillinger. Kj&oslash;per gj&oslash;res dog oppmerksom p&aring; at han hefter for dette kontraktsforhold inntil ny kj&oslash;per har signert alle dokumenter vedr. salget, og innbetalt kj&oslash;pesum inkl. omkostninger etter denne kontrakt. Kj&oslash;per har heller ikke anledning til &aring; motsette seg overskj&oslash;ting av boligen til seg, dersom han p&aring; overtakelsestidspunktet ikke har utpekt ny eier som har oppfylt kontrakts- og oppgj&oslash;rsbestemmelsene i kj&oslash;pekontrakten. Transport av kontrakt kan senest skje 1 mnd. f&oslash;r overtagelse.</p>
+</div>
+
+<p>Det anbefales at [[meglerkontor.navn]] forest&aring;r transporten mot betaling i henhold til gjeldende standardsatser.</p>
+
+<p>Ved bes&oslash;k p&aring; byggeplassen f&oslash;r overtagelse skal kj&oslash;per alltid v&aelig;re i f&oslash;lge med en representant fra selger. All annen ferdsel p&aring; byggeplassen er beheftet med stor grad av risiko og er forbudt.</p>
+
+<p>Selger forbeholder seg retten til enhver prisjustering p&aring; &oslash;vrige enheter i prosjektet. Uansett om prisforlangende for tilsvarende eierseksjon eller bolig i tidsrommet etter kontraktsinng&aring;elsen blir justert opp eller ned, kan ingen av partene av den grunn kreve prisavslag eller pristillegg. Det samme gjelder om det blir avtalt h&oslash;yere eller lavere pris p&aring; andre, tilsvarende seksjoner i prosjektet enn den pris som er avtalt i n&aelig;rv&aelig;rende kontrakt.</p>
+
+<p>Selger forbeholder seg retten til &aring; forest&aring; fordelingen av boder. Det samme gjelder fordelingen av garasjeplasser blant kj&oslash;pere som kj&oslash;per garasjeplass.</p>
+
+<p>Selger forbeholder seg retten til &aring; organisere parkering p&aring; den m&aring;te som anses mest hensiktsmessig, for eksempel som en del av sameiets fellesarealer, som tilleggsdel til seksjonene, andel av realsameie eller som en s&aelig;rskilt seksjon eller anleggseiendom (egen matrikkel). Utbygger tar forbehold om annen organisering av parkering dersom det skulle vise seg n&oslash;dvendig eller hensiktsmessig.</p>
+
+<p>Alle arealer er oppgitt som bruksareal (BRA) og samlet areal for prim&aelig;re rom (P-rom) i henhold til NS 3940. Bruksarealet er leilighetens totale innvendige areal inklusive bl.a. innvendige boder og kanalf&oslash;ringer.</p>
+</article>
+
+<!-- ===== SECTION 17 ===== -->
+<article class="avoid-page-break item">
+<h2>SAMTYKKE TIL BRUK AV ELEKTRONISK KOMMUNIKASJON</h2>
+
+<p>Avtalen mellom kj&oslash;per og selger er underlagt bestemmelsene i bustadoppf&oslash;ringslova. Der hvor denne avtalen eller der hvor Bustadoppf&oslash;ringslova setter krav til at meddelelser skal v&aelig;re skriftlig, er partene enige om at bruk av elektronisk kommunikasjon skal anses &aring; oppfylle kravet til skriftlighet.</p>
+</article>
+
+<!-- ===== SECTION 18 ===== -->
+<article class="avoid-page-break item">
+<h2>VERNETING</h2>
+
+<p>Partene vedtar den faste eiendoms verneting som rett verneting for tvister etter denne kontrakt.</p>
+</article>
+
+<!-- ===== SECTION 19 ===== -->
+<article class="avoid-page-break item">
+<h2>BILAG</h2>
+
+<p>Kj&oslash;per er forelagt f&oslash;lgende dokumentasjon:</p>
+
+<p><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> Salgsoppgave</p>
+<p><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> Grunnboksutskrift for eiendommen</p>
+<p><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> Grunnboksutskrift for fellesarealer</p>
+<p><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> Utskrift av tinglyste erkl&aelig;ringer</p>
+<p><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> Reguleringsplan med reguleringsbestemmelser</p>
+<p><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> Opplysninger fra kommunen</p>
+<p><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> M&aring;lebrev/arealbekreftelse</p>
+<p><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> Ferdigattest/midlertidig brukstillatelse</p>
+<p><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> Protokoll for overtakelsesforretning</p>
+<p><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> Annet: <span class="insert-table"><span class="insert" data-label="tekst"></span></span></p>
+</article>
+
+<!-- ===== SECTION 20 ===== -->
+<div class="avoid-page-break" style="page-break-before: always;">
+<article class="item">
+<h2>UNDERSKRIFT</h2>
+
+<p>Denne kontrakt er utferdiget i 3 &ndash; tre &ndash; likelydende eksemplar hvorav partene f&aring;r hvert sitt eksemplar og ett beror hos eiendomsmegler.</p>
+
+<table style="width:100%; table-layout:fixed;">
+<tbody>
+<tr>
+  <td colspan="100">
+    <p>[[meglerkontor.poststed]], den [[dagensdato]]</p>
+    <p>&nbsp;</p>
+  </td>
+</tr>
+<tr>
+  <td colspan="45" style="vertical-align:top"><strong>Selger<span vitec-if="Model.selgere.Count &gt; 1">e</span></strong></td>
+  <td colspan="10">&nbsp;</td>
+  <td colspan="45"><strong>Kj&oslash;per<span vitec-if="Model.kjopere.Count &gt; 1">e</span></strong></td>
+</tr>
+<tr>
+  <td colspan="45" style="vertical-align:top">
+    <table vitec-if="Model.selgere.Count &gt; 0">
+      <tbody vitec-foreach="selger in Model.selgere">
+        <tr><td style="border-bottom: solid 1px #000; height:40px">&nbsp;</td></tr>
+        <tr><td style="vertical-align:bottom">[[*selger.navn]]</td></tr>
+      </tbody>
+    </table>
+  </td>
+  <td colspan="10">&nbsp;</td>
+  <td colspan="45" style="vertical-align:top">
+    <div vitec-if="Model.kjopere.Count &gt; 0">
+      <div vitec-foreach="kjoper in Model.kjopere">
+        <table>
+          <tbody>
+            <tr><td style="border-bottom: solid 1px #000; height:40px">&nbsp;</td></tr>
+            <tr><td>[[*kjoper.navn]]</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </td>
+</tr>
+</tbody>
+</table>
+</article>
+</div>
+
+  </td>
+</tr>
+</tbody>
+</table>
+
+</div>

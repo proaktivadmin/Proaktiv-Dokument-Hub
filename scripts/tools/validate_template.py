@@ -1,21 +1,24 @@
 """
-Validate production Vitec Next template against the 14-point Section 12 checklist.
+Validate production Vitec Next template against the Section 12 checklist.
+
+Usage:
+    python validate_template.py <template.html>
+    python validate_template.py <template.html> --tier 4
+    python validate_template.py <template.html> --compare-snapshot snapshot.html
 """
 
+import argparse
 import re
 import os
 import sys
 
-WORKSPACE = r"c:\Users\Adrian\.claude-worktrees\Proaktiv-Dokument-Hub\mystifying-hertz"
-TEMPLATE = os.path.join(WORKSPACE, "scripts", "converted_html", "Kjopekontrakt_prosjekt_enebolig_PRODUCTION.html")
 
-
-def read_template() -> str:
-    with open(TEMPLATE, encoding="utf-8") as f:
+def read_file(path: str) -> str:
+    with open(path, encoding="utf-8") as f:
         return f.read()
 
 
-def validate(html: str) -> list[tuple[str, bool, str]]:
+def validate(html: str, tier: int = 4) -> list[tuple[str, bool, str]]:
     results = []
 
     def check(section: str, name: str, passed: bool, detail: str = ""):
@@ -35,7 +38,6 @@ def validate(html: str) -> list[tuple[str, bool, str]]:
     check("B", "No CSS flexbox/grid", 
           "display:flex" not in html and "display:grid" not in html and "display: flex" not in html)
     
-    # Check tr are inside tbody/thead/tfoot (simplified check)
     orphan_tr = re.findall(r'<table[^>]*>\s*<tr', html)
     check("B", "No orphan <tr> outside tbody/thead", len(orphan_tr) == 0,
           f"Found {len(orphan_tr)} orphan <tr>")
@@ -70,7 +72,6 @@ def validate(html: str) -> list[tuple[str, bool, str]]:
     check("E", "Has vitec-if conditions", len(vitec_ifs) > 0,
           f"Found {len(vitec_ifs)} conditions")
     
-    # Check escaping
     bad_quotes = [v for v in vitec_ifs if '"' in v.replace('&quot;', '').replace('&amp;', '')]
     check("E", "String comparisons use &quot;", len(bad_quotes) == 0,
           f"Bad: {bad_quotes[:3]}")
@@ -84,18 +85,21 @@ def validate(html: str) -> list[tuple[str, bool, str]]:
     check("F", "Has vitec-foreach loops", len(foreachs) > 0,
           f"Found {len(foreachs)}: {foreachs}")
     
-    # Check foreach is on <tbody>
     foreach_on_tbody = re.findall(r'<tbody\s+vitec-foreach=', html)
     check("F", "Foreach on <tbody> elements", len(foreach_on_tbody) > 0,
           f"Found {len(foreach_on_tbody)} on tbody")
     
-    # Check collection guards
-    for foreach in foreachs:
-        parts = foreach.split(" in ")
-        if len(parts) == 2:
-            collection = parts[1]
-            guard_pattern = f'{collection}.Count'
-            check("F", f"Guard for {collection}", guard_pattern in html)
+    foreach_parsed = re.findall(r'vitec-foreach="(\w+)\s+in\s+([\w.]+)"', html)
+
+    for item, collection in foreach_parsed:
+        guard_pattern = f'{collection}.Count'
+        check("F", f"Guard for {collection}", guard_pattern in html,
+              f"foreach '{item} in {collection}' has no Count guard — will crash if collection is empty")
+
+    for item, collection in foreach_parsed:
+        fallback_pattern = f'{collection}.Count == 0'
+        check("F", f"Fallback placeholder for empty {collection}", fallback_pattern in html,
+              f"No '[Mangler ...]' fallback for empty {collection} — document will silently omit missing data")
 
     # ===================== G. Images and SVG =====================
     img_tags = re.findall(r'<img\s[^>]*>', html)
@@ -114,28 +118,28 @@ def validate(html: str) -> list[tuple[str, bool, str]]:
     check("I", "No <center> tags", len(center_tags) == 0,
           f"Found {len(center_tags)}")
     
-    # Check Norwegian characters
     check("I", "Contains ø", "ø" in html)
     check("I", "Contains æ", "æ" in html)
     check("I", "Contains å", "å" in html)
 
-    # ===================== J. Contract-Specific =====================
-    check("J", "Uses <article class='item'>", '<article class="item">' in html)
-    
-    check("J", "CSS counters present", "counter-reset: section" in html and "counter-increment: section" in html)
-    
-    check("J", "Dual counter pattern (section/subsection)", 
-          "subsection" in html)
-    
-    check("J", "H2 in top-level articles", "<h2>" in html)
-    
-    check("J", "roles-table class present", 'class="roles-table"' in html)
-    
-    check("J", "Signature block with border-bottom", "border-bottom" in html and "solid 1px #000" in html)
-    
-    check("J", "span.insert placeholders", 'class="insert"' in html)
-    
-    check("J", "avoid-page-break class", 'avoid-page-break' in html)
+    # ===================== J. Contract-Specific (T3+ only) =====================
+    if tier >= 3:
+        check("J", "Uses <article class='item'>", '<article class="item">' in html)
+        
+        check("J", "CSS counters present", "counter-reset: section" in html and "counter-increment: section" in html)
+        
+        check("J", "Dual counter pattern (section/subsection)", 
+              "subsection" in html)
+        
+        check("J", "H2 in top-level articles", "<h2>" in html)
+        
+        check("J", "roles-table class present", 'class="roles-table"' in html)
+        
+        check("J", "Signature block with border-bottom", "border-bottom" in html and "solid 1px #000" in html)
+        
+        check("J", "span.insert placeholders", 'class="insert"' in html)
+        
+        check("J", "avoid-page-break class", 'avoid-page-break' in html)
 
     # ===================== K. Final Validation =====================
     check("K", "Well-formed HTML (basic check)", 
@@ -154,19 +158,87 @@ def validate(html: str) -> list[tuple[str, bool, str]]:
     return results
 
 
+def compare_snapshot(current_html: str, snapshot_path: str) -> list[tuple[str, bool, str]]:
+    """Compare current template against a pre-edit snapshot for Mode A regression detection."""
+    results = []
+    snapshot_html = read_file(snapshot_path)
+
+    def check(name: str, passed: bool, detail: str = ""):
+        results.append((f"[SNAPSHOT] {name}", passed, detail))
+
+    current_fields = set(re.findall(r'\[\[[\*]?([^\]]+)\]\]', current_html))
+    snapshot_fields = set(re.findall(r'\[\[[\*]?([^\]]+)\]\]', snapshot_html))
+    lost = snapshot_fields - current_fields
+    added = current_fields - snapshot_fields
+    check("No merge fields lost", len(lost) == 0,
+          f"Lost: {sorted(lost)}" if lost else "")
+    if added:
+        check("New merge fields added", True, f"Added: {sorted(added)}")
+
+    current_ifs = set(re.findall(r'vitec-if="([^"]*)"', current_html))
+    snapshot_ifs = set(re.findall(r'vitec-if="([^"]*)"', snapshot_html))
+    lost_ifs = snapshot_ifs - current_ifs
+    check("No vitec-if conditions lost", len(lost_ifs) == 0,
+          f"Lost: {sorted(lost_ifs)}" if lost_ifs else "")
+
+    current_loops = set(re.findall(r'vitec-foreach="([^"]*)"', current_html))
+    snapshot_loops = set(re.findall(r'vitec-foreach="([^"]*)"', snapshot_html))
+    lost_loops = snapshot_loops - current_loops
+    check("No vitec-foreach loops lost", len(lost_loops) == 0,
+          f"Lost: {sorted(lost_loops)}" if lost_loops else "")
+
+    current_articles = current_html.count('<article class="item">')
+    snapshot_articles = snapshot_html.count('<article class="item">')
+    check("Article count unchanged or increased",
+          current_articles >= snapshot_articles,
+          f"Was {snapshot_articles}, now {current_articles}")
+
+    return results
+
+
 def main():
-    html = read_template()
-    results = validate(html)
-    
-    passed = sum(1 for _, p, _ in results if p)
-    failed = sum(1 for _, p, _ in results if not p)
-    total = len(results)
+    parser = argparse.ArgumentParser(
+        description="Validate a Vitec Next production template",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n"
+               "  python validate_template.py template.html\n"
+               "  python validate_template.py template.html --tier 2\n"
+               "  python validate_template.py template.html --compare-snapshot snapshot.html\n"
+    )
+    parser.add_argument("template", help="Path to the production HTML template to validate")
+    parser.add_argument("--tier", type=int, default=4, choices=[1, 2, 3, 4, 5],
+                        help="Complexity tier (1-5). Section J checks are skipped for T1/T2. Default: 4")
+    parser.add_argument("--compare-snapshot", metavar="SNAPSHOT",
+                        help="Path to a pre-edit snapshot HTML for Mode A regression comparison")
+    args = parser.parse_args()
+
+    if not os.path.isfile(args.template):
+        print(f"ERROR: Template file not found: {args.template}", file=sys.stderr)
+        sys.exit(2)
+
+    html = read_file(args.template)
+    results = validate(html, tier=args.tier)
+
+    snapshot_results = []
+    if args.compare_snapshot:
+        if not os.path.isfile(args.compare_snapshot):
+            print(f"ERROR: Snapshot file not found: {args.compare_snapshot}", file=sys.stderr)
+            sys.exit(2)
+        snapshot_results = compare_snapshot(html, args.compare_snapshot)
+
+    all_results = results + snapshot_results
+    passed = sum(1 for _, p, _ in all_results if p)
+    failed = sum(1 for _, p, _ in all_results if not p)
+    total = len(all_results)
     
     print(f"{'='*60}")
     print(f"VITEC TEMPLATE VALIDATION REPORT")
     print(f"{'='*60}")
-    print(f"Template: {os.path.basename(TEMPLATE)}")
+    print(f"Template: {os.path.basename(args.template)}")
     print(f"Size: {len(html):,} chars")
+    print(f"Tier: T{args.tier}")
+    if args.compare_snapshot:
+        print(f"Snapshot: {os.path.basename(args.compare_snapshot)}")
     print(f"{'='*60}\n")
     
     for name, p, detail in results:
@@ -176,24 +248,33 @@ def main():
         if detail and not p:
             line += f" — {detail}"
         print(line)
+
+    if snapshot_results:
+        print(f"\n{'='*60}")
+        print(f"SNAPSHOT COMPARISON (Mode A regression)")
+        print(f"{'='*60}\n")
+        for name, p, detail in snapshot_results:
+            status = "PASS" if p else "FAIL"
+            icon = "+" if p else "!"
+            line = f"  [{icon}] {status}: {name}"
+            if detail:
+                line += f" — {detail}"
+            print(line)
     
     print(f"\n{'='*60}")
     print(f"RESULTS: {passed}/{total} passed, {failed} failed")
     print(f"{'='*60}")
     
-    # Summary of merge fields
     merge_fields = sorted(set(re.findall(r'\[\[[\*]?([^\]]+)\]\]', html)))
     print(f"\nMerge fields ({len(merge_fields)}):")
     for f in merge_fields:
         print(f"  [[{f}]]")
     
-    # Summary of vitec-if expressions
     vitec_ifs = re.findall(r'vitec-if="([^"]*)"', html)
     print(f"\nvitec-if conditions ({len(vitec_ifs)}):")
     for expr in sorted(set(vitec_ifs)):
         print(f"  {expr}")
     
-    # Summary of vitec-foreach
     foreachs = re.findall(r'vitec-foreach="([^"]*)"', html)
     print(f"\nvitec-foreach loops ({len(foreachs)}):")
     for expr in foreachs:

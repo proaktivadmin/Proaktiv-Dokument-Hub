@@ -1,0 +1,298 @@
+<div id="vitecTemplate">
+<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">
+/* Counter system */
+#vitecTemplate { counter-reset: section; }
+#vitecTemplate article.item:not(article.item article.item) {
+  counter-increment: section;
+  counter-reset: subsection;
+}
+#vitecTemplate article.item article.item { counter-increment: subsection; }
+#vitecTemplate article.item:not(article.item article.item) h2::before {
+  content: counter(section) ". ";
+  display: inline-block;
+  width: 26px;
+}
+#vitecTemplate article.item article.item h3::before {
+  content: counter(section) "." counter(subsection) ". ";
+  display: inline-block;
+  width: 36px;
+}
+
+/* Heading styles */
+#vitecTemplate h1 { text-align: center; font-size: 14pt; margin: 0; padding: 0; }
+#vitecTemplate h2 { font-size: 11pt; margin: 30px 0 0 -26px; padding: 0; }
+#vitecTemplate h3 { font-size: 10pt; margin: 20px 0 0 -10px; padding: 0; }
+
+/* Article/section layout */
+#vitecTemplate article { padding-left: 26px; }
+#vitecTemplate article article { padding-left: 0; }
+#vitecTemplate .avoid-page-break { page-break-inside: avoid; }
+
+/* Table base styles */
+#vitecTemplate table { width: 100%; table-layout: fixed; }
+#vitecTemplate table .borders {
+  width: 100%; table-layout: fixed;
+  border-bottom: solid 1px black; border-top: solid 1px black;
+}
+
+/* Roles table */
+#vitecTemplate .roles-table { width: 100%; table-layout: fixed; border-collapse: collapse; }
+#vitecTemplate .roles-table th { text-align: left; padding: 4px 6px; border-bottom: 1px solid #000; }
+#vitecTemplate .roles-table td { padding: 4px 6px; vertical-align: top; }
+#vitecTemplate .roles-table tbody:last-child tr:last-child td { display: none; }
+
+/* Costs table */
+#vitecTemplate .costs-table { width: 100%; table-layout: fixed; border-collapse: collapse; }
+#vitecTemplate .costs-table td { padding: 2px 6px; vertical-align: top; }
+#vitecTemplate .costs-table tr.sum-row td { border-top: 1px solid #000; font-weight: bold; }
+
+/* Lists */
+#vitecTemplate ul { list-style-type: disc; margin-left: 0; }
+#vitecTemplate ul li { list-style-position: outside; line-height: 20px; margin-left: 0; }
+#vitecTemplate .liste:last-child .separator { display: none; }
+
+/* Bookmark cross-references */
+#vitecTemplate a.bookmark { color: #000; font-style: italic; text-decoration: none; }
+
+/* Insert fields */
+#vitecTemplate .insert { border-bottom: 1px dotted #999; min-width: 80px; display: inline-block; }
+#vitecTemplate span.insert:empty::before { content: attr(data-label); color: #999; font-style: italic; }
+#vitecTemplate .insert-table { display: inline-table; }
+
+/* SVG checkboxes */
+label.btn {
+  display: inline;
+  text-transform: none;
+  white-space: normal;
+  padding: 0;
+  vertical-align: baseline;
+  outline: none;
+  font-size: inherit;
+}
+label.btn:active,
+label.btn.active {
+  box-shadow: none;
+  outline: none;
+}
+.svg-toggle {
+  display: inline-block !important;
+  width: 16px;
+  height: 16px;
+  margin: 0 5px;
+  vertical-align: bottom;
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none !important;
+  cursor: pointer;
+  white-space: normal;
+  text-align: left;
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+  background-position: center center;
+}
+.svg-toggle.checkbox {
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Crect%20width%3D%2215%22%20height%3D%2215%22%20x%3D%22.5%22%20y%3D%22.5%22%20fill%3D%22%23fff%22%20stroke%3D%22%23000%22%20rx%3D%222%22%20ry%3D%222%22%2F%3E%3C%2Fsvg%3E");
+}
+.svg-toggle.checkbox.active,
+.btn.active > .svg-toggle.checkbox {
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Crect%20width%3D%2215%22%20height%3D%2215%22%20x%3D%22.5%22%20y%3D%22.5%22%20fill%3D%22%23fff%22%20stroke%3D%22%23000%22%20rx%3D%222%22%20ry%3D%222%22%2F%3E%3Cpath%20fill%3D%22%23000%22%20d%3D%22M12.207%204.793a1%201%200%200%201%200%201.414l-5%205a1%201%200%200%201-1.414%200l-2-2a1%201%200%200%201%201.414-1.414L6.5%209.086l4.293-4.293a1%201%200%200%201%201.414%200z%22%2F%3E%3C%2Fsvg%3E");
+  box-shadow: none !important;
+}
+#vitecTemplate [data-toggle="buttons"] input {
+  display: none;
+}
+</style>
+
+<table>
+<tbody>
+<tr>
+  <td colspan="100" style="text-align:right">
+    <small>
+      Meglerforetakets org.nr: <strong>[[meglerkontor.orgnr]]</strong><br />
+      Oppdragsnr.:&nbsp;<strong>[[oppdrag.nr]]</strong><br />
+      Omsetningsnr.:&nbsp;<strong>[[kontrakt.formidling.nr]]</strong>
+    </small>
+  </td>
+</tr>
+<tr><td colspan="100">&nbsp;</td></tr>
+<tr>
+  <td colspan="100">
+
+<!-- Section 1: Title + Sted/dato -->
+<div class="avoid-page-break">
+  <table style="width:100%; table-layout:fixed;">
+    <tbody>
+      <tr>
+        <td colspan="40">
+          <h1 style="text-align:left;"><u>GENERALFULLMAKT</u></h1>
+        </td>
+        <td colspan="60" style="text-align:right;">
+          Sted, dato: <span class="insert-table"><span class="insert" data-label="sted"></span></span>, [[dagensdato]]
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p>&nbsp;</p>
+
+<!-- Section 2: Property table (Matrikkel + Adresse) -->
+<div class="avoid-page-break">
+  <table style="width:100%; table-layout:fixed; border-collapse:collapse;">
+    <tbody>
+      <tr>
+        <td colspan="20" style="border:solid 1px #000; padding:5px; vertical-align:top;">
+          <strong>Matrikkel</strong>
+        </td>
+        <td colspan="80" style="border:solid 1px #000; padding:5px; vertical-align:top;">
+          [[komplettmatrikkel]] og eiendommer utskilt fra denne.
+        </td>
+      </tr>
+      <tr>
+        <td colspan="20" style="border:solid 1px #000; border-top:none; padding:5px; vertical-align:top;">
+          <strong>Adresse</strong>
+        </td>
+        <td colspan="80" style="border:solid 1px #000; border-top:none; padding:5px; vertical-align:top;">
+          [[eiendom.adresse]]<br />
+          [[eiendom.postnr]] [[eiendom.poststed]]
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Section 3: Grant intro -->
+<div class="avoid-page-break">
+  <p>&nbsp;</p>
+  <p>Det gis herved <strong><span style="text-transform:uppercase"><span class="insert-table"><span class="insert" data-label="Fullmektigens navn"></span></span> <span class="insert-table"><span class="insert" data-label="F&oslash;dselsnr./org.nr."></span></span></span></strong> ugjenkallelig generalfullmakt til &aring; disponere den ovennevnte eiendommen p&aring; enhver m&aring;te, herunder:</p>
+</div>
+
+<!-- Section 4: Powers list (VERBATIM from source) -->
+<div class="avoid-page-break">
+  <p>&nbsp;</p>
+  <ul>
+    <li>Tinglysing av alle dokumenter, erkl&aelig;ringer etc. p&aring; eiendommen</li>
+    <li>Begj&aelig;ring om deling og seksjonering</li>
+    <li>Byggemelding</li>
+    <li>Overskj&oslash;ting, inkl. selvkontrahering</li>
+    <li>Pantsettelse</li>
+    <li>Motta og disponere oppgj&oslash;r</li>
+  </ul>
+</div>
+
+<!-- Section 5: Scope and limitation paragraphs (VERBATIM from source) -->
+<div class="avoid-page-break">
+  <p>&nbsp;</p>
+  <p>.. samt ethvert tiltak i forbindelse med utbygging/salg av eiendommen. Fullmakten gjelder ogs&aring; alle eventuelle senere fradelte parseller, opprette seksjoner og lignende.</p>
+
+  <p>&nbsp;</p>
+  <p>Videre gis det fullmakt til &aring; undertegne p&aring; alle dokumenter hvor hjemmelshavers samtykke er n&oslash;dvendig jfr. Tinglysingslovens &sect; 13, 1 ledd, og kunne motta fullt oppgj&oslash;r for eiendommen.</p>
+
+  <p>&nbsp;</p>
+  <p>Fullmakten gjelder kun forf&oslash;ying over ovennevnte eiendom, og <span class="insert-table"><span class="insert" data-label="Fullmektigens navn"></span></span> har s&aring;ledes ingen adgang til &aring; forplikte <span vitec-if="Model.eiendom.tomtetype == &quot;festetomt&quot;">fester</span><span vitec-if="Model.eiendom.tomtetype != &quot;festetomt&quot;">hjemmelshaver</span> personlig i henhold til n&aring;v&aelig;rende fullmakt.</p>
+</div>
+
+<p>&nbsp;</p>
+
+<!-- Section 6: Signature block — Fullmaktsgiver (foreach over selgere) -->
+<article class="avoid-page-break item">
+  <h2>Fullmaktsgiver</h2>
+  <div vitec-if="Model.selgere.Count &gt; 0">
+    <table class="roles-table" style="width:100%; table-layout:fixed; border-collapse:collapse;">
+      <thead>
+        <tr>
+          <td colspan="100" style="background:#E6E6E6; padding:5px; border:solid 1px #000;">
+            <strong>Fullmaktsgiver (<span vitec-if="Model.eiendom.tomtetype == &quot;festetomt&quot;">Fester</span><span vitec-if="Model.eiendom.tomtetype != &quot;festetomt&quot;">Hjemmelshaver</span>)</strong>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="40" style="background:#E6E6E6; text-align:center; padding:5px; border:solid 1px #000;">Signatur</td>
+          <td colspan="35" style="background:#E6E6E6; text-align:center; padding:5px; border:solid 1px #000;">Navn i blokkbokstaver</td>
+          <td colspan="25" style="background:#E6E6E6; text-align:center; padding:5px; border:solid 1px #000;">F&oslash;dselsnummer<br />(evt. orgnr)</td>
+        </tr>
+      </thead>
+      <tbody vitec-foreach="selger in Model.selgere">
+        <tr>
+          <td colspan="40" style="border:solid 1px #000; padding:15px 5px; height:30px;">&nbsp;</td>
+          <td colspan="35" style="border:solid 1px #000; padding:5px; text-transform:uppercase;">[[*selger.navnutenfullmektigogkontaktperson]]</td>
+          <td colspan="25" style="border:solid 1px #000; padding:5px; text-transform:uppercase;">[[*selger.idnummer]]</td>
+        </tr>
+        <tr><td colspan="100">&nbsp;</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div vitec-if="Model.selgere.Count == 0">
+    <p><em>[Mangler fullmaktsgivere]</em></p>
+  </div>
+</article>
+
+<p>&nbsp;</p>
+
+<!-- Section 7: Spouse consent — broker selects one alternative and deletes the others -->
+<article class="avoid-page-break item">
+  <h2>Ektefelle-/partnersamtykke</h2>
+
+  <p><em>[Velg ett alternativ og slett de andre:]</em></p>
+
+  <p>[Alternativ 1:] Ektefelle/partner samtykke er ikke aktuelt, ettersom eiendommen eies sammen</p>
+
+  <p>[Alternativ 2:] Eiendommen tjener ikke til felles bop&aelig;l for ektefeller/registrerte partnere</p>
+
+  <p>[Alternativ 3 &ndash; Ektefelle-/partnersamtykke:]</p>
+  <p>Jeg samtykker herved i overensstemmelse med Ekteskapsloven &sect; 32.</p>
+  <table style="width:100%; table-layout:fixed;">
+    <tbody>
+      <tr>
+        <td colspan="45" style="border-bottom: solid 1px #000; padding-top:30px;">&nbsp;</td>
+        <td colspan="10">&nbsp;</td>
+        <td colspan="45" style="border-bottom: solid 1px #000; padding-top:30px;">&nbsp;</td>
+      </tr>
+      <tr>
+        <td colspan="45"><em>Ektefelle/partner signatur</em></td>
+        <td colspan="10">&nbsp;</td>
+        <td colspan="45"><em>Navn i blokkbokstaver / f&oslash;dselsnummer</em></td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+
+<p>&nbsp;</p>
+
+<!-- Witness attestation -->
+<article class="avoid-page-break item">
+  <h2>Vitnep&aring;tegning</h2>
+  <p>Underskriften(e) er avgitt i v&aring;rt n&aelig;rv&aelig;r og bekreftes.</p>
+  <table style="width:100%; table-layout:fixed;">
+    <tbody>
+      <tr>
+        <td colspan="45" style="border-bottom: solid 1px #000; padding-top:30px;">&nbsp;</td>
+        <td colspan="10">&nbsp;</td>
+        <td colspan="45" style="border-bottom: solid 1px #000; padding-top:30px;">&nbsp;</td>
+      </tr>
+      <tr>
+        <td colspan="45"><em>Vitne 1 underskrift</em></td>
+        <td colspan="10">&nbsp;</td>
+        <td colspan="45"><em>Vitne 2 underskrift</em></td>
+      </tr>
+      <tr>
+        <td colspan="45" style="border-bottom: solid 1px #000; padding-top:20px;">&nbsp;</td>
+        <td colspan="10">&nbsp;</td>
+        <td colspan="45" style="border-bottom: solid 1px #000; padding-top:20px;">&nbsp;</td>
+      </tr>
+      <tr>
+        <td colspan="45"><em>Navn / adresse</em></td>
+        <td colspan="10">&nbsp;</td>
+        <td colspan="45"><em>Navn / adresse</em></td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+
+  </td>
+</tr>
+</tbody>
+</table>
+</div>

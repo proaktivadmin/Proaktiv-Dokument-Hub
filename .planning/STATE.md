@@ -12,12 +12,12 @@ See: .planning/PROJECT.md (updated 2026-01-23)
 
 ## Current Position
 
-Phase: 3.9.4 (Signature Page Self-Service Enhancements)
-Plan: Editable fields, setup instructions, photo hyperlink on signature landing page
-Status: Deployed to production (Vercel + Railway)
-Last activity: 2026-02-02 — Self-service signature editing, platform instructions, photo upload (hidden)
+Phase: 11 (HTML Template Management & Publishing Suite)
+Plan: Multi-agent template suite — documentation, conversion, editor, comparison, dedup, flettekode
+Status: Phase 11 foundation committed + notifications page + CSP fix deployed to Vercel
+Last activity: 2026-02-22 — Template suite, notifications page, Vitec picture proxy, CSP fix
 
-Progress: [████████░░] 80% (Photo upload feature on hold, pending WebDAV testing)
+Progress: [███░░░░░░░] 30% (Phase 11 foundation laid, agents 1-6 planned, partial implementation)
 
 ## Performance Metrics
 
@@ -70,12 +70,55 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-02
-Stopped at: V3.9.4 Self-service signature enhancements deployed, photo upload hidden
+Last session: 2026-02-22
+Stopped at: Phase 11 foundation committed, CSP fix deployed, Monaco Editor working
 Resume file: N/A
-Next step: Test WebDAV photo upload (credentials configured on Railway), or deploy signature emails
+Next step: Execute Phase 11 agents (start with Agent 1: Documentation, then Agent 2: Conversion pipeline)
 
-### Session Summary (2026-02-02 - Latest)
+### Session Summary (2026-02-22 - Latest)
+
+**V4.0 Phase 11 Foundation + Infrastructure Fixes (2026-02-21 to 2026-02-22):**
+
+This session delivered the Phase 11 HTML Template Management & Publishing Suite foundation, a dedicated notifications page, Vitec picture proxy restoration, editor fixes, and a critical CSP fix.
+
+**Commits in this session (oldest first):**
+
+1. **`a790f38` — Phase 11: HTML Template Management & Publishing Suite**
+   - 39 files changed, 19,352 insertions
+   - Full multi-agent plan: 6 agent specs in `.planning/phases/11-template-suite/`
+   - Backend services: `WordConversionService` (DOCX/RTF→HTML), `TemplateComparisonService`, `TemplateDedupService`, `TemplateWorkflowService`, `TemplateAnalysisAIService`
+   - Backend schemas: `template_comparison.py`, `template_dedup.py`, `template_workflow.py`, `word_conversion.py`
+   - Backend migration: `20260221_0001_template_publishing.py` (adds publishing fields to templates)
+   - Frontend pages: `/templates/[id]/edit` (full editor), `/templates/dedup` (deduplication dashboard)
+   - Frontend components: `CKEditorSandbox`, `DeduplicationDashboard`, `MergeFieldAutocomplete`, `MergeFieldHighlighter`, `MergeFieldPanel`, `TemplateComparison`, `WordConversionDialog`
+   - Extended `lib/api.ts` with template workflow, comparison, dedup, and word conversion endpoints
+   - Documentation: `vitec-html-ruleset.md` (4,087 lines), `docs/Alle-flettekoder-25.9.md` (6,493 lines), `docs/vitec-stilark.md`
+   - Library reset script: `backend/scripts/library_reset.py`
+
+2. **`63a5ff7` — RTF support, A3 validation fix, dedup improvements**
+   - Added RTF-to-HTML conversion via `striprtf` library
+   - Fixed A3 page size validation (was incorrectly flagging valid templates)
+   - Improved deduplication detection with better similarity scoring
+
+3. **`48c7a3b` — Notifications page, Vitec picture proxy, editor fixes**
+   - **New `/notifications` page** (556 lines): Filterable by type/severity/read status, date-grouped, expandable metadata, mark-as-read/delete/clear-all actions
+   - **Vitec picture proxy re-enabled**: `GET /api/vitec/employees/{id}/picture` and `GET /api/vitec/departments/{id}/picture` — proxies images from Vitec Hub API with resize/crop and caching
+   - **Picture sync integration**: Office and employee sync buttons now also trigger picture sync from Vitec Hub
+   - **CKEditor CDN fix**: Updated URL from `4.25.1` to `4.25.1-lts` (old URL 404'd)
+   - **"Normaliser til Vitec" save workflow**: No longer auto-saves; shows persistent unsaved-changes banner with explicit save button
+   - **Office banner fallback**: `onError` handler on `<img>` falls back to colored background
+   - **NotificationDropdown**: Added "Se alle varsler (N)" link to notification page
+
+4. **`ed58bb3` — CSP fix for Monaco Editor and CKEditor CDN**
+   - Added `https://cdn.jsdelivr.net` and `https://cdn.ckeditor.com` to `script-src` in both `next.config.js` and `vercel.json`
+   - Added `'unsafe-eval'` for Monaco Editor's dynamic execution
+   - Added CDN domains to `style-src`, `font-src`, and `connect-src` as needed
+   - **Root cause of "Loading editor..." bug**: CSP blocked external scripts from loading
+
+**Deployed to Vercel:** ✅ Production build successful, all pages rendering
+**Monaco Editor:** ✅ Now loading properly (CSP fix resolved the blocking)
+
+### Session Summary (2026-02-02 - Previous)
 
 **V3.9.4 Signature Page Self-Service Enhancements (Completed):**
 
@@ -267,6 +310,7 @@ Files modified:
 
 | Version | Date       | Key Changes                                                |
 | ------- | ---------- | ---------------------------------------------------------- |
+| V4.0    | 2026-02-22 | Phase 11 Template Suite foundation, notifications page, CSP fix |
 | V3.9.4  | 2026-02-02 | Signature self-service editing, setup instructions, photo link |
 | V3.9.3  | 2026-02-01 | Signature template hardening, reply-chain resilience, Maps link |
 | V3.11   | 2026-01-28 | Territory seeding (1732), dashboard 500 fixes, office sync |
@@ -285,38 +329,56 @@ Files modified:
 
 ## Ready for Next Steps
 
-### Option A: WebDAV Employee Photos (RECOMMENDED)
+### Option A: Execute Phase 11 Agents (RECOMMENDED)
+
+Phase 11 foundation is committed. Execute agents in order:
+
+| Agent | Name | Purpose | Status |
+|-------|------|---------|--------|
+| 1 | Documentation | Vitec HTML ruleset validation, Flettekode reference | ✅ Docs written |
+| 2 | Conversion | Word/RTF → HTML pipeline (mammoth + striprtf) | ✅ Backend built, needs testing |
+| 3 | Storage & Editor | CKEditor 4 sandbox, template workflow, publishing | ✅ Components built, needs integration |
+| 4 | Comparison | AI-powered template diff analysis | ✅ Service built, needs frontend wiring |
+| 5 | Merge/Dedup | Duplicate template consolidation | ✅ Service + dashboard built |
+| 6 | Flettekode | Merge field autocomplete & validation | ✅ Components built, needs editor integration |
+
+**Next action:** Run Agent 1 documentation validation, then Agent 2 conversion pipeline testing.
+
+**Plans:** `.planning/phases/11-template-suite/PLAN.md` (master plan), `AGENT-*.md` (per-agent specs)
+
+**DB Migration:** `20260221_0001_template_publishing.py` — **needs manual apply to Railway!**
+
+```powershell
+$env:DATABASE_URL = "postgresql://postgres:PASSWORD@shuttle.proxy.rlwy.net:51557/railway"
+cd backend
+python -m alembic upgrade head
+python -m alembic current  # Verify
+```
+
+### Option B: Notifications Page Polish
+
+The `/notifications` page is live but could benefit from:
+- Sync approval/rejection workflow (approve/deny changes from notification detail)
+- Email notification preferences
+- Batch actions on filtered notifications
+
+### Option C: WebDAV Employee Photos
 
 Replace Vitec API base64 images with WebDAV-hosted photos for faster loading.
 
 ```powershell
-# 1. Upload photos to WebDAV
 cd backend
 python scripts/upload_employee_photos.py --photos-dir "C:\Users\Adrian\Documents\ProaktivPhotos\webdav-upload" --dry-run
-
-# 2. Update database URLs
-python scripts/update_photo_urls_webdav.py --dry-run   # Preview
-python scripts/update_photo_urls_webdav.py             # Apply
+python scripts/update_photo_urls_webdav.py --dry-run
 ```
 
-**Scripts ready:** `upload_employee_photos.py`, `update_photo_urls_webdav.py`  
-**Photos downloaded:** 184 in `C:\Users\Adrian\Documents\ProaktivPhotos\webdav-upload\`
-
-### Option B: Complete Signature QA
-
-- QA plan: `.cursor/plans/signature_qa_testing_01ae0f96.plan.md`
-- Stage 3: Email client rendering (Outlook, Gmail, Apple Mail)
-- Stage 4: Mobile device testing
-- Stage 5: Edge cases and error states
-
-### Option C: Deploy Signature Emails
+### Option D: Deploy Signature Emails
 
 - Set environment variables (SIGNATURE_SENDER_EMAIL, FRONTEND_URL)
 - Add Mail.Send permission in Azure Portal
 - Run `.\backend\scripts\Send-SignatureEmails.ps1 -DryRun` to test
-- Run `.\backend\scripts\Send-SignatureEmails.ps1` for full rollout
 
-### Option D: Phase 07 (Office Enhancements)
+### Option E: Phase 07 (Office Enhancements)
 
 - 8 execution plans ready
 - Region grouping, office merge, SalesScreen

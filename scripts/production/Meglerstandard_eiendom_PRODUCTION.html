@@ -1,0 +1,1375 @@
+<div class="proaktiv-theme" id="vitecTemplate">
+<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">
+/* Counter system */
+#vitecTemplate { counter-reset: section; }
+#vitecTemplate article.item:not(article.item article.item) {
+  counter-increment: section;
+  counter-reset: subsection;
+}
+#vitecTemplate article.item article.item { counter-increment: subsection; }
+#vitecTemplate article.item:not(article.item article.item) h2::before {
+  content: counter(section) ". ";
+  display: inline-block;
+  width: 26px;
+}
+#vitecTemplate article.item article.item h3::before {
+  content: counter(section) "." counter(subsection) " ";
+  display: inline-block;
+  width: 36px;
+}
+
+/* Heading styles */
+#vitecTemplate h1 { text-align: center; font-size: 14pt; margin: 0; padding: 0; }
+#vitecTemplate h2 { font-size: 11pt; margin: 30px 0 0 -26px; padding: 0; }
+#vitecTemplate h3 { font-size: 10pt; margin: 20px 0 0 -10px; padding: 0; }
+
+/* Article/section layout */
+#vitecTemplate article { padding-left: 26px; }
+#vitecTemplate article article { padding-left: 0; }
+#vitecTemplate .avoid-page-break { page-break-inside: avoid; }
+
+/* Table base styles */
+#vitecTemplate table { width: 100%; table-layout: fixed; }
+
+/* Roles table */
+#vitecTemplate .roles-table { width: 100%; table-layout: fixed; border-collapse: collapse; }
+#vitecTemplate .roles-table th { text-align: left; padding: 4px 6px; border-bottom: 1px solid #000; }
+#vitecTemplate .roles-table td { padding: 4px 6px; vertical-align: top; }
+#vitecTemplate .roles-table tbody:last-child tr:last-child td { display: none; }
+
+/* Lists */
+#vitecTemplate ul { list-style-type: disc; margin-left: 0; }
+#vitecTemplate ul li { list-style-position: outside; line-height: 20px; margin-left: 0; }
+#vitecTemplate .liste:last-child .separator { display: none; }
+
+/* Bookmark cross-references */
+#vitecTemplate a.bookmark { color: #000; font-style: italic; text-decoration: none; }
+
+/* Insert fields */
+#vitecTemplate .insert { border-bottom: 1px dotted #999; min-width: 80px; display: inline-block; }
+#vitecTemplate span.insert:empty::before { content: attr(data-label); color: #999; font-style: italic; }
+#vitecTemplate .insert-table { display: inline-table; }
+
+/* SVG checkboxes */
+label.btn {
+  display: inline;
+  text-transform: none;
+  white-space: normal;
+  padding: 0;
+  vertical-align: baseline;
+  outline: none;
+  font-size: inherit;
+}
+label.btn:active,
+label.btn.active {
+  box-shadow: none;
+  outline: none;
+}
+.svg-toggle {
+  display: inline-block !important;
+  width: 16px;
+  height: 16px;
+  margin: 0 5px;
+  vertical-align: bottom;
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none !important;
+  cursor: pointer;
+  white-space: normal;
+  text-align: left;
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+  background-position: center center;
+}
+.svg-toggle.checkbox {
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Crect%20width%3D%2215%22%20height%3D%2215%22%20x%3D%22.5%22%20y%3D%22.5%22%20fill%3D%22%23fff%22%20stroke%3D%22%23000%22%20rx%3D%222%22%20ry%3D%222%22%2F%3E%3C%2Fsvg%3E");
+}
+.svg-toggle.checkbox.active,
+.btn.active > .svg-toggle.checkbox {
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Crect%20width%3D%2215%22%20height%3D%2215%22%20x%3D%22.5%22%20y%3D%22.5%22%20fill%3D%22%23fff%22%20stroke%3D%22%23000%22%20rx%3D%222%22%20ry%3D%222%22%2F%3E%3Cpath%20fill%3D%22%23000%22%20d%3D%22M12.207%204.793a1%201%200%200%201%200%201.414l-5%205a1%201%200%200%201-1.414%200l-2-2a1%201%200%200%201%201.414-1.414L6.5%209.086l4.293-4.293a1%201%200%200%201%201.414%200z%22%2F%3E%3C%2Fsvg%3E");
+  box-shadow: none !important;
+}
+#vitecTemplate [data-toggle="buttons"] input {
+  display: none;
+}
+</style>
+
+<!-- ===== HEADER INFO BLOCK ===== -->
+<table>
+<tbody>
+<tr>
+  <td colspan="100" style="text-align:right">
+    <small>
+      Megler: <strong>[[meglerkontor.navn]]</strong> &ndash; Org.nr.: <strong>[[meglerkontor.orgnr]]</strong><br />
+      Type oppdrag:&nbsp;<strong>[[oppdrag.type]]</strong><br />
+      <span vitec-if="Model.eiendom.eieform != &quot;&quot;">Eierform bygninger:&nbsp;<strong>[[eiendom.eieform]]</strong><br /></span>
+      <span vitec-if="Model.eiendom.typegrunn != &quot;&quot;">Eierform tomt:&nbsp;<strong>[[eiendom.typegrunn]]</strong><br /></span>
+      Oppdragsnr.:&nbsp;<strong>[[oppdrag.nr]]</strong><br />
+      Omsetningsnr.:&nbsp;<strong>[[kontrakt.formidling.nr]]</strong>
+    </small>
+  </td>
+</tr>
+<tr><td colspan="100">&nbsp;</td></tr>
+<tr>
+  <td colspan="100">
+
+<p style="text-align:center"><small>MEGLERSTANDARD MARS 2020 OM SALG AV EIENDOM <u>MED OG UTEN</u> OPPGJ&Oslash;RSANSVARLIG</small></p>
+
+<p><small>Utkast A [[kontrakt.dato]] av [[ansvarligmegler.navn]]. [[ansvarligmegler.navn]] har ikke unders&oslash;kt skatte-, avgifts- eller regnskapsmessige forhold. Dette anbefales vurdert av partenes r&aring;dgivere eller revisor. Avtalen inng&aring;s ved at den undertegnes av selger og kj&oslash;per.</small></p>
+<!-- Alternativt: «Partene har tatt de forbehold som følger av bud og budaksept, og er ikke bundet før disse forbeholdene er løftet.» -->
+
+<p>&nbsp;</p>
+
+<h1>KJ&Oslash;PEKONTRAKT</h1>
+<p style="text-align:center"><strong>mellom</strong></p>
+
+<!-- ===== SELLER PARTY LISTING ===== -->
+<table class="roles-table" vitec-if="Model.selgere.Count &gt; 0">
+<thead>
+<tr>
+  <th colspan="34"><strong>Navn</strong></th>
+  <th colspan="48"><strong>Adresse/Kontaktinfo</strong></th>
+  <th colspan="18"><strong>[[selger.ledetekst_fdato_orgnr]]</strong></th>
+</tr>
+</thead>
+<tbody vitec-foreach="selger in Model.selgere">
+<tr>
+  <td colspan="34" rowspan="2">[[*selger.navnutenfullmektigogkontaktperson]]</td>
+  <td colspan="48">[[*selger.gatenavnognr]], [[*selger.postnr]] [[*selger.poststed]]</td>
+  <td colspan="18" rowspan="2">[[*selger.fdato_orgnr]]</td>
+</tr>
+<tr>
+  <td colspan="48">
+    <span vitec-if="(selger.tlf != &quot;&quot; &amp;&amp; selger.tlf != &quot;Mangler data&quot;)">Mob: [[*selger.tlf]]</span>
+    <span vitec-if="(selger.tlf != &quot;&quot; &amp;&amp; selger.tlf != &quot;Mangler data&quot; &amp;&amp; selger.emailadresse != &quot;&quot; &amp;&amp; selger.emailadresse != &quot;Mangler data&quot;)"> / </span>
+    <span vitec-if="(selger.emailadresse != &quot;&quot; &amp;&amp; selger.emailadresse != &quot;Mangler data&quot;)">E-post: [[*selger.emailadresse]]</span>
+  </td>
+</tr>
+<tr><td colspan="100">&nbsp;</td></tr>
+</tbody>
+</table>
+<div vitec-if="Model.selgere.Count == 0">
+  <p>[Mangler selger]</p>
+</div>
+
+<p style="text-align:center"><strong>og</strong></p>
+
+<!-- ===== BUYER PARTY LISTING ===== -->
+<table class="roles-table" vitec-if="Model.kjopere.Count &gt; 0">
+<thead>
+<tr>
+  <th colspan="34"><strong>Navn</strong></th>
+  <th colspan="48"><strong>Adresse/Kontaktinfo</strong></th>
+  <th colspan="18"><strong>[[kjoper.ledetekst_fdato_orgnr]]</strong></th>
+</tr>
+</thead>
+<tbody vitec-foreach="kjoper in Model.kjopere">
+<tr>
+  <td colspan="34" rowspan="2">[[*kjoper.navnutenfullmektigogkontaktperson]]</td>
+  <td colspan="48">[[*kjoper.gatenavnognr]], [[*kjoper.postnr]] [[*kjoper.poststed]]</td>
+  <td colspan="18" rowspan="2">[[*kjoper.fdato_orgnr]]</td>
+</tr>
+<tr>
+  <td colspan="48">
+    <span vitec-if="(kjoper.tlf != &quot;&quot; &amp;&amp; kjoper.tlf != &quot;Mangler data&quot;)">Mob: [[*kjoper.tlf]]</span>
+    <span vitec-if="(kjoper.tlf != &quot;&quot; &amp;&amp; kjoper.tlf != &quot;Mangler data&quot; &amp;&amp; kjoper.emailadresse != &quot;&quot; &amp;&amp; kjoper.emailadresse != &quot;Mangler data&quot;)"> / </span>
+    <span vitec-if="(kjoper.emailadresse != &quot;&quot; &amp;&amp; kjoper.emailadresse != &quot;Mangler data&quot;)">E-post: [[*kjoper.emailadresse]]</span>
+  </td>
+</tr>
+<tr><td colspan="100">&nbsp;</td></tr>
+</tbody>
+</table>
+<div vitec-if="Model.kjopere.Count == 0">
+  <p>[Mangler kj&oslash;per]</p>
+</div>
+
+<p>&nbsp;</p>
+
+<p style="text-align:center"><strong>vedr&oslash;rende salg av</strong></p>
+
+<p><strong>[[eiendom.adresse]], [[komplettmatrikkel]] [[eiendom.kommunenavn]]<span vitec-if="Model.eiendom.typegrunn != &quot;&quot;"> m/[[eiendom.typegrunn]]</span><span vitec-if="Model.eiendom.andelsnr != &quot;&quot;">, seksjonsbruk [[eiendom.andelsnr]]</span><span vitec-if="Model.sameie.sameiebrok != &quot;&quot;">, ideell andel [[sameie.sameiebrok]]</span>, heretter kalt &laquo;Eiendommen&raquo;.</strong></p>
+
+  </td>
+</tr>
+</tbody>
+</table>
+
+<!-- ===== PAGE BREAK BEFORE CONTRACT BODY ===== -->
+<span style="page-break-before:always">&nbsp;</span>
+
+<!-- ========================================== -->
+<!-- ===== SECTION 1: PARTENE OG EIENDOMMEN === -->
+<!-- ========================================== -->
+<article class="avoid-page-break item">
+<h2>PARTENE OG EIENDOMMEN</h2>
+
+<p>1.1 <span vitec-foreach="selger in Model.selgere"><span class="liste">[[*selger.navnutenfullmektigogkontaktperson]], org.nr. [[*selger.fdato_orgnr]]<span class="separator">; </span></span></span> (<strong>Selger</strong>) eier gnr. <span class="insert-table"><span class="insert" data-label="gnr"></span></span>, bnr. <span class="insert-table"><span class="insert" data-label="bnr"></span></span>, med p&aring;st&aring;ende bygninger og anlegg i [[eiendom.kommunenavn]] kommune (<strong>Eiendommen</strong>).</p>
+
+<p>1.2 Selger og <span vitec-foreach="kjoper in Model.kjopere"><span class="liste">[[*kjoper.navnutenfullmektigogkontaktperson]], org.nr. [[*kjoper.fdato_orgnr]]<span class="separator">; </span></span></span> (<strong>Kj&oslash;per</strong>) er enige om at Eiendommen skal overdras fra Selger til Kj&oslash;per p&aring; de vilk&aring;r som f&oslash;lger av denne avtalen.</p>
+</article>
+
+<!-- ========================================== -->
+<!-- ===== SECTION 2: KJØPESUMMEN ============= -->
+<!-- ========================================== -->
+<article class="item">
+<h2>KJ&Oslash;PESUMMEN OG EIENDOMMENS AVKASTNING OG KOSTNADER</h2>
+
+<article class="item">
+<h3>Kj&oslash;pesummen og omkostninger</h3>
+
+<p>2.1.1 Kj&oslash;pesummen for Eiendommen er NOK $.UD([[kontrakt.kjopesum]]) (<strong>Kj&oslash;pesummen</strong>).</p>
+
+<p>2.1.2 I tillegg skal Kj&oslash;per betale dokumentavgift og tinglysingsgebyr for skj&oslash;tet og eventuelle pantedokumenter til Kj&oslash;pers l&aring;ngiver.</p>
+
+<p>2.1.3 Det betyr at Kj&oslash;per totalt skal betale NOK $.UD([[kontrakt.kjopesumogomkostn]]) (<strong>Vederlaget</strong>), beregnet ut fra gjeldende avgifter og gebyrer ved signering av denne avtalen.</p>
+</article>
+
+<article class="item">
+<h3>Eiendommens avkastning og kostnader</h3>
+
+<p>2.2.1 Selger har rett til den avkastning Eiendommen gir frem til og med den dagen Kj&oslash;per overtar Eiendommen. Til samme tid svarer Selger for kostnadene ved Eiendommen.</p>
+
+<p>2.2.2 Senest <span class="insert-table"><span class="insert" data-label="antall dager"></span></span> dager etter Overtakelse skal Selger og Kj&oslash;per direkte seg i mellom foreta et pro &amp; contra-oppgj&oslash;r for inntekter og utgifter knyttet til Eiendommen per Overtakelse. Hvis partene ikke blir enige om dette oppgj&oslash;ret innen fristen, kan hver av partene kreve at en revisor som partene i fellesskap oppnevner og bekoster, avgj&oslash;r hvordan oppgj&oslash;ret skal foretas, med bindende og endelig virkning for partene.</p>
+</article>
+</article>
+
+<!-- ========================================== -->
+<!-- ===== SECTION 3: OVERTAKELSE ============= -->
+<!-- ========================================== -->
+<article class="item">
+<h2>OVERTAKELSE, OPPGJ&Oslash;R OG FORSINKELSE</h2>
+
+<article class="item">
+<h3>Avtalt overtakelse</h3>
+
+<p>Eiendommen skal overtas av Kj&oslash;per den [[kontrakt.overtagelse.dato]] (<strong>Avtalt Overtakelse</strong>).</p>
+</article>
+
+<article class="item">
+<h3>Faktisk overtakelse. Oppgj&oslash;r</h3>
+
+<p vitec-if="Model.oppgjor.ansvarlig.navn != &quot;&quot; &amp;&amp; Model.oppgjor.ansvarlig.navn != &quot;Mangler data&quot;">3.2.1 Eiendommen blir f&oslash;rst overtatt av Kj&oslash;per idet Kj&oslash;pesummen er disponibel p&aring; oppgj&oslash;rskontoen og vilk&aring;rene for utbetaling i punkt 3 i oppgj&oslash;rsavtalen i <u>vedlegg&nbsp;6</u> er oppfylt eller frafalt (<strong>Overtakelse</strong>).</p>
+
+<p vitec-if="Model.oppgjor.ansvarlig.navn == &quot;&quot; || Model.oppgjor.ansvarlig.navn == &quot;Mangler data&quot;">3.2.1 Eiendommen blir f&oslash;rst overtatt av Kj&oslash;per idet Vederlaget er disponibelt p&aring; Selgers konto etter gjennomf&oslash;ring av oppgj&oslash;ret i henhold til oppgj&oslash;rsavtalen i <u>vedlegg&nbsp;6</u> (<strong>Overtakelse</strong>).</p>
+
+<p>3.2.2 Selger og Kj&oslash;per p&aring;tar seg herved &aring; oppfylle sine respektive plikter etter oppgj&oslash;rsavtalen.</p>
+</article>
+
+<article class="item">
+<h3>Forsinkelse</h3>
+
+<p>Hvis Overtakelse skjer p&aring; en senere dag enn Avtalt Overtakelse,</p>
+
+<p style="margin-left:14px">(a) og forsinkelsen skyldes forhold p&aring; Kj&oslash;pers side, kan Selger kreve oppfyllelse, heving og erstatning, herunder forsinkelsesrente, etter punkt 6.1 til 6.3;</p>
+
+<p style="margin-left:14px">(b) og forsinkelsen skyldes forhold p&aring; Selgers side, kan Kj&oslash;per kreve oppfyllelse, heving og erstatning samt holde kj&oslash;pesummen tilbake etter punkt 6.1 til 6.3 og punkt 8.1;</p>
+
+<p style="margin-left:14px">(c) gjelder Selgers forpliktelser etter punkt 5 frem til Overtakelse, og en del av Selgers garantier i punkt 7.1 avgis per Overtakelse; og</p>
+
+<p style="margin-left:14px">(d) gjelder punkt 9.1(a) for skader p&aring; Eiendommen og dens tilbeh&oslash;r.</p>
+</article>
+</article>
+
+<!-- ========================================== -->
+<!-- ===== SECTION 4: BETINGELSER ============= -->
+<!-- ========================================== -->
+<article class="item">
+<h2>BETINGELSER FOR GJENNOMF&Oslash;RING AV AVTALEN</h2>
+
+<article class="item">
+<h3>Kj&oslash;pers betingelser</h3>
+
+<p>Kj&oslash;pers forpliktelse til &aring; gjennomf&oslash;re denne avtalen er betinget av at f&oslash;lgende vilk&aring;r er oppfylt eller frafalt av Kj&oslash;per:</p>
+
+<p style="margin-left:14px">(a) Eiendommen eller dets tilbeh&oslash;r har ikke blitt skadet etter signering av denne avtalen med den f&oslash;lge at kostnadene til gjenoppf&oslash;ring/reparasjon og leietap som f&oslash;lge av skaden utgj&oslash;r mer enn <span class="insert-table"><span class="insert" data-label="prosentsats"></span></span> % av Kj&oslash;pesummen. I vurderingen av om denne bel&oslash;psgrensen er n&aring;dd, skal det ses bort fra kostnader i tilknytning til skader som Selger ikke hefter for etter punkt 9.1(a)(ii).</p>
+</article>
+
+<article class="item">
+<h3>Selgers betingelser</h3>
+
+<p>Selgers forpliktelse til &aring; gjennomf&oslash;re denne avtalen er betinget av at f&oslash;lgende vilk&aring;r er oppfylt eller frafalt av Selger:</p>
+
+<p style="margin-left:14px">(a) Eiendommen eller dets tilbeh&oslash;r har ikke blitt skadet etter signering av denne avtalen med den f&oslash;lge at det tapet Selger selv m&aring; dekke etter punkt 9.1(a), overstiger <span class="insert-table"><span class="insert" data-label="prosentsats"></span></span> % av Kj&oslash;pesummen. Selger kan ikke gj&oslash;re denne betingelsen gjeldende hvis Kj&oslash;per p&aring;tar seg ikke &aring; kreve en erstatning som overstiger <span class="insert-table"><span class="insert" data-label="prosentsats"></span></span> % av Kj&oslash;pesummen som f&oslash;lge av skaden.</p>
+</article>
+
+<article class="item">
+<h3>Betydningen av at avtalen bortfaller</h3>
+
+<p>Hvis avtalen bortfaller som f&oslash;lge av at Selgers eller Kj&oslash;pers betingelser ikke blir oppfylt eller frafalt, kan ingen av partene rette krav om kostnadsdekning eller annet mot den annen part. Hvis avtalen bortfaller som f&oslash;lge av at en part bryter sine plikter etter avtalen, kan den annen part likevel gj&oslash;re gjeldende erstatningskrav som f&oslash;lge av avtalebruddet.</p>
+</article>
+</article>
+
+<!-- ========================================== -->
+<!-- ===== SECTION 5: SELGERS PLIKTER ========= -->
+<!-- ========================================== -->
+<article class="avoid-page-break item">
+<h2>SELGERS PLIKTER F&Oslash;R OVERTAKELSE</h2>
+
+<p>Frem til Overtakelse skal Selger s&oslash;rge for:</p>
+
+<p style="margin-left:14px">(a) At Eiendommen vedlikeholdes p&aring; en forsvarlig m&aring;te og i et omfang som ikke er mindre enn f&oslash;r signering av denne avtalen.</p>
+
+<p style="margin-left:14px">(b) At Selger ikke inng&aring;r nye avtaler av vesentlig betydning for Eiendommen, og at ingen avtaler av vesentlig betydning for Eiendommen heves, endres eller sies opp uten Kj&oslash;pers skriftlige samtykke.</p>
+
+<p style="margin-left:14px">(c) Ikke &aring; tilskynde eller foreta noe som ville utgj&oslash;re brudd p&aring; Selgers garantier i punkt 7.</p>
+
+<p style="margin-left:14px">(d) &Aring; holde Eiendommen fullverdiforsikret.</p>
+
+<p style="margin-left:14px">(e) At Eiendommens ledige arealer ryddes og rengj&oslash;res p&aring; sedvanlig m&aring;te f&oslash;r Overtakelse.</p>
+</article>
+
+<!-- ========================================== -->
+<!-- ===== SECTION 6: PARTENES BEFØYELSER ===== -->
+<!-- ========================================== -->
+<article class="item">
+<h2>PARTENES BEF&Oslash;YELSER VED AVTALEBRUDD</h2>
+
+<p>6.1 B&aring;de Selger og Kj&oslash;per kan fastholde kj&oslash;pet og kreve at avtalen gjennomf&oslash;res, med mindre den annen part rettmessig hever avtalen eller gj&oslash;r gjeldende at en betingelse for gjennomf&oslash;ring av avtalen i punkt 4 ikke er oppfylt. Kj&oslash;per kan ikke kreve retting etter avhendingsloven &sect; 4-10 (2), men Selger har rett til &aring; utf&oslash;re retting etter avhendingsloven &sect; 4-10 (1).</p>
+
+<p>6.2 Bryter Selger denne avtalen, har Kj&oslash;per rett til erstatning p&aring; de vilk&aring;r som f&oslash;lger av punkt 8 og rett til &aring; holde kj&oslash;pesummen tilbake etter avhendingsloven &sect; 4-15, men Kj&oslash;per har ikke rett til prisavslag etter avhendingsloven &sect; 4-12. Bryter Kj&oslash;per denne avtalen, kan Selger kreve erstatning etter alminnelige regler, herunder avhendingsloven &sect; 5-4 og forsinkelsesrenteloven.</p>
+
+<p>6.3 B&aring;de Selger og Kj&oslash;per kan heve denne avtalen f&oslash;r Overtakelse hvis det inntrer omstendigheter, herunder forsinkelse, som utgj&oslash;r vesentlig brudd av den annen parts forpliktelser etter denne avtalen. Etter Overtakelse kan Kj&oslash;per heve s&aring; fremt Kj&oslash;per har rett til det etter avhendingslovens regler.</p>
+
+<p>6.4 Kj&oslash;per fraskriver seg herved, s&aring; langt gjeldende rett tillater det, enhver rett til &aring; gj&oslash;re krav gjeldende mot Selger som f&oslash;lge av at salgsobjektet ikke er som det skal v&aelig;re, i medhold av avhendingsloven &sect; 3-7, 3-8 og 3-9, andre regler om ansvar for uriktige og manglende opplysninger og ethvert annet lovfestet eller ulovfestet grunnlag utenfor denne avtalen.</p>
+</article>
+
+<!-- ========================================== -->
+<!-- ===== SECTION 7: SELGERS GARANTIER ======= -->
+<!-- ========================================== -->
+<article class="item">
+<h2>SELGERS GARANTIER</h2>
+
+<article class="item">
+<h3>&nbsp;</h3>
+<p>Selger garanterer det f&oslash;lgende overfor Kj&oslash;per ved signering av denne avtalen og ved Overtakelse, med mindre noe annet fremg&aring;r av garantiene nedenfor:</p>
+
+<p style="margin-left:14px">(a) Selger har opplyst Kj&oslash;per om de omstendighetene vedr&oslash;rende Eiendommen som Selger kjenner til ved signering av denne avtalen, og som Kj&oslash;per har grunn til &aring; regne med &aring; f&aring;. &laquo;Grunn til &aring; regne med &aring; f&aring;&raquo; skal forst&aring;s p&aring; samme m&aring;te som i avhendingsloven &sect; 3-7.</p>
+
+<p style="margin-left:14px">(b) De opplysninger vedr&oslash;rende omstendigheter ved Eiendommen som Kj&oslash;per har mottatt fra Selgers side f&oslash;r signering av denne avtalen, er riktige. Denne garantien omfatter ikke opplysninger i dokumenter utarbeidet av andre enn Selger eller selskap i samme konsern som Selger, med mindre Selger kjenner til at opplysningene er uriktige ved signering av denne avtalen.</p>
+
+<p style="margin-left:14px">(c) At Selger eier Eiendommen og er hjemmelshaver til denne.</p>
+
+<p style="margin-left:14px">(d) Det eksisterer ikke andre heftelser p&aring; Eiendommen (herunder l&oslash;sningsretter) enn de som er angitt i <u>vedlegg 2</u>, og at alle eventuelle panteheftelser (utover lovbestemt pant for uforfalt gjeld og eventuelle leiekontrakter) p&aring; Eiendommen vil slettes uten ugrunnet opphold etter Overtakelse.</p>
+
+<p style="margin-left:14px">(e) At Selger ikke bryter leieavtalene med tilh&oslash;rende tilleggsavtaler angitt i <u>vedlegg 3</u>. Denne garantien gjelder ikke et vedlikeholdsetterslep eller andre tekniske forhold ved Eiendommen.</p>
+
+<p style="margin-left:14px">(f) Eiendommen er ved signering av denne avtalen leiet ut i henhold til leieavtalene med tilh&oslash;rende tilleggsavtaler angitt i <u>vedlegg 3</u>, og disse avtalene er gyldige og gjengir alt som er avtalt med leietakerne. Ved signering av denne avtalen kjenner Selger ikke til at en leietaker bryter en leieavtale.</p>
+
+<p style="margin-left:14px">(g) Ved signering av denne avtalen foreligger det ikke skriftlige p&aring;legg mv. fra offentlige myndigheter som gjelder Eiendommen, og som ikke er betalt eller oppfylt p&aring; annen m&aring;te.</p>
+</article>
+
+<article class="item">
+<h3>&nbsp;</h3>
+<p>Med forhold som <strong>Selger kjenner til</strong> i punkt 7.1, menes b&aring;de de forhold som Selger faktisk kjenner til ved signering av denne avtalen, og de forhold som Selger ikke har en rimelig grunn til &aring; v&aelig;re uvitende om p&aring; dette tidspunktet. Selger hefter ikke for manglende opplysninger fra andre enn Selger selv.</p>
+</article>
+</article>
+
+<!-- ========================================== -->
+<!-- ===== SECTION 8: ERSTATNING ============== -->
+<!-- ========================================== -->
+<article class="item">
+<h2>RETT TIL ERSTATNING OG BEGRENSNINGER I SELGERS ANSVAR</h2>
+
+<article class="item">
+<h3>Kj&oslash;pers rett til erstatning</h3>
+
+<p>8.1.1 Bryter Selger denne avtalen, herunder ved forsinkelse, har Kj&oslash;per bare rett til erstatning for det tapet Kj&oslash;per lider som f&oslash;lge av avtalebruddet. Retten til erstatning omfatter imidlertid bare tap som en med rimelighet kunne ha forutsett som en mulig f&oslash;lge av avtalebruddet.</p>
+
+<p>8.1.2 Kj&oslash;pers tap skal beregnes netto etter fradrag for i) skatte- og avgiftsbesparelser som Kj&oslash;per kan nyttiggj&oslash;re seg, og ii) det Kj&oslash;per har rett til &aring; kreve erstattet fra tredjemann, herunder et forsikringsselskap. Hvis et tap er betinget, kan Selger f&oslash;rst holdes ansvarlig for tapet hvis og n&aring;r tapet m&aring; dekkes av Kj&oslash;per. Kj&oslash;per kan overholde fristene i punkt 8.3 ved &aring; gi skriftlig melding om det betingede tapet f&oslash;r utl&oslash;pet av disse fristene.</p>
+</article>
+
+<article class="item">
+<h3>Kj&oslash;pers kunnskap</h3>
+
+<p>Kj&oslash;per kan ikke gj&oslash;re gjeldende som brudd p&aring; punkt 7 noe som han selv faktisk kjente til ved signeringen av denne avtalen, eller noe som rimelig klart og tydelig fremg&aring;r av de skriftlige opplysningene som Kj&oslash;per har mottatt fra Selgers side f&oslash;r signering av denne avtalen. Denne begrensningen i Selgers ansvar gjelder ikke ved brudd p&aring; punkt 7.1(c) (<i>om eierskap til Eiendommen</i>). Selger fraskriver seg retten til &aring; gj&oslash;re gjeldende avhendingsloven &sect; 3-10.</p>
+</article>
+
+<article class="item">
+<h3>Reklamasjon</h3>
+
+<p><strong>8.3.1 Reklamasjon ved forsinkelse</strong></p>
+
+<p>En part taper sitt krav p&aring; erstatning som f&oslash;lge av forsinkelse som skyldes forhold p&aring; den annen parts side, hvis parten ikke innen &eacute;n m&aring;ned etter Overtakelse gir den annen part skriftlig melding om at avtalebruddet vil bli gjort gjeldende og hva avtalebruddet best&aring;r i (<strong>Reklamasjon</strong>).</p>
+
+<p><strong>8.3.2 Reklamasjon ved andre brudd p&aring; avtalen</strong></p>
+
+<p style="margin-left:14px">(a) Kj&oslash;per taper retten til &aring; gj&oslash;re brudd p&aring; garantien i punkt 7.1(c) gjeldende hvis Kj&oslash;per ikke sender en Reklamasjon til Selger innen 5 &aring;r etter Overtakelse. For andre brudd p&aring; denne avtalen m&aring; Kj&oslash;per sende en Reklamasjon til Selger senest 18&nbsp;m&aring;neder etter Overtakelse. Hvis Kj&oslash;per selv oppdager et avtalebrudd innen utl&oslash;pet av en av disse fristene, men senere enn &eacute;n m&aring;ned f&oslash;r utl&oslash;pet av den, utvides fristen med &eacute;n m&aring;ned regnet fra fristens utl&oslash;p.</p>
+
+<p style="margin-left:14px">(b) Dessuten skal Kj&oslash;per sende en Reklamasjon til Selger senest &eacute;n m&aring;ned etter at Kj&oslash;per selv oppdaget avtalebruddet. Fors&oslash;mmer Kj&oslash;per &aring; sende en Reklamasjon innen denne fristen, vil Kj&oslash;per bare tape sitt krav mot Selger hvis og i den utstrekning fors&oslash;mmelsen i) har &oslash;kt Kj&oslash;pers tap, eller ii) har medf&oslash;rt at Selger har mistet retten til &aring; kreve erstatning fra tredjemann, herunder et forsikringsselskap.</p>
+</article>
+
+<article class="item">
+<h3>Bel&oslash;psmessige ansvarsbegrensninger</h3>
+
+<p>8.4.1 Selgers ansvar for brudd p&aring; punkt 7 er underlagt f&oslash;lgende begrensninger:</p>
+
+<p style="margin-left:14px">(a) Kj&oslash;per kan ikke gj&oslash;re gjeldende enkeltst&aring;ende brudd som medf&oslash;rer tap p&aring; mindre enn NOK <span class="insert-table"><span class="insert" data-label="bel&oslash;psgrense enkeltansvar"></span></span>, og det skal ses bort fra s&aring;danne brudd ved beregningen av Kj&oslash;pers tap, herunder ved vurderingen av om bel&oslash;psgrensen i bokstav (b) nedenfor er n&aring;dd.</p>
+
+<p style="margin-left:14px">(b) Kj&oslash;per kan ikke gj&oslash;re krav gjeldende med mindre Kj&oslash;pers samlede tap overstiger NOK&nbsp;<span class="insert-table"><span class="insert" data-label="bel&oslash;psgrense samlet ansvar"></span></span>, men hvis Kj&oslash;pers samlede tap overstiger denne bel&oslash;psgrensen, har Kj&oslash;per rett til erstatning fra f&oslash;rste krone.</p>
+
+<p style="margin-left:14px">(c) Selgers samlede ansvar er begrenset oppad til <span class="insert-table"><span class="insert" data-label="ansvarsbegrensning"></span></span>.</p>
+
+<p>8.4.2 Ansvarsbegrensningene i punkt 8.4.1 gjelder ikke ved brudd p&aring; garantien i punkt 7.1(c) (<i>om eierskap til Eiendommen</i>).</p>
+
+<p>8.4.3 Selgers samlede ansvar for brudd p&aring; denne avtalen (herunder garantien i punkt 7.1(c)) og punkt 5 eller 7) er begrenset til Kj&oslash;pesummen. Se likevel punkt 9.2.</p>
+</article>
+
+<article class="item">
+<h3>Ansvar ved forsett eller grov uaktsomhet</h3>
+
+<p>Begrensningene i Selgers ansvar i punkt 8.3 og 8.4 gjelder ikke hvis avtalebruddet er forvoldt ved forsett eller grov uaktsomhet hos medlemmer av Selgers styre eller daglig leder eller en annen person hos Selger, som har v&aelig;rt den hovedansvarlige for gjennomf&oslash;ringen av salget av Eiendommen til Kj&oslash;per.</p>
+</article>
+
+<div vitec-if="Model.selgere.Count &gt; 1">
+<article class="item">
+<h3>Ansvaret til de respektive selgere</h3>
+
+<p>De aksjeeiere eller personer som utgj&oslash;r Selger, hefter proratarisk og ikke solidarisk for Kj&oslash;pers krav mot Selger som f&oslash;lge av brudd p&aring; denne avtalen. Den enkelte aksjeeiers/persons ansvar er begrenset oppad til en andel av kravet lik aksjeeierens/personens eierandel i Eiendommen.</p>
+<!-- Alternativt: «De aksjeeiere/personer som utgjør Selger, hefter solidarisk for Kjøpers krav mot Selger som følge av brudd på denne avtalen». -->
+</article>
+</div>
+</article>
+
+<!-- ========================================== -->
+<!-- ===== SECTION 9: SKADESLØSHOLDELSE ======= -->
+<!-- ========================================== -->
+<article class="item">
+<h2>SKADESL&Oslash;SHOLDELSE FRA SELGER</h2>
+
+<p>9.1 Selger skal holde Kj&oslash;per skadesl&oslash;s for tap som springer ut av:</p>
+
+<p style="margin-left:14px">(a) At Eiendommen eller dens tilbeh&oslash;r blir skadet i perioden mellom signering av denne avtalen og kl. 1200 ved Overtakelse. Denne skadesl&oslash;sholdelsen gjelder:</p>
+
+<p style="margin-left:28px">(i) Ikke hvis tapet er lavere enn bel&oslash;psterskelen i punkt 8.4.1(a), eller hvis i) kostnadene til gjenoppf&oslash;ring/reparasjon og leietap som f&oslash;lge av skaden er fullt dekket av en forsikring eller dekkes av Selger eller Selger stiller betryggende sikkerhet for disse kostnadene og leietapet, og ii) alle leietakerne til Eiendommen er forpliktet til &aring; videref&oslash;re eller gjenoppta sitt leieforhold p&aring; uendrede vilk&aring;r etter gjenoppf&oslash;ring/reparasjon.</p>
+
+<p style="margin-left:28px">(ii) Ikke skader som inntreffer i perioden fra kl. 1200 ved Avtalt Overtakelse frem til kl. 1200 ved Overtakelse hvis det skyldes forhold p&aring; Kj&oslash;pers side at Overtakelse gjennomf&oslash;res senere enn Avtalt Overtakelse, med mindre skaden skyldes uaktsomhet p&aring; Selgers side. For s&aring;danne skader som skyldes uaktsomhet, gjelder ikke unntaket i dette punkt 9.1(a)(ii).</p>
+
+<p style="margin-left:28px">(iii) Bare hvis Kj&oslash;per senest &eacute;n m&aring;ned etter Overtakelse gir Selger skriftlig melding om at han krever erstatning for skaden.</p>
+
+<p>9.2 Punkt 8.1 gjelder tilsvarende. Begrensningene i Selgers ansvar etter punkt 8.2, 8.3 og 8.4 gjelder ikke for skadesl&oslash;sholdelsene i dette punkt 9.</p>
+</article>
+
+<!-- ========================================== -->
+<!-- ===== SECTION 10: SIKKERHET ============== -->
+<!-- ========================================== -->
+<!-- SECTION 10: Strykes hvis Selger ikke skal stille sikkerhet -->
+<article class="avoid-page-break item">
+<h2>SIKKERHET</h2>
+
+<p>Som sikkerhet for Kj&oslash;pers krav overfor Selger under denne avtalen skal NOK <span class="insert-table"><span class="insert" data-label="sikkerhetsbeløp"></span></span> av Kj&oslash;pesummen holdes tilbake p&aring; en for begge parter sperret konto i navnet til Selger frem til og med dagen ett &aring;r etter Overtakelse. Rettmessige krav som Kj&oslash;per har overfor Selger, skal gj&oslash;res opp ved utbetalinger fra kontoen. Dersom det ikke er fremmet rettmessige krav overfor Selger i perioden frem til og med dagen ett &aring;r etter Overtakelse, skal innest&aring;ende bel&oslash;p p&aring; kontoen inklusive renter utbetales til Selger. Ved uenighet om hva som utgj&oslash;r rettmessige krav, skal tvisten avgj&oslash;res etter punkt 14. Alle kostnader til banken i tilknytning til denne sikkerheten skal fordeles med en halvpart p&aring; hver av Selger og Kj&oslash;per.</p>
+</article>
+
+<!-- ========================================== -->
+<!-- ===== SECTION 11: MERVERDIAVGIFT ========= -->
+<!-- ========================================== -->
+<article class="avoid-page-break item">
+<h2>MERVERDIAVGIFT. OVERF&Oslash;RING AV JUSTERINGS-/TILBAKEF&Oslash;RINGSFORPLIKTELSER OG RETTIGHETER</h2>
+
+<p>Partene er enige om at Selgers justerings-/tilbakef&oslash;ringsforpliktelser og -rettigheter tilknyttet Eiendommen skal overf&oslash;res til Kj&oslash;per per Overtakelse. Innen Overtakelse skal det derfor inng&aring;s en egen avtale om overf&oslash;ring av plikt/rett til &aring; justere/tilbakef&oslash;re merverdiavgift som tilfredsstiller kravene for slik overf&oslash;ring etter gjeldende merverdiavgiftsregelverk, jf. <u>vedlegg&nbsp;5</u>.</p>
+</article>
+
+<!-- ========================================== -->
+<!-- ===== SECTION 12: FRASKRIVELSE =========== -->
+<!-- ========================================== -->
+<article class="item">
+<h2>FRASKRIVELSE AV RETTEN TIL &Aring; GJ&Oslash;RE KRAV GJELDENDE MOT ANDRE ENN PARTENE</h2>
+
+<p>12.1 Kj&oslash;per p&aring; den ene side og Selger p&aring; den annen side fraskriver seg herved overfor den andre parten enhver rett til &aring; gj&oslash;re krav gjeldende mot n&aelig;rst&aring;ende av den andre parten som f&oslash;lge av den n&aelig;rst&aring;endes disposisjoner, handlinger eller unnlatelser til skade for Eiendommen frem til og med Overtakelse eller i forbindelse med inng&aring;elsen eller gjennomf&oslash;ringen av denne avtalen.</p>
+
+<p>12.2 B&aring;de Kj&oslash;per og Selger (hver for seg <strong>Skadesl&oslash;shareholderen</strong>) skal holde den annen part og hans n&aelig;rst&aring;ende (i fellesskap de <strong>Beskyttede Parter</strong>) skadesl&oslash;s for det tilfelle n&aelig;rst&aring;ende av Skadesl&oslash;shareholderen gj&oslash;r krav gjeldende mot de Beskyttede Parter som f&oslash;lge av de Beskyttede Parters disposisjoner, handlinger eller unnlatelser til skade for Eiendommen frem til og med Overtakelse eller i forbindelse med inng&aring;elsen eller gjennomf&oslash;ringen av denne avtalen.</p>
+
+<p>12.3 Ansvarsfraskrivelsen og skadesl&oslash;sholdelsen i dette punkt 12 gjelder ikke i den grad kravet mot en person springer ut av hans forsettlige skadeforvoldelse eller en avtale med ham som inng&aring;s i tilknytning til denne avtalen.</p>
+
+<p>12.4 Med <strong>n&aelig;rst&aring;ende</strong> menes i) selskap i samme konsern (som definert i aksjeloven &sect; 1-3) som en part, ii) en parts aksjeeiere (direkte og indirekte), iii) n&aring;v&aelig;rende eller tidligere styremedlemmer eller ansatte hos en part eller selskap i samme konsern som parten, og iv) meglere, r&aring;dgivere eller andre representanter for en part.</p>
+</article>
+
+<!-- ========================================== -->
+<!-- ===== SECTION 13: MEDDELELSER ============ -->
+<!-- ========================================== -->
+<article class="avoid-page-break item">
+<h2>MEDDELELSER</h2>
+
+<p>13.1 Enhver meddelelse i forbindelse med denne avtalen skal skje per brev eller e-post til f&oslash;lgende adresser:</p>
+
+<p>For Selger: <span class="insert-table"><span class="insert" data-label="adresse Selger"></span></span></p>
+
+<p>For Kj&oslash;per: <span class="insert-table"><span class="insert" data-label="adresse Kj&oslash;per"></span></span></p>
+
+<p>13.2 Frem til og med Overtakelse skal alle meddelelser sendes med kopi til:</p>
+
+<p>[[ansvarligmegler.navn]]: <span class="insert-table"><span class="insert" data-label="adresse/e-post megler"></span></span></p>
+</article>
+
+<!-- ========================================== -->
+<!-- ===== SECTION 14: LOVVALG ================ -->
+<!-- ========================================== -->
+<article class="avoid-page-break item">
+<h2>LOVVALG OG TVISTEL&Oslash;SNING</h2>
+
+<p>14.1 Denne avtalen er underlagt norsk rett. Norske lovvalgsregler skal ikke kunne lede til valg av et annet lands rett.</p>
+
+<p>14.2 Enhver tvist som m&aring;tte oppst&aring; med tilknytning til denne avtale, avgj&oslash;res ved ordin&aelig;r rettergang med <span class="insert-table"><span class="insert" data-label="verneting"></span></span> som eksklusivt verneting. Kretsen av kompetente domstoler i henhold til de alminnelige regler for midlertidig sikring begrenses ikke av det som er bestemt her.</p>
+</article>
+
+<!-- ========================================== -->
+<!-- ===== SECTION 15: VEDLEGG ================ -->
+<!-- ========================================== -->
+<article class="avoid-page-break item">
+<h2>VEDLEGG</h2>
+
+<p>Vedlagt f&oslash;lger:</p>
+
+<ol>
+<li>Firmaattester for Selger og Kj&oslash;per</li>
+<li>Grunnboksutskrifter</li>
+<li>Leiekontrakter med vedlegg</li>
+<li>Prospekt med vedlegg</li>
+<li>Justeringsavtale</li>
+<li>Oppgj&oslash;rsavtale</li>
+<li><i>[Datarom p&aring; minnepinne]</i></li>
+</ol>
+</article>
+
+<!-- ========================================== -->
+<!-- ===== SECTION 16: UNDERSKRIFT ============ -->
+<!-- ========================================== -->
+<div style="page-break-before:always">
+<article class="item">
+<h2>UNDERSKRIFT</h2>
+
+<p>Denne avtalen er i dag underskrevet i tre eksemplarer, hvorav partene og [[ansvarligmegler.navn]] beholder ett hver.</p>
+
+<p style="text-align:center">[[meglerkontor.poststed]], [[kontrakt.dato]]</p>
+
+<p>&nbsp;</p>
+
+<table style="width:100%; table-layout:fixed">
+<tbody>
+<tr>
+  <td colspan="45" style="vertical-align:top">
+    <p>for <span vitec-foreach="selger in Model.selgere"><span class="liste">[[*selger.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span></p>
+    <p>&nbsp;</p>
+    <div style="border-bottom:1px solid #000; width:80%; margin-bottom:4px">&nbsp;</div>
+    <p><span class="insert-table"><span class="insert" data-label="Selgers representant"></span></span></p>
+  </td>
+  <td colspan="10">&nbsp;</td>
+  <td colspan="45" style="vertical-align:top">
+    <p>for <span vitec-foreach="kjoper in Model.kjopere"><span class="liste">[[*kjoper.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span></p>
+    <p>&nbsp;</p>
+    <div style="border-bottom:1px solid #000; width:80%; margin-bottom:4px">&nbsp;</div>
+    <p><span class="insert-table"><span class="insert" data-label="Kj&oslash;pers representant"></span></span></p>
+  </td>
+</tr>
+</tbody>
+</table>
+
+</article>
+</div>
+
+<!-- ========================================== -->
+<!-- ===== PART 2: VEDLEGG OG BILAG ========== -->
+<!-- ========================================== -->
+
+<!-- ========================================== -->
+<!-- ===== VEDLEGG 5: JUSTERINGSAVTALE ======== -->
+<!-- ========================================== -->
+<div style="page-break-before:always">
+
+<h1>VEDLEGG 5</h1>
+<p style="text-align:center"><strong>AVTALE OM OVERF&Oslash;RING AV<br />JUSTERINGS-/TILBAKEF&Oslash;RINGSFORPLIKTELSER<br />mellom<br /><span vitec-foreach="selger in Model.selgere"><span class="liste">[[*selger.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span><br />og<br /><span vitec-foreach="kjoper in Model.kjopere"><span class="liste">[[*kjoper.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span></strong></p>
+
+<p>&nbsp;</p>
+
+<p><strong>1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Partene</strong></p>
+
+<p style="margin-left:26px">Denne avtalen er inng&aring;tt [[kontrakt.dato]] mellom</p>
+
+<p style="margin-left:40px">(a)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span vitec-foreach="selger in Model.selgere"><span class="liste">[[*selger.navnutenfullmektigogkontaktperson]], [[*selger.gatenavnognr]], [[*selger.postnr]] [[*selger.poststed]], org.nr. [[*selger.fdato_orgnr]]<span class="separator">; </span></span></span> (<strong>Overdrager</strong>)</p>
+
+<p style="margin-left:40px">(b)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span vitec-foreach="kjoper in Model.kjopere"><span class="liste">[[*kjoper.navnutenfullmektigogkontaktperson]], [[*kjoper.gatenavnognr]], [[*kjoper.postnr]] [[*kjoper.poststed]], org.nr. [[*kjoper.fdato_orgnr]]<span class="separator">; </span></span></span> (<strong>Mottaker</strong>)</p>
+
+<p><strong>2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bakgrunn</strong></p>
+
+<p style="margin-left:26px">Den [[kontrakt.dato]] inngikk Overdrager og Mottaker en kj&oslash;pekontrakt (<strong>Kj&oslash;pekontrakten</strong>) vedr&oslash;rende salg av eiendom med [[komplettmatrikkel]] i [[eiendom.kommunenavn]] kommune (<strong>Eiendommen</strong>). I henhold til Kj&oslash;pekontrakten skal Mottaker per [[kontrakt.overtagelse.dato]] (<strong>Overtakelse</strong>) overta Overdragers justerings-/tilbakef&oslash;ringsforpliktelser knyttet til Eiendommen.</p>
+
+<p><strong>3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Justerings-/tilbakef&oslash;ringsforpliktelser som overf&oslash;res</strong></p>
+
+<p style="margin-left:26px">F&oslash;lgende justerings-/tilbakef&oslash;ringsforpliktelser overf&oslash;res fra Overdrager til Mottaker per Overtakelse:</p>
+
+<table style="width:90%; table-layout:fixed; border-collapse:collapse; margin-left:26px">
+<thead>
+<tr>
+  <th colspan="75" style="border:1px solid #bfbfbf; padding:3px 6px; background:#d9d9d9; text-align:left"><strong><span class="insert-table"><span class="insert" data-label="Angivelse av byggetiltak"></span></span></strong></th>
+  <th colspan="25" style="border:1px solid #bfbfbf; padding:3px 6px; background:#d9d9d9">&nbsp;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td colspan="75" style="border:1px solid #bfbfbf; padding:3px 6px">Fullf&oslash;ringstidspunkt/anskaffelsestidspunkt</td>
+  <td colspan="25" style="border:1px solid #bfbfbf; padding:3px 6px"><span class="insert-table"><span class="insert" data-label="Dato"></span></span></td>
+</tr>
+<tr>
+  <td colspan="75" style="border:1px solid #bfbfbf; padding:3px 6px">Anskaffelseskostnad uten mva.</td>
+  <td colspan="25" style="border:1px solid #bfbfbf; padding:3px 6px">Kr <span class="insert-table"><span class="insert" data-label="anskaffelseskostnad"></span></span></td>
+</tr>
+<tr>
+  <td colspan="75" style="border:1px solid #bfbfbf; padding:3px 6px">Total mva.</td>
+  <td colspan="25" style="border:1px solid #bfbfbf; padding:3px 6px">Kr <span class="insert-table"><span class="insert" data-label="total mva"></span></span></td>
+</tr>
+<tr>
+  <td colspan="75" style="border:1px solid #bfbfbf; padding:3px 6px">Mva. fradragsf&oslash;rt av Overdrager</td>
+  <td colspan="25" style="border:1px solid #bfbfbf; padding:3px 6px">Kr <span class="insert-table"><span class="insert" data-label="mva fradragsf&oslash;rt"></span></span></td>
+</tr>
+<tr>
+  <td colspan="75" style="border:1px solid #bfbfbf; padding:3px 6px">Overdragers fradragsrett ved anskaffelsen</td>
+  <td colspan="25" style="border:1px solid #bfbfbf; padding:3px 6px"><span class="insert-table"><span class="insert" data-label="fradragsrett anskaffelse %"></span></span> %</td>
+</tr>
+<tr>
+  <td colspan="75" style="border:1px solid #bfbfbf; padding:3px 6px">Overdragers fradragsrett per Overtakelse</td>
+  <td colspan="25" style="border:1px solid #bfbfbf; padding:3px 6px"><span class="insert-table"><span class="insert" data-label="fradragsrett overtakelse %"></span></span> %</td>
+</tr>
+<tr>
+  <td colspan="75" style="border:1px solid #bfbfbf; padding:3px 6px">Mottakers fradragsrett per Overtakelse</td>
+  <td colspan="25" style="border:1px solid #bfbfbf; padding:3px 6px"><span class="insert-table"><span class="insert" data-label="mottakers fradragsrett"></span></span></td>
+</tr>
+<tr>
+  <td colspan="75" style="border:1px solid #bfbfbf; padding:3px 6px">Resterende justeringsbel&oslash;p for Overdrager</td>
+  <td colspan="25" style="border:1px solid #bfbfbf; padding:3px 6px">Kr <span class="insert-table"><span class="insert" data-label="resterende justeringsbel&oslash;p"></span></span></td>
+</tr>
+<tr>
+  <td colspan="75" style="border:1px solid #bfbfbf; padding:3px 6px">Overf&oslash;rt justeringsforpliktelse</td>
+  <td colspan="25" style="border:1px solid #bfbfbf; padding:3px 6px">Kr <span class="insert-table"><span class="insert" data-label="overf&oslash;rt justeringsforpliktelse"></span></span></td>
+</tr>
+</tbody>
+</table>
+
+<p>&nbsp;</p>
+
+<p style="margin-left:26px"><i>[Ta inn &eacute;n tabell for hvert byggetiltak, dersom det er flere]</i></p>
+
+<p style="margin-left:26px"><i>[Angi hvordan den inng&aring;ende merverdiavgiften fordeler seg p&aring; de ulike delene av bygge&shy;tiltaket, dersom den ikke er jevnt fordelt. Hvis den er jevnt fordelt, kan f&oslash;lgende formulering benyttes: &laquo;Den inng&aring;ende merverdiavgiften fordeler seg likt p&aring; de ulike deler av bygge&shy;tiltaket&raquo;.]</i></p>
+
+<p><strong>4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Avsluttende bestemmelser</strong></p>
+
+<p style="margin-left:26px">Mottaker innest&aring;r ved sin underskrift p&aring; denne avtalen for at han er en n&aelig;ringsdrivende som er registrert i Merverdiavgiftsregisteret, eller vil bli registrert senest med virkning fra den avgiftstermin Overtakelse skjer, og slik har fradragsrett for inng&aring;ende merverdiavgift som angitt i tabellen(e) ovenfor.</p>
+
+<p style="margin-left:26px">Dersom opplysninger nevnt i denne avtalen endres etter at avtalen er inng&aring;tt, skal Overdrager rette disse overfor Mottaker hvis opplysningene kan p&aring;virke Mottakers justerings&shy;plikt.</p>
+
+<p style="text-align:center">[[meglerkontor.poststed]], den [[kontrakt.dato]]</p>
+
+<p>&nbsp;</p>
+
+<!-- Vedlegg 5 signatur: Overdrager / Mottaker -->
+<table style="width:100%; table-layout:fixed; margin-top:2cm">
+<tbody>
+<tr>
+  <td colspan="45" style="vertical-align:bottom">
+    <p>for <span vitec-foreach="selger in Model.selgere"><span class="liste">[[*selger.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span></p>
+    <p>&nbsp;</p>
+    <div style="border-bottom:1px solid #000; width:80%; margin-bottom:4px">&nbsp;</div>
+    <p><span class="insert-table"><span class="insert" data-label="Selgers representant"></span></span></p>
+  </td>
+  <td colspan="10">&nbsp;</td>
+  <td colspan="45" style="vertical-align:bottom">
+    <p>for <span vitec-foreach="kjoper in Model.kjopere"><span class="liste">[[*kjoper.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span></p>
+    <p>&nbsp;</p>
+    <div style="border-bottom:1px solid #000; width:80%; margin-bottom:4px">&nbsp;</div>
+    <p><span class="insert-table"><span class="insert" data-label="Kj&oslash;pers representant"></span></span></p>
+  </td>
+</tr>
+</tbody>
+</table>
+
+</div>
+
+<!-- ========================================== -->
+<!-- ===== VEDLEGG 6A: MED OPPGJØRSANSVARLIG == -->
+<!-- ===== LÅN INNFRIS ETTER TINGLYSING ======= -->
+<!-- ========================================== -->
+<!-- VEDLEGG 6A: Strykes hvis selgers lån innfris ved overtakelse, eller hvis oppgjøret gjennomføres uten oppgjørsansvarlig. -->
+<div vitec-if="Model.oppgjor.ansvarlig.navn != &quot;&quot; &amp;&amp; Model.oppgjor.ansvarlig.navn != &quot;Mangler data&quot;">
+<div style="page-break-before:always">
+
+<h1>VEDLEGG 6</h1>
+<p style="text-align:center"><strong>OPPGJ&Oslash;RSAVTALE</strong></p>
+<p style="text-align:center"><small>med oppgj&oslash;rsansvarlig der selgers l&aring;n innfris etter tinglysing av skj&oslash;tet til kj&oslash;per</small></p>
+
+<p>&nbsp;</p>
+
+<p><strong>1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Oppgj&oslash;rsansvarlig og oppgj&oslash;rskontoen</strong></p>
+
+<p style="margin-left:26px">1.1&nbsp;&nbsp;&nbsp;&nbsp;<span vitec-foreach="selger in Model.selgere"><span class="liste">[[*selger.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span>, org.nr. <span vitec-foreach="selger in Model.selgere"><span class="liste">[[*selger.fdato_orgnr]]<span class="separator">; </span></span></span>, (<strong>Selger</strong>) og <span vitec-foreach="kjoper in Model.kjopere"><span class="liste">[[*kjoper.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span>, org.nr. <span vitec-foreach="kjoper in Model.kjopere"><span class="liste">[[*kjoper.fdato_orgnr]]<span class="separator">; </span></span></span>, (<strong>Kj&oslash;per</strong>) har i dag inng&aring;tt avtale (<strong>Avtalen</strong>) om salg av [[komplettmatrikkel]] med p&aring;st&aring;ende bygninger og anlegg i [[eiendom.kommunenavn]] kommune (<strong>Eiendommen</strong>).</p>
+
+<p style="margin-left:26px">1.2&nbsp;&nbsp;&nbsp;&nbsp;Ord med stor forbokstav i denne avtalen (<strong>Oppgj&oslash;rsavtalen</strong>) skal bety det samme som i Avtalen.</p>
+
+<p style="margin-left:26px">1.3&nbsp;&nbsp;&nbsp;&nbsp;Selger og Kj&oslash;per har for Selgers regning engasjert [[ansvarligmegler.navn]], org.nr. [[meglerkontor.orgnr]], (<strong>Oppgj&oslash;rsansvarlig</strong>) til &aring; bist&aring; med gjennomf&oslash;ring av oppgj&oslash;ret som beskrevet nedenfor. Oppgj&oslash;rsansvarlig skal ikke bist&aring; med etteroppgj&oslash;ret som skal finne sted etter punkt 2.2 i Avtalen.</p>
+
+<p style="margin-left:26px">1.4&nbsp;&nbsp;&nbsp;&nbsp;Avtalt Overtakelse er [[kontrakt.overtagelse.dato]].</p>
+
+<p style="margin-left:26px">1.5&nbsp;&nbsp;&nbsp;&nbsp;Vederlaget skal betales til kontonr. <span class="insert-table"><span class="insert" data-label="Oppgj&oslash;rskonto"></span></span> (<strong>Oppgj&oslash;rskontoen</strong>) som er etablert i navnet til Oppgj&oslash;rsansvarlig.</p>
+
+<p style="margin-left:26px">1.6&nbsp;&nbsp;&nbsp;&nbsp;Eventuelle renter p&aring; Oppgj&oslash;rskontoen opptjent fra og med dagen for Overtakelse skal utbetales til Selger, mens eventuelle renter opptjent f&oslash;r Overtakelse skal utbetales til Kj&oslash;per. Renter under halvparten av rettsgebyret utbetales ikke.</p>
+
+<p><strong>2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Handlinger f&oslash;r overtakelse</strong></p>
+
+<p>F&oslash;r Overtakelse skal partene oppfylle forpliktelsene i dette punkt 2:</p>
+
+<table style="width:100%; table-layout:fixed; border-collapse:collapse">
+<thead>
+<tr>
+  <th colspan="8" style="border:1px solid #000; padding:4px; background:#d9d9d9"><strong>Nr.</strong></th>
+  <th colspan="42" style="border:1px solid #000; padding:4px; background:#d9d9d9"><strong>Handling</strong></th>
+  <th colspan="25" style="border:1px solid #000; padding:4px; background:#d9d9d9"><strong>Ansvarlig</strong></th>
+  <th colspan="25" style="border:1px solid #000; padding:4px; background:#d9d9d9"><strong>Frist</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td colspan="8" style="border:1px solid #000; padding:4px; vertical-align:top">2.1</td>
+  <td colspan="42" style="border:1px solid #000; padding:4px; vertical-align:top">Utstede og sende til tinglysing et sikringsdokument p&aring; Eiendommen p&aring;lydende NOK <span class="insert-table"><span class="insert" data-label="sikringsdokument bel&oslash;p"></span></span> til fordel for Oppgj&oslash;rsansvarlig. Sikringsdokumentet skal tjene som sikkerhet for ethvert krav som tilkommer Kj&oslash;per eller Kj&oslash;pers l&aring;ngiver i tilknytning til Avtalen (herunder l&aring;n til Kj&oslash;per fra Kj&oslash;pers l&aring;ngiver) og forby Selger &aring; avhende, pantsette eller p&aring; annen m&aring;te r&aring;de over Eiendommen uten samtykke fra Oppgj&oslash;rsansvarlig.</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Selger</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Straks etter signering av Avtalen</td>
+</tr>
+<tr>
+  <td colspan="8" style="border:1px solid #000; padding:4px; vertical-align:top">2.2</td>
+  <td colspan="42" style="border:1px solid #000; padding:4px; vertical-align:top">Levere til Oppgj&oslash;rsansvarlig et signert skj&oslash;te utstedt til Kj&oslash;per. Oppgj&oslash;rsansvarlig skal ikke utlevere skj&oslash;tet til Kj&oslash;per f&oslash;r oppgj&oslash;ret er gjennomf&oslash;rt.</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Selger</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Straks etter signering av Avtalen</td>
+</tr>
+<tr>
+  <td colspan="8" style="border:1px solid #000; padding:4px; vertical-align:top">2.3</td>
+  <td colspan="42" style="border:1px solid #000; padding:4px; vertical-align:top">Innhente eventuelle samtykker som er n&oslash;dvendige for &aring; tinglyse skj&oslash;tet.</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Selger/Oppgj&oslash;rs&shy;ansvarlig</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">F&oslash;r Avtalt Overtakelse</td>
+</tr>
+<tr>
+  <td colspan="8" style="border:1px solid #000; padding:4px; vertical-align:top">2.4</td>
+  <td colspan="42" style="border:1px solid #000; padding:4px; vertical-align:top">Levere til Oppgj&oslash;rsansvarlig en signert egener&shy;kl&aelig;ring om konsesjonsfrihet.</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Kj&oslash;per</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Straks etter signering av Avtalen</td>
+</tr>
+<tr>
+  <td colspan="8" style="border:1px solid #000; padding:4px; vertical-align:top">2.5</td>
+  <td colspan="42" style="border:1px solid #000; padding:4px; vertical-align:top">Forutsatt at punkt 2.4 er oppfylt, innhente kommunens bekreftelse p&aring; egener&shy;kl&aelig;ring om konsesjons&shy;frihet.</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Oppgj&oslash;rsansvarlig</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">S&aring; fort som mulig</td>
+</tr>
+<tr>
+  <td colspan="8" style="border:1px solid #000; padding:4px; vertical-align:top">2.6</td>
+  <td colspan="42" style="border:1px solid #000; padding:4px; vertical-align:top">Levere til Oppgj&oslash;rsansvarlig korrekt signerte og bekreftede pantedokumenter over Eiendommen utstedt fra Kj&oslash;per til <span class="insert-table"><span class="insert" data-label="Kj&oslash;pers bank"></span></span>, org.nr. <span class="insert-table"><span class="insert" data-label="org.nr. Kj&oslash;pers bank"></span></span> (<strong>L&aring;ngiveren</strong>).</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Kj&oslash;per</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Senest ved Avtalt Overtakelse</td>
+</tr>
+<tr>
+  <td colspan="8" style="border:1px solid #000; padding:4px; vertical-align:top">2.7</td>
+  <td colspan="42" style="border:1px solid #000; padding:4px; vertical-align:top">Innhente eventuelle samtykker som er n&oslash;dvendige for &aring; tinglyse pantedokumentene til L&aring;ngiveren.</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Selger/Oppgj&oslash;rs&shy;ansvarlig</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">F&oslash;r Avtalt Overtakelse</td>
+</tr>
+<tr>
+  <td colspan="8" style="border:1px solid #000; padding:4px; vertical-align:top">2.8</td>
+  <td colspan="42" style="border:1px solid #000; padding:4px; vertical-align:top">Innhente bekreftelser (<strong>Restgjeldsoppgavene</strong>) fra alle kreditorene med panterett (herunder tinglyst legalpant) i Eiendommen om at de vil slette sitt pant hvis de mottar et n&aelig;rmere angitt bel&oslash;p (<strong>L&aring;nene</strong>) fem virkedager etter Overtakelse.</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Selger/<br />Oppgj&oslash;rs&shy;ansvarlig</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">F&oslash;r Avtalt Overtakelse</td>
+</tr>
+</tbody>
+</table>
+
+<p>&nbsp;</p>
+
+<p><strong>3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Handlinger ved Overtakelse</strong></p>
+
+<p style="margin-left:26px">3.1&nbsp;&nbsp;&nbsp;&nbsp;Forutsatt at betingelsene i punkt 4 i Avtalen er oppfylt eller frafalt, Selger har levert skj&oslash;tet til Oppgj&oslash;rsansvarlig, jf. punkt 2.2, og sikringsdokumentet er tinglyst, jf. punkt 2.1, skal:</p>
+
+<p style="margin-left:40px">(a)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Kj&oslash;per betale Vederlaget til Oppgj&oslash;rskontoen, slik at bel&oslash;pet er disponibelt f&oslash;r kl.&nbsp;11.00 ved Overtakelse, og</p>
+
+<p style="margin-left:40px">(b)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s&aring;fremt Vederlaget er innbetalt til Oppgj&oslash;rskontoen, skal Oppgj&oslash;rsansvarlig ved Overtakelse sende f&oslash;lgende til Kartverket: Skj&oslash;tet og eventuelle pantedokumenter til fordel for L&aring;ngiveren, og eventuell annen dokumentasjon som er n&oslash;dvendig for tinglysing av disse dokumentene.</p>
+
+<p style="margin-left:26px">3.2&nbsp;&nbsp;&nbsp;&nbsp;Hvis L&aring;nene er h&oslash;yere enn Kj&oslash;pesummen, skal Selger innbetale differansen mellom L&aring;nene og Kj&oslash;pesummen til Oppgj&oslash;rskontoen, slik at bel&oslash;pet er disponibelt f&oslash;r kl. 11.00 ved Overtakelse. Bryter Selger denne forpliktelsen, skal Oppgj&oslash;rsansvarlig ikke sende dokumentene nevnt i bokstav (b) til Kartverket.</p>
+
+<p><strong>4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Utbetaling av kj&oslash;pesummen, mv.</strong></p>
+
+<p style="margin-left:26px">4.1&nbsp;&nbsp;&nbsp;&nbsp;Oppgj&oslash;rsansvarlig skal s&oslash;rge for at oppgj&oslash;ret gjennomf&oslash;res p&aring; en dag (<strong>Oppgj&oslash;rsdagen</strong>) som senest kan v&aelig;re tre virkedager etter at skj&oslash;tet og pantedokumentene til L&aring;ngiveren er tinglyst. Hvis Oppgj&oslash;rsdagen ikke er fem virkedager etter Overtakelse, skal Oppgj&oslash;rsansvarlig innhente en oppdatert Restgjeldsoppgave per Oppgj&oslash;rsdagen.</p>
+
+<p style="margin-left:26px">4.2&nbsp;&nbsp;&nbsp;&nbsp;N&aring;r skj&oslash;tet og pantedokumentene til L&aring;ngiveren er tinglyst, skal Oppgj&oslash;rsansvarlig kontrollere om Selgers kreditorer har tatt beslag i Eiendommen. Hvis de ikke har det, skal Oppgj&oslash;rsansvarlig p&aring; Oppgj&oslash;rsdagen:</p>
+
+<p style="margin-left:40px">(a)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;innfri L&aring;nene med de bel&oslash;p som fremg&aring;r av Restgjeldsoppgavene per Oppgj&oslash;rsdagen,</p>
+
+<p style="margin-left:40px">(b)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;utbetale avtalt honorar og utlegg til Oppgj&oslash;rsansvarlig, og</p>
+
+<p style="margin-left:40px">(c)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;utbetale det som gjenst&aring;r av Kj&oslash;pesummen, inklusive opptjente renter p&aring; Oppgj&oslash;rskontoen til Selgers konto med kontonr. <span class="insert-table"><span class="insert" data-label="Selgers kontonummer"></span></span></p>
+
+<p style="margin-left:26px">4.3&nbsp;&nbsp;&nbsp;&nbsp;Oppgj&oslash;rsansvarlig skal bes&oslash;rge rettidig betaling av dokumentavgift og tinglysingsgebyr til Kartverket.</p>
+
+<p style="margin-left:26px">4.4&nbsp;&nbsp;&nbsp;&nbsp;Oppgj&oslash;ret skal gjennomf&oslash;res i iht. denne Oppgj&oslash;rsavtalen selv om Kj&oslash;pers kreditorer tar beslag i Eiendommen etter Overtakelse.</p>
+
+<!-- Om ønskelig kan dette punktet strykes -->
+<p><strong>5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tilbakehold i kj&oslash;pesummen til sikkerhet for heftelser over eiendommen</strong></p>
+
+<p style="margin-left:26px">Hvis i) det foreligger en pengeheftelse over Eiendommen som if&oslash;lge denne Oppgj&oslash;rsavtalen skal slettes, og som ikke omfattes av Restgjeldsoppgavene, ii) det som gjenst&aring;r av Kj&oslash;pesummen p&aring; Oppgj&oslash;rskontoen etter innfrielse av L&aring;nene med god margin gir betryggende sikkerhet for full innfrielse av forpliktelsen sikret ved heftelsen og iii) alle de &oslash;vrige betingelsene i punkt 4 i Avtalen og punkt 2 og 3&nbsp;(a) og (b) i Oppgj&oslash;rsavtalen er oppfylt eller frafalt ved Overtakelse, skal Oppgj&oslash;rsansvarlig foreta handlingene i punkt 3(b) og 4 i Oppgj&oslash;rsavtalen, men holde tilbake et bel&oslash;p p&aring; Oppgj&oslash;rskontoen som med god margin gir betryggende sikkerhet for full innfrielse av forpliktelsen sikret ved heftelsen. Det overskytende bel&oslash;p p&aring; Oppgj&oslash;rskontoen skal utbetales til Selgers konto tidligst f&oslash;rste virkedag etter at skj&oslash;tet og pantedokumentene til L&aring;ngiveren er tinglyst. Det bel&oslash;p som holdes tilbake (inklusive rentene p&aring; Oppgj&oslash;rskontoen), skal utbetales n&aring;r heftelsen er slettet eller en bank skriftlig har bekreftet at heftelsen vil slettes.</p>
+
+<p><strong>6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Oppgj&oslash;ret gjennomf&oslash;res ikke som avtalt</strong></p>
+
+<p>Hvis ett eller flere av vilk&aring;rene i Oppgj&oslash;rsavtalen punkt 2 eller 3&nbsp;(a) ikke er oppfylt eller frafalt ved Overtakelse, skal oppgj&oslash;ret, bortsett fra i de tilfeller som er omtalt i punkt 5, likevel gjennomf&oslash;res hvis og n&aring;r samtlige vilk&aring;r er oppfylt eller frafalt innen 30 dager etter i) Overtakelse eller ii) utsatt Overtakelse iht. skriftlig endringsavtale mellom partene. Hvis ett eller flere av vilk&aring;rene fremdeles ikke er oppfylt eller frafalt innen utl&oslash;pet av den nevnte fristen p&aring; 30 dager, skal Oppgj&oslash;rsansvarlig tilbakebetale mottatt l&aring;nebel&oslash;p inklusive renter til L&aring;ngiveren og den gjenv&aelig;rende delen av Vederlaget til Kj&oslash;per. Dessuten skal Oppgj&oslash;rsansvarlig av eget tiltak s&oslash;rge for sletting av sikringsdokumentet.</p>
+
+<p><strong>7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sletting av sikringsdokument</strong></p>
+
+<p>Straks skj&oslash;tet er tinglyst og heftelser som skal slettes er slettet, skal Oppgj&oslash;rsansvarlig sende sikringsdokumentet til sletting, med mindre Kj&oslash;per gir instruks om noe annet.</p>
+
+<p style="text-align:center">***</p>
+
+<p style="text-align:center">[[meglerkontor.poststed]], [[kontrakt.dato]]</p>
+
+<p>&nbsp;</p>
+
+<!-- Vedlegg 6A signatur: Selger | Kjøper -->
+<table style="width:100%; table-layout:fixed; margin-top:2cm">
+<tbody>
+<tr>
+  <td colspan="45" style="vertical-align:bottom">
+    <p>for <span vitec-foreach="selger in Model.selgere"><span class="liste">[[*selger.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span></p>
+    <p>&nbsp;</p>
+    <div style="border-bottom:1px solid #000; width:80%; margin-bottom:4px">&nbsp;</div>
+    <p><span class="insert-table"><span class="insert" data-label="Selgers representant"></span></span></p>
+  </td>
+  <td colspan="10">&nbsp;</td>
+  <td colspan="45" style="vertical-align:bottom">
+    <p>for <span vitec-foreach="kjoper in Model.kjopere"><span class="liste">[[*kjoper.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span></p>
+    <p>&nbsp;</p>
+    <div style="border-bottom:1px solid #000; width:80%; margin-bottom:4px">&nbsp;</div>
+    <p><span class="insert-table"><span class="insert" data-label="Kj&oslash;pers representant"></span></span></p>
+  </td>
+</tr>
+</tbody>
+</table>
+
+<!-- Vedlegg 6A signatur: Megler (Oppgjørsansvarlig) -->
+<table style="width:100%; table-layout:fixed; margin-top:2cm">
+<tbody>
+<tr>
+  <td colspan="45" style="vertical-align:bottom">
+    <p>for [[ansvarligmegler.navn]]</p>
+    <p>&nbsp;</p>
+    <div style="border-bottom:1px solid #000; width:80%; margin-bottom:4px">&nbsp;</div>
+    <p><small>Oppgj&oslash;rsansvarlig</small></p>
+  </td>
+  <td colspan="55">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+
+<!-- ========================================== -->
+<!-- ===== VEDLEGG 6B: MED OPPGJØRSANSVARLIG == -->
+<!-- ===== LÅN INNFRIS VED OVERTAKELSE ======== -->
+<!-- ========================================== -->
+<!-- VEDLEGG 6B: Alternativ til Vedlegg 6A. Slett enten 6A eller 6B basert på når selgers lån innfris. -->
+<!-- Strykes hvis selgers lån innfris ETTER tinglysing av skjøtet til kjøper, eller hvis oppgjøret gjennomføres uten oppgjørsansvarlig. -->
+<div vitec-if="Model.oppgjor.ansvarlig.navn != &quot;&quot; &amp;&amp; Model.oppgjor.ansvarlig.navn != &quot;Mangler data&quot;">
+<div style="page-break-before:always">
+
+<h1>VEDLEGG 6</h1>
+<p style="text-align:center"><strong>OPPGJ&Oslash;RSAVTALE</strong></p>
+<p style="text-align:center"><small>med oppgj&oslash;rsansvarlig der selgers l&aring;n innfris ved overtakelse</small></p>
+
+<p>&nbsp;</p>
+
+<p><strong>1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Oppgj&oslash;rsansvarlig og oppgj&oslash;rskontoen</strong></p>
+
+<p style="margin-left:26px">1.1&nbsp;&nbsp;&nbsp;&nbsp;<span vitec-foreach="selger in Model.selgere"><span class="liste">[[*selger.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span>, org.nr. <span vitec-foreach="selger in Model.selgere"><span class="liste">[[*selger.fdato_orgnr]]<span class="separator">; </span></span></span>, (<strong>Selger</strong>) og <span vitec-foreach="kjoper in Model.kjopere"><span class="liste">[[*kjoper.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span>, org.nr. <span vitec-foreach="kjoper in Model.kjopere"><span class="liste">[[*kjoper.fdato_orgnr]]<span class="separator">; </span></span></span>, (<strong>Kj&oslash;per</strong>) har i dag inng&aring;tt avtale (<strong>Avtalen</strong>) om salg av [[komplettmatrikkel]] med p&aring;st&aring;ende bygninger og anlegg i [[eiendom.kommunenavn]] kommune (<strong>Eiendommen</strong>).</p>
+
+<p style="margin-left:26px">1.2&nbsp;&nbsp;&nbsp;&nbsp;Ord med stor forbokstav i denne avtalen (<strong>Oppgj&oslash;rsavtalen</strong>) skal bety det samme som i Avtalen.</p>
+
+<p style="margin-left:26px">1.3&nbsp;&nbsp;&nbsp;&nbsp;Selger og Kj&oslash;per har for Selgers regning engasjert [[ansvarligmegler.navn]], org.nr. [[meglerkontor.orgnr]], (<strong>Oppgj&oslash;rsansvarlig</strong>) til &aring; bist&aring; med gjennomf&oslash;ring av oppgj&oslash;ret som beskrevet nedenfor. Oppgj&oslash;rsansvarlig skal ikke bist&aring; med etteroppgj&oslash;ret som skal finne sted etter punkt 2.2 i Avtalen.</p>
+
+<p style="margin-left:26px">1.4&nbsp;&nbsp;&nbsp;&nbsp;Avtalt Overtakelse er [[kontrakt.overtagelse.dato]].</p>
+
+<p style="margin-left:26px">1.5&nbsp;&nbsp;&nbsp;&nbsp;Vederlaget skal betales til kontonr. <span class="insert-table"><span class="insert" data-label="Oppgj&oslash;rskonto"></span></span> (<strong>Oppgj&oslash;rskontoen</strong>) som er etablert i navnet til Oppgj&oslash;rsansvarlig.</p>
+
+<p style="margin-left:26px">1.6&nbsp;&nbsp;&nbsp;&nbsp;Eventuelle renter p&aring; Oppgj&oslash;rskontoen opptjent fra og med dagen for Overtakelse skal utbetales til Selger, mens eventuelle renter opptjent f&oslash;r Overtakelse skal utbetales til Kj&oslash;per. Renter under halvparten av rettsgebyret utbetales ikke.</p>
+
+<p style="margin-left:26px">1.7&nbsp;&nbsp;&nbsp;&nbsp;I denne Oppgj&oslash;rsavtalen fravikes eiendomsmeglingsloven &sect; 6-9 (3), idet deler av Kj&oslash;pesummen ved Overtakelse benyttes til &aring; innfri Selgers l&aring;n med pant i Eiendommen. Kj&oslash;per fraskriver seg herved retten til &aring; gj&oslash;re krav gjeldende mot Oppgj&oslash;rsansvarlig som f&oslash;lge av at &sect;&nbsp;6-9 (3) fravikes. Dessuten skal Kj&oslash;per holde Oppgj&oslash;rsansvarlig skadesl&oslash;s for det tilfelle at Kj&oslash;pers kreditorer gj&oslash;r krav gjeldende mot Oppgj&oslash;rsansvarlig som f&oslash;lge av denne fravikelsen.</p>
+
+<p><strong>2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Handlinger f&oslash;r overtakelse</strong></p>
+
+<p>F&oslash;r Overtakelse skal partene oppfylle forpliktelsene i dette punkt 2:</p>
+
+<p>&nbsp;</p>
+
+<table style="width:100%; table-layout:fixed; border-collapse:collapse">
+<thead>
+<tr>
+  <th colspan="8" style="border:1px solid #000; padding:4px; background:#d9d9d9"><strong>Nr.</strong></th>
+  <th colspan="42" style="border:1px solid #000; padding:4px; background:#d9d9d9"><strong>Handling</strong></th>
+  <th colspan="25" style="border:1px solid #000; padding:4px; background:#d9d9d9"><strong>Ansvarlig</strong></th>
+  <th colspan="25" style="border:1px solid #000; padding:4px; background:#d9d9d9"><strong>Frist</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td colspan="8" style="border:1px solid #000; padding:4px; vertical-align:top">2.1</td>
+  <td colspan="42" style="border:1px solid #000; padding:4px; vertical-align:top">Utstede og sende til tinglysing et sikringsdokument p&aring; Eiendommen p&aring;lydende NOK <span class="insert-table"><span class="insert" data-label="sikringsdokument bel&oslash;p"></span></span> til fordel for Oppgj&oslash;rsansvarlig. Sikringsdokumentet skal tjene som sikkerhet for ethvert krav som tilkommer Kj&oslash;per eller Kj&oslash;pers l&aring;ngiver i tilknytning til Avtalen (herunder l&aring;n til Kj&oslash;per fra Kj&oslash;pers l&aring;ngiver) og forby Selger &aring; avhende, pantsette eller p&aring; annen m&aring;te r&aring;de over Eiendommen uten samtykke fra Oppgj&oslash;rsansvarlig.</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Selger</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Straks etter signering av Avtalen</td>
+</tr>
+<tr>
+  <td colspan="8" style="border:1px solid #000; padding:4px; vertical-align:top">2.2</td>
+  <td colspan="42" style="border:1px solid #000; padding:4px; vertical-align:top">Levere til Oppgj&oslash;rsansvarlig et signert skj&oslash;te utstedt til Kj&oslash;per. Oppgj&oslash;rsansvarlig skal ikke utlevere skj&oslash;tet til Kj&oslash;per f&oslash;r oppgj&oslash;ret er gjennomf&oslash;rt.</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Selger</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Straks etter signering av Avtalen</td>
+</tr>
+<tr>
+  <td colspan="8" style="border:1px solid #000; padding:4px; vertical-align:top">2.3</td>
+  <td colspan="42" style="border:1px solid #000; padding:4px; vertical-align:top">Innhente eventuelle samtykker som er n&oslash;dvendige for &aring; tinglyse skj&oslash;tet.</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Selger/Oppgj&oslash;rs&shy;ansvarlig</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">F&oslash;r Avtalt Overtakelse</td>
+</tr>
+<tr>
+  <td colspan="8" style="border:1px solid #000; padding:4px; vertical-align:top">2.4</td>
+  <td colspan="42" style="border:1px solid #000; padding:4px; vertical-align:top">Levere til Oppgj&oslash;rsansvarlig en signert egener&shy;kl&aelig;ring om konsesjonsfrihet.</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Kj&oslash;per</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Straks etter signering av Avtalen</td>
+</tr>
+<tr>
+  <td colspan="8" style="border:1px solid #000; padding:4px; vertical-align:top">2.5</td>
+  <td colspan="42" style="border:1px solid #000; padding:4px; vertical-align:top">Forutsatt at punkt 2.4 er oppfylt, innhente kommunens bekreftelse p&aring; egener&shy;kl&aelig;ring om konsesjons&shy;frihet.</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Oppgj&oslash;rsansvarlig</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">S&aring; fort som mulig</td>
+</tr>
+<tr>
+  <td colspan="8" style="border:1px solid #000; padding:4px; vertical-align:top">2.6</td>
+  <td colspan="42" style="border:1px solid #000; padding:4px; vertical-align:top">Levere til Oppgj&oslash;rsansvarlig en original fullmakt som angitt i Bilag 1 der Selger gir Kj&oslash;per en rett til &aring; pantsette Eiendommen til Kj&oslash;pers l&aring;ngiver, <span class="insert-table"><span class="insert" data-label="Kj&oslash;pers bank"></span></span>, org.nr. <span class="insert-table"><span class="insert" data-label="org.nr. Kj&oslash;pers bank"></span></span> (<strong>L&aring;ngiveren</strong>). Oppgj&oslash;rsansvarlig skal ikke utlevere fullmakten til Kj&oslash;per f&oslash;r oppgj&oslash;ret er gjennomf&oslash;rt.</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Selger</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Senest ti virkedager f&oslash;r Avtalt Overtakelse</td>
+</tr>
+<tr>
+  <td colspan="8" style="border:1px solid #000; padding:4px; vertical-align:top">2.7</td>
+  <td colspan="42" style="border:1px solid #000; padding:4px; vertical-align:top">Levere til Oppgj&oslash;rsansvarlig korrekt signerte og bekreftede pantedokumenter over Eiendommen utstedt til <span class="insert-table"><span class="insert" data-label="Kj&oslash;pers bank"></span></span>, org.nr. <span class="insert-table"><span class="insert" data-label="org.nr. Kj&oslash;pers bank"></span></span>, (<strong>L&aring;ngiveren</strong>) og en erkl&aelig;ring der L&aring;ngiveren p&aring;tar seg &aring; avlyse pantedokumentene hvis Overtakelse, uavhengig av &aring;rsak, ikke finner sted.</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Kj&oslash;per</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Senest ved Avtalt Overtakelse</td>
+</tr>
+<tr>
+  <td colspan="8" style="border:1px solid #000; padding:4px; vertical-align:top">2.8</td>
+  <td colspan="42" style="border:1px solid #000; padding:4px; vertical-align:top">Innhente eventuelle samtykker som er n&oslash;dvendige for &aring; tinglyse pantedokumentene til L&aring;ngiveren.</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Selger/Oppgj&oslash;rs&shy;ansvarlig</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">F&oslash;r Avtalt Overtakelse</td>
+</tr>
+<tr>
+  <td colspan="8" style="border:1px solid #000; padding:4px; vertical-align:top">2.9</td>
+  <td colspan="42" style="border:1px solid #000; padding:4px; vertical-align:top">Forutsatt at punkt 2.6 til og med punkt 2.8 er oppfylt, sende pantedokumentene til fordel for L&aring;ngiveren til tinglysing.</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Oppgj&oslash;rsansvarlig</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Senest 7 virkedager f&oslash;r Avtalt Overtakelse</td>
+</tr>
+<tr>
+  <td colspan="8" style="border:1px solid #000; padding:4px; vertical-align:top">2.10</td>
+  <td colspan="42" style="border:1px solid #000; padding:4px; vertical-align:top">Innhente bekreftelser (<strong>Restgjeldsoppgavene</strong>) fra alle kreditorene med panterett (herunder tinglyst legalpant) i Eiendommen om at de vil slette sitt pant hvis de mottar et n&aelig;rmere angitt bel&oslash;p (<strong>L&aring;nene</strong>).</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">Selger/<br />Oppgj&oslash;rs&shy;ansvarlig</td>
+  <td colspan="25" style="border:1px solid #000; padding:4px; vertical-align:top">5 dager f&oslash;r Avtalt Overtakelse</td>
+</tr>
+</tbody>
+</table>
+
+<p>&nbsp;</p>
+
+<p><strong>3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Handlinger ved Overtakelse</strong></p>
+
+<p style="margin-left:26px">3.1&nbsp;&nbsp;&nbsp;&nbsp;Forutsatt at betingelsene i punkt 4 i Avtalen er oppfylt eller frafalt, Selger har oppfylt sine forpliktelser etter Oppgj&oslash;rsavtalen punkt 2 og sikringsdokumentet og eventuelle pantedokumenter til L&aring;ngiveren er tinglyst, jf. punkt 2.9, skal</p>
+
+<p style="margin-left:40px">(a)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Kj&oslash;per betale Vederlaget til Oppgj&oslash;rskontoen slik at bel&oslash;pet er disponibelt f&oslash;r kl.&nbsp;11.00 ved Overtakelse, og</p>
+
+<p style="margin-left:40px">(b)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s&aring;fremt Vederlaget er innbetalt til Oppgj&oslash;rskontoen, skal Oppgj&oslash;rsansvarlig ved Overtakelse:</p>
+
+<p style="margin-left:54px">(i)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sende f&oslash;lgende til Kartverket: Skj&oslash;tet og eventuell annen dokumentasjon som er n&oslash;dvendig for tinglysing av disse dokumentene, og</p>
+
+<p style="margin-left:54px">(ii)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;innfri L&aring;nene med de bel&oslash;p som fremg&aring;r av Restgjeldsoppgavene.</p>
+
+<p style="margin-left:26px">3.2&nbsp;&nbsp;&nbsp;&nbsp;Hvis L&aring;nene er h&oslash;yere enn Kj&oslash;pesummen, skal Selger innbetale differansen mellom L&aring;nene og Kj&oslash;pesummen til Oppgj&oslash;rskontoen, slik at bel&oslash;pet er disponibelt f&oslash;r kl. 11.00 ved Overtakelse. Bryter Selger denne forpliktelsen, skal Oppgj&oslash;rsansvarlig ikke sende dokumentene nevnt i bokstav (b) til Kartverket.</p>
+
+<p><strong>4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Utbetaling av kj&oslash;pesummen mv.</strong></p>
+
+<p style="margin-left:26px">4.1&nbsp;&nbsp;&nbsp;&nbsp;N&aring;r skj&oslash;tet er tinglyst, skal Oppgj&oslash;rsansvarlig kontrollere om Selgers kreditorer har tatt beslag i Eiendommen. Hvis de ikke har det, skal Oppgj&oslash;rsansvarlig p&aring; Oppgj&oslash;rsdagen utbetale:</p>
+
+<p style="margin-left:40px">(a)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;avtalt honorar og utlegg til Oppgj&oslash;rsansvarlig, og</p>
+
+<p style="margin-left:40px">(b)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;det som gjenst&aring;r av Kj&oslash;pesummen, inklusive opptjente renter p&aring; Oppgj&oslash;rskontoen til Selgers konto med kontonr. <span class="insert-table"><span class="insert" data-label="Selgers kontonummer"></span></span></p>
+
+<p style="margin-left:26px">4.2&nbsp;&nbsp;&nbsp;&nbsp;Oppgj&oslash;rsansvarlig skal bes&oslash;rge rettidig betaling av dokumentavgift og tinglysingsgebyr til Kartverket.</p>
+
+<p style="margin-left:26px">4.3&nbsp;&nbsp;&nbsp;&nbsp;Oppgj&oslash;ret skal gjennomf&oslash;res i iht. denne Oppgj&oslash;rsavtalen selv om Kj&oslash;pers kreditorer tar beslag i Eiendommen etter Overtakelse.</p>
+
+<!-- Om ønskelig kan dette punktet strykes -->
+<p><strong>5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Delvis oppgj&oslash;r der Selger har fors&oslash;mt sine plikter</strong></p>
+
+<p style="margin-left:26px">5.1&nbsp;&nbsp;&nbsp;&nbsp;Hvis i) det foreligger en pengeheftelse over Eiendommen som Selger skal bes&oslash;rge slettet, og som ikke omfattes av Restgjeldsoppgavene, ii) det som gjenst&aring;r av Kj&oslash;pesummen p&aring; Oppgj&oslash;rskontoen etter innfrielse av L&aring;nene med god margin gir betryggende sikkerhet for full innfrielse av forpliktelsen sikret ved heftelsen og iii) alle de &oslash;vrige betingelsene i punkt 4 i Avtalen og punkt 2 og 3(a) i Oppgj&oslash;rsavtalen er oppfylt eller frafalt ved Overtakelse, skal Oppgj&oslash;rsansvarlig foreta handlingene i punkt 3(b) og 4 i Oppgj&oslash;rsavtalen, men holde tilbake et bel&oslash;p p&aring; Oppgj&oslash;rskontoen som med god margin gir betryggende sikkerhet for full innfrielse av forpliktelsen sikret ved heftelsen. Det overskytende bel&oslash;p p&aring; Oppgj&oslash;rskontoen skal utbetales til Selgers konto tidligst f&oslash;rste virkedag etter at skj&oslash;tet er tinglyst. Det bel&oslash;p som holdes tilbake (inklusive rentene p&aring; Oppgj&oslash;rskontoen), skal utbetales n&aring;r heftelsen er slettet eller en bank skriftlig har bekreftet at heftelsen vil slettes.</p>
+
+<p style="margin-left:26px">5.2&nbsp;&nbsp;&nbsp;&nbsp;For det tilfelle at i) betingelsene i punkt 4 i Avtalen er oppfylt eller frafalt, ii) Kj&oslash;per har innbetalt Vederlaget til Oppgj&oslash;rskontoen og oppfylt alle sine andre plikter etter Oppgj&oslash;rsavtalen, men iii) ett eller flere av de &oslash;vrige vilk&aring;rene i Oppgj&oslash;rsavtalen punkt 2 ikke er oppfylt eller frafalt ved Overtakelse, har Kj&oslash;per rett, men ikke plikt til skriftlig &aring; kreve at Overtakelse likevel gjennomf&oslash;res. I et slikt tilfelle skal Oppgj&oslash;rsansvarlig:</p>
+
+<p style="margin-left:40px">(a)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i den utstrekning det er mulig, straks foreta handlingene i punkt 3(b) og 4(a) i Oppgj&oslash;rsavtalen,</p>
+
+<p style="margin-left:40px">(b)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;holde tilbake p&aring; Oppgj&oslash;rskontoen det bel&oslash;p som ellers ville blitt utbetalt etter Oppgj&oslash;rsavtalen punkt&nbsp;4(b),</p>
+
+<p style="margin-left:40px">(c)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;straks vilk&aring;rene i Oppgj&oslash;rsavtalen punkt&nbsp;2 er oppfylt eller frafalt,</p>
+
+<p style="margin-left:54px">(i)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;om L&aring;nene ikke allerede er innfridd, innfri L&aring;nene med de bel&oslash;p som fremg&aring;r av en ny restgjeldsoppgave som er innhentet av Oppgj&oslash;rsansvarlig eller Selger, og</p>
+
+<p style="margin-left:54px">(ii)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;utbetale det som gjenst&aring;r av Kj&oslash;pesummen inklusive opptjente renter p&aring; Oppgj&oslash;rskontoen til Selgers konto.</p>
+
+<p><strong>6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Oppgj&oslash;ret gjennomf&oslash;res ikke som avtalt</strong></p>
+
+<p>Hvis ett eller flere av vilk&aring;rene i Oppgj&oslash;rsavtalen punkt 2 eller 3.1(a) ikke er oppfylt eller frafalt ved Overtakelse, skal oppgj&oslash;ret, bortsett fra i de tilfeller som er omtalt i punkt&nbsp;5, likevel gjennomf&oslash;res hvis og n&aring;r samtlige vilk&aring;r er oppfylt eller frafalt innen 30 dager etter i) Overtakelse eller ii) utsatt Overtakelse iht. skriftlig endringsavtale mellom partene. Hvis ett eller flere av vilk&aring;rene fremdeles ikke er oppfylt eller frafalt innen utl&oslash;pet av den nevnte fristen p&aring; 30 dager, skal Oppgj&oslash;rsansvarlig levere den originale fullmakten nevnt i punkt 2.6 til Selger og tilbakebetale mottatt l&aring;nebel&oslash;p inklusive opptjente renter p&aring; Oppgj&oslash;rskontoen til L&aring;ngiveren, s&aring;fremt L&aring;ngiveren bekrefter at pantedokumentene tinglyst til fordel for L&aring;ngiveren vil slettes. Det overskytende bel&oslash;p p&aring; Oppgj&oslash;rskontoen som ikke skal overf&oslash;res til L&aring;ngiveren, skal samtidig tilbakebetales til Kj&oslash;per. Dessuten skal Oppgj&oslash;rsansvarlig av eget tiltak s&oslash;rge for sletting av sikringsdokumentet, med mindre Kj&oslash;per har et krav som er dekket av sikringsdokumentet.</p>
+
+<p><strong>7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sletting av sikringsdokument</strong></p>
+
+<p>Straks skj&oslash;tet er tinglyst og heftelser som skal slettes er slettet, skal Oppgj&oslash;rsansvarlig sende sikringsdokumentet til sletting, med mindre Kj&oslash;per gir instruks om noe annet.</p>
+
+<p style="text-align:center">***</p>
+
+<p style="text-align:center">[[meglerkontor.poststed]], [[kontrakt.dato]]</p>
+
+<p>&nbsp;</p>
+
+<!-- Vedlegg 6B signatur: Selger | Kjøper -->
+<table style="width:100%; table-layout:fixed; margin-top:2cm">
+<tbody>
+<tr>
+  <td colspan="45" style="vertical-align:bottom">
+    <p>for <span vitec-foreach="selger in Model.selgere"><span class="liste">[[*selger.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span></p>
+    <p>&nbsp;</p>
+    <div style="border-bottom:1px solid #000; width:80%; margin-bottom:4px">&nbsp;</div>
+    <p><span class="insert-table"><span class="insert" data-label="Selgers representant"></span></span></p>
+  </td>
+  <td colspan="10">&nbsp;</td>
+  <td colspan="45" style="vertical-align:bottom">
+    <p>for <span vitec-foreach="kjoper in Model.kjopere"><span class="liste">[[*kjoper.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span></p>
+    <p>&nbsp;</p>
+    <div style="border-bottom:1px solid #000; width:80%; margin-bottom:4px">&nbsp;</div>
+    <p><span class="insert-table"><span class="insert" data-label="Kj&oslash;pers representant"></span></span></p>
+  </td>
+</tr>
+</tbody>
+</table>
+
+<!-- Vedlegg 6B signatur: Megler (Oppgjørsansvarlig) -->
+<table style="width:100%; table-layout:fixed; margin-top:2cm">
+<tbody>
+<tr>
+  <td colspan="45" style="vertical-align:bottom">
+    <p>for [[ansvarligmegler.navn]]</p>
+    <p>&nbsp;</p>
+    <div style="border-bottom:1px solid #000; width:80%; margin-bottom:4px">&nbsp;</div>
+    <p><small>Oppgj&oslash;rsansvarlig</small></p>
+  </td>
+  <td colspan="55">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+
+<p>&nbsp;</p>
+<p><u>Bilag</u>:</p>
+<p>1.&nbsp;&nbsp;&nbsp;&nbsp;Fullmakt til &aring; pantsette Eiendommen fra Selger til Kj&oslash;per</p>
+
+</div>
+</div>
+
+<!-- ========================================== -->
+<!-- ===== VEDLEGG 6C: UTEN OPPGJØRSANSVARLIG = -->
+<!-- ========================================== -->
+<!-- VEDLEGG 6C: Strykes hvis oppgjøret gjennomføres med en oppgjørsansvarlig -->
+<div vitec-if="Model.oppgjor.ansvarlig.navn == &quot;&quot; || Model.oppgjor.ansvarlig.navn == &quot;Mangler data&quot;">
+<div style="page-break-before:always">
+
+<h1>VEDLEGG 6</h1>
+<p style="text-align:center"><strong>OPPGJ&Oslash;RSAVTALE UTEN OPPGJ&Oslash;RSANSVARLIG</strong></p>
+
+<p>&nbsp;</p>
+
+<p><strong>1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Handlinger f&oslash;r overtakelse</strong></p>
+
+<p>F&oslash;r Overtakelse skal partene oppfylle forpliktelsene i dette punkt 1:</p>
+
+<table style="width:100%; table-layout:fixed; border-collapse:collapse">
+<thead>
+<tr>
+  <th colspan="8" style="border:1px solid #000; padding:4px; background:#d9d9d9"><strong>Nr.</strong></th>
+  <th colspan="37" style="border:1px solid #000; padding:4px; background:#d9d9d9"><strong>Handling</strong></th>
+  <th colspan="15" style="border:1px solid #000; padding:4px; background:#d9d9d9"><strong>Ansvarlig</strong></th>
+  <th colspan="20" style="border:1px solid #000; padding:4px; background:#d9d9d9"><strong>Frist</strong></th>
+  <th colspan="20" style="border:1px solid #000; padding:4px; background:#d9d9d9"><strong>Status</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td colspan="8" style="border:1px solid #000; padding:4px; vertical-align:top">1.1</td>
+  <td colspan="37" style="border:1px solid #000; padding:4px; vertical-align:top">Utstede og sende til tinglysing et sikringsdokument p&aring; Eiendommen p&aring;lydende Vederlaget til fordel for [[ansvarligmegler.navn]], org.nr. [[meglerkontor.orgnr]], (<strong>Megleren</strong>). Sikringsdokumentet skal tjene som sikkerhet for ethvert krav som tilkommer Kj&oslash;per eller Kj&oslash;pers l&aring;ngiver i tilknytning til Avtalen (herunder l&aring;n til Kj&oslash;per fra Kj&oslash;pers l&aring;ngiver) og forby Selger &aring; avhende, pantsette eller p&aring; annen m&aring;te r&aring;de over Eiendommen uten samtykke fra Megleren.</td>
+  <td colspan="15" style="border:1px solid #000; padding:4px; vertical-align:top">Selger</td>
+  <td colspan="20" style="border:1px solid #000; padding:4px; vertical-align:top">Straks etter signering av Avtalen</td>
+  <td colspan="20" style="border:1px solid #000; padding:4px; vertical-align:top">&nbsp;</td>
+</tr>
+<tr>
+  <td colspan="8" style="border:1px solid #000; padding:4px; vertical-align:top">1.2</td>
+  <td colspan="37" style="border:1px solid #000; padding:4px; vertical-align:top">Signere egener&shy;kl&aelig;ring om konsesjonsfrihet.</td>
+  <td colspan="15" style="border:1px solid #000; padding:4px; vertical-align:top">Kj&oslash;per</td>
+  <td colspan="20" style="border:1px solid #000; padding:4px; vertical-align:top">Straks etter signering av Avtalen</td>
+  <td colspan="20" style="border:1px solid #000; padding:4px; vertical-align:top">&nbsp;</td>
+</tr>
+<tr>
+  <td colspan="8" style="border:1px solid #000; padding:4px; vertical-align:top">1.3</td>
+  <td colspan="37" style="border:1px solid #000; padding:4px; vertical-align:top">Forutsatt at punkt 1.2 er oppfylt, innhente kommunens bekreftelse p&aring; egener&shy;kl&aelig;ringen om konsesjonsfrihet.</td>
+  <td colspan="15" style="border:1px solid #000; padding:4px; vertical-align:top">Kj&oslash;per</td>
+  <td colspan="20" style="border:1px solid #000; padding:4px; vertical-align:top">S&aring; fort som mulig</td>
+  <td colspan="20" style="border:1px solid #000; padding:4px; vertical-align:top">&nbsp;</td>
+</tr>
+<tr>
+  <td colspan="8" style="border:1px solid #000; padding:4px; vertical-align:top">1.4</td>
+  <td colspan="37" style="border:1px solid #000; padding:4px; vertical-align:top">Levere til Selger pantedokumenter over Eiendommen utstedt til <span class="insert-table"><span class="insert" data-label="Kj&oslash;pers bank"></span></span>, org.nr. <span class="insert-table"><span class="insert" data-label="org.nr. Kj&oslash;pers bank"></span></span>, (<strong>L&aring;ngiveren</strong>) og en erkl&aelig;ring der L&aring;ngiveren p&aring;tar seg &aring; avlyse pantedokumentene hvis Overtakelse, uavhengig av hvilken &aring;rsak, ikke finner sted.</td>
+  <td colspan="15" style="border:1px solid #000; padding:4px; vertical-align:top">Kj&oslash;per</td>
+  <td colspan="20" style="border:1px solid #000; padding:4px; vertical-align:top">Senest 10 virkedager f&oslash;r Overtakelse</td>
+  <td colspan="20" style="border:1px solid #000; padding:4px; vertical-align:top">&nbsp;</td>
+</tr>
+<tr>
+  <td colspan="8" style="border:1px solid #000; padding:4px; vertical-align:top">1.5</td>
+  <td colspan="37" style="border:1px solid #000; padding:4px; vertical-align:top">Forutsatt at punkt 1.4 er oppfylt, innhente eventuelle samtykker som er n&oslash;dvendige for &aring; tinglyse pantedokumentene til L&aring;ngiveren, og sende disse til tinglysing.</td>
+  <td colspan="15" style="border:1px solid #000; padding:4px; vertical-align:top">Selger</td>
+  <td colspan="20" style="border:1px solid #000; padding:4px; vertical-align:top">Senest 8 virkedager f&oslash;r Overtakelse</td>
+  <td colspan="20" style="border:1px solid #000; padding:4px; vertical-align:top">&nbsp;</td>
+</tr>
+<tr>
+  <td colspan="8" style="border:1px solid #000; padding:4px; vertical-align:top">1.6</td>
+  <td colspan="37" style="border:1px solid #000; padding:4px; vertical-align:top">Levere til Kj&oslash;per bekreftelser (<strong>Restgjeldsoppgaven</strong>) fra alle kreditorene med panterett (herunder legalpant) i Eiendommen om at de vil slette sitt pant hvis de ved Overtakelse mottar et n&aelig;rmere angitt bel&oslash;p (<strong>L&aring;nene</strong>).</td>
+  <td colspan="15" style="border:1px solid #000; padding:4px; vertical-align:top">Selger</td>
+  <td colspan="20" style="border:1px solid #000; padding:4px; vertical-align:top">5 dager f&oslash;r Overtakelse</td>
+  <td colspan="20" style="border:1px solid #000; padding:4px; vertical-align:top">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Handlinger ved Overtakelse</strong></p>
+
+<p>Forutsatt at L&aring;nene ikke er h&oslash;yere enn Kj&oslash;pesummen, at betingelsene i punkt 4 i Avtalen er oppfylt eller frafalt, partene har oppfylt sine forpliktelser etter Oppgj&oslash;rsavtalen punkt 1 og sikringsdokumentet og eventuelle pantedokumenter til L&aring;ngiveren er tinglyst, jf. punkt 1.5, skal:</p>
+
+<p style="margin-left:40px">(a)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Selger levere til Kj&oslash;per et signert skj&oslash;te utstedt til Kj&oslash;per og eventuelle samtykker som er n&oslash;dvendige for &aring; tinglyse skj&oslash;tet; og</p>
+
+<p style="margin-left:40px">(b)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Selger og Kj&oslash;per samtidig levere til L&aring;ngiveren en betalingsinstruks som angitt i Bilag 2 om innfrielse av L&aring;nene og betaling av det gjenv&aelig;rende Vederlaget til Selger.</p>
+
+<p><strong>3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tidspunkt for kj&oslash;pers overtakelse av Eiendommen</strong></p>
+
+<p>Eiendommen er overtatt av Kj&oslash;per idet det gjenv&aelig;rende Vederlaget etter innfrielse av L&aring;nene er disponibelt p&aring; Selgers konto. Hvis det gjenv&aelig;rende Vederlaget av en eller annen grunn ikke blir disponibelt p&aring; Selgers konto, skal skj&oslash;tet leveres tilbake til Selger.</p>
+
+<!-- Om ønskelig kan dette punktet strykes -->
+<p><strong>4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sletting av sikringsdokument</strong></p>
+
+<p>Straks oppgj&oslash;ret er gjennomf&oslash;rt og skj&oslash;tet er tinglyst, skal Megleren sende sikringsdokumentet til sletting, med mindre Kj&oslash;per gir instruks om noe annet.</p>
+
+<p style="text-align:center">***</p>
+
+<p>&nbsp;</p>
+<p><u>Bilag</u>:</p>
+<p>2.&nbsp;&nbsp;&nbsp;&nbsp;Ugjenkallelig betalingsinstruks</p>
+
+</div>
+</div>
+
+<!-- ========================================== -->
+<!-- ===== BILAG 1: FULLMAKT TIL PANTSETTELSE = -->
+<!-- ========================================== -->
+<!-- Bilag 1: Strykes hvis oppgjøret gjennomføres etter tinglysing av skjøte (dvs. brukes kun med Vedlegg 6B) -->
+<div style="page-break-before:always">
+
+<h1 style="font-size:12pt">Bilag 1</h1>
+<p>&nbsp;</p>
+<p style="text-align:center"><strong>Fullmakt til pantsettelse</strong></p>
+
+<p>&nbsp;</p>
+
+<p><span vitec-foreach="selger in Model.selgere"><span class="liste">[[*selger.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span>, org.nr. <span vitec-foreach="selger in Model.selgere"><span class="liste">[[*selger.fdato_orgnr]]<span class="separator">; </span></span></span>, gir herved <span vitec-foreach="kjoper in Model.kjopere"><span class="liste">[[*kjoper.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span>, org.nr. <span vitec-foreach="kjoper in Model.kjopere"><span class="liste">[[*kjoper.fdato_orgnr]]<span class="separator">; </span></span></span>, representert ved <span class="insert-table"><span class="insert" data-label="navngitt representant for Kj&oslash;per"></span></span>, personnummer <span class="insert-table"><span class="insert" data-label="personnummer fullmektig"></span></span>, fullmakt til alene &aring; pantsette og utstede en ur&aring;dighetser&shy;kl&aelig;ring over v&aring;r eiendom med [[komplettmatrikkel]] i [[eiendom.kommunenavn]] kommune til fordel for <span class="insert-table"><span class="insert" data-label="Kj&oslash;pers bank"></span></span>, org.nr. <span class="insert-table"><span class="insert" data-label="org.nr. Kj&oslash;pers bank"></span></span>.</p>
+
+<p>Denne fullmakten kan bare benyttes i original og gjelder ikke etter <span class="insert-table"><span class="insert" data-label="frist for fullmakt"></span></span>.</p>
+
+<p>&nbsp;</p>
+
+<p style="text-align:center">[[meglerkontor.poststed]], [[kontrakt.dato]]</p>
+
+<!-- Bilag 1 signatur: Selger -->
+<table style="width:100%; table-layout:fixed; margin-top:2cm">
+<tbody>
+<tr>
+  <td colspan="100" style="text-align:center; vertical-align:bottom">
+    <div style="border-bottom:1px solid #000; width:40%; margin:0 auto 4px auto">&nbsp;</div>
+    <p>for <span vitec-foreach="selger in Model.selgere"><span class="liste">[[*selger.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span></p>
+    <p><small>[NB! Bare signaturberettigede hos hjemmelshaver kan signere.]</small></p>
+  </td>
+</tr>
+</tbody>
+</table>
+
+<p>&nbsp;</p>
+
+<p>Jeg/vi bekrefter at <span class="insert-table"><span class="insert" data-label="angi navn p&aring; signaturberettigede i Selger"></span></span> er over 18 &aring;r og har underskrevet eller vedkjent seg sin(e) underskrift(er) i mitt/v&aring;rt n&aelig;rv&aelig;r. Jeg/vi er myndig(e) og bosatt i Norge.</p>
+
+<p style="text-align:center">[[meglerkontor.poststed]], [[kontrakt.dato]]</p>
+
+<!-- Bilag 1 vitnesignatur -->
+<table style="width:100%; table-layout:fixed; border-collapse:collapse; margin-top:1cm">
+<tbody>
+<tr>
+  <td colspan="40" style="vertical-align:bottom; padding:4px">
+    <div style="border-bottom:1px solid #000; width:90%; margin-bottom:4px">&nbsp;</div>
+  </td>
+  <td colspan="20">&nbsp;</td>
+  <td colspan="40" style="vertical-align:bottom; padding:4px">
+    <div style="border-bottom:1px solid #000; width:90%; margin-bottom:4px">&nbsp;</div>
+  </td>
+</tr>
+<tr>
+  <td colspan="40" style="vertical-align:bottom; padding:4px">
+    <p>Vitnes underskrift</p>
+    <p>&nbsp;</p>
+    <div style="border-bottom:1px solid #000; width:90%; margin-bottom:4px">&nbsp;</div>
+  </td>
+  <td colspan="20">&nbsp;</td>
+  <td colspan="40" style="vertical-align:bottom; padding:4px">
+    <p>Vitnes underskrift</p>
+    <p>&nbsp;</p>
+    <div style="border-bottom:1px solid #000; width:90%; margin-bottom:4px">&nbsp;</div>
+  </td>
+</tr>
+<tr>
+  <td colspan="40" style="vertical-align:top; padding:4px">
+    <p>Vitnes navn i blokkbokstaver</p>
+    <p>&nbsp;</p>
+    <div style="border-bottom:1px solid #000; width:90%; margin-bottom:4px">&nbsp;</div>
+  </td>
+  <td colspan="20">&nbsp;</td>
+  <td colspan="40" style="vertical-align:top; padding:4px">
+    <p>Vitnes navn i blokkbokstaver</p>
+    <p>&nbsp;</p>
+    <div style="border-bottom:1px solid #000; width:90%; margin-bottom:4px">&nbsp;</div>
+  </td>
+</tr>
+<tr>
+  <td colspan="40" style="vertical-align:top; padding:4px">
+    <p>Adresse</p>
+  </td>
+  <td colspan="20">&nbsp;</td>
+  <td colspan="40" style="vertical-align:top; padding:4px">
+    <p>Adresse</p>
+  </td>
+</tr>
+</tbody>
+</table>
+
+</div>
+
+<!-- ========================================== -->
+<!-- ===== BILAG 2: BETALINGSINSTRUKS ========= -->
+<!-- ========================================== -->
+<!-- Bilag 2: Benyttes kun når oppgjøret gjennomføres uten oppgjørsansvarlig -->
+<div vitec-if="Model.oppgjor.ansvarlig.navn == &quot;&quot; || Model.oppgjor.ansvarlig.navn == &quot;Mangler data&quot;">
+<div style="page-break-before:always">
+
+<h1 style="font-size:12pt">Bilag 2</h1>
+<p>&nbsp;</p>
+<p style="text-align:center"><strong>Ugjenkallelig betalingsinstruks</strong></p>
+
+<p>&nbsp;</p>
+
+<p><span vitec-foreach="kjoper in Model.kjopere"><span class="liste">[[*kjoper.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span>, org.nr. <span vitec-foreach="kjoper in Model.kjopere"><span class="liste">[[*kjoper.fdato_orgnr]]<span class="separator">; </span></span></span>, gir herved <span class="insert-table"><span class="insert" data-label="Kj&oslash;pers bank"></span></span>, org.nr. <span class="insert-table"><span class="insert" data-label="org.nr. Kj&oslash;pers bank"></span></span>, ugjenkallelig instruks om straks &aring; foreta f&oslash;lgende utbetalinger:</p>
+
+<table style="width:100%; table-layout:fixed; border-collapse:collapse">
+<thead>
+<tr>
+  <th colspan="8" style="border:1px solid #bfbfbf; padding:3px 6px; background:#d9d9d9"><strong>Nr.</strong></th>
+  <th colspan="25" style="border:1px solid #bfbfbf; padding:3px 6px; background:#d9d9d9"><strong>Mottaker:</strong></th>
+  <th colspan="17" style="border:1px solid #bfbfbf; padding:3px 6px; background:#d9d9d9"><strong>Kontonummer:</strong></th>
+  <th colspan="25" style="border:1px solid #bfbfbf; padding:3px 6px; background:#d9d9d9"><strong>Melding til mottaker:</strong></th>
+  <th colspan="25" style="border:1px solid #bfbfbf; padding:3px 6px; background:#d9d9d9"><strong>Bel&oslash;p i NOK:</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td colspan="8" style="border:1px solid #bfbfbf; padding:3px 6px; vertical-align:top">1.</td>
+  <td colspan="25" style="border:1px solid #bfbfbf; padding:3px 6px; vertical-align:top"><span class="insert-table"><span class="insert" data-label="Mottaker 1 (kreditor)"></span></span></td>
+  <td colspan="17" style="border:1px solid #bfbfbf; padding:3px 6px; vertical-align:top"><span class="insert-table"><span class="insert" data-label="kontonr. kreditor"></span></span></td>
+  <td colspan="25" style="border:1px solid #bfbfbf; padding:3px 6px; vertical-align:top">Innfrielse av l&aring;n nr. <span class="insert-table"><span class="insert" data-label="l&aring;nenummer"></span></span> og opptjente renter, samt overkurs</td>
+  <td colspan="25" style="border:1px solid #bfbfbf; padding:3px 6px; vertical-align:top"><span class="insert-table"><span class="insert" data-label="bel&oslash;p 1"></span></span></td>
+</tr>
+<tr>
+  <td colspan="8" style="border:1px solid #bfbfbf; padding:3px 6px; vertical-align:top">2.</td>
+  <td colspan="25" style="border:1px solid #bfbfbf; padding:3px 6px; vertical-align:top">[[ansvarligmegler.navn]],<br />org.nr. [[meglerkontor.orgnr]]</td>
+  <td colspan="17" style="border:1px solid #bfbfbf; padding:3px 6px; vertical-align:top"><span class="insert-table"><span class="insert" data-label="kontonr. megler"></span></span></td>
+  <td colspan="25" style="border:1px solid #bfbfbf; padding:3px 6px; vertical-align:top">Honorar</td>
+  <td colspan="25" style="border:1px solid #bfbfbf; padding:3px 6px; vertical-align:top"><span class="insert-table"><span class="insert" data-label="bel&oslash;p honorar"></span></span></td>
+</tr>
+<tr>
+  <td colspan="8" style="border:1px solid #bfbfbf; padding:3px 6px; vertical-align:top">3.</td>
+  <td colspan="25" style="border:1px solid #bfbfbf; padding:3px 6px; vertical-align:top"><span vitec-foreach="selger in Model.selgere"><span class="liste">[[*selger.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span>,<br />org.nr. <span vitec-foreach="selger in Model.selgere"><span class="liste">[[*selger.fdato_orgnr]]<span class="separator">; </span></span></span></td>
+  <td colspan="17" style="border:1px solid #bfbfbf; padding:3px 6px; vertical-align:top"><span class="insert-table"><span class="insert" data-label="Selgers kontonummer"></span></span></td>
+  <td colspan="25" style="border:1px solid #bfbfbf; padding:3px 6px; vertical-align:top">Vederlag for salg av eiendom</td>
+  <td colspan="25" style="border:1px solid #bfbfbf; padding:3px 6px; vertical-align:top"><span class="insert-table"><span class="insert" data-label="bel&oslash;p selger"></span></span></td>
+</tr>
+<tr>
+  <td colspan="8" style="border:1px solid #bfbfbf; padding:3px 6px; vertical-align:top">&nbsp;</td>
+  <td colspan="25" style="border:1px solid #bfbfbf; padding:3px 6px; vertical-align:top"><strong>Totalt:</strong></td>
+  <td colspan="17" style="border:1px solid #bfbfbf; padding:3px 6px; vertical-align:top">&nbsp;</td>
+  <td colspan="25" style="border:1px solid #bfbfbf; padding:3px 6px; vertical-align:top">&nbsp;</td>
+  <td colspan="25" style="border:1px solid #bfbfbf; padding:3px 6px; vertical-align:top"><span class="insert-table"><span class="insert" data-label="totalbel&oslash;p"></span></span></td>
+</tr>
+</tbody>
+</table>
+
+<p>&nbsp;</p>
+
+<p>Vennligst bekreft s&aring; fort som mulig per epost til:</p>
+
+<p><span class="insert-table"><span class="insert" data-label="firma/kontaktperson"></span></span><br />v/<span class="insert-table"><span class="insert" data-label="kontaktperson"></span></span><br />Epost: <span class="insert-table"><span class="insert" data-label="epostadresse"></span></span></p>
+
+<p>&nbsp;</p>
+
+<p>at betalingene i pkt. 1&ndash;<span class="insert-table"><span class="insert" data-label="siste pkt.nr."></span></span> ovenfor er ugjenkallelig iverksatt.</p>
+
+<p style="text-align:center">Med vennlig hilsen</p>
+
+<!-- Bilag 2 signatur: Kjøper -->
+<table style="width:100%; table-layout:fixed; margin-top:2cm">
+<tbody>
+<tr>
+  <td colspan="100" style="text-align:center; vertical-align:bottom">
+    <p>for <span vitec-foreach="kjoper in Model.kjopere"><span class="liste">[[*kjoper.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span></p>
+    <p>&nbsp;</p>
+    <div style="border-bottom:1px solid #000; width:40%; margin:0 auto 4px auto">&nbsp;</div>
+    <p><span class="insert-table"><span class="insert" data-label="Kj&oslash;pers representant"></span></span></p>
+  </td>
+</tr>
+</tbody>
+</table>
+
+<p>&nbsp;</p>
+
+<p>Vi bekrefter herved at betalingsinstruksen s&aring; vidt vi kjenner til, er korrekt.</p>
+
+<p style="text-align:center">Med vennlig hilsen</p>
+
+<!-- Bilag 2 signatur: Selger (bekreftelse) -->
+<table style="width:100%; table-layout:fixed; margin-top:2cm">
+<tbody>
+<tr>
+  <td colspan="100" style="text-align:center; vertical-align:bottom">
+    <p>for <span vitec-foreach="selger in Model.selgere"><span class="liste">[[*selger.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span></p>
+    <p>&nbsp;</p>
+    <div style="border-bottom:1px solid #000; width:40%; margin:0 auto 4px auto">&nbsp;</div>
+    <p><span class="insert-table"><span class="insert" data-label="Selgers representant"></span></span></p>
+  </td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+
+<!-- ===== END OF DOCUMENT ===== -->
+</div>

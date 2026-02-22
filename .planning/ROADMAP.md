@@ -190,6 +190,53 @@ Plans:
 - 9 micro-interactions added
 - Full documentation in `.planning/codebase/DESIGN-SYSTEM.md`
 
+### V3.8-3.9.4: Signature Portal & Notifications ✅ COMPLETE
+**Completed**: 2026-01-24 to 2026-02-02
+See STATE.md session summaries for details.
+
+### Phase 11: HTML Template Management & Publishing Suite 🔧 IN PROGRESS
+**Goal**: Full template lifecycle — import Word/RTF docs, edit in CKEditor 4, compare against Vitec originals, deduplicate, validate merge fields, and publish
+**Depends on**: Phase 4 (stack upgrade)
+**Status**: Foundation committed (2026-02-22), agents ready for execution
+**Plans**: `.planning/phases/11-template-suite/`
+
+**6-Agent Architecture:**
+
+| Agent | Name | Scope | Status |
+|-------|------|-------|--------|
+| 1 | Documentation | Vitec HTML ruleset, Flettekode reference, Stilark spec | ✅ Docs written |
+| 2 | Conversion | Word/RTF → CKEditor-compliant HTML pipeline | ✅ Backend built |
+| 3 | Storage & Editor | CKEditor 4 iframe sandbox, template workflow, publish states | ✅ Components built |
+| 4 | Comparison | AI-powered diff between customized and Vitec originals | ✅ Service built |
+| 5 | Merge & Dedup | Detect duplicates, consolidate with Vitec if-logic | ✅ Dashboard built |
+| 6 | Flettekode | Merge field autocomplete, validation, panel | ✅ Components built |
+
+**What was delivered:**
+- Backend: 5 new services, 4 new schemas, 1 migration, 330+ lines of new router endpoints
+- Frontend: 8 new components, 2 new pages, extended API client
+- Documentation: `vitec-html-ruleset.md` (4,087 lines), `Alle-flettekoder-25.9.md` (6,493 lines)
+- Library reset script for clean baseline
+
+**Remaining work:**
+- Apply migration `20260221_0001_template_publishing.py` to Railway
+- Integration testing of conversion pipeline (DOCX/RTF uploads)
+- Wire CKEditor sandbox into template edit page
+- Connect comparison service to frontend
+- End-to-end dedup workflow testing
+- Merge field validation against live template content
+
+### V4.0: Infrastructure & UX Fixes ✅ COMPLETE
+**Goal**: Fix Monaco/CKEditor loading, add notifications page, restore Vitec pictures
+**Completed**: 2026-02-22
+
+**What was delivered:**
+- CSP fix: Added CDN domains to `script-src` for Monaco + CKEditor
+- Notifications page: `/notifications` with filters, date grouping, metadata display
+- Vitec picture proxy: Re-enabled employee/office picture endpoints
+- Picture sync integration: Sync buttons now also fetch pictures
+- Editor UX: "Normaliser til Vitec" no longer auto-saves, shows explicit save banner
+- CKEditor CDN: Fixed 404 on version 4.25.1 → 4.25.1-lts
+
 ---
 
 ## Progress
@@ -207,7 +254,10 @@ Phases execute in numeric order, with V3.x versions as incremental feature relea
 | 6. Entra ID Sync | 8/8 | Ready for Testing | 2026-01-22 |
 | 7. Office Enhancements | 0/8 | Not started | - |
 | V3.6 Design System | Complete | Complete | 2026-01-23 |
+| V3.8-3.9.4 Signatures | Complete | Complete | 2026-02-02 |
+| 11. Template Suite | Foundation | In Progress | - |
+| V4.0 Infra & UX | Complete | Complete | 2026-02-22 |
 
 ---
 *Roadmap created: 2026-01-20*
-*Last updated: 2026-01-23 (V3.6 Design System completed)*
+*Last updated: 2026-02-22 (Phase 11 foundation + V4.0 fixes)*
