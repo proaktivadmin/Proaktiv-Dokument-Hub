@@ -8,6 +8,7 @@ import { OfficeGrid, OfficeForm } from "@/components/offices";
 import { useOffices } from "@/hooks/v3/useOffices";
 import { officesApi } from "@/lib/api/offices";
 import { entraSyncApi } from "@/lib/api/entra-sync";
+import { vitecApi } from "@/lib/api/vitec";
 import { useToast } from "@/hooks/use-toast";
 import type { OfficeWithStats } from "@/types/v3";
 
@@ -55,15 +56,25 @@ export default function OfficesPage() {
     setIsSyncing(true);
     try {
       const result = await officesApi.sync();
-      await refetch();
-      toast({
-        title: "Kontorer synkronisert",
-        description: `Oppdatert ${result.synced} av ${result.total} kontorer.`,
-      });
+
+      // Also sync pictures from Vitec Hub
+      try {
+        const picResult = await vitecApi.syncOfficePictures();
+        await refetch();
+        toast({
+          title: "Kontorer synkronisert",
+          description: `Oppdatert ${result.synced} av ${result.total} kontorer. ${picResult.synced} bilder hentet.`,
+        });
+      } catch {
+        await refetch();
+        toast({
+          title: "Kontorer synkronisert",
+          description: `Oppdatert ${result.synced} av ${result.total} kontorer. Bildesynk feilet.`,
+        });
+      }
     } catch (error) {
       console.error("Failed to sync offices:", error);
       
-      // Extract actual error message from backend response
       let errorMessage = "Kunne ikke hente kontorer fra Vitec Hub.";
       if (error instanceof AxiosError && error.response?.data?.detail) {
         errorMessage = error.response.data.detail;

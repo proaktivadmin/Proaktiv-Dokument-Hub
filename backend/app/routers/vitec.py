@@ -7,9 +7,11 @@ Provides endpoints for checking Vitec Hub API configuration and connection statu
 import logging
 
 from fastapi import APIRouter, HTTPException, Query
+from fastapi.responses import Response
 from pydantic import BaseModel
 
 from app.config import settings
+from app.services.image_service import ImageService
 from app.services.vitec_hub_service import VitecHubService
 
 logger = logging.getLogger(__name__)
@@ -95,53 +97,64 @@ async def get_employee_picture(
     crop: str = Query("top", description="Crop mode: top, center"),
 ):
     """
-    DISABLED: Fetch employee profile picture from Vitec Hub.
-
-    This endpoint is temporarily disabled to identify employees missing WebDAV photos.
-    All employee photos should now be served from https://proaktiv.no/photos/employees/
-
-    If you see broken images, the employee needs their photo uploaded to WebDAV.
+    Fetch employee profile picture from Vitec Hub and proxy it.
 
     Supports optional resizing for avatars. When size is specified,
     the image is cropped to a square and resized.
-
-    Args:
-        employee_id: Vitec employee ID
-        size: Optional size for square resize (e.g., 256 for 256x256)
-        crop: Crop mode - "top" for portraits, "center" for general
-
-    Returns:
-        Image bytes with appropriate content-type
+    Response is cached for 24 hours to avoid excessive Vitec API calls.
     """
-    # DISABLED: Return 410 Gone to indicate this endpoint is deprecated
-    raise HTTPException(
-        status_code=410,
-        detail="This endpoint is disabled. Employee photos are now served from WebDAV at https://proaktiv.no/photos/employees/. "
-        "If you see this error, the employee's profile_image_url needs to be updated to the WebDAV URL.",
+    if not settings.VITEC_HUB_ACCESS_KEY:
+        raise HTTPException(status_code=503, detail="Vitec Hub not configured")
+
+    hub = VitecHubService()
+    installation_id = settings.VITEC_INSTALLATION_ID
+
+    try:
+        image_data = await hub.get_employee_picture(installation_id, employee_id)
+    except Exception as exc:
+        logger.error("Failed to fetch employee picture %s: %s", employee_id, exc)
+        raise HTTPException(status_code=502, detail="Failed to fetch picture from Vitec") from exc
+
+    if not image_data:
+        raise HTTPException(status_code=404, detail="No picture available")
+
+    if size:
+        crop_mode = "top" if crop == "top" else "center"
+        image_data = ImageService.resize_for_avatar(image_data, size=size, crop_mode=crop_mode)
+
+    return Response(
+        content=image_data,
+        media_type="image/jpeg",
+        headers={"Cache-Control": "public, max-age=86400"},
     )
 
 
 @router.get("/departments/{department_id}/picture")
 async def get_department_picture(department_id: str):
     """
-    DISABLED: Fetch department banner/logo picture from Vitec Hub.
+    Fetch department banner/logo picture from Vitec Hub and proxy it.
 
-    This endpoint is temporarily disabled to identify offices missing WebDAV banners.
-    All office banners should now be served from https://proaktiv.no/photos/offices/
-
-    If you see broken images, the office needs their banner uploaded to WebDAV.
-
-    Args:
-        department_id: Vitec department ID
-
-    Returns:
-        Image bytes with appropriate content-type
+    Response is cached for 24 hours to avoid excessive Vitec API calls.
     """
-    # DISABLED: Return 410 Gone to indicate this endpoint is deprecated
-    raise HTTPException(
-        status_code=410,
-        detail="This endpoint is disabled. Office banners are now served from WebDAV at https://proaktiv.no/photos/offices/. "
-        "If you see this error, the office's banner_image_url needs to be updated to the WebDAV URL.",
+    if not settings.VITEC_HUB_ACCESS_KEY:
+        raise HTTPException(status_code=503, detail="Vitec Hub not configured")
+
+    hub = VitecHubService()
+    installation_id = settings.VITEC_INSTALLATION_ID
+
+    try:
+        image_data = await hub.get_department_picture(installation_id, department_id)
+    except Exception as exc:
+        logger.error("Failed to fetch department picture %s: %s", department_id, exc)
+        raise HTTPException(status_code=502, detail="Failed to fetch picture from Vitec") from exc
+
+    if not image_data:
+        raise HTTPException(status_code=404, detail="No picture available")
+
+    return Response(
+        content=image_data,
+        media_type="image/jpeg",
+        headers={"Cache-Control": "public, max-age=86400"},
     )
 
 

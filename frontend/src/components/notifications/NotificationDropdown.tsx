@@ -1,6 +1,7 @@
 "use client";
 
-import { Bell, Check, RefreshCw, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { Bell, Check, ExternalLink, RefreshCw, Trash2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,6 +19,7 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
   const {
     notifications,
     unreadCount,
+    total,
     isLoading,
     refresh,
     markAsRead,
@@ -123,6 +125,18 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
             </div>
           )}
         </div>
+
+        {total > 0 && (
+          <div className="border-t border-border px-4 py-2">
+            <Link
+              href="/notifications"
+              className="flex items-center justify-center gap-1.5 rounded-md py-1.5 text-xs font-medium text-[#BCAB8A] transition-colors hover:text-[#272630]"
+            >
+              Se alle varsler ({total})
+              <ExternalLink className="h-3 w-3" />
+            </Link>
+          </div>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
