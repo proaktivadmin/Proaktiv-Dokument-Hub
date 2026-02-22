@@ -403,13 +403,13 @@ async def create_template(
 
 
 @router.post("/convert-docx", response_model=ConversionResult)
-async def convert_docx(
+async def convert_document(
     file: UploadFile = File(...),
     user: dict = Depends(get_current_user),
 ):
-    """Convert a .docx file to Vitec-ready HTML.
+    """Convert a .docx or .rtf file to Vitec-ready HTML.
 
-    Accepts a multipart file upload (.docx only) and returns the converted
+    Accepts a multipart file upload (.docx or .rtf) and returns the converted
     HTML along with warnings, validation results, and detected merge fields.
     Does NOT create a template record — the user reviews the output first.
     """
@@ -417,19 +417,22 @@ async def convert_docx(
         raise HTTPException(status_code=400, detail="Filename is required")
 
     file_ext = file.filename.rsplit(".", 1)[-1].lower() if "." in file.filename else ""
-    if file_ext != "docx":
+    from app.services.word_conversion_service import SUPPORTED_EXTENSIONS
+
+    if file_ext not in SUPPORTED_EXTENSIONS:
         raise HTTPException(
             status_code=400,
-            detail="Only .docx files are supported. Received: " + (file_ext or "(no extension)"),
+            detail=f"Supported formats: {', '.join('.' + e for e in sorted(SUPPORTED_EXTENSIONS))}. "
+            f"Received: .{file_ext or '(no extension)'}",
         )
 
-    docx_bytes = await file.read()
-    if not docx_bytes:
+    file_bytes = await file.read()
+    if not file_bytes:
         raise HTTPException(status_code=400, detail="Uploaded file is empty")
 
     service = get_word_conversion_service()
     try:
-        result = await service.convert(docx_bytes, filename=file.filename)
+        result = await service.convert(file_bytes, filename=file.filename)
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc))
 

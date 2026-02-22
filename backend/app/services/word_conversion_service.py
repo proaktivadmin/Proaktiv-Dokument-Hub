@@ -1,8 +1,8 @@
 """
-Word Conversion Service — Converts .docx files to Vitec Next-ready HTML.
+Document Conversion Service — Converts .docx and .rtf files to Vitec Next-ready HTML.
 
-Uses mammoth for initial .docx→HTML conversion, then post-processes with
-BeautifulSoup to enforce the rules from .planning/vitec-html-ruleset.md.
+Uses mammoth for .docx→HTML and striprtf for .rtf→text conversion, then post-processes
+with BeautifulSoup to enforce the rules from .planning/vitec-html-ruleset.md.
 The output passes through SanitizerService for final Vitec Stilark compliance.
 """
 
@@ -12,6 +12,7 @@ import re
 
 import mammoth
 from bs4 import BeautifulSoup, Tag
+from striprtf.striprtf import rtf_to_text
 
 from app.schemas.word_conversion import ConversionResult, ValidationItem
 from app.services.sanitizer_service import SanitizerService
@@ -25,33 +26,46 @@ VITEC_STILARK_RESOURCE = "resource:Vitec Stilark"
 WRAPPER_CLASS = "proaktiv-theme"
 WRAPPER_ID = "vitecTemplate"
 
+SUPPORTED_EXTENSIONS = {"docx", "rtf"}
+
 
 class WordConversionService:
-    """Converts .docx files to CKEditor 4-compliant, Vitec Next-ready HTML."""
+    """Converts .docx and .rtf files to CKEditor 4-compliant, Vitec Next-ready HTML."""
 
     def __init__(self) -> None:
         self._sanitizer = SanitizerService()
 
     async def convert(
         self,
-        docx_bytes: bytes,
+        file_bytes: bytes,
         filename: str = "upload.docx",
     ) -> ConversionResult:
-        """Convert a .docx file to Vitec-ready HTML.
+        """Convert a .docx or .rtf file to Vitec-ready HTML.
 
         Args:
-            docx_bytes: Raw bytes of the .docx file.
-            filename: Original filename (for logging/warnings).
+            file_bytes: Raw bytes of the uploaded file.
+            filename: Original filename (used to detect format and for logging).
 
         Returns:
             ConversionResult with cleaned HTML, warnings, validation, and merge fields.
 
         Raises:
-            ValueError: If mammoth cannot parse the file.
+            ValueError: If the file cannot be parsed.
         """
+        ext = filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
+
+        if ext == "rtf":
+            return await self._convert_rtf(file_bytes, filename)
+        return await self._convert_docx(file_bytes, filename)
+
+    async def _convert_docx(
+        self,
+        docx_bytes: bytes,
+        filename: str,
+    ) -> ConversionResult:
+        """Convert a .docx file using mammoth."""
         warnings: list[str] = []
 
-        # 1. Run mammoth conversion
         style_map = self._build_style_map()
         try:
             result = mammoth.convert_to_html(
@@ -69,17 +83,69 @@ class WordConversionService:
             warnings.append("mammoth produced empty output")
             raw_html = "<p>&nbsp;</p>"
 
-        # 2. Post-process to enforce ruleset
+        return self._finalize(raw_html, warnings)
+
+    async def _convert_rtf(
+        self,
+        rtf_bytes: bytes,
+        filename: str,
+    ) -> ConversionResult:
+        """Convert an .rtf file using striprtf."""
+        warnings: list[str] = []
+
+        try:
+            rtf_text = rtf_bytes.decode("cp1252", errors="replace")
+        except Exception:
+            rtf_text = rtf_bytes.decode("utf-8", errors="replace")
+
+        try:
+            plain_text = rtf_to_text(rtf_text, errors="replace")
+        except Exception as exc:
+            raise ValueError(f"Could not parse RTF file '{filename}': {exc}") from exc
+
+        if not plain_text.strip():
+            warnings.append("RTF file produced empty output")
+            plain_text = " "
+
+        raw_html = self._text_to_html(plain_text)
+        warnings.append(f"RTF converted from plain text ({len(plain_text)} chars)")
+
+        return self._finalize(raw_html, warnings)
+
+    @staticmethod
+    def _text_to_html(text: str) -> str:
+        """Convert plain text to basic HTML paragraphs."""
+        lines = text.split("\n")
+        html_parts: list[str] = []
+        current_block: list[str] = []
+
+        for line in lines:
+            stripped = line.strip()
+            if not stripped:
+                if current_block:
+                    html_parts.append("<p>" + "<br>".join(current_block) + "</p>")
+                    current_block = []
+            else:
+                current_block.append(stripped)
+
+        if current_block:
+            html_parts.append("<p>" + "<br>".join(current_block) + "</p>")
+
+        return "\n".join(html_parts) if html_parts else "<p>&nbsp;</p>"
+
+    def _finalize(
+        self,
+        raw_html: str,
+        warnings: list[str],
+    ) -> ConversionResult:
+        """Shared post-processing pipeline for all formats."""
         html, post_warnings = self._post_process(raw_html)
         warnings.extend(post_warnings)
 
-        # 3. Run through SanitizerService for Stilark compliance
         html = self._sanitizer.sanitize(html, update_resource=True)
 
-        # 4. Extract merge fields
         merge_fields = TemplateAnalyzerService.extract_merge_fields(html)
 
-        # 5. Validate against Section 12 checklist
         validation = self._validate_against_checklist(html)
         is_valid = all(item.passed for item in validation)
 
@@ -319,7 +385,7 @@ class WordConversionService:
 
         stilark_has_nbsp = False
         if stilark_ref:
-            content = stilark_ref.decode_contents().strip()
+            content = stilark_ref.decode_contents()
             stilark_has_nbsp = "\xa0" in content or "&nbsp;" in content
         items.append(
             ValidationItem(
