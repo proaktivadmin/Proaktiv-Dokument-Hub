@@ -1,0 +1,647 @@
+<div id="vitecTemplate">
+<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">
+/* Heading styles */
+#vitecTemplate h1 { text-align: center; font-size: 14pt; margin: 0; padding: 0; }
+#vitecTemplate h2 { font-size: 11pt; margin: 20px 0 0 0; padding: 0; }
+
+/* Article/section layout */
+#vitecTemplate article { padding-left: 0; }
+#vitecTemplate .avoid-page-break { page-break-inside: avoid; }
+
+/* Table base styles */
+#vitecTemplate table { width: 100%; table-layout: fixed; }
+
+/* Bilag table */
+#vitecTemplate .bilag-table { width: 100%; border-collapse: collapse; }
+#vitecTemplate .bilag-table td { padding: 2px 6px; vertical-align: top; }
+
+/* Lists */
+#vitecTemplate ul { list-style-type: disc; margin-left: 20px; }
+#vitecTemplate ul li { list-style-position: outside; line-height: 20px; }
+#vitecTemplate ol { margin-left: 20px; }
+#vitecTemplate ol li { line-height: 20px; }
+
+/* Insert fields */
+#vitecTemplate .insert { border-bottom: 1px dotted #999; min-width: 80px; display: inline-block; }
+#vitecTemplate span.insert:empty::before { content: attr(data-label); color: #999; font-style: italic; }
+#vitecTemplate .insert-table { display: inline-table; }
+
+/* Signature lines */
+#vitecTemplate .signature-line { border-bottom: 1px solid #000; min-width: 200px; display: inline-block; margin-top: 40px; }
+
+/* SVG checkboxes */
+label.btn {
+  display: inline;
+  text-transform: none;
+  white-space: normal;
+  padding: 0;
+  vertical-align: baseline;
+  outline: none;
+  font-size: inherit;
+}
+label.btn:active,
+label.btn.active {
+  box-shadow: none;
+  outline: none;
+}
+.svg-toggle {
+  display: inline-block !important;
+  width: 16px;
+  height: 16px;
+  margin: 0 5px;
+  vertical-align: bottom;
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none !important;
+  cursor: pointer;
+  white-space: normal;
+  text-align: left;
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+  background-position: center center;
+}
+.svg-toggle.checkbox {
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Crect%20width%3D%2215%22%20height%3D%2215%22%20x%3D%22.5%22%20y%3D%22.5%22%20fill%3D%22%23fff%22%20stroke%3D%22%23000%22%20rx%3D%222%22%20ry%3D%222%22%2F%3E%3C%2Fsvg%3E");
+}
+.svg-toggle.checkbox.active,
+.btn.active > .svg-toggle.checkbox {
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Crect%20width%3D%2215%22%20height%3D%2215%22%20x%3D%22.5%22%20y%3D%22.5%22%20fill%3D%22%23fff%22%20stroke%3D%22%23000%22%20rx%3D%222%22%20ry%3D%222%22%2F%3E%3Cpath%20fill%3D%22%23000%22%20d%3D%22M12.207%204.793a1%201%200%200%201%200%201.414l-5%205a1%201%200%200%201-1.414%200l-2-2a1%201%200%200%201%201.414-1.414L6.5%209.086l4.293-4.293a1%201%200%200%201%201.414%200z%22%2F%3E%3C%2Fsvg%3E");
+  box-shadow: none !important;
+}
+</style>
+
+<table>
+<tbody>
+<tr>
+  <td colspan="100" style="text-align:right">
+    <small>8. utgave 06/25</small>
+  </td>
+</tr>
+<tr><td colspan="100">&nbsp;</td></tr>
+<tr>
+  <td colspan="100">
+
+  <div class="avoid-page-break">
+  <h1>STANDARD LEIEAVTALE FOR N&AElig;RINGSLOKALER</h1>
+  <p style="text-align:center;">
+    <label class="btn active" contenteditable="false" data-toggle="button">
+      <span class="checkbox svg-toggle"></span>
+    </label> Brukte/&laquo;som de er&raquo; lokaler
+    &nbsp;&nbsp;
+    <label class="btn" contenteditable="false" data-toggle="button">
+      <span class="checkbox svg-toggle"></span>
+    </label> Nye/Rehabiliterte lokaler
+  </p>
+  </div>
+
+<!-- ============================================================ -->
+<!-- PUNKT 1. UTLEIER -->
+<!-- ============================================================ -->
+<article class="avoid-page-break item">
+<h2>1. UTLEIER</h2>
+<p>Navn/Firma: <span class="insert-table"><span class="insert" data-label="utleier.navn-firma"></span></span> (Utleier)</p>
+<p>F&oslash;dsels- eller organisasjonsnummer: <span class="insert-table"><span class="insert" data-label="utleier.orgnr"></span></span></p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 2. LEIETAKER -->
+<!-- ============================================================ -->
+<article class="avoid-page-break item">
+<h2>2. LEIETAKER</h2>
+<p>Navn/Firma: <span class="insert-table"><span class="insert" data-label="leietaker.navn-firma"></span></span> (Leietaker)</p>
+<p>F&oslash;dsels- eller organisasjonsnummer: <span class="insert-table"><span class="insert" data-label="leietaker.orgnr"></span></span></p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 3. EIENDOMMEN -->
+<!-- ============================================================ -->
+<article class="avoid-page-break item">
+<h2>3. EIENDOMMEN</h2>
+<p>Adresse <span class="insert-table"><span class="insert" data-label="eiendom.adresse"></span></span></p>
+<p>Gnr. <span class="insert-table"><span class="insert" data-label="eiendom.gnr"></span></span> bnr. <span class="insert-table"><span class="insert" data-label="eiendom.bnr"></span></span> fnr. <span class="insert-table"><span class="insert" data-label="eiendom.fnr"></span></span> snr. <span class="insert-table"><span class="insert" data-label="eiendom.snr"></span></span> i <span class="insert-table"><span class="insert" data-label="eiendom.kommune"></span></span> kommune, kommunenummer <span class="insert-table"><span class="insert" data-label="eiendom.kommunenr"></span></span> (Eiendommen)</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 4. LEIEOBJEKTET -->
+<!-- ============================================================ -->
+<article class="item">
+<div class="avoid-page-break">
+<h2>4. LEIEOBJEKTET</h2>
+<p>Leieobjektet best&aring;r av arealer til Leietakers eksklusive bruk (Eksklusivt Areal), en forholdsmessig andel av Eiendommens fellesareal og tekniske rom (Fellesareal) og utearealer.</p>
+<p>Eksklusivt Areal og arealfordeling, samt eventuelt eksklusivt uteareal, er vist i Bilag 2 (arealoversikt og tegninger).</p>
+</div>
+<p><strong>[NYE:]</strong> Leieobjektet skal v&aelig;re i henhold til avtalt kravspesifikasjon, Bilag 3.</p>
+<p>Eksklusivt Areal samt andel av Fellesareal utgj&oslash;r totalt ca. <span class="insert-table"><span class="insert" data-label="areal.totalt-kvm"></span></span> kvm. BTA (Leieobjektet). Av dette utgj&oslash;r Eksklusivt Areal ca. <span class="insert-table"><span class="insert" data-label="areal.eksklusivt-kvm"></span></span> kvm. BTA.</p>
+<p>Leieobjektet inkluderer ikke parkeringsplasser.</p>
+<p>Alle arealer er oppgitt etter NS 3940:2023+AC:2024. Eventuelle feil i arealangivelsene gir ikke rett til &aring; kreve Leien justert, og medf&oslash;rer heller ikke noen endring av denne leieavtalens &oslash;vrige bestemmelser.</p>
+<p><strong>[BRUKT:]</strong> F&oslash;r Overtakelse skal Utleier utf&oslash;re arbeider/endringer i Leieobjektet som angitt i Bilag <span class="insert-table"><span class="insert" data-label="bilag-nr"></span></span>.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 5. LEIETAKERS VIRKSOMHET -->
+<!-- ============================================================ -->
+<article class="item">
+<div class="avoid-page-break">
+<h2>5. LEIETAKERS VIRKSOMHET</h2>
+<p>Leieobjektet m&aring; kun benyttes til <span class="insert-table"><span class="insert" data-label="virksomhet"></span></span>.</p>
+</div>
+<p>Endring av virksomheten i Leieobjektet, herunder drift av annen, beslektet virksomhet, er ikke tillatt uten Utleiers skriftlige forh&aring;ndssamtykke. Samtykke kan ikke nektes uten saklig grunn. &Oslash;kt avgiftsmessig belastning for Utleier som f&oslash;lge av Leietakers endrede virksomhet skal anses som saklig grunn, med mindre Leietaker forplikter seg til &aring; holde Utleier skadesl&oslash;s for Utleiers tap og kostnader i samsvar med punkt 10 og stiller en &ndash; etter Utleiers oppfatning &ndash; tilfredsstillende sikkerhet for sine forpliktelser. Videre skal opprettholdelse av Eiendommens virksomhetsprofil/virksomhetssammensetning anses som saklig grunn.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 6. OVERTAKELSE/MELDING OM MANGLER -->
+<!-- ============================================================ -->
+<article class="item">
+<div class="avoid-page-break">
+<h2>6. OVERTAKELSE/MELDING OM MANGLER</h2>
+<p><strong>[BRUKT:]</strong> Leieobjektet overtas ryddet og rengjort, og for &oslash;vrig i den stand som Leieobjektet var i ved Leietakers besiktigelse, og med arbeider/endringer som beskrevet i Bilag <span class="insert-table"><span class="insert" data-label="bilag-nr"></span></span>.</p>
+<p><strong>[NYE:]</strong> Leieobjektet overtas i henhold til punkt 4.1 ovenfor.</p>
+</div>
+<p>Utleier er ansvarlig for at Leieobjektet ved Overtakelse lovlig kan benyttes til den bruk/virksomhet som er angitt i punkt 5.1, herunder hva gjelder krav som f&oslash;lger av plan- og bygningsloven og privatrettslige forhold.</p>
+<p>Leietaker er selv ansvarlig for egne innrednings-, installasjons- og bygningsarbeider som etter avtale skal utf&oslash;res av Leietaker. Leietaker er videre selv ansvarlig for eventuelle krav til, eller godkjennelser av, Leieobjektet/virksomheten som ikke er av bygningsteknisk eller reguleringsmessig karakter.</p>
+<p>I forbindelse med Overtakelse av Leieobjektet skal det foretas overtakelsesbefaring. Fra befaringen f&oslash;res protokoll som undertegnes p&aring; stedet av begge parter. Skjema for overtakelsesprotokoll, inkludert dokumentasjon i form av bilder og/eller video, er vedlagt som Bilag <span class="insert-table"><span class="insert" data-label="bilag-nr"></span></span>.</p>
+<p>Leietaker m&aring; gi skriftlig melding om skader og mangler mv. innen rimelig tid etter at Leietaker burde ha oppdaget dem. Forhold som Leietaker kjente til eller burde ha oppdaget ved Overtakelse kan ikke senere gj&oslash;res gjeldende som mangel.</p>
+<p>Ved Overtakelse skal Utleier gi Leietaker en innf&oslash;ring i bruk av teknisk utstyr/innretninger i Leieobjektet som skal benyttes av Leietaker. Videre skal Utleier ved Overtakelse fremlegge driftsmanualer/-instrukser for teknisk utstyr og innretninger i Leieobjektet. Leietaker skal i hele Leieperioden f&oslash;lge Utleiers til enhver tid gjeldende driftsmanualer/-instrukser.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 7. LEIEPERIODEN -->
+<!-- ============================================================ -->
+<article class="avoid-page-break item">
+<h2>7. LEIEPERIODEN</h2>
+<p>Leieforholdet l&oslash;per fra <span class="insert-table"><span class="insert" data-label="overtakelse.dato"></span></span> (Overtakelse) til <span class="insert-table"><span class="insert" data-label="leieperioden.sluttdato"></span></span> (Leieperioden), hvoretter leieforholdet opph&oslash;rer uten oppsigelse. Leieforholdet kan ikke sies opp i Leieperioden.</p>
+<p>Fristen for &aring; sende flyttingsoppfordring etter Leieperiodens utl&oslash;p er seks m&aring;neder.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 8. LEIEN MV. -->
+<!-- ============================================================ -->
+<article class="item">
+<div class="avoid-page-break">
+<h2>8. LEIEN MV.</h2>
+<p>Leien for Leieobjektet per &aring;r (Leien) utgj&oslash;r NOK <span class="insert-table"><span class="insert" data-label="leie.belop"></span></span> (eksklusive merverdiavgift). I tillegg kommer merverdiavgift i den utstrekning vilk&aring;rene for &aring; legge merverdiavgift p&aring; Leien er oppfylt, jf. punkt 10.</p>
+</div>
+<p>1/4 / 1/12 [stryk det som ikke passer] av Leien forfaller til betaling forskuddsvis den 1. i hver(t) kvartal/m&aring;ned [stryk det som ikke passer].</p>
+<p>I tillegg til Leien betaler Leietaker en andel av Eiendommens felleskostnader (Felleskostnadene) i henhold til punkt 15. Ved kontraktsinng&aring;elsen er akontobel&oslash;pet for Felleskostnadene stipulert til NOK <span class="insert-table"><span class="insert" data-label="akonto.felleskostnader"></span></span> (eksklusive merverdiavgift) [per kvm BTA per &aring;r/per kvartal/per m&aring;ned (stryk det som ikke passer)].</p>
+<p>Utleier utsteder faktura til Leietaker med slikt innhold som er p&aring;krevd i henhold til gjeldende regelverk, og med opplysninger om Utleiers kontonummer for betaling av Leien og Felleskostnadene. Betaling anses ikke skjedd f&oslash;r bel&oslash;pet er mottatt p&aring; Utleiers konto.</p>
+<p>Ved forsinket betaling av Leien og/eller andel Felleskostnader, svares forsinkelsesrente i henhold til lov av 17. desember 1976 nr. 100 eller lov som trer i stedet for denne. Utleier har rett til &aring; kreve gebyr ved purring.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 9. LEIEREGULERING -->
+<!-- ============================================================ -->
+<article class="item">
+<div class="avoid-page-break">
+<h2>9. LEIEREGULERING</h2>
+<p>Leien reguleres hver 1. januar i samsvar med eventuelle endringer i Statistisk Sentralbyr&aring;s konsumprisindeks, eller, hvis denne blir opphevet, annen tilsvarende offentlig indeks. Leien skal ikke kunne reguleres under den Leien som ble avtalt p&aring; kontraktstidspunktet.</p>
+</div>
+<p>Opprinnelig kontraktsindeks er indeksen for <span class="insert-table"><span class="insert" data-label="indeks.maaned"></span></span> m&aring;ned &aring;r <span class="insert-table"><span class="insert" data-label="indeks.aar"></span></span>. Leieregulering baseres p&aring; utviklingen fra opprinnelig kontraktsindeks til siste kjente indeks p&aring; reguleringstidspunktet. Leietaker er med dette gitt varsel om at &aring;rlig leieregulering vil finne sted.</p>
+<p>Ved offentlig inngrep (prisstopp o.l.) som begrenser den leie Utleier ellers kunne tatt etter denne leieavtalen, skal den regulerte Leien l&oslash;pe fra det tidspunkt og i den utstrekning det m&aring;tte v&aelig;re lovlig adgang til det.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 10. MERVERDIAVGIFT -->
+<!-- ============================================================ -->
+<article class="item" style="page-break-before: always;">
+<div class="avoid-page-break">
+<h2>10. MERVERDIAVGIFT</h2>
+<p>Partene har per kontraktssignering forutsatt at [Stryk de alternativene som ikke passer.]</p>
+<p>A&nbsp;&nbsp;&nbsp;hele Leieobjektet skal omfattes av Utleiers frivillige registrering i Merverdiavgiftsregisteret.</p>
+<p>B&nbsp;&nbsp;&nbsp;deler av Leieobjektet skal omfattes av Utleiers frivillige registrering i Merverdiavgiftsregisteret. M&aring;lsatte tegninger og opplysninger om st&oslash;rrelsen p&aring; arealet som skal omfattes av Utleiers frivillige registrering er inntatt i Bilag <span class="insert-table"><span class="insert" data-label="bilag-nr"></span></span>.</p>
+<p>C&nbsp;&nbsp;&nbsp;ingen del av Leieobjektet skal omfattes av Utleiers frivillige registrering i Merverdiavgiftsregisteret.</p>
+</div>
+<p>[Ved valg av alternativ B eller C skal Utleier i et eget brev notifisere skattekontoret om at de relevante deler av Leieobjektet ikke skal omfattes av Utleiers frivillige registrering, selv om Leietaker senere skulle bruke arealene i egen avgiftspliktig virksomhet].</p>
+<p>I den utstrekning Leieobjektet skal omfattes av Utleiers registrering i henhold til punkt 10.1, innest&aring;r Leietaker for at vilk&aring;rene for registrering er oppfylt fra tidspunkt for kontraktssignering og i hele Leieperioden.</p>
+<p>Utleier har rett til &aring; legge merverdiavgift med den til enhver tid gjeldende sats p&aring; Leien, Felleskostnadene og eventuelle andre kostnader knyttet til arealer som skal omfattes av Utleiers registrering i henhold til punkt 10.1. Det samme gjelder for arealer som m&aring;tte bli omfattet av Utleiers registrering som f&oslash;lge av at registrering for utleie blir p&aring;lagt ved lov eller forskrift.</p>
+<p><strong>[BRUKT:]</strong> Dersom Leietaker i samsvar med punkt 25 har f&aring;tt samtykke til fremleie av arealer som skal omfattes av Utleiers registrering i henhold til punkt 10.1, og Leietaker har rett til &aring; bli frivillig registrert i Merverdiavgiftsregisteret for fremleien, skal Leietaker s&oslash;rge for at fremleien blir omfattet av en frivillig registrering.</p>
+<p><strong>[NYE:]</strong> Dersom Leietaker i samsvar med punkt 25 har f&aring;tt samtykke til fremleie av arealer som skal omfattes av Utleiers registrering i henhold til punkt 10.1, og Leietaker har rett til &aring; bli frivillig registrert i Merverdiavgiftsregisteret for fremleien, skal Leietaker umiddelbart s&oslash;ke om frivillig registrering for fremleien.</p>
+<p>Leietaker skal umiddelbart gi Utleier opplysninger om forhold ved bruken av Leieobjektet som kan medf&oslash;re en endring i Utleiers fradragsrett for inng&aring;ende merverdiavgift. Leietaker skal ogs&aring; innen 14 dager skriftlig besvare Utleiers &aring;rlige leietakererkl&aelig;ringer om Leietakers bruk av Leieobjektet gjennom &aring;ret og bygningsmessige tiltak foretatt p&aring; Leieobjektet av Leietaker. Leietaker skal ogs&aring; innhente tilsvarende dokumentasjon fra eventuelle fremleietakere.</p>
+<p>Ved opph&oslash;r av leieforholdet, uansett grunnlag, skal Leietaker og eventuelle fremleietakere beholde egne justeringsforpliktelser for bygningsmessige tiltak foretatt p&aring; Leieobjektet.</p>
+<p>Leietaker skal holde Utleier skadesl&oslash;s for ethvert tap Utleier m&aring;tte bli p&aring;f&oslash;rt, herunder redusert fradragsrett og tilbakef&oslash;ring/justering av fradragsf&oslash;rt inng&aring;ende merverdiavgift samt renter, tilleggsskatt og &oslash;vrige kostnader forbundet med slikt tap, som f&oslash;lge av regelendringer for Leietakers bruk/virksomhet eller Leietakers bruksendring, fremleie, selskapsmessige/organisatoriske endringer, formelle mangler eller fors&oslash;mmelser o.l. Ved beregningen av Utleiers tap skal det tas hensyn til skattemessige konsekvenser for Utleier.</p>
+<p>Eventuelle krav som f&oslash;lge av bestemmelsene i dette punkt 10 forfaller i sin helhet til betaling ved p&aring;krav. Krav som f&oslash;lge av Utleiers plikt til tilbakef&oslash;ring/nedjustering av fradragsf&oslash;rt inng&aring;ende merverdiavgift forfaller imidlertid til betaling tidligst 14 dager f&oslash;r forfall for Utleiers betalingsplikt til staten.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 11. SIKKERHETSSTILLELSE -->
+<!-- ============================================================ -->
+<article class="item">
+<div class="avoid-page-break">
+<h2>11. SIKKERHETSSTILLELSE</h2>
+<p>Leietaker stiller selvskyldnergaranti fra bank eller annet finansforetak som driver virksomhet i Norge etter konsesjon gitt av og underlagt norske myndigheter som tilsynsmyndighet, for rettidig oppfyllelse av Leietakers forpliktelser etter leieavtalen.</p>
+</div>
+<p>Garantien skal tilsvare <span class="insert-table"><span class="insert" data-label="depositum.maaneder"></span></span> m&aring;neders leie inkludert andel Felleskostnader og merverdiavgift i den grad det f&oslash;lger av punkt 10. I forbindelse med leieregulering kan Utleier kreve garantien regulert forholdsmessig. Garantien skal v&aelig;re gyldig, og uoppsigelig fra Leietakers og garantists side, i Leieperioden samt tre m&aring;neder etter fraflytting. Garantien skal ikke inneholde preklusive varslingsfrister. Garantien skal v&aelig;re underlagt norsk rett. Eiendommens verneting vedtas i alle tvister som gjelder garantien.</p>
+<p>Sikkerhetsstillelsen m&aring; foreligge senest <span class="insert-table"><span class="insert" data-label="sikkerhetsstillelse.frist"></span></span>.</p>
+<p>Mislighold av bestemmelsen i dette punkt 11 anses som vesentlig mislighold som gir Utleier hevingsrett, dersom Leietaker ikke etter skriftlig varsel fra Utleier har s&oslash;rget for &aring; bringe forholdet i orden innen 14 dager.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 12. LEIETAKERS BRUK AV LEIEOBJEKTET -->
+<!-- ============================================================ -->
+<article class="item">
+<div class="avoid-page-break">
+<h2>12. LEIETAKERS BRUK AV LEIEOBJEKTET</h2>
+<p>Leietaker skal behandle s&aring; vel Leieobjektet som Eiendommen for &oslash;vrig med tilb&oslash;rlig aktsomhet.</p>
+</div>
+<p>Leietaker skal sette seg inn i og f&oslash;lge de offentligrettslige og privatrettslige regler som er eller m&aring;tte bli innf&oslash;rt og som kommer til anvendelse p&aring; leieforholdet.</p>
+<p>Leietaker er i Leieperioden ansvarlig overfor alle offentlige myndigheter for at Leietakers bruk av Leieobjektet tilfredsstiller de til enhver tid gjeldende offentligrettslige krav.</p>
+<p><strong>[BRUKT:]</strong> Leietaker skal i Leieperioden etterleve de krav og rutiner som f&oslash;lger av Eiendommens eventuelle milj&oslash;sertifisering.</p>
+<p><strong>[NYE:]</strong> Leietaker skal i Leieperioden etterleve de krav og rutiner som f&oslash;lger av Eiendommens eventuelle milj&oslash;sertifisering slik de til enhver tid gjelder.</p>
+<p>Leietaker skal oppfylle og bekoste alle nye offentligrettslige krav (bygningstekniske, milj&oslash;messige mv.) til Leieobjektet som oppst&aring;r i Leieperioden som f&oslash;lge av Leietakers s&aelig;rlige virksomhet/bruk av Leieobjektet, herunder krav til universell utforming og krav fra arbeidstilsyn, helsemyndigheter, sivilforsvar, industrivern, brannvern eller annen offentlig myndighet.</p>
+<p>Leietaker skal p&aring; Utleiers foresp&oslash;rsel dokumentere at det foreligger et internkontrollsystem for Leietakers virksomhet som oppfyller de til enhver tid gjeldende krav.</p>
+<p>Leieobjektet m&aring; ikke brukes p&aring; en m&aring;te som forringer Eiendommens omd&oslash;mme eller utseende. Virksomheten i Leieobjektet m&aring; heller ikke sjenere andre leietakere eller naboer ved st&oslash;v, st&oslash;y, lukt, rystelse eller p&aring; annen m&aring;te.</p>
+<p>R&oslash;yking er ikke tillatt i Leieobjektet.</p>
+<p>Rom med vann- og/eller avl&oslash;psr&oslash;r m&aring; holdes oppvarmet, slik at frysing unng&aring;s. Kostnadene ved utbedring og eventuell erstatning i forbindelse med disse forhold er Leietakers ansvar.</p>
+<p>Avfall m&aring; legges i Eiendommens s&oslash;ppelkasser/kildesorteringssystem, med mindre det er avtalt at Leietaker selv skal ta h&aring;nd om s&oslash;ppel/kildesortering. Leietaker m&aring; selv fjerne avfall av ekstraordin&aelig;r(t) omfang eller karakter for egen regning. I motsatt fall kan Utleier fjerne avfallet for Leietakers regning. All avfallsh&aring;ndtering skal f&oslash;lge de til enhver tid gjeldende offentlige krav.</p>
+<p>Leietaker kan ikke benytte Fellesareal til eget form&aring;l (for eksempel salg, oppslag, lagring o.l.).</p>
+<p>Dersom Leietaker &oslash;nsker &oslash;kt kapasitet/forsyning av energi, vann, luft, avl&oslash;p mv. i forhold til hva som var forutsatt for Leietakers bruk p&aring; kontraktstidspunktet, m&aring; utleiers skriftlige forh&aring;ndssamtykke innhentes.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 13. UTLEIERS ADGANG TIL EKSKLUSIVT AREAL mv. -->
+<!-- ============================================================ -->
+<article class="avoid-page-break item">
+<h2>13. UTLEIERS ADGANG TIL EKSKLUSIVT AREAL mv.</h2>
+<p>Leietaker skal gi Utleier adgang til Eksklusivt Areal i kontor-/forretningstid alle dager for ettersyn, reparasjon, vedlikehold, inspeksjon, taksering, endringsarbeid etc.</p>
+<p>Leietaker plikter ogs&aring; &aring; gi Utleier adgang til Eksklusivt Areal for gjennomf&oslash;ring av milj&oslash;tiltak, herunder for unders&oslash;kelse/m&aring;ling av energiforbruk mv. Leietaker skal varsles med rimelig frist.</p>
+<p>I alle tilfeller der det anses n&oslash;dvendig for &aring; forebygge eller begrense skade p&aring; Eiendommen, har Utleier rett til &aring; skaffe seg adgang til Eksklusivt Areal uten slikt varsel.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 14. UTLEIERS VEDLIKEHOLDS- OG UTSKIFTINGSPLIKT -->
+<!-- ============================================================ -->
+<article class="item">
+<div class="avoid-page-break">
+<h2>14. UTLEIERS VEDLIKEHOLDS- OG UTSKIFTINGSPLIKT - Eierkostnader</h2>
+<p>Utleier skal s&oslash;rge for og bekoste utskifting og vedlikehold av utvendige bygningsmessige konstruksjoner/komponenter og utskifting av tekniske innretninger (slik som heiser, ventilasjonsanlegg, branntekniske anlegg, fyringsanlegg, solavskjermingsanlegg mv.), n&aring;r disse ikke lenger lar seg vedlikeholde p&aring; regningssvarende m&aring;te. Utleier har ogs&aring; utskiftningsansvar for utearealer, herunder gjerder, dekke mv.</p>
+</div>
+<p>Utleier har ikke ansvar for vedlikehold eller utskifting av innretninger anbrakt i Leieobjektet av Leietaker.</p>
+<p>Leietaker har ikke krav p&aring; erstatning eller avslag i Leien ved avbrudd i forsyninger av vann, energi, luft etc., som ikke er vesentlige.</p>
+<p>Utleier skal s&oslash;rge for at Leieobjektet i Leieperioden er i samsvar med de for Eiendommen/Leieobjektet gjeldende offentligrettslige bygningstekniske krav, med mindre annet f&oslash;lger av punkt 12 eller Leietakers vedlikeholdsplikt etter punkt 16.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 15. DRIFT OG VEDLIKEHOLD AV FELLESAREAL - Felleskostnader -->
+<!-- ============================================================ -->
+<article class="item">
+<div class="avoid-page-break">
+<h2>15. DRIFT OG VEDLIKEHOLD AV FELLESAREAL OG TEKNISKE INNRETNINGER MV. - Felleskostnader</h2>
+<p>Utleier skal s&oslash;rge for at Fellesareal og Eiendommens tekniske innretninger holdes i tilsvarende stand som ved Overtakelse, men slik at alminnelig slitasje m&aring; aksepteres av Leietaker. Utleier skal s&oslash;rge for vedlikehold, drift og renhold av Fellesareal og utearealer.</p>
+</div>
+<p>Kostnader etter dette punkt 15 skal dekkes som Felleskostnader. Eksempler p&aring; kostnader som inng&aring;r i Felleskostnadene er inntatt i Bilag <span class="insert-table"><span class="insert" data-label="bilag-nr"></span></span>.</p>
+<p>Felleskostnadene fordeles etter Eiendommens fordelingsn&oslash;kkel p&aring; kontraktstidspunktet, som angitt i Bilag <span class="insert-table"><span class="insert" data-label="bilag-nr"></span></span>. Med mindre annet er angitt skal fordelingsn&oslash;kkelen v&aelig;re arealbasert.</p>
+<p>Eiendommens fordelingsn&oslash;kkel justeres forholdsmessig ved eventuelle endringer i grunnlaget for fordelingsn&oslash;kkelen. Leietaker skal i forbindelse med felleskostnadsavregningen orienteres om eventuelle endringer i fordelingsn&oslash;kkelen.</p>
+<p>Endring av prinsipp for fordelingsn&oslash;kkelen krever Leietakers skriftlige samtykke.</p>
+<p>Felleskostnadene dekkes i det enkelte kostnads&aring;r gjennom at Leietaker betaler et akontobel&oslash;p sammen med Leien til dekning av de Felleskostnadene Utleier forventer vil p&aring;l&oslash;pe. Utleier skal fremlegge budsjett for Felleskostnadene for det aktuelle kostnads&aring;r, og skal varsle Leietaker dersom Utleier f&aring;r grunn til &aring; tro at Felleskostnadene vil avvike vesentlig fra det fremlagte budsjettet.</p>
+<p>Avregning foretas normalt med forfall innen 30. april &aring;ret etter kostnads&aring;ret basert p&aring; en oversikt satt opp av Utleier, som viser de faktiske p&aring;l&oslash;pte Felleskostnadene i kostnads&aring;ret spesifisert for tjenestene som inng&aring;r i Felleskostnadene. Avregningen skal legges frem i en form som gj&oslash;r det mulig for Leietaker &aring; kontrollere avregningen, herunder skal Utleier spesifisere poster, bel&oslash;p og Felleskostnadenes fordeling p&aring; Leietakerne.</p>
+<p>Utleier dekker Felleskostnadene for ledige lokaler. I den grad ledighet medf&oslash;rer reduserte kostnader, skal reduksjonen krediteres de ledige lokaler. Deretter fordeles Felleskostnadene som om reduksjon ikke var skjedd.</p>
+<p>Eventuell merverdiavgift p&aring; Felleskostnadene som ikke er fradragsberettiget for Utleier som f&oslash;lge av at hele eller deler av Leieobjektet ikke omfattes av Utleiers frivillige registrering i Merverdiavgiftsregisteret (jf. ogs&aring; punkt 10), dekkes av Leietaker som en del av Felleskostnadene.</p>
+<p>Utleier kan overlate driften av Eiendommen og fakturering av Felleskostnadene til et driftsselskap. Utleier er uansett ansvarlig overfor Leietaker for oppfyllelsen av sine forpliktelser til drift av Eiendommen i henhold til denne leieavtalen.</p>
+<p>Utleier skal uansett fakturere eventuell eiendomsskatt i eget navn til Leietaker etter Eiendommens fordelingsn&oslash;kkel.</p>
+<p>Eiendomsskatt belastes Leietaker og fordeles etter samme fordelingsn&oslash;kkel som Felleskostnadene. Tilsvarende gjelder dersom utleie av eiendom i Leieperioden blir belagt med nye s&aelig;rlige skatter og/eller avgifter.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 16. LEIETAKERS PLIKT TIL DRIFT OG VEDLIKEHOLD -->
+<!-- ============================================================ -->
+<article class="item" style="page-break-before: always;">
+<div class="avoid-page-break">
+<h2>16. LEIETAKERS PLIKT TIL DRIFT OG VEDLIKEHOLD - Leietakerkostnader</h2>
+<p>Leietaker skal s&oslash;rge for og bekoste innvendig vedlikehold av Eksklusivt Areal, ut- og innvendig vedlikehold av inngangsd&oslash;rer/porter til Eksklusivt Areal samt innvendig vedlikehold av vinduer med omramming.</p>
+</div>
+<p>Vedlikeholdsplikten omfatter reparasjon (akutt vedlikehold) og periodisk vedlikehold, s&aring; som overflatebehandling av gulv, vegger og tak, n&oslash;dvendig utskifting av for eksempel tapet, gulvbelegg, o.l., utskifting av deler (pakninger med videre) og enkle reparasjoner av innretninger i Eksklusivt Areal, som synlige r&oslash;r, ledninger og installasjoner for forsyning av og avl&oslash;p for vann, varme, ventilasjon/kj&oslash;ling, elektrisitet/IKT og hvitevarer. I tillegg skal Leietaker s&oslash;rge for og bekoste vedlikehold av eventuelt eksklusivt uteareal.</p>
+<p>Leietakers vedlikeholdsplikt omfatter ogs&aring; utbedring av skader etter innbrudd og/eller h&aelig;rverk i Eksklusivt Areal; herunder skader p&aring; vinduer, karmer og inngangsd&oslash;rer/porter til Eksklusivt Areal. Knuste ruter m&aring; straks erstattes med nye.</p>
+<p>Leietaker skal s&oslash;rge for og bekoste reparasjon og vedlikehold av de skilt etc. som Utleier har gitt tillatelse til &aring; sette opp i henhold til punkt 18.</p>
+<p>Leietaker skal s&oslash;rge for og bekoste rengj&oslash;ring av Eksklusivt Areal (herunder innvendig vask av vinduer) og vaktmestertjenester for egen bruk. For det tilfelle at det er installert egen energim&aring;ler, skal Leietaker ogs&aring; betale energi til Eksklusivt Areal. Dersom egen m&aring;ler ikke er installert, skal energi til Eksklusivt Areal bli fordelt og belastet som Felleskostnader, jf. punkt 15.</p>
+<p>Utleier har rett til &aring; m&aring;le Leietakers forbruk i Eksklusivt Areal ved &aring; for eksempel installere separat m&aring;ler for elektrisitet, vann, fjernvarme eller annen form for forbruk. Leietaker skal i s&aring; fall og s&aring; langt mulig, etablere egne abonnement hos de aktuelle leverand&oslash;rene og betale for sitt forbruk i Eksklusivt Areal. Hvis eget abonnement ikke lar seg opprette, skal Utleier fakturere Leietaker for Leietakers forbruk. Videre har Utleier rett til &aring; etablere en l&oslash;sning for &aring; m&aring;le og fakturere Leietakers avfall.</p>
+<p>Leietaker skal s&oslash;rge for og bekoste drift og vedlikehold av fett-/oljeutskiller eller lignende innretninger dersom Leietakers virksomhet krever slike.</p>
+<p>Oppfyller ikke Leietaker sin vedlikeholdsplikt, er Utleier berettiget til, etter skriftlig varsel med 3 ukers oppfyllelsesfrist, &aring; utf&oslash;re vedlikeholdsarbeidene for Leietakers regning.</p>
+<p>Leietaker skal s&oslash;rge for og bekoste tilfredsstillende utvendig renhold, str&oslash;ing og sn&oslash;rydding dersom Leieobjektet brukes til virksomhet rettet mot publikum (for eksempel forretning eller servering).</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 17. UTLEIERS ARBEIDER I LEIEOBJEKTET/EIENDOMMEN -->
+<!-- ============================================================ -->
+<article class="item">
+<div class="avoid-page-break">
+<h2>17. UTLEIERS ARBEIDER I LEIEOBJEKTET/EIENDOMMEN</h2>
+<p>Utleier kan foreta alle arbeider til Eiendommens/Leieobjektets vedlikehold eller fornyelse; eksempelvis milj&oslash;tiltak. Utleier kan videre foreta ethvert endringsarbeid; herunder tilbygg, p&aring;bygg mv., utenfor Eksklusivt Areal. Endring av Fellesarealets areal og utforming kan bare foretas dersom endringene er mindre vesentlige. Leietaker skal medvirke til at ledninger, kanaler og r&oslash;r etc. til andre deler av Eiendommen kan f&oslash;res gjennom Eksklusivt Areal uten hinder av Leietakers innredning eller lignende.</p>
+</div>
+<p>Leietaker m&aring; finne seg i slike arbeider uten erstatning eller avslag i Leien, med mindre ulempene for Leietaker er vesentlige. Leietaker skal varsles om alle arbeider etter dette punkt 17 med rimelig frist. Utleier skal p&aring;se at arbeidene blir til minst mulig sjenanse for Leietaker.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 18. LEIETAKERS ENDRING AV LEIEOBJEKTET -->
+<!-- ============================================================ -->
+<article class="item">
+<div class="avoid-page-break">
+<h2>18. LEIETAKERS ENDRING AV LEIEOBJEKTET</h2>
+<p>Leietaker kan ikke foreta endringer av Leieobjektet, uten Utleiers skriftlige forh&aring;ndssamtykke. Samtykke kan ikke nektes uten saklig grunn. Dersom samtykke gis skal Utleier samtidig, dersom Leietaker krever det, skriftlig ta stilling til om Leietaker ved fraflytting helt eller delvis m&aring; tilbakestille de utf&oslash;rte endringene. Med mindre annet skriftlig avtales, skal alle Leietakers endringsarbeider tilbakestilles ved fraflytting.</p>
+</div>
+<p>Leietaker kan ikke sette opp virksomhetsskilt og solavskjerming uten Utleiers skriftlige forh&aring;ndssamtykke. Samtykke kan ikke nektes uten saklig grunn. St&oslash;rrelse, utforming og plassering skal v&aelig;re sedvanlig etter virksomhetens og Eiendommens art og karakter, og skal godkjennes av Utleier. Leietaker m&aring; bekoste sitt firmanavn p&aring;satt felles anvisningsskilt etter n&aelig;rmere avtale med Utleier.</p>
+<p>Leietaker er ansvarlig for &aring; innhente de n&oslash;dvendige offentlige tillatelser og for &oslash;vrig oppfylle alle offentlige krav som gjelder for arbeider som utf&oslash;res i henhold til dette punkt 18. Alle s&oslash;knader skal godkjennes av Utleier. Ved ferdigstillelse av arbeidene skal dokumentasjon for arbeidene overleveres Utleier sammen med eventuelle offentlige godkjennelser.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 19. FORSIKRING -->
+<!-- ============================================================ -->
+<article class="item">
+<div class="avoid-page-break">
+<h2>19. FORSIKRING</h2>
+<p>Hver av partene holder sine eiendeler/interesser forsikret. Utleier forsikrer Eiendommen.</p>
+</div>
+<p>Leietaker forsikrer egen innredning, fast og l&oslash;st inventar, l&oslash;s&oslash;re, maskiner, data, varer, driftstap/-avbrudd og eget ansvar. Leietaker forsikrer ogs&aring; d&oslash;rer og vinduer til Eksklusivt Areal.</p>
+<p>Dersom Leietakers virksomhet medf&oslash;rer forh&oslash;yelse av Eiendommens forsikringspremier eller nye sikkerhetsforskrifter fra Utleiers forsikringsselskap som inneb&aelig;rer investeringer, skal Leietaker dekke kostnadene. Leietaker skal melde til Utleier ethvert forhold og/eller endring i forhold ved virksomheten, som kan f&aring; f&oslash;lger for Eiendommens forsikringspremie.</p>
+<p>Hver av partene kan kreve &aring; f&aring; fremlagt den annen parts forsikringsbevis.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 20. BRANN/DESTRUKSJON -->
+<!-- ============================================================ -->
+<article class="avoid-page-break item">
+<h2>20. BRANN/DESTRUKSJON</h2>
+<p>Dersom Leieobjektet blir totalskadet som f&oslash;lge av brann eller annen hendelig begivenhet, kan hver av partene erkl&aelig;re seg fri fra alle rettigheter og forpliktelser under leieavtalen.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 21. UTLEIERS AVTALEBRUDD -->
+<!-- ============================================================ -->
+<article class="item">
+<div class="avoid-page-break">
+<h2>21. UTLEIERS AVTALEBRUDD</h2>
+<p>Leietaker kan kreve avslag i Leien i henhold til husleieloven &sect; 2-11 som f&oslash;lge av forsinkelse eller mangel.</p>
+<p><strong>[BRUKT:]</strong> Hva gjelder mangel, forutsettes at mangelen er vesentlig.</p>
+</div>
+<p>Leietaker m&aring; gi skriftlig melding om skader og mangler mv. innen rimelig tid etter at Leietaker burde ha oppdaget dem.</p>
+<p>Leietaker kan kreve erstatning for direkte tap som f&oslash;lge av forsinkelse eller mangel i henhold til husleieloven &sect; 2-13.</p>
+<p><strong>[BRUKT:]</strong> Hva gjelder mangel, forutsettes at mangelen er vesentlig.</p>
+<p>Indirekte tap dekkes ikke. Erstatningen er oppad begrenset til 12 m&aring;neders leie, med mindre Utleier har handlet forsettlig eller grovt uaktsomt. Ved eventuell forlengelse av Leieperioden gjelder en ny, tilsvarende begrensning for tap i forlengelsesperioden.</p>
+<p>Leietaker har ikke rett til &aring; motregne eller holde tilbake leie til sikkerhet for de krav Leietaker har eller m&aring;tte f&aring; mot Utleier som f&oslash;lge av forsinkelse eller mangel.</p>
+<p>Ved vesentlig mislighold av leieavtalen kan Leietaker heve denne. Dersom Leietaker &oslash;nsker &aring; p&aring;berope vedvarende eller gjentatt mislighold fra Utleiers side som grunnlag for heving, krever dette skriftlig forh&aring;ndsvarsling om at leieavtalen kan bli hevet dersom misligholdet ikke opph&oslash;rer. For &oslash;vrig gjelder husleieloven &sect; 2-12.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 22. LEIETAKERS AVTALEBRUDD/UTKASTELSE -->
+<!-- ============================================================ -->
+<article class="item">
+<div class="avoid-page-break">
+<h2>22. LEIETAKERS AVTALEBRUDD/UTKASTELSE</h2>
+<p>Leietaker er erstatningsansvarlig for all skade som skyldes forsett eller uaktsomhet fra Leietaker selv eller folk i Leietakers tjeneste samt fremleietakere, kunder, leverand&oslash;rer, oppdragstakere og/eller andre personer som Leietaker har gitt adgang til Eiendommen. Erstatningsplikten omfatter ogs&aring; kostnader til utrydding/bekjempelse av skadedyr, ut&oslash;y o.l.</p>
+</div>
+<p>Leietaker vedtar at tvangsfravikelse kan kreves hvis Leien eller avtalte tilleggsytelser ikke blir betalt, jf. tvangsfullbyrdelsesloven &sect; 13-2 tredje ledd (a).</p>
+<p>Leietaker vedtar at tvangsfravikelse kan kreves n&aring;r Leieperioden er l&oslash;pt ut, jf. tvangsfullbyrdelsesloven &sect; 13-2 tredje ledd (b).</p>
+<p>Ved vesentlig mislighold av leieavtalen kan Utleier heve denne, og Leietaker skal da straks fraflytte Leieobjektet. Bestemmelsen i punkt 21.4 gjelder tilsvarende ved heving fra Utleier.</p>
+<p>Dersom Leietaker blir kastet ut eller flytter etter krav fra Utleier pga. mislighold eller fraviker Leieobjektet som f&oslash;lge av konkurs, skal Leietaker betale Leien og andel Felleskostnader for den tid som m&aring;tte v&aelig;re igjen av Leieperioden. Betalingsplikten gjelder bare i den utstrekning Utleier ikke f&aring;r dekket sitt tap gjennom annen utleie av Leieobjektet. Leietaker m&aring; ogs&aring; betale de omkostninger som utkastelse, s&oslash;ksm&aring;l og rydding/rengj&oslash;ring av Leieobjektet f&oslash;rer med seg. Det samme gjelder eventuelle kostnader til tilbakestillelse av Leietakers arbeider og kostnader til ny utleie.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 23. FRAFLYTTING -->
+<!-- ============================================================ -->
+<article class="item">
+<div class="avoid-page-break">
+<h2>23. FRAFLYTTING</h2>
+<p>Ved fraflytting skal Utleier umiddelbart gis adgang til Eksklusivt Areal.</p>
+</div>
+<p>Ved fraflytting skal Leietaker tilbakelevere Leieobjektet ryddet, rengjort, med hele vindusruter og for &oslash;vrig i kontrakts- og h&aring;ndverksmessig godt vedlikeholdt stand og med samtlige n&oslash;kler/adgangskort. Dersom vedlikeholdsplikten etter punkt 16 er oppfylt med alminnelige intervaller i Leieperioden, aksepterer Utleier normalt slit og elde frem til fraflytting. For endringer foretatt av Leietaker i Leieperioden, gjelder reguleringen i punkt 18.</p>
+<p>Utleier m&aring; gi skriftlig melding om skader og mangler mv. innen rimelig tid etter at Leieobjektet er tilbakelevert. Utleier kan utbedre mangler som Leietaker ikke har utbedret, for Leietakers regning. Dersom Utleier ikke gjennomf&oslash;rer slik utbedring, skal Leietaker likevel kompensere Utleier for de kostnader som ville medg&aring;tt dersom utbedring hadde v&aelig;rt foretatt, uavhengig av Leieobjektets bruk etter fraflytting.</p>
+<p>I god tid f&oslash;r utl&oslash;pet av Leieperioden skal det avholdes en felles befaring mellom Leietaker og Utleier for &aring; avtale eventuelle n&oslash;dvendige arbeider som skal utf&oslash;res for &aring; bringe Leieobjektet i den stand det skal v&aelig;re ved fraflytting.</p>
+<p>Utleier har i de siste <span class="insert-table"><span class="insert" data-label="maaneder-tall"></span></span> m&aring;neder f&oslash;r fraflytting rett til &aring; sette opp skilt p&aring; fasaden med informasjon om at Leieobjektet blir ledig. I samme periode skal Leietaker, etter forh&aring;ndsvarsel, gi leies&oslash;kende adgang til Eksklusivt Areal <span class="insert-table"><span class="insert" data-label="dager-tall"></span></span> dager per uke i alminnelig kontor-/forretningstid.</p>
+<p>Leietaker skal senest siste dag i Leieperioden p&aring; egen bekostning fjerne sine eiendeler. Eiendeler som ikke fjernes skal anses etterlatt, og tilfaller Utleier. Utleier kan kaste eller fjerne s&oslash;ppel og eiendeler som Leietaker har etterlatt, for Leietakers regning.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 24. TINGLYSING/PANTSETTELSE -->
+<!-- ============================================================ -->
+<article class="avoid-page-break item">
+<h2>24. TINGLYSING/PANTSETTELSE</h2>
+<p>Leieavtalen kan ikke tinglyses uten Utleiers skriftlige forh&aring;ndssamtykke. Samtykke kan ikke nektes uten saklig grunn. En eventuelt tinglyst leieavtale skal ikke ha opptrinnsrett, og den skal vike prioritet for nye pantedokumenter som Utleier m&aring;tte la tinglyse p&aring; Eiendommen. Leietaker skal medvirke til at slik prioritetsvikelse gjennomf&oslash;res. Leietaker gir Utleier ugjenkallelig fullmakt til &aring; slette den tinglyste leieavtalen p&aring; det tidspunkt leieforholdet opph&oslash;rer. Kostnader forbundet med tinglysing og sletting av leieavtalen dekkes av Leietaker.</p>
+<p>Leieavtalen kan ikke pantsettes uten Utleiers skriftlige forh&aring;ndssamtykke. Samtykke kan ikke nektes uten saklig grunn. Utleier kan stille vilk&aring;r for pantsettelsen. Leietaker gir Utleier ugjenkallelig fullmakt til &aring; slette pantsettelsen p&aring; det tidspunkt leieforholdet opph&oslash;rer.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 25. FREMLEIE -->
+<!-- ============================================================ -->
+<article class="item">
+<div class="avoid-page-break">
+<h2>25. FREMLEIE</h2>
+<p>Fremleie av Leieobjektet, helt eller delvis, m&aring; ikke finne sted uten Utleiers skriftlige forh&aring;ndssamtykke. Samtykke kan ikke nektes uten saklig grunn. &Oslash;kt avgiftsmessig belastning for Utleier som f&oslash;lge av fremleien skal alltid anses som saklig grunn, med mindre Leietaker forplikter seg til &aring; holde Utleier skadesl&oslash;s for Utleiers tap og kostnader som f&oslash;lge av fremleien i samsvar med punkt 10 og stiller en etter Utleiers oppfatning tilfredsstillende sikkerhet for sine forpliktelser. Videre skal opprettholdelse av Eiendommens virksomhetsprofil/virksomhetssammensetning anses som saklig grunn.</p>
+</div>
+<p>Manglende svar p&aring; s&oslash;knad om samtykke etter bestemmelsene i dette punkt 25 anses ikke som samtykke.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 26. OVERDRAGELSE -->
+<!-- ============================================================ -->
+<article class="avoid-page-break item">
+<h2>26. OVERDRAGELSE</h2>
+<p>Utleier kan ved eierskifte til Leieobjektet overf&oslash;re sine rettigheter og forpliktelser etter leieavtalen til erververen. Leietaker skal ved slik overf&oslash;ring stille ny sikkerhet overfor erververen i samsvar med punkt 11.</p>
+<p>Leietaker kan ikke uten skriftlig forh&aring;ndssamtykke fra Utleier overdra hele eller deler av leieavtalen. Samtykke kan nektes p&aring; fritt grunnlag. Manglende svar p&aring; s&oslash;knad om samtykke anses ikke som samtykke.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 27. KONTROLLSKIFTE, FUSJON OG FISJON -->
+<!-- ============================================================ -->
+<article class="item">
+<div class="avoid-page-break">
+<h2>27. KONTROLLSKIFTE, FUSJON OG FISJON</h2>
+<p>Ved kontrollskifte hos Leietaker skal Leietaker, uten ugrunnet opphold etter at Leietaker fikk kjennskap til kontrollskiftet sende skriftlig melding til Utleier med opplysninger om kontrollskiftet og overtakende person, slik at Utleier til enhver tid har oppdatert informasjon over hvem som har bestemmende innflytelse over Leietaker.</p>
+</div>
+<p>Med kontrollskifte menes at i) en person (enten alene eller sammen med n&aelig;rst&aring;ende) som har bestemmende innflytelse over Leietaker ved inng&aring;elsen av leieavtalen, mister denne innflytelse (herunder ved fusjon og fisjon), eller ii) at en person f&aring;r bestemmende innflytelse over Leietaker (herunder ved fusjon og fisjon). Med person menes b&aring;de fysisk og juridisk person. Bestemmende innflytelse betyr det samme som i aksjeloven &sect; 1-3 (2), og omfatter ogs&aring; en persons indirekte innflytelse over Leietaker gjennom n&aelig;rst&aring;ende og datterselskaper som nevnt i aksjeloven &sect; 1-3 (3).</p>
+<p>Et kontrollskifte omfatter likevel ikke i) overf&oslash;ring av aksjer eller andeler til en n&aelig;rst&aring;ende, eller ii) at en person (enten alene eller sammen med n&aelig;rst&aring;ende) mister eller f&aring;r bestemmende innflytelse over et selskap som er notert p&aring; et regulert marked eller en multilateral handelsfasilitet.</p>
+<p>Leietaker kan ikke uten skriftlig forh&aring;ndssamtykke fra Utleier delta i en fusjon eller fisjon som vesentlig forringer Leietakers evne til &aring; oppfylle sine forpliktelser under leieavtalen. Foresp&oslash;rsel om samtykke skal sendes uten ugrunnet opphold etter at slik endring er besluttet. Samtykke kan nektes p&aring; fritt grunnlag. Manglende svar p&aring; foresp&oslash;rsel om samtykke anses ikke som samtykke. Mislighold av denne bestemmelsen anses som et vesentlig mislighold som gir Utleiers hevingsrett.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 28. MILJ&Oslash; OG SIRKUL&AElig;RE L&Oslash;SNINGER MV. -->
+<!-- ============================================================ -->
+<article class="item" style="page-break-before: always;">
+<div class="avoid-page-break">
+<h2>28. MILJ&Oslash; OG SIRKUL&AElig;RE L&Oslash;SNINGER MV.</h2>
+<p>Alle arbeider som utf&oslash;res av Utleier eller Leietaker i henhold til denne Leieavtalen, herunder, men ikke begrenset til, vedlikeholdsarbeider (jf. punkt 14, 15 og 16) eller andre arbeider (jf. punkt 17 og 18), skal foretas p&aring; en forskriftsmessig og h&aring;ndverksmessig god m&aring;te.</p>
+</div>
+<p>Partene skal vurdere l&oslash;sninger som minimerer ressursbruk, klimagassutslipp, og negativ p&aring;virkning p&aring; naturmangfold, samt fremmer ombruk, materialgjenvinning og bruk av fornybare ressurser. S&aring; langt det er teknisk egnet, &oslash;konomisk forsvarlig og praktisk gjennomf&oslash;rbart, skal parten som er ansvarlig for arbeidet velge milj&oslash;effektive og sirkul&aelig;re l&oslash;sninger.</p>
+<p>Ved anskaffelse av produkter eller materialer til utf&oslash;relse av arbeider, inkludert vedlikeholds- og utskiftningsplikten, skal parten som er ansvarlig for arbeidet prioritere produkter og materialer som:</p>
+<ol type="a">
+<li>er sirkul&aelig;re (f.eks. ombruksmaterialer, produkter designet for ombruk, eller materialer med h&oslash;y andel resirkulert innhold),</li>
+<li>har dokumentert lav milj&oslash;- og klimap&aring;virkning gjennom livsl&oslash;pet (f.eks. gjennom anerkjente milj&oslash;merker, milj&oslash;varedeklarasjoner eller andre sertifiseringsordninger), og</li>
+<li>ikke inneholder helse- og milj&oslash;farlige stoffer utover det som tillates i henhold til gjeldende regelverk og anerkjente bransjestandarder for b&aelig;rekraftig bygging.</li>
+</ol>
+<p>Dokumentasjon som viser vurderingene gjort i henhold til punkt 28.1-28.3, inkludert avveininger knyttet til teknisk egnethet, &oslash;konomisk forsvarlighet og praktisk gjennomf&oslash;rbarhet, samt dokumentasjon p&aring; produkters og materialers milj&oslash;egenskaper (som milj&oslash;merking), skal v&aelig;re tilgjengelig for den andre parten p&aring; foresp&oslash;rsel.</p>
+<p>Partene skal videre samarbeide om &aring; heve og videreutvikle Leieobjektets milj&oslash;standard i Leieperioden og minimere Leieobjektets negative milj&oslash;p&aring;virkninger ved for eksempel gjennomf&oslash;ring av milj&oslash;tiltak. De tiltakene som partene er enige om &aring; gjennomf&oslash;re f&oslash;lger av Bilag <span class="insert-table"><span class="insert" data-label="bilag-nr"></span></span> (Milj&oslash;avtale).</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 29. INFORMASJONSUTVEKSLING OG INNHENTING AV DATA MV. -->
+<!-- ============================================================ -->
+<article class="item">
+<div class="avoid-page-break">
+<h2>29. INFORMASJONSUTVEKSLING OG INNHENTING AV DATA MV.</h2>
+<p>Leietaker plikter &aring; medvirke til at Utleier kan innhente m&aring;le- og forbruksdata fra Leietakers leverand&oslash;rer av energi, vann, avl&oslash;p, avfall, mv. knyttet til Leieobjektet. Dette for &aring; legge til rette for at Utleier kan tilfredsstille offentligrettslige og privatrettslige krav og forventninger knyttet til rapportering, merking og sertifisering, forbruk og effektivisering, samt milj&oslash;vennlig bruk og drift av Eiendommen.</p>
+</div>
+<p>Leietaker skal innen 14 dager etter Utleiers anmodning gi fullmakt til Utleier og de tjenesteleverand&oslash;rer som Utleier utpeker til &aring; innhente forbruksdata, herunder til &aring; innhente m&aring;lepunkts ID og data for forbruk av energi. Fullmakten skal gis p&aring; den m&aring;ten Utleier fastsetter.</p>
+<p>Utleier plikter, etter skriftlig og spesifisert anmodning fra Leietaker, &aring; utlevere informasjon om Leieobjektet og/eller Eiendommen som Utleier besitter eller med rimelighet kan fremskaffe, og som er n&oslash;dvendig for at Leietaker skal kunne oppfylle sine forpliktelser til rapportering, eksempelvis i henhold til CSRD (EUs direktiv om b&aelig;rekraftsrapportering) eller annen relevant lovgivning, standarder eller bransjenormer. Slik informasjon kan omfatte, men er ikke begrenset til, data om Eiendommens energimerking, tekniske installasjoner, avfallsh&aring;ndteringssystemer, gjennomf&oslash;rte tiltak for energieffektivisering eller bruk av fornybar energi. Informasjonen skal utleveres uten ugrunnet opphold og i et egnet format.</p>
+<p>Leietaker plikter &aring; behandle all informasjon mottatt fra Utleier i henhold til dette punkt 29 konfidensielt, og kun benytte den til det form&aring;l &aring; oppfylle egne rapporteringsforpliktelser, med mindre annet er skriftlig avtalt eller informasjonen er offentlig tilgjengelig.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 30. MENNESKERETTIGHETER, HVITVASKING OG KORRUPSJON MV. -->
+<!-- ============================================================ -->
+<article class="item">
+<div class="avoid-page-break">
+<h2>30. MENNESKERETTIGHETER, HVITVASKING OG KORRUPSJON MV.</h2>
+<p>Partene er forpliktet til &aring; drive sin virksomhet slik at brudd p&aring; grunnleggende menneskerettigheter ikke oppst&aring;r og slik at anstendige l&oslash;nns- og arbeidsvilk&aring;r sikres. Partene skal videre bes&oslash;rge rimelige tiltak for &aring; unng&aring; hvitvasking, korrupsjon, brudd p&aring; sanksjonsregler og p&aring;virkningshandel knyttet til innkj&oslash;psavtaler, anbudskonkurranser og politiske beslutninger mv.</p>
+</div>
+<p>For &aring; ivareta disse pliktene skal partene etablere en internkontroll tilpasset virksomheten.</p>
+<p>Partene har rett til informasjon om hverandres dokumentasjon og systemer for &aring; ivareta pliktene etter dette punkt 30, og plikter straks og uoppfordret &aring; varsle hverandre skriftlig ved manglende oppfyllelse av disse.</p>
+<p>Dersom det etter gjeldende sanksjonsregler blir ulovlig for en av partene &aring; ha en forretningsmessig forbindelse med den andre parten i form av leiekontrakt for leie av lokaler, skal dette anses som vesentlig mislighold som gir den andre parten rett til &aring; heve leieavtalen om ikke forholdet rettes innen rimelig tid.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 31. PERSONVERN -->
+<!-- ============================================================ -->
+<article class="item">
+<div class="avoid-page-break">
+<h2>31. PERSONVERN</h2>
+<p>Utleier vil som ledd i utleie av Eiendommen kunne behandle personopplysninger som behandlingsansvarlig (ikke p&aring; vegne av Leietaker). N&aelig;rmere informasjon om slik behandling fremg&aring;r av Utleiers personvernerkl&aelig;ring.</p>
+</div>
+<p>Utleier vil ogs&aring; kunne behandle personopplysninger p&aring; vegne av Leietaker som ledd i utleie av Eiendommen. Dette inneb&aelig;rer at Utleier kan behandle personopplysninger om Leietakers ansatte, bes&oslash;kende, innleid personale eller &oslash;vrige brukere.</p>
+<p>Personopplysningsloven krever i slike tilfeller inng&aring;else av databehandleravtale mellom databehandleren (Utleier) og den behandlingsansvarlige (Leietaker). Slik databehandleravtale (Databehandleravtalen) er inntatt som Bilag <span class="insert-table"><span class="insert" data-label="bilag-nr"></span></span>.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 32. ANDRE DATA (SOM IKKE ER PERSONOPPLYSNINGER) -->
+<!-- ============================================================ -->
+<article class="avoid-page-break item">
+<h2>32. ANDRE DATA (SOM IKKE ER PERSONOPPLYSNINGER)</h2>
+<p>Utleier har rett til &aring; samle inn og r&aring;de over de data som samles inn av Utleier i forbindelse med bruk og drift av Eiendommen. Dette inneb&aelig;rer, men er ikke begrenset til, kopiering, tilgjengeliggj&oslash;ring, bearbeiding, analyse mv. Utleier vil anonymisere data slik at ikke enkeltpersoner kan identifiseres, og bruke slike anonymiserte data i aggregert form under og etter leieforholdet for &aring; tilby og videreutvikle tjenester relatert til utleie og bruk av n&aelig;ringseiendom.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 33. SAMORDNINGSAVTALE FOR BRANNFOREBYGGING -->
+<!-- ============================================================ -->
+<article class="avoid-page-break item">
+<h2>33. SAMORDNINGSAVTALE FOR BRANNFOREBYGGING</h2>
+<p>Partene har samtidig med denne leieavtalen inng&aring;tt samordningsavtale for brannforebygging som er vedlagt som Bilag <span class="insert-table"><span class="insert" data-label="bilag-nr"></span></span>.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 34. S&AElig;RLIGE BESTEMMELSER/FORBEHOLD -->
+<!-- ============================================================ -->
+<article class="avoid-page-break item">
+<h2>34. S&AElig;RLIGE BESTEMMELSER/FORBEHOLD</h2>
+<p><span class="insert-table"><span class="insert" data-label="saerlige-bestemmelser"></span></span></p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 35. FORHOLDET TIL HUSLEIELOVEN -->
+<!-- ============================================================ -->
+<article class="avoid-page-break item">
+<h2>35. FORHOLDET TIL HUSLEIELOVEN</h2>
+<p>F&oslash;lgende bestemmelser i husleieloven gjelder ikke: &sect;&sect; 2-15, 3-5, 3-6, 3-8, 4-3, 5-4 f&oslash;rste ledd, 5-8 f&oslash;rste til og med fjerde ledd, 7-5, 8-4, 8-5, 8-6 annet ledd og 10-5. For &oslash;vrig er det denne leieavtalen som gjelder i de tilfeller der den har andre bestemmelser enn hva som f&oslash;lger av husleielovens fravikelige regler.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- PUNKT 36. LOVVALG OG TVISTEL&Oslash;SNING -->
+<!-- ============================================================ -->
+<article class="avoid-page-break item">
+<h2>36. LOVVALG OG TVISTEL&Oslash;SNING</h2>
+<p>Denne leieavtalen reguleres av norsk rett.</p>
+<p>Eiendommens verneting vedtas i alle tvister som gjelder leieavtalen.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- BILAG TIL LEIEAVTALEN -->
+<!-- ============================================================ -->
+<article class="item" style="page-break-before: always;">
+<h2>BILAG TIL LEIEAVTALEN</h2>
+<table class="bilag-table">
+<tbody>
+<tr>
+  <td style="width:120px;">Bilag 1:</td>
+  <td>Firmaattest/legitimasjon for Utleier og Leietaker og eventuelle fullmakter</td>
+</tr>
+<tr>
+  <td>Bilag 2:</td>
+  <td>Tegninger</td>
+</tr>
+<tr>
+  <td>
+    <strong>[NYE:]</strong> Bilag 3:</td>
+  <td>Kravspesifikasjon</td>
+</tr>
+<tr>
+  <td>Bilag <span class="insert-table"><span class="insert" data-label="bilag-nr"></span></span>:</td>
+  <td>[S&aelig;rregulering for parkeringsplasser]</td>
+</tr>
+<tr>
+  <td><strong>[BRUKT:]</strong> Bilag <span class="insert-table"><span class="insert" data-label="bilag-nr"></span></span>:</td>
+  <td>[Arbeider som Utleier skal utf&oslash;re i Leieobjektet f&oslash;r Overtakelse]</td>
+</tr>
+<tr>
+  <td>Bilag <span class="insert-table"><span class="insert" data-label="bilag-nr"></span></span>:</td>
+  <td>Skjema for overtakelsesprotokoll</td>
+</tr>
+<tr>
+  <td>Bilag <span class="insert-table"><span class="insert" data-label="bilag-nr"></span></span>:</td>
+  <td>Eksempler p&aring; kostnader som inng&aring;r i Felleskostnadene, samt fordelingsn&oslash;kkelen</td>
+</tr>
+<tr>
+  <td>Bilag <span class="insert-table"><span class="insert" data-label="bilag-nr"></span></span>:</td>
+  <td>[Tegninger med spesifisering av areal som omfattes av mva.-registreringen]</td>
+</tr>
+<tr>
+  <td>Bilag <span class="insert-table"><span class="insert" data-label="bilag-nr"></span></span>:</td>
+  <td>[S&aelig;rskilt avtalt sikkerhetsstillelse]</td>
+</tr>
+<tr>
+  <td>Bilag <span class="insert-table"><span class="insert" data-label="bilag-nr"></span></span>:</td>
+  <td>[Milj&oslash;avtale]</td>
+</tr>
+<tr>
+  <td>Bilag <span class="insert-table"><span class="insert" data-label="bilag-nr"></span></span>:</td>
+  <td>[Databehandleravtale]</td>
+</tr>
+<tr>
+  <td>Bilag <span class="insert-table"><span class="insert" data-label="bilag-nr"></span></span>:</td>
+  <td>Samordningsavtale for brannforebygging</td>
+</tr>
+</tbody>
+</table>
+</article>
+
+<!-- ============================================================ -->
+<!-- SIGNATUR -->
+<!-- ============================================================ -->
+<article class="item" style="page-break-before: always;">
+<div class="avoid-page-break">
+<h2>SIGNATUR</h2>
+<p>Denne leieavtalen er inng&aring;tt <span class="insert-table"><span class="insert" data-label="signatur.dato"></span></span>, undertegnet elektronisk og sendt partene <span class="insert-table"><span class="insert" data-label="megler-valg"></span></span> per e-post.</p>
+
+<table style="width:100%; margin-top:40px;">
+<tbody>
+<tr>
+  <td style="width:50%; text-align:left; vertical-align:bottom;">
+    <p>for Utleier</p>
+    <br /><br />
+    <p style="border-bottom: solid 1px #000; width: 200px;">&nbsp;</p>
+    <p><span class="insert-table"><span class="insert" data-label="utleier.representant"></span></span></p>
+  </td>
+  <td style="width:50%; text-align:left; vertical-align:bottom;">
+    <p>for Leietaker</p>
+    <br /><br />
+    <p style="border-bottom: solid 1px #000; width: 200px;">&nbsp;</p>
+    <p><span class="insert-table"><span class="insert" data-label="leietaker.representant"></span></span></p>
+  </td>
+</tr>
+</tbody>
+</table>
+</div>
+</article>
+
+  </td>
+</tr>
+</tbody>
+</table>
+</div>

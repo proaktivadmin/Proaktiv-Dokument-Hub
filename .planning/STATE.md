@@ -8,16 +8,16 @@
 See: .planning/PROJECT.md (updated 2026-01-23)
 
 **Core value:** Brokers can manage and preview document templates without touching code
-**Current focus:** Phase 06 Testing OR Phase 07 Office Enhancements
+**Current focus:** Phase 11 — Template production pipeline + QA testing
 
 ## Current Position
 
-Phase: 3.9.4 (Signature Page Self-Service Enhancements)
-Plan: Editable fields, setup instructions, photo hyperlink on signature landing page
-Status: Deployed to production (Vercel + Railway)
-Last activity: 2026-02-02 — Self-service signature editing, platform instructions, photo upload (hidden)
+Phase: 11 (HTML Template Management & Publishing Suite)
+Plan: Subagent-driven template builder pipeline — 3-phase orchestrator with 6 specialized subagents
+Status: 9 production templates delivered, subagent pipeline designed and validated, file structure reorganized
+Last activity: 2026-02-22 — Template builder sprint complete, preparing for signoff
 
-Progress: [████████░░] 80% (Photo upload feature on hold, pending WebDAV testing)
+Progress: [██████░░░░] 60% (9 templates built, pipeline operational, 14 source docs in backlog)
 
 ## Performance Metrics
 
@@ -70,12 +70,82 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-02
-Stopped at: V3.9.4 Self-service signature enhancements deployed, photo upload hidden
+Last session: 2026-02-22
+Stopped at: Template builder sprint complete — 9 production templates, subagent pipeline, file restructure committed
 Resume file: N/A
-Next step: Test WebDAV photo upload (credentials configured on Railway), or deploy signature emails
+Next step: Manual QA of production templates via Testfletting, then continue backlog conversion (14 remaining source docs)
 
-### Session Summary (2026-02-02 - Latest)
+### Session Summary (2026-02-22 - Latest)
+
+**V4.1 Template Builder Sprint + Subagent Pipeline (2026-02-22):**
+
+This session delivered the full template builder sprint: 9 production-ready Vitec Next HTML templates, a new subagent pipeline architecture, comprehensive documentation, and a reorganized file structure.
+
+**Commit: `7e1e7ef` — Template builder pipeline with subagent architecture**
+- 88 files changed, 26,667 insertions
+
+**Production templates delivered (9):**
+
+| Template | Type | Size |
+|----------|------|------|
+| Kjopekontrakt prosjekt (leilighet) | Contract | 51 KB |
+| Kjopekontrakt prosjekt (enebolig) | Contract | 38 KB |
+| Kjopekontrakt prosjekt (profesjonell) | Contract | 51 KB |
+| Generalfullmakt | Legal form | 12 KB |
+| Leieavtale naeringsbygg | Standard form | 70 KB |
+| Leieavtale naeringslokaler | Standard form | 61 KB |
+| Meglerstandard eiendom | Standard form | 102 KB |
+| Forlengelse av oppdrag | Letter | 8 KB |
+| Forlengelse av oppdrag (epost) | Email | 4 KB |
+
+**Subagent pipeline architecture (new):**
+- 3-phase orchestrator: Analysis (3 parallel) → Construction (1 sequential) → Validation (2 parallel)
+- 6 specialized subagents: Structure Analyzer, Field Mapper, Logic Mapper, Builder, Static Validator, Content Verifier
+- Structured output formats for subagent handoffs (`scripts/_analysis/FORMAT_*.md`)
+- Prompt templates in `.planning/phases/11-template-suite/SUBAGENT-PROMPTS.md`
+- Orchestrator spec in `.planning/phases/11-template-suite/AGENT-2B-TEMPLATE-BUILDER.md`
+
+**File structure reorganization:**
+- `scripts/production/` — QA-ready HTML files (grab for testing)
+- `scripts/handoffs/` — build summaries per template
+- `scripts/tools/` — validator, preview, batch scripts
+- `scripts/sources/` — original .htm/.docx files
+- `scripts/intermediates/` — raw extractions
+- `scripts/_analysis/` — subagent outputs + format templates
+
+**Documentation:**
+- Vitec HTML ruleset split into 15 modular files (`.planning/vitec-html-ruleset/`)
+- vitec-if deep analysis, field registry, V2 analysis report
+- Production template pipeline expanded to 15 sections
+- Updated SKILL.md with orchestrator flow and quality checklist
+- Golden standard templates added for reference
+
+**Backlog:** 14 unconverted source documents remain in `scripts/converted_html/`
+
+### Session Summary (2026-02-22 - Earlier)
+
+**V4.0 Phase 11 Foundation + Infrastructure Fixes (2026-02-21 to 2026-02-22):**
+
+This session delivered the Phase 11 HTML Template Management & Publishing Suite foundation, a dedicated notifications page, Vitec picture proxy restoration, editor fixes, and a critical CSP fix.
+
+**Commits (oldest first):**
+
+1. **`a790f38` — Phase 11: HTML Template Management & Publishing Suite**
+   - 39 files changed, 19,352 insertions
+   - Full multi-agent plan: 6 agent specs in `.planning/phases/11-template-suite/`
+   - Backend services: `WordConversionService`, `TemplateComparisonService`, `TemplateDedupService`, `TemplateWorkflowService`, `TemplateAnalysisAIService`
+   - Frontend pages: `/templates/[id]/edit`, `/templates/dedup`
+   - Documentation: `vitec-html-ruleset.md` (4,087 lines), `Alle-flettekoder-25.9.md` (6,493 lines)
+
+2. **`63a5ff7` — RTF support, A3 validation fix, dedup improvements**
+
+3. **`48c7a3b` — Notifications page, Vitec picture proxy, editor fixes**
+
+4. **`ed58bb3` — CSP fix for Monaco Editor and CKEditor CDN**
+
+**Deployed to Vercel:** ✅ Production build successful, all pages rendering
+
+### Session Summary (2026-02-02 - Previous)
 
 **V3.9.4 Signature Page Self-Service Enhancements (Completed):**
 
@@ -267,6 +337,8 @@ Files modified:
 
 | Version | Date       | Key Changes                                                |
 | ------- | ---------- | ---------------------------------------------------------- |
+| V4.1    | 2026-02-22 | 9 production templates, subagent pipeline, file restructure |
+| V4.0    | 2026-02-22 | Phase 11 Template Suite foundation, notifications page, CSP fix |
 | V3.9.4  | 2026-02-02 | Signature self-service editing, setup instructions, photo link |
 | V3.9.3  | 2026-02-01 | Signature template hardening, reply-chain resilience, Maps link |
 | V3.11   | 2026-01-28 | Territory seeding (1732), dashboard 500 fixes, office sync |
@@ -285,42 +357,33 @@ Files modified:
 
 ## Ready for Next Steps
 
-### Option A: WebDAV Employee Photos (RECOMMENDED)
+### Option A: Manual QA of Production Templates (RECOMMENDED)
 
-Replace Vitec API base64 images with WebDAV-hosted photos for faster loading.
+9 production templates in `scripts/production/`. For each template:
+1. Open in Vitec Next CKEditor (paste HTML)
+2. Run Testfletting against a test property
+3. Verify PDF rendering: page breaks, checkboxes, conditional sections, merge fields
+4. If satisfied, commit to template database
 
-```powershell
-# 1. Upload photos to WebDAV
-cd backend
-python scripts/upload_employee_photos.py --photos-dir "C:\Users\Adrian\Documents\ProaktivPhotos\webdav-upload" --dry-run
+### Option B: Continue Template Backlog
 
-# 2. Update database URLs
-python scripts/update_photo_urls_webdav.py --dry-run   # Preview
-python scripts/update_photo_urls_webdav.py             # Apply
-```
+14 unconverted source documents in `scripts/converted_html/`. To convert:
+1. Move source to `scripts/sources/`
+2. Open new agent session, reference `.agents/skills/vitec-template-builder/SKILL.md`
+3. Orchestrator launches subagents automatically
+4. Output lands in `scripts/production/`
 
-**Scripts ready:** `upload_employee_photos.py`, `update_photo_urls_webdav.py`  
-**Photos downloaded:** 184 in `C:\Users\Adrian\Documents\ProaktivPhotos\webdav-upload\`
+### Option C: Template Library Inventory Refresh
 
-### Option B: Complete Signature QA
+A Vitec Next export (`vitec-next-export.json`, 247 templates) has metadata but no content.
+Needs a content-fetch pass to backfill HTML bodies before library reset.
 
-- QA plan: `.cursor/plans/signature_qa_testing_01ae0f96.plan.md`
-- Stage 3: Email client rendering (Outlook, Gmail, Apple Mail)
-- Stage 4: Mobile device testing
-- Stage 5: Edge cases and error states
+### Option D: Remaining Infrastructure
 
-### Option C: Deploy Signature Emails
-
-- Set environment variables (SIGNATURE_SENDER_EMAIL, FRONTEND_URL)
-- Add Mail.Send permission in Azure Portal
-- Run `.\backend\scripts\Send-SignatureEmails.ps1 -DryRun` to test
-- Run `.\backend\scripts\Send-SignatureEmails.ps1` for full rollout
-
-### Option D: Phase 07 (Office Enhancements)
-
-- 8 execution plans ready
-- Region grouping, office merge, SalesScreen
-- Can run in parallel with other work
+- **DB Migration:** `20260221_0001_template_publishing.py` — needs manual apply to Railway
+- **WebDAV Employee Photos** — replace base64 with hosted photos
+- **Signature Email Deployment** — Send-SignatureEmails.ps1
+- **Notifications Page Polish** — approval workflow, batch actions
 
 ---
 

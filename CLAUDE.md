@@ -10,7 +10,7 @@ A document template management system for Norwegian real estate brokers, integra
 
 | Aspect         | Details                                                |
 | -------------- | ------------------------------------------------------ |
-| **Phase**      | 3.9.4 (Signature Page Self-Service Enhancements)       |
+| **Phase**      | 11 (HTML Template Management & Publishing Suite)       |
 | **Stack**      | Next.js 16 + React 19 + FastAPI + PostgreSQL (Railway) |
 | **UI**         | Shadcn/UI + Tailwind CSS 4 + Custom Design Tokens      |
 | **Hosting**    | Vercel (Frontend) + Railway (Backend + PostgreSQL)     |
@@ -101,10 +101,15 @@ backend/
 ├── app/
 │   ├── models/      # SQLAlchemy models
 │   ├── services/    # Business logic (async)
-│   │   ├── sanitizer_service.py   # Vitec Stilark compliance
-│   │   ├── webdav_service.py      # WebDAV client
-│   │   ├── inventory_service.py   # Template sync stats
-│   │   └── image_service.py       # Avatar resizing/cropping
+│   │   ├── sanitizer_service.py          # Vitec Stilark compliance
+│   │   ├── webdav_service.py             # WebDAV client
+│   │   ├── inventory_service.py          # Template sync stats
+│   │   ├── image_service.py              # Avatar resizing/cropping
+│   │   ├── word_conversion_service.py    # DOCX/RTF → HTML conversion
+│   │   ├── template_comparison_service.py # AI-powered template diff
+│   │   ├── template_dedup_service.py     # Duplicate detection
+│   │   ├── template_workflow_service.py  # Publish workflow states
+│   │   └── template_analysis_ai_service.py # AI analysis engine
 │   ├── routers/     # FastAPI endpoints
 │   └── schemas/     # Pydantic models
 
@@ -114,11 +119,15 @@ frontend/
 │   │   ├── assets/  # Mediefiler page (logos, global assets)
 │   │   ├── storage/ # WebDAV browser page
 │   │   ├── portal/  # Portal skins preview page
+│   │   ├── notifications/ # Dedicated notification history page
+│   │   ├── templates/[id]/edit/ # Full template editor page
+│   │   ├── templates/dedup/ # Deduplication dashboard
 │   │   └── signature/[id]/ # Public signature copy page
 │   ├── components/  # React components
 │   │   ├── assets/  # Asset gallery, LogoLibrary
 │   │   ├── storage/ # Storage browser components
 │   │   ├── portal/  # Portal mockup components
+│   │   ├── editor/  # CKEditorSandbox, MergeField*, TemplateComparison, Dedup
 │   │   └── notifications/ # NotificationDropdown, NotificationItem
 │   ├── hooks/       # Custom hooks
 │   │   └── use-notifications.ts # Notification polling hook
@@ -205,6 +214,27 @@ Railway's internal networking causes Alembic migrations to fail silently during 
 **Symptoms of failed migration:** `UndefinedColumnError`, `MissingGreenlet`, 500 errors on previously working endpoints.
 
 ---
+
+**V4.0 Phase 11 Foundation + Infrastructure Fixes (2026-02-22):**
+
+- ✅ **Phase 11 Template Suite foundation** — 6-agent architecture planned and partially implemented
+- ✅ Backend: `WordConversionService` (DOCX/RTF→HTML via mammoth+striprtf), `TemplateComparisonService`, `TemplateDedupService`, `TemplateWorkflowService`, `TemplateAnalysisAIService`
+- ✅ Backend: New schemas (`template_comparison`, `template_dedup`, `template_workflow`, `word_conversion`)
+- ✅ Backend: Migration `20260221_0001_template_publishing.py` (publishing fields on templates)
+- ✅ Frontend: `/templates/[id]/edit` page, `/templates/dedup` dashboard
+- ✅ Frontend: `CKEditorSandbox`, `DeduplicationDashboard`, `MergeFieldAutocomplete`, `MergeFieldHighlighter`, `MergeFieldPanel`, `TemplateComparison`, `WordConversionDialog`
+- ✅ Frontend: Extended `lib/api.ts` with template workflow, comparison, dedup, and conversion endpoints
+- ✅ Documentation: `vitec-html-ruleset.md` (4,087 lines), `docs/Alle-flettekoder-25.9.md` (6,493 lines), `docs/vitec-stilark.md`
+- ✅ **Notifications page** at `/notifications` — filterable, date-grouped, expandable metadata, mark-read/delete
+- ✅ **Vitec picture proxy** re-enabled — `GET /api/vitec/employees/{id}/picture` and `/departments/{id}/picture`
+- ✅ **Picture sync integration** — Sync buttons now also fetch pictures from Vitec Hub
+- ✅ **CSP fix** — Added `cdn.jsdelivr.net` + `cdn.ckeditor.com` to `script-src` (fixed Monaco Editor loading)
+- ✅ **CKEditor CDN fix** — Updated `4.25.1` → `4.25.1-lts` (old URL 404'd)
+- ✅ **"Normaliser til Vitec" UX** — No longer auto-saves; shows persistent unsaved-changes banner
+- ✅ **Office banner fallback** — `onError` handler falls back to colored background
+- ⚠️ **Migration pending**: `20260221_0001_template_publishing.py` needs manual apply to Railway
+- Plans: `.planning/phases/11-template-suite/PLAN.md` + `AGENT-1` through `AGENT-6`
+- Library reset script: `backend/scripts/library_reset.py`
 
 **V3.7 Territory Seeding & Dashboard Fixes (Completed 2026-01-28):**
 
