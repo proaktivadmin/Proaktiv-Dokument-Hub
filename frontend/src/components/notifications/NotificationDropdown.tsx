@@ -19,6 +19,7 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
   const {
     notifications,
     unreadCount,
+    total,
     isLoading,
     refresh,
     markAsRead,
