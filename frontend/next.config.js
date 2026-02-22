@@ -24,11 +24,12 @@ const backendUrl = (process.env.BACKEND_URL
  */
 const cspHeader = `
   default-src 'self';
-  script-src 'self' 'unsafe-inline' ${isDev ? "'unsafe-eval'" : ''};
-  style-src 'self' 'unsafe-inline';
+  script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdn.ckeditor.com;
+  style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
   img-src 'self' blob: data: https://proaktiv.no https://*.proaktiv.no https://*.sentry.io https://*.openstreetmap.org;
-  font-src 'self' data:;
-  connect-src 'self' ${backendUrl} https://*.sentry.io https://*.ingest.sentry.io wss://*.sentry.io ${isDev ? 'ws://localhost:* http://localhost:*' : ''};
+  font-src 'self' data: https://cdn.jsdelivr.net;
+  worker-src 'self' blob:;
+  connect-src 'self' ${backendUrl} https://*.sentry.io https://*.ingest.sentry.io wss://*.sentry.io https://cdn.jsdelivr.net ${isDev ? 'ws://localhost:* http://localhost:*' : ''};
   frame-ancestors 'none';
   base-uri 'self';
   form-action 'self';
