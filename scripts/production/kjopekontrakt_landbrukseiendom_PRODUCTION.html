@@ -1,0 +1,867 @@
+<div id="vitecTemplate">
+<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">
+/* Counter system - retained for structure, but disabled for this template heading format */
+#vitecTemplate { counter-reset: section; }
+#vitecTemplate article.item:not(article.item article.item) {
+  counter-increment: section;
+  counter-reset: subsection;
+}
+#vitecTemplate article.item article.item { counter-increment: subsection; }
+#vitecTemplate article.item:not(article.item article.item) h2::before {
+  content: none;
+}
+#vitecTemplate article.item article.item h3::before {
+  content: none;
+}
+
+/* Heading styles */
+#vitecTemplate h1 { text-align: center; font-size: 14pt; margin: 0; padding: 0; }
+#vitecTemplate h2 { font-size: 11pt; margin: 30px 0 0 -20px; padding: 0; text-align: center; }
+#vitecTemplate h3 { font-size: 10pt; margin: 20px 0 0 0; padding: 0; }
+
+/* Article/section layout */
+#vitecTemplate article { padding-left: 20px; }
+#vitecTemplate article article { padding-left: 0; }
+#vitecTemplate .avoid-page-break { page-break-inside: avoid; }
+
+/* Table base styles */
+#vitecTemplate table { width: 100%; table-layout: fixed; }
+
+/* Roles table */
+#vitecTemplate .roles-table { width: 100%; table-layout: fixed; border-collapse: collapse; }
+#vitecTemplate .roles-table th { text-align: left; padding: 4px 6px; border-bottom: 1px solid #000; }
+#vitecTemplate .roles-table td { padding: 4px 6px; vertical-align: top; }
+#vitecTemplate .roles-table tbody:last-child tr:last-child td { display: none; }
+
+/* Costs table */
+#vitecTemplate .costs-table { width: 100%; table-layout: fixed; border-collapse: collapse; }
+#vitecTemplate .costs-table td { padding: 2px 6px; vertical-align: top; }
+#vitecTemplate .costs-table tr.sum-row td { border-top: 1px solid #000; font-weight: bold; }
+
+/* Lists */
+#vitecTemplate ul { list-style-type: disc; margin-left: 0; }
+#vitecTemplate ul li { list-style-position: outside; line-height: 20px; margin-left: 0; }
+#vitecTemplate .liste:last-child .separator { display: none; }
+
+/* Bookmark cross-references */
+#vitecTemplate a.bookmark { color: #000; font-style: italic; text-decoration: none; }
+
+/* Insert fields (matches reference pattern) */
+span.insert:empty {
+  font-size: inherit !important;
+  line-height: inherit !important;
+  display: inline-block;
+  background-color: lightpink;
+  min-width: 2em !important;
+  height: .7em !important;
+  text-align: center;
+}
+span.insert:empty:before {
+  content: attr(data-label);
+}
+span.insert:empty:hover {
+  background-color: #fff;
+  cursor: pointer;
+}
+.insert-table {
+  display: inline-table;
+}
+.insert-table > span,
+.insert-table > span.insert {
+  display: table-cell;
+}
+
+/* Inline list with separator */
+#vitecTemplate .liste { display: inline; }
+#vitecTemplate .liste .separator { display: inline; }
+#vitecTemplate .liste .separator:first-child { display: none; }
+</style>
+<style type="text/css">/* Klikkbare sjekkbokser og radioknapper */
+label.btn {
+  display: inline;
+  text-transform: none;
+  white-space: normal;
+  padding: 0;
+  vertical-align: baseline;
+  outline: none;
+  font-size: inherit;
+}
+label.btn:active,
+label.btn.active {
+  box-shadow: none;
+  outline: none;
+}
+.svg-toggle {
+  display: inline-block !important;
+  width: 16px;
+  height: 16px;
+  margin: 0 5px;
+  vertical-align: bottom;
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none !important;
+  cursor: pointer;
+  white-space: normal;
+  text-align: left;
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+  background-position: center center;
+}
+.svg-toggle.checkbox {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+}
+.svg-toggle.checkbox.active,
+.btn.active > .svg-toggle.checkbox {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+  box-shadow: none !important;
+}
+#vitecTemplate [data-toggle="buttons"] input {
+  display: none;
+}
+</style>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="100" style="text-align:right">
+        <small>
+          Meglerforetakets org.nr: <strong><span vitec-if="Model.meglerkontor.orgnr != &quot;&quot; &amp;&amp; Model.meglerkontor.orgnr != &quot;Mangler data&quot;">[[meglerkontor.orgnr]]</span><span vitec-if="Model.meglerkontor.orgnr == &quot;&quot;"><span class="insert-table"><span class="insert" data-label="org.nr"></span></span></span><span vitec-if="Model.meglerkontor.orgnr == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="org.nr"></span></span></span></strong><br />
+          Oppdragsnr.:&nbsp;<strong><span vitec-if="Model.oppdrag.nr != &quot;&quot; &amp;&amp; Model.oppdrag.nr != &quot;Mangler data&quot;">[[oppdrag.nr]]</span><span vitec-if="Model.oppdrag.nr == &quot;&quot;"><span class="insert-table"><span class="insert" data-label="oppdragsnr"></span></span></span><span vitec-if="Model.oppdrag.nr == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="oppdragsnr"></span></span></span></strong><br />
+          Omsetningsnr.:&nbsp;<strong><span vitec-if="Model.kontrakt.formidling.nr != &quot;&quot; &amp;&amp; Model.kontrakt.formidling.nr != &quot;Mangler data&quot;">[[kontrakt.formidling.nr]]</span><span vitec-if="Model.kontrakt.formidling.nr == &quot;&quot;"><span class="insert-table"><span class="insert" data-label="omsetningsnr"></span></span></span><span vitec-if="Model.kontrakt.formidling.nr == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="omsetningsnr"></span></span></span></strong>
+        </small>
+      </td>
+    </tr>
+    <tr><td colspan="100">&nbsp;</td></tr>
+    <tr>
+      <td colspan="100">
+
+<!-- ============================================================ -->
+<!-- PREAMBLE -->
+<!-- ============================================================ -->
+
+<div class="avoid-page-break">
+<table style="width:100%; table-layout:fixed;">
+  <tbody>
+    <tr>
+      <td colspan="25" style="vertical-align:top;"><strong>Megler:</strong></td>
+      <td colspan="75" style="vertical-align:top;"><span vitec-if="Model.meglerkontor.navn != &quot;&quot; &amp;&amp; Model.meglerkontor.navn != &quot;Mangler data&quot;">[[meglerkontor.navn]]</span><span vitec-if="Model.meglerkontor.navn == &quot;&quot;"><span class="insert-table"><span class="insert" data-label="Meglerforetak"></span></span></span><span vitec-if="Model.meglerkontor.navn == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="Meglerforetak"></span></span></span> Foretaksregisteret orgnr. <span vitec-if="Model.meglerkontor.orgnr != &quot;&quot; &amp;&amp; Model.meglerkontor.orgnr != &quot;Mangler data&quot;">[[meglerkontor.orgnr]]</span><span vitec-if="Model.meglerkontor.orgnr == &quot;&quot;"><span class="insert-table"><span class="insert" data-label="org.nr"></span></span></span><span vitec-if="Model.meglerkontor.orgnr == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="org.nr"></span></span></span>MVA</td>
+    </tr>
+    <tr>
+      <td colspan="25" style="vertical-align:top;"><strong>Type oppdrag:</strong></td>
+      <td colspan="75" style="vertical-align:top;"><span vitec-if="Model.oppdrag.type != &quot;&quot; &amp;&amp; Model.oppdrag.type != &quot;Mangler data&quot;">[[oppdrag.type]]</span><span vitec-if="Model.oppdrag.type == &quot;&quot;"><span class="insert-table"><span class="insert" data-label="Type oppdrag"></span></span></span><span vitec-if="Model.oppdrag.type == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="Type oppdrag"></span></span></span></td>
+    </tr>
+    <tr>
+      <td colspan="25" style="vertical-align:top;"><strong>Eierform:</strong></td>
+      <td colspan="75" style="vertical-align:top;"><span vitec-if="Model.eiendom.eieform != &quot;&quot; &amp;&amp; Model.eiendom.eieform != &quot;Mangler data&quot;">[[eiendom.eieform]]</span><span vitec-if="Model.eiendom.eieform == &quot;&quot;"><span class="insert-table"><span class="insert" data-label="Eierform"></span></span></span><span vitec-if="Model.eiendom.eieform == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="Eierform"></span></span></span></td>
+    </tr>
+    <tr>
+      <td colspan="25" style="vertical-align:top;"><strong>Oppdragsnr:</strong></td>
+      <td colspan="75" style="vertical-align:top;"><span vitec-if="Model.oppdrag.nr != &quot;&quot; &amp;&amp; Model.oppdrag.nr != &quot;Mangler data&quot;">[[oppdrag.nr]]</span><span vitec-if="Model.oppdrag.nr == &quot;&quot;"><span class="insert-table"><span class="insert" data-label="Oppdragsnr"></span></span></span><span vitec-if="Model.oppdrag.nr == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="Oppdragsnr"></span></span></span></td>
+    </tr>
+    <tr>
+      <td colspan="25" style="vertical-align:top;"><strong>Omsetningsnr:</strong></td>
+      <td colspan="75" style="vertical-align:top;"><span vitec-if="Model.kontrakt.formidling.nr != &quot;&quot; &amp;&amp; Model.kontrakt.formidling.nr != &quot;Mangler data&quot;">[[kontrakt.formidling.nr]]</span><span vitec-if="Model.kontrakt.formidling.nr == &quot;&quot;"><span class="insert-table"><span class="insert" data-label="Omsetningsnr"></span></span></span><span vitec-if="Model.kontrakt.formidling.nr == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="Omsetningsnr"></span></span></span></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>&nbsp;</p>
+
+<h1>KJ&Oslash;PEKONTRAKT</h1>
+
+<p>&nbsp;</p>
+
+<p>For salg av landbrukseiendom der det er tatt forbehold i salgsoppgaven om at eiendommen er solgt &quot;som den er&quot;.</p>
+
+<p>&nbsp;</p>
+
+<div vitec-if="Model.oppdrag.hovedtype == &quot;Oppgj\xF8rsoppdrag&quot;">
+<p>Ved oppgj&oslash;rsoppdrag gjelder f&oslash;lgende, s&aelig;rskilte ansvarsbegrensning: Avtalen om kj&oslash;p er inng&aring;tt mellom partene direkte, og megler skal kun bist&aring; med &aring; utarbeide kontrakt basert p&aring; partenes avtale, foreta tinglysing og gjennomf&oslash;re oppgj&oslash;r i tr&aring;d med partenes avtale. Megler har ikke vurdert eiendommens verdi, og b&aring;de kj&oslash;per og kj&oslash;pers l&aring;ngivere oppfordres til selv &aring; unders&oslash;ke hvorvidt den avtalte kj&oslash;pesummen reflekterer eiendommens verdi. Megler har ikke noe erstatningsrettslig ansvar overfor kj&oslash;per eller kj&oslash;pers l&aring;ngivere for eventuelt &oslash;konomisk tap som f&oslash;lge av eventuelt avvik mellom den avtalte kj&oslash;pesummen og eiendommens reelle verdi.</p>
+<p>&nbsp;</p>
+</div>
+
+<p>Kontraktens bestemmelser utfylles av lov 3. juli 1992 nr. 93 om avhending av fast eigedom (avhendingslova) og annen bakgrunnsrett.</p>
+
+<p>&nbsp;</p>
+
+<!-- Party block: Selger -->
+<p><strong><em>Mellom</em></strong></p>
+
+<div vitec-if="Model.selgere.Count &gt; 0">
+<table class="roles-table">
+<thead>
+<tr>
+  <th colspan="34"><strong>Navn</strong></th>
+  <th colspan="48"><strong>Adresse</strong></th>
+  <th colspan="18"><strong><span vitec-if="Model.selger.ledetekst_fdato_orgnr != &quot;&quot; &amp;&amp; Model.selger.ledetekst_fdato_orgnr != &quot;Mangler data&quot;">[[selger.ledetekst_fdato_orgnr]]</span><span vitec-if="Model.selger.ledetekst_fdato_orgnr == &quot;&quot;">F.dato/Org.nr</span><span vitec-if="Model.selger.ledetekst_fdato_orgnr == &quot;Mangler data&quot;">F.dato/Org.nr</span></strong></th>
+</tr>
+</thead>
+<tbody vitec-foreach="selger in Model.selgere">
+<tr>
+  <td colspan="34"><span vitec-if="selger.navnutenfullmektigogkontaktperson != &quot;&quot; &amp;&amp; selger.navnutenfullmektigogkontaktperson != &quot;Mangler data&quot;">[[*selger.navnutenfullmektigogkontaktperson]]</span><span vitec-if="selger.navnutenfullmektigogkontaktperson == &quot;&quot;"><span class="insert-table"><span class="insert" data-label="Selgers navn"></span></span></span><span vitec-if="selger.navnutenfullmektigogkontaktperson == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="Selgers navn"></span></span></span></td>
+  <td colspan="48"><span vitec-if="selger.gatenavnognr != &quot;&quot; &amp;&amp; selger.gatenavnognr != &quot;Mangler data&quot;">[[*selger.gatenavnognr]], [[*selger.postnr]] [[*selger.poststed]]</span><span vitec-if="selger.gatenavnognr == &quot;&quot;"><span class="insert-table"><span class="insert" data-label="Adresse"></span></span></span><span vitec-if="selger.gatenavnognr == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="Adresse"></span></span></span></td>
+  <td colspan="18"><span vitec-if="selger.fdato_orgnr != &quot;&quot; &amp;&amp; selger.fdato_orgnr != &quot;Mangler data&quot;">[[*selger.fdato_orgnr]]</span><span vitec-if="selger.fdato_orgnr == &quot;&quot;"><span class="insert-table"><span class="insert" data-label="F.dato/Org.nr"></span></span></span><span vitec-if="selger.fdato_orgnr == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="F.dato/Org.nr"></span></span></span></td>
+</tr>
+<tr>
+  <td colspan="100">
+    <span vitec-if="selger.tlf != &quot;&quot;">Mob: [[*selger.tlf]]</span>
+    <span vitec-if="(selger.tlf != &quot;&quot; &amp;&amp; selger.emailadresse != &quot;&quot;)"> / </span>
+    <span vitec-if="selger.emailadresse != &quot;&quot;">E-post: [[*selger.emailadresse]]</span>
+  </td>
+</tr>
+<tr><td colspan="100">&nbsp;</td></tr>
+</tbody>
+</table>
+</div>
+<div vitec-if="Model.selgere.Count == 0">
+  <p>[Mangler selger]</p>
+</div>
+
+<p>heretter kalt <strong><em>selgeren</em></strong>, og</p>
+
+<p>&nbsp;</p>
+
+<!-- Party block: Kjoper -->
+<div vitec-if="Model.kjopere.Count &gt; 0">
+<table class="roles-table">
+<thead>
+<tr>
+  <th colspan="34"><strong>Navn</strong></th>
+  <th colspan="48"><strong>Adresse</strong></th>
+  <th colspan="18"><strong><span vitec-if="Model.kjoper.ledetekst_fdato_orgnr != &quot;&quot; &amp;&amp; Model.kjoper.ledetekst_fdato_orgnr != &quot;Mangler data&quot;">[[kjoper.ledetekst_fdato_orgnr]]</span><span vitec-if="Model.kjoper.ledetekst_fdato_orgnr == &quot;&quot;">F.dato/Org.nr</span><span vitec-if="Model.kjoper.ledetekst_fdato_orgnr == &quot;Mangler data&quot;">F.dato/Org.nr</span></strong></th>
+</tr>
+</thead>
+<tbody vitec-foreach="kjoper in Model.kjopere">
+<tr>
+  <td colspan="34"><span vitec-if="kjoper.navnutenfullmektigogkontaktperson != &quot;&quot; &amp;&amp; kjoper.navnutenfullmektigogkontaktperson != &quot;Mangler data&quot;">[[*kjoper.navnutenfullmektigogkontaktperson]]</span><span vitec-if="kjoper.navnutenfullmektigogkontaktperson == &quot;&quot;"><span class="insert-table"><span class="insert" data-label="Kj&oslash;pers navn"></span></span></span><span vitec-if="kjoper.navnutenfullmektigogkontaktperson == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="Kj&oslash;pers navn"></span></span></span></td>
+  <td colspan="48"><span vitec-if="kjoper.gatenavnognr != &quot;&quot; &amp;&amp; kjoper.gatenavnognr != &quot;Mangler data&quot;">[[*kjoper.gatenavnognr]], [[*kjoper.postnr]] [[*kjoper.poststed]]</span><span vitec-if="kjoper.gatenavnognr == &quot;&quot;"><span class="insert-table"><span class="insert" data-label="Adresse"></span></span></span><span vitec-if="kjoper.gatenavnognr == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="Adresse"></span></span></span></td>
+  <td colspan="18"><span vitec-if="kjoper.fdato_orgnr != &quot;&quot; &amp;&amp; kjoper.fdato_orgnr != &quot;Mangler data&quot;">[[*kjoper.fdato_orgnr]]</span><span vitec-if="kjoper.fdato_orgnr == &quot;&quot;"><span class="insert-table"><span class="insert" data-label="F.dato/Org.nr"></span></span></span><span vitec-if="kjoper.fdato_orgnr == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="F.dato/Org.nr"></span></span></span></td>
+</tr>
+<tr>
+  <td colspan="100">
+    <span vitec-if="kjoper.tlf != &quot;&quot;">Mob: [[*kjoper.tlf]]</span>
+    <span vitec-if="(kjoper.tlf != &quot;&quot; &amp;&amp; kjoper.emailadresse != &quot;&quot;)"> / </span>
+    <span vitec-if="kjoper.emailadresse != &quot;&quot;">E-post: [[*kjoper.emailadresse]]</span>
+  </td>
+</tr>
+<tr><td colspan="100">&nbsp;</td></tr>
+</tbody>
+</table>
+</div>
+<div vitec-if="Model.kjopere.Count == 0">
+  <p>[Mangler kj&oslash;per]</p>
+</div>
+
+<p>&nbsp;</p>
+
+<p>heretter kalt <strong><em>kj&oslash;peren</em></strong>, er i dag inng&aring;tt f&oslash;lgende kontrakt</p>
+
+<!-- ============================================================ -->
+<!-- S1 SALGSOBJEKT OG TILBEHOR -->
+<!-- ============================================================ -->
+
+<article class="item" style="page-break-before: always;">
+  <h2>&sect; 1</h2>
+  <p style="text-align:center"><strong>SALGSOBJEKT OG TILBEH&Oslash;R</strong></p>
+
+  <p>&nbsp;</p>
+
+  <p>Selger overdrar herved til kj&oslash;per sin eiendom: <span vitec-if="Model.eiendom.adresse != &quot;&quot; &amp;&amp; Model.eiendom.adresse != &quot;Mangler data&quot;">[[eiendom.adresse]]</span><span vitec-if="Model.eiendom.adresse == &quot;&quot;"><span class="insert-table"><span class="insert" data-label="Eiendomsadresse"></span></span></span><span vitec-if="Model.eiendom.adresse == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="Eiendomsadresse"></span></span></span></p>
+
+  <!-- NEED REVIEW: seksjonsbrok.oppdrag and ideellandel.oppdrag are unmapped legacy fields.
+       [[komplettmatrikkel]] includes the full cadastral reference. Seksjonsbrok and ideell andel
+       may not apply to landbrukseiendom and are omitted. -->
+  <p><span vitec-if="Model.komplettmatrikkel != &quot;&quot; &amp;&amp; Model.komplettmatrikkel != &quot;Mangler data&quot;">[[komplettmatrikkel]]</span><span vitec-if="Model.komplettmatrikkel == &quot;&quot;"><span class="insert-table"><span class="insert" data-label="Matrikkel"></span></span></span><span vitec-if="Model.komplettmatrikkel == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="Matrikkel"></span></span></span> m/<span vitec-if="Model.eiendom.eieform != &quot;&quot; &amp;&amp; Model.eiendom.eieform != &quot;Mangler data&quot;">[[eiendom.eieform]]</span><span vitec-if="Model.eiendom.eieform == &quot;&quot;"><span class="insert-table"><span class="insert" data-label="Eierform"></span></span></span><span vitec-if="Model.eiendom.eieform == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="Eierform"></span></span></span>, heretter kalt eiendommen.</p>
+
+  <p>&nbsp;</p>
+
+  <div class="avoid-page-break">
+  <p>Hjemmelshaver til eiendommen er:
+  <span vitec-if="Model.hjemmelshavere.Count &gt; 0"><span vitec-if="Model.hjemmelshaver.navn != &quot;Mangler data&quot;"><span vitec-foreach="hjemmelshaver in Model.hjemmelshavere"><span class="liste"><span class="separator">, </span>[[*hjemmelshaver.navn]] ([[*hjemmelshaver.fdato_orgnr]])</span></span></span><span vitec-if="Model.hjemmelshaver.navn == &quot;Mangler data&quot;"><span vitec-foreach="selger in Model.selgere"><span class="liste"><span class="separator">, </span>[[*selger.navnutenfullmektigogkontaktperson]]</span></span></span></span><span vitec-if="Model.hjemmelshavere.Count == 0"><span vitec-if="Model.selgere.Count &gt; 0"><span vitec-foreach="selger in Model.selgere"><span class="liste"><span class="separator">, </span>[[*selger.navnutenfullmektigogkontaktperson]]</span></span></span></span></p>
+  </div>
+
+  <p>&nbsp;</p>
+
+  <p>Eiendommens areal fremg&aring;r av takst <span vitec-if="Model.eiendom.takstdato != &quot;&quot; &amp;&amp; Model.eiendom.takstdato != &quot;Mangler data&quot;">datert [[eiendom.takstdato]]</span><span vitec-if="Model.eiendom.takstdato == &quot;&quot;">datert <span class="insert-table"><span class="insert" data-label="dato"></span></span></span><span vitec-if="Model.eiendom.takstdato == &quot;Mangler data&quot;">datert <span class="insert-table"><span class="insert" data-label="dato"></span></span></span>,</p>
+
+  <p>eller utskrift av g&aring;rdskart med arealopplysninger datert <span class="insert-table"><span class="insert" data-label="G&aring;rdskart dato"></span></span></p>
+
+  <p>&nbsp;</p>
+
+  <p>Med eiendommen f&oslash;lger:</p>
+
+  <p>&nbsp;</p>
+
+  <div class="avoid-page-break">
+  <ol>
+    <li>Gjenstander som er p&aring; eiendommen og som etter lov, forskrifter eller annet offentlig vedtak skal tilh&oslash;re denne.</li>
+    <li>Driftsplaner, redskap og utstyr som enten er fast montert eller s&aelig;rskilt tilpasset eiendommen, jf. avhendingsloven &sect; 3-6.</li>
+  </ol>
+  </div>
+
+  <p>&nbsp;</p>
+
+  <p>Annet l&oslash;s&oslash;re og tilbeh&oslash;r som f&oslash;lger med eiendommen ved handelen fremg&aring;r av vedlagt liste mellom partene og reguleres av kj&oslash;psloven.</p>
+
+  <p>&nbsp;</p>
+
+  <p>Eiendommen med tilbeh&oslash;r overtas i den stand det var ved besiktigelsen.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- S2 KJOPESUM OG OMKOSTNINGER -->
+<!-- ============================================================ -->
+
+<article class="item">
+  <h2>&sect; 2</h2>
+  <p style="text-align:center"><strong>KJ&Oslash;PESUM OG OMKOSTNINGER</strong></p>
+
+  <p>&nbsp;</p>
+
+  <p>Eiendommen med tilbeh&oslash;r overdras for en kj&oslash;pesum p&aring;lydende kroner <span vitec-if="Model.kontrakt.kjopesum != &quot;&quot; &amp;&amp; Model.kontrakt.kjopesum != &quot;Mangler data&quot;">$.UD([[kontrakt.kjopesum]]),-</span><span vitec-if="Model.kontrakt.kjopesum == &quot;&quot;"><span class="insert-table"><span class="insert" data-label="Kj&oslash;pesum"></span></span></span><span vitec-if="Model.kontrakt.kjopesum == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="Kj&oslash;pesum"></span></span></span>,  heretter kalt &quot;kj&oslash;pesummen&quot;.</p>
+
+  <p>&nbsp;</p>
+
+  <p>Av kj&oslash;pesummen utgj&oslash;r kroner <span class="insert-table"><span class="insert" data-label="Eiendomsverdi"></span></span> vederlag for selve eiendommen, heretter kalt &quot;eiendomsverdien&quot;.</p>
+
+  <p>&nbsp;</p>
+
+  <p>Kj&oslash;pesummen gj&oslash;res opp p&aring; f&oslash;lgende m&aring;te:</p>
+
+  <p>&nbsp;</p>
+
+  <div class="avoid-page-break">
+  <div vitec-if="Model.kjoperskostnader.alleposter.Count &gt; 0">
+  <table class="costs-table">
+    <thead>
+      <tr>
+        <td colspan="70" style="border-bottom: 1px solid #000;"><strong>Kj&oslash;pesum og omkostninger</strong></td>
+        <td colspan="25" style="border-bottom: 1px solid #000; text-align: right;"><strong>Bel&oslash;p</strong></td>
+        <td colspan="5" style="border-bottom: 1px solid #000;">&nbsp;</td>
+      </tr>
+    </thead>
+    <tbody vitec-foreach="kostnad in Model.kjoperskostnader.alleposter">
+      <tr>
+        <td colspan="70">[[*kostnad.beskrivelse]]</td>
+        <td colspan="25" style="text-align: right;">$.UD([[*kostnad.belop]])</td>
+        <td colspan="5">&nbsp;</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <div vitec-if="Model.kjoperskostnader.alleposter.Count == 0">
+    <p>[Ingen omkostninger registrert]</p>
+  </div>
+  </div>
+
+  <p>&nbsp;</p>
+
+  <p>Det tas forbehold om endringer i offentlige avgifter/gebyrer.</p>
+
+  <p>&nbsp;</p>
+
+  <p>Konsesjonsgebyret, stort kr <span class="insert-table"><span class="insert" data-label="Konsesjonsgebyr"></span></span> faktureres kj&oslash;per direkte fra landbruksmyndighetene, og kj&oslash;per forplikter seg til &aring; betale dette innen forfall.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- S3 OPPGJOR -->
+<!-- ============================================================ -->
+
+<article class="item">
+  <h2>&sect; 3</h2>
+  <p style="text-align:center"><strong>OPPGJ&Oslash;R</strong></p>
+
+  <p>&nbsp;</p>
+
+  <!-- 3.1 Ytelse mot ytelse -->
+  <div class="avoid-page-break">
+  <p><em>3.1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ytelse mot ytelse</em></p>
+
+  <p>Oppgj&oslash;ret mellom partene foretas av megler, og gjennomf&oslash;res i henhold til denne kontrakt inng&aring;tt mellom kj&oslash;per og selger. Ved overtagelse g&aring;r som hovedregel eiendomsretten og r&aring;digheten til eiendommen over fra selger til kj&oslash;per, og samtidig g&aring;r eiendomsretten og r&aring;digheten til kj&oslash;pesummen over fra kj&oslash;per til selger.</p>
+
+  <p>&nbsp;</p>
+
+  <p>Se likevel punkt 4.1 flg. om oppgj&oslash;r og avtalt sikkerhet for partenes rettslige posisjoner frem til det er oppn&aring;dd rettsvern.</p>
+  </div>
+
+  <p>&nbsp;</p>
+
+  <!-- 3.2 Konto og betalingstidspunkt -->
+  <div class="avoid-page-break">
+  <p><em>3.2. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Konto og betalingstidspunkt. Forsinkelsesrenter ved forsinket betaling.</em></p>
+
+  <p>Hele kj&oslash;pesummen med tillegg av omkostninger skal v&aelig;re kreditert meglers klientkonto nr. <span class="insert-table"><span class="insert" data-label="Klientkontonummer"></span></span> innen dato for overtagelse, se punkt 7.</p>
+  </div>
+
+  <p>&nbsp;</p>
+
+  <p>Ved forsinket betaling av hele eller deler av kj&oslash;pesummen og omkostninger, kan selger kreve lovens forsinkelsesrente av den til enhver tid ubetalte del av kj&oslash;pesummen fra avtalt tidspunkt for overtagelse og frem til full innbetaling faktisk finner sted. Denne bestemmelse gir ikke kj&oslash;per rett til &aring; forlenge betalingsfristen utover de frister som er avtalt.</p>
+
+  <p>&nbsp;</p>
+
+  <!-- 3.3 Betalingsforsinkelse -->
+  <div class="avoid-page-break">
+  <p><em>3.3 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Betalingsforsinkelse fra kj&oslash;per som utgj&oslash;r vesentlig mislighold</em></p>
+
+  <p>Ved forsinkelse med innbetaling av kj&oslash;pesummen og omkostningene som utgj&oslash;r vesentlig mislighold, kan selger heve kj&oslash;pet, jf. avhendingslova &sect; 5-3 jf. &sect; 5-1.</p>
+  </div>
+
+  <p>&nbsp;</p>
+
+  <!-- 3.4 Forsinket overlevering fra selger -->
+  <div class="avoid-page-break">
+  <p><em>3.4 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Forsinket overlevering fra selger</em></p>
+
+  <p>Selger vedtar utkastelse uten s&oslash;ksm&aring;l og dom etter tvangsfullbyrdelsesloven &sect; 4-18, &sect; 13-2 annet ledd, bokstav e jf. &sect; 13-11, hvis fraflytting ikke har funnet sted ved avtalt overtakelsestidspunkt. Dette gjelder s&aring; fremt ikke annen skriftlig avtale er gjort mellom partene.</p>
+  </div>
+
+  <p>&nbsp;</p>
+
+  <!-- 3.5 Kjopers ovrige forpliktelser -->
+  <div class="avoid-page-break">
+  <p><em>3.5. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Kj&oslash;pers &oslash;vrige forpliktelser forbundet med dokumentasjon og oppgj&oslash;r</em></p>
+
+  <p>Kj&oslash;per er forpliktet til &aring; signere og fremskaffe n&oslash;dvendige dokumenter i forbindelse med gjennomf&oslash;ring av handelen, for eksempel &aring; signere p&aring; s&oslash;knad om konsesjon/egenerkl&aelig;ring om konsesjonsfrihet og &aring; signere n&oslash;dvendige l&aring;nedokumenter og pantedokumenter for finansiering av kj&oslash;pet. Blir overtagelse forsinket som f&oslash;lge av manglende medvirkning fra kj&oslash;per knyttet til slike forhold, vil det v&aelig;re et mislighold som kan utl&oslash;se krav fra selger som beskrevet i punkt 8, annet avsnitt.</p>
+  </div>
+
+  <p>&nbsp;</p>
+
+  <!-- 3.6 Driftsutgifter og driftsinntekter -->
+  <div class="avoid-page-break">
+  <p><em>3.6. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Driftsutgifter og driftsinntekter p&aring; eiendommen. Renter p&aring; klientkonto</em></p>
+
+  <p>Fordeling av eiendommens driftsutgifter og eventuelle inntekter per overtagelsesdato fastsettes av kj&oslash;per og selger, eventuelt med meglers bistand.</p>
+  </div>
+
+  <p>&nbsp;</p>
+
+  <p style="color: red;">[Stryk det alternativ som ikke passer]</p>
+
+  <p>&nbsp;</p>
+
+  <div class="avoid-page-break">
+  <p><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> <strong style="color: red;">A</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Fordelingsregnskap settes opp av selger per overtagelsesdato og skal foreligge for kj&oslash;per senest 30 dager etter at overtagelsen har funnet sted. Eventuelle bemerkninger fra kj&oslash;per m&aring; framsettes via megler innen syv dager etter mottagelsen av regnskapet, ellers anses regnskapet for godkjent. Den av partene som skylder penger i henhold til fordelingsregnskapet betaler bel&oslash;pet til meglers klientkonto senest sju dager etter at regnskapet er godkjent, se konto i punkt 3.2. Megler vil videreformidle bel&oslash;pet.</p>
+  </div>
+
+  <p>&nbsp;</p>
+
+  <div class="avoid-page-break">
+  <p><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> <strong style="color: red;">B</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Senest 30 dager etter overtagelse skal selger sende til kj&oslash;per en oppdatert balanse for fordelingsregnskap per overtagelse. Selger skal sende til kj&oslash;per en bekreftelse fra en revisor som selger engasjerer, om at revisor har foretatt en forenklet revisorkontroll av oppdatert balanse. Hvis kj&oslash;per ikke gj&oslash;r innsigelse gjeldende innen en frist p&aring; syv dager, blir fordelingsregnskap utarbeidet av selger endelig og bindende for partene. Hvis kj&oslash;per fremmer innsigelse mot fordelingsregnskapet innen fristen og partene ikke innen ytterligere 14 dager blir enige, skal en uavhengig statsautorisert revisor som partene i fellesskap oppnevner og bekoster, fastsette fordelingsregnskapet med bindende og endelig virkning for partene. Den av partene som skylder penger i henhold til fordelingsregnskapet betaler bel&oslash;pet til meglers klientkonto senest syv dager etter at regnskapet er fastsatt, se konto i punkt 3.2. Megler vil videreformidle bel&oslash;pet.</p>
+  </div>
+
+  <p>&nbsp;</p>
+
+  <p>Den som eier innest&aring;ende p&aring; klientkonto godskrives ogs&aring; rentene. Omkostninger som er innbetalt i henhold til denne kontrakts punkt 2 tilh&oslash;rer kj&oslash;per. Selger og kj&oslash;per godskrives likevel ikke renter n&aring;r disse for hver av partene utgj&oslash;r mindre enn et halvt rettsgebyr, jf. eiendomsmeglingsforskriften &sect; 3-10 tredje ledd.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- S4 TINGLYSING OG SIKKERHET -->
+<!-- ============================================================ -->
+
+<article class="item">
+  <h2>&sect; 4</h2>
+  <p style="text-align:center"><strong>TINGLYSING OG SIKKERHET</strong></p>
+
+  <p>&nbsp;</p>
+
+  <!-- 4.1 Forutsetninger for oppgjor og frigivelse av kjopesummen -->
+  <div class="avoid-page-break">
+  <p><em>4.1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Forutsetninger for oppgj&oslash;r og frigivelse av kj&oslash;pesummen</em></p>
+
+  <p>For &aring; sikre trygg gjennomf&oslash;ring av handelen etter eiendomsmeglingsloven &sect; 3-2 og &sect; 6-9, er f&oslash;lgende avtalt:</p>
+  </div>
+
+  <p>&nbsp;</p>
+
+  <div class="avoid-page-break">
+  <ol>
+    <li>Partene har avtalt f&oslash;lgende betingelser for frigivelse av kj&oslash;pesummen:</li>
+    <li>Panterettsdokument med ur&aring;dighetserkl&aelig;ring er tinglyst,</li>
+    <li>Kj&oslash;per har innbetalt hele kj&oslash;pesummen inklusive omkostninger,</li>
+    <li>Kj&oslash;per har overtatt bruken av eiendommen,</li>
+    <li>Det er fattet endelig konsesjonsvedtak, Kj&oslash;pers skj&oslash;te p&aring; eiendommen &ndash; uten andre heftelser enn det partene har avtalt &ndash; er tinglyst,</li>
+    <li>Kj&oslash;pers eventuelle l&aring;ngivere har f&aring;tt tinglyst panterett i eiendommen med forutsatt prioritet og</li>
+    <li>Heftelser som ikke skal f&oslash;lge med ved handelen er slettet.</li>
+  </ol>
+  </div>
+
+  <p>&nbsp;</p>
+
+  <p>Forutsetningene nr. 6 og 7 er ikke til hinder for at megler kan iverksette oppgj&oslash;r basert p&aring; restgjeldsoppgave og tilstrekkelig slettebekreftelse fra selgers kreditor(er) med panterett i eiendommen.</p>
+
+  <p>&nbsp;</p>
+
+  <p>Kreditorer kan ikke s&oslash;ke dekning i kj&oslash;pesummen p&aring; meglers klientkonto f&oslash;r betingelsene 1 til 7 for frigivelse av kj&oslash;pesummen i henhold til denne kontrakt er oppfylt, jf. eiendomsmeglingsloven &sect; 3-2 og dekningsloven &sect; 2-2.</p>
+
+  <p>&nbsp;</p>
+
+  <p>Har selger tillatt kj&oslash;per &aring; overta eiendommen selv om deler av kj&oslash;pesummen/omkostningene ikke er innbetalt, kan den f&oslash;rste delen av oppgj&oslash;ret likevel gjennomf&oslash;res uten hinder av forutsetning nummer 2 ovenfor. Resterende del av oppgj&oslash;ret vil i s&aring; fall finne sted n&aring;r resten av kj&oslash;pesummen/omkostningene er innbetalt.</p>
+
+  <p>&nbsp;</p>
+
+  <!-- 4.2 Konsesjonsrisiko -->
+  <div class="avoid-page-break">
+  <p><em>4.2 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Konsesjonsrisiko</em></p>
+
+  <p>Selger har risikoen for at det er avtalt for h&oslash;y kj&oslash;pesum etter konsesjonsloven &sect; 9 a, og</p>
+  </div>
+
+  <p>&nbsp;</p>
+
+  <p style="color: red;">[Stryk det alternativ som ikke passer]</p>
+
+  <p>&nbsp;</p>
+
+  <div class="avoid-page-break">
+  <p><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> <strong style="color: red;">A</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Hver av partene kan i s&aring; fall fri seg fra avtalen ved skriftlig melding til megler. Partene kan ikke fremme krav mot hverandre som f&oslash;lge av slik oppsigelse av avtalen.</p>
+  </div>
+
+  <p>&nbsp;</p>
+
+  <div class="avoid-page-break">
+  <p><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> <strong style="color: red;">B</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Partene har da avtalt at avtalen likevel skal gjelde, men til den h&oslash;yeste pris landbruksmyndighetene kan godkjenne.</p>
+  </div>
+
+  <p>&nbsp;</p>
+
+  <p>Kj&oslash;per har risikoen for at konsesjon nektes med grunnlag i konsesjonsloven &oslash;vrige bestemmelser, herunder &sect; 9 f&oslash;rste ledd nr. 1- 4 eller &sect; 9 andre til fjerde ledd.</p>
+
+  <p>&nbsp;</p>
+
+  <p>Dersom konsesjon p&aring; dette grunnlag nektes, skal oppgj&oslash;ret likevel gjennomf&oslash;res, jf. eiendomsmeglingsforskriften &sect; 6-5 (1), jf. eiendomsmeglingsloven &sect; 6-9 (3), men da to m&aring;neder etter at endelig avslagsvedtak er truffet. Endelig avslagsvedtak inneb&aelig;rer at alle klagemuligheter er utt&oslash;mt.</p>
+
+  <p>&nbsp;</p>
+
+  <p>I stedet for vilk&aring;ret om at kj&oslash;pers skj&oslash;te p&aring; eiendommen er tinglyst (punkt 4.1 annet ledd nr. 5) er det i disse tilfellene et vilk&aring;r for frigivelse av kj&oslash;pesummen at kj&oslash;per har f&aring;tt n&oslash;dvendig sikkerhet for kj&oslash;pesummen gjennom tredjemannspant i eiendommen eller at det blir enighet mellom partene om annen sikkerhet.</p>
+
+  <p>&nbsp;</p>
+
+  <p>Selger forplikter seg til lojalt &aring; medvirke til at det etableres sikkerhet for kj&oslash;pesummen, eksempelvis gjennom &aring; samtykke til tinglysing av kj&oslash;pers pantedokument p&aring; eiendommen, og at kj&oslash;per kan disponere over eiendommen, blant annet gjennom videresalg. Se for &oslash;vrig punkt 4.4 fjerde ledd.</p>
+
+  <p>&nbsp;</p>
+
+  <!-- 4.3 Deponering og tinglysing av skjotet -->
+  <div class="avoid-page-break">
+  <p><em>4.3. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Deponering og tinglysing av skj&oslash;tet og andre dokumenter for tinglysing</em></p>
+
+  <p>All tinglysing av dokumenter p&aring; eiendommen skal foretas av megler.</p>
+  </div>
+
+  <p>&nbsp;</p>
+
+  <p>Selger utsteder skj&oslash;te til kj&oslash;per samtidig med denne kontrakts underskrift. Skj&oslash;tet oppbevares hos megler, som bes&oslash;rger tinglysing av skj&oslash;tet s&aring; snart overtagelse er gjennomf&oslash;rt, med mindre konsesjon ikke gis og kj&oslash;per har risikoen, jf. punkt 4.2.</p>
+
+  <p>&nbsp;</p>
+
+  <p>Dokumenter som skal tinglyses m&aring; snarest overleveres megler i undertegnet og tinglysingsklar stand.</p>
+
+  <p>&nbsp;</p>
+
+  <!-- 4.4 Tinglysing av panterett med uradighet -->
+  <div class="avoid-page-break">
+  <p><em>4.4. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tinglysing av panterett med ur&aring;dighet (sikringsobligasjon)</em></p>
+
+  <p>Selger har utstedt et pantedokument &ndash; en sikringsobligasjon &ndash; til megler p&aring;lydende et bel&oslash;p minst tilsvarende kj&oslash;pesummen. Pantedokumentet inneholder ogs&aring; en ur&aring;dighetserkl&aelig;ring som hindrer at det kan tinglyses nye, frivillige heftelser p&aring; eiendommen uten meglers samtykke. Pantedokumentet tinglyses av megler for selgers regning. Eiendomsmeglingsforetaket st&aring;r som panthaver. Pantedokumentet tinglyses som en heftelse p&aring; eiendommen, og tjener som sikkerhet for partenes rettigheter og plikter etter kj&oslash;pekontrakten.</p>
+  </div>
+
+  <p>&nbsp;</p>
+
+  <p>Megler skal vederlagsfritt bes&oslash;rge pantedokumentet slettet n&aring;r oppgj&oslash;r mellom partene er avsluttet og skj&oslash;tet er tinglyst i avtalt stand.</p>
+
+  <p>&nbsp;</p>
+
+  <p>Dersom skj&oslash;te ikke kan tinglyses som f&oslash;lge av konsesjonsforhold kj&oslash;per har risikoen for, skal selger utstede en ur&aring;dighet i eiendommen til fordel for kj&oslash;per. Ur&aring;digheten skal tinglyses.</p>
+
+  <p>&nbsp;</p>
+
+  <!-- 4.5 Selgers forbehold om kjopers oppfyllelse -->
+  <div class="avoid-page-break">
+  <p><em>4.5. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Selgers forbehold om kj&oslash;pers oppfyllelse</em></p>
+
+  <p>Selger tar forbehold om &aring; heve kj&oslash;pet selv om overtagelse og overlevering av skj&oslash;tet har funnet sted, jf. avhendingslova &sect; 5-3 fjerde ledd og tinglysingsloven &sect; 21 tredje ledd.</p>
+  </div>
+
+  <p>&nbsp;</p>
+
+  <p>Blir avtalen hevet som f&oslash;lge av manglende oppfyllelse fra kj&oslash;per etter overtagelse, vedtar kj&oslash;per tvangsfravikelse i tr&aring;d med tvangsfullbyrdelsesloven &sect; 13-2.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- S5 HEFTELSER -->
+<!-- ============================================================ -->
+
+<article class="item">
+  <h2>&sect; 5</h2>
+  <p style="text-align:center"><strong>HEFTELSER</strong></p>
+
+  <p>&nbsp;</p>
+
+  <p>En bekreftet utskrift av eiendommens grunnbok datert <span class="insert-table"><span class="insert" data-label="Grunnbok dato"></span></span> er forelagt kj&oslash;per. Kj&oslash;per har gjort seg kjent med innholdet i denne.</p>
+
+  <p>&nbsp;</p>
+
+  <p>Pengeheftelser:</p>
+
+  <p>&nbsp;</p>
+
+  <div class="avoid-page-break">
+  <p><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> Eiendommen overdras fri for pengeheftelser.</p>
+
+  <p>&nbsp;</p>
+
+  <p><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> Eiendommen overdras fri for pengeheftelser, med unntak av f&oslash;lgende pantedokumenter:</p>
+
+  <p><span class="insert-table"><span class="insert" data-label="Pantedokumenter"></span></span></p>
+  </div>
+
+  <p>&nbsp;</p>
+
+  <p>Pengeheftelser som ikke skal f&oslash;lge med eiendommen, skal slettes for selgers regning. Megler gis fullmakt til &aring; innhente restgjeldsoppgave og slettebekreftelse fra panthavere til de panteretter som skal slettes i forbindelse med oppgj&oslash;ret.</p>
+
+  <p>&nbsp;</p>
+
+  <p>Selger bekrefter at det ikke eksisterer pengeheftelser av noen art, herunder utlegg, utover det som grunnboksutskriften viser. Selger forplikter seg til umiddelbart &aring; underrette megler dersom utleggsforretninger blir avholdt f&oslash;r skj&oslash;tet er tinglyst. Videre forplikter selger seg til &aring; betale alle avgifter mv. som vedr&oslash;rer eiendommen og som er forfalt eller forfaller f&oslash;r overtagelsen.</p>
+
+  <p>&nbsp;</p>
+
+  <p>Selger gir herved megler ugjenkallelig fullmakt til &aring; innfri pengeheftelser som fremg&aring;r av bekreftet grunnboksutskrift/oppgj&oslash;rsskjema og som det ikke er avtalt at kj&oslash;per skal overta.</p>
+
+  <p>&nbsp;</p>
+
+  <p><strong>Odel:</strong></p>
+
+  <p>&nbsp;</p>
+
+  <p style="color: red;">[Stryk de alternativer som ikke passer]</p>
+
+  <p>&nbsp;</p>
+
+  <div class="avoid-page-break">
+  <p><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> <strong style="color: red;">A</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Det hviler ikke odel p&aring; eiendommen.</p>
+
+  <p>&nbsp;</p>
+
+  <p><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> <strong style="color: red;">B</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Alle kjente odelsberettigede har fraskrevet seg odelsretten, jf. vedlagte erkl&aelig;ringer. For umyndige barn, hvis foreldre har bedt om odelsfraskrivelse, er n&aring; erkl&aelig;ringene inne hos Fylkesmannen for samtykke.</p>
+
+  <p>&nbsp;</p>
+
+  <p><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> <strong style="color: red;">C</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; De odelsberettigede har ikke fraskrevet seg sin odelsrett. Kj&oslash;per har tatt p&aring; seg risikoen for at en av disse eventuelt g&aring;r til odelsl&oslash;sningssak. Selger stiller odelsgaranti etter n&aelig;rmere avtale.</p>
+  </div>
+</article>
+
+<!-- ============================================================ -->
+<!-- S6 FORBEHOLD OM EIENDOMMENS TILSTAND - SELGERS MANGELSANSVAR -->
+<!-- ============================================================ -->
+
+<article class="item">
+  <h2>&sect; 6</h2>
+  <p style="text-align:center"><strong>FORBEHOLD OM EIENDOMMENS TILSTAND &ndash; SELGERS MANGELSANSVAR</strong></p>
+
+  <p>&nbsp;</p>
+
+  <p>Eiendommen selges i den stand den var ved kj&oslash;pers besiktigelse, jf. Avhendingslova &sect; 3-9. Det inneb&aelig;rer at avhendingslovens regler om n&aring;r eiendommen har mangel, fravikes til ugunst for kj&oslash;per.</p>
+
+  <p>&nbsp;</p>
+
+  <p>Eiendommen har likevel mangel i f&oslash;lgende tilfeller:</p>
+
+  <p>&nbsp;</p>
+
+  <div class="avoid-page-break">
+  <ul>
+    <li>N&aring;r selger ikke oppfyller sine konkrete forpliktelser under denne kontrakt.</li>
+    <li>N&aring;r kj&oslash;per ikke har f&aring;tt opplysninger om forhold ved eiendommen som selger kjente eller m&aring;tte kjenne til, og som kj&oslash;per hadde grunn til &aring; regne med &aring; f&aring;. Dette gjelder likevel bare dersom man kan g&aring; ut fra at det har virket inn p&aring; avtalen at opplysningene ikke ble gitt, jf. avhendingslova &sect; 3-7.</li>
+    <li>N&aring;r selger har gitt uriktige opplysninger om eiendommen. Det samme gjelder dersom eiendommen ikke er i samsvar med opplysninger som er gitt i annonse, salgsprospekt eller ved annen markedsf&oslash;ring p&aring; vegne av selgeren. Dette gjelder likevel bare dersom man kan g&aring; ut fra at opplysningene har virket inn p&aring; avtalen, og ikke er blitt rettet i tide p&aring; en tydelig m&aring;te, jf. avhendingslova &sect; 3-8.</li>
+    <li>N&aring;r eiendommen er i vesentlig d&aring;rligere stand enn kj&oslash;per hadde grunn til &aring; regne med ut fra kj&oslash;pesummen og forholdene ellers, jf. avhendingslova &sect; 3-9 annet punktum.</li>
+    <li>N&aring;r bygning og/eller tomt har et vesentlig mindre areal enn opplyst av selgeren, jf. avhendingslova &sect; 3-3.</li>
+  </ul>
+  </div>
+
+  <p>&nbsp;</p>
+
+  <p>Kj&oslash;peren kan ikke gj&oslash;re gjeldende som mangel noe han ble kjent med eller burde blitt kjent med ved besiktigelsen. Det samme gjelder andre forhold kj&oslash;per kjente eller m&aring;tte kjenne til da avtalen ble inng&aring;tt, jf. avhendingslova &sect; 3-10.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- S7 OVERTAGELSE -->
+<!-- ============================================================ -->
+
+<article class="avoid-page-break item">
+  <h2>&sect; 7</h2>
+  <p style="text-align:center"><strong>OVERTAGELSE</strong></p>
+
+  <p>&nbsp;</p>
+
+  <p>Eiendommen overtas av kj&oslash;per etter n&aelig;rmere avtale, senest to m&aring;neder etter at endelig konsesjonsvedtak er truffet, med alle rettigheter og forpliktelser slik den har tilh&oslash;rt selger, forutsatt at kj&oslash;per har oppfylt sine forpliktelser.</p>
+
+  <p>&nbsp;</p>
+
+  <p>F&oslash;r overtagelse kan finne sted m&aring; hele kj&oslash;pesummen v&aelig;re innbetalt.</p>
+
+  <p>&nbsp;</p>
+
+  <p>Kj&oslash;per svarer fra overtagelsen for alle eiendommens utgifter og oppeb&aelig;rer eventuelle inntekter.</p>
+
+  <p>&nbsp;</p>
+
+  <p>V&aring;ningshus/k&aring;rbolig leveres i ryddig og rengjort stand, uten leieforhold av noen art. Uthusene leveres i ryddet stand.</p>
+
+  <p>&nbsp;</p>
+
+  <p>Risikoen for eiendommen g&aring;r over p&aring; kj&oslash;per n&aring;r han har overtatt bruken av eiendommen. Overtar kj&oslash;per ikke til fastsatt tid, og &aring;rsaken ligger hos vedkommende, har kj&oslash;per risikoen fra det tidspunktet han kunne ha f&aring;tt overta bruken.</p>
+
+  <p>&nbsp;</p>
+
+  <p>N&aring;r risikoen for eiendommen er g&aring;tt over p&aring; kj&oslash;per, faller ikke kj&oslash;pers plikt til &aring; betale kj&oslash;pesummen bort ved at eiendommen blir &oslash;delagt eller skadet som f&oslash;lge av en hendelse som selger ikke svarer for.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- S8 KONSEKVENSER AV MISLIGHOLD - REKLAMASJON -->
+<!-- ============================================================ -->
+
+<article class="avoid-page-break item">
+  <h2>&sect; 8</h2>
+  <p style="text-align:center"><strong>KONSEKVENSER AV MISLIGHOLD &ndash; REKLAMASJON</strong></p>
+
+  <p>&nbsp;</p>
+
+  <p>Dersom eiendommen har mangel eller selgeren ikke overleverer eiendommen til avtalt tid, kan kj&oslash;peren p&aring; de vilk&aring;r som f&oslash;lger av avhendingslova kreve oppfyllelse, retting, prisavslag, erstatning, avvise eiendommen, heve kontrakten og/eller holde tilbake en forholdsmessig del av kj&oslash;pesummen.</p>
+
+  <p>&nbsp;</p>
+
+  <p>Dersom kj&oslash;peren ikke betaler kj&oslash;pesummen eller ikke oppfyller andre plikter etter avtalen, kan selgeren p&aring; de vilk&aring;r som f&oslash;lger av avhendingslova kapittel 5 kreve oppfyllelse, heving, erstatning, renter og/eller nekte &aring; overlevere skj&oslash;te eller overlate bruken av eiendommen til kj&oslash;peren.</p>
+
+  <p>&nbsp;</p>
+
+  <p>Dersom en av partene mener at det foreligger mangel eller forsinkelse ved den annen parts oppfyllelse av plikter etter avtalen, m&aring; han gi motparten melding om at avtalebruddet gj&oslash;res gjeldende og hvilket avtalebrudd det gjelder, innen rimelig tid etter at han oppdaget eller burde ha oppdaget misligholdet, jf. avhendingslova &sect;&sect; 4-19 og 5-7.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- S9 FORSIKRING -->
+<!-- ============================================================ -->
+
+<article class="avoid-page-break item">
+  <h2>&sect; 9</h2>
+  <p style="text-align:center"><strong>FORSIKRING</strong></p>
+
+  <p>&nbsp;</p>
+
+  <p>Eiendommen er fullverdiforsikret i <span vitec-if="Model.forsikring.selskap != &quot;&quot; &amp;&amp; Model.forsikring.selskap != &quot;Mangler data&quot;">[[forsikring.selskap]]</span><span vitec-if="Model.forsikring.selskap == &quot;&quot;"><span class="insert-table"><span class="insert" data-label="Forsikringsselskap"></span></span></span><span vitec-if="Model.forsikring.selskap == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="Forsikringsselskap"></span></span></span></p>
+
+  <p>&nbsp;</p>
+
+  <p>[Dersom det er bygninger p&aring; eiendommen som er f&oslash;rsterisikoforsikret eller det er bygninger som ikke er forsikret, skal dette spesifiseres.]</p>
+
+  <p>&nbsp;</p>
+
+  <p>Selger er forpliktet til &aring; holde eiendommen med bygninger og skog fullverdiforsikret frem til og med overtagelsesdagen. Kj&oslash;per skal ved overtagelsen tegne egen forsikring.</p>
+
+  <p>&nbsp;</p>
+
+  <p>Dersom eiendommen f&oslash;r overtagelse blir utsatt for skade ved brann eller andre forhold som dekkes av forsikringen, har kj&oslash;per rett til &aring; tre inn i forsikringsavtalen.</p>
+
+  <p>&nbsp;</p>
+
+  <p>Kj&oslash;per m&aring; selv tegne innbo- og l&oslash;s&oslash;reforsikring.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- S10 BILAG -->
+<!-- ============================================================ -->
+
+<article class="item">
+  <h2>&sect; 10</h2>
+  <p style="text-align:center"><strong>BILAG</strong></p>
+
+  <p>&nbsp;</p>
+
+  <p>Kj&oslash;per er forelagt f&oslash;lgende dokumentasjon:</p>
+
+  <p>&nbsp;</p>
+
+  <div class="avoid-page-break">
+  <ol>
+    <li>Salgsoppgave</li>
+    <li>Bekreftet grunnboksutskrift for eiendommen</li>
+    <li>Bekreftet utskrift av tinglyste erkl&aelig;ringer, dagboknummer/dokumentnummer: <span class="insert-table"><span class="insert" data-label="Dagboknummer/dokumentnummer"></span></span></li>
+    <li>Takst/boligsalgsrapport datert <span class="insert-table"><span class="insert" data-label="Takst dato"></span></span></li>
+    <li>Reguleringsplan med reguleringsbestemmelser</li>
+    <li>Opplysninger fra kommunen</li>
+    <li>M&aring;lebrev/arealbekreftelse/g&aring;rdskart</li>
+    <li>Ferdigattest/midlertidig brukstillatelse</li>
+    <li>Selgers egenerkl&aelig;ring om eiendommen</li>
+    <li>Budjournal</li>
+    <li>Liste over boligens l&oslash;s&oslash;re og tilbeh&oslash;r</li>
+    <li>Liste over annet l&oslash;s&oslash;re og tilbeh&oslash;r</li>
+    <li>Energiattest</li>
+    <li>Annet: <span class="insert-table"><span class="insert" data-label="Annet"></span></span></li>
+  </ol>
+  </div>
+
+  <p>&nbsp;</p>
+
+  <p>Denne kontrakt er utferdiget i tre likelydende eksemplar, hvorav partene f&aring;r hvert sitt eksemplar og ett eksemplar arkiveres hos eiendomsmegler.</p>
+</article>
+
+<!-- ============================================================ -->
+<!-- SIGNATURE BLOCK -->
+<!-- ============================================================ -->
+
+<div class="avoid-page-break" style="page-break-before: always;">
+<article class="item">
+
+  <p>Sted/dato: <span vitec-if="Model.meglerkontor.poststed != &quot;&quot; &amp;&amp; Model.meglerkontor.poststed != &quot;Mangler data&quot;">[[meglerkontor.poststed]]</span><span vitec-if="Model.meglerkontor.poststed == &quot;&quot;"><span class="insert-table"><span class="insert" data-label="Sted"></span></span></span><span vitec-if="Model.meglerkontor.poststed == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="Sted"></span></span></span>, <span vitec-if="Model.kontrakt.dato != &quot;&quot; &amp;&amp; Model.kontrakt.dato != &quot;Mangler data&quot;">[[kontrakt.dato]]</span><span vitec-if="Model.kontrakt.dato == &quot;&quot;"><span class="insert-table"><span class="insert" data-label="Dato"></span></span></span><span vitec-if="Model.kontrakt.dato == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="Dato"></span></span></span></p>
+
+  <p>&nbsp;</p>
+
+  <table style="width:100%; table-layout:fixed;">
+    <tbody>
+      <tr>
+        <td colspan="45"><u>Kj&oslash;per:</u></td>
+        <td colspan="10">&nbsp;</td>
+        <td colspan="45"><u>Selger:</u></td>
+      </tr>
+      <tr>
+        <td colspan="45" style="border-bottom: solid 1px #000; padding-top:50px;">&nbsp;</td>
+        <td colspan="10">&nbsp;</td>
+        <td colspan="45" style="border-bottom: solid 1px #000; padding-top:50px;">&nbsp;</td>
+      </tr>
+      <tr>
+        <td colspan="45">
+          <span vitec-if="Model.kjoper.fullmektig.navn != &quot;&quot; &amp;&amp; Model.kjoper.fullmektig.navn != &quot;Mangler data&quot;">[[kjoper.fullmektig.navn]]</span>
+        </td>
+        <td colspan="10">&nbsp;</td>
+        <td colspan="45">
+          <span vitec-if="Model.selger.fullmektig.navn != &quot;&quot; &amp;&amp; Model.selger.fullmektig.navn != &quot;Mangler data&quot;">[[selger.fullmektig.navn]]</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</article>
+</div>
+
+<!-- Post-signature conditional blocks -->
+
+<!-- NEED REVIEW: sjekkliste2901085 - exact Model path unverified (may be Model.oppdrag.sjekkliste2901085 or sjekkliste["2901085"]) -->
+<!-- NEED REVIEW: standard_ektefellesamtykke - standard Vitec clause block; content must be pasted from Vitec system -->
+<div vitec-if="Model.oppdrag.sjekkliste2901085 == &quot;1&quot;">
+  <p><em>[Ektefellesamtykke-klausul innsettes her]</em></p>
+</div>
+
+<!-- NEED REVIEW: standard_partnersamtykke - standard Vitec clause block; content must be pasted from Vitec system -->
+<div vitec-if="Model.oppdrag.sjekkliste2901085 == &quot;2&quot;">
+  <p><em>[Partnersamtykke-klausul innsettes her]</em></p>
+</div>
+
+<!-- NEED REVIEW: standard_oppgjorsinstruks - standard Vitec clause block; renders unconditionally; content must be pasted from Vitec system -->
+<p><em>[Oppgj&oslash;rsinstruks innsettes her]</em></p>
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>

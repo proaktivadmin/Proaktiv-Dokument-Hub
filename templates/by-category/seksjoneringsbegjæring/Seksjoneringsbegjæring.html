@@ -1,0 +1,1662 @@
+<div id="vitecTemplate">
+<style type="text/css">#vitecTemplate p {
+                                font-family: Calibri,Arial, sans-serif;
+                                font-size: 9pt;
+                                line-height: 11pt;
+                                margin: 0 0 1em 0;
+                            }
+                    
+                            #vitecTemplate .table-header {
+                                font-family: Calibri,Arial, sans-serif;
+                                font-weight: bold;
+                                font-size: 9pt;
+                                line-height: 13pt;
+                                margin-top: .5cm;
+                            }
+                    
+                            #vitecTemplate table {
+                                font-family: Calibri,Arial, sans-serif;
+                                font-size: 9pt;
+                                margin: 0;
+                                padding: 0;
+                                width: 100%;
+                                table-layout: fixed;
+                                border-collapse: collapse;
+                            }
+                    
+                            #vitecTemplate tr.borders td {
+                                border: solid 1px #000;
+                            }
+                    
+                            #vitecTemplate tr.sideborders {
+                                border-left: solid 1px #000;
+                                border-right: solid 1px #000;
+                            }
+                    
+                            #vitecTemplate tr.border-top td {
+                                border-top: solid 1px #000;
+                            }
+                    
+                            #vitecTemplate tr.border-bottom td {
+                                border-bottom: solid 1px #000;
+                            }
+                    
+                            #vitecTemplate tr.border-bottom-dotted td {
+                                border-bottom: dotted 1px #000;
+                            }
+                    
+                            #vitecTemplate .vertical-top {
+                                vertical-align: top;
+                            }
+                    
+                            #vitecTemplate tr td {
+                                font-family: Calibri, Arial, sans-serif;
+                                font-size: 7.5pt;
+                                line-height: 8.5pt;
+                                padding: 2px 2px 2px 4px;
+                                height: .55cm;
+                            }
+                    
+                            #vitecTemplate label {
+                                font-size: 8pt;
+                            }
+                    
+                            #vitecTemplate td.header-cell {
+                                font-weight: bold;
+                                font-size: 9pt;
+                            }
+                    
+                            #vitecTemplate td.bg-color {
+                                background-color: #D9E2F3;
+                            }
+                    
+                    
+                            #vitecTemplate td.border-left {
+                                border-left: solid 1px #000;
+                            }
+                    
+                            #vitecTemplate td.border-right {
+                                border-right: solid 1px #000;
+                            }
+                    
+                            #vitecTemplate .extra-border-right {
+                                position: relative;
+                            }
+                    
+                                #vitecTemplate .extra-border-right:after {
+                                    position: absolute;
+                                    top: 0;
+                                    right: 0;
+                                    bottom: 0;
+                                    content: " ";
+                                    background-color: black;
+                                    width: 2px;
+                                }
+                    
+                            #vitecTemplate td.text-center {
+                                text-align: center;
+                                vertical-align: middle;
+                            }
+                    
+                            #vitecTemplate .text-right {
+                                text-align: right;
+                            }
+                    
+                            #vitecTemplate ul {
+                                font-family: Calibri,Arial, sans-serif;
+                                font-size: 8pt;
+                                line-height: 10pt;
+                                margin: 0;
+                                padding: 0;
+                                list-style-type: none;
+                            }
+                    
+                            #vitecTemplate ol {
+                                font-family: Calibri,Arial, sans-serif;
+                                font-size: 8pt;
+                                line-height: 10pt;
+                                margin: 0;
+                                padding: 0;
+                            }
+                    
+                                #vitecTemplate ul li,
+                                #vitecTemplate ol li {
+                                    padding-left: 0;
+                                    font-family: Calibri,Arial, sans-serif;
+                                    font-size: 8pt;
+                                    line-height: 10pt;
+                                }
+                    
+                            #vitecTemplate .page-info {
+                                font-family: Calibri,Arial, sans-serif;
+                                float: left;
+                                font-size: 8pt;
+                                width: 100%;
+                                position: relative;
+                            }
+                    
+                            #vitecTemplate td[data-label]:before {
+                                content: attr(data-label);
+                                text-align: left;
+                                color: #333;
+                                font-size: 7.5pt;
+                                line-height: 8pt;
+                                /*text-transform: uppercase;*/
+                                display: block;
+                                position: absolute;
+                                top: 1px;
+                            }
+                    
+                    
+                            #vitecTemplate td[data-label] {
+                                padding: 12px 2px 2px 2px;
+                                position: relative;
+                                height: 0.7cm;
+                            }
+                    
+                                #vitecTemplate td[data-label] > p {
+                                    margin-bottom: 0;
+                                }
+                            /* Malredigering: Hindre placeholder-plugin fra &aring; sprenge tabell-celler (matrikkel-rad)*/
+                            .cke_widget_inline {
+                                white-space: pre-wrap;
+                                word-break: break-all;
+                            }
+                    
+                            #vitecTemplate [contenteditable="false"] * {
+                                user-select: none;
+                            }
+                    
+                            #vitecTemplate .main-table {
+                                page-break-after: always;
+                            }
+                    
+                                #vitecTemplate .main-table:last-child {
+                                    page-break-after: avoid;
+                                }
+                    
+                            #vitecTemplate td.a4-main {
+                                vertical-align: top;
+                                height: 27.5cm;
+                                padding: 0;
+                            }
+                    
+                            #vitecTemplate td.separator {
+                                height: .25cm;
+                                font-size: 0;
+                                line-height: 0;
+                                padding: 0;
+                            }
+                    
+                            #vitecTemplate .snr-lead {
+                                font-size: 11pt;
+                            }
+                    
+                                #vitecTemplate .snr-lead.reduced-size {
+                                    font-size: 9.2pt;
+                                }
+</style>
+<style type="text/css">/* Klikkbare sjekkbokser og radioknapper */
+                            label.btn {
+                                display: flex;
+                                align-items: center;
+                                text-transform: none;
+                                white-space: normal;
+                                padding: 0;
+                                vertical-align: baseline;
+                                outline: none;
+                                font-size: inherit;
+                            }
+                    
+                                label.btn.inline-flex {
+                                    display: inline-flex;
+                                }
+                    
+                                label.btn:active,
+                                label.btn.active {
+                                    box-shadow: none;
+                                    outline: none;
+                                }
+                    
+                            .svg-toggle { /* nullstiller bootstrap button-styling */
+                                display: inline-block !important;
+                                width: 18px;
+                                height: 18px;
+                                margin: 0 5px;
+                                vertical-align: bottom;
+                                padding: 0;
+                                border: none;
+                                background: transparent;
+                                border-radius: 0;
+                                box-shadow: none !important;
+                                cursor: pointer;
+                                white-space: normal;
+                                text-align: left;
+                                background-repeat: no-repeat;
+                                background-size: 18px 18px;
+                                background-position: center center;
+                            }
+                    
+                                .svg-toggle.checkbox {
+                                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+                                }
+                    
+                                    .svg-toggle.checkbox.active,
+                                    .btn.active > .svg-toggle.checkbox {
+                                        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+                                        box-shadow: none !important;
+                                    }
+                    
+                                .svg-toggle.radio {
+                                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
+                                }
+                    
+                                    .svg-toggle.radio.active,
+                                    .btn.active > .svg-toggle.radio {
+                                        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
+                                        box-shadow: none !important;
+                                    }
+                    
+                    
+                    
+                            /* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
+                            #vitecTemplate [data-toggle="buttons"] input {
+                                display: none;
+                            }
+</style>
+<table class="main-table">
+	<tbody>
+		<tr>
+			<td class="a4-main" colspan="2">
+			<table>
+				<tbody>
+					<tr contenteditable="false">
+						<td colspan="100" style="height:1cm; padding:0; text-align:right">
+						<div style="font-size:13pt; font-weight:bold; line-height:15pt; margin-top:0; text-align:right">S&oslash;knad om seksjonering</div>
+						</td>
+					</tr>
+					<tr class="borders" contenteditable="false">
+						<td class="bg-color header-cell" colspan="100">Tinglysingsrekvirenten (kommunen)</td>
+					</tr>
+					<tr class="borders" contenteditable="false">
+						<td colspan="100">Kommunen skal fylle ut dette feltet og sende skjemaet til Kartverket.</td>
+					</tr>
+					<tr class="borders">
+						<td colspan="26" data-label="Kommunens navn">[[eiendom.kommunenavn]]</td>
+						<td colspan="44" data-label="Kommunens adresse">&nbsp;</td>
+						<td colspan="30" data-label="Kontaktperson">&nbsp;</td>
+					</tr>
+					<tr contenteditable="false">
+						<td class="separator" colspan="100">&nbsp;</td>
+					</tr>
+					<tr class="borders" contenteditable="false">
+						<td class="bg-color header-cell" colspan="100">1. Opplysninger om innsenderen</td>
+					</tr>
+					<tr class="borders" contenteditable="false">
+						<td colspan="100">Feltet skal fylles ut av den som sender inn s&oslash;knaden til kommunen. Dette kan v&aelig;re den som eier eiendommen (hjemmelshaveren), men ogs&aring; en advokat eller annen med fullmakt fra hjemmelshaveren(e).</td>
+					</tr>
+					<tr class="borders">
+						<td colspan="44" data-label="Navn">[[meglerkontor.navn]]</td>
+						<td colspan="14" data-label="Fødselsnr./Org.nr.">[[meglerkontor.orgnr]]</td>
+						<td colspan="42" data-label="E-postadresse">[[meglerkontor.epost]]</td>
+					</tr>
+					<tr class="borders">
+						<td colspan="44" data-label="Adresse">[[meglerkontor.adresse]]</td>
+						<td colspan="14" data-label="Postnummer">[[meglerkontor.postnr]]</td>
+						<td colspan="30" data-label="Poststed">[[meglerkontor.poststed]]</td>
+						<td colspan="12" data-label="Telefonnummer">[[meglerkontor.tlf]]</td>
+					</tr>
+					<tr contenteditable="false">
+						<td class="separator" colspan="100">&nbsp;</td>
+					</tr>
+					<tr class="borders" contenteditable="false">
+						<td class="bg-color header-cell" colspan="100">2. Opplysninger om eiendommen</td>
+					</tr>
+					<tr class="borders">
+						<td colspan="12" data-label="Kommunenr.">
+						<ul vitec-foreach="matrikkel in Model.matrikler">
+							<li>[[eiendom.kommunenr]]</li>
+						</ul>
+						</td>
+						<td colspan="52" data-label="Kommunens navn">
+						<ul vitec-foreach="matrikkel in Model.matrikler">
+							<li>[[eiendom.kommunenavn]]</li>
+						</ul>
+						</td>
+						<td colspan="12" data-label="Gårdsnr.">
+						<ul vitec-foreach="matrikkel in Model.matrikler">
+							<li>[[*matrikkel.gnr]]</li>
+						</ul>
+						</td>
+						<td colspan="12" data-label="Bruksnr.">
+						<ul vitec-foreach="matrikkel in Model.matrikler">
+							<li>[[*matrikkel.bnr]]</li>
+						</ul>
+						</td>
+						<td colspan="12" data-label="Festenr.">
+						<ul vitec-foreach="matrikkel in Model.matrikler">
+							<li><span vitec-if="matrikkel.fnr != 0">[[*matrikkel.fnr]]</span></li>
+						</ul>
+						</td>
+					</tr>
+					<tr contenteditable="false">
+						<td class="separator" colspan="100">&nbsp;</td>
+					</tr>
+					<tr class="borders" contenteditable="false">
+						<td class="bg-color header-cell" colspan="100">3. Hvem eier/fester eiendommen? (Hjemmelshaver(e)</td>
+					</tr>
+					<tr class="borders" contenteditable="false">
+						<td class="vertical-top" colspan="24">F&oslash;dselsnr./Org.nr. (11/9 siffer)</td>
+						<td class="vertical-top" colspan="64">Navn</td>
+						<td class="vertical-top" colspan="12">Eierandel (oppgis som br&oslash;k)</td>
+					</tr>
+				</tbody>
+				<tbody vitec-foreach="hjemmelshaver in Model.hjemmelshavere">
+					<tr class="border-bottom-dotted sideborders">
+						<td class="border-right" colspan="24">[[*hjemmelshaver.idnummer]]</td>
+						<td class="border-right" colspan="64">[[*hjemmelshaver.navn]]</td>
+						<td colspan="12">[[*hjemmelshaver.eierbrok]]</td>
+					</tr>
+				</tbody>
+				<tbody>
+					<tr class="border-bottom-dotted sideborders">
+						<td class="border-right" colspan="24">&nbsp;</td>
+						<td class="border-right" colspan="64">&nbsp;</td>
+						<td colspan="12">&nbsp;</td>
+					</tr>
+					<tr class="border-bottom sideborders">
+						<td class="border-right" colspan="24">&nbsp;</td>
+						<td class="border-right" colspan="64">&nbsp;</td>
+						<td colspan="12">&nbsp;</td>
+					</tr>
+					<tr contenteditable="false">
+						<td class="separator" colspan="100">&nbsp;</td>
+					</tr>
+					<tr class="borders" contenteditable="false">
+						<td class="bg-color header-cell" colspan="100">4. S&oslash;knad (&oslash;nsket oppdeling av eiendommen)</td>
+					</tr>
+					<tr class="borders" contenteditable="false">
+						<td colspan="100">Eiendommen s&oslash;kes oppdelt i eierseksjoner slik det fremg&aring;r av fordelingslisten nedenfor.<br />
+						Dersom eiendommen &oslash;nskes oppdelt i flere enn seksti seksjoner, m&aring; du fortsette utfyllingen p&aring; s&oslash;knadens siste side.</td>
+					</tr>
+					<tr class="borders" contenteditable="false">
+						<td class="vertical-top" colspan="8"><strong>Seksjons-<br />
+						nummer </strong></td>
+						<td class="vertical-top" colspan="20"><strong>Seksjonens form&aring;l</strong><br />
+						<strong>B</strong> = Boligseksjon (omfatter ogs&aring; fritidsboliger)<br />
+						<strong>N</strong> = n&aelig;ringseiendom<br />
+						<strong>SB</strong> = samleseksjon bolig<br />
+						<strong>SN</strong> = samleseksjon n&aelig;ring</td>
+						<td class="vertical-top" colspan="30"><strong>Sameiebr&oslash;k (teller)</strong><br />
+						Her skriver du telleren til seksjonen. Nederst skriver du nevneren, som vil v&aelig;re summen av tellerne til samtlige seksjoner i sameiet.</td>
+						<td class="vertical-top" colspan="42"><strong>Tilleggsareal</strong><br />
+						Fyll ut denne kolonnen hvis seksjonen skal ha tilleggsareal.<br />
+						<strong>B</strong> = tilleggsareal i bygning<br />
+						<strong>G</strong> = tilleggsareal i grunn (krever oppm&aring;lingsforretning)<br />
+						<strong>BG</strong> = tilleggsareal i bygning og grunn (krever oppm&aring;lingsforretning)</td>
+					</tr>
+					<tr class="borders" contenteditable="false">
+						<td class="vertical-top" colspan="4">S.nr</td>
+						<td class="vertical-top" colspan="4">For-<br />
+						m&aring;l</td>
+						<td class="vertical-top" colspan="6">Br&oslash;k<br />
+						(teller)</td>
+						<td class="extra-border-right vertical-top" colspan="6">Tilleggs-<br />
+						areal</td>
+						<td class="vertical-top" colspan="4">S.nr</td>
+						<td colspan="4">For-<br />
+						m&aring;l</td>
+						<td class="vertical-top" colspan="6">Br&oslash;k<br />
+						(teller)</td>
+						<td class="extra-border-right vertical-top" colspan="6">Tilleggs-<br />
+						areal</td>
+						<td class="vertical-top" colspan="4">S.nr</td>
+						<td class="vertical-top" colspan="4">For-<br />
+						m&aring;l</td>
+						<td class="vertical-top" colspan="6">Br&oslash;k<br />
+						(teller)</td>
+						<td class="extra-border-right vertical-top" colspan="6">Tilleggs-<br />
+						areal</td>
+						<td class="vertical-top" colspan="4">S.nr</td>
+						<td class="vertical-top" colspan="4">For-<br />
+						m&aring;l</td>
+						<td class="vertical-top" colspan="6">Br&oslash;k<br />
+						(teller)</td>
+						<td class="extra-border-right vertical-top" colspan="6">Tilleggs-<br />
+						areal</td>
+						<td class="vertical-top" colspan="4">S.nr</td>
+						<td class="vertical-top" colspan="4">For-<br />
+						m&aring;l</td>
+						<td class="vertical-top" colspan="6">Br&oslash;k<br />
+						(teller)</td>
+						<td class="vertical-top" colspan="6">Tilleggs-<br />
+						areal</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">1</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">13</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">25</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">37</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">49</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">2</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">14</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">26</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">38</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">50</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">3</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">15</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">27</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">39</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">51</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">4</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">16</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">28</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">40</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">52</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">5</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">17</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">29</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">41</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">53</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">6</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">18</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">30</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">42</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">54</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">7</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">19</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">31</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">43</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">55</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">8</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">20</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">32</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">44</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">56</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">9</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">21</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">33</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">45</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">57</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">10</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">22</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">34</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">46</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">58</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">11</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">23</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">35</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">47</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">59</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">12</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">24</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">36</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">48</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">60</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="bg-color header-cell text-right" colspan="14" contenteditable="false">Sum tellere =</td>
+						<td colspan="14">&nbsp;</td>
+						<td class="bg-color extra-border-right header-cell text-right" colspan="12" contenteditable="false">Nevner = &nbsp;</td>
+						<td colspan="14">&nbsp;</td>
+						<td class="bg-color header-cell" colspan="46" contenteditable="false">&nbsp;</td>
+					</tr>
+					<tr contenteditable="false">
+						<td class="separator" colspan="100">&nbsp;</td>
+					</tr>
+					<tr class="border-top sideborders" contenteditable="false">
+						<td class="border-right" colspan="20">Dato</td>
+						<td colspan="80">Innsenderens underskrift</td>
+					</tr>
+					<tr class="border-bottom sideborders">
+						<td colspan="20" style="height:.8cm">&nbsp;</td>
+						<td colspan="80">&nbsp;</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+		<tr contenteditable="false">
+			<td>Fastsatt av Kommunal- og moderniseringsdepartementet med hjemmel i forskrift<br />
+			17. desember 2017 om bruk av standardisert s&oslash;knad om seksjonering</td>
+			<td style="text-align:right; vertical-align:bottom">Side <strong>1</strong> av <strong>4</strong></td>
+		</tr>
+	</tbody>
+</table>
+
+<table class="main-table">
+	<tbody>
+		<tr>
+			<td class="a4-main" colspan="2">
+			<table>
+				<tbody>
+					<tr contenteditable="false">
+						<td colspan="100" style="height:1cm">&nbsp;</td>
+					</tr>
+					<tr class="borders" contenteditable="false">
+						<td class="bg-color header-cell" colspan="100">5. N&oslash;dvendige dokumenter som skal tinglyses samtidig med seksjoneringen</td>
+					</tr>
+					<tr class="borders" contenteditable="false">
+						<td class="vertical-top" colspan="100">Her skal s&oslash;ker kun gi opplysninger om dokumenter som er n&oslash;dvendige for at seksjoneringen skal kunne tinglyses, for eksempel dokumenter som inneholder opplysninger om fordeling av opprinnelige sameieandeler.</td>
+					</tr>
+					<tr class="borders">
+						<td class="vertical-top" colspan="100" style="height:6cm">&nbsp;</td>
+					</tr>
+					<tr class="borders" contenteditable="false">
+						<td class="bg-color header-cell" colspan="100">6. Egenerkl&aelig;ring om at vilk&aring;rene i eierseksjonsloven er oppfylt</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false" style="border-bottom:none">
+						<td colspan="100">Hjemmelshaver(ne) erkl&aelig;rer at:</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td colspan="5"><strong>a)</strong></td>
+						<td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td colspan="90">hver seksjonseier har enerett til &aring; bruke en bruksenhet</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td class="separator" colspan="100">&nbsp;</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td colspan="5"><strong>b)</strong></td>
+						<td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td colspan="90">hver bruksenhets hoveddel er en klart avgrenset og sammenhengende del av en bygning p&aring; eiendommen og har egen inngang fra fellesareal, fra naboeiendom eller fra egen tilleggsdel</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td class="separator" colspan="100">&nbsp;</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td colspan="5"><strong>c)</strong></td>
+						<td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td colspan="90">det er avsatt tilstrekkelig parkeringsareal til &aring; sikre det antallet parkeringsplasser som f&oslash;lger av byggetillatelsen eller plangrunnlaget</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td class="separator" colspan="100">&nbsp;</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td colspan="5"><strong>d)</strong></td>
+						<td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td colspan="90">seksjoneringen omfatter alle bruksenhetene i eiendommen</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td class="separator" colspan="100">&nbsp;</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td colspan="5"><strong>e)</strong></td>
+						<td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td colspan="90">seksjoneringen omfatter bare &eacute;n grunneiendom, festegrunn eller anleggseiendom, eller at kommunen med samtykke fra Kartverket har gjort unntak fra vilk&aring;ret</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td class="separator" colspan="100">&nbsp;</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td colspan="5"><strong>f)</strong></td>
+						<td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td colspan="90">det er fastsatt om den enkelte seksjon skal brukes til boligform&aring;l eller annet form&aring;l, og bruksform&aring;let er i samsvar med arealplanform&aring;let, eller annen bruk det er gitt tillatelse til</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td class="separator" colspan="100">&nbsp;</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td colspan="5"><strong>g)</strong></td>
+						<td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td colspan="90">rammetillatelse eller igangsettingstillatelse er gitt dersom seksjoneringen gjelder planlagt bygning eller s&oslash;knadspliktige tiltak i eksisterende bygg</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td class="separator" colspan="100">&nbsp;</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td colspan="5"><strong>h)</strong></td>
+						<td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td colspan="90">arealer som andre seksjonseiere trenger tilgang til, og arealer som etter plan- og bygningsloven er avsatt til felles uteoppholdsareal, seksjoneres til fellesareal</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td class="separator" colspan="100">&nbsp;</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td colspan="5"><strong>i)</strong></td>
+						<td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td colspan="90">det er fastsatt vedtekter.</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td class="separator" colspan="100">&nbsp;</td>
+					</tr>
+					<tr class="borders" contenteditable="false">
+						<td class="header-cell" colspan="100">Hjemmelshaver(ne) er kjent med at det er straffbart &aring; avgi eller benytte uriktig erkl&aelig;ring, jf. straffeloven &sect; 365</td>
+					</tr>
+					<tr contenteditable="false">
+						<td class="separator" colspan="100">&nbsp;</td>
+					</tr>
+					<tr class="borders" contenteditable="false">
+						<td class="bg-color header-cell" colspan="100">7. Egenerkl&aelig;ring om at lovens tilleggsvilk&aring;r for seksjonering til bolig er oppfylt</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false" style="border-bottom:none">
+						<td colspan="100">Hjemmelshaver(ne) erkl&aelig;rer at:</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td class="vertical-top" colspan="95">Hver boligseksjon er en lovlig etablert boenhet etter plan- og bygningsloven og har kj&oslash;kken, bad og wc innenfor hoveddelen av<br />
+						bruksenheten og at bad og wc er i eget eller egne rom<br />
+						eller</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td class="separator" colspan="100">&nbsp;</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td colspan="95">boligseksjonen skal brukes til fritidsbolig,<br />
+						eller</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td class="separator" colspan="100">&nbsp;</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td colspan="95">alle boligene inng&aring;r i en samleseksjon bolig</td>
+					</tr>
+					<tr class="border-bottom sideborders" contenteditable="false">
+						<td class="separator" colspan="100">&nbsp;</td>
+					</tr>
+					<tr contenteditable="false">
+						<td class="separator" colspan="100">&nbsp;</td>
+					</tr>
+					<tr class="border-top sideborders" contenteditable="false">
+						<td class="border-right" colspan="20">Dato</td>
+						<td colspan="80">Innsenderens underskrift</td>
+					</tr>
+					<tr class="border-bottom sideborders">
+						<td colspan="20" style="height:.8cm">&nbsp;</td>
+						<td colspan="80">&nbsp;</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+		<tr contenteditable="false">
+			<td>Fastsatt av Kommunal- og moderniseringsdepartementet med hjemmel i forskrift<br />
+			17. desember 2017 om bruk av standardisert s&oslash;knad om seksjonering</td>
+			<td style="text-align:right; vertical-align:bottom">Side <strong>2</strong> av <strong>4</strong></td>
+		</tr>
+	</tbody>
+</table>
+
+<table class="main-table">
+	<tbody>
+		<tr>
+			<td class="a4-main" colspan="2">
+			<table>
+				<tbody>
+					<tr contenteditable="false">
+						<td colspan="100" style="height:1cm">&nbsp;</td>
+					</tr>
+					<tr class="borders" contenteditable="false">
+						<td class="bg-color header-cell" colspan="100">8. Vedlegg som skal f&oslash;lge s&oslash;knaden</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td colspan="5"><strong>a)</strong></td>
+						<td colspan="95">Situasjonsplan over eiendommen som tydelig angir eiendommens grenser, omrisset av bebyggelsen og grensene for eventuelle utend&oslash;rs tilleggsdeler som skal inng&aring; i bruksenhetene</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td colspan="5"><strong>b)</strong></td>
+						<td colspan="95">Plantegninger over etasjene i bygningen, inkludert kjeller og loft. P&aring; tegningene skal bruksenhetens arealer og avgrensinger, forslag til seksjonsnummer og bruken av de enkelte rom angis tydelig</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td colspan="5"><strong>c)</strong></td>
+						<td colspan="95">Sameiets vedtekter</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td colspan="5"><strong>d)</strong></td>
+						<td colspan="95">Rekvisisjon av oppm&aring;lingsforretning dersom noen av bruksenhetene har utend&oslash;rs tilleggsareal</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td colspan="5"><strong>e)</strong></td>
+						<td colspan="95">Dokumentasjon p&aring; at boligseksjoner oppfyller kravene til &aring; v&aelig;re selvstendige boenheter etter plan- og bygningsloven. Som regel vil slik dokumentasjon fremg&aring; av tillatelse etter plan- og bygningsloven, men ogs&aring; opplysninger fra matrikkelen, tinglyste klausuler eller annet dokument kan tjene som dokumentasjon</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td colspan="5"><strong>f)</strong></td>
+						<td colspan="95">Samtykke fra rettighetshaver hvis det er tinglyst ur&aring;dighetserkl&aelig;ring som g&aring;r ut p&aring; at eiendommen ikke kan disponeres over uten samtykke fra rettighetshaver. Samtykket m&aring; v&aelig;re med original signatur</td>
+					</tr>
+					<tr class="border-bottom sideborders" contenteditable="false">
+						<td colspan="5"><strong>g)</strong></td>
+						<td colspan="95">Dersom det er flere hjemmelshavere til eiendommen som skal seksjoneres, skal skjemaet &laquo;Fordeling av sameieandeler ved seksjonering&raquo; vedlegges.</td>
+					</tr>
+					<tr contenteditable="false">
+						<td class="separator" colspan="100">&nbsp;</td>
+					</tr>
+					<tr class="borders" contenteditable="false">
+						<td class="bg-color header-cell" colspan="100">9. Innsendte plantegninger</td>
+					</tr>
+					<tr class="border-bottom sideborders" contenteditable="false">
+						<td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td colspan="95">Som hjemmelshaver(e) bekrefter jeg/vi at de vedlagte plantegningene stemmer overens med den faktiske planl&oslash;sningen</td>
+					</tr>
+					<tr contenteditable="false">
+						<td class="separator" colspan="100">&nbsp;</td>
+					</tr>
+					<tr class="borders" contenteditable="false">
+						<td class="bg-color header-cell" colspan="100">10. Underskrifter</td>
+					</tr>
+				</tbody>
+				<tbody vitec-foreach="hjemmelshaver in Model.hjemmelshavere">
+					<tr class="borders">
+						<td colspan="30" data-label="Sted og dato" style="height:1cm">&nbsp;</td>
+						<td colspan="35" data-label="Hjemmelshavers underskrift">&nbsp;</td>
+						<td colspan="35" data-label="Gjenta navn med blokkbokstaver"><span style="text-transform:uppercase">[[*hjemmelshaver.navn]]</span></td>
+					</tr>
+				</tbody>
+				<tbody>
+					<tr class="borders">
+						<td colspan="30" data-label="Sted og dato" style="height:1cm">&nbsp;</td>
+						<td colspan="35" data-label="Hjemmelshavers underskrift">&nbsp;</td>
+						<td colspan="35" data-label="Gjenta navn med blokkbokstaver">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td colspan="30" data-label="Sted og dato" style="height:1cm">&nbsp;</td>
+						<td colspan="35" data-label="Hjemmelshavers underskrift">&nbsp;</td>
+						<td colspan="35" data-label="Gjenta navn med blokkbokstaver">&nbsp;</td>
+					</tr>
+					<tr contenteditable="false">
+						<td class="separator" colspan="100">&nbsp;</td>
+					</tr>
+					<tr class="borders" contenteditable="false">
+						<td class="bg-color header-cell" colspan="100">11. Kommunens saksbehandling</td>
+					</tr>
+					<tr class="sideborders" contenteditable="false">
+						<td colspan="5"><strong>a)</strong></td>
+						<td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td colspan="90">Kommunen har utarbeidet og vedlagt matrikkelkart for utend&oslash;rs tilleggsdeler</td>
+					</tr>
+					<tr class="border-bottom sideborders" contenteditable="false">
+						<td colspan="5"><strong>b)</strong></td>
+						<td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td colspan="90">Brev med orientering om vedtaket er sendt til innsenderen (m&aring; krysses av)</td>
+					</tr>
+					<tr contenteditable="false">
+						<td class="separator" colspan="100">&nbsp;</td>
+					</tr>
+					<tr class="borders" contenteditable="false">
+						<td class="bg-color header-cell" colspan="100">12. Kommunen bekrefter at tillatelse til seksjonering er gitt for (<u>m&aring;</u> fylles ut):</td>
+					</tr>
+					<tr class="borders">
+						<td colspan="12" data-label="Kommunenr.">
+						<ul vitec-foreach="matrikkel in Model.matrikler">
+							<li>[[eiendom.kommunenr]]</li>
+						</ul>
+						</td>
+						<td colspan="52" data-label="Kommunens navn">
+						<ul vitec-foreach="matrikkel in Model.matrikler">
+							<li>[[eiendom.kommunenavn]]</li>
+						</ul>
+						</td>
+						<td colspan="12" data-label="Gårdsnr.">
+						<ul vitec-foreach="matrikkel in Model.matrikler">
+							<li>[[*matrikkel.gnr]]</li>
+						</ul>
+						</td>
+						<td colspan="12" data-label="Bruksnr.">
+						<ul vitec-foreach="matrikkel in Model.matrikler">
+							<li>[[*matrikkel.bnr]]</li>
+						</ul>
+						</td>
+						<td colspan="12" data-label="Festenr.">
+						<ul vitec-foreach="matrikkel in Model.matrikler">
+							<li>[[*matrikkel.fnr]]</li>
+						</ul>
+						</td>
+					</tr>
+					<tr class="borders">
+						<td class="vertical-top" colspan="12" data-label="Dato" style="height:3cm">&nbsp;</td>
+						<td class="vertical-top" colspan="52" data-label="Underskrift">&nbsp;</td>
+						<td class="vertical-top" colspan="36" data-label="Stempel">&nbsp;</td>
+					</tr>
+					<tr contenteditable="false">
+						<td class="separator" colspan="100">&nbsp;</td>
+					</tr>
+					<tr class="border-top sideborders" contenteditable="false">
+						<td class="border-right" colspan="20">Dato</td>
+						<td colspan="80">Innsenderens underskrift</td>
+					</tr>
+					<tr class="border-bottom sideborders">
+						<td colspan="20" style="height:.8cm">&nbsp;</td>
+						<td colspan="80">&nbsp;</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+		<tr contenteditable="false">
+			<td>Fastsatt av Kommunal- og moderniseringsdepartementet med hjemmel i forskrift<br />
+			17. desember 2017 om bruk av standardisert s&oslash;knad om seksjonering</td>
+			<td style="text-align:right; vertical-align:bottom">Side <strong>3</strong> av <strong>4</strong></td>
+		</tr>
+	</tbody>
+</table>
+
+<table class="main-table">
+	<tbody>
+		<tr>
+			<td class="a4-main" colspan="2">
+			<table>
+				<tbody>
+					<tr contenteditable="false">
+						<td colspan="100" style="height:1cm">&nbsp;</td>
+					</tr>
+					<tr class="borders" contenteditable="false">
+						<td class="bg-color header-cell" colspan="100">4. S&oslash;knad (&oslash;nsket oppdeling av eiendommen), fortsettelse.</td>
+					</tr>
+					<tr class="borders" contenteditable="false">
+						<td colspan="100">Eiendommen s&oslash;kes oppdelt i eierseksjoner slik det fremg&aring;r av fordelingslisten nedenfor.<br />
+						Dersom eiendommen &oslash;nskes oppdelt i flere enn seksti seksjoner, m&aring; du fortsette utfyllingen p&aring; s&oslash;knadens siste side.</td>
+					</tr>
+					<tr class="borders" contenteditable="false">
+						<td class="vertical-top" colspan="8"><strong>Seksjons-<br />
+						nummer </strong></td>
+						<td class="vertical-top" colspan="20"><strong>Seksjonens form&aring;l</strong><br />
+						<strong>B</strong> = Boligseksjon (omfatter ogs&aring; fritidsboliger)<br />
+						<strong>N</strong> = n&aelig;ringseiendom<br />
+						<strong>SB</strong> = samleseksjon bolig<br />
+						<strong>SN</strong> = samleseksjon n&aelig;ring</td>
+						<td class="vertical-top" colspan="30"><strong>Sameiebr&oslash;k (teller)</strong><br />
+						Her skriver du telleren til seksjonen. Nederst skriver du nevneren, som vil v&aelig;re summen av tellerne til samtlige seksjoner i sameiet.</td>
+						<td class="vertical-top" colspan="42"><strong>Tilleggsareal</strong><br />
+						Fyll ut denne kolonnen hvis seksjonen skal ha tilleggsareal.<br />
+						<strong>B</strong> = tilleggsareal i bygning<br />
+						<strong>G</strong> = tilleggsareal i grunn (krever oppm&aring;lingsforretning)<br />
+						<strong>BG</strong> = tilleggsareal i bygning og grunn (krever oppm&aring;lingsforretning)</td>
+					</tr>
+					<tr class="borders" contenteditable="false">
+						<td class="vertical-top" colspan="4">S.nr</td>
+						<td class="vertical-top" colspan="4">For-<br />
+						m&aring;l</td>
+						<td class="vertical-top" colspan="6">Br&oslash;k<br />
+						(teller)</td>
+						<td class="extra-border-right vertical-top" colspan="6">Tilleggs-<br />
+						areal</td>
+						<td class="vertical-top" colspan="4">S.nr</td>
+						<td colspan="4">For-<br />
+						m&aring;l</td>
+						<td class="vertical-top" colspan="6">Br&oslash;k<br />
+						(teller)</td>
+						<td class="extra-border-right vertical-top" colspan="6">Tilleggs-<br />
+						areal</td>
+						<td class="vertical-top" colspan="4">S.nr</td>
+						<td class="vertical-top" colspan="4">For-<br />
+						m&aring;l</td>
+						<td class="vertical-top" colspan="6">Br&oslash;k<br />
+						(teller)</td>
+						<td class="extra-border-right vertical-top" colspan="6">Tilleggs-<br />
+						areal</td>
+						<td class="vertical-top" colspan="4">S.nr</td>
+						<td class="vertical-top" colspan="4">For-<br />
+						m&aring;l</td>
+						<td class="vertical-top" colspan="6">Br&oslash;k<br />
+						(teller)</td>
+						<td class="extra-border-right vertical-top" colspan="6">Tilleggs-<br />
+						areal</td>
+						<td class="vertical-top" colspan="4">S.nr</td>
+						<td class="vertical-top" colspan="4">For-<br />
+						m&aring;l</td>
+						<td class="vertical-top" colspan="6">Br&oslash;k<br />
+						(teller)</td>
+						<td class="vertical-top" colspan="6">Tilleggs-<br />
+						areal</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">61</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">85</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">109</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">133</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">157</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">62</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">86</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">110</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">134</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">158</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">63</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">87</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">111</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">135</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">159</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">64</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">88</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">112</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">136</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">160</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">65</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">89</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">113</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">137</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">161</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">66</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">90</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">114</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">138</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">162</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">67</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">91</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">115</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">139</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">163</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">68</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">92</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">116</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">140</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">164</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">69</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">93</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">117</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">141</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">165</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">70</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">94</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">118</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">142</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">166</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">71</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">95</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">119</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">143</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">167</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">72</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">96</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">120</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">144</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">168</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">73</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">97</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">121</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">145</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">169</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">74</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">98</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">122</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">146</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">170</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">75</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="snr-lead" colspan="4" contenteditable="false">99</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">123</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">147</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">171</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">76</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">100</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">124</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">148</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">172</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">77</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">101</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">125</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">149</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">173</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">78</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">102</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">126</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">150</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">174</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">79</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">103</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">127</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">151</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">175</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">80</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">104</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">128</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">152</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">176</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">81</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">105</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">129</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">153</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">177</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">82</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">106</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">130</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">154</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">178</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">83</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">107</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">131</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">155</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">179</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="snr-lead" colspan="4" contenteditable="false">84</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">108</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">132</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">156</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td class="extra-border-right" colspan="6">&nbsp;</td>
+						<td class="reduced-size snr-lead" colspan="4" contenteditable="false">180</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+						<td colspan="6">&nbsp;</td>
+					</tr>
+					<tr class="borders">
+						<td class="bg-color header-cell text-right" colspan="14" contenteditable="false">Sum tellere =</td>
+						<td colspan="14">&nbsp;</td>
+						<td class="bg-color extra-border-right header-cell text-right" colspan="12" contenteditable="false">Nevner = &nbsp;</td>
+						<td colspan="14">&nbsp;</td>
+						<td class="bg-color header-cell" colspan="46" contenteditable="false">&nbsp;</td>
+					</tr>
+					<tr contenteditable="false">
+						<td class="separator" colspan="100">&nbsp;</td>
+					</tr>
+					<tr class="border-top sideborders" contenteditable="false">
+						<td class="border-right" colspan="20">Dato</td>
+						<td colspan="80">Innsenderens underskrift</td>
+					</tr>
+					<tr class="border-bottom sideborders">
+						<td colspan="20" style="height:.8cm">&nbsp;</td>
+						<td colspan="80">&nbsp;</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+		<tr contenteditable="false">
+			<td>Fastsatt av Kommunal- og moderniseringsdepartementet med hjemmel i forskrift<br />
+			17. desember 2017 om bruk av standardisert s&oslash;knad om seksjonering</td>
+			<td style="text-align:right; vertical-align:bottom">Side <strong>4</strong> av <strong>4</strong></td>
+		</tr>
+	</tbody>
+</table>
+</div>

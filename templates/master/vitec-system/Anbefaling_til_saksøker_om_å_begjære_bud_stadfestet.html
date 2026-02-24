@@ -1,0 +1,106 @@
+<div id="vitecTemplate">
+	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+	<style type="text/css">
+		#vitecTemplate table {
+			border-collapse: collapse;
+			width: 100%;
+			table-layout: fixed;
+		}
+
+		#vitecTemplate strong {
+			font-size: unset;
+		}
+
+		#vitecTemplate .saksokte:last-child .separator {
+			display: none;
+		}
+
+		/* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+		#vitecTemplate span.insert:empty {
+			font-size: inherit !important;
+			line-height: inherit !important;
+			display: inline-block;
+			background-color: lightpink;
+			min-width: 2em !important;
+			height: .7em !important;
+			text-align: center;
+		}
+
+			#vitecTemplate span.insert:empty:before {
+				content: attr(data-label);
+			}
+
+			#vitecTemplate span.insert:empty:hover {
+				background-color: #fff;
+				cursor: pointer;
+			}
+
+		#vitecTemplate .insert-table {
+			display: inline-table;
+		}
+
+			#vitecTemplate .insert-table > span,
+			#vitecTemplate .insert-table > span.insert {
+				display: table-cell;
+			}
+	</style>
+	<table>
+		<tbody>
+			<tr>
+				<td colspan="100">
+					<div vitec-template="resource: Mottaker">&nbsp;</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="100">
+					<p><strong>Anbefaling om &aring; begj&aelig;re stadfestelse av bud i forbindelse med tvangssalg av [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+					<table>
+						<tbody>
+							<tr>
+								<td colspan="25"><strong>Tingrettens saksnr.:</strong></td>
+								<td colspan="75">[[tvangssalgrefnr]]</td>
+							</tr>
+							<tr>
+								<td colspan="25"><strong>Saks&oslash;kte:</strong></td>
+								<td colspan="75"><span vitec-foreach="saksokte  in Model.saksokteliste"> <span class="saksokte">[[*saksokte.navnutenfullmektigogkontaktperson]]<span class="separator">, </span> </span> </span></td>
+							</tr>
+							<tr>
+							</tr>
+						</tbody>
+					</table>
+
+					<p>Vi viser til ovennevnte tvangssalg.</p>
+
+					<p>Eiendommen er annonsert [[oppdrag.antallfinnannonser]] ganger. Vi har avholdt [[oppdrag.antallvisninger]] visninger.</p>
+
+					<p>Det er innkommet flere bud p&aring; eienodmmen iht. vedlagte budjournal. Det h&oslash;yeste budet er p&aring; <span style="white-space:nowrap">kr $.UD([[hoyestebud.belop]])</span> og er fra [[hoyestebud.budgiver.navn]]. Kopi av bud med skriftlig finansieringsbekreftelse vedlegges. Vi anbefaler at budet begj&aelig;res stadfestet.</p>
+
+					<p>Vi ber om at dere gir melding til oss s&aring; snart som mulig om hvorvidt dette - eller evt. senere innkomne og h&oslash;yere bud - blir begj&aelig;rt stadfestet slik at vi deretter kan oversende anbefaling om stadfestelse til Tingretten og f&aring; utstedt kjennelser.</p>
+
+					<p>Vi ber ogs&aring; om &aring; f&aring; opplyst deres &oslash;konomiske krav med pant i eiendommen pr. antatt oppgj&oslash;rsdag (3 m&aring;neder frem i tid fra brevet er mottatt hos oss) med grunnlag i den tinglyste panteretten etter gjeldende regler &ndash; spesifisert med omkostninger og renter fra 2 &aring;r f&oslash;r begj&aelig;ringstidspunkt og renter frem til oppgj&oslash;rsdag. Oppgi ogs&aring; hvilken rentesats som er benyttet.</p>
+
+					<p>Eventuelle sp&oslash;rsm&aring;l bes rettet til undertegnede.</p>
+
+					<div vitec-template="resource: Avsender">&nbsp;</div>
+
+					<p>&nbsp;</p>
+
+					<table style="border:none">
+						<tbody>
+							<tr>
+								<td colspan="10">Vedlegg:</td>
+								<td colspan="90">Kopi av h&oslash;yeste bud</td>
+							</tr>
+							<tr>
+								<td colspan="10">&nbsp;</td>
+								<td colspan="90">Budjournal</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

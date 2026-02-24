@@ -1,0 +1,894 @@
+<div id="vitecTemplate">
+    <style type="text/css">
+        #vitecTemplate .a4-main {
+            vertical-align: top;
+            height: 27.5cm;
+        }
+
+        #vitecTemplate p {
+            font-family: Arial, sans-serif;
+            font-size: 8.5pt;
+            line-height: 10pt;
+        }
+
+        #vitecTemplate .indented {
+            padding-left: 1em;
+        }
+
+            #vitecTemplate .indented > span:first-child {
+                display: inline-block;
+                width: 1em;
+                margin-left: -1em;
+            }
+
+        #vitecTemplate strong,
+        #vitectemplate b {
+            font-family: Arial, sans-serif;
+        }
+
+        #vitecTemplate .table-header {
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            font-size: 9pt;
+            line-height: 11pt;
+        }
+
+        #vitecTemplate table {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        #vitecTemplate tr.bg-red-light {
+            background-color: #fde7dc;
+            border-right: solid 1px #000;
+            border-left: solid 1px #000;
+        }
+
+        #vitecTemplate tr.bg-red {
+            background-color: #f8a98e;
+            font-weight: bold;
+            font-size: 10pt;
+            height: .35cm;
+            border: solid 1px #000;
+        }
+
+        #vitecTemplate tr td {
+            font-family: Arial, sans-serif;
+            font-size: 8.5pt;
+            padding: 3px;
+            line-height: 10pt;
+            height: 0.7cm;
+        }
+
+        #vitecTemplate .borders {
+            border: solid 1px #000;
+        }
+
+        #vitecTemplate .border-top {
+            border-top: solid 1px #000;
+        }
+
+        #vitecTemplate .border-right {
+            border-right: solid 1px #000;
+        }
+
+        #vitecTemplate .border-bottom {
+            border-bottom: solid 1px #000;
+        }
+
+        #vitecTemplate .border-left {
+            border-left: solid 1px #000;
+        }
+
+        #vitecTemplate .center {
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        #vitecTemplate .vtop {
+            vertical-align: top;
+        }
+
+        #vitecTemplate .vbottom {
+            vertical-align: bottom;
+        }
+
+        #vitecTemplate .related-box {
+            background-color: #fff;
+            vertical-align: top;
+            border: solid 1px #000;
+            border-top: none;
+            position: relative;
+            height: 1.1cm;
+        }
+
+            #vitecTemplate .related-box:before {
+                content: " ";
+                position: absolute;
+                top: 0;
+                right: 0;
+                left: 0;
+                border-bottom: solid 1px #000;
+                display: block;
+            }
+
+        #vitecTemplate td.row-header {
+            font-weight: bold;
+            font-size: 9pt;
+            height: .35cm;
+            border-left: solid 1px #000;
+            border-right: solid 1px #000;
+        }
+
+        #vitecTemplate ul {
+            font-family: Arial, sans-serif;
+            font-size: 9pt;
+            line-height: 11pt;
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+        }
+
+            #vitecTemplate ul li {
+                padding-left: 0;
+                font-family: Arial, sans-serif;
+                font-size: 9pt;
+                line-height: 11pt;
+            }
+
+        #vitecTemplate .page-info {
+            font-family: Arial, sans-serif;
+            float: left;
+            font-size: 8pt;
+            width: 100%;
+            position: relative;
+        }
+
+        #vitecTemplate .version {
+            position: absolute;
+            font-size: 9px;
+            -webkit-transform: rotate(-90deg);
+            -webkit-transform-origin: top left;
+            transform: rotate(-90deg);
+            transform-origin: top left;
+            width: 200px;
+            margin-left: -20px;
+        }
+
+        #vitecTemplate td[data-label]:before {
+            content: attr(data-label);
+            text-align: left;
+            color: #333;
+            font-size: 7pt;
+            line-height: 8pt;
+            display: block;
+            position: absolute;
+            top: 1px;
+        }
+
+        #vitecTemplate td[data-label] {
+            padding: 16px 2px 4px 2px;
+            position: relative;
+        }
+
+
+        /* Malredigering: Hindre placeholder-plugin fra &aring; sprenge tabell-celler (matrikkel-rad)*/
+
+        .cke_widget_inline {
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        #vitecTemplate [contenteditable="false"] * {
+            user-select: none;
+        }
+
+        #vitecTemplate .foreach-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+            #vitecTemplate .foreach-list li {
+                list-style-type: none;
+            }
+
+        #vitecTemplate .matrikkel-info td {
+            vertical-align: top;
+        }
+    </style>
+    <style type="text/css">
+        /* Klikkbare sjekkbokser og radioknapper */
+        label.btn {
+            display: inline;
+            text-transform: none;
+            white-space: normal;
+            padding: 0;
+            vertical-align: baseline;
+            outline: none;
+            font-size: inherit;
+        }
+
+            label.btn:active,
+            label.btn.active {
+                box-shadow: none;
+                outline: none;
+            }
+
+        .svg-toggle { /* nullstiller bootstrap button-styling */
+            display: inline-block !important;
+            width: 18px;
+            height: 18px;
+            margin: 0 5px;
+            vertical-align: bottom;
+            padding: 0;
+            border: none;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none !important;
+            cursor: pointer;
+            white-space: normal;
+            text-align: left;
+            background-repeat: no-repeat;
+            background-size: 18px 18px;
+            background-position: center center;
+        }
+
+            .svg-toggle.checkbox {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+            }
+
+                .svg-toggle.checkbox.active,
+                .btn.active > .svg-toggle.checkbox {
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+                    box-shadow: none !important;
+                }
+
+            .svg-toggle.radio {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
+            }
+
+                .svg-toggle.radio.active,
+                .btn.active > .svg-toggle.radio {
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
+                    box-shadow: none !important;
+                }
+
+
+
+        /* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
+        #vitecTemplate [data-toggle="buttons"] input {
+            display: none;
+        }
+    </style>
+    <span style="display:none!important">[[selger.eierbrok]]</span>
+    <div vitec-foreach="kjoper in Model.kjopere">
+        <table style="page-break-inside:avoid">
+            <tbody>
+                <tr>
+                    <td class="a4-main">
+                        <table>
+                            <tbody>
+                                <tr contenteditable="false">
+                                    <td colspan="30" style="padding-top:0.5cm">
+                                        <svg enable-background="new 0 0 160.158 42.52" height="1.5cm" id="Layer_1" version="1.1" viewbox="0 0 160.158 42.52" width="5.65cm" x="0px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" y="0px"> <polygon fill="#3C1605" points="59.09,0.001 59.09,7.151 63.946,7.151 63.946,5.873 60.526,5.873 60.526,0.001 "></polygon> <g> <path d="M72.965,1.883c-0.557,0-1.055,0.226-1.387,0.624V1.981H70.28v5.171h1.328V4.261
+			c0-0.795,0.331-1.198,0.982-1.198c0.722,0,0.874,0.598,0.874,1.1v2.989h1.328V3.857C74.792,2.603,74.126,1.883,72.965,1.883" fill="#3C1605"></path> <path d="M79.106,2.43c-0.256-0.28-0.694-0.548-1.248-0.548c-1.301,0-2.142,0.83-2.142,2.113v1.222
+			c0,1.228,0.826,2.053,2.054,2.053c0.416,0,1.025-0.23,1.366-0.584v0.465h1.297V0h-1.327V2.43z M78.095,6.11
+			c-0.626,0-1.031-0.355-1.031-0.904v-1.25c0-0.688,0.511-0.933,0.991-0.933c0.629,0,1.051,0.367,1.051,0.913v1.241
+			C79.106,5.866,78.562,6.11,78.095,6.11" fill="#3C1605"></path> <path d="M84.242,1.882c-0.256,0-0.871,0.06-1.338,0.582V0h-1.326v7.151h1.277v-0.43
+			c0.256,0.28,0.695,0.549,1.248,0.549c1.092,0,2.191-0.654,2.191-2.113V3.936C86.294,2.708,85.47,1.882,84.242,1.882 M84.947,3.945
+			v1.252c0,0.687-0.512,0.932-0.99,0.932c-0.629,0-1.053-0.367-1.053-0.912V4.054c0-0.664,0.51-1.012,1.012-1.012
+			C84.542,3.042,84.947,3.396,84.947,3.945" fill="#3C1605"></path> <path d="M90.162,1.883c-0.578,0-1.258,0.355-1.602,0.818v-0.72h-1.297v5.171h1.326V4.508
+			c0-0.848,0.598-1.396,1.523-1.396c0.168,0,0.289,0,0.441,0.028l0.074,0.014V1.926L90.58,1.914
+			C90.445,1.883,90.296,1.883,90.162,1.883" fill="#3C1605"></path> <path d="M94.537,4.862c0,0.802-0.328,1.208-0.975,1.208c-0.729,0-0.883-0.598-0.883-1.1V1.981h-1.328v3.285
+			c0,1.242,0.688,1.984,1.836,1.984c0.566,0,1.053-0.225,1.387-0.635v0.536h1.289v-5.17h-1.326V4.862z" fill="#3C1605"></path> <polygon fill="#3C1605" points="101.675,1.981 100.072,1.981 98.32,3.959 98.31,0.063 98.31,0 96.982,0 96.982,7.152 98.31,7.152
+			98.31,5.517 98.896,4.887 100.205,7.121 100.222,7.152 101.72,7.152 99.804,3.954 	"></polygon> <path d="M105.003,4.012l-0.906-0.179c-0.51-0.093-0.756-0.15-0.756-0.409c0-0.451,0.527-0.5,0.754-0.5
+			c0.471,0,0.791,0.141,1.076,0.471l0.035,0.042l0.967-0.658l-0.037-0.051c-0.41-0.583-1.057-0.855-2.031-0.855
+			c-1.215,0-2.063,0.706-2.063,1.718c0,0.731,0.496,1.205,1.432,1.371l0.66,0.119c0.691,0.121,0.893,0.206,0.893,0.54
+			c0,0.411-0.48,0.558-0.932,0.558c-0.545,0-1.033-0.232-1.34-0.635l-0.037-0.05l-0.943,0.714l0.031,0.049
+			c0.453,0.665,1.229,1.003,2.309,1.003c1.139,0,2.289-0.611,2.289-1.778C106.404,4.711,105.906,4.189,105.003,4.012" fill="#3C1605"></path> <path d="M110.527,2.429c-0.258-0.279-0.695-0.547-1.25-0.547c-1.301,0-2.141,0.83-2.141,2.113v1.222
+			c0,1.228,0.826,2.053,2.053,2.053c0.418,0,1.025-0.23,1.367-0.583v0.464h1.297V0h-1.326V2.429z M109.515,6.11
+			c-0.627,0-1.033-0.355-1.033-0.904v-1.25c0-0.688,0.514-0.933,0.992-0.933c0.631,0,1.053,0.367,1.053,0.913v1.241
+			C110.527,5.866,109.98,6.11,109.515,6.11" fill="#3C1605"></path> <rect fill="#3C1605" height="1.407" width="1.328" x="112.994"></rect> <rect fill="#3C1605" height="5.171" width="1.328" x="112.994" y="1.981"></rect> <path d="M118.347,1.883c-0.58,0-1.26,0.356-1.605,0.819V1.981h-1.297v5.171h1.328V4.508
+			c0-0.848,0.598-1.396,1.523-1.396c0.168,0,0.289,0,0.441,0.028l0.074,0.014V1.926l-0.049-0.012
+			C118.628,1.883,118.472,1.883,118.347,1.883" fill="#3C1605"></path> <path d="M121.675,1.892c-1.395,0-2.367,0.934-2.367,2.271v0.985c0,1.466,1.209,2.122,2.406,2.122
+			c1.004,0,1.762-0.411,2.135-1.158l0.027-0.053l-1.029-0.59l-0.033,0.048c-0.26,0.378-0.67,0.623-1.041,0.623
+			c-0.539,0-1.119-0.298-1.119-0.952V4.974h3.262V3.936C123.916,2.532,122.755,1.892,121.675,1.892 M120.654,4.011V4.005
+			c0-0.717,0.527-0.972,1.021-0.972c0.441,0,0.912,0.237,0.912,0.903v0.075H120.654z" fill="#3C1605"></path> <polygon fill="#3C1605" points="129.566,1.981 127.964,1.981 126.21,3.959 126.201,0.063 126.201,0 124.875,0 124.875,7.152
+			126.201,7.152 126.201,5.517 126.789,4.887 128.095,7.121 128.113,7.152 129.609,7.152 127.695,3.954 	"></polygon> <path d="M131.953,0.454h-1.328v1.527h-0.68v1.082h0.68v2.834c0,0.835,0.551,1.333,1.473,1.333
+			c0.18,0,0.631-0.029,0.902-0.1l0.047-0.012V5.972l-0.072,0.012c-0.234,0.038-0.365,0.048-0.611,0.048
+			c-0.287,0-0.41-0.126-0.41-0.421V3.063h1.094V1.981h-1.094V0.454z" fill="#3C1605"></path> <path d="M135.962,1.892c-1.135,0-2.342,0.764-2.342,2.181v1.154c0,1.403,1.234,2.043,2.379,2.043
+			c1.135,0,2.34-0.765,2.34-2.181V4.054C138.339,2.65,137.113,1.892,135.962,1.892 M134.968,3.975c0-0.688,0.512-0.933,0.994-0.933
+			c0.615,0,1.029,0.363,1.029,0.903v1.252c0,0.687-0.512,0.932-0.992,0.932c-0.615,0-1.031-0.367-1.031-0.913V3.975z" fill="#3C1605"></path> <path d="M142.193,1.883c-0.576,0-1.256,0.354-1.602,0.816V1.981h-1.297v5.171h1.326V4.508
+			c0-0.848,0.598-1.396,1.523-1.396c0.164,0,0.291,0,0.443,0.028l0.074,0.014V1.926l-0.049-0.012
+			C142.476,1.883,142.326,1.883,142.193,1.883" fill="#3C1605"></path> <path d="M150.214,0.454h-1.328v1.527h-0.68v1.082h0.68v2.834c0,0.835,0.551,1.333,1.471,1.333
+			c0.182,0,0.631-0.029,0.904-0.1l0.045-0.012V5.972l-0.072,0.012c-0.232,0.038-0.363,0.048-0.609,0.048
+			c-0.289,0-0.41-0.126-0.41-0.421V3.063h1.092V1.981h-1.092V0.454z" fill="#3C1605"></path> <path d="M154.248,1.892c-1.395,0-2.369,0.934-2.369,2.271v0.985c0,1.466,1.209,2.122,2.408,2.122
+			c1.004,0,1.762-0.411,2.135-1.158l0.025-0.053l-1.027-0.59l-0.031,0.048c-0.264,0.378-0.672,0.623-1.043,0.623
+			c-0.541,0-1.121-0.298-1.121-0.952V4.974h3.264V3.936C156.488,2.532,155.328,1.892,154.248,1.892 M153.224,4.011V4.005
+			c0-0.717,0.529-0.972,1.023-0.972c0.439,0,0.912,0.237,0.912,0.903v0.075H153.224z" fill="#3C1605"></path> <path d="M160.158,3.062V1.981h-1.094V0.453h-1.328v1.528h-0.678v1.081h0.678v2.834c0,0.835,0.553,1.334,1.473,1.334
+			c0.18,0,0.631-0.03,0.902-0.101l0.047-0.012V5.971l-0.072,0.012c-0.234,0.038-0.363,0.048-0.611,0.048
+			c-0.287,0-0.41-0.126-0.41-0.421V3.062H160.158z" fill="#3C1605"></path> <path d="M69.175,6.006V3.553c0-1.076-0.788-1.669-2.22-1.669c-0.998,0-2.063,0.405-2.063,1.541v0.111h1.205
+			l0.006-0.055c0.049-0.381,0.293-0.536,0.841-0.536c0.608,0,0.904,0.228,0.904,0.696v0.401h-1.277c-1.264,0-1.925,0.814-1.925,1.619
+			c0,0.966,0.713,1.59,1.817,1.59c0.605,0,1.006-0.08,1.446-0.503c0,0.007,0,0.014,0.001,0.021c0.013,0.158,0.025,0.282,0.038,0.336
+			l0.011,0.048h1.346l-0.05-0.092C69.211,6.979,69.175,6.312,69.175,6.006 M66.787,6.18c-0.316,0-0.844-0.075-0.844-0.578
+			c0-0.376,0.256-0.558,0.785-0.558h1.12v0.184C67.848,5.799,67.668,6.18,66.787,6.18" fill="#3C1605"></path> <path d="M147.503,6.006V3.553c0-1.076-0.789-1.669-2.221-1.669c-0.996,0-2.063,0.405-2.063,1.541v0.111h1.205
+			l0.006-0.055c0.049-0.381,0.293-0.536,0.84-0.536c0.609,0,0.904,0.228,0.904,0.696v0.401h-1.277c-1.264,0-1.924,0.814-1.924,1.619
+			c0,0.966,0.713,1.59,1.816,1.59c0.605,0,1.006-0.08,1.445-0.503c0.014,0.157,0.027,0.301,0.041,0.358l0.012,0.047h1.346
+			l-0.049-0.092C147.541,6.979,147.503,6.312,147.503,6.006 M145.117,6.18c-0.316,0-0.846-0.075-0.846-0.578
+			c0-0.37,0.264-0.558,0.785-0.558h1.119v0.184C146.175,5.799,145.996,6.18,145.117,6.18" fill="#3C1605"></path> <polygon fill="#3C1605" points="60.005,13.04 61.937,13.04 61.937,12.345 60.005,12.345 60.005,11.206 62.264,11.206
+			62.264,10.511 59.243,10.511 59.243,15.008 62.283,15.008 62.283,14.313 60.005,14.313 	"></polygon> <path d="M65.619,14.207v-1.488c0-0.653-0.463-1.012-1.304-1.012c-0.61,0-1.262,0.25-1.262,0.952v0.168h0.665v-0.186
+			c0-0.248,0.302-0.336,0.584-0.336c0.541,0,0.604,0.268,0.604,0.469v0.293h-0.774c-0.587,0-1.219,0.319-1.219,1.019
+			c0,0.591,0.451,0.988,1.123,0.988c0.312,0,0.635-0.043,0.908-0.33c0.005,0.077,0.012,0.154,0.017,0.193l0.011,0.071h0.718
+			l-0.024-0.103C65.644,14.817,65.619,14.373,65.619,14.207 M64.906,13.641v0.16c0,0.45-0.238,0.67-0.725,0.67
+			c-0.131,0-0.56-0.03-0.56-0.415c0-0.178,0.062-0.415,0.597-0.415H64.906z" fill="#3C1605"></path> <path d="M68.006,11.707c-0.357,0-0.672,0.14-0.895,0.39v-0.323h-0.695v3.234h0.713v-1.863
+			c0-0.481,0.278-0.791,0.707-0.791c0.368,0,0.554,0.227,0.554,0.676v1.978h0.714v-2.155C69.104,12.146,68.683,11.707,68.006,11.707" fill="#3C1605"></path> <path d="M72.445,14.207v-1.488c0-0.653-0.462-1.012-1.303-1.012c-0.61,0-1.263,0.25-1.263,0.952v0.168h0.666v-0.186
+			c0-0.248,0.301-0.336,0.584-0.336c0.54,0,0.603,0.268,0.603,0.469v0.293h-0.773c-0.587,0-1.22,0.319-1.22,1.019
+			c0,0.591,0.452,0.988,1.123,0.988c0.313,0,0.636-0.043,0.908-0.329c0.006,0.077,0.012,0.153,0.018,0.192l0.011,0.071h0.717
+			l-0.024-0.103C72.471,14.817,72.445,14.373,72.445,14.207 M71.732,13.641v0.16c0,0.45-0.237,0.67-0.725,0.67
+			c-0.131,0-0.56-0.03-0.56-0.415c0-0.178,0.062-0.415,0.597-0.415H71.732z" fill="#3C1605"></path> <path d="M74.832,11.707c-0.356,0-0.672,0.14-0.895,0.39v-0.323h-0.694v3.234h0.713v-1.863
+			c0-0.481,0.277-0.791,0.706-0.791c0.368,0,0.555,0.227,0.555,0.676v1.978h0.713v-2.155C75.93,12.146,75.509,11.707,74.832,11.707" fill="#3C1605"></path> <path d="M78.695,12.044c-0.188-0.208-0.478-0.337-0.786-0.337c-0.593,0-1.285,0.337-1.285,1.286v0.875
+			c0,0.729,0.494,1.219,1.231,1.219c0.27,0,0.615-0.132,0.852-0.389v0.31h0.701v-4.497h-0.713V12.044z M78.695,13.03v0.68
+			c0,0.474-0.355,0.731-0.688,0.731c-0.4,0-0.658-0.23-0.658-0.585v-0.899c0-0.459,0.344-0.621,0.639-0.621
+			C78.405,12.336,78.695,12.621,78.695,13.03" fill="#3C1605"></path> <path d="M81.517,11.713c-0.672,0-1.395,0.418-1.395,1.335v0.76c0,0.777,0.553,1.279,1.412,1.279
+			c0.672,0,1.396-0.419,1.396-1.34v-0.711C82.931,12.245,82.361,11.713,81.517,11.713 M81.535,14.453
+			c-0.432,0-0.688-0.244-0.688-0.651v-0.79c0-0.422,0.244-0.664,0.67-0.664c0.43,0,0.688,0.239,0.688,0.639v0.796
+			C82.205,14.215,81.966,14.453,81.535,14.453" fill="#3C1605"></path> <path d="M86.21,14.207v-1.488c0-0.653-0.463-1.012-1.305-1.012c-0.609,0-1.262,0.25-1.262,0.952v0.168h0.664v-0.186
+			c0-0.248,0.303-0.336,0.586-0.336c0.541,0,0.604,0.268,0.604,0.469v0.293h-0.773c-0.588,0-1.219,0.319-1.219,1.019
+			c0,0.591,0.451,0.988,1.121,0.988c0.313,0,0.637-0.043,0.908-0.329c0.006,0.077,0.012,0.153,0.018,0.192l0.012,0.071h0.717
+			l-0.023-0.103C86.236,14.817,86.21,14.373,86.21,14.207 M85.498,13.641v0.16c0,0.45-0.236,0.67-0.725,0.67
+			c-0.131,0-0.561-0.03-0.561-0.415c0-0.178,0.063-0.415,0.596-0.415H85.498z" fill="#3C1605"></path> <path d="M87.984,14.41c-0.184,0-0.275-0.084-0.275-0.25v-3.649h-0.713v3.636c0,0.742,0.436,0.898,0.801,0.898
+			c0.199,0,0.4-0.024,0.545-0.064l0.059-0.018v-0.586l-0.133,0.014C88.173,14.402,88.091,14.41,87.984,14.41" fill="#3C1605"></path> <path d="M89.974,14.41c-0.182,0-0.275-0.084-0.275-0.25v-3.649h-0.713v3.636c0,0.742,0.436,0.898,0.801,0.898
+			c0.199,0,0.402-0.024,0.545-0.064l0.061-0.018v-0.586l-0.133,0.014C90.164,14.402,90.082,14.41,89.974,14.41" fill="#3C1605"></path> <path d="M92.244,11.713c-0.672,0-1.396,0.418-1.396,1.335v0.76c0,0.777,0.555,1.279,1.414,1.279
+			c0.672,0,1.395-0.419,1.395-1.34v-0.711C93.656,12.245,93.089,11.713,92.244,11.713 M92.261,14.453
+			c-0.43,0-0.689-0.244-0.689-0.651v-0.79c0-0.422,0.244-0.664,0.672-0.664c0.43,0,0.688,0.239,0.688,0.639v0.796
+			C92.931,14.215,92.693,14.453,92.261,14.453" fill="#3C1605"></path> <path d="M96.333,12.044c-0.188-0.208-0.479-0.337-0.785-0.337c-0.594,0-1.287,0.337-1.287,1.286v0.875
+			c0,0.729,0.496,1.219,1.232,1.219c0.27,0,0.615-0.133,0.852-0.389v0.31h0.701v-4.497h-0.713V12.044z M96.333,13.03v0.68
+			c0,0.474-0.355,0.731-0.689,0.731c-0.398,0-0.658-0.23-0.658-0.585v-0.899c0-0.459,0.346-0.621,0.641-0.621
+			C96.042,12.336,96.333,12.621,96.333,13.03" fill="#3C1605"></path> <rect fill="#3C1605" height="0.877" width="0.713" x="97.871" y="10.511"></rect> <rect fill="#3C1605" height="3.234" width="0.713" x="97.871" y="11.774"></rect> <path d="M101.101,11.719c-0.309,0-0.725,0.124-1.004,0.459v-0.404h-0.695v3.234h0.713v-1.723
+			c0-0.54,0.367-0.889,0.938-0.889c0.09,0,0.176,0,0.264,0.017l0.1,0.018v-0.68l-0.068-0.012
+			C101.279,11.726,101.189,11.719,101.101,11.719" fill="#3C1605"></path> <path d="M103.251,11.713c-0.857,0-1.432,0.565-1.432,1.408v0.631c0,0.811,0.566,1.335,1.443,1.335
+			c0.566,0,1.014-0.233,1.262-0.655l0.043-0.071l-0.555-0.33l-0.045,0.06c-0.1,0.135-0.324,0.361-0.674,0.361
+			c-0.447,0-0.738-0.26-0.738-0.663v-0.185h2.031v-0.605C104.587,12.11,103.916,11.713,103.251,11.713 M103.234,12.341
+			c0.393,0,0.639,0.25,0.639,0.652v0.062h-1.316v-0.02C102.556,12.62,102.828,12.341,103.234,12.341" fill="#3C1605"></path> <polygon fill="#3C1605" points="108.054,11.774 107.164,11.774 105.988,13.069 105.988,10.511 105.275,10.511 105.275,15.008
+			105.988,15.008 105.988,13.943 106.392,13.519 107.267,15.008 108.082,15.008 106.888,13.011 	"></polygon> <path d="M109.896,14.398c-0.221,0-0.299-0.074-0.299-0.281v-1.733h0.789v-0.61h-0.789v-0.948h-0.715v0.948h-0.492
+			v0.61h0.492v1.873c0,0.504,0.328,0.805,0.881,0.805c0.113,0,0.381-0.015,0.582-0.076l0.059-0.018V14.33l-0.1,0.021
+			C110.166,14.38,110.048,14.398,109.896,14.398" fill="#3C1605"></path> <path d="M112.261,11.713c-0.672,0-1.395,0.418-1.395,1.335v0.76c0,0.777,0.555,1.279,1.412,1.279
+			c0.674,0,1.396-0.419,1.396-1.34v-0.711C113.675,12.245,113.107,11.713,112.261,11.713 M112.279,14.453
+			c-0.43,0-0.688-0.244-0.688-0.651v-0.79c0-0.422,0.244-0.664,0.67-0.664c0.43,0,0.689,0.239,0.689,0.639v0.796
+			C112.951,14.215,112.712,14.453,112.279,14.453" fill="#3C1605"></path> <path d="M116.087,11.719c-0.309,0-0.725,0.124-1.004,0.459v-0.404h-0.697v3.234h0.715v-1.723
+			c0-0.54,0.367-0.889,0.938-0.889c0.09,0,0.174,0,0.264,0.017l0.098,0.018v-0.68l-0.066-0.012
+			C116.263,11.726,116.175,11.719,116.087,11.719" fill="#3C1605"></path> <path d="M119.496,14.207v-1.488c0-0.653-0.465-1.012-1.305-1.012c-0.609,0-1.262,0.25-1.262,0.952v0.168h0.664
+			v-0.186c0-0.248,0.303-0.336,0.586-0.336c0.539,0,0.604,0.268,0.604,0.469v0.293h-0.773c-0.588,0-1.219,0.319-1.219,1.019
+			c0,0.591,0.451,0.988,1.121,0.988c0.313,0,0.635-0.043,0.908-0.329c0.006,0.077,0.012,0.153,0.018,0.192l0.012,0.071h0.717
+			l-0.023-0.103C119.521,14.817,119.496,14.373,119.496,14.207 M118.783,13.641v0.16c0,0.45-0.238,0.67-0.725,0.67
+			c-0.133,0-0.561-0.03-0.561-0.415c0-0.178,0.063-0.415,0.596-0.415H118.783z" fill="#3C1605"></path> <polygon fill="#3C1605" points="119.279,10.462 118.423,10.462 117.765,11.582 118.396,11.582 	"></polygon> <path d="M121.882,11.707c-0.346,0-0.66,0.144-0.877,0.395v-1.591h-0.713v4.497h0.713v-1.863
+			c0-0.481,0.277-0.791,0.705-0.791c0.369,0,0.557,0.227,0.557,0.676v1.978h0.713v-2.155C122.98,12.146,122.56,11.707,121.882,11.707
+			" fill="#3C1605"></path> <path d="M125.009,14.398c-0.221,0-0.299-0.074-0.299-0.281v-1.733h0.789v-0.61h-0.789v-0.948h-0.715v0.948h-0.49
+			v0.61h0.49v1.873c0,0.504,0.33,0.805,0.881,0.805c0.113,0,0.381-0.015,0.582-0.076l0.061-0.018V14.33l-0.102,0.021
+			C125.279,14.38,125.162,14.398,125.009,14.398" fill="#3C1605"></path> <path d="M127.427,14.398c-0.221,0-0.299-0.074-0.299-0.281v-1.733h0.789v-0.61h-0.789v-0.948h-0.713v0.948h-0.494
+			v0.61h0.494v1.873c0,0.504,0.328,0.805,0.879,0.805c0.113,0,0.381-0.015,0.584-0.076l0.057-0.018V14.33l-0.1,0.021
+			C127.697,14.38,127.58,14.398,127.427,14.398" fill="#3C1605"></path> <path d="M131.166,14.905c-0.021-0.088-0.047-0.532-0.047-0.698v-1.488c0-0.653-0.465-1.012-1.305-1.012
+			c-0.609,0-1.262,0.25-1.262,0.952v0.168h0.664v-0.186c0-0.248,0.303-0.336,0.586-0.336c0.541,0,0.602,0.268,0.602,0.469v0.293
+			h-0.771c-0.588,0-1.221,0.319-1.221,1.019c0,0.591,0.451,0.988,1.123,0.988c0.313,0,0.635-0.043,0.908-0.329
+			c0.004,0.077,0.012,0.153,0.018,0.192l0.012,0.071h0.717L131.166,14.905z M130.404,13.641v0.16c0,0.45-0.234,0.67-0.723,0.67
+			c-0.133,0-0.561-0.03-0.561-0.415c0-0.178,0.061-0.415,0.596-0.415H130.404z" fill="#3C1605"></path> <polygon fill="#3C1605" points="19.284,42.109 41.63,0.082 40.309,0.082 17.965,42.109 	"></polygon> <polygon fill="#3C1605" points="15.715,42.109 38.06,0.082 36.74,0.082 14.394,42.109 	"></polygon> <polygon fill="#3C1605" points="12.145,42.109 34.491,0.082 33.169,0.082 10.824,42.109 	"></polygon> <polygon fill="#3C1605" points="8.574,42.109 30.92,0.082 29.6,0.082 7.255,42.109 	"></polygon> <polygon fill="#3C1605" points="5.005,42.109 27.35,0.082 26.031,0.082 3.686,42.109 	"></polygon> <polygon fill="#00B5DF" points="59.475,30.266 58.154,30.266 64.451,42.109 65.772,42.109 	"></polygon> <polygon fill="#00B5DF" points="55.905,30.266 54.586,30.266 60.882,42.109 62.202,42.109 	"></polygon> <polygon fill="#00B5DF" points="51.016,30.266 57.313,42.109 58.632,42.109 52.336,30.266 	"></polygon> <polygon fill="#00B5DF" points="47.445,30.266 53.742,42.109 55.062,42.109 48.766,30.266 	"></polygon> <polygon fill="#00B5DF" points="43.876,30.266 50.173,42.109 51.493,42.109 45.197,30.266 	"></polygon> <path d="M1.439,42.107L23.755,0.099c-0.908,0.205-1.724,0.788-2.194,1.675L0.128,42.107H1.439z" fill="#3C1605"></path> <path d="M41.622,30.264h-1.306l5.39,10.143c0.471,0.887,1.287,1.471,2.195,1.676L41.622,30.264z" fill="#00B5DF"></path> <polygon fill="#00B5DF" points="77.433,21.043 66.929,40.799 67.589,42.041 78.754,21.043 	"></polygon> <polygon fill="#00B5DF" points="73.863,21.043 65.144,37.442 65.805,38.684 75.184,21.043 	"></polygon> <polygon fill="#00B5DF" points="70.293,21.043 63.358,34.085 64.018,35.326 71.614,21.043 	"></polygon> <polygon fill="#00B5DF" points="66.723,21.043 61.574,30.729 62.234,31.969 68.044,21.043 	"></polygon> <polygon fill="#00B5DF" points="63.154,21.043 59.789,27.371 60.449,28.613 64.475,21.043 	"></polygon> <polygon fill="#00B5DF" points="59.584,21.043 58.004,24.016 58.663,25.256 60.903,21.043 	"></polygon> <polygon fill="#3C1605" points="44.298,28.577 36.324,13.58 35.664,14.822 42.978,28.577 	"></polygon> <polygon fill="#3C1605" points="47.867,28.577 38.108,10.223 37.448,11.465 46.546,28.577 	"></polygon> <polygon fill="#3C1605" points="51.438,28.577 39.893,6.866 39.232,8.108 50.117,28.577 	"></polygon> <polygon fill="#3C1605" points="58.577,28.577 43.464,0.152 42.803,1.394 57.256,28.577 	"></polygon> <polygon fill="#3C1605" points="55.006,28.577 41.679,3.51 41.018,4.751 53.685,28.577 	"></polygon> <polygon fill="#3C1605" points="40.727,28.577 34.539,16.937 33.879,18.178 39.407,28.577 	"></polygon> <polygon fill="#00B5DF" points="58.025,30.002 64.462,42.109 65.783,42.109 59.345,30.002 	"></polygon> <polygon fill="#00B5DF" points="54.456,30.002 60.893,42.109 62.212,42.109 55.776,30.002 	"></polygon> <polygon fill="#00B5DF" points="50.885,30.002 57.322,42.109 58.644,42.109 52.207,30.002 	"></polygon> <polygon fill="#00B5DF" points="47.315,30.002 53.752,42.109 55.073,42.109 48.635,30.002 	"></polygon> <polygon fill="#00B5DF" points="43.747,30.002 50.184,42.109 51.502,42.109 45.065,30.002 	"></polygon> <path d="M40.179,30.002l5.534,10.416c0.471,0.887,1.287,1.471,2.195,1.676l-6.423-12.092H40.179z" fill="#00B5DF"></path> </g> </svg>
+                                    </td>
+                                    <td colspan="70" style="padding-top:0.5cm; text-align:right">
+                                        <p style="font-size:12pt; font-weight:bold; line-height:15pt; margin-bottom:.25cm; margin-top:0">
+                                            Egenerkl&aelig;ring om konsesjonsfrihet<br />
+                                            i kommuner med nedsatt konsesjonsgrense
+                                        </p>
+
+                                        <p style="margin-bottom:.5cm">
+                                            Fastsatt i medhold av forskrift 8. desember 2003 gitt i medhold<br />
+                                            av konsesjonsloven av 28. november 2003 nr. 98 &sect; 8
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr class="bg-red-light" contenteditable="false">
+                                    <td class="border-bottom border-left border-right border-top" colspan="100">
+                                        <div>
+                                            <strong>1. </strong> Erkl&aelig;ringen leveres til kommunen der eiendommen ligger.<br />
+                                            <strong>2. </strong> Kommunen kontrollerer at skjemaet er riktig utfylt.<br />
+                                            <strong>3. </strong> Ett skjema for hver ny eier.
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr contenteditable="false">
+                                    <td colspan="100" style="font-size:2px; height:.25cm; line-height:2px">&nbsp;</td>
+                                </tr>
+                                <tr class="bg-red" contenteditable="false">
+                                    <td colspan="100">
+                                        <div class="indented" style="font-size:11pt"><span>1.</span>Erververs (ny eiers) navn</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="borders" colspan="100" data-label="Etternavn, for-  og mellomnavn">[[*kjoper.navnutenfullmektigogkontaktperson]]</td>
+                                </tr>
+                                <tr>
+                                    <td class="borders" colspan="50" data-label="Fødselsnr. (11 siffer)"><span vitec-if="kjoper.idnummer.ToString().Length == 12">[[*kjoper.idnummer]]</span></td>
+                                    <td class="borders" colspan="50" data-label="Organisasjonsnr. (9 siffer) - kun for firmaer"><span vitec-if="kjoper.idnummer.ToString().Length == 11">[[*kjoper.idnummer]]</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="borders" colspan="50" data-label="Adresse">[[*kjoper.gatenavnognr]]</td>
+                                    <td class="borders" colspan="13" data-label="Postnr.">[[*kjoper.postnr]]</td>
+                                    <td class="borders" colspan="37" data-label="Poststed">[[*kjoper.poststed]]</td>
+                                </tr>
+                                <tr>
+                                    <td class="borders" colspan="63" data-label="E-postadresse">[[*kjoper.emailadresse]]</td>
+                                    <td class="borders" colspan="37" data-label="Telefonnummer">[[*kjoper.tlf]]</td>
+                                </tr>
+                                <tr class="bg-red" contenteditable="false">
+                                    <td colspan="100">
+                                        <div class="indented" style="font-size:11pt"><span>2.</span>Eiendommen ervervet gjelder</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="borders vtop" colspan="13" data-label="Gnr." style="height:2cm">
+                                        <ul class="foreach-list" vitec-foreach="matrikkel in Model.matrikler">
+                                            <li>[[*matrikkel.gnr]]</li>
+                                        </ul>
+                                    </td>
+                                    <td class="borders vtop" colspan="12" data-label="Bnr.">
+                                        <ul class="foreach-list" vitec-foreach="matrikkel in Model.matrikler">
+                                            <li>[[*matrikkel.bnr]]</li>
+                                        </ul>
+                                    </td>
+                                    <td class="borders vtop" colspan="13" data-label="Festenr.">
+                                        <ul class="foreach-list" vitec-foreach="matrikkel in Model.matrikler">
+                                            <li>[[*matrikkel.fnr]]</li>
+                                        </ul>
+                                    </td>
+                                    <td class="borders vtop" colspan="12" data-label="Snr.">
+                                        <ul class="foreach-list" vitec-foreach="matrikkel in Model.matrikler">
+                                            <li>[[*matrikkel.snr]]</li>
+                                        </ul>
+                                    </td>
+                                    <td class="borders vtop" colspan="13" data-label="Andelsnr.">
+                                        <ul class="foreach-list" vitec-foreach="matrikkel in Model.matrikler">
+                                            <li>[[eiendom.andelsnr]]</li>
+                                        </ul>
+                                    </td>
+                                    <td class="borders vtop" colspan="12" data-label="Eierandel">
+                                        <ul class="foreach-list" vitec-foreach="matrikkel in Model.matrikler">
+                                            <li>[[*kjoper.eierbrok]]</li>
+                                        </ul>
+                                    </td>
+                                    <td class="borders vtop" colspan="25" data-label="Kommune">
+                                        <ul class="foreach-list" vitec-foreach="matrikkel in Model.matrikler">
+                                            <li>[[eiendom.kommunenavn]]</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr contenteditable="false">
+                                    <td colspan="100">
+                                        <p style="font-size:11pt; margin-bottom:0; margin-left:.25cm; margin-right:.25cm; margin-top:0; text-align:center"><strong>ERKL&AElig;RING FRA NY EIER OM KONSESJONSFRIHET</strong></p>
+
+                                        <div>Du skal bare krysse av p&aring; <u>ett</u> av punktene 3 til 7. Punkt 3 til 6 gjelder eiendomstyper etter konsesjonsloven &sect; 4 jf. &sect; 7. Punkt 7 gjelder alle typer eiendom som overtas fra n&aelig;r slekt etter konsesjonsloven &sect; 5. Dersom du overtar en konsesjonsfri eiendom fra n&aelig;r slekt, anbefaler vi at du benytter ett av punktene 3 til 6 istedenfor punkt 7. Se veiledningen.</div>
+                                    </td>
+                                </tr>
+                                <tr contenteditable="false">
+                                    <td colspan="90">
+                                        <div class="table-header">Konsesjonsfrihet p&aring; grunn av eiendommens karakter &sect; 4 (og ev. &sect; 7)</div>
+                                    </td>
+                                    <td colspan="10">
+                                        <div class="table-header">Kommunen bekrefter</div>
+                                    </td>
+                                </tr>
+                                <tr class="bg-red-light" contenteditable="false">
+                                    <td class="border-top row-header" colspan="90">
+                                        <div class="indented"><span>3.</span>Bebygd areal, jf &sect; 4 f&oslash;rste ledd nr. 4</div>
+                                    </td>
+                                    <td class="border-bottom border-left border-top center" colspan="10" rowspan="2"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                </tr>
+                                <tr class="bg-red-light">
+                                    <td class="border-bottom center" colspan="5" style="height:34px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                    <td class="border-bottom" colspan="85" contenteditable="false">Eiendommen er bebygd, er ikke st&oslash;rre enn 100 dekar totalt og har ikke mer enn 35 dekar fulldyrka og/eller overflatedyrka jord</td>
+                                </tr>
+                                <tr class="bg-red-light" contenteditable="false">
+                                    <td colspan="5">&nbsp;</td>
+                                    <td colspan="85">Kryss av ett punkt A, B eller C for &aring; bekrefte at ervervet er konsesjonsfritt ogs&aring; etter regelen om nedsatt konsesjonsgrense i &sect; 7.</td>
+                                    <td class="border-bottom border-left border-top center" colspan="10" rowspan="6"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                </tr>
+                                <tr class="bg-red-light" contenteditable="false">
+                                    <td class="vbottom" colspan="5" style="padding-bottom:0; text-align:right">NB!</td>
+                                    <td class="vbottom" colspan="85" style="padding-bottom:0">Dersom eiendommen ligger i omr&aring;der regulert til boligform&aring;l og har bebyggelse som</td>
+                                </tr>
+                                <tr class="bg-red-light" contenteditable="false">
+                                    <td colspan="5">&nbsp;</td>
+                                    <td class="vtop" colspan="85" style="padding-top:0">ikke er tatt i bruk som hel&aring;rsbolig, herunder eiendom med bebyggelse under opp&oslash;ring, m&aring; du krysse av pkt B eller C.</td>
+                                </tr>
+                                <tr class="bg-red-light">
+                                    <td class="center" colspan="5" style="height:34px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                    <td colspan="85" contenteditable="false">
+                                        <div class="indented"><span><strong>A.</strong></span> Eiendommen er bebygd og verken er eller har v&aelig;rt i bruk som hel&aring;rsbolig.</div>
+                                    </td>
+                                </tr>
+                                <tr class="bg-red-light">
+                                    <td class="center" colspan="5" style="height:34px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                    <td colspan="85" contenteditable="false">
+                                        <div class="indented"><span><strong>B.</strong></span> Eiendommen skal brukes til hel&aring;rsbolig.</div>
+                                    </td>
+                                </tr>
+                                <tr class="bg-red-light">
+                                    <td class="border-bottom center" colspan="5" style="height:34px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                    <td class="border-bottom" colspan="85" contenteditable="false">
+                                        <div class="indented"><span><strong>C.</strong></span> Eiendommen har bebyggelse som ikke er tatt i bruk som hel&aring;rsbolig, herunder eiendom med bebyggelse under oppf&oslash;ring, men kommunen har ikke forskrift som omfatter denne type eiendom, jf &sect; 7 f&oslash;rste ledd nr 2.</div>
+                                    </td>
+                                </tr>
+                                <tr contenteditable="false">
+                                    <td colspan="100" style="font-size:2px; height:.25cm; line-height:2px">&nbsp;</td>
+                                </tr>
+                                <tr class="bg-red-light" contenteditable="false">
+                                    <td class="border-top row-header" colspan="90">
+                                        <div class="indented"><span>4.</span>Ubebygd tomt til bolig, fritidshus eller naust, jf &sect; 4 f&oslash;rste ledd nr. 1:</div>
+                                    </td>
+                                    <td class="border-bottom border-left border-top center" colspan="10" rowspan="3"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                </tr>
+                                <tr class="bg-red-light">
+                                    <td class="center" colspan="5" style="height:34px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                    <td colspan="85" contenteditable="false">Tomta er ikke st&oslash;rre enn 2 dekar og er godkjent fradelt etter plan- og bygningsloven og jordlova.</td>
+                                </tr>
+                                <tr class="bg-red-light">
+                                    <td class="border-bottom center" colspan="5" style="height:34px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                    <td class="border-bottom" colspan="85" contenteditable="false">Jeg er klar over at konsesjonsfriheten forutsetter at tomten blir bebygd innen fem &aring;r.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr contenteditable="false">
+                    <td>
+                        <div class="page-info">
+                            <div class="version">versjon 1.8 - 1.1.2026</div>
+                            LDIR-356 B <span style="float:right">side 1 av 4</span>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table style="page-break-before:always">
+            <tbody>
+                <tr>
+                    <td class="a4-main">
+                        <table>
+                            <tbody>
+                                <tr contenteditable="false">
+                                    <td colspan="100" style="height:0.5cm">&nbsp;</td>
+                                </tr>
+                                <tr class="bg-red-light" contenteditable="false">
+                                    <td class="border-top row-header" colspan="90">
+                                        <div class="indented">
+                                            <span>5.</span>Ubebygd tomt til bolig- eller fritidshus i omr&aring;de lagt ut til bebyggelse og anlegg, jf<br />
+                                            &sect; 4 f&oslash;rste ledd nr. 2
+                                        </div>
+                                    </td>
+                                    <td class="border-left border-top center" colspan="10" rowspan="3"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                </tr>
+                                <tr class="bg-red-light">
+                                    <td class="center" colspan="5" style="height:34px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                    <td colspan="85" contenteditable="false">Tomta ligger i et omr&aring;de som er lagt ut til bebyggelse og anlegg der tomteinndelingen er foretatt eller godkjent av bygningsmyndighetene.</td>
+                                </tr>
+                                <tr class="bg-red-light">
+                                    <td class="center" colspan="5" style="height:34px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                    <td colspan="85" contenteditable="false">Jeg er klar over at konsesjonsfriheten forutsetter at tomten blir bebygd innen fem &aring;r.</td>
+                                </tr>
+                                <tr class="bg-red-light" contenteditable="false">
+                                    <td colspan="5">&nbsp;</td>
+                                    <td colspan="85"><strong>Kryss av pkt. A eller B for a bekrefte at ervervet er konsesjonsfritt ogs&aring; etter regelen om nedsatt konsesjonsgrense i &sect; 7: </strong></td>
+                                    <td class="border-left border-bottom center" colspan="10" rowspan="3"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                </tr>
+                                <tr class="bg-red-light">
+                                    <td class="center" colspan="5" style="height:34px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                    <td colspan="85" contenteditable="false">
+                                        <div class="indented"><span><strong>A.</strong></span> Kommunen har ikke forskrift som omfatter ubebygd tomt som er regulert til boligform&aring;l, jf &sect; 7 f&oslash;rste ledd nr. 3, eller tomta ligger ikke i omr&aring;det regulert til boligform&aring;l.</div>
+                                    </td>
+                                </tr>
+                                <tr class="bg-red-light">
+                                    <td class="border-bottom center" colspan="5" style="height:34px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                    <td class="border-bottom" colspan="85" contenteditable="false">
+                                        <div class="indented"><span><strong>B.</strong></span> Eiendommen skal brukes som hel&aring;rsbolig.</div>
+                                    </td>
+                                </tr>
+                                <tr contenteditable="false">
+                                    <td colspan="100" style="font-size:2px; height:.25cm; line-height:2px">&nbsp;</td>
+                                </tr>
+                                <tr class="bg-red-light" contenteditable="false">
+                                    <td class="border-top row-header" colspan="90">
+                                        <div class="indented"><span>6.</span>Andre ubebygde arealer, jf &sect; 4 f&oslash;rste ledd nr. 3 <small style="font-weight: normal;">(ubebygde arealer som ikke faller inn under pkt. 4 eller 5)</small></div>
+                                    </td>
+                                    <td class="border-bottom border-left border-top center" colspan="10" rowspan="3"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                </tr>
+                                <tr class="bg-red-light">
+                                    <td class="center" colspan="5" style="height:34px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                    <td colspan="85" contenteditable="false">Arealet ligger i omr&aring;de som i reguleringsplan er regulert til annet enn LNFR, eller som i kommuneplanens arealdel er lagt ut til bebyggelse og anlegg.</td>
+                                </tr>
+                                <tr class="bg-red-light">
+                                    <td class="border-bottom center" colspan="5" style="height:34px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                    <td class="border-bottom" colspan="85" contenteditable="false">Jeg er klar over at konsesjonsfriheten er betinget av at jeg ikke foretar bruksendring i strid med plan.</td>
+                                </tr>
+                                <tr contenteditable="false">
+                                    <td colspan="90">
+                                        <p class="table-header" style="padding-top:0.25cm">Konsesjonsfrihet p&aring; grunn av slektskap/ekteskap/samboerskap/svogerskap/uskifte &sect; 5</p>
+
+                                        <p style="padding-bottom:0.25cm">
+                                            Hvis konsesjonsfriheten for n&aelig;r slekt er satt ut av kraft etter &sect; 7 (se veiledningen) m&aring; du fylle ut ett av punktene 3-6.<br />
+                                            Da gjelder ikke pkt. 7.
+                                        </p>
+                                    </td>
+                                    <td colspan="10">
+                                        <div class="table-header">&nbsp;</div>
+                                    </td>
+                                </tr>
+                                <tr class="bg-red-light" contenteditable="false">
+                                    <td class="border-top row-header" colspan="90">
+                                        <div class="indented"><span>7.</span> Jeg er i slekt med overdrager p&aring; f&oslash;lgende m&aring;te:</div>
+                                    </td>
+                                    <td class="border-bottom border-left border-top center" colspan="10" rowspan="4"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                </tr>
+                                <tr class="bg-red-light">
+                                    <td class="center" colspan="5" style="height:34px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                    <td colspan="85" contenteditable="false">Jeg har overtatt eiendommen fra ektefelle, samboer eller er i slekt med eieren eller eierens ektfelle/samboer slik som angitt i &sect; 5 f&oslash;rste ledd nr. 1. Eventuelt som arv eller i uskifte (se n&aelig;rmere i veiledningens punkt 7). Jeg er beslektet eller besvogret med overdrager p&aring; f&oslash;lgende m&aring;te:</td>
+                                </tr>
+                                <tr class="bg-red-light">
+                                    <td colspan="5" contenteditable="false">&nbsp;</td>
+                                    <td colspan="45" contenteditable="false" style="text-align:right">
+                                        <div class="indented">Jeg er overdragers: (fyll ut &ndash; eks. &laquo;datter&raquo;)</div>
+                                    </td>
+                                    <td class="related-box" colspan="35">&nbsp;</td>
+                                    <td colspan="5" contenteditable="false">&nbsp;</td>
+                                </tr>
+                                <tr class="bg-red-light" contenteditable="false">
+                                    <td class="border-bottom" colspan="90" style="height:.3cm">&nbsp;</td>
+                                </tr>
+                                <tr class="bg-red-light">
+                                    <td class="center" colspan="5" style="height:34px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                    <td colspan="85" contenteditable="false">Jeg er klar over at konsesjonsfriheten er betinget av at overdrager har sitt konsesjonsforhold i orden.</td>
+                                    <td class="border-bottom border-left border-top center" colspan="10" rowspan="2"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                </tr>
+                                <tr class="bg-red-light">
+                                    <td class="border-bottom center" colspan="5" style="height:34px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                    <td class="border-bottom" colspan="85" contenteditable="false">Jeg er klar over at konsesjonsfriheten er betinget av at overdrager har hatt tinglyst hjemmel til eiendommen de siste 5 &aring;r forut for overdragelsen.</td>
+                                </tr>
+                                <tr contenteditable="false">
+                                    <td colspan="100">
+                                        <div class="table-header">SIGNATUR</div>
+                                    </td>
+                                </tr>
+                                <tr class="bg-red-light" contenteditable="false">
+                                    <td class="border-top row-header" colspan="90">
+                                        <div class="indented"><span>8.</span>Ny eiers signatur og kjennskap til straffeansvar <small style="font-weight: normal;">(m&aring; signeres personlig av den nye eieren).</small></div>
+                                    </td>
+                                    <td class="border-bottom border-left border-top center" colspan="10" rowspan="2"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                </tr>
+                                <tr class="bg-red-light">
+                                    <td class="border-bottom center" colspan="5" style="height:34px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                    <td class="border-bottom" colspan="85" contenteditable="false">Jeg er kjent med at det etter straffeloven &sect; 365 er straffbart &aring; avgi uriktig egenerkl&aelig;ring</td>
+                                </tr>
+                                <tr>
+                                    <td class="borders" colspan="30" data-label="Dato" style="height:1cm">&nbsp;</td>
+                                    <td class="borders" colspan="70" data-label="Ny eiers underskrift">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td class="borders" colspan="30" data-label="Dato" style="height:1cm">&nbsp;</td>
+                                    <td class="borders" colspan="70" data-label="Vergens underskrift (for umyndige må vergen undertegne)">&nbsp;</td>
+                                </tr>
+                                <tr contenteditable="false">
+                                    <td colspan="100" style="font-size:2px; height:.25cm; line-height:2px">&nbsp;</td>
+                                </tr>
+                                <tr contenteditable="false">
+                                    <td class="border-top row-header" colspan="100">
+                                        <div class="indented"><span>9.</span>Kommunen bekrefter for alle erverv: <small style="font-weight: normal;">(m&aring; alltid fylles ut)</small></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="border-left center" colspan="5" style="height:34px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                    <td class="border-right" colspan="95" contenteditable="false">Overdragelsen f&oslash;rer ikke til deling av en driftsenhet, jf. jordlova &sect; 12 sjette ledd</td>
+                                </tr>
+                                <tr>
+                                    <td class="border-left center" colspan="5" style="height:34px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                    <td class="border-right" colspan="95" contenteditable="false">Relevante punkter ovenfor er bekreftet</td>
+                                </tr>
+                                <tr>
+                                    <td class="borders" colspan="30" data-label="Kommunens navn" style="height:1cm">&nbsp;</td>
+                                    <td class="borders" colspan="20" data-label="Dato" style="height:1cm">&nbsp;</td>
+                                    <td class="borders" colspan="50" data-label="Stempel og underskrift">&nbsp;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr contenteditable="false">
+                    <td>
+                        <div class="page-info">
+                            <div class="version">versjon 1.8 - 1.1.2026</div>
+                            LDIR-356 B <span style="float:right">side 2 av 4</span>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table style="page-break-before:always">
+            <tbody>
+                <tr>
+                    <td class="a4-main">
+                        <table>
+                            <tbody>
+                                <tr contenteditable="false">
+                                    <td colspan="100" style="border-style:none; border-width:0px; height:1cm; padding-top:0.5cm">&nbsp;</td>
+                                </tr>
+                                <tr contenteditable="false">
+                                    <td colspan="100" style="border-style:none; border-width:0px">
+                                        <p class="table-header" style="font-size:12pt; margin-bottom:0">Veiledning LDIR-356 B</p>
+                                    </td>
+                                </tr>
+                                <tr contenteditable="false">
+                                    <td colspan="49" style="border-style:none; border-width:0px; vertical-align:top">
+                                        <p>Denne egenerkl&aelig;ringen skal benyttes i kommuner med <a href="https://www.landbruksdirektoratet.no/no/eiendom-og-skog/eiendom/konsesjon/regelverk/kommunale-forskrifter-etter-konsesjonsloven-7">nedsatt konsesjonsgrense</a> og skal brukes b&aring;de ved erverv av bebygd og ubebygd eiendom.</p>
+
+                                        <p><strong>Noen kommuner har forskrift om nedsatt konsesjonsgrense bare for deler av kommunen. Dersom forskriften ikke gjelder for det geografiske omr&aring;det hvor eiendommen ligger, skal egenerkl&aelig;ring LDIR-360 (gr&oslash;nt skjema) brukes. </strong></p>
+
+                                        <p>Er eiendommen bebygd, og st&oslash;rre enn 100 dekar eller har den mer enn 35 dekar fulldyrket eller overflatedyrket jord, skal du ogs&aring; bruke gr&oslash;nt skjema. Hvis eiendommen er konsesjonspliktig skal skjema s&oslash;knad om konsesjon m.m (LDIR-359) brukes.</p>
+
+                                        <p>Du kan kontakte kommunen for avklaring om forskriften gjelder for din eiendom, eller hvis du trenger hjelp til utfylling av skjemaet. Det samme gjelder dersom du trenger hjelp til beregning av arealgrunnlaget. Du kan sjekke dette p&aring; internett: <a href="https://gardskart.nibio.no/">https://gardskart.nibio.no/</a></p>
+
+                                        <p>Erkl&aelig;ringen skal kontrolleres og bekreftes av den kommunen der eiendommen ligger. Deretter vil kommunen overf&oslash;re opplysningene til Kartverket digitalt. Du vil f&aring; tilbakemelding n&aring;r du kan sende hjemmelsdokumentet (skj&oslash;te, festekontrakt eller lignende) til Kartverket for tinglysing.</p>
+
+                                        <p><a href="http://www.lovdata.no/all/hl-20031128-098.html">Konsesjonsloven av 28. november 2003</a> bestemmer at alle erverv av fast eiendom, og stiftelse av bruksrett for lengre tid enn 10 &aring;r er undergitt konsesjonsplikt med mindre det er gjort unntak i loven eller forskrifter fastsatt i medhold av loven. Som erverv regnes ogs&aring; erverv av andeler eller parter i en eiendom.</p>
+
+                                        <p>&laquo;Erverv&raquo; er et fellesord for alle m&aring;ter man kan bli eier av en eiendom p&aring;; kj&oslash;p, arv, gave osv. Konsesjon er en tillatelse fra staten. Den som blir ny eier av eiendommen er erverver. Overdrager er forrige eier.</p>
+
+                                        <p>Hovedregelen er at bebygd eiendom som ikke er st&oslash;rre enn 100 dekar og heller ikke har mer enn 35 dekar fulldyrka/overflatedyrket jord kan erverves uten konsesjon, jf konsesjonsloven &sect; 4 f&oslash;rste ledd nr. 4. Det samme gjelder blant annet tomter regulert til boligform&aring;l, jf konsesjonsloven &sect; 4 f&oslash;rste ledd nr. 2. Overdragelse fra n&aelig;r familie er ogs&aring; unntatt fra konsesjonsplikt, jf konsesjonsloven &sect; 5 f&oslash;rste ledd nr. 1.</p>
+
+                                        <p>Konsesjonsfriheten etter disse bestemmelsene kan settes ut av kraft ved forskrift, se pkt 3, 5 og 7. Dette vil ogs&aring; gjelde leiligheter som ligger innenfor forskriftens virkeomr&aring;de. Konsesjonsplikt etter forskrift vil likevel ikke oppst&aring; dersom du forplikter deg til at bebyggelsen eller tomta skal brukes som hel&aring;rsbolig, enten av deg selv eller andre.</p>
+
+                                        <p>Dersom betingelsene for konsesjonsfrihet ikke er tilstede, m&aring; du s&oslash;ke kommunen om konsesjon for ervervet.</p>
+
+                                        <p>
+                                            <strong>Til punkt 1</strong><br />
+                                            <em>Dette punktet m&aring; alltid fylles ut.</em><br />
+                                            Er det flere som erverver eiendommen sammen, m&aring; hver enkelt avgi egenerkl&aelig;ring.
+                                        </p>
+
+                                        <p>
+                                            <strong>Til punkt 2</strong><br />
+                                            Eiendommens betegnelse, (gnr., bnr., festenr. eller lignende) og i hvilken kommune eiendommen ligger, m&aring; alltid fylles ut. Hvis du bare overtar en sameieandel skal det f&oslash;res opp hvor stor andel av eiendommen du overtar.
+                                        </p>
+                                    </td>
+                                    <td colspan="2" style="border-style:none; border-width:0px">&nbsp;</td>
+                                    <td colspan="49" style="border-style:none; border-width:0px; vertical-align:top">
+                                        <p>
+                                            <strong>Til punkt 3</strong><br />
+                                            F&oslash;r du fyller ut dette punktet m&aring; du finne ut hva slags forskrift kommunen har. Du kan enten kontakte kommunen eller finne forskriften via <a href="https://www.landbruksdirektoratet.no/no/eiendom-og-skog/eiendom/konsesjon/regelverk/kommunale-forskrifter-etter-konsesjonsloven-7">kommuneoversikten</a>.
+                                        </p>
+
+                                        <p>Benytt dette alternativet hvis du har overtatt en bebygd eiendom som ikke er st&oslash;rre enn 100 dekar og heller ikke har mer enn 35 dekar fulldyrket og/eller overflatedyrket jord. Kommunen m&aring; bekrefte at eiendommen ikke overstiger den konsesjonsfrie grensa.</p>
+
+                                        <p>N&aring;r kommunen har forskrift som setter konsesjonsfriheten for bebygd eiendom som er eller har v&aelig;rt i bruk som hel&aring;rsbolig ut av kraft, kan du bare erverve eiendommen konsesjonsfritt hvis du forplikter deg til at eiendommen skal nyttes som hel&aring;rsbolig enten av deg selv eller andre. Du krysser da av i punkt B. Har eiendommen aldri v&aelig;rt i bruk som hel&aring;rsbolig, krysser du av i punkt A. Kommunen m&aring; da bekrefte at eiendommen aldri har v&aelig;rt i bruk som hel&aring;rsbolig, og derfor ikke omfattes av forskriften.</p>
+
+                                        <p>Hvis eiendommen har bebyggelse som enn&aring; ikke er tatt i bruk som bolig, for eksempel bolig under oppf&oslash;ring, og kommunen har forskrift som setter konsesjonsfriheten ut av kraft for slik eiendom, kan du bare erverve eiendommen konsesjonsfritt om du forplikter deg til at eiendommen skal benyttes som hel&aring;rsbolig. Forpliktelsen om bruk som hel&aring;rsbolig kan oppfylles av deg selv eller andre. Hvis ervervet gjelder en slik eiendom og kommunen ikke har forskrift som omfatter slik eiendom etter konsesjonsloven &sect; 7 f&oslash;rste ledd nr. 2, er ervervet konsesjonsfritt. Du m&aring; da krysse i punkt C. Kommunen m&aring; bekrefte dette.</p>
+
+                                        <p>Det er et vilk&aring;r for konsesjonsfriheten at du ikke foretar bruksendring i strid med plan.</p>
+
+                                        <p>
+                                            <strong>Til punkt 4</strong><br />
+                                            Punkt 4 gjelder tomt som ikke ligger i omr&aring;de som i kommuneplanens arealdel eller reguleringsplan er lagt ut til bebyggelse eller anlegg. Dette vil i hovedsak gjelde tomter som ligger i omr&aring;de som i kommuneplanens arealdel er lagt ut til landbruks-, natur- og friluftsomr&aring;de samt reindrift (LNFR).Med enkelt tomt forst&aring;s ubebygd tomt som kan bebygges med ett hus med en eller h&oslash;yst to boenheter.
+                                        </p>
+
+                                        <p>Konsesjonsfrihetene er betinget av at tomta ikke er st&oslash;rre enn 2 dekar og er godkjent fradelt etter planog bygningsloven og jordlova der slik godkjenning er n&oslash;dvendig. Det er en forutsetning for konsesjonsfriheten at tomten blir bebygd innen fem &aring;r.</p>
+
+                                        <p><strong>Konsesjonsfrihetene er betinget av at tomta ikke er st&oslash;rre enn 2 dekar og er godkjent fradelt etter plan- og bygningsloven og jordlova der slik godkjenning er n&oslash;dvendig.</strong></p>
+
+                                        <p>
+                                            <strong>Til punkt 5</strong><br />
+                                            Punkt 5 gjelder tomter som i kommuneplan eller reguleringsplan er lagt ut til bebyggelse og anlegg og hvor tomteinndeling er godkjent av bygnings&shy;myndighetene. Denne konsesjonsfriheten kan settes ut av kraft dersom kommunen har forskrift som omfatter ubebygd tomt regulert til boligform&aring;l, jf. &sect; 7 f&oslash;rste ledd nr. 3. Der kommunen har slik forskrift og den ubebygde tomta er regulert til boligform&aring;l, kan du bare erverve eiendommen konsesjonsfritt ved &aring; krysse av i punkt B. Ved oppf&oslash;ring av hus bekrefter du da at eiendommen skal nyttes som hel&aring;rsbolig.
+                                        </p>
+
+                                        <p>Ervervet av tomta er konsesjonsfritt etter &sect; 4 f&oslash;rste ledd nr. 2 hvor kommunens forskrift ikke omfatter ubebygd tomt regulert til boligform&aring;l. Uansett er ervervet konsesjonsfritt dersom tomta ikke ligger i omr&aring;de regulert til boligform&aring;l. I disse tilfellene krysser du i punkt A. Kommunen m&aring; ogs&aring; bekrefte dette punktet.</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr contenteditable="false">
+                    <td>
+                        <div class="page-info">
+                            <div class="version">versjon 1.8 - 1.1.2026</div>
+                            LDIR-356 B <span style="float:right">side 3 av 4</span>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table style="page-break-before:always">
+            <tbody>
+                <tr>
+                    <td class="a4-main">
+                        <table>
+                            <tbody>
+                                <tr contenteditable="false">
+                                    <td colspan="100" style="border-style:none; border-width:0px; height:1cm; padding-top:0.5cm">&nbsp;</td>
+                                </tr>
+                                <tr contenteditable="false">
+                                    <td colspan="49" style="border-style:none; border-width:0px; vertical-align:top">
+                                        <p>
+                                            <strong>Til punkt 6</strong><br />
+                                            Dersom du erverver andre ubebygde arealer som ikke faller inn under punktene 4 eller 5, kan ervervet v&aelig;re konsesjonsfritt etter &sect; 4 f&oslash;rste ledd nr. 3.
+                                        </p>
+
+                                        <p>Du kan benytte dette alternativet hvis du har overtatt ubebygd areal som er regulert til annet enn landbruk, herunder tomter til bolig- og fritidsform&aring;l som kan bebygges med mer enn to boenheter. Unntaket gjelder videre alt areal som i kommuneplan er lagt ut til bebyggelse og anlegg. Konsesjonsfriheten er betinget av at du ikke foretar bruksendring i strid med plan.</p>
+
+                                        <p>Kommunen m&aring; bekrefte at ervervet er konsesjonsfritt.</p>
+
+                                        <p>
+                                            <strong>Til punkt 7</strong><br />
+                                            F&oslash;r du fyller ut dette punktet, m&aring; du forvisse deg om at konsesjonsfriheten for n&aelig;r slekt ikke er satt ut av kraft. Du kan enten kontakte kommunen eller finne forskriften via <a href="https://www.landbruksdirektoratet.no/no/eiendom-og-skog/eiendom/konsesjon/regelverk/kommunale-forskrifter-etter-konsesjonsloven-7">kommuneoversikten</a>.
+                                        </p>
+
+                                        <p>Er konsesjonsfriheten for n&aelig;r slekt satt ut av kraft, kan du ikke benytte punkt 7. For at ervervet skal v&aelig;re konsesjonsfritt, m&aring; ett av punktene 3-6 passe.</p>
+
+                                        <p>Du kan bruke dette punktet dersom du overtar en eiendom fra n&aelig;r slekt uavhengig av om ervervet gjelder bebygd eller ubebygd eiendom.</p>
+
+                                        <p>Dersom eiendommen er konsesjonsfri etter sin karakter, feks. etter punkt 3 alternativ A eller C, anbefaler vi bruk av denne konsesjonsfrihetsgrunnen selv om man overtar fra n&aelig;r slekt. Dette har sammenheng med at overdragelse fra n&aelig;r slekt blant annet har vilk&aring;r om at overdrager har sitt konsesjonsforhold i orden, noe punktene 3-6 ikke har.</p>
+
+                                        <p>
+                                            N&aelig;r slekt<br />
+                                            Det regnes som n&aelig;r slekt dersom du er eiers ektefelle eller er i slekt med eieren eller eierens ektefelle i rett opp- eller nedstigende linje eller i eierens eller ektefellens f&oslash;rste sidelinje til og med barn av s&oslash;sken (nev&oslash;/niese) eller er i svogerskap med eier i rett oppstigende linje. Slektsskapsunntaket gjelder ogs&aring; ved skifte av felleseie etter separasjon/skilsmisse og ved arv. Se lenkene for n&aelig;rmere illustrasjon.
+                                        </p>
+
+                                        <p><a href="http://www.regjeringen.no/upload/kilde/ld/rus/2003/0008/ddd/hfig/195173-vedlegg-5-konsesjon.gif">Hvem kan jeg erverve konsesjonsfritt fra?</a></p>
+
+                                        <p><a href="http://www.regjeringen.no/upload/kilde/ld/rus/2003/0008/ddd/hfig/195174-vedlegg-6-konsesjon.gif">Hvem kan jeg overdra konsesjonsfritt til?</a></p>
+
+                                        <p>Samboere i ekteskapslignende forhold jf. <a href="http://www.lovdata.no/all/hl-19720303-005.html">arveloven &sect; 28 a</a>, og dennes n&aelig;re familie, er omfattet tilsvarende som for ektefeller.</p>
+
+                                        <p>Du m&aring; bekrefte at du har overtatt eiendommen fra n&aelig;r slekt og p&aring; hvilken m&aring;te dere er i slekt.</p>
+
+                                        <p>
+                                            <strong>Overdrager har sitt konsesjonsforhold i orden</strong><br />
+                                            Dersom overdrager ikke har sitt konsesjonsforhold i orden, f.eks. ved at han ikke har oppfylt boplikten p&aring; eiendommen, m&aring; du s&oslash;ke konsesjon p&aring; skjema LDIR-359.
+                                        </p>
+                                    </td>
+                                    <td colspan="2" style="border-style:none; border-width:0px">&nbsp;</td>
+                                    <td colspan="49" style="border-style:none; border-width:0px; vertical-align:top">
+                                        <p>
+                                            <strong>Overdrager har hatt tinglyst hjemmel til eiendommen de siste 5 &aring;r forut overdragelsen.</strong><br />
+                                            Hvis kommunen har forskift om nedsatt konsesjonsgrense og ditt erverv gjelder slik eiendom, er ervervet bare konsesjonsfritt n&aring;r en eller flere av tidligere eiere i n&aelig;r familie sammenlagt har hatt tinglyst hjemmel til eiendommen de siste 5 &aring;r. D&oslash;r tidligere eier f&oslash;r 5 &aring;rs-fristen er ute, gjelder konsesjonsfriheten p&aring; grunn av slektskap fullt ut. Kommunen m&aring; bekrefte under punkt 7 at overdrager har hatt tinglyst hjemmel til eiendommen i minst 5 &aring;r.
+                                        </p>
+
+                                        <p>
+                                            <strong>Til punkt 8</strong><br />
+                                            Du m&aring; som ny eier selv undertegne erkl&aelig;ringen, og kan ikke benytte fullmektig. For umyndige personer &ndash; personer under 18 &aring;r eller umyndiggjorte &ndash; m&aring; vergen undertegne. Hvis du avgir uriktig erkl&aelig;ring, kan du bli p&aring;lagt &aring; omgj&oslash;re ervervet eller selge eiendommen til noen som kan f&aring; konsesjon eller ikke trenger konsesjon. Oversitter du fristen, kan eiendommen selges uten varsel etter reglene om tvangssalg. Se <a href="https://lovdata.no/dokument/NL/lov/2003-11-28-98">konsesjonsloven &sect; 18</a>
+                                        </p>
+
+                                        <p>
+                                            <strong>Til punkt 9</strong><br />
+                                            <em>Dette punktet skal kommunen fylle ut</em><br />
+                                            Kommunen skal alltid unders&oslash;ke om ervervet f&oslash;rer til ulovlig deling av driftsenhet, jf jordlova &sect; 12 sjette ledd. Kommunen m&aring; videre bekrefte at ervervet er konsesjonsfritt etter aktuell konsesjonsfrihetsgrunn.
+                                        </p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr contenteditable="false">
+                    <td>
+                        <div class="page-info">
+                            <div class="version">versjon 1.8 - 1.1.2026</div>
+                            LDIR-356 B <span style="float:right">side 4 av 4</span>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

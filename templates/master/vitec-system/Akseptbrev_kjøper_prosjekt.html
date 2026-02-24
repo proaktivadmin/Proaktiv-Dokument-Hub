@@ -1,0 +1,434 @@
+<div id="vitecTemplate">
+    <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+    <style type="text/css">
+        #vitecTemplate table {
+            border-collapse: collapse;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+            #vitecTemplate table td {
+                border: solid 1px #000;
+                height: 35px;
+                vertical-align: middle;
+            }
+
+            #vitecTemplate table tr.no-border td {
+                border: none;
+                height: auto;
+            }
+
+            #vitecTemplate table td.overskrift1 {
+                background-color: rgb(224,224,224);
+                color: #000;
+                line-height: 25px;
+                height: 25px;
+                padding-left: 5px;
+                font-weight: bold;
+            }
+
+            #vitecTemplate table td.overskrift2 {
+                color: #000;
+                line-height: 25px;
+                height: 25px;
+                padding-left: 5px;
+                font-weight: bold;
+            }
+
+            #vitecTemplate table td[data-label]:before {
+                content: attr(data-label);
+                text-align: left;
+                color: #333;
+                font-size: 9pt;
+                line-height: 8pt;
+                display: block;
+                position: absolute;
+                top: 2px;
+            }
+
+            #vitecTemplate table td[data-choice]:after {
+                content: attr(data-choice);
+                text-align: center;
+                font-size: 7pt;
+                font-weight: normal;
+                line-height: 8pt;
+                color: #333;
+                display: block;
+                position: absolute;
+                bottom: 1px;
+                left: 0;
+                right: 0;
+            }
+
+            #vitecTemplate table td[data-label] {
+                padding: 16px 2px 4px 2px;
+                position: relative;
+            }
+
+            #vitecTemplate table td[data-choice] {
+                padding: 4px 2px 16px 2px;
+                position: relative;
+            }
+
+            /* tabellceller med B?DE label og valg-tekst */
+
+            #vitecTemplate table td[data-label][data-choice] {
+                padding: 16px 2px 16px 2px;
+                position: relative;
+            }
+
+        #vitecTemplate [contenteditable="false"] * {
+            user-select: none;
+        }
+
+        #vitecTemplate .checkbox-table {
+            /* 13/15 av full bredde */
+            width: 100%;
+            margin-left: 10px;
+            table-layout: fixed;
+            margin-bottom: 8px;
+        }
+
+            #vitecTemplate .checkbox-table td {
+                padding-bottom: 5px;
+                border: 0px;
+            }
+
+                /* checkbox-cell */
+
+                #vitecTemplate .checkbox-table td:first-child {
+                    font-weight: 700;
+                    vertical-align: top;
+                }
+
+        .checkbox-table-one-row {
+            width: 86.7%;
+            margin-left: 10px;
+            table-layout: fixed;
+        }
+
+        #vitecTemplate .sign-field {
+            display: inline-block;
+            width: 45%;
+            margin-top: 1cm;
+            margin-right: 10px;
+            border-top: solid 1px #000;
+            vertical-align: top;
+        }
+
+        #vitecTemplate .buyer:last-child .separator {
+            display: none;
+        }
+    </style>
+    <style type="text/css">
+        /* Klikkbare sjekkbokser og radioknapper */
+        label.btn {
+            display: inline;
+            text-transform: none;
+            white-space: normal;
+            padding: 0;
+            vertical-align: baseline;
+            outline: none;
+            font-size: inherit;
+        }
+
+            label.btn:active,
+            label.btn.active {
+                box-shadow: none;
+                outline: none;
+            }
+
+        .svg-toggle { /* nullstiller bootstrap button-styling */
+            display: inline-block !important;
+            width: 16px;
+            height: 16px;
+            margin: 0 5px;
+            vertical-align: bottom;
+            padding: 0;
+            border: none;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none !important;
+            cursor: pointer;
+            white-space: normal;
+            text-align: left;
+            background-repeat: no-repeat;
+            background-size: 16px 16px;
+            background-position: center center;
+        }
+
+            .svg-toggle.large {
+                width: 24px;
+                height: 24px;
+                background-size: 24px 24px;
+            }
+
+            .svg-toggle.checkbox {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+            }
+
+                .svg-toggle.checkbox.active,
+                .btn.active > .svg-toggle.checkbox {
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+                    box-shadow: none !important;
+                }
+
+            .svg-toggle.radio {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
+            }
+
+                .svg-toggle.radio.active,
+                .btn.active > .svg-toggle.radio {
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
+                    box-shadow: none !important;
+                }
+
+        /* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
+        #vitecTemplate [data-toggle="buttons"] input {
+            display: none;
+        }
+    </style>
+    <table>
+        <tbody>
+            <tr class="no-border">
+                <td colspan="100">
+                    <div vitec-template="resource: Mottaker">&nbsp;</div>
+
+                    <p><strong>Kj&oslash;p av [[eiendom.alfanavn]] i [[eiendom.prosjektnavn]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+                    <p>Vi viser til akseptert kj&oslash;petilbud p&aring; ovennevnte eiendom og gratulerer med kj&oslash;pet! Med bakgrunn i denne aksept er bindende avtale inng&aring;tt p&aring; f&oslash;lgende vilk&aring;r:</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table vitec-if="Model.eiendom.eieform != &quot;Andel&quot;">
+        <tbody>
+            <tr class="no-border">
+                <td colspan="65">Vederlag for tomt:</td>
+                <td colspan="5">kr</td>
+                <td colspan="20" style="text-align:right">$.UD([[kontrakt.avgiftsgrunnlag]])</td>
+            </tr>
+            <tr class="no-border">
+                <td colspan="65">Vederlag for bolig:</td>
+                <td colspan="5">kr</td>
+                <td colspan="20" style="text-align:right">$.CALC(UD:[[kontrakt.kjopesum]]-[[kontrakt.avgiftsgrunnlag]])</td>
+            </tr>
+            <tr class="no-border">
+                <td colspan="65" style="border-bottom:1px solid black; border-top:1px solid black"><strong>Total kj&oslash;pesum</strong></td>
+                <td colspan="5" style="border-bottom:1px solid black; border-top:1px solid black"><strong>kr</strong></td>
+                <td colspan="20" style="border-bottom:1px solid black; border-top:1px solid black; text-align:right"><strong>$.UD([[kontrakt.kjopesum]])</strong></td>
+                <td colspan="10">+ omk.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">
+        <tbody>
+            <tr class="no-border">
+                <td colspan="75">Pantesikret innskudd (Kj&oslash;pesum):</td>
+                <td colspan="5">kr</td>
+                <td colspan="20" style="text-align:right">$.UD([[kontrakt.kjopesum]])</td>
+            </tr>
+            <tr class="no-border">
+                <td colspan="75">Andel fellesgjeld:</td>
+                <td colspan="5">kr</td>
+                <td colspan="20" style="text-align:right">$.UD([[eiendom.fellesgjeld]])</td>
+            </tr>
+            <tr class="no-border" style="border-bottom:1px solid black; border-top:1px solid black">
+                <td colspan="75"><strong>Sum Innskudd og Andel fellesgjeld</strong></td>
+                <td colspan="5"><strong>kr</strong></td>
+                <td colspan="20" style="text-align:right"><strong>$.CALC(UD:[[kontrakt.kjopesum]]+[[eiendom.fellesgjeld]])</strong></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">
+        <tbody>
+            <tr class="no-border">
+                <td colspan="100">&nbsp;</td>
+            </tr>
+            <tr class="no-border">
+                <td colspan="75">Total kj&oslash;pesum og omkostninger:</td>
+                <td colspan="5">kr</td>
+                <td colspan="20" style="text-align:right">$.UD([[kontrakt.kjopesumogomkostn]])</td>
+            </tr>
+            <tr class="no-border">
+                <td colspan="75">Forskudd 10% av Innskudd og Andel fellesgjeld:</td>
+                <td colspan="5">kr</td>
+                <td colspan="20" style="text-align:right">$.CALC(UD:([[kontrakt.kjopesum]]+[[eiendom.fellesgjeld]])*0,10)</td>
+            </tr>
+            <tr class="no-border" style="border-bottom:1px solid black; border-top:1px solid black">
+                <td colspan="75"><strong>Restoppgj&oslash;r ved overtakelse</strong></td>
+                <td colspan="5"><strong>kr</strong></td>
+                <td colspan="20" style="text-align:right"><strong>$.CALC(UD:[[kontrakt.kjopesumogomkostn]]-(([[kontrakt.kjopesum]]+[[eiendom.fellesgjeld]])*0,10))</strong></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <tbody>
+            <tr class="no-border">
+                <td colspan="100">
+                    <p vitec-if="Model.eiendom.eieform != &quot;Andel&quot;">Vederlaget for tomten forfaller til betaling 7 dager etter mottatt faktura.</p>
+
+                    <p vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">Forskuddet p&aring; 10% forfaller til betaling 7 dager etter mottatt faktura. Innbetalingen skal v&aelig;re fri egenkapital, det vil si forutsetter ikke pant i den leiligheten som kj&oslash;pes.</p>
+
+                    <p>Vi &oslash;nsker velkommen til kontraktsm&oslash;te p&aring; v&aring;rt kontor i [[meglerkontor.besoksadresse]] den <strong>[[kontrakt.overtagelse.dato]] kl. [[kontrakt.overtagelse.klokkeslett]]</strong>.</p>
+
+                    <p>Til kontraktsm&oslash;tet ber vi <span vitec-if="Model.kjopere.Count == 1">deg</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> medbringe:</p>
+
+                    <ol>
+                        <li>Utfylt oppgj&oslash;rsskjema (vedlagt dette brev) p&aring;f&oslash;rt kontaktpersoner/dokumentasjon for finansiering.</li>
+                        <li>Legitimasjon/dokumentasjon som inneholder 11-sifret f&oslash;dselsnr. (f.eks. pass, f&oslash;rerkort eller bankkort med bilde).</li>
+                    </ol>
+
+                    <p>Er det noe <span vitec-if="Model.kjopere.Count == 1">du</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> &oslash;nsker &aring; dr&oslash;fte med oss f&oslash;r m&oslash;tet, st&aring;r vi med glede til tjeneste!</p>
+
+                    <div vitec-template="resource: Avsender">&nbsp;</div>
+
+                    <p>&nbsp;</p>
+
+                    <p>Vedlegg</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="page-break-after:always"><span style="display:none">&nbsp;</span></div>
+    <!-- Oppgjørsskjema -->
+
+    <table>
+        <tbody>
+            <tr class="no-border">
+                <td colspan="100" style="text-align:center">
+                    <strong style="font-size:12pt">OPPGJ&Oslash;RSSKJEMA KJ&Oslash;PER</strong><br />
+                    <em>Dette skjema m&aring; fylles ut og returneres megler til kontraktsm&oslash;tet</em>
+                </td>
+            </tr>
+            <tr class="no-border">
+                <td colspan="100">&nbsp;</td>
+            </tr>
+            <tr class="no-border">
+                <td colspan="25"><strong>Adresse/oppdragsnr:</strong></td>
+                <td colspan="75">[[eiendom.gatenavnognr]], [[eiendom.postnr]] [[eiendom.poststed]] / [[oppdrag.nr]]</td>
+            </tr>
+            <tr class="no-border">
+                <td colspan="25"><strong>Megler:</strong></td>
+                <td colspan="75">[[operativmegler.navn]]</td>
+            </tr>
+            <tr class="no-border">
+                <td colspan="25"><strong>Kj&oslash;per:</strong></td>
+                <td colspan="75"><span vitec-foreach="kjoper in Model.kjopere"> <span class="buyer">[[*kjoper.navnutenfullmektigogkontaktperson]]<span class="separator">, </span> </span> </span></td>
+            </tr>
+            <tr class="no-border">
+                <td colspan="100">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="70" data-label="Ny adresse">&nbsp;</td>
+                <td colspan="30" data-label="Fra dato">&nbsp;</td>
+            </tr>
+            <tr class="no-border">
+                <td colspan="100">
+                    <p style="margin-top:0px; padding-top:0px"><small><em>(Vennligst noter om <span vitec-if="Model.kjopere.Count == 1">du</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> planlegger senere innflytting, slik at v&aring;r korrespondanse blir sendt til riktig adresse)</em> </small></p>
+                </td>
+            </tr>
+            <tr>
+                <td class="overskrift1" colspan="100" style="line-height:15px">
+                    Politisk Eksponert Person (PEP*)<br />
+                    <em><span style="font-size:7pt; font-weight:normal">* Med PEP menes person som har/har hatt (siste 12 mnd) h&oslash;ytst&aring;ende verv/stilling som statsoverhode, regjeringssjef, (ass.)minister. Medlem av nasjonalforsamling, styrende organ i politisk parti, h&oslash;yere rettsinstans, styre i riksrevisjon, revisjonsdomstol, sentralbank. Ambassad&oslash;r, charge d&rsquo;affaires, milit&aelig;r offiser av h&oslash;yere rang (generalmajor eller h&oslash;yere). Medlem av administrativt, ledende eller kontrollerende organ i statlig foretak. Direkt&oslash;r, styremedlem eller annen person i &oslash;verste ledelse i internasjonal organisasjon.</span></em>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="100" data-label="Er du, eller er du i familie med, eller jobber du sammen med en Politisk Eksponert Person (PEP)?" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" /> Ja </label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" /> Nei </label> &nbsp;&nbsp;&nbsp;Dersom PEP, oppgi navn p&aring; PEP og relasjon:</td>
+            </tr>
+            <tr>
+                <td class="overskrift1" colspan="100">Form&aring;l med handelen <em><span style="font-size:8pt; font-weight:normal">(Ihht. hvitvaskingsregelverket er vi forpliktet til &aring; notere form&aring;let med handelen)</span></em></td>
+            </tr>
+            <tr>
+                <td colspan="100" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" />Beboelse</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" />Utleie</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" />Fremtidig bolig for barn</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" />Videresalg</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" />Annet:</label></td>
+            </tr>
+            <tr>
+                <td class="overskrift1" colspan="100">Finansiering <em><span style="font-size:8pt; font-weight:normal"> - NB! Kj&oslash;pesum inkl. omk. m&aring; v&aelig;re ankommet meglers klientkonto senest to virkedager f&oslash;r overtakelse!</span></em></td>
+            </tr>
+            <tr>
+                <td class="overskrift2" colspan="10">L&aring;n 1</td>
+                <td colspan="40" data-label="Bank/finansinstitusjon">&nbsp;</td>
+                <td colspan="30" data-label="Kontaktperson/tlf/e-post">&nbsp;</td>
+                <td colspan="20" data-label="Beløp">&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="overskrift2" colspan="10">L&aring;n 2</td>
+                <td colspan="40" data-label="Bank/finansinstitusjon">&nbsp;</td>
+                <td colspan="30" data-label="Kontaktperson/tlf/e-post">&nbsp;</td>
+                <td colspan="20" data-label="Beløp">&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="overskrift2" colspan="18">Egenkapital</td>
+                <td colspan="62" data-label="Bank">&nbsp;</td>
+                <td colspan="20" data-label="Beløp">&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="overskrift2" colspan="28">Kj&oslash;pesum og omkostn.</td>
+                <td colspan="20" data-label="Overføres samlet?" data-toggle="buttons" style="text-align:center"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" />Ja &nbsp;&nbsp; </label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" />Nei</label></td>
+                <td colspan="52" data-label="Dersom ikke overf. fra samme norske bank, redegjør:">&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="overskrift1" colspan="100">Eventuelt tilgodehavende (f.eks renter klientkonto)</td>
+            </tr>
+            <tr vitec-if="Model.kjopere.Count == 1">
+                <td colspan="35" data-label="Overføres til bankkontonummer">&nbsp;</td>
+                <td colspan="65" data-label="Kontoholders navn">&nbsp;</td>
+            </tr>
+        </tbody>
+        <tbody vitec-foreach="kjoper in Model.kjopere" vitec-if="Model.kjopere.Count &gt; 1">
+            <tr>
+                <td colspan="35" data-label="Overføres til bankkontonummer">&nbsp;</td>
+                <td colspan="45" data-label="Kontoholders navn">&nbsp;</td>
+                <td colspan="20" data-label="Utbetalingsfordeling">&nbsp;</td>
+            </tr>
+        </tbody>
+        <tbody>
+            <tr class="no-border">
+                <td colspan="100">&nbsp;</td>
+            </tr>
+            <tr class="no-border">
+                <td colspan="6"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
+                <td colspan="44">Det &oslash;nskes tilbud om finansiering p&aring; boligl&aring;n</td>
+                <td colspan="6"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
+                <td colspan="44">Det &oslash;nskes tilbud om salg av n&aring;v&aelig;rende bolig</td>
+            </tr>
+        </tbody>
+    </table>
+    <table style="page-break-inside: avoid">
+        <tbody>
+            <tr class="no-border">
+                <td colspan="100">
+                    <p>Som kj&oslash;per samtykker <span vitec-if="Model.kjopere.Count == 1">jeg</span> <span vitec-if="Model.kjopere.Count &gt; 1">vi</span> i at [[meglerkontor.navn]] benytter dette salget som eventuelt referansesalg i forbindelse med sin markedsf&oslash;ring. <em>Selgers og kj&oslash;pers navn oppgis ikke.</em></p>
+
+                    <table style="width:45%">
+                        <tbody>
+                            <tr>
+                                <td colspan="100" style="border-bottom-color:#000000; border-bottom-style:solid; border-bottom-width:1px">
+                                    <br />
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="100">Sted / dato</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td colspan="100" style="vertical-align:top"><span vitec-foreach="kjoper in Model.kjopere"> <span class="sign-field">[[*kjoper.navn]]</span> </span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

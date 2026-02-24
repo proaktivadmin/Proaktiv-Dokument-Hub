@@ -1,0 +1,73 @@
+<div id="vitecTemplate"><span contenteditable="false" vitec-template="resource:Vitec Stilark"> </span>
+<style type="text/css">/* 1. RESET & FONTS: Clean, standard sans-serif look */
+    #vitecTemplate { 
+        font-family: 'Open Sans', Arial, sans-serif; 
+        font-size: 10pt; 
+        color: #000; 
+        line-height: 1.4; 
+    }
+
+    /* 2. HEADERS: Simple and high-contrast (removed gold and Playfair) */
+    #vitecTemplate h1 { 
+        font-size: 18pt; 
+        font-weight: bold; 
+        text-transform: none; 
+        border: none; 
+        margin: 0 0 20px 0; 
+        padding: 0; 
+    }
+
+    /* 3. TABLE LOGIC: Reliable borders for document stability */
+    #vitecTemplate table { border-collapse: collapse; table-layout: fixed; width: 100%; margin-bottom: 10px; }
+    #vitecTemplate td { padding: 8px; vertical-align: top; }
+    
+    .info-label { font-weight: bold; width: 100px; }
+
+    /* 4. HIGHLIGHT BOX: Cleaned up the return information area */
+    .return-info-box { 
+        background-color: #f9f9f9; 
+        border-left: 5px solid #cccccc; 
+        padding: 15px; 
+        margin: 20px 0;
+    }
+</style>
+<!-- CONTENT START -->
+<h1>Notering av gjeldsbrev med ur&aring;dighetssperre</h1>
+<!-- Information Table -->
+
+<table border="1" cellspacing="0" style="border-collapse:collapse; border:1px solid #eeeeee; width:100%">
+	<colgroup>
+		<col style="width: 100px;" />
+		<col style="width: auto;" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td class="info-label">Eiendom:</td>
+			<td>[[eiendom.adresse]], [[komplettmatrikkel]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Eier(e):</td>
+			<td>[[selger.navn]]</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>&nbsp;</p>
+
+<p>Vi har f&aring;tt i oppdrag &aring; selge ovennevnte eiendom. Vedlagt oversendes originalt &rdquo;Gjeldsbrev med ur&aring;dighetssperre&rdquo; som bes notert p&aring; leiligheten.</p>
+
+<p>Vi har overf&oslash;rt kr. __________________,- (noteringsgebyr) til deres konto.</p>
+
+<p>Vi im&oslash;teser deres snarlige bekreftelse p&aring; at gjeldsbrevet er notert til <strong>[[oppgjor.kontorepost]]</strong>.</p>
+<!-- Return Address Block -->
+
+<div class="return-info-box">
+<p><strong>Ferdig notert gjeldsbrev bes returnert til:</strong></p>
+
+<p><strong>[[oppgjor.kontornavn]]</strong><br />
+[[oppgjor.postadresse]]<br />
+[[oppgjor.postnr]] [[oppgjor.poststed]]</p>
+</div>
+
+<p>Dersom det er feil eller mangler ved gjeldsbrevet, bes det returnert til v&aring;rt kontor. P&aring; forh&aring;nd takk for hjelpen.</p>
+</div>

@@ -1,0 +1,400 @@
+<!-- 
+=============================================================================
+SYSTEM:      Vitec Next
+MODUL:       Proaktiv Master Mal
+MALNAVN:     Risikoklassifisering Oppgjør v.3.0
+VERSJON:     3.2 (Content Restoration Fix)
+DATO:        28.11.2025
+FORFATTER:   Senior Developer / Proaktiv
+FRAMEWORK:   v3.0
+BESKRIVELSE: Risikovurdering på oppgjørsstadiet.
+             Fullstendig rekonstruksjon av innhold 1:1 fra original.
+             Inkluderer seksjon 1 om endringer, samt indikatorlister.
+=============================================================================
+-->
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&family=Playfair+Display:wght@400;700&display=swap');
+    
+    #vitecTemplate { font-family: Arial, Helvetica, sans-serif; font-size: 10pt; color: #000; margin: 0; padding: 0; }
+    
+    h1 { font-family: Arial, Helvetica, sans-serif; font-size: 16pt; font-weight: bold; text-align: center; margin-bottom: 5px; page-break-after: avoid; }
+    h2 { font-family: Arial, Helvetica, sans-serif; font-size: 14pt; font-weight: bold; text-align: center; margin-top: 0; margin-bottom: 20px; page-break-after: avoid; }
+    p { margin-bottom: 10px; line-height: 1.3; }
+    li { margin-bottom: 5px; }
+    
+    table { width: 100%; border-collapse: collapse; margin-bottom: 15px; table-layout: fixed; page-break-inside: avoid; }
+    td, th { padding: 5px; vertical-align: top; border: 1px solid #000; }
+    
+    /* SJEKKBOKSER (v3.0 STANDARD) */
+    label.btn { display: inline-block !important; cursor: pointer; margin: 0 !important; padding: 0 !important; vertical-align: middle !important; line-height: 1 !important; }
+    #vitecTemplate input[type="checkbox"] { display: none !important; } 
+    .svg-toggle { display: inline-block !important; width: 14px !important; height: 14px !important; margin-right: 8px !important; vertical-align: middle !important; border: none !important; background-color: transparent !important; position: relative; top: -1px; }
+    
+    .svg-toggle.checkbox { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect x='25' y='25' width='462' height='462' fill='none' stroke='%23000000' stroke-width='40'/%3E%3C/svg%3E"); }
+    .svg-toggle.checkbox.active, .btn.active > .svg-toggle.checkbox { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect x='25' y='25' width='462' height='462' fill='none' stroke='%23000000' stroke-width='40'/%3E%3Crect x='100' y='100' width='312' height='312' fill='%23000000'/%3E%3C/svg%3E"); }
+
+    /* FARGOKODER */
+    .bg-low { background-color: rgb(215, 228, 189); } /* Lys grønn */
+    .bg-mod { background-color: rgb(149, 179, 215); } /* Blå */
+    .bg-high { background-color: rgb(255, 124, 128); } /* Rød */
+    .bg-purple { background-color: rgb(128, 100, 162); color: #fff; }
+    .bg-black { background-color: #000; color: #fff; }
+    
+    .no-border td { border: none; }
+    .v-middle td { vertical-align: middle !important; }
+</style>
+<h1>Oppgj&oslash;r</h1>
+
+<h2>Risikovurdering av kunden og oppdraget</h2>
+
+<p><strong>Oppdragsnummer:</strong> [[oppdrag.nr]]<br />
+<strong>Risikoklassifisering utf&oslash;rt av:</strong> [[oppgjor.ansvarlig.navn]]</p>
+
+<p>Oppdragets iboende risiko for hvitvasking/terrorfinansiering er vurdert av megler ved oppdragsinng&aring;elsen og etter kontraktsignering, og f&oslash;lgende dokumenter skal foreligge p&aring; saken:</p>
+
+<ul>
+	<li>&laquo;Risikoklassifisering &ndash; Oppdragsinng&aring;else&raquo;</li>
+	<li>&laquo;Risikoklassifisering &ndash; Fornyet vurdering&raquo;</li>
+	<li>Komplett utfylt &laquo;Oppgj&oslash;rsskjema selger&raquo;</li>
+	<li>Komplett utfylt &laquo;Oppgj&oslash;rsskjema kj&oslash;per&raquo;</li>
+	<li>Komplett utfylt &laquo;Kundeskjema juridisk person&raquo; ved juridisk person</li>
+	<li>Annen informasjon som har fremkommet i dialog med selger/kj&oslash;per</li>
+</ul>
+
+<p><strong>P&aring; oppgj&oslash;rsstadiet skal det foretas en siste risikovurdering f&oslash;r transaksjonen gjennomf&oslash;res.</strong></p>
+
+<p>Klassifiseringen av risiko foretas iht. f&oslash;lgende niv&aring;:</p>
+<!-- RISIKOMATRISE -->
+
+<table>
+	<colgroup>
+		<col style="width: 20%;" />
+		<col style="width: 20%;" />
+		<col style="width: 60%;" />
+	</colgroup>
+	<thead>
+		<tr>
+			<td style="text-align:center"><strong>Risiko</strong></td>
+			<td style="text-align:center"><strong>Kontrollniv&aring;</strong></td>
+			<td style="text-align:center"><strong>Beskrivelse</strong></td>
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="bg-low">
+			<td style="text-align:center"><strong>Lav</strong></td>
+			<td style="text-align:center"><strong>Forenklet</strong></td>
+			<td>Lav risiko &ndash; forenklede kundetiltak<br />
+			Andre indikatorer kan gi Moderat eller H&oslash;y risiko</td>
+		</tr>
+		<tr class="bg-mod">
+			<td style="text-align:center"><strong>Normal</strong></td>
+			<td style="text-align:center"><strong>Normal</strong></td>
+			<td>Normal risiko &ndash; Normale kundetiltak<br />
+			Andre indikatorer kan gi H&oslash;y risiko</td>
+		</tr>
+		<tr class="bg-high">
+			<td style="text-align:center"><strong>H&oslash;y</strong></td>
+			<td style="text-align:center"><strong>Forsterket</strong></td>
+			<td>H&oslash;y risiko &ndash; forsterkede kundetiltak<br />
+			Indikatorer som alene inneb&aelig;rer h&oslash;y risiko</td>
+		</tr>
+	</tbody>
+</table>
+<br />
+<!-- 1. KUNDETYPE OG KUNDEFORHOLD -->
+<div class="bg-black" style="font-weight:bold; padding:5px">1. Kundetype og Kundeforhold (sett kryss)</div>
+
+<table>
+	<colgroup>
+		<col style="width: 40px;" /><!-- Venstre grønn stolpe -->
+		<col style="width: 150px;" /><!-- Mellomstolpe -->
+		<col style="width: auto;" /><!-- Innhold -->
+	</colgroup>
+	<tbody>
+		<tr>
+			<td class="bg-low" rowspan="2">&nbsp;</td>
+			<td class="bg-low" style="font-weight:bold; vertical-align:top">Kundeforhold</td>
+			<td>
+			<p>Er det siden de to tidligere risikoklassifiseringene forekommet endringer hos Selger og/eller Kj&oslash;per hva ang&aring;r &laquo;Kundetype&raquo; eller &laquo;Kundeforhold&raquo;?</p>
+
+			<p>Eksempel p&aring; dette kan v&aelig;re instruks om:</p>
+
+			<ul>
+				<li>At andre enn kj&oslash;per skal ha hjemmel ev. annen endring i kj&oslash;per</li>
+				<li>At andre enn selger skal st&aring; som hjemmelsutsteder</li>
+				<li>Andre endringer i partsforholdet</li>
+			</ul>
+
+			<table class="no-border" style="margin-top:10px">
+				<colgroup>
+					<col style="width: 30px;" />
+					<col style="width: auto;" />
+				</colgroup>
+				<tbody class="v-middle">
+					<tr>
+						<td><label aria-pressed="false" class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+						<td>Nei</td>
+					</tr>
+					<tr>
+						<td><label aria-pressed="false" class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+						<td>Ja</td>
+					</tr>
+				</tbody>
+			</table>
+			&nbsp;
+
+			<p><strong>Hvis &laquo;Ja&raquo; er det gitt en velbegrunnet begrunnelse for endringen?</strong></p>
+
+			<table class="no-border">
+				<colgroup>
+					<col style="width: 30px;" />
+					<col style="width: auto;" />
+				</colgroup>
+				<tbody class="v-middle">
+					<tr>
+						<td><label aria-pressed="false" class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+						<td>Nei &ndash; saken m&aring; sendes til hvitvaskingsansvarlig ref. pkt. 5.</td>
+					</tr>
+					<tr>
+						<td><label aria-pressed="false" class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+						<td>Ja &ndash; Forklaring:<br />
+						<br />
+						__________________________________________</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td class="bg-low" style="font-weight:bold">1.1<br />
+			1.2</td>
+			<td><em>(Se tidligere klassifiseringer)</em></td>
+		</tr>
+	</tbody>
+</table>
+<!-- 2. RISIKO TRANSAKSJON -->
+
+<div class="bg-black" style="font-weight:bold; padding:5px">2. Risiko knyttet til transaksjonen</div>
+
+<table>
+	<colgroup>
+		<col style="width: 40px;" />
+		<col style="width: auto;" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td class="bg-low">&nbsp;</td>
+			<td>
+			<p>Sett kryss ved. Forekomst av indikator</p>
+			<!-- Indre tabell for to kolonner -->
+
+			<table class="no-border">
+				<colgroup>
+					<col style="width: 48%;" />
+					<col style="width: 4%;" />
+					<col style="width: 48%;" />
+				</colgroup>
+				<tbody class="v-middle">
+					<tr><!-- Venstre kolonne -->
+						<td style="vertical-align:top">
+						<table class="no-border">
+							<colgroup>
+								<col style="width: 30px;" />
+								<col style="width: auto;" />
+							</colgroup>
+							<tbody class="v-middle">
+								<tr>
+									<td><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+									<td>Midlenes opprinnelse er uklar/h&oslash;y egenkapital</td>
+								</tr>
+								<tr>
+									<td><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+									<td>Bel&oslash;p til/fra utlandet</td>
+								</tr>
+								<tr>
+									<td><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+									<td>Bel&oslash;p til/fra h&oslash;yrisikoland</td>
+								</tr>
+								<tr>
+									<td><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+									<td>L&aring;n ytes (kj&oslash;per) / er ytet (selger) fra utradisjonell finansieringskilde</td>
+								</tr>
+								<tr>
+									<td><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+									<td>Finansieringsopplysningene er uklare eller unormale</td>
+								</tr>
+								<tr>
+									<td><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+									<td>Betaling med kontanter (gjelder ogs&aring; kontantinnskudd i bank)</td>
+								</tr>
+								<tr>
+									<td><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+									<td>31.12 saker</td>
+								</tr>
+								<tr>
+									<td><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+									<td>Innfrielse av private pant</td>
+								</tr>
+							</tbody>
+						</table>
+						</td>
+						<td>&nbsp;</td>
+						<!-- Høyre kolonne -->
+						<td style="vertical-align:top">
+						<table class="no-border">
+							<colgroup>
+								<col style="width: 30px;" />
+								<col style="width: auto;" />
+							</colgroup>
+							<tbody class="v-middle">
+								<tr>
+									<td><label aria-pressed="false" class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+									<td>Uvanlig bruk av klientkonto selger</td>
+								</tr>
+								<tr>
+									<td><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+									<td>Uvanlig bruk av klientkonto kj&oslash;per, f.eks. unormal f&oslash;rtidig betaling</td>
+								</tr>
+								<tr>
+									<td><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+									<td>Kj&oslash;pesummen skal innbetales i un&oslash;dig mange transaksjoner (delinnbetalinger)</td>
+								</tr>
+								<tr>
+									<td><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+									<td>Kj&oslash;pesummen betales helt eller delvis av andre enn kj&oslash;per</td>
+								</tr>
+								<tr>
+									<td><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+									<td>Utbetaling av oppgj&oslash;r til andre enn selger/tinglyste panthavere</td>
+								</tr>
+								<tr>
+									<td><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+									<td>Partene har gjort opp helt eller delvis seg imellom</td>
+								</tr>
+								<tr>
+									<td><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+									<td>Oppgj&oslash;r i annet enn penger</td>
+								</tr>
+								<tr>
+									<td><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+									<td>Kj&oslash;per &oslash;nsker blanco</td>
+								</tr>
+								<tr>
+									<td><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+									<td>Ettersp&oslash;rsel etter andre tjenester enn det som er normalt</td>
+								</tr>
+							</tbody>
+						</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<!-- 3. ANDRE RISIKOTRIGGERE -->
+
+<div class="bg-black" style="font-weight:bold; padding:5px">3. Andre risikotriggere (sett kryss)</div>
+
+<table>
+	<colgroup>
+		<col style="width: 40px;" />
+		<col style="width: 120px;" />
+		<col style="width: auto;" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td class="bg-low">&nbsp;</td>
+			<td class="bg-low">Er det avdekket andre risikotriggere ved partene eller transaksjonen?</td>
+			<td>
+			<table class="no-border" style="margin-bottom:0">
+				<colgroup>
+					<col style="width: 30px;" />
+					<col style="width: auto;" />
+				</colgroup>
+				<tbody class="v-middle">
+					<tr>
+						<td><label aria-pressed="false" class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+						<td>Nei</td>
+					</tr>
+					<tr>
+						<td><label aria-pressed="false" class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+						<td>Ja, kommenter:<br />
+						<br />
+						_____________________________</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<br />
+<!-- 4. KONKLUSJON -->
+<div class="bg-black" style="font-weight:bold; padding:5px">4. Risikovurdering &ndash; konklusjon (sett kryss)</div>
+
+<table>
+	<colgroup>
+		<col style="width: 40px;" />
+		<col style="width: 120px;" />
+		<col style="width: auto;" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td class="bg-low" style="font-weight:bold; text-align:center">4.1</td>
+			<td class="bg-low">Vurdering av hvitvaskingsrisikoen knyttet til partene og oppdraget</td>
+			<td>
+			<table class="no-border" style="margin-bottom:10px">
+				<colgroup>
+					<col style="width: 30px;" />
+					<col style="width: 130px;" />
+					<col style="width: 30px;" />
+					<col style="width: 130px;" />
+					<col style="width: 30px;" />
+					<col style="width: 130px;" />
+				</colgroup>
+				<tbody class="v-middle">
+					<tr>
+						<td><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+						<td><strong>Lav - Forenklet</strong></td>
+						<td><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+						<td><strong>Normalt - Normal</strong></td>
+						<td><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+						<td><strong>H&oslash;y - Forsterket</strong></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p style="font-size:9pt; font-style:italic; margin-bottom:10px">Ved treff p&aring; forhold som gir &laquo;H&oslash;y&raquo; risiko for hvitvasking jf. pkt. 1 til 3 over, s&aring; skal oppdraget klassifiseres i siste kategori, Hvitvaskingsansvarlig skal konsulteres, f&oslash;r det endelig konkluderes med hvorvidt saken skal f&oslash;lges opp av Hvitvaskingsansvarlig.</p>
+			<!-- Lilla boks -->
+
+			<div class="bg-purple" style="font-weight:bold; margin-bottom:5px; padding:5px">Forsterket risiko &ndash; avklart:</div>
+
+			<p style="font-size:9pt; font-style:italic">&laquo;H&oslash;y risiko&raquo; er identifisert, Hvitvaskingsansvarlig er konsultert, foresterkede kontrolltiltak er gjennomf&oslash;rt og det er ikke behov for ytterligere unders&oslash;kelser.</p>
+
+			<p style="font-size:9pt; font-style:italic">F&oslash;lgende vurdering/unders&oslash;kelser er gjort (beskriv):</p>
+
+			<p style="border-bottom:1px solid #cccccc; height:20px; margin-bottom:5px">&nbsp;</p>
+
+			<p style="border-bottom:1px solid #cccccc; height:20px; margin-bottom:5px">&nbsp;</p>
+
+			<p style="font-size:9pt; font-style:italic">&laquo;H&oslash;y risiko&raquo; hukes av i sjekkliste i Webmegler. Hvitvaskingsansvarlig skal orienteres om saken ved e-post, der f&oslash;lgende angis i emnefeltet: <strong>[[oppdrag.nr]] Forsterket risiko &ndash; avklart</strong></p>
+			<br />
+			<!-- Rød boks -->
+			<div class="bg-high" style="font-weight:bold; margin-bottom:5px; padding:5px">Forsterket &ndash; IKKE avklart: Saken m&aring; f&oslash;lges opp av hvitvaskingsansvarlig</div>
+
+			<p style="font-size:9pt; font-style:italic">&laquo;H&oslash;y risiko&raquo; er identifisert, Hvitvaskingsansvarlig er konsultert, foresterkede kontrolltiltak er gjennomf&oslash;rt og saken m&aring; f&oslash;lges opp av hvitvaskingsansvarlig.</p>
+
+			<p style="font-size:9pt; font-style:italic">F&oslash;lgende vurdering/unders&oslash;kelser er gjort (beskriv):</p>
+
+			<p style="border-bottom:1px solid #cccccc; height:20px; margin-bottom:5px">&nbsp;</p>
+
+			<p style="border-bottom:1px solid #cccccc; height:20px; margin-bottom:5px">&nbsp;</p>
+
+			<p style="font-size:9pt; font-style:italic">&laquo;H&oslash;y risiko&raquo; hukes av i sjekkliste i Webmegler og hvitvaskingsansvarlig skal umiddelbart orienteres pr. e-post der f&oslash;lgende angis i emnefeltet: <strong>[[oppdrag.nr]] Forsterket risiko &ndash; IKKE avklart</strong></p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>

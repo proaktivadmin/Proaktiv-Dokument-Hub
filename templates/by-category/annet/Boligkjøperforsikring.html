@@ -1,0 +1,32 @@
+<p><!-- @functions {   
+
+private string GetPosteringsVerdiForBoligkjoperforsikring()
+{
+var codeList = new List<string>(){"10098"};
+return GetPosteringsVerdi(codeList);
+}
+
+private List<Vitec.Megler.DocumentMerging.DocumentFullModelPool.ModelPost> GetPosteringerUtenBoligkjoperforsikring()
+{
+var codeList = new List<string>(){"10098"};
+return GetPosteringerExcept(codeList);
+}
+
+private List<Vitec.Megler.DocumentMerging.DocumentFullModelPool.ModelPost> GetPosteringerExcept(List<string> codeList)
+{
+return @Model.kjoperskostnader.alleposter.Where(x => !codeList.Contains(x.kode)).ToList();
+}
+
+private string GetPosteringsVerdi(List<string> codeList)
+{
+var post = @Model.kjoperskostnader.alleposter.FirstOrDefault(x => codeList.Contains(x.kode));
+if (post != null)
+{
+return post.belop;
+}
+else
+{
+return "0";
+}
+}
+}--></p>

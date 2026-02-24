@@ -1,0 +1,376 @@
+<div id="vitecTemplate">
+    <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+    <style type="text/css">
+        #vitecTemplate p,
+        #vitecTemplate th p,
+        #vitecTemplate td p {
+            font-size: 8.5pt;
+        }
+
+        #vitecTemplate table {
+            table-layout: fixed;
+            width: 100%;
+            border-spacing: 4px;
+            border-collapse: collapse;
+        }
+
+            #vitecTemplate table th {
+                font-size: 8.5pt;
+                line-height: 10pt;
+                font-weight: normal;
+                text-align: left;
+                padding: 4px 0;
+            }
+
+            #vitecTemplate table td {
+                font-size: 8.5pt;
+                line-height: 10pt;
+                padding: 7.5px 4px;
+            }
+
+                #vitecTemplate table td strong {
+                    font-size: 8.5pt;
+                    line-height: 10pt;
+                }
+
+            #vitecTemplate table tr.border-top th {
+                padding-top: 2px;
+                border-top: solid 1px #000;
+            }
+
+            #vitecTemplate table tr.border-bottom td {
+                border-bottom: solid 1px #ccc;
+            }
+
+        #vitecTemplate .info-row td {
+            font-size: 7.5pt;
+            padding: 2px 2px 14px 4px;
+        }
+
+        #vitecTemplate table td.border-top {
+            border-top: solid 1px #ccc;
+        }
+
+        #vitecTemplate table td.border-right {
+            border-right: solid 1px #ccc;
+        }
+
+        #vitecTemplate table td.border-bottom {
+            border-bottom: solid 1px #ccc;
+        }
+
+        #vitecTemplate table td.border-left {
+            border-left: solid 1px #ccc;
+        }
+
+        #vitecTemplate h1 {
+            font-weight: normal;
+            font-size: 14pt;
+            line-height: 14px;
+            margin: 0 0 5px 0;
+            padding: 0;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        #vitecTemplate .info-field {
+            background-color: #961932;
+            color: white;
+            border: none;
+        }
+
+        #vitecTemplate .use-caps {
+            text-transform: uppercase;
+            text-align: center;
+            font-size: 14pt;
+            font-weight: 700;
+        }
+
+        #vitecTemplate .text-center {
+            text-align: center;
+        }
+
+        #vitecTemplate .text-right {
+            text-align: right;
+        }
+
+        #vitecTemplate .insert-table {
+            display: inline-table;
+        }
+
+            #vitecTemplate .insert-table > span,
+            #vitecTemplate .insert-table > span.insert {
+                display: table-cell;
+            }
+
+        #vitecTemplate span.insert:empty {
+            font-size: inherit !important;
+            line-height: inherit !important;
+            display: inline-block;
+            background-color: lightpink;
+            min-width: 2em !important;
+            height: 1.1em !important;
+            text-align: center;
+        }
+
+            #vitecTemplate span.insert:empty:before {
+                content: attr(data-label);
+            }
+
+            #vitecTemplate span.insert:empty:hover {
+                background-color: #fff;
+                cursor: pointer;
+            }
+
+        #vitecTemplate .insert-textbox {
+            display: inline-table;
+        }
+
+            #vitecTemplate .insert-textbox > span {
+                padding: 0 4px;
+                line-height: 1.1;
+                border: solid 1px #000;
+                width: 14em;
+                max-width: 18em;
+                overflow: hidden;
+                display: table-cell;
+                text-align: left;
+                white-space: nowrap;
+            }
+
+            #vitecTemplate .insert-textbox.small > span {
+                width: 7em;
+                max-width: 14em;
+            }
+
+        #vitecTemplate .insert-textarea {
+            display: table;
+            width: 100%;
+        }
+
+            #vitecTemplate .insert-textarea > span {
+                display: table-cell;
+                height: 3em;
+                vertical-align: top;
+                padding: 5px;
+                border: solid 1px #000;
+            }
+
+        #vitecTemplate .add-signature {
+            border-radius: 10px;
+            border: solid 2px #ccc;
+            text-align: center;
+            line-height: 4cm;
+            margin-bottom: 20px;
+            font-size: 8.5pt;
+        }
+    </style>
+    <style type="text/css">
+        /* Klikkbare sjekkbokser og radioknapper */
+        label.btn {
+            display: inline;
+            text-transform: none;
+            white-space: normal;
+            padding: 0;
+            vertical-align: baseline;
+            outline: none;
+            font-size: inherit;
+        }
+
+            label.btn:active,
+            label.btn.active {
+                box-shadow: none;
+                outline: none;
+            }
+
+        .svg-toggle { /* nullstiller bootstrap button-styling */
+            display: inline-block !important;
+            width: 13px;
+            height: 13px;
+            margin: 0 5px;
+            vertical-align: bottom;
+            padding: 0;
+            border: none;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none !important;
+            cursor: pointer;
+            white-space: normal;
+            text-align: left;
+            background-repeat: no-repeat;
+            background-size: 13px 13px;
+            background-position: center center;
+        }
+
+
+            .svg-toggle.checkbox {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+            }
+
+                .svg-toggle.checkbox.active,
+                .btn.active > .svg-toggle.checkbox {
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+                    box-shadow: none !important;
+                }
+
+            .svg-toggle.radio {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
+            }
+
+                .svg-toggle.radio.active,
+                .btn.active > .svg-toggle.radio {
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
+                    box-shadow: none !important;
+                }
+
+        /* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
+        #vitecTemplate [data-toggle="buttons"] input {
+            display: none;
+        }
+    </style>
+    <table>
+        <thead>
+            <tr>
+                <td colspan="100"><img src="[[meglerkontor.firmalogourl]]" style="float:right; max-height:3.5cm; max-width:3.5cm; text-align:right" /></td>
+            </tr>
+            <tr>
+                <th colspan="70" style="border-bottom: solid 1px #000;">
+                    <h1>Kj&oslash;petilbud p&aring; [[eiendom.prosjektnavn]]</h1>
+                </th>
+                <th colspan="30" style="border-bottom: solid 1px #000; font-size: 10pt; text-align: right">Oppdragsnr.: [[oppdrag.nr]]</th>
+            </tr>
+            <tr>
+                <th colspan="100" style="text-align: right;">Megler: <span vitec-if="Model.ansvarligmegler.navn != &quot;Mangler data&quot;">[[ansvarligmegler.navn]]</span> <span vitec-if="Model.ansvarligmegler.navn == &quot;Mangler data&quot;">[[operativmegler.navn]]</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="100">
+                    <strong>Enhet:</strong> [[eiendom.alfanavn]]<br />
+                    <strong>Adresse:</strong> [[eiendom.gatenavnognr]], [[eiendom.postnr]] [[eiendom.poststed]]<br />
+                    <strong>Matrikkel:</strong> [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune
+                </td>
+            </tr>
+            <tr>
+                <td colspan="100">Undertegnede gir herved bindende kj&oslash;petilbud p&aring; ovennevnte eiendom:</td>
+            </tr>
+            <tr class="border-bottom">
+                <td class="border-bottom" colspan="38"><strong>Kj&oslash;epsum ihht. prisliste kr:</strong></td>
+                <td class="border-bottom" colspan="62"><strong>Bel&oslash;p med bokstaver:</strong></td>
+            </tr>
+            <tr class="info-row">
+                <td colspan="100">+ omkostninger i henhold til opplysninger i salgsoppgave/prisliste. Eventuell andel fellesgjeld kommer i tillegg til kj&oslash;pesummen.</td>
+            </tr>
+            <tr class="border-bottom">
+                <td colspan="100"><strong>Eventuelle forbehold:</strong></td>
+            </tr>
+            <tr>
+                <td colspan="100"><strong>Kj&oslash;pesum og omkostninger finansieres slik:</strong></td>
+            </tr>
+            <tr class="border-bottom">
+                <td colspan="35">L&aring;n i</td>
+                <td colspan="6">v/</td>
+                <td colspan="25">&nbsp;</td>
+                <td colspan="17">tlf</td>
+                <td colspan="17">kr</td>
+            </tr>
+            <tr class="border-bottom">
+                <td colspan="35">L&aring;n i</td>
+                <td colspan="6">v/</td>
+                <td colspan="25">&nbsp;</td>
+                <td colspan="17">tlf</td>
+                <td colspan="17">kr</td>
+            </tr>
+            <tr class="border-bottom">
+                <td colspan="35">Egenkapital i</td>
+                <td colspan="6">v/</td>
+                <td colspan="25">&nbsp;</td>
+                <td colspan="17">tlf</td>
+                <td colspan="17">kr</td>
+            </tr>
+            <tr class="border-bottom">
+                <td colspan="35">Finansiering kr</td>
+                <td colspan="40">Bekreftet av</td>
+                <td colspan="25">Dato/kl.</td>
+            </tr>
+            <tr>
+                <td colspan="100">Egenkapital best&aring;r av <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span>salg av n&aring;v&aelig;rende bolig eller annen fast eiendom</label> &nbsp;&nbsp;&nbsp;&nbsp; <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span>disponibelt kontantbel&oslash;p (bankinnskudd)</label></td>
+            </tr>
+            <tr>
+                <td colspan="100">Undertegnede bekrefter med dette bindende bekreftelse p&aring; kj&oslash;p av ovennevnte eiendom. Bindende kj&oslash;psbekreftelse er avgitt iht. de avtalebetingelser som fremg&aring;r av salgsoppgaven og/eller prislisten. Kj&oslash;per er inneforst&aring;tt med at kopi av legitimasjon og finansieringsbekreftelse for hele kj&oslash;pesummen skal forelegges megler sammen med n&aelig;rv&aelig;rende bindende bekreftelse p&aring; kj&oslash;p. Bindende bekreftelse p&aring; kj&oslash;p kan ikke trekkes tilbake etter at dette er gjort kjent for megler p&aring; vegne av selger. Bindende avtale er regulert iht. Lov om avtaler av 31. mai 1918.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table style="page-break-inside:avoid">
+        <tbody>
+            <tr>
+                <td colspan="100"><strong>Budgivere</strong></td>
+            </tr>
+            <tr class="border-bottom">
+                <td colspan="49">Navn:</td>
+                <td colspan="2" style="border-style:none; border-width:0px">&nbsp;</td>
+                <td colspan="49">Navn:</td>
+            </tr>
+            <tr class="border-bottom">
+                <td colspan="49">Personnr.:</td>
+                <td colspan="2" style="border-style:none; border-width:0px">&nbsp;</td>
+                <td colspan="49">Personnr.:</td>
+            </tr>
+            <tr class="border-bottom">
+                <td colspan="49">Adresse:</td>
+                <td colspan="2" style="border-style:none; border-width:0px">&nbsp;</td>
+                <td colspan="49">Adresse:</td>
+            </tr>
+            <tr class="border-bottom">
+                <td colspan="49">Tlf:</td>
+                <td colspan="2" style="border-style:none; border-width:0px">&nbsp;</td>
+                <td colspan="49">Tlf:</td>
+            </tr>
+            <tr class="border-bottom">
+                <td colspan="49">E-post:</td>
+                <td colspan="2" style="border-style:none; border-width:0px">&nbsp;</td>
+                <td colspan="49">E-post:</td>
+            </tr>
+            <tr class="border-bottom">
+                <td colspan="49">Sted, dato:</td>
+                <td colspan="2" style="border-style:none; border-width:0px">&nbsp;</td>
+                <td colspan="49">Sted, dato:</td>
+            </tr>
+            <tr class="border-bottom">
+                <td colspan="49">Signatur:</td>
+                <td colspan="2" style="border-style:none; border-width:0px">&nbsp;</td>
+                <td colspan="49">Signatur:</td>
+            </tr>
+            <tr>
+            </tr>
+            <tr>
+                <td colspan="49" style="padding:2px">&nbsp;</td>
+                <td colspan="2" style="padding:2px">&nbsp;</td>
+                <td colspan="49" style="padding:2px">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table style="page-break-inside:avoid">
+        <tbody>
+            <tr>
+                <td colspan="49">
+                    <div class="add-signature">Kopi av gyldig legitimasjon (f.eks. f&oslash;rerkort)</div>
+                </td>
+                <td colspan="2">&nbsp;</td>
+                <td colspan="49">
+                    <div class="add-signature">Kopi av gyldig legitimasjon (f.eks. f&oslash;rerkort)</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <tfoot>
+            <tr class="border-top">
+                <th colspan="100">[[meglerkontor.navn]], [[meglerkontor.adresse]], [[meglerkontor.postnr]] [[meglerkontor.poststed]], tlf. [[meglerkontor.tlf]]<span vitec-if="Model.meglerkontor.fax != &quot;Mangler data&quot;">, [[meglerkontor.fax]]</span></th>
+            </tr>
+        </tfoot>
+    </table>
+</div>

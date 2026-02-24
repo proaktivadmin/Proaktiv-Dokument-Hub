@@ -1,0 +1,424 @@
+<!--VITEC-VISUAL-HELP-ENABLED-->
+<div id="vitecTemplate">
+    <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+    <style type="text/css">
+        .vitec-data-missing {
+            display: inline-table;
+        }
+
+            .vitec-data-missing > span {
+                display: table-cell;
+            }
+
+                .vitec-data-missing > span:empty {
+                    font-size: inherit !important;
+                    line-height: inherit !important;
+                    display: inline-block;
+                    background-color: lightpink;
+                    min-width: 2em !important;
+                    height: inherit !important;
+                    text-align: center;
+                }
+
+                    .vitec-data-missing > span:empty:before {
+                        content: attr(data-label);
+                    }
+
+                    .vitec-data-missing > span:empty:hover {
+                        background-color: #fff;
+                        cursor: pointer;
+                    }
+    </style>
+    <style type="text/css">
+        #vitecTemplate h1 {
+            font-size: 12pt;
+            margin: 3cm 0 1cm 0;
+            padding: 0;
+            border-bottom: solid 1px #000;
+        }
+
+        #vitecTemplate h2 {
+            font-size: 12pt;
+        }
+
+        #vitecTemplate h1 span {
+            background-color: #000;
+            text-transform: uppercase;
+            color: #fff;
+            display: inline-block;
+            padding: 5px 1cm;
+        }
+
+        #vitecTemplate h2 {
+            text-align: center;
+        }
+
+        #vitecTemplate table {
+            table-layout: fixed;
+            width: 100%;
+        }
+
+
+        #vitecTemplate .text-center {
+            text-align: center;
+        }
+
+        #vitecTemplate .text-right {
+            text-align: right;
+        }
+
+        #vitecTemplate .bold-text {
+            font-weight: bold;
+        }
+
+        #vitecTemplate .first-page-table {
+            page-break-after: always;
+            font-size: 12pt;
+            color: #000;
+        }
+
+            #vitecTemplate .first-page-table td {
+                padding: 10px 0;
+            }
+
+        #vitecTemplate .bordered-table {
+            border-spacing: 0;
+            border-collapse: collapse;
+        }
+
+            #vitecTemplate .bordered-table td {
+                border: solid 1px #000;
+                padding: 2px;
+            }
+
+                #vitecTemplate .bordered-table td[colspan="100"] {
+                    padding: 0;
+                }
+
+            #vitecTemplate .bordered-table table tr:first-child td {
+                border-top: none;
+            }
+
+            #vitecTemplate .bordered-table table tr:last-child td {
+                border-bottom: none;
+            }
+
+            #vitecTemplate .bordered-table table td:first-child {
+                border-left: none;
+            }
+
+            #vitecTemplate .bordered-table table td:last-child {
+                border-right: none;
+            }
+    </style>
+    <style type="text/css">
+        /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+        span.insert:empty {
+            font-size: inherit !important;
+            line-height: inherit !important;
+            display: inline-block;
+            background-color: lightpink;
+            min-width: 2em !important;
+            height: .7em !important;
+            text-align: center;
+        }
+
+            span.insert:empty:before {
+                content: attr(data-label);
+            }
+
+            span.insert:empty:hover {
+                background-color: #fff;
+                cursor: pointer;
+            }
+
+        .insert-table {
+            display: inline-table;
+        }
+
+            .insert-table > span,
+            .insert-table > span.insert {
+                display: table-cell;
+            }
+    </style>
+    <h1><span>Kjennelse</span></h1>
+
+    <table class="first-page-table" style="table-layout:fixed; width:100%">
+        <tbody>
+            <tr>
+                <td colspan="20"><strong>Avsagt:</strong></td>
+                <td colspan="80"><span class="insert-table"><span class="insert" data-label="Dato kjennelsen er avsagt"></span></span></td>
+            </tr>
+            <tr>
+                <td colspan="20"><strong>Sak nr.:</strong></td>
+                <td colspan="80"><span class="insert-table"><span class="insert" data-label="Saksnummer fra rettsinstans">[[tvangssalgrefnr]]</span></span></td>
+            </tr>
+            <tr>
+                <td colspan="20"><strong>Dommer:</strong></td>
+                <td colspan="80"><span class="insert-table"><span class="insert" data-label="Navn på dommer"></span></span></td>
+            </tr>
+            <tr>
+                <td colspan="20"><strong>Saken gjelder:</strong></td>
+                <td colspan="80"><span>Fordeling av kj&oslash;pesummen etter tvangssalg ved medhjelper jf. tvangsfullbyrdelsesloven &sect; 11-36</span></td>
+            </tr>
+            <tr contenteditable="false">
+                <td colspan="100">
+                    <hr style="margin: 0.5cm 0 0.5cm 0; border-top: solid 1px #000;" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="50">&nbsp;</td>
+                <td colspan="50">&nbsp;</td>
+            </tr>
+        </tbody>
+        <tbody vitec-foreach="saksoker in Model.saksokere" vitec-if="Model.saksokere.Count &gt; 0">
+            <tr>
+                <td colspan="50">[[*saksoker.navnutenfullmektigogkontaktperson]]</td>
+                <td colspan="50"><span class="insert-table"><span class="insert" data-label="Evt. prosessfullmektig"></span></span></td>
+            </tr>
+        </tbody>
+        <tbody vitec-if="Model.saksokere.Count == 0">
+            <tr>
+                <td colspan="50"><span class="insert-table"><span class="insert" data-label="Saksøkers navn"></span></span></td>
+                <td colspan="50"><span class="insert-table"><span class="insert" data-label="Evt. prosessfullmektig"></span></span></td>
+            </tr>
+        </tbody>
+        <tbody>
+            <tr>
+                <td colspan="100" contenteditable="false"><strong>mot</strong></td>
+            </tr>
+        </tbody>
+        <tbody vitec-foreach="saksokte in Model.saksokteliste" vitec-if="Model.saksokteliste.Count &gt; 0">
+            <tr>
+                <td colspan="50">[[*saksokte.navnutenfullmektigogkontaktperson]]</td>
+                <td colspan="50"><span class="insert-table"><span class="insert" data-label="Evt. prosessfullmektig"></span></span></td>
+            </tr>
+        </tbody>
+        <tbody vitec-if="Model.saksokteliste.Count == 0">
+            <tr>
+                <td colspan="50"><span class="insert-table"><span class="insert" data-label="Saksøktes navn"></span></span></td>
+                <td colspan="50"><span class="insert-table"><span class="insert" data-label="Evt. prosessfullmektig"></span></span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table style="page-break-after:always">
+        <tbody>
+            <tr>
+                <td>
+                    <h2>KJENNELSE</h2>
+
+                    <p>Ved <span class="insert-table"><span class="insert" data-label="Rettsinstans"></span></span> kjennelse av <span class="insert-table"><span class="insert" data-label="Dato"></span></span> ble bud kr $.UD([[hoyestebud.belop]]) for [[komplettmatrikkelutvidet]]&nbsp;i&nbsp;[[eiendom.kommunenavn]]&nbsp;kommune stadfestet. Tvangssalget ble gjennomf&oslash;rt med bistand av&nbsp;[[meglerkontor.navn]] som medhjelper.</p>
+
+                    <p>Medhjelperen sendte <span class="insert-table"><span class="insert" data-label="Dato"></span></span> skriftlig melding vedlagt utkast til fordelingskjennelse til partene og andre interessenter, jf. tvangsfullbyrdelsesloven &sect; 11-29 f&oslash;rste og annet ledd.</p>
+
+                    <p>Det har ikke kommet innsigelser til utkastet til fordelingskjennelse innen den fastsatte fristen p&aring; to uker.</p>
+
+                    <p>Oppgj&oslash;rsdag er <span class="insert-table"><span class="insert" data-label="Dato"></span></span>, jf. tvangsfullbyrdelsesloven &sect; 11-27 f&oslash;rste ledd f&oslash;rste punktum.</p>
+
+                    <p>Medhjelperen har foresl&aring;tt f&oslash;lgende fordeling av kj&oslash;pesummen:</p>
+
+                    <table class="bordered-table" style="margin-bottom:10px; margin-top:10px; page-break-inside:avoid; width:100%">
+                        <thead>
+                            <tr>
+                                <th colspan="100">Medhjelpers utlegg og utgifter:</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                        <tbody vitec-foreach="utlegg in Model.selgerutlegg.alleposter">
+                            <tr>
+                                <td colspan="75">[[*utlegg.beskrivelse]]</td>
+                                <td colspan="5">kr</td>
+                                <td class="text-right" colspan="20" style="text-align:right">$.UD([[*utlegg.belop]])</td>
+                            </tr>
+                        </tbody>
+                        <tbody vitec-foreach="utgift in Model.selgerutgifter.alleposter">
+                            <tr>
+                                <td colspan="75">[[*utgift.beskrivelse]]</td>
+                                <td colspan="5">kr</td>
+                                <td class="text-right" colspan="20">$.UD([[*utgift.belop]])</td>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr class="bold-text">
+                                <td colspan="75">Sum:</td>
+                                <td colspan="5">kr</td>
+                                <td class="text-right" colspan="20">$.UD([[oppdrag.selgerutleggogutgiftersum]])</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="bordered-table" style="page-break-inside:avoid; width:100%">
+                        <thead>
+                            <tr>
+                                <th colspan="100">Legal pant:</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                        <tbody vitec-foreach="pant in Model.oppdrag.pantforinnfrielse.Where(x =&gt; x.ertypelegalpant == true)">
+                            <tr>
+                                <td colspan="75">[[*pant.prioritet]]. prioritet: <em>[[*pant.navn]]</em></td>
+                                <td colspan="5">kr</td>
+                                <td class="text-right" colspan="20">$.UD([[*pant.belop]])</td>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr class="bold-text">
+                                <td colspan="75">Sum:</td>
+                                <td colspan="5">kr</td>
+                                <td class="text-right" colspan="20"><span class="insert-table"><span class="insert" data-label="Sum"></span></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="bordered-table" style="margin-bottom:10px; margin-top:10px; page-break-inside:avoid; width:100%">
+                        <thead>
+                            <tr>
+                                <th colspan="100">Pantesikret pengekrav - til saks&oslash;ker:</th>
+                            </tr>
+                        </thead>
+                        <tbody vitec-foreach="pant in Model.oppdrag.saksokerspant">
+                            <tr>
+                                <td colspan="100"><em>[[*pant.navn]] i henhold til pantedokument, tinglyst [[*pant.tinglystdato]]:</em></td>
+                            </tr>
+                            <tr vitec-if="pant.laan.Count &gt; 0">
+                                <td colspan="100">
+                                    <table style="width:100%">
+                                        <tbody vitec-foreach="laan in pant.laan">
+                                            <tr>
+                                                <td colspan="75">&nbsp; &nbsp; Restsaldo (ref./l&aring;n [[*laan.nr]])</td>
+                                                <td colspan="5">kr</td>
+                                                <td class="text-right" colspan="20">$.UD([[*laan.restsaldo]])</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr class="bold-text">
+                                <td colspan="75">Sum:</td>
+                                <td colspan="5">kr</td>
+                                <td class="text-right" colspan="20"><span class="insert-table"><span class="insert" data-label="Sum"></span></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="bordered-table" style="margin-bottom:10px; margin-top:10px; page-break-inside:avoid; width:100%">
+                        <thead>
+                            <tr>
+                                <th colspan="100">Pantesikret pengekrav - fra panthavere som ikke er saks&oslash;ker</th>
+                            </tr>
+                        </thead>
+                        <tbody vitec-foreach="pant in Model.oppdrag.pantforinnfrielse.Where(x =&gt; x.ertypefrivilligpant == true &amp;&amp; Model.saksoker.firmanavn != x.navn)">
+                            <tr>
+                                <td colspan="100"><em>[[*pant.navn]] i henhold til pantedokument, tinglyst [[*pant.tinglystdato]]:</em></td>
+                            </tr>
+                            <tr vitec-if="pant.laan.Count &gt; 0">
+                                <td colspan="100">
+                                    <table style="width:100%">
+                                        <tbody vitec-foreach="laan in pant.laan">
+                                            <tr>
+                                                <td colspan="75">&nbsp; &nbsp; Restsaldo (ref./l&aring;n [[*laan.nr]])</td>
+                                                <td colspan="5">kr</td>
+                                                <td class="text-right" colspan="20">$.UD([[*laan.restsaldo]])</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr class="bold-text">
+                                <td colspan="75">Sum:</td>
+                                <td colspan="5">kr</td>
+                                <td class="text-right" colspan="20"><span class="insert-table"><span class="insert" data-label="Sum"></span></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>som stemmer med det budet som begj&aelig;res stadfestet.</p>
+
+                    <table class="bordered-table" style="margin-bottom:10px; margin-top:10px; page-break-inside:avoid; width:100%">
+                        <thead>
+                            <tr>
+                                <th colspan="100">Etterst&aring;ende pengeheftelser dekkes ikke:</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="75">&nbsp;</td>
+                                <td colspan="5">kr</td>
+                                <td colspan="20">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td colspan="75">&nbsp;</td>
+                                <td colspan="5">kr</td>
+                                <td colspan="20">&nbsp;</td>
+                            </tr>
+                            <tr class="bold-text">
+                                <td colspan="75">Sum:</td>
+                                <td colspan="5">kr</td>
+                                <td class="text-right" colspan="20"><span class="insert-table"><span class="insert" data-label="Sum"></span></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="bordered-table" style="margin-bottom:10px; margin-top:10px; page-break-inside:avoid; width:100%">
+                        <thead>
+                            <tr>
+                                <th colspan="100">Pro &amp; Contra:</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="75">&nbsp;</td>
+                                <td colspan="5">kr</td>
+                                <td colspan="20">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td colspan="75">&nbsp;</td>
+                                <td colspan="5">kr</td>
+                                <td colspan="20">&nbsp;</td>
+                            </tr>
+                            <tr class="bold-text">
+                                <td colspan="75">Sum:</td>
+                                <td colspan="5">kr</td>
+                                <td class="text-right" colspan="20"><span class="insert-table"><span class="insert" data-label="Sum"></span></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="page-break-inside:avoid">
+                        <p><strong>Rettens vurdering</strong></p>
+
+                        <p>Utkastet kan ikke sees &aring; inneholde feil som retten av eget tiltak skal ta i betraktning, og retten fordeler kj&oslash;pesummen i samsvar med forslaget.</p>
+
+                        <p>N&aring;r stadfestelseskjennelsen er rettskraftig og kj&oslash;peren er blitt eier av formuesgodet, jf. tvangsfullbyrdelsesloven &sect; 11-33, jf. &sect; 11-31, kan retten, p&aring; begj&aelig;ring fra kj&oslash;peren, overf&oslash;re hjemmelen til formuesgodet.</p>
+
+                        <p>Utbetaling finner sted n&aring;r stadfestelseskjennelsen og denne kjennelse er rettskraftig, jf. tvfbl &sect; 11-38 jf. &sect; 12-6. Endres fordelingen etter utbetaling, kan tilbakebetaling kreves, jf. tvfbl &sect; 11-37, jf. &sect; 12-6.</p>
+                    </div>
+
+                    <div style="margin-top:0.5cm; page-break-inside:avoid">
+                        <h2>SLUTNING</h2>
+
+                        <p>Kj&oslash;pesummen ved tvangssalg av [[komplettmatrikkelutvidet]] fordeles som vist foran.</p>
+
+                        <p class="text-center">Retten hevet</p>
+
+                        <p class="text-center" style="margin-bottom:0.5cm; margin-top:1.5cm">Dommer</p>
+
+                        <p>Avgj&oslash;relsen kan ankes til lagmannsretten. Anke m&aring; erkl&aelig;res direkte for <span class="insert-table"><span class="insert" data-label="Rettsinstans"></span></span> tingrett innen &eacute;n m&aring;ned fra kjennelsen ble avsagt.</p>
+
+                        <p>Retten beslutter i medhold av domstolloven &sect; 140 tredje ledd at ankefristen l&oslash;per ogs&aring; i rettsferiene. Dette gj&oslash;res for &aring; unng&aring; fristforlengelser som ikke harmonerer med de s&aelig;rskilte frister som er fastsatt i tvangsfullbyrdelsesloven for prosessen ved tvangssalg. Hensynet til partene ansees ikke &aring; tale imot en slik avgj&oslash;relse. (Rettsferiene er f.o.m. l&oslash;rdag f&oslash;r palmes&oslash;ndag t.o.m. andre p&aring;skedag, f.o.m. 1. juli t.o.m. 15. august og f.o.m. 24. desember t.o.m. 3. januar.)</p>
+
+                        <p>Den som anker, m&aring; betale ankegebyr p&aring; kr <span class="insert-table"><span class="insert" data-label="Ankebeløp"></span></span></p>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

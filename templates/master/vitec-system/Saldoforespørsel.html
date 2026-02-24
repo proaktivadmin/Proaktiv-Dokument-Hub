@@ -1,0 +1,255 @@
+<div id="vitecTemplate">
+	<span contenteditable="false" vitec-template="resource:Vitec Stilark">&nbsp;</span>
+	<style type="text/css">
+		body,
+		html {
+			margin: 0;
+			padding: 0;
+		}
+
+		span.insert:empty {
+			font-size: inherit !important;
+			line-height: inherit !important;
+			display: inline-block;
+			background-color: lightpink;
+			min-width: 2em !important;
+			height: .7em !important;
+			text-align: center;
+		}
+
+			span.insert:empty:before {
+				content: attr(data-label);
+			}
+
+			span.insert:empty:hover {
+				background-color: #fff;
+				cursor: pointer;
+			}
+
+		.insert-table {
+			display: inline-table;
+		}
+
+			.insert-table > span,
+			.insert-table > span.insert {
+				display: table-cell;
+			}
+
+
+		#vitecTemplate [contenteditable="false"] * {
+			user-select: none;
+		}
+	</style>
+	<table style="margin-left:10%; table-layout:fixed; width:80%">
+		<tbody>
+			<tr contenteditable="false">
+				<td colspan="100">
+					<p style="font-size:18px; font-weight:bold">Saldoforesp&oslash;rsel til [[pant.navn]]</p>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="100" style="font-weight:bold">Mottaker</td>
+			</tr>
+			<tr>
+				<td colspan="100">[[mottaker.navn]]</td>
+			</tr>
+			<tr>
+				<td colspan="100">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="100" style="font-weight:bold">Fra megler</td>
+			</tr>
+			<tr>
+				<td colspan="100">[[meglerkontor.navn]] orgnr. [[meglerkontor.orgnr]]</td>
+			</tr>
+			<tr>
+				<td colspan="100">&nbsp;</td>
+			</tr>
+			<tr vitec-if="(Model.ansvarligmegler.navn != &quot;Mangler data&quot; &amp;&amp; Model.operativmegler.navn != Model.ansvarligmegler.navn)">
+				<td colspan="100">
+					<strong>Oppdragsansvarlig:</strong><br />
+					[[operativmegler.navn]], mobil [[operativmegler.mobiltlf]], e-post [[operativmegler.epost]]<br />
+					<br />
+					<span vitec-if="Model.ansvarligmegler.navn != &quot;Mangler data&quot;">
+						<strong>Ansvarlig megler:</strong><br />
+						[[ansvarligmegler.navn]], mobil [[ansvarligmegler.mobiltlf]], e-post [[ansvarligmegler.epost]]
+					</span>
+				</td>
+			</tr>
+			<tr vitec-if="(Model.ansvarligmegler.navn == &quot;Mangler data&quot; || Model.operativmegler.navn == Model.ansvarligmegler.navn)">
+				<td colspan="100">
+					<strong>Ansvarlig megler:</strong><br />
+					[[operativmegler.navn]], mobil [[operativmegler.mobiltlf]], e-post [[operativmegler.epost]]
+				</td>
+			</tr>
+			<tr>
+				<td colspan="100">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="100" style="font-weight:bold">Oppdragsnr</td>
+			</tr>
+			<tr>
+				<td colspan="100">[[oppdrag.nr]]</td>
+			</tr>
+			<tr>
+				<td colspan="100">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="100" style="font-weight:bold">Eiendom</td>
+			</tr>
+			<tr>
+				<td colspan="100">[[eiendom.gatenavnognr]], [[eiendom.postnr]] [[eiendom.poststed]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</td>
+			</tr>
+			<tr>
+				<td colspan="100">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="100" style="font-weight:bold">Selger(e)</td>
+			</tr>
+		</tbody>
+		<tbody vitec-foreach="selger in Model.selgere">
+			<tr>
+				<td colspan="100">[[*selger.navnutenfullmektigogkontaktperson]] - f&oslash;dt [[*selger.fodselsdato]]</td>
+			</tr>
+		</tbody>
+		<tbody>
+			<tr>
+				<td colspan="100">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="100" style="font-weight:bold">Pantedokument<span vitec-if="Model.oppdrag.mottakerspant.Count &gt; 0">er</span></td>
+			</tr>
+		</tbody>
+		<tbody vitec-foreach="pant in Model.oppdrag.mottakerspantforinnfrielse">
+			<tr>
+				<td colspan="100">Bel&oslash;p: kr $.UD([[*pant.belop]]) - <span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">Tinglyst</span><span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Notert</span>: [[*pant.tinglystdato]]<span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)"> - Dokumentnr. [[*pant.dokumentnr]]</span></td>
+			</tr>
+		</tbody>
+		<tbody>
+			<tr>
+				<td colspan="100">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="100" style="padding:10px 0">[[meglerkontor.navn]] har f&aring;tt i oppdrag &aring; selge eiendommen over. Ettersom dere st&aring;r oppf&oslash;rt med l&aring;n som hefter i eiendommen m&aring; vi be om informasjon. Vennligst fyll ut skjemaet under og returner snarest til: <strong>[[oppgjor.kontornavn]] / [[oppgjor.kontorepost]]</strong></td>
+			</tr>
+			<tr>
+				<td colspan="100" style="font-weight:bold">Info om l&aring;nenummer</td>
+			</tr>
+			<tr contenteditable="true">
+				<td colspan="100">V&aring;rt krav pr. ____.____.______ er som f&oslash;lger under:</td>
+			</tr>
+			<tr>
+				<td colspan="100">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="100">L&aring;nenummer:</td>
+			</tr>
+			<tr>
+				<td colspan="100">Saldo:</td>
+			</tr>
+			<tr>
+				<td colspan="100">Bankkontonr:</td>
+			</tr>
+			<tr>
+				<td colspan="100">KID:</td>
+			</tr>
+			<tr>
+				<td colspan="100">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="100">L&aring;nenummer:</td>
+			</tr>
+			<tr>
+				<td colspan="100">Saldo:</td>
+			</tr>
+			<tr>
+				<td colspan="100">Bankkontonr:</td>
+			</tr>
+			<tr>
+				<td colspan="100">KID:</td>
+			</tr>
+			<tr>
+				<td colspan="100">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="100">TOTAL SALDO:</td>
+			</tr>
+			<tr>
+				<td colspan="100">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="100" style="font-weight:bold">L&aring;netaker(e)</td>
+			</tr>
+		</tbody>
+		<tbody vitec-foreach="selger in Model.selgere">
+			<tr class="border">
+				<td colspan="100">Bekreft navn p&aring; l&aring;netaker:</td>
+			</tr>
+		</tbody>
+		<tbody>
+			<tr>
+				<td colspan="100">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="100" style="font-weight:bold">Detaljer</td>
+			</tr>
+			<tr class="border">
+				<td colspan="100">Innfri til bankkontonr. (hvis det avviker fra l&aring;nenr.):</td>
+			</tr>
+			<tr>
+				<td colspan="100">Er det bindingstid p&aring; l&aring;net?</td>
+			</tr>
+			<tr>
+				<td colspan="100">Evt. over/underkurs:</td>
+			</tr>
+			<tr>
+				<td colspan="100">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="100">Bekreftelsesbrev om l&aring;neinnfrielse sendes til (om det avviker fra epostadressen denne saldoforesp&oslash;rselen ble sendt til):</td>
+			</tr>
+			<tr>
+				<td colspan="100">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="100">Deres kontakt:</td>
+			</tr>
+			<tr>
+				<td colspan="100">Tlf:</td>
+			</tr>
+			<tr>
+				<td colspan="100">E-post:</td>
+			</tr>
+			<tr>
+				<td colspan="100">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="100">Vi bekrefter med dette at l&aring;net/pantesikkerheten ikke vil oppl&aring;nes videre uten samtykke fra meglers oppgj&oslash;rsavdeling, og at alle v&aring;re panteretter i eiendommen vil slettes ved innfrielse/mottakelse av v&aring;rt tilgodehavende pr. oppgj&oslash;rsdato</td>
+			</tr>
+			<tr>
+				<td colspan="100">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="100">[&nbsp;&nbsp;&nbsp;]&nbsp;Eventuelt ved mottakelse av nettoprovenyet (dersom ikke full innfrielse av l&aring;net er mulig - sett kryss for &aring; godta dette eventuelle pantefrafallet)</td>
+			</tr>
+			<tr>
+				<td colspan="100">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="100">Signatur etter fullmakt / stempel:</td>
+			</tr>
+			<tr>
+				<td colspan="100">
+					<p>&nbsp;</p>
+
+					<hr />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="100">
+					<div vitec-template="resource: Avsender">&nbsp;</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

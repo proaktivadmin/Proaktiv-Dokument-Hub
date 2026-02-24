@@ -1,0 +1,154 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate table {
+                    table-layout: fixed;
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+        
+                #vitecTemplate table tr.borderoppgjor td {
+                    border-bottom: solid 1px black;
+                    vertical-align: middle;
+                }
+        
+                #vitecTemplate table tr.bordersum td {
+                    border-top: solid 1px black;
+                    border-bottom: solid 1px black;
+                    vertical-align: middle;
+                }
+        
+                #vitecTemplate table td.mvacell {
+                    font-style: italic;
+                    background-color: lightgray;
+                }
+        
+                #vitecTemplate .seller:last-child .separator {
+                    display: none;
+                }
+</style>
+<h1>Oppgj&oslash;rsoppstilling selger</h1>
+
+<table>
+	<tbody>
+		<tr vitec-if="Model.oppdrag.hovedtype == &quot;Prosjektsalg&quot;">
+			<td colspan="14"><strong>Prosjekt:</strong></td>
+			<td colspan="28">[[eiendom.prosjektnavn]]</td>
+			<td colspan="14"><strong>Enhet:</strong></td>
+			<td colspan="44">[[eiendom.alfanavn]] - Leil.nr. [[eiendom.leilighetsnr]]</td>
+		</tr>
+		<tr>
+			<td colspan="14"><strong>Selger:</strong></td>
+			<td colspan="86"><span vitec-foreach="selger in Model.selgere"> <span class="seller">[[*selger.navn]]<span class="separator">, </span></span></span></td>
+		</tr>
+		<tr>
+			<td colspan="14"><strong>Eiendom:</strong></td>
+			<td colspan="86">[[eiendom.gatenavnognr]], [[eiendom.postnr]] [[eiendom.poststed]]</td>
+		</tr>
+		<tr vitec-if="Model.oppdrag.hovedtype == &quot;Prosjektsalg&quot;">
+			<td colspan="14"><strong>Matrikkel:</strong></td>
+			<td colspan="86">[[komplettmatrikkelutvidet]]</td>
+		</tr>
+		<tr>
+			<td colspan="14"><strong>Oppdragsnr:</strong></td>
+			<td colspan="86">[[oppdrag.nr]]</td>
+		</tr>
+		<tr>
+			<td colspan="100" style="text-align: right;"><small>Dokument opprettet [[dagensdato]]</small></td>
+		</tr>
+		<tr>
+			<td colspan="100">&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+
+<div style="page-break-inside:avoid">
+<table>
+	<tbody>
+		<tr class="borderoppgjor">
+			<td colspan="14"><strong>Dato</strong></td>
+			<td colspan="40"><strong>Beskrivelse</strong></td>
+			<td colspan="17" style="text-align:center"><strong>Ut</strong></td>
+			<td colspan="17" style="text-align:center"><strong>Inn</strong></td>
+			<td class="mvacell" colspan="12" style="text-align:center"><strong>Mva</strong></td>
+		</tr>
+	</tbody>
+</table>
+
+<table vitec-foreach="gruppe in Model.oppgjorselger.gruppering">
+	<tbody>
+		<tr>
+			<td colspan="100">&nbsp;</td>
+		</tr>
+		<tr class="borderoppgjor">
+			<td colspan="100">[[*gruppe.overskrift]]</td>
+		</tr>
+	</tbody>
+	<tbody vitec-foreach="post in gruppe.poster">
+		<tr>
+			<td colspan="14">[[*post.posteringsdato]]</td>
+			<td colspan="40">[[*post.beskrivelse]]</td>
+			<td colspan="17" style="text-align:right"><span vitec-if="post.debet != &quot;&quot;">[[*post.debet]]</span></td>
+			<td colspan="17" style="text-align:right"><span vitec-if="post.kredit != &quot;&quot;">[[*post.kredit]]</span></td>
+			<td class="mvacell" colspan="12" style="text-align:right"><span vitec-if="post.mva != &quot;&quot;">[[*post.mva]]</span></td>
+		</tr>
+	</tbody>
+</table>
+
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">&nbsp;</td>
+		</tr>
+		<tr class="bordersum">
+			<td colspan="14"><strong><span vitec-if="Model.kontrakt.oppgjor.dato != &quot;Mangler data&quot;">[[kontrakt.oppgjor.dato]]</span></strong></td>
+			<td colspan="40"><strong>Sum</strong></td>
+			<td colspan="17" style="text-align:right"><strong>[[oppgjorselger.sumdebet]]</strong></td>
+			<td colspan="17" style="text-align:right"><strong>[[oppgjorselger.sumkredit]]</strong></td>
+			<td class="mvacell" colspan="12" style="text-align:right"><strong>[[oppgjorselger.summva]]</strong></td>
+		</tr>
+		<tr>
+			<td colspan="14">&nbsp;</td>
+			<td colspan="46">Differanse</td>
+			<td colspan="28" style="text-align:center">[[oppgjorselger.saldo]]</td>
+			<td colspan="12">&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+</div>
+
+<div style="page-break-inside:avoid" vitec-if="Model.oppdrag.hovedtype != &quot;Prosjektsalg&quot;">
+<h2>Timeliste</h2>
+
+<table>
+	<tbody>
+		<tr class="borderoppgjor">
+			<td colspan="90"><strong>Aktivitet</strong></td>
+			<td colspan="10" style="text-align:center"><strong>Timer</strong></td>
+		</tr>
+		<tr>
+			<td colspan="90">Befaring, inkl. reisetid, innhenting og kontroll av<span vitec-if="Model.oppdrag.hovedtype != &quot;Oppgj\xF8rsoppdrag&quot;"> lovp&aring;lagte</span> opplysninger, innhenting av saldobrev<span vitec-if="Model.oppdrag.hovedtype == &quot;Oppgj\xF8rsoppdrag&quot;"> og reg. av opplysninger.</span><span vitec-if="Model.oppdrag.hovedtype != &quot;Oppgj\xF8rsoppdrag&quot;">, reg. av opplysninger, salgsforberedelse med markedsplan, bestilling og koordinering av andre tjenester, og utforming/bestilling av salgsoppgaver.</span></td>
+			<td colspan="10" style="text-align:center">[[timer.paalopt.salg]]</td>
+		</tr>
+		<tr vitec-if="Model.oppdrag.hovedtype != &quot;Oppgj\xF8rsoppdrag&quot;">
+			<td colspan="90">Visninger</td>
+			<td colspan="10" style="text-align:center">[[timer.paalopt.visning]]</td>
+		</tr>
+		<tr>
+			<td colspan="90">Interessentoppf&oslash;lging <span vitec-if="Model.oppdrag.hovedtype != &quot;Oppgj\xF8rsoppdrag&quot;">og budrunde</span></td>
+			<td colspan="10" style="text-align:center">[[timer.paalopt.bud]]</td>
+		</tr>
+		<tr>
+			<td colspan="90">Kontraktsskriving, avholdelse av kontraktsm&oslash;te og utforming av dokumenter for tinglysing</td>
+			<td colspan="10" style="text-align:center">[[timer.paalopt.kontrakt]]</td>
+		</tr>
+		<tr>
+			<td colspan="90">Oppgj&oslash;r</td>
+			<td colspan="10" style="text-align:center">[[timer.paalopt.oppgjor]]</td>
+		</tr>
+		<tr class="bordersum">
+			<td colspan="90">Sum p&aring;l&oslash;pte timer</td>
+			<td colspan="10" style="text-align:center">$.CALCHOURS([[timer.paalopt.salg]]+[[timer.paalopt.visning]]+[[timer.paalopt.bud]]+[[timer.paalopt.kontrakt]]+[[timer.paalopt.oppgjor]])</td>
+		</tr>
+	</tbody>
+</table>
+</div>
+</div>

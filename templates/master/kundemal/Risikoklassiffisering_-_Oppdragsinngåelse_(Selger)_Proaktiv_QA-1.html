@@ -1,0 +1,687 @@
+<!-- 
+=============================================================================
+SYSTEM:      Vitec Next
+MODUL:       Risikoklassifisering og Kundekontroll (AML)
+VERSJON:     6.0 (Innholdsoppdatering)
+DATO:        21.11.2025
+ENDRING:     Gjeninnført manglende punkt 2.1 (Oppdragstype) basert på skjermbilde.
+             Sikret at kolonnebredder flukter med resten av dokumentet.
+=============================================================================
+-->
+<div id="vitecTemplate">
+<style type="text/css">/* --- 1. GENERELT OPPSETT --- */
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap');
+
+    html, body { margin: 0; padding: 0; }
+
+    #vitecTemplate { 
+        font-family: Arial, Helvetica, sans-serif; 
+        font-size: 9pt; 
+        line-height: 1.2;
+        padding: 20mm; 
+        box-sizing: border-box;
+        width: 100%;
+    }
+
+    #vitecTemplate * { font-variant-ligatures: none; }
+    
+    /* Tabell-oppsett */
+    #vitecTemplate table { 
+        width: 100%; 
+        border-collapse: collapse; 
+        table-layout: fixed; 
+        page-break-inside: avoid; 
+        margin-bottom: 10px;
+    }
+    
+    #vitecTemplate td { 
+        vertical-align: top; 
+        padding: 4px; 
+        word-wrap: break-word; 
+    }
+
+    /* --- 2. SJEKKBOKS-KODE --- */
+    label.btn {
+        display: inline;
+        text-transform: none;
+        white-space: normal;
+        padding: 0;
+        vertical-align: baseline;
+        outline: none;
+        font-size: inherit;
+        cursor: pointer;
+    }
+
+    label.btn:active,
+    label.btn.active {
+        box-shadow: none;
+        outline: none;
+    }
+
+    .svg-toggle {
+        display: inline-block !important;
+        width: 14px; 
+        height: 14px; 
+        margin: 0 5px 0 0;
+        vertical-align: text-bottom;
+        padding: 0;
+        border: none;
+        background: transparent;
+        border-radius: 0;
+        box-shadow: none !important;
+        cursor: pointer;
+        background-repeat: no-repeat;
+        background-size: 14px 14px;
+        background-position: center center;
+    }
+
+    .svg-toggle.checkbox {
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+    }
+
+    .svg-toggle.checkbox.active,
+    .btn.active > .svg-toggle.checkbox {
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+        box-shadow: none !important;
+    }
+
+    #vitecTemplate [data-toggle="buttons"] input { display: none; }
+    .td-center { text-align: center; vertical-align: top; }
+
+    /* Innsettingsfelter */
+    span.insert:empty { display: inline-block; background-color: #ffecec; min-width: 100%; height: 1.2em; border-bottom: 1px solid #000; }
+    span.insert:empty:before { content: attr(data-label); color: #555; font-style: italic; font-size: 0.9em; padding-left: 5px;}
+</style>
+<!-- INNHOLD START -->
+<p style="margin-top:0; text-align:center"><strong style="color:#000000; font-size:16px; font-weight:bold">Oppdragsinng&aring;else</strong><br />
+<strong style="color:#000000; font-size:16px; font-weight:bold">Risikovurdering av kunden og oppdraget </strong></p>
+
+<p style="margin-bottom:0; margin-left:0; margin-right:0; margin-top:0; text-align:left"><strong style="font-size:12px; font-weight:bold">Kunde: </strong>[[selger.navn]]<br />
+<strong style="font-size:12px; font-weight:bold">Risikoklassifisering utf&oslash;rt av: </strong><strong>[[operativmegler.navn]]</strong></p>
+
+<p style="margin-bottom:10px; margin-left:0; margin-right:0; margin-top:10px; text-align:left"><span>[[meglerkontor.navn]] er som ledd i kundetiltakene p&aring;lagt &aring; vurdere oppdragets iboende risiko for hvitvasking og terrorfinansiering. Ved vurderingen av iboende risiko skal det vies s&aelig;rlig oppmerksomhet til tjenester og transaksjoner som fremmer anonymitet og &oslash;vrige indikatorer som representerer &laquo;H&oslash;y&raquo; iboende risiko slik som beskrevet i </span> <strong style="font-weight:bold">&laquo;Virksomhetsrettet risikovurdering&raquo;</strong> <span> med tilh&oslash;rende </span> <strong style="font-weight:bold">Risikomatrise. </strong> <span>For &oslash;vrig vises til </span> <strong style="font-weight:bold">&laquo;Arbeidsrutine &ndash; etterlevelse av hvitvaskingsregelverket&raquo;.</strong></p>
+
+<p style="margin-bottom:0; margin-left:0; margin-right:0; margin-top:0; text-align:left"><span>Ved treff p&aring; indikatorer som gir H&oslash;y risiko skal det gj&oslash;res n&aelig;rmere vurdering av oppdragets iboende risiko ved gjennomf&oslash;ring av Forsterkede kundetiltak. Klassifiseringen av risiko foretas iht. f&oslash;lgende niv&aring;:</span></p>
+<br />
+<!-- RISK MATRIX -->
+<table cellspacing="0" style="border-collapse:collapse">
+	<colgroup>
+		<col style="width: 15%;" />
+		<col style="width: 15%;" />
+		<col style="width: 70%;" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td style="border-style:solid; border-width:1px; padding:5pt">
+			<p style="margin-bottom:0; margin-left:0; margin-right:0; margin-top:0; text-align:center"><strong style="color:#000000; font-size:12px; font-weight:bold">Risiko</strong></p>
+			</td>
+			<td style="border-style:solid; border-width:1px; padding:5pt">
+			<p style="margin-bottom:0; margin-left:0; margin-right:0; margin-top:0; text-align:center"><strong style="color:#000000; font-size:12px; font-weight:bold">Kontrollniv&aring;</strong></p>
+			</td>
+			<td style="border-style:solid; border-width:1px; padding:5pt">
+			<p style="margin-bottom:0; margin-left:0; margin-right:0; margin-top:0; text-align:center"><strong style="color:#000000; font-size:12px; font-weight:bold">Beskrivelse</strong></p>
+			</td>
+		</tr>
+		<tr>
+			<td style="background-color:#fcd5b5; background:#fcd5b5; border-style:solid; border-width:1px; padding:5pt">
+			<p style="margin-bottom:0; margin-left:0; margin-right:0; margin-top:0; text-align:center"><strong style="font-size:10pt; font-weight:bold">Lav</strong></p>
+			</td>
+			<td style="background-color:#fcd5b5; background:#fcd5b5; border-style:solid; border-width:1px; padding:5pt">
+			<p style="margin-bottom:0; margin-left:0; margin-right:0; margin-top:0; text-align:center"><strong style="font-size:10pt; font-weight:bold">Forenklet</strong></p>
+			</td>
+			<td style="background-color:#fcd5b5; background:#fcd5b5; border-style:solid; border-width:1px; padding:5pt">
+			<p style="margin-bottom:0; margin-left:0; margin-right:0; margin-top:0; text-align:left">Lav risiko &ndash; forenklede kundetiltak<br />
+			Andre indikatorer kan gi Moderat eller H&oslash;y risiko<br />
+			Sv&aelig;rt liten sannsynlighet for terrorfinansiering (&lt;10%)</p>
+			</td>
+		</tr>
+		<tr>
+			<td style="background-color:#95b3d7; background:#95b3d7; border-style:solid; border-width:1px; padding:5pt">
+			<p style="margin-bottom:0; margin-left:0; margin-right:0; margin-top:0; text-align:center"><strong style="font-size:10pt; font-weight:bold">Normal</strong></p>
+			</td>
+			<td style="background-color:#95b3d7; background:#95b3d7; border-style:solid; border-width:1px; padding:5pt">
+			<p style="margin-bottom:0; margin-left:0; margin-right:0; margin-top:0; text-align:center"><strong style="font-size:10pt; font-weight:bold">Normal</strong></p>
+			</td>
+			<td style="background-color:#95b3d7; background:#95b3d7; border-style:solid; border-width:1px; padding:5pt">
+			<p style="margin-bottom:0; margin-left:0; margin-right:0; margin-top:0; text-align:left">Normal risiko &ndash; normale kundetiltak<br />
+			Andre indikatorer kan gi H&oslash;y risiko<br />
+			Liten sannsynlighet for terrorfinansiering (10-40%)</p>
+			</td>
+		</tr>
+		<tr>
+			<td style="background-color:#ff7c80; background:#ff7c80; border-style:solid; border-width:1px; padding:5pt">
+			<p style="margin-bottom:0; margin-left:0; margin-right:0; margin-top:0; text-align:center"><strong style="font-size:10pt; font-weight:bold">H&oslash;y</strong></p>
+			</td>
+			<td style="background-color:#ff7c80; background:#ff7c80; border-style:solid; border-width:1px; padding:5pt">
+			<p style="margin-bottom:0; margin-left:0; margin-right:0; margin-top:0; text-align:center"><strong style="font-size:10pt; font-weight:bold">Forsterket</strong></p>
+			</td>
+			<td style="background-color:#ff7c80; background:#ff7c80; border-style:solid; border-width:1px; padding:5pt">
+			<p style="margin-bottom:0; margin-left:0; margin-right:0; margin-top:0; text-align:left">H&oslash;y risiko &ndash; forsterkede kundetiltak<br />
+			Indikatorer som alene inneb&aelig;rer h&oslash;y risiko<br />
+			Mulig/god grunn til &aring; forvente terrorfinansiering (&gt;40%)</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<br />
+<!-- SECTION 1 -->
+<p style="background:#000000; color:#ffffff; font-weight:bold; margin-bottom:0; margin-left:0; margin-right:0; margin-top:0; padding:5px">1. Kundetype og Kundeforhold (sett kryss)</p>
+
+<table cellspacing="0" style="border-collapse:collapse">
+	<colgroup>
+		<col style="width: 40px;" />
+		<col style="width: 120px;" />
+		<col style="width: auto;" />
+	</colgroup>
+	<tbody><!-- 1.1 LAV RISIKO -->
+		<tr>
+			<td class="td-center" style="background-color:#d7e4bd; background:#d7e4bd; border-style:solid; border-width:1px"><span style="font-size:9pt">1.1</span></td>
+			<td style="border-style:solid; border-width:1px">
+			<p style="margin-bottom:0; margin-left:0; margin-right:0; margin-top:0; text-align:left">Kundetype</p>
+			</td>
+			<td style="border-style:solid; border-width:1px">
+			<p style="background:#fcd5b5; margin-bottom:5px; margin-left:0; margin-right:0; margin-top:0; padding:2px; text-align:left"><strong style="font-weight:bold">Lav risiko:</strong></p>
+
+			<table style="width:100%">
+				<colgroup>
+					<col style="width: 25px;" />
+					<col style="width: auto;" />
+				</colgroup>
+				<tbody>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Norsk statlig eller kommunalt forvaltningsorgan/offentlig eid virksomhet</td>
+					</tr>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label aria-pressed="false" class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">B&oslash;rsnotert selskap i E&Oslash;S-land eller andre markeder underlagt informasjonsplikt som sikrer tilstrekkelig kunnskap om reelle rettighetshavere</td>
+					</tr>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label aria-pressed="false" class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Finansinstitusjoner og verdipapirforetak hjemmeh&oslash;rende i Norge</td>
+					</tr>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Tingrett/namsmann</td>
+					</tr>
+				</tbody>
+			</table>
+			<!-- 1.2 MODERAT -->
+
+			<p style="background:#95b3d7; margin-bottom:5px; margin-left:0; margin-right:0; margin-top:10px; padding:2px; text-align:left"><strong style="font-weight:bold">Moderat risiko:</strong></p>
+
+			<table style="width:100%">
+				<colgroup>
+					<col style="width: 25px;" />
+					<col style="width: auto;" />
+				</colgroup>
+				<tbody>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Privatperson, norsk statsborger, bosatt i Norge</td>
+					</tr>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Privatperson, utenlandsk statsborger fra EU/E&Oslash;S-land, bosatt i Norge</td>
+					</tr>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Vergem&aring;l / Norsk selskap / Stiftelse</td>
+					</tr>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Fullmakt fra selger der fullmaktsforholdet er velbegrunnet</td>
+					</tr>
+				</tbody>
+			</table>
+			<!-- 1.3 HØY -->
+
+			<p style="background:#ff7c80; margin-bottom:5px; margin-left:0; margin-right:0; margin-top:10px; padding:2px; text-align:left"><strong style="font-weight:bold">H&oslash;y Risiko:</strong></p>
+
+			<table style="width:100%">
+				<colgroup>
+					<col style="width: 25px;" />
+					<col style="width: auto;" />
+				</colgroup>
+				<tbody>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Privatperson bosatt i utlandet / Utenlandsk statsborger (utenfor E&Oslash;S)</td>
+					</tr>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Politisk eksponert person (PEP) / Sanksjonslistet kunde</td>
+					</tr>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Selskap under stiftelse (SUS) / NUF / Forening / Lag</td>
+					</tr>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">N&aelig;ringsdrivende innenfor H&oslash;yrisikobransjer (f. eks BYGG OG ANLEGG)</td>
+					</tr>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Kjent kunde, hyppig salg uten reg. virksomhet</td>
+					</tr>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Fullmakt uten velbegrunnet forhold</td>
+					</tr>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Komplisert selskapsstruktur / Investorer f&aring;r kj&oslash;pe billig</td>
+					</tr>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Transaksjon uten naturlig sammenheng med virksomhet</td>
+					</tr>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Oppdragsgiver har blancoskj&oslash;te / ingen hjemmel</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<div style="page-break-after:always"><span style="display:none">&nbsp;</span></div>
+<br />
+<!-- SECTION 2 - MED PUNKT 2.1 LAGT TILBAKE -->
+<p style="background:#000000; color:#ffffff; font-weight:bold; margin-bottom:0; margin-left:0; margin-right:0; margin-top:0; padding:5px">2. Produkt og tjeneste (sett kryss)</p>
+
+<table cellspacing="0" style="border-collapse:collapse">
+	<colgroup>
+		<col style="width: 40px;" />
+		<col style="width: 120px;" />
+		<col style="width: auto;" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td class="td-center" style="background-color:#d7e4bd; background:#d7e4bd; border-style:solid; border-width:1px; padding:5pt"><span style="font-size:9pt">2.1</span></td>
+			<td style="border-style:solid; border-width:1px; padding:5pt">
+			<p style="margin-bottom:0; margin-left:0; margin-right:0; margin-top:0">Oppdragstype</p>
+			</td>
+			<td style="border-style:solid; border-width:1px; padding:5pt"><!-- MODERAT -->
+			<p style="background:#95b3d7; margin-bottom:5px; margin-left:0; margin-right:0; margin-top:0; padding:2px; text-align:left"><strong style="font-weight:bold">Moderat risiko:</strong></p>
+
+			<table style="width:100%">
+				<colgroup>
+					<col style="width: 25px;" />
+					<col style="width: auto;" />
+				</colgroup>
+				<tbody>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Ordin&aelig;rt salgsoppdrag (bolig, tomt (bolig/fritid))</td>
+					</tr>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Verdivurdering (bolig, tomt (bolig/fritid))</td>
+					</tr>
+				</tbody>
+			</table>
+			<!-- HØY -->
+
+			<p style="background:#ff7c80; margin-bottom:5px; margin-left:0; margin-right:0; margin-top:10px; padding:2px; text-align:left"><strong style="font-weight:bold">H&oslash;y Risiko:</strong></p>
+
+			<table style="width:100%">
+				<colgroup>
+					<col style="width: 25px;" />
+					<col style="width: auto;" />
+				</colgroup>
+				<tbody>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Prosjektsalg</td>
+					</tr>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Prosjektsalg-transport av kontrakt</td>
+					</tr>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Oppgj&oslash;rsoppdrag</td>
+					</tr>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">N&AElig;RING salgsoppdrag eiendom eller selskap</td>
+					</tr>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">N&AElig;RING Verdivurdering</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<br />
+<!-- SECTION 3 -->
+<table cellspacing="0" style="border-collapse:collapse">
+	<colgroup>
+		<col style="width: 40px;" />
+		<col style="width: auto;" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td style="background-color:#d7e4bd; background:#d7e4bd; border-style:solid; border-width:1px; padding:5pt"><span style="font-size:12px">3.1</span></td>
+			<td style="border-style:solid; border-width:1px; padding:0"><!-- INDRE TABELL FOR Å DELE I TO LIKE KOLONNER -->
+			<table style="margin:0; width:100%">
+				<colgroup>
+					<col style="width: 50%;" />
+					<col style="width: 50%;" />
+				</colgroup>
+				<tbody>
+					<tr><!-- VENSTRE KOLONNE -->
+						<td style="border-right:1px solid #000000; padding:5px; vertical-align:top">
+						<p style="margin-bottom:5px; margin-left:0; margin-right:0; margin-top:0">Sett kryss ved forekomst av indikator</p>
+
+						<p style="background:#ff7c80; margin-bottom:5px; margin-left:0; margin-right:0; margin-top:0; padding:2px"><strong style="font-weight:bold">H&oslash;y Risiko:</strong></p>
+
+						<table style="width:100%">
+							<colgroup>
+								<col style="width: 25px;" />
+								<col style="width: auto;" />
+							</colgroup>
+							<tbody>
+								<tr>
+									<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+									<td style="border-style:solid; border-width:1px">Oppdragsgiver kjent kunde &ndash; flere salg/kj&oslash;p</td>
+								</tr>
+								<tr>
+									<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+									<td style="border-style:solid; border-width:1px">Ukjent, men negativt kjent fra media</td>
+								</tr>
+								<tr>
+									<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+									<td style="border-style:solid; border-width:1px">Nye investorer i prosjekt</td>
+								</tr>
+								<tr>
+									<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+									<td style="border-style:solid; border-width:1px">Transaksjon uten naturlig sammenheng med virksomhet</td>
+								</tr>
+								<tr>
+									<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+									<td style="border-style:solid; border-width:1px">Oppusset eiendom (helt/delvis) &quot;svart arbeid&quot;</td>
+								</tr>
+								<tr>
+									<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+									<td style="border-style:solid; border-width:1px">Midlenes opprinnelse er uklar</td>
+								</tr>
+								<tr>
+									<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+									<td style="border-style:solid; border-width:1px">Uvanlig bruk av klientkonto selger</td>
+								</tr>
+								<tr>
+									<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+									<td style="border-style:solid; border-width:1px">Utbetaling av oppgj&oslash;r til andre enn selger</td>
+								</tr>
+								<tr>
+									<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+									<td style="border-style:solid; border-width:1px">Kort tid mellom kj&oslash;p/salg - stor gevinst/tap</td>
+								</tr>
+								<tr>
+									<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+									<td style="border-style:solid; border-width:1px">Sammenblanding privat/foretak</td>
+								</tr>
+								<tr>
+									<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+									<td style="border-style:solid; border-width:1px">Overdragelse mellom n&aelig;rst&aring;ende og selskap</td>
+								</tr>
+							</tbody>
+						</table>
+						</td>
+						<!-- HØYRE KOLONNE -->
+						<td style="padding:5px; vertical-align:top">
+						<div style="height:32px">&nbsp;</div>
+						<!-- Spacer for alignment -->
+
+						<table style="width:100%">
+							<colgroup>
+								<col style="width: 25px;" />
+								<col style="width: auto;" />
+							</colgroup>
+							<tbody>
+								<tr>
+									<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+									<td style="border-style:solid; border-width:1px">Innfrielse av privat pantel&aring;n</td>
+								</tr>
+								<tr>
+									<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+									<td style="border-style:solid; border-width:1px">Overpris / underpris</td>
+								</tr>
+								<tr>
+									<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+									<td style="border-style:solid; border-width:1px">Kunden er tilbakeholden med info</td>
+								</tr>
+								<tr>
+									<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+									<td style="border-style:solid; border-width:1px">Kunden unng&aring;r personlig kontakt</td>
+								</tr>
+								<tr>
+									<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+									<td style="border-style:solid; border-width:1px">Opplyst adresse eksisterer ikke</td>
+								</tr>
+								<tr>
+									<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+									<td style="border-style:solid; border-width:1px">Kun postboks eller c/o adresse</td>
+								</tr>
+								<tr>
+									<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+									<td style="border-style:solid; border-width:1px">Adressen benyttes ikke til virksomhet/bolig</td>
+								</tr>
+								<tr>
+									<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+									<td style="border-style:solid; border-width:1px">Korrespondanse til andre uten forklaring</td>
+								</tr>
+								<tr>
+									<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+									<td style="border-style:solid; border-width:1px">Mistanke om fiktiv eiendomsoverdragelse</td>
+								</tr>
+								<tr>
+									<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+									<td style="border-style:solid; border-width:1px">Unormalt mange overdragelser mellom parter</td>
+								</tr>
+								<tr>
+									<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+									<td style="border-style:solid; border-width:1px">Instrukt&oslash;r har ikke formell tilknytning</td>
+								</tr>
+								<tr>
+									<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+									<td style="border-style:solid; border-width:1px">Kunden bruker mellomledd uten grunn</td>
+								</tr>
+							</tbody>
+						</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<div style="page-break-after:always"><span style="display:none">&nbsp;</span></div>
+<br />
+<!-- SECTION 4 -->
+<p style="background:#000000; color:#ffffff; font-weight:bold; margin-bottom:0; margin-left:0; margin-right:0; margin-top:0; padding:5px">4. Risiko knyttet til terrorfinansiering</p>
+
+<table cellspacing="0" style="border-collapse:collapse">
+	<colgroup>
+		<col style="width: 40px;" />
+		<col style="width: auto;" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td style="background-color:#d7e4bd; background:#d7e4bd; border-style:solid; border-width:1px; padding:4pt">&nbsp;</td>
+			<td style="border-style:solid; border-width:1px; padding:4pt">
+			<p style="background:#b9cde5; margin-bottom:5px; margin-left:0; margin-right:0; margin-top:0; padding:2px; text-align:left"><span style="font-size:9pt">Lav/Moderat &ndash; lite sannsynlig &aring; forvente terrorfinansiering (10-40% sannsynlighet)</span></p>
+
+			<table style="width:100%">
+				<colgroup>
+					<col style="width: 25px;" />
+					<col style="width: auto;" />
+				</colgroup>
+				<tbody>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Lite sannsynlighet &aring; forvente terrorfinansiering (0-40%)</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p style="background:#ff7c80; margin-bottom:5px; margin-left:0; margin-right:0; margin-top:10px; padding:2px; text-align:left"><strong style="font-weight:bold">H&oslash;y/meget sannsynlig/mulig &aring; forvente terrorfinansiering 40-100% sannsynlighet)</strong></p>
+
+			<table style="width:100%">
+				<colgroup>
+					<col style="width: 25px;" />
+					<col style="width: auto;" />
+				</colgroup>
+				<tbody>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Kunde har ingen naturlig tilknytning eller grunn til &aring; kj&oslash;pe</td>
+					</tr>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Eiendommen kan bli benyttet til &laquo;oppbevaring&raquo; av midler</td>
+					</tr>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Kunde er knyttet til ekstremt milj&oslash; (h&oslash;yre/venstre)</td>
+					</tr>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Midlenes opprinnelse er uklar/penger fra utlandet</td>
+					</tr>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Eiendommen kan bli brukt til lager/planlegging for terror</td>
+					</tr>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Kunden kommer fra h&oslash;yrisikoland / returnert fremmedkriger</td>
+					</tr>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Penger kommer fra ulike kilder/andre familiemedlemmer</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<br />
+<!-- SECTION 5 -->
+<p style="background:#000000; color:#ffffff; font-weight:bold; margin-bottom:0; margin-left:0; margin-right:0; margin-top:0; padding:5px">5. Andre risikotriggere (sett kryss)</p>
+
+<table cellspacing="0" style="border-collapse:collapse">
+	<colgroup>
+		<col style="width: 40px;" />
+		<col style="width: 120px;" />
+		<col style="width: auto;" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td style="background-color:#d7e4bd; background:#d7e4bd; border-style:solid; border-width:1px; padding:5pt">&nbsp;</td>
+			<td style="background-color:#d7e4bd; background:#d7e4bd; border-style:solid; border-width:1px; padding:5pt">
+			<p style="margin-bottom:5px; margin-left:0; margin-right:0; margin-top:5px">Er det avdekket andre risikotriggere ved kunden?</p>
+			</td>
+			<td style="border-style:solid; border-width:1px; padding:5pt">
+			<table style="width:100%">
+				<colgroup>
+					<col style="width: 25px;" />
+					<col style="width: auto;" />
+				</colgroup>
+				<tbody>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label aria-pressed="false" class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Nei</td>
+					</tr>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px">Ja, kommenter:<br />
+						<span class="insert-table"><span class="insert" data-label="Kommentar"></span></span></td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<br />
+<!-- SECTION 6 -->
+<p style="background:#000000; color:#ffffff; font-weight:bold; margin-bottom:0; margin-left:0; margin-right:0; margin-top:0; padding:5px">6. Risikovurdering &ndash; konklusjon (sett kryss)</p>
+
+<table cellspacing="0" style="border-collapse:collapse">
+	<colgroup>
+		<col style="width: 40px;" />
+		<col style="width: 120px;" />
+		<col style="width: auto;" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td style="background-color:#d7e4bd; background:#d7e4bd; border-style:solid; border-width:1px; padding:5pt">6.1</td>
+			<td style="background-color:#d7e4bd; background:#d7e4bd; border-style:solid; border-width:1px; padding:5pt">
+			<p style="margin-bottom:0; margin-left:0; margin-right:0; margin-top:0">Vurdering av hvitvaskingsrisikoen knyttet til kunden og oppdraget</p>
+			</td>
+			<td style="border-style:solid; border-width:1px; padding:5pt">
+			<table style="width:100%">
+				<colgroup>
+					<col style="width: 25px;" />
+					<col style="width: 120px;" />
+					<col style="width: 25px;" />
+					<col style="width: 120px;" />
+					<col style="width: 25px;" />
+					<col style="width: 120px;" />
+				</colgroup>
+				<tbody>
+					<tr>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px"><strong>Lav - Forenklet</strong></td>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px"><strong>Normalt - Normal</strong></td>
+						<td class="td-center" style="border-style:solid; border-width:1px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td style="border-style:solid; border-width:1px"><strong>H&oslash;y - Forsterket</strong></td>
+					</tr>
+				</tbody>
+			</table>
+			<br />
+			<!-- PURPLE BOX -->
+			<table style="width:100%">
+				<tbody>
+					<tr>
+						<td style="background-color:#8064a2; background:#8064a2; border-style:solid; border-width:1px; color:#ffffff; padding:5pt"><strong style="font-weight:bold">Forsterket risiko &ndash; avklart:</strong></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p style="margin-top:5px">&laquo;H&oslash;y risiko&raquo; er identifisert, Hvitvaskingsansvarlig er konsultert, foresterkede kontrolltiltak er gjennomf&oslash;rt og det er ikke behov for ytterligere unders&oslash;kelser.</p>
+
+			<p>F&oslash;lgende vurdering/unders&oslash;kelser er gjort (beskriv):</p>
+			<br />
+			<span class="insert-table"><span class="insert" data-label="Beskrivelse"></span></span><br />
+			<br />
+			<!-- RED BOX -->
+			<table style="width:100%">
+				<tbody>
+					<tr>
+						<td style="background-color:#ff7c80; background:#ff7c80; border-style:solid; border-width:1px; padding:5pt"><strong style="font-weight:bold">Forsterket &ndash; IKKE avklart: Saken m&aring; f&oslash;lges opp av hvitvaskingsansvarlig</strong></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p style="margin-top:5px">&laquo;H&oslash;y risiko&raquo; er identifisert, Hvitvaskingsansvarlig er konsultert, foresterkede kontrolltiltak er gjennomf&oslash;rt og saken m&aring; f&oslash;lges opp av hvitvaskingsansvarlig.</p>
+
+			<p>F&oslash;lgende vurdering/unders&oslash;kelser er gjort (beskriv):</p>
+			<br />
+			<span class="insert-table"><span class="insert" data-label="Beskrivelse"></span></span></td>
+		</tr>
+	</tbody>
+</table>
+</div>

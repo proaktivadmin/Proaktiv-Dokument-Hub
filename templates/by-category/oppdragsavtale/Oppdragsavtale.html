@@ -1,0 +1,1101 @@
+<div id="vitecTemplate">
+    <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+    <style type="text/css">
+        #vitecTemplate {
+            font-size: 9pt;
+        }
+
+        #vitecTemplate {
+            counter-reset: section;
+        }
+
+            #vitecTemplate .item:not(.item .item) {
+                counter-increment: section;
+                counter-reset: subsection;
+            }
+
+                #vitecTemplate .item:not(.item .item) h2::before {
+                    content: counter(section) ". ";
+                }
+
+            #vitecTemplate .item .item:not(.item .item .item) {
+                counter-increment: subsection;
+                counter-reset: subsubsection;
+            }
+
+                #vitecTemplate .item .item:not(.item .item .item) h3::before {
+                    content: counter(section) "." counter(subsection) ". ";
+                }
+
+            #vitecTemplate .item .item .item {
+                counter-increment: subsubsection;
+            }
+
+                #vitecTemplate .item .item .item h4::before {
+                    content: counter(section) "." counter(subsection) "." counter(subsubsection) ". ";
+                }
+
+            #vitecTemplate table {
+                width: 100%;
+                table-layout: fixed;
+                border-collapse: collapse;
+            }
+
+                #vitecTemplate table th {
+                    text-align: left;
+                    font-weight: normal;
+                    display: table-cell;
+                    padding: 0 0 0 0;
+                }
+
+                #vitecTemplate table td {
+                    font-size: 9pt;
+                    padding: 3px 0;
+                    margin: 0;
+                }
+
+                #vitecTemplate table p,
+                #vitecTemplate table div {
+                    font-size: 9pt;
+                    padding: 3px 0;
+                    margin: 0;
+                }
+
+            #vitecTemplate ul li,
+            #vitecTemplate ol li {
+                font-size: 9pt;
+                line-height: 1.25;
+                margin: 0 0;
+                padding: 0;
+            }
+
+            #vitecTemplate article {
+                margin-left: 1.5em;
+            }
+
+            #vitecTemplate .avoid-page-break {
+                page-break-inside: avoid;
+            }
+
+            #vitecTemplate h1 {
+                text-align: center;
+                font-size: 14pt;
+                margin: 0;
+                padding: 0;
+            }
+
+            #vitecTemplate h2 {
+                font-size: 11pt;
+                margin: 25px 0 0 -1em;
+                padding: 0;
+            }
+
+            #vitecTemplate h3 {
+                font-size: 10pt;
+                margin: 20px 0 0 0;
+                padding: 0;
+            }
+
+            #vitecTemplate h4 {
+                font-size: 9pt;
+                margin: 0 0 0 1em;
+                padding: 12px 0 0 0;
+            }
+
+        /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+        span.insert:empty {
+            font-size: inherit !important;
+            line-height: inherit !important;
+            display: inline-block;
+            background-color: lightpink;
+            min-width: 2em !important;
+            height: .7em !important;
+            text-align: center;
+        }
+
+            span.insert:empty:before {
+                content: attr(data-label);
+            }
+
+            span.insert:empty:hover {
+                background-color: #fff;
+                cursor: pointer;
+            }
+
+        .insert-table {
+            display: inline-table;
+        }
+
+            .insert-table > span,
+            .insert-table > span.insert {
+                display: table-cell;
+            }
+
+        .insert-textbox {
+            display: inline-table;
+            vertical-align: bottom;
+            margin: 0 2px;
+        }
+
+            .insert-textbox > span {
+                padding: 4px 0;
+                line-height: 1.1;
+                border-bottom: solid 1px #000;
+                height: 1.1em;
+                width: 8cm;
+                max-width: 30em;
+                overflow: hidden;
+                display: table-cell;
+                text-align: left;
+                white-space: nowrap;
+            }
+
+        #vitecTemplate .info-table {
+            border-collapse: collapse;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+            #vitecTemplate .info-table tr:not(:first-child) td {
+                border-top: solid 1px lightgray;
+            }
+
+            #vitecTemplate .info-table td {
+                vertical-align: top;
+            }
+
+            #vitecTemplate .info-table .text-right {
+                text-align: right;
+            }
+
+            #vitecTemplate .info-table tr.sumlinje td {
+                border-top: solid 1px #000;
+                border-bottom: solid 1px #000;
+                font-weight: bold;
+                padding: 3px 0;
+                margin: 0;
+            }
+
+            #vitecTemplate .info-table tr.delsumlinje td {
+                border-top: solid 1px #000;
+                border-bottom: solid 1px #000;
+            }
+
+        #vitecTemplate .bordered-table td {
+            border: solid 1px #000;
+        }
+
+        #vitecTemplate .oppdragsparter tbody:last-child tr:last-child {
+            display: none;
+        }
+
+        #vitecTemplate .main-type {
+            display: none;
+        }
+
+        #vitecTemplate .announced-type {
+            display: none;
+        }
+
+            #vitecTemplate .announced-type[data-type="Oppgj\00f8rsoppdrag"] {
+                display: inline;
+            }
+
+        #vitecTemplate .seller:last-child .separator {
+            display: none;
+        }
+
+        #vitecTemplate .sign-field {
+            display: inline-block;
+            width: 45%;
+            margin-top: 1cm;
+            margin-right: 10px;
+            border-top: solid 1px #000;
+            vertical-align: top;
+        }
+    </style>
+    <style type="text/css">
+        /* Klikkbare sjekkbokser og radioknapper */
+        label.btn {
+            display: inline;
+            text-transform: none;
+            white-space: normal;
+            padding: 0;
+            vertical-align: baseline;
+            outline: none;
+            font-size: inherit;
+        }
+
+            label.btn:active,
+            label.btn.active {
+                box-shadow: none;
+                outline: none;
+            }
+
+        .svg-toggle { /* nullstiller bootstrap button-styling */
+            display: inline-block !important;
+            width: 16px;
+            height: 16px;
+            margin: 0 5px;
+            vertical-align: bottom;
+            padding: 0;
+            border: none;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none !important;
+            cursor: pointer;
+            white-space: normal;
+            text-align: left;
+            background-repeat: no-repeat;
+            background-size: 16px 16px;
+            background-position: center center;
+        }
+
+
+            .svg-toggle.checkbox {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+            }
+
+                .svg-toggle.checkbox.active,
+                .btn.active > .svg-toggle.checkbox {
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+                    box-shadow: none !important;
+                }
+
+            .svg-toggle.radio {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
+            }
+
+                .svg-toggle.radio.active,
+                .btn.active > .svg-toggle.radio {
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
+                    box-shadow: none !important;
+                }
+
+        /* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
+        #vitecTemplate [data-toggle="buttons"] input {
+            display: none;
+        }
+    </style>
+    <table>
+        <tbody>
+            <tr>
+                <td colspan="100">
+                    <div style="text-align:right"><strong>Oppdragsnr:</strong> [[oppdrag.nr]]</div>
+
+                    <h1>Oppdragsavtale</h1>
+
+                    <article class="item">
+                        <h2>Partene</h2>
+
+                        <table class="info-table item oppdragsparter">
+                            <thead>
+                                <tr>
+                                    <th colspan="100">
+                                        <h3>Oppdragsgiver</h3>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody vitec-foreach="selger in Model.selgere">
+                                <tr>
+                                    <td colspan="20" style="border-top-color:currentColor; border-top-style:none; border-top-width:medium"><strong>Navn</strong></td>
+                                    <td colspan="80" style="border-top-color:currentColor; border-top-style:none; border-top-width:medium">[[*selger.navnutenfullmektigogkontaktperson]]</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="20">Adresse</td>
+                                    <td colspan="80">[[*selger.gatenavnognr]], [[*selger.postnr]] [[*selger.poststed]]</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="20">E-post</td>
+                                    <td colspan="80">[[*selger.emailadresse]]</td>
+                                </tr>
+                                <tr style="border-bottom:solid 1px lightgray">
+                                    <td colspan="20">[[*selger.ledetekst_idnummer]]</td>
+                                    <td colspan="30">[[*selger.idnummer]]</td>
+                                    <td colspan="50"><strong>Legitimasjon</strong> (Type og kontrollnr.): &nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="100">&nbsp;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="info-table item">
+                            <thead>
+                                <tr>
+                                    <th colspan="100">
+                                        <h3>Oppdragstaker</h3>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="20"><strong>Meglerforetak</strong></td>
+                                    <td colspan="80">[[meglerkontor.navn]]</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="20">Adresse</td>
+                                    <td colspan="80">[[meglerkontor.besoksadresse]], [[meglerkontor.postnr]] [[meglerkontor.poststed]]</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="20">Org.nr.</td>
+                                    <td colspan="80">[[meglerkontor.orgnr]]</td>
+                                </tr>
+                                <tr style="border-bottom:solid 1px lightgray">
+                                    <td colspan="20">Telefon:</td>
+                                    <td colspan="30">[[meglerkontor.tlf]]</td>
+                                    <td colspan="10">E-post:</td>
+                                    <td colspan="40">[[meglerkontor.epost]]</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </article>
+
+                    <article class="item">
+                        <h2>Oppdragsansvarlig og meglerens bruk av kontraktsmedhjelpere</h2>
+
+                        <p><span vitec-if="(Model.ansvarligmegler.navn != &quot;Mangler data&quot; &amp;&amp; Model.operativmegler.navn != Model.ansvarligmegler.navn)">Oppdragsansvarlig er <strong>[[operativmegler.navn]]</strong>, [[operativmegler.tittel]]. <span vitec-if="Model.ansvarligmegler.navn != &quot;Mangler data&quot;"> Ansvarlig megler er <strong> [[ansvarligmegler.navn]]</strong>, [[ansvarligmegler.tittel]].</span> </span> <span vitec-if="(Model.ansvarligmegler.navn == &quot;Mangler data&quot; || Model.operativmegler.navn == Model.ansvarligmegler.navn)">Ansvarlig megler er <strong>[[operativmegler.navn]]</strong>, [[operativmegler.tittel]].</span> <span vitec-if="Model.megler2.navn != &quot;Mangler data&quot;"> Medhjelper er <strong>[[megler2.navn]]</strong>, [[megler2.tittel]].</span></p>
+
+                        <p>I ansvarlig meglers frav&aelig;r aksepteres det at meglerkontorets &oslash;vrige ansatte kan bist&aring; i oppdraget. Ved lengre frav&aelig;r skal dette varsles skriftlig.</p>
+
+                        <p>Meglerforetaket benytter seg av f&oslash;lgende kontraktsmedhjelpere:</p>
+
+                        <table class="avoid-page-break info-table item">
+                            <thead>
+                                <tr>
+                                    <th colspan="100">
+                                        <h3>Oppgj&oslash;rsavdeling</h3>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="20"><strong>Navn:</strong></td>
+                                    <td colspan="80">[[oppgjor.kontornavn]]</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="20">Adresse:</td>
+                                    <td colspan="80">[[oppgjor.postadresse]], [[oppgjor.postnr]] [[oppgjor.poststed]]</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="20">Org.nr:</td>
+                                    <td colspan="80">[[oppgjor.orgnr]]</td>
+                                </tr>
+                                <tr style="border-bottom:solid 1px lightgray">
+                                    <td colspan="20">Telefon:</td>
+                                    <td colspan="30">[[oppgjor.kontortlf]]</td>
+                                    <td colspan="10">E-post:</td>
+                                    <td colspan="40">[[oppgjor.kontorepost]]</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="avoid-page-break info-table item">
+                            <thead>
+                                <tr>
+                                    <th colspan="100">
+                                        <h3>Oppgj&oslash;rsansvarlig</h3>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="20">Navn:</td>
+                                    <td colspan="80">[[oppgjor.ansvarlig.navn]]</td>
+                                </tr>
+                                <tr style="border-bottom:solid 1px lightgray">
+                                    <td colspan="20">Telefon:</td>
+                                    <td colspan="30">[[oppgjor.ansvarlig.tlf]]</td>
+                                    <td colspan="10">E-post:</td>
+                                    <td colspan="40">[[oppgjor.ansvarlig.epost]]</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="avoid-page-break info-table item">
+                            <thead>
+                                <tr>
+                                    <th colspan="100">
+                                        <h3>&Oslash;vrige medhjelpere:</h3>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="100">[[meglerkontor.fullmektigenavn]].</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </article>
+
+                    <article class="avoid-page-break item">
+                        <h2>Oppdragets karakter og objekt</h2>
+                        <!-- @{
+                                            var erSalg ="";
+                                            var erKjop ="";
+                                            var erUtleie ="";
+                                            var erOppgjorsoppdrag ="";
+                                            if (Model.oppdrag.hovedtype == "Salgsoppdrag" && !Model.oppdrag.type.Contains("\xF8")) {
+                                                erSalg = "active";
+                                            } else if (Model.oppdrag.hovedtype != "Oppgj\xF8rsoppdrag" && Model.oppdrag.type.Contains("\xF8")) {
+                                                erKjop = "active";
+                                            } else if (Model.oppdrag.hovedtype == "Utleieoppdrag") {
+                                                erUtleie = "active";
+                                            } else if (Model.oppdrag.hovedtype == "Oppgj\xF8rsoppdrag") {
+                                                erOppgjorsoppdrag = "active";
+                                            }
+                                    }-->
+
+                        <table>
+                            <tbody>
+                                <tr data-toggle="buttons">
+                                    <td colspan="20"><label class="btn @erSalg" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" />Salg </label></td>
+                                    <td colspan="20"><label class="btn @erKjop" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" />Kj&oslash;p </label></td>
+                                    <td colspan="20"><label class="btn @erUtleie" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" />Utleie </label></td>
+                                    <td colspan="20"><label class="btn @erOppgjorsoppdrag" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" />Kontrakt/Oppgj&oslash;r </label></td>
+                                    <td colspan="20"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" />Annet </label></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p>av <span style="text-transform:lowercase">[[eiendom.boligtype]]</span> i [[eiendom.gatenavnognr]], [[eiendom.postnr]] [[eiendom.poststed]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune.</p>
+                    </article>
+
+                    <article class="item" data-toggle="buttons">
+                        <h2>Eiendomsmeglerens vederlag</h2>
+
+                        <div class="avoid-page-break item">
+                            <h3>Fastsettelse av vederlagstype</h3>
+
+                            <p>Vi kan tilby to alternative vederlagstyper; <span vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">provisjonsbasert</span><span vitec-if="Model.oppdrag.vederlagtypefastpris == true">fastprisbasert</span> og timebasert.</p>
+                        </div>
+
+                        <p style="margin-top:12px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" /></label> <span style="font-size:10pt"> <strong> Alternativ 1: <span vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">Provisjon</span> <span vitec-if="Model.oppdrag.vederlagtypefastpris == true">Provisjon Fastpris</span> </strong> </span></p>
+
+                        <p vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">Eiendomsmegleren har krav p&aring; <strong>[[oppdrag.provisjonprosent]] %</strong> provisjon inkl. mva.</p>
+
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td colspan="82"><span vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">Beregnet provisjon basert p&aring; prisantydning kr $.UD([[eiendom.pris]]) <span vitec-if="Model.oppdrag.erfellesgjeldinkludertiprovisjonsgrunnlag == true &amp;&amp; Model.eiendom.fellesgjeld != &quot;0,00&quot;"> og fellesgjeld kr $.UD([[eiendom.fellesgjeld]])</span></span><span vitec-if="Model.oppdrag.vederlagtypefastpris == true">Eiendomsmegleren har krav p&aring; en fast provisjon</span>:</td>
+                                    <td colspan="3">kr</td>
+                                    <td colspan="15" style="text-align:right"><span vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">$.UD([[oppdrag.provisjonberegnet]])</span><span vitec-if="Model.oppdrag.vederlagtypefastpris == true">kr $.UD([[oppdrag.fastpris]])</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p><u>I tillegg til meglers provisjon kommer f&oslash;lgende faste vederlag:</u></p>
+
+                        <table class="info-table">
+                            <tbody vitec-foreach="vederlag in Model.selgervederlag.alleposter">
+                                <tr>
+                                    <td colspan="82">[[*vederlag.beskrivelse]]</td>
+                                    <td colspan="3">kr</td>
+                                    <td colspan="15" style="text-align:right">$.UD([[*vederlag.belop]])</td>
+                                </tr>
+                            </tbody>
+                            <tbody>
+                                <tr class="sumlinje">
+                                    <td colspan="82">Sum provisjon og faste vederlag</td>
+                                    <td colspan="3">kr</td>
+                                    <td colspan="15" style="text-align:right"><span vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">$.UD([[oppdrag.selgervederlagmedprovsum]])</span><span vitec-if="Model.oppdrag.vederlagtypefastpris == true">$.UD([[oppdrag.selgervederlagogfastprissum]])</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p style="margin-top:16px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" /></label> <span style="font-size:10pt"> <strong> Alternativ 2: Betaling etter medg&aring;tt tid (timer)</strong> </span></p>
+
+                        <p>Eiendomsmegleren har krav p&aring; vederlag for arbeid etter medg&aring;tt tid som for tiden er kr $.UD([[oppdrag.timeprisinklmva]]) pr. time inkl. mva.</p>
+
+                        <p><u>Disse arbeidsoppgavene inng&aring;r:</u></p>
+
+                        <table class="info-table">
+                            <tbody>
+                                <tr>
+                                    <td colspan="82">Befaring, inkl. reisetid, innhenting og kontroll av <span vitec-if="Model.oppdrag.hovedtype != &quot;Oppgj\xF8rsoppdrag&quot;">lovp&aring;lagte </span>opplysninger, innhenting av saldobrev, reg. av opplysninger <span vitec-if="Model.oppdrag.hovedtype != &quot;Oppgj\xF8rsoppdrag&quot;">, salgsforberedelse med markedsplan, bestilling og koordinering av andre tjenester, og utforming/bestilling av salgsoppgaver.</span></td>
+                                    <td colspan="3">&nbsp;</td>
+                                    <td colspan="15" style="text-align:right">[[timer.budsjett.salg]]</td>
+                                </tr>
+                                <tr vitec-if="Model.oppdrag.hovedtype != &quot;Oppgj\xF8rsoppdrag&quot;">
+                                    <td colspan="82">Visninger (estimert)</td>
+                                    <td colspan="3">&nbsp;</td>
+                                    <td colspan="15" style="text-align:right">[[timer.budsjett.visning]]</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="82">Interessentoppf&oslash;lging <span vitec-if="Model.oppdrag.hovedtype != &quot;Oppgj\xF8rsoppdrag&quot;">og budrunde</span></td>
+                                    <td colspan="3">&nbsp;</td>
+                                    <td colspan="15" style="text-align:right">[[timer.budsjett.bud]]</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="82">Kontraktsskriving, avholdelse av kontraktsm&oslash;te og utforming av dokumenter for tinglysing</td>
+                                    <td colspan="3">&nbsp;</td>
+                                    <td colspan="15" style="text-align:right">[[timer.budsjett.kontrakt]]</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="82">Oppgj&oslash;r</td>
+                                    <td colspan="3">&nbsp;</td>
+                                    <td colspan="15" style="text-align:right">[[timer.budsjett.oppgjor]]</td>
+                                </tr>
+                                <tr class="delsumlinje">
+                                    <td colspan="82">Totalt antall timer</td>
+                                    <td colspan="3">&nbsp;</td>
+                                    <td colspan="15" style="text-align:right"><span vitec-if="Model.oppdrag.hovedtype != &quot;Oppgj\xF8rsoppdrag&quot;">[[oppdrag.timebudsjettantall]]</span> <span vitec-if="Model.oppdrag.hovedtype == &quot;Oppgj\xF8rsoppdrag&quot;">$.CALCHOURS([[oppdrag.timebudsjettantall]]-[[timer.budsjett.visning]])</span></td>
+                                </tr>
+                                <tr class="sumlinje">
+                                    <td colspan="82">Sum timebasert vederlag</td>
+                                    <td colspan="3">kr</td>
+                                    <td colspan="15" style="text-align:right">$.UD([[oppdrag.timevederlagberegnet]])</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p>Eiendomsmegleren plikter &aring; varsle oppdragsgiveren dersom medg&aring;tt tid forventes &aring; vesentlig overstige det som er angitt i overslaget.</p>
+
+                        <div class="avoid-page-break item">
+                            <h3>Utlegg og andre utgifter</h3>
+
+                            <p>Eiendomsmegleren kan kreve dekning for f&oslash;lgende utlegg og andre utgifter:</p>
+                            &nbsp;
+
+                            <p><span style="font-size:10pt"><strong>Utlegg:</strong></span></p>
+
+                            <table class="info-table">
+                                <tbody vitec-foreach="utlegg in Model.selgerutlegg.alleposter">
+                                    <tr>
+                                        <td colspan="82">[[*utlegg.beskrivelse]]</td>
+                                        <td colspan="3">kr</td>
+                                        <td colspan="15" style="text-align:right">$.UD([[*utlegg.belop]])</td>
+                                    </tr>
+                                </tbody>
+                                <tbody>
+                                    <tr class="sumlinje">
+                                        <td colspan="82">Sum utlegg</td>
+                                        <td colspan="3">kr</td>
+                                        <td colspan="15" style="text-align:right">$.UD([[oppdrag.selgerutleggsum]])</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="100">&nbsp;</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="avoid-page-break">
+                            <p><span style="font-size:10pt"><strong>Andre utgifter:</strong></span></p>
+
+                            <table class="info-table">
+                                <tbody vitec-foreach="utgifter in Model.selgerutgifter.alleposter">
+                                    <tr>
+                                        <td colspan="82">[[*utgifter.beskrivelse]]</td>
+                                        <td colspan="3">kr</td>
+                                        <td colspan="15" style="text-align:right">$.UD([[*utgifter.belop]])</td>
+                                    </tr>
+                                </tbody>
+                                <tbody>
+                                    <tr class="sumlinje">
+                                        <td colspan="82">Sum utgifter</td>
+                                        <td colspan="3">kr</td>
+                                        <td colspan="15" style="text-align:right">$.UD([[oppdrag.selgerutgiftersum]])</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="avoid-page-break item">
+                            <h3>Samlet kostnadsoverslag</h3>
+                            &nbsp;
+
+                            <p><span style="font-size:10pt"> <strong> Alternativ 1: <span vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">Provisjon</span><span vitec-if="Model.oppdrag.vederlagtypefastpris == true">Provisjon Fastpris</span></strong> </span></p>
+
+                            <table class="info-table">
+                                <tbody>
+                                    <tr>
+                                        <td colspan="82">Sum provisjon og faste vederlag iht. alternativ 1 i punkt 4.1:</td>
+                                        <td colspan="3">kr</td>
+                                        <td colspan="15" style="text-align:right"><span vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">$.UD([[oppdrag.selgervederlagmedprovsum]])</span><span vitec-if="Model.oppdrag.vederlagtypefastpris == true">$.UD([[oppdrag.selgervederlagogfastprissum]])</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="82">Utlegg iht. punkt 4.2</td>
+                                        <td colspan="3">kr</td>
+                                        <td colspan="15" style="text-align:right">$.UD([[oppdrag.selgerutleggsum]])</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="82">Andre utgifter iht. punkt 4.2</td>
+                                        <td colspan="3">kr</td>
+                                        <td colspan="15" style="text-align:right">$.UD([[oppdrag.selgerutgiftersum]])</td>
+                                    </tr>
+                                    <tr class="sumlinje">
+                                        <td colspan="82">Sum kostnader alternativ 1 - <span vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">Provisjon</span><span vitec-if="Model.oppdrag.vederlagtypefastpris == true">Fastpris</span></td>
+                                        <td colspan="3">kr</td>
+                                        <td colspan="15" style="text-align:right"><span vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">$.UD([[oppdrag.selgersamletsum]])</span><span vitec-if="Model.oppdrag.vederlagtypefastpris == true">$.UD([[oppdrag.selgersamletfastprissum]])</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="100">&nbsp;</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <p><span style="font-size:10pt"> <strong> Alternativ 2: Betaling etter medg&aring;tt tid (timer)</strong> </span></p>
+
+                        <table class="info-table">
+                            <tbody>
+                                <tr>
+                                    <td colspan="82">Sum timebasert vederlag iht. alternativ 2 i punkt 4.1:</td>
+                                    <td colspan="3">kr</td>
+                                    <td colspan="15" style="text-align:right">$.UD([[oppdrag.timevederlagberegnet]])</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="82">Utlegg iht. punkt 4.2</td>
+                                    <td colspan="3">kr</td>
+                                    <td colspan="15" style="text-align:right">$.UD([[oppdrag.selgerutleggsum]])</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="82">Andre utgifter iht. punkt 4.2</td>
+                                    <td colspan="3">kr</td>
+                                    <td colspan="15" style="text-align:right">$.UD([[oppdrag.selgerutgiftersum]])</td>
+                                </tr>
+                                <tr class="sumlinje">
+                                    <td colspan="82">Sum kostnader alternativ 2 - Timer</td>
+                                    <td colspan="3">kr</td>
+                                    <td colspan="15" style="text-align:right">$.UD([[oppdrag.timevederlagberegnetogselgerutleggogutgiftersum]])</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="100">&nbsp;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </article>
+
+                    <article class="item">
+                        <h2>Eiendomsmeglerens rett til &aring; kreve dekning for utlegg og Eiendomsmeglerens vederlag ved oppsigelse fra en av partene</h2>
+
+                        <div class="avoid-page-break item">
+                            <h3>Eiendomsmeglerens vederlag dersom handel ikke kommer i stand</h3>
+
+                            <p>Ved avtalt provisjonsbetaling/fastpris, har oppdragstaker krav p&aring; et rimelig vederlag, kr <span class="insert-table"><span class="insert" data-label="Beløp"></span></span> for utf&oslash;rt arbeid samt eksterne utlegg, dersom oppdraget avsluttes, sies opp eller utl&oslash;per.</p>
+                        </div>
+
+                        <p>Oppdragstaker har krav p&aring; et rimelig vederlag stort kr <span class="insert-table"><span class="insert" data-label="Beløp"></span></span> dersom det er oppn&aring;dd bud p&aring; avtalt prisantydning og oppdragsgiver likevel velger &aring; avsl&aring; budet, og oppdraget senere sies opp, utl&oslash;per eller handel ikke kommer i stand.</p>
+
+                        <p>Ved avtalt timebetaling har oppdragstaker krav p&aring; dekning av vederlag for utf&oslash;rt arbeid med kr $.UD([[oppdrag.timeprisinklmva]]) pr. time inkl. mva.</p>
+
+                        <p>P&aring; alle avtaler kommer p&aring;l&oslash;pte utlegg i tillegg og m&aring; dekkes av oppdragsgiver.</p>
+
+                        <div class="item">
+                            <div class="avoid-page-break">
+                                <h3>Eiendomsmeglerens vederlag dersom handel er sluttet gjennom andre eller uten mellommann</h3>
+
+                                <p>Eiendomsmegleren har rett til vederlag i samsvar med eiendomsmeglingsloven kapittel 7. [ Ved kj&oslash;psoppdrag m&aring; dette avtales s&aelig;rskilt, jf. lovens &sect; 7-3 tredje ledd. ]</p>
+                            </div>
+
+                            <div class="avoid-page-break item" vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">
+                                <h4>Vederlag fastsatt som provisjonsbetaling</h4>
+
+                                <p style="margin-left:1em" vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">Eiendomsmegleren har krav p&aring; et rimelig vederlag for utf&oslash;rt arbeid dersom oppdraget sies opp av en av partene. Dekning av utlegg kan kreves i samsvar med avtalen uten hensyn til oppsigelsen, jf. eiendomsmeglingsloven &sect; 6-4.</p>
+                            </div>
+
+                            <div class="avoid-page-break item">
+                                <h4>Vederlag fastsatt som fastpris eller timepris</h4>
+
+                                <p style="margin-left:1em">Eiendomsmegleren har krav p&aring; forholdsmessig betaling fastsatt med utgangspunkt i det avtalte vederlaget. Dekning av utlegg kan kreves i samsvar med avtalen uten hensyn til oppsigelsen, jf. eiendomsmeglingsloven &sect; 6-4.</p>
+                            </div>
+                        </div>
+
+                        <div class="avoid-page-break item">
+                            <h3>Vederlagets forfallstidspunkt</h3>
+
+                            <p>Eiendomsmeglerens krav p&aring; vederlag forfaller til betaling n&aring;r handel er kommet i stand mellom kunden (for eksempel selger) og kundens medkontrahent (for eksempel kj&oslash;per) eller ved p&aring;krav (dersom oppdraget blir sagt opp).</p>
+                        </div>
+
+                        <div class="avoid-page-break item">
+                            <h3>Oppdragsgivers tilbakeholdsrett</h3>
+
+                            <p>Kunden har rett til &aring; holde tilbake s&aring; mye av vederlaget at det sikrer de kravene kunden har som f&oslash;lge av mislighold fra eiendomsmeglerens side.</p>
+                        </div>
+
+                        <div class="avoid-page-break item">
+                            <h3>Avregning av eiendomsmeglerens honorar i midler p&aring; klientkonto</h3>
+
+                            <p>Eiendomsmegleren kan bare dekke sitt krav p&aring; vederlag i klientmidler som tilh&oslash;rer kunden, dersom kunden har samtykket til dette etter at handel er kommet i stand.</p>
+                        </div>
+                    </article>
+
+                    <article class="item">
+                        <h2>Oppdragets varighet og oppsigelse</h2>
+
+                        <p>Oppdraget gjelder for en periode fra signering av oppdragsavtalen og i <strong>6 m&aring;neder</strong>.</p>
+
+                        <p>Oppdraget kan fornyes for inntil seks m&aring;neder av gangen. Fornyelse skal v&aelig;re skriftlig.</p>
+
+                        <p>Oppdraget kan sies opp uten varsel av hver av partene.</p>
+                    </article>
+
+                    <article class="avoid-page-break item" data-toggle="buttons">
+                        <h2>Andre oppdragstakere</h2>
+
+                        <p>F&oslash;lgende oppdragstakere har arbeidet med det samme oppdraget de siste tre m&aring;nedene:</p>
+
+                        <div><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" /></label> Ingen</div>
+
+                        <div><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" /></label> <span style="display:inline-block; vertical-align:middle">Annet meglerforetak. Navn p&aring; meglerforetak: </span> <span class="insert-textbox"> <span></span> </span></div>
+                    </article>
+
+                    <article class="item">
+                        <div class="avoid-page-break">
+                            <h2>Taushetsplikt</h2>
+
+                            <p>Eiendomsmegleren skal bevare taushet overfor uvedkommende om det de under utf&oslash;relsen av sitt arbeid eller verv f&aring;r vite om noens personlige forhold eller drifts- og forretningsforhold.</p>
+                        </div>
+                        <div class="avoid-page-break">
+                            <p>Ved foresp&oslash;rsel om utlevering av opplysninger til ligningsmyndighetene gjelder f&oslash;lgende:</p>
+
+                            <ul>
+                                <li>Megleren kan ikke utlevere opplysninger underlagt taushetsplikt etter eiendomsmeglingsloven &sect; 3-6 til uvedkommende, herunder ligningsmyndighetene.</li>
+                                <li>Eiendomsmeglere plikter p&aring; anmodning fra ligningsmyndighetene &aring; utlevere en oversikt over alle oppdragsgivere, samt kj&oslash;pesum og meglerens vederlag for det enkelte oppdrag. Megleren kan utlevere b&aring;de oppdragsjournalen og meglingsjournalen til ligningsmyndighetene for dette form&aring;l uten at det kommer i konflikt med taushetsplikten i eiendomsmeglingsloven &sect; 3-6.</li>
+                                <li>Uten at det er til hinder av taushetsplikten, kan megleren utlevere oppgj&oslash;rsoppstillinger og kontrakter dersom eventuelle opplysninger underlagt taushetsplikt er sladdet.</li>
+                                <li>Dersom ligningsmyndighetene finner at meglerens oppdragsgiver er n&aelig;ringsdrivende, plikter megleren &aring; utlevere ytterligere opplysninger vedr&oslash;rende de aktuelle oppdragsgiverne, herunder meglingsjournalen, oppgj&oslash;rsoppstilling og kontrakter dersom eventuelle opplysninger underlagt taushetsplikt er sladdet.</li>
+                            </ul>
+                        </div>
+                    </article>
+
+                    <article class="item">
+                        <h2>Fullmakt fra kunden til eiendomsmegleren</h2>
+
+                        <div class="avoid-page-break item">
+                            <h3>Standard</h3>
+
+                            <p>Ingen fullmakter.</p>
+                        </div>
+
+                        <div class="avoid-page-break item">
+                            <h3>Fullmakt til &aring; avvise bud</h3>
+
+                            <p>Eiendomsmegleren har fullmakt til &aring; avvise bud som har</p>
+
+                            <ul>
+                                <li>kortere akseptfrist enn <span class="insert-table"> <span class="insert" data-label="Antall"></span> </span> time(r)</li>
+                                <li>forbehold</li>
+                            </ul>
+
+                            <p>Bud som blir avvist etter denne fullmakten har ikke megleren plikt til &aring; forelegge for kunden.</p>
+                        </div>
+                    </article>
+
+                    <article class="avoid-page-break item">
+                        <h2>Rett til &aring; kreve nemdsbehandling (tvister)</h2>
+
+                        <p>Eventuelle tvister skal s&oslash;kes l&oslash;st i minnelighet.</p>
+
+                        <p vitec-if="Model.selger.idnummer.ToString().Length == 12">Oppdragsgiver, forbruker, har ved tvist med oppdragstaker rett til &aring; kreve nemndsbehandling i samsvar med lov om eiendomsmegling &sect; 8-8.</p>
+
+                        <p vitec-if="Model.selger.idnummer.ToString().Length == 11">Tvister er ikke gjenstand for nemndsbehandling i tr&aring;d med eiendomsmeglingslovens &sect; 8-8. Enhver tvist som m&aring;tte oppst&aring; i tilknytning til denne kontrakten, skal avgj&oslash;res ved voldgift i henhold til lov av 14. mai 2004 nr. 25 om voldgift.</p>
+                    </article>
+
+                    <article class="item">
+                        <h2>Samtykke</h2>
+
+                        <div class="avoid-page-break item">
+                            <h3>Gjensidig forpliktelse</h3>
+
+                            <p>Selger samtykker at i en budrunde s&aring; kan hver av partene gjensidig forplikte hverandre for aksept/avslag av bud. (Gjelder dersom eiendommen har flere eiere eller at boligen fungerer som felles bolig).</p>
+                        </div>
+
+                        <table class="avoid-page-break">
+                            <tbody>
+                                <tr>
+                                    <td colspan="100" style="text-align:left">1. &nbsp;Er oppdragsgiver(ne) gift eller registrert(e) partner(e)?</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="25" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" />Ja &nbsp; </label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" />Nei &nbsp; </label></td>
+                                    <td colspan="75">Hvis ja, m&aring; ogs&aring; sp&oslash;rsm&aring;l 2 besvares</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="100" style="text-align:left">2. &nbsp;Er oppdragsgiver(ne) gift eller registrerte partnere med hverandre og begge underskriver som utsteder?</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="25" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl005" type="radio" />Ja &nbsp; </label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl005" type="radio" />Nei &nbsp; </label></td>
+                                    <td colspan="75">Hvis nei, m&aring; ogs&aring; sp&oslash;rsm&aring;l 3 besvares</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="100" style="text-align:left">3. &nbsp;Gjelder overdragelsen bolig som oppdragsgiver(ne) og dennes (deres) ektefelle eller registrert(e) partner(e) bruker som felles bolig?</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="25" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl006" type="radio" />Ja &nbsp; </label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl006" type="radio" />Nei &nbsp; </label></td>
+                                    <td colspan="75">Hvis ja, m&aring; ektefellen(e)/registrert(e) partner(e) samtykke i overdragelsen.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="avoid-page-break item">
+                            <h3>Samtykke til markedsf&oslash;ring av bolig solgt</h3>
+
+                            <p>Meglerforetaket &oslash;nsker &aring; sende ut et brev til nabolaget om at boligen er solgt. Til dette trenger vi ditt samtykke.</p>
+
+                            <table>
+                                <tbody data-toggle="buttons">
+                                    <tr>
+                                        <td colspan="4"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl007" type="radio" /></label></td>
+                                        <td colspan="96">Ja, jeg/vi samtykker til at meglerforetaket kan sende ut nabobrev i n&aelig;romr&aring;det med informasjon om hva boligen min/v&aring;r blir solgt for. Nabobrevet inneholder opplysninger om adresse, boligens pris og bilde. Opplysningene kan brukes til &aring; sende ut et nabobrev i 3 m&aring;neder fra boligen selges.</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl007" type="radio" /></label></td>
+                                        <td colspan="96">Nei, jeg/vi samtykker ikke til at meglerforetaket sender ut nabobrev om hva boligen min/v&aring;r selges for.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <p>&Oslash;nsker du/dere &aring; tilbaketrekke samtykket meldes dette til oppdragsansvarlig megler i meglerforetaket pr post, telefon eller e-post.</p>
+                        </div>
+                    </article>
+
+                    <article class="avoid-page-break item" vitec-if="Model.selger.idnummer.ToString().Length == 12">
+                        <h2>Informasjon om angrerett</h2>
+
+                        <p>En forbruker som har inng&aring;tt oppdragsavtale med eiendomsmegler utenfor eiendomsmeglers kontor, kan uten begrunnelse si opp avtalen. Fristen for &aring; benytte angrerett er 14 dager fra dagen etter avtalen ble signert av oppdragsgiver og ansvarlig megler jf. angrerettloven &sect;&sect; 20 og 21.</p>
+
+                        <p>Angrerett gjelder ikke etter at oppdraget er fullf&oslash;rt, forutsatt at oppdragsgiveren uttrykkelig har samtykket til at leveringen av eiendomsmeglingsoppdraget starter f&oslash;r utl&oslash;pet av angrefristen p&aring; 14 dager, og har erkjent at det ikke er angrerett etter at tjenesten er fullf&oslash;rt.&nbsp;</p>
+
+                        <p>Oppdragsgiver ut&oslash;ver angrerett gjennom &aring; sende beskjed om dette innen 14 dager fra dagen etter oppdragsavtalen ble underskrevet av begge parter. Standardformular for &aring; ut&oslash;ve angrerett ligger som vedlegg til oppdragsavtalen. Det er ikke krav til at man fyller ut et angrerettskjema, men megler m&aring; f&aring; skriftlig beskjed om at man &oslash;nsker &aring; benytte angreretten.</p>
+
+                        <p>Oppdragsgiver som benytter seg av angreretten etter &aring; uttrykkelig ha anmodet eiendomsmeglingsforetaket om &aring; begynne p&aring; oppdraget f&oslash;r angrefristen er g&aring;tt ut, m&aring; betale eiendomsmegler et rimelig vederlag for den delen av tjenesten som er levert frem til tidspunkt for bruk av angreretten.&nbsp;</p>
+                    </article>
+
+                    <article class="avoid-page-break item" vitec-if="Model.selger.idnummer.ToString().Length == 12">
+                        <h2>F&oslash;rtidig oppstart av eiendomsmeglingstjenesten inkludert tilleggstjenester (eks. foto/styling mm.)</h2>
+
+                        <table>
+                            <tbody data-toggle="buttons">
+                                <tr>
+                                    <td colspan="4"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl008" type="radio" /></label></td>
+                                    <td colspan="96">Jeg &oslash;nsker at eiendomsmeglingsforetaket skal sette i gang arbeidet i henhold til oppdragsavtalen, herunder starte levering av tilknyttede avtaler, f&oslash;r angrefristen p&aring; 14 dager har utl&oslash;pt, og erkjenner at angreretten har g&aring;tt tapt n&aring;r tjenesten er levert.</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl008" type="radio" /></label></td>
+                                    <td colspan="96">Jeg &oslash;nsker IKKE at eiendomsmeglingsforetaket skal sette i gang arbeidet i henhold til oppdragsavtalen, herunder starte levering av tilknyttede avtaler, f&oslash;r angrefristen p&aring; 14 dager har utl&oslash;pt.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </article>
+
+                    <article class="item">
+                        <div class="avoid-page-break">
+                            <h2>Signaturer</h2>
+
+                            <p style="margin-top:12px">[[meglerkontor.poststed]], den [[dagensdato]]</p>
+
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="48" style="vertical-align:top"><strong>Oppdragsgiver</strong></td>
+                                        <td colspan="4">&nbsp;</td>
+                                        <td colspan="48"><strong>Oppdragstaker v/oppdragsansvarlig</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="48" style="padding-top:20px; vertical-align:top">
+                                            <table vitec-if="Model.selgere.Count &gt; 0">
+                                                <tbody vitec-foreach="selger in Model.selgere">
+                                                    <tr>
+                                                        <td colspan="100" style="border-bottom:solid 1px #000000">
+                                                            <p>&nbsp;</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="100" style="vertical-align:bottom">[[*selger.navn]]</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                        <td colspan="4">&nbsp;</td>
+                                        <td colspan="48" style="padding-top:20px; vertical-align:top">
+                                            <table>
+                                                <tbody>
+                                                    <tr>
+                                                        <td colspan="100" style="border-bottom:solid 1px #000000">
+                                                            <p>&nbsp;</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="100" style="vertical-align:bottom">[[operativmegler.navn]], [[operativmegler.tittel]]</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="avoid-page-break">
+                            <p>Iht. Hvitvaskingsreglene har oppdragstaker foretatt legitimasjonskontroll:</p>
+
+                            <table class="bordered-table">
+                                <thead>
+                                    <tr>
+                                        <th colspan="33"><strong>Navn i blokkbokstaver iht. leg</strong></th>
+                                        <th colspan="34"><strong>Legitimasjonstype</strong></th>
+                                        <th colspan="33"><strong>Legitimasjonsnr.</strong></th>
+                                    </tr>
+                                </thead>
+                                <tbody data-toggle="buttons">
+                                    <tr>
+                                        <td colspan="33" rowspan="3">&nbsp;</td>
+                                        <td colspan="17"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl009" type="radio" />Bankkort</label></td>
+                                        <td colspan="17"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl009" type="radio" />Firmaattest</label></td>
+                                        <td colspan="33" rowspan="3">&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="17"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl009" type="radio" />F&oslash;rerkort</label></td>
+                                        <td colspan="17"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl009" type="radio" />Annet</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="17"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl009" type="radio" />Pass</label></td>
+                                        <td colspan="17">&nbsp;</td>
+                                    </tr>
+                                </tbody>
+                                <tbody data-toggle="buttons">
+                                    <tr>
+                                        <td colspan="33" rowspan="3">&nbsp;</td>
+                                        <td colspan="17"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl010" type="radio" />Bankkort</label></td>
+                                        <td colspan="17"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl010" type="radio" />Firmaattest</label></td>
+                                        <td colspan="33" rowspan="3">&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="17"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl010" type="radio" />F&oslash;rerkort</label></td>
+                                        <td colspan="17"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl010" type="radio" />Annet</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="17"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl010" type="radio" />Pass</label></td>
+                                        <td colspan="17">&nbsp;</td>
+                                    </tr>
+                                </tbody>
+                                <tbody data-toggle="buttons">
+                                    <tr>
+                                        <td colspan="33" rowspan="3">&nbsp;</td>
+                                        <td colspan="17"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl011" type="radio" />Bankkort</label></td>
+                                        <td colspan="17"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl011" type="radio" />Firmaattest</label></td>
+                                        <td colspan="33" rowspan="3">&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="17"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl011" type="radio" />F&oslash;rerkort</label></td>
+                                        <td colspan="17"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl011" type="radio" />Annet</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="17"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl011" type="radio" />Pass</label></td>
+                                        <td colspan="17">&nbsp;</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </article>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table style="page-break-before:always" vitec-if="Model.selger.idnummer.ToString().Length == 12">
+        <tbody>
+            <tr>
+                <td colspan="100" style="text-align:right"><strong>Oppdragsnr:</strong> [[oppdrag.nr]]</td>
+            </tr>
+            <tr>
+                <td colspan="100" style="line-height:2em">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="100">
+                    <h1>Angreskjema</h1>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="100" style="text-align:center">ved kj&oslash;p av ikke finansielle tjenester</td>
+            </tr>
+            <tr>
+                <td colspan="100">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="100" style="text-align:center"><strong>Fyll ut og returner dette skjemaet dersom du &oslash;nsker &aring; g&aring; fra avtalen</strong></td>
+            </tr>
+            <tr>
+                <td colspan="100" style="line-height:2em">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="100">
+                    <strong>Utfylt skjema sendes til:</strong><br />
+                    [[meglerkontor.navn]]<br />
+                    [[meglerkontor.adresse]]<br />
+                    [[meglerkontor.postnr]] [[meglerkontor.poststed]]<br />
+                    E-post: [[meglerkontor.epost]]
+                </td>
+            </tr>
+            <tr>
+                <td colspan="100">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="100">Jeg/vi underretter herved om at jeg/vi &oslash;nsker &aring; g&aring; fra min/v&aring;r avtale om kj&oslash;p av f&oslash;lgende:</td>
+            </tr>
+            <tr>
+                <td colspan="100">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td colspan="4"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+                                <td colspan="96">tjenester (spesifiser p&aring; linjene nedenfor)</td>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr>
+                                <td colspan="100" style="border-bottom:1px solid black; line-height:1cm">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td colspan="100" style="border-bottom:1px solid black; line-height:1cm">&nbsp;</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="100">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="100">Avtalen ble inng&aring;tt den [[dagensdato]]</td>
+            </tr>
+            <tr>
+                <td colspan="100">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="30"><strong>Forbruker<span vitec-if="Model.selgere.Count == 1">ens</span><span vitec-if="Model.selgere.Count &gt; 1">nes</span> navn:</strong></td>
+                <td colspan="70"><span vitec-foreach="selger in Model.selgere"> <span class="seller">[[*selger.navnutenfullmektigogkontaktperson]]<span class="separator">, </span> </span> </span></td>
+            </tr>
+            <tr>
+                <td colspan="30"><strong>Forbruker<span vitec-if="Model.selgere.Count == 1">ens</span><span vitec-if="Model.selgere.Count &gt; 1">nes</span> adresse:</strong></td>
+                <td colspan="70">[[selger.hovedgatenavnognr]], [[selger.hovedpostnr]] [[selger.hovedpoststed]]</td>
+            </tr>
+            <tr>
+                <td colspan="100" style="line-height:2em">
+                    <table style="width:45%">
+                        <tbody>
+                            <tr class="no-border">
+                                <td colspan="100" style="border-bottom:solid 1px #000000">
+                                    <br />
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class="no-border">
+                                <td colspan="100">Sted / dato</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table>
+                        <tbody>
+                            <tr class="no-border">
+                                <td colspan="100" style="vertical-align:top"><span vitec-foreach="selger in Model.selgere"> <span class="sign-field">[[*selger.navn]]</span> </span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,114 @@
+<!-- Aktiverer visuell hjelp med en html-kommentar: --><!--VITEC-VISUAL-HELP-ENABLED--><!-- "Visuelle hint" / rosa sett-inn-felt:  -->
+<style type="text/css">
+    .vitec-data-missing {
+        display: inline-table;
+    }
+
+        .vitec-data-missing > span {
+            display: table-cell;
+        }
+
+            .vitec-data-missing > span:empty {
+                font-size: inherit !important;
+                line-height: inherit !important;
+                display: inline-block;
+                background-color: lightpink;
+                min-width: 2em !important;
+                height: inherit !important;
+                text-align: center;
+            }
+
+                .vitec-data-missing > span:empty:before {
+                    content: attr(data-label);
+                }
+
+                .vitec-data-missing > span:empty:hover {
+                    background-color: #fff;
+                    cursor: pointer;
+                }
+</style>
+<div id="vitecTemplate">
+    <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+    <style type="text/css">
+        #vitecTemplate table {
+            border-collapse: collapse;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        #vitecTemplate ul {
+            list-style-type: none;
+        }
+
+        #vitecTemplate table td[data-label] {
+            padding: 16px 2px 4px 2px;
+            position: relative;
+        }
+
+        #vitecTemplate table td[data-choice] {
+            padding: 4px 2px 16px 2px;
+            position: relative;
+        }
+
+        /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+        span.insert:empty {
+            font-size: inherit !important;
+            line-height: inherit !important;
+            display: inline-block;
+            background-color: lightpink;
+            min-width: 2em !important;
+            height: .7em !important;
+            text-align: center;
+        }
+
+            span.insert:empty:before {
+                content: attr(data-label);
+            }
+
+            span.insert:empty:hover {
+                background-color: #fff;
+                cursor: pointer;
+            }
+
+        .insert-table {
+            display: inline-table;
+        }
+
+            .insert-table > span,
+            .insert-table > span.insert {
+                display: table-cell;
+            }
+
+        #vitecTemplate ul {
+            list-style-type: none;
+        }
+    </style>
+    <table>
+        <tbody>
+            <tr>
+                <td colspan="100">
+                    <div vitec-template="resource: Mottaker">&nbsp;</div>
+
+                    <p><strong>Innfrielse av restanse kommunale avgifter p&aring; [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+                    <p>Vi viser til tidligere korrespondanse i saken, samt tidligere mottatt restanseinformasjon.</p>
+
+                    <p>Overtakelsen fant sted den [[kontrakt.overtagelse.dato]], og partene &oslash;nsker avregning av kommunale avgifter&nbsp;for innev&aelig;rende &aring;r.&nbsp;</p>
+
+                    <p>Vi bekrefter med dette p&aring; vegne av:</p>
+
+                    <ul vitec-foreach="selger in Model.selgere">
+                        <li>[[*selger.navnutenfullmektigogkontaktperson]] - [[*selger.ledetekst_fdato_orgnr]]: [[*selger.fdato_orgnr]]</li>
+                    </ul>
+
+                    <p>at det i dag er overf&oslash;rt <strong>kr $.UD([[postering.belop]])</strong> til deres konto <strong>[[postering.utbetalingskontonr]]</strong> som betaling for skyldige kommunale avgifter.</p>
+
+                    <p>Ta gjerne kontakt dersom noe er uklart.</p>
+
+                    <div vitec-template="resource: Avsender">&nbsp;</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

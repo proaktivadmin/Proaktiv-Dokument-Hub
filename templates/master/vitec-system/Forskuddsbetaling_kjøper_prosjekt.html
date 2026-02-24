@@ -1,0 +1,69 @@
+<div id="vitecTemplate">
+	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+	<style type="text/css">
+		/* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+		span.insert:empty {
+			font-size: inherit !important;
+			line-height: inherit !important;
+			display: inline-block;
+			background-color: lightpink;
+			min-width: 2em !important;
+			height: .7em !important;
+			text-align: center;
+		}
+
+			span.insert:empty:before {
+				content: attr(data-label);
+			}
+
+			span.insert:empty:hover {
+				background-color: #fff;
+				cursor: pointer;
+			}
+
+		.insert-table {
+			display: inline-table;
+		}
+
+			.insert-table > span,
+			.insert-table > span.insert {
+				display: table-cell;
+			}
+
+		#vitecTemplate table {
+			width: 100%;
+			table-layout: fixed;
+		}
+
+		#vitecTemplate ul {
+			list-style-type: none;
+			margin-left: 0;
+		}
+	</style>
+	<table>
+		<tbody>
+			<tr>
+				<td>
+					<div vitec-template="resource: Mottaker">&nbsp;</div>
+
+					<p><strong>Deloppgj&oslash;r ved kj&oslash;p av [[eiendom.alfanavn]] i [[eiendom.prosjektnavn]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+					<p>Vi viser til signert kj&oslash;pekontrakt og ber herved om innbetaling av <span vitec-if="Model.eiendom.eieform != &quot;Andel&quot;">vederlag for tomten </span><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">forskudd </span>p&aring;</p>
+
+					<ul>
+						<li><strong>kr <span vitec-if="Model.eiendom.eieform != &quot;Andel&quot;">$.UD([[kontrakt.avgiftsgrunnlag]])</span><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">$.CALC(UD:[[kontrakt.kjopesum]]*0,10)</span></strong></li>
+					</ul>
+
+					<p>Innbetalingen skal foretas til meglers klientkonto nummer <strong>[[kontrakt.klientkonto]]</strong> med <strong>KID [[kontrakt.kid]]</strong>.</p>
+
+					<p>Vi ber om at innbetalingen skjer snarest, og senest innen 14 dager.</p>
+
+					<p>Vedlagt f&oslash;lger kopi av 3 % garanti som utvides til 5 % etter overtakelse, ref. byggekontraktens punkt 7. Original vil bli utsendt sammen med tinglyst <span vitec-if="Model.eiendom.eieform != &quot;Andel&quot;">skj&oslash;te</span><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">hjemmelsdokument</span>.</p>
+
+					<div vitec-template="resource: Avsender">&nbsp;</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

@@ -1,0 +1,133 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate table {
+			width: 100%;
+			table-layout: fixed;
+			border-collapse: collapse;
+			box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+		}
+
+		#vitecTemplate table tr.no-border td {
+			border: none;
+			height: auto;
+		}
+
+		#vitecTemplate .sign-field {
+			display: inline-block;
+			width: 48%;
+			margin-top: 1cm;
+			margin-right: 10px;
+			border-top: solid 1px #000;
+			vertical-align: top;
+		}
+
+		#vitecTemplate .witness-table {
+			table-layout: fixed;
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+		#vitecTemplate .witness-table td {
+			border: solid 1px #000;
+			height: 30px;
+			vertical-align: middle;
+			padding: 2px;
+		}
+
+		#vitecTemplate .witness-table td.header-cell {
+			background-color: rgb(231, 230, 230);
+			text-align: center;
+		}
+
+		#vitecTemplate td[data-label]:before {
+			content: attr(data-label);
+			text-align: left;
+			color: #333;
+			font-size: 7pt;
+			line-height: 8pt;
+			text-transform: uppercase;
+			display: block;
+			position: absolute;
+			top: 1px;
+		}
+
+		#vitecTemplate td[data-label] {
+			padding: 14px 2px 2px 2px;
+			position: relative;
+		}
+</style>
+<table style="table-layout:fixed; width:100%">
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<p style="text-align:right">Oppdragsnr: [[oppdrag.nr]]</p>
+
+			<p style="text-align:center"><span style="font-size:14pt"> <strong>FULLMAKT</strong> </span></p>
+
+			<p>Undertegnede</p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="37"><strong>Navn</strong></td>
+			<td colspan="45"><strong>Adresse</strong></td>
+			<td colspan="18"><strong>[[selger.ledetekst_fdato_orgnr]]</strong></td>
+		</tr>
+	</tbody>
+	<tbody vitec-foreach="selger in Model.selgere" vitec-if="Model.selgere.Count &gt; 0">
+		<tr>
+			<td colspan="37">[[*selger.navn]]</td>
+			<td colspan="45">[[*selger.gatenavnognr]], [[*selger.postnr]] [[*selger.poststed]]</td>
+			<td colspan="18">[[*selger.fdato_orgnr]]</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>som eier av:</p>
+
+<p><strong>[[eiendom.gatenavnognr]], [[eiendom.postnr]] [[eiendom.poststed]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+<p>gir herved fullmakt til</p>
+
+<p><strong>[[meglerkontor.navn]], [[meglerkontor.adresse]], [[meglerkontor.postnr]] [[meglerkontor.poststed]]</strong></p>
+
+<p>&aring; innhente f&oslash;lgende opplysninger om eiendommen fra offentlige etat(er) i den kommune eiendommen ligger:</p>
+
+<table style="table-layout:fixed; width:100%">
+	<tbody>
+		<tr>
+			<td colspan="5">&nbsp;</td>
+			<td colspan="25">1. Ligningskontor:</td>
+			<td colspan="70">Formuesverdien/Skattetakst</td>
+		</tr>
+		<tr>
+			<td colspan="5">&nbsp;</td>
+			<td colspan="25">2. Teknisk etat:</td>
+			<td colspan="70">Reguleringsplaner/brukstillatelse/ferdigattest, m.v.</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>&nbsp;</p>
+
+<table style="table-layout:fixed; width:48%">
+	<tbody>
+		<tr class="no-border">
+			<td colspan="100" style="border-bottom:solid 1px #000000"><br />
+			&nbsp;</td>
+		</tr>
+		<tr class="no-border">
+			<td colspan="100">Sted / dato</td>
+		</tr>
+	</tbody>
+</table>
+
+<div style="page-break-inside:avoid">
+<table>
+	<tbody>
+		<tr class="no-border">
+			<td colspan="100" style="vertical-align:top"><span vitec-foreach="selger in Model.selgere"> <span class="sign-field">[[*selger.navn]]</span> </span></td>
+		</tr>
+	</tbody>
+</table>
+</div>
+</div>

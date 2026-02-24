@@ -1,0 +1,225 @@
+<!--VITEC-VISUAL-HELP-ENABLED-->
+<div id="vitecTemplate">
+    <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+    <style type="text/css">
+        .vitec-data-missing {
+            display: inline-table;
+        }
+
+            .vitec-data-missing > span {
+                display: table-cell;
+            }
+
+                .vitec-data-missing > span:empty {
+                    font-size: inherit !important;
+                    line-height: inherit !important;
+                    display: inline-block;
+                    background-color: lightpink;
+                    min-width: 2em !important;
+                    height: inherit !important;
+                    text-align: center;
+                }
+
+                    .vitec-data-missing > span:empty:before {
+                        content: attr(data-label);
+                    }
+
+                    .vitec-data-missing > span:empty:hover {
+                        background-color: #fff;
+                        cursor: pointer;
+                    }
+    </style>
+    <style type="text/css">
+        #vitecTemplate h1 {
+            font-size: 12pt;
+            margin: 3cm 0 1cm 0;
+            padding: 0;
+            border-bottom: solid 1px #000;
+        }
+
+        #vitecTemplate h2 {
+            font-size: 12pt;
+        }
+
+        #vitecTemplate h1 span {
+            background-color: #000;
+            text-transform: uppercase;
+            color: #fff;
+            display: inline-block;
+            padding: 5px 1cm;
+        }
+
+        #vitecTemplate h2 {
+            text-align: center;
+        }
+
+        #vitecTemplate table {
+            table-layout: fixed;
+            width: 100%;
+        }
+
+            #vitecTemplate table td {
+                vertical-align: top;
+            }
+
+        #vitecTemplate .text-center {
+            text-align: center;
+        }
+
+        #vitecTemplate .text-right {
+            text-align: right;
+        }
+
+        #vitecTemplate .first-page-table {
+            page-break-after: always;
+            font-family: Arial, sans-serif;
+            font-size: 12pt;
+            color: #000;
+        }
+
+            #vitecTemplate .first-page-table td {
+                padding: 10px 0;
+            }
+
+        #vitecTemplate .bordered-table {
+            border-collapse: collapse;
+        }
+
+            #vitecTemplate .bordered-table td {
+                padding: 2px;
+                border: solid 1px #000;
+                height: 26px;
+            }
+    </style>
+    <style type="text/css">
+        /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+        span.insert:empty {
+            font-size: inherit !important;
+            line-height: inherit !important;
+            display: inline-block;
+            background-color: lightpink;
+            min-width: 2em !important;
+            height: .7em !important;
+            text-align: center;
+        }
+
+            span.insert:empty:before {
+                content: attr(data-label);
+            }
+
+            span.insert:empty:hover {
+                background-color: #fff;
+                cursor: pointer;
+            }
+
+        .insert-table {
+            display: inline-table;
+        }
+
+            .insert-table > span,
+            .insert-table > span.insert {
+                display: table-cell;
+            }
+    </style>
+    <h1><span>Kjennelse</span></h1>
+
+    <table class="first-page-table">
+        <tbody>
+            <tr>
+                <td colspan="20"><strong>Avsagt:</strong></td>
+                <td colspan="80"><span class="insert-table"><span class="insert" data-label="Dato kjennelsen er avsagt"></span></span></td>
+            </tr>
+            <tr>
+                <td colspan="20"><strong>Sak nr.:</strong></td>
+                <td colspan="80"><span class="insert-table"><span class="insert" data-label="Saksnummer fra rettsinstans">[[tvangssalgrefnr]]</span></span></td>
+            </tr>
+            <tr>
+                <td colspan="20"><strong>Dommer:</strong></td>
+                <td colspan="80"><span class="insert-table"><span class="insert" data-label="Navn på dommer"></span></span></td>
+            </tr>
+            <tr>
+                <td colspan="20"><strong>Saken gjelder:</strong></td>
+                <td colspan="80"><span>Stadfestelse av bud etter tvangssalg ved medhjelper jf. tvangsfullbyrdelsesloven &sect; 11-30</span></td>
+            </tr>
+            <tr contenteditable="false">
+                <td colspan="100">
+                    <hr style="margin: 2cm 0 1cm 0; border-top: solid 1px #000;" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="50">&nbsp;</td>
+                <td colspan="50">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="100">
+                    <table>
+                        <tbody vitec-foreach="saksoker in Model.saksokere">
+                            <tr>
+                                <td colspan="50">[[*saksoker.navnutenfullmektigogkontaktperson]]</td>
+                                <td colspan="50"><span class="insert-table"><span class="insert" data-label="Evt. prosessfullmektig"></span></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="100" contenteditable="false"><strong>mot</strong></td>
+            </tr>
+            <tr>
+                <td colspan="100">
+                    <table>
+                        <tbody vitec-foreach="saksokte in Model.saksokteliste">
+                            <tr>
+                                <td colspan="50">[[*saksokte.navnutenfullmektigogkontaktperson]]</td>
+                                <td colspan="50"><span class="insert-table"><span class="insert" data-label="Evt. prosessfullmektig"></span></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table style="page-break-after:always">
+        <tbody>
+            <tr>
+                <td>
+                    <h2>KJENNELSE</h2>
+
+                    <p>Etter begj&aelig;ring av <span class="insert-table"><span class="insert" data-label="Dato"></span></span> fra ovennevte prosessfullmektig(e) besluttet <span class="insert-table"><span class="insert" data-label="Saksnummer fra rettsinstans">[[tvangssalgrefnr]]</span></span> tvangssalg av [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune jf. tvangsfullbyrdelsesloven &sect; 11-9, og at salget skal gjennomf&oslash;res ved bruk av medhjelper, jf. tvangsfullbyrdelsesloven &sect; 11-12. <span style="display:block" vitec-if="Model.hjemmelshaver.navn != &quot;Mangler data&quot;">Hjemmelshaver er [[hjemmelshaver.navn]].</span></p>
+
+                    <p>Den oppnevnte medhjelperen, [[meglerkontor.navn]], har utbudt salgsobjektet for salg. H&oslash;yeste bud er avgitt av[[hoyestebud.budgiver.navn]] med kr $.UD([[hoyestebud.belop]]). Budgiveren er bundet til [[hoyestebud.akseptfrist.dato]] [[hoyestebud.akseptfrist.klokkeslett]]. Det er framlagt finansieringsplan for budet, jf. tvangsfullbyrdelsesloven &sect; 11-25 annet ledd.</p>
+
+                    <p>Ved brev av <span class="insert-table"><span class="insert" data-label="Dato"></span></span> til retten har medhjelperen meddelt at [[saksoker.prosessfullmektignavn]] har begj&aelig;rt stadfestet bud stort kr $.UD([[hoyestebud.belop]]) avgitt av [[hoyestebud.budgiver.navn]]. Den skriftlige meldingen av <span class="insert-table"><span class="insert" data-label="Dato"></span></span> er sendt partene, kjente rettighetshavere og budgiveren, med opplysninger og vedlegg som nevnt i &sect; 11-29 a &ndash; f. Det g&aring;r videre fram av meddelelsen at innsigelse m&aring; v&aelig;re kommet fram til retten innen to uker fra avsendelsen av underretningen.</p>
+
+                    <p>Fristen er n&aring; utl&oslash;pt uten at retten har mottatt innsigelser.</p>
+
+                    <p>Det foreligger en prisvurdering av [[meglerkontor.navn]] over salgsobjektet av [[besiktigelse.dato]], hvor verdien er ansl&aring;tt til kr $.UD([[eiendom.pris]]).</p>
+
+                    <p><strong>Rettens vurdering</strong></p>
+
+                    <p>Den omstendighet at salget er et tvangssalg antas &aring; ha en viss prisdempende effekt p&aring; st&oslash;rrelsen av budene, s&aelig;rlig ved at retten til &aring; reklamere er begrenset, at budenes bindingstid er lengre enn ved frivillig salg, og at det hefter noe usikkerhet ved tidspunktet for tiltredelsen. Retten anser det, ut fra det som er kommet fram i saken, ikke sannsynlig at fornyede salgsfors&oslash;k vil lede til st&oslash;rre utbytte, jf. tvangsfullbyrdelsesloven &sect; 11-30 bokstav a.</p>
+
+                    <p>Budet dekker samtlige heftelser med bedre prioritet enn saks&oslash;kers krav, jf. tvangsfullbyrdelsesloven &sect; 11-30 andre ledd bokstav b. Det foreligger heller ikke andre omstendigheter som hindrer stadfestelse, jf. &sect; 11- 30 annet ledd bokstav c-f, og budet blir &aring; stadfeste.</p>
+
+                    <div style="page-break-inside:avoid">
+                        <h2>SLUTNING</h2>
+
+                        <p>Bud p&aring; kr $.UD([[hoyestebud.belop]]), avgitt av [[hoyestebud.budgiver.navn]] ved tvangssalg av [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune stadfestes.</p>
+
+                        <p class="text-center">Retten hevet</p>
+
+                        <p class="text-center" style="margin-bottom:0.5cm; margin-top:1.5cm">Dommer</p>
+
+                        <p>Avgj&oslash;relsen kan ankes til lagmannsretten. Anke m&aring; erkl&aelig;res direkte for <span class="insert-table"><span class="insert" data-label="Rettsinstans"></span></span> tingrett innen &eacute;n m&aring;ned fra kjennelsen ble avsagt.</p>
+
+                        <p>Retten beslutter i medhold av domstolloven &sect; 140 tredje ledd at ankefristen l&oslash;per ogs&aring; i rettsferiene. Dette gj&oslash;res for &aring; unng&aring; fristforlengelser som ikke harmonerer med de s&aelig;rskilte frister som er fastsatt i tvangsfullbyrdelsesloven for prosessen ved tvangssalg. Hensynet til partene ansees ikke &aring; tale imot en slik avgj&oslash;relse. (Rettsferiene er f.o.m. l&oslash;rdag f&oslash;r palmes&oslash;ndag t.o.m. andre p&aring;skedag, f.o.m. 1. juli t.o.m. 15. august og f.o.m. 24. desember t.o.m. 3. januar.)</p>
+
+                        <p>Den som anker, m&aring; betale ankegebyr p&aring; kr <span class="insert-table"><span class="insert" data-label="Ankebeløp"></span></span></p>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

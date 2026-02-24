@@ -123,9 +123,11 @@ You are a logic specialist — you determine WHAT conditions to use and WHERE.
 
 1. Format specification: scripts/_analysis/FORMAT_logic.md (read FIRST)
 2. Source document: {source_file_path}
-3. Conditional logic rules: .planning/vitec-html-ruleset/03-conditional-logic.md
-4. Property conditionals: .planning/vitec-html-ruleset/10-property-conditionals.md
-5. Deep analysis reference: .planning/phases/11-template-suite/VITEC-IF-DEEP-ANALYSIS.md
+3. Deep analysis reference: .planning/phases/11-template-suite/VITEC-IF-DEEP-ANALYSIS.md (PRIMARY — 366 conditions analyzed)
+4. Builder lessons: .agents/skills/vitec-template-builder/LESSONS.md (MF4-MF6 for conditional patterns)
+5. Old ruleset (supplementary): .planning/vitec-html-ruleset/03-conditional-logic.md, 10-property-conditionals.md
+   NOTE: Old ruleset was based on 133 Proaktiv-customized templates, not official Vitec standard.
+   When it conflicts with the VITEC-IF Deep Analysis or reference templates, the latter win.
 
 ## Output
 
@@ -174,16 +176,21 @@ already done. Your job is to assemble the pieces into a working template.
 
 {spec_sheet}
 
-## Files to Read
+## Files to Read (IN THIS ORDER)
 
-1. Structure analysis: scripts/_analysis/{template_name}/structure.md
-2. Field mapping: scripts/_analysis/{template_name}/fields.md
-3. Logic mapping: scripts/_analysis/{template_name}/logic.md
-4. Builder skill (patterns + CSS): .agents/skills/vitec-template-builder/SKILL.md
-5. Source document: {source_file_path} (for verbatim legal text only)
+Builder knowledge base (read FIRST — contains lessons from 11 past builds):
+1. Lessons learned: .agents/skills/vitec-template-builder/LESSONS.md
+2. Pattern library: .agents/skills/vitec-template-builder/PATTERNS.md
+3. Builder skill: .agents/skills/vitec-template-builder/SKILL.md
+
+Analysis outputs:
+4. Structure analysis: scripts/_analysis/{template_name}/structure.md
+5. Field mapping: scripts/_analysis/{template_name}/fields.md
+6. Logic mapping: scripts/_analysis/{template_name}/logic.md
+7. Source document: {source_file_path} (for verbatim legal text only)
 
 For CSS blocks and pattern details, also read:
-6. .planning/phases/11-template-suite/PRODUCTION-TEMPLATE-PIPELINE.md — Sections 3 and 7
+8. .planning/phases/11-template-suite/PRODUCTION-TEMPLATE-PIPELINE.md — Sections 3 and 7
 
 ## Output
 
@@ -192,20 +199,23 @@ For CSS blocks and pattern details, also read:
 
 ## Construction Process
 
-1. Read all three analysis files to understand what to build
-2. Read SKILL.md for the template shell, CSS block, and pattern library
-3. Create the build script with:
-   - Template shell (from SKILL.md)
-   - Full CSS block including counters, checkboxes, insert fields (from pipeline Section 3+7)
+1. Read LESSONS.md first — apply every relevant lesson proactively
+2. Read PATTERNS.md — use these patterns verbatim (copy-paste, don't improvise)
+3. Read all three analysis files to understand what to build
+4. Create the build script with:
+   - Template shell (from PATTERNS.md section 1)
+   - Full CSS block (from PATTERNS.md sections 2-4)
    - Entity encoding as final post-processing step
-4. For each section identified in structure.md:
+5. For each section identified in structure.md:
    - Use the heading and type from structure analysis
    - Apply the field mappings from fields.md
    - Apply the conditional logic from logic.md
    - Apply page break recommendations from structure.md
    - Copy legal text VERBATIM from the source document
-5. Run the build script to generate the production HTML
-6. Run validation: python scripts/tools/validate_vitec_template.py {output_path} --tier {tier}
+6. Run the build script to generate the production HTML
+7. Run post-processor: python scripts/tools/post_process_template.py {output_path} --in-place
+8. Fix any post-processor warnings
+9. Run validation: python scripts/tools/validate_vitec_template.py {output_path} --tier {tier}
 7. Fix any validation failures and re-run until all checks PASS
 
 ## Hard Rules

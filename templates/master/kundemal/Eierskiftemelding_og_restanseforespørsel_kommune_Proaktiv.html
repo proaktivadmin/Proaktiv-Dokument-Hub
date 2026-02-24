@@ -1,0 +1,117 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate table {
+            border-collapse: collapse;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+            #vitecTemplate table td[data-label] {
+                padding: 16px 2px 4px 2px;
+                position: relative;
+            }
+
+            #vitecTemplate table td[data-choice] {
+                padding: 4px 2px 16px 2px;
+                position: relative;
+            }
+
+        /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+        span.insert:empty {
+            font-size: inherit !important;
+            line-height: inherit !important;
+            display: inline-block;
+            background-color: lightpink;
+            min-width: 2em !important;
+            height: .7em !important;
+            text-align: center;
+        }
+
+            span.insert:empty:before {
+                content: attr(data-label);
+            }
+
+            span.insert:empty:hover {
+                background-color: #fff;
+                cursor: pointer;
+            }
+
+        .insert-table {
+            display: inline-table;
+        }
+
+            .insert-table > span,
+            .insert-table > span.insert {
+                display: table-cell;
+            }
+</style>
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<div vitec-template="resource: Mottaker">&nbsp;</div>
+
+			<p><strong>Melding om eierskifte og restanseforesp&oslash;rsel p&aring; [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+			<p>Vi viser til tidligere korrespondanse vedr. salg av ovennevnte eiendom, og vil med dette orientere om at eiendommen er solgt fra</p>
+
+			<table style="table-layout:fixed; width:100%" vitec-if="Model.selgere.Count &gt; 0">
+				<thead>
+					<tr>
+						<th colspan="37"><strong>Selger<span vitec-if="Model.selgere.Count &gt; 1">e</span></strong></th>
+						<th colspan="45"><strong>Adresse/Kontaktinfo</strong></th>
+						<th colspan="18">[[selger.ledetekst_fdato_orgnr]]</th>
+					</tr>
+				</thead>
+				<tbody vitec-foreach="selger in Model.selgere">
+					<tr>
+						<td colspan="37" rowspan="2">[[*selger.navnutenfullmektigogkontaktperson]]</td>
+						<td colspan="45">[[*selger.gatenavnognr]], [[*selger.postnr]] [[*selger.poststed]]</td>
+						<td colspan="18">[[*selger.fdato_orgnr]]</td>
+					</tr>
+					<tr>
+						<td colspan="63"><span vitec-if="selger.tlf != &quot;Mangler data&quot;">Tlf: [[*selger.tlf]]</span> <span vitec-if="(selger.tlf != &quot;Mangler data&quot; &amp;&amp; selger.emailadresse != &quot;&quot;)"> / </span> <span vitec-if="selger.emailadresse != &quot;&quot;">E-post: [[*selger.emailadresse]]</span></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>til</p>
+
+			<table style="table-layout:fixed; width:100%" vitec-if="Model.kjopere.Count &gt; 0">
+				<thead>
+					<tr>
+						<th colspan="37"><strong>Kj&oslash;per<span vitec-if="Model.kjopere.Count &gt; 1">e</span></strong></th>
+						<th colspan="45"><strong>Adresse/Kontaktinfo</strong></th>
+						<th colspan="18">[[kjoper.ledetekst_fdato_orgnr]]</th>
+					</tr>
+				</thead>
+				<tbody vitec-foreach="kjoper in Model.kjopere">
+					<tr>
+						<td colspan="37" rowspan="2">[[*kjoper.navnutenfullmektigogkontaktperson]]</td>
+						<td colspan="45">[[*kjoper.gatenavnognr]],&nbsp;[[*kjoper.postnr]]&nbsp;[[*kjoper.poststed]]</td>
+						<td colspan="18">[[*kjoper.fdato_orgnr]]</td>
+					</tr>
+					<tr>
+						<td colspan="63"><span vitec-if="kjoper.tlf != &quot;Mangler data&quot;">Tlf: [[*kjoper.tlf]]</span> <span vitec-if="(kjoper.tlf != &quot;Mangler data&quot; &amp;&amp; kjoper.emailadresse != &quot;&quot;)"> / </span> <span vitec-if="kjoper.emailadresse != &quot;&quot;">E-post: [[*kjoper.emailadresse]]</span></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>Overtakelsen fant sted den <strong>[[kontrakt.overtagelse.dato]].</strong></p>
+
+			<p>Selgers nye adresse er: <span class="insert-table"><span class="insert" data-label="Ny adresse"></span></span>.</p>
+
+			<p>Vi ber om at ovennevnte eierskifte registreres.</p>
+
+			<p>Vi skal n&aring; foreta oppgj&oslash;r p&aring; eiendommen, og ber om &aring; f&aring; oppgitt om det foreligger restanser p&aring; de kommunale avgiftene og evt. til hvilket kontonummer vi skal foreta betalingen til.</p>
+
+			<p>Opplysningene bes returnert snarest til [[avsender.epost]].</p>
+
+			<p>P&aring; forh&aring;nd takk!</p>
+
+			<div vitec-template="resource: Avsender">&nbsp;</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>

@@ -1,0 +1,758 @@
+<div id="vitecTemplate">
+    <style type="text/css">
+        #vitecTemplate .info-box {
+            background-color: #c1e5f2;
+            border: solid 1px #000000;
+            font-size: 10pt;
+            line-height: 12pt;
+            padding: 3px;
+        }
+
+        #vitecTemplate .small-header-text {
+            font-family: Arial, sans-serif;
+            font-size: 8pt;
+            font-weight: normal;
+        }
+
+        #vitecTemplate p {
+            font-family: Arial, sans-serif;
+            font-size: 9pt;
+            line-height: 11pt;
+            margin: 0 0 1em 0;
+        }
+
+        #vitecTemplate .table-header {
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            font-size: 9pt;
+            line-height: 13pt;
+            margin-top: .5cm;
+        }
+
+        #vitecTemplate p.small {
+            font-family: Arial, sans-serif;
+            font-size: 8.6pt;
+            line-height: 10.6pt;
+            padding: 0;
+            margin: 0 0 1em 0;
+        }
+
+        #vitecTemplate p.x-small { /* side 3 & 4*/
+            font-family: Arial, sans-serif;
+            font-size: 8pt;
+            line-height: 11pt;
+            padding: 0;
+            margin: 0 0 1em 0;
+        }
+
+        #vitecTemplate table {
+            font-family: Arial, sans-serif;
+            font-size: 9pt;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            #vitecTemplate table tr.sideborders {
+                border-left: solid 1px #000;
+                border-right: solid 1px #000;
+            }
+
+        #vitecTemplate td.masked-top-border[data-label]:before {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            padding: 2px 2px 0 2px;
+            border-top: solid 1px #000000;
+        }
+
+        #vitecTemplate tr td {
+            font-family: Arial, sans-serif;
+            font-size: 9pt;
+            line-height: 11pt;
+            border-top: solid 1px #000;
+            border-bottom: solid 1px #000;
+            padding: 3px;
+            height: 0.7cm;
+        }
+
+        #vitecTemplate tr.no-border td {
+            border: none;
+        }
+
+        #vitecTemplate label {
+            font-size: 8pt;
+        }
+
+        #vitecTemplate td.header-cell {
+            font-weight: bold;
+            font-size: 9.5pt;
+        }
+
+        #vitecTemplate td.info-cell {
+            background-color: #c1e5f2;
+        }
+
+        #vitecTemplate td.info-cell-light {
+            background-color: #eaf6fa;
+        }
+
+        #vitecTemplate td.border-left {
+            border-left: solid 1px #000;
+        }
+
+        #vitecTemplate td.border-right {
+            border-right: solid 1px #000;
+        }
+
+        #vitecTemplate td.text-center {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        #vitecTemplate .text-right {
+            text-align: right;
+        }
+
+        #vitecTemplate ul {
+            font-family: Arial, sans-serif;
+            font-size: 8pt;
+            line-height: 10pt;
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+        }
+
+        #vitecTemplate ol {
+            font-family: Arial, sans-serif;
+            font-size: 8pt;
+            line-height: 10pt;
+            margin: 0;
+            padding: 0;
+        }
+
+            #vitecTemplate ul li,
+            #vitecTemplate ol li {
+                padding-left: 0;
+                font-family: Arial, sans-serif;
+                font-size: 8pt;
+                line-height: 10pt;
+            }
+
+        #vitecTemplate .page-info {
+            font-family: Arial, sans-serif;
+            float: left;
+            font-size: 8pt;
+            width: 100%;
+            position: relative;
+        }
+
+        #vitecTemplate .version {
+            position: absolute;
+            font-size: 9px;
+            -webkit-transform: rotate(-90deg);
+            -webkit-transform-origin: top left;
+            transform: rotate(-90deg);
+            transform-origin: top left;
+            width: 200px;
+            margin-left: -20px;
+        }
+
+        #vitecTemplate td[data-label]:before {
+            content: attr(data-label);
+            text-align: left;
+            color: #333;
+            font-size: 7pt;
+            line-height: 8pt;
+            /*text-transform: uppercase;*/
+            display: block;
+            position: absolute;
+            top: 1px;
+        }
+
+
+        #vitecTemplate td[data-label] {
+            padding: 16px 2px 4px 2px;
+            position: relative;
+        }
+
+            #vitecTemplate td[data-label] > p {
+                margin-bottom: 0;
+            }
+        /* Malredigering: Hindre placeholder-plugin fra &aring; sprenge tabell-celler (matrikkel-rad)*/
+        .cke_widget_inline {
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        #vitecTemplate [contenteditable="false"] * {
+            user-select: none;
+        }
+
+        #vitecTemplate .main-table {
+            table-layout: fixed;
+            page-break-after: always;
+        }
+
+            #vitecTemplate .main-table:last-child {
+                page-break-after: avoid;
+            }
+    </style>
+    <style type="text/css">
+        /* Klikkbare sjekkbokser og radioknapper */
+        label.btn {
+            display: flex;
+            align-items: center;
+            text-transform: none;
+            white-space: normal;
+            padding: 0;
+            vertical-align: baseline;
+            outline: none;
+            font-size: inherit;
+        }
+
+            label.btn.inline-flex {
+                display: inline-flex;
+            }
+
+            label.btn:active,
+            label.btn.active {
+                box-shadow: none;
+                outline: none;
+            }
+
+        .svg-toggle { /* nullstiller bootstrap button-styling */
+            display: inline-block !important;
+            width: 18px;
+            height: 18px;
+            margin: 0 5px;
+            vertical-align: bottom;
+            padding: 0;
+            border: none;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none !important;
+            cursor: pointer;
+            white-space: normal;
+            text-align: left;
+            background-repeat: no-repeat;
+            background-size: 18px 18px;
+            background-position: center center;
+        }
+
+            .svg-toggle.checkbox {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+            }
+
+                .svg-toggle.checkbox.active,
+                .btn.active > .svg-toggle.checkbox {
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+                    box-shadow: none !important;
+                }
+
+            .svg-toggle.radio {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
+            }
+
+                .svg-toggle.radio.active,
+                .btn.active > .svg-toggle.radio {
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
+                    box-shadow: none !important;
+                }
+
+
+
+        /* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
+        #vitecTemplate [data-toggle="buttons"] input {
+            display: none;
+        }
+    </style>
+    <div vitec-foreach="kjoper in Model.kjopere">
+        <table class="main-table">
+            <tbody>
+                <tr contenteditable="false">
+                    <td colspan="30" style="border-style:none; border-width:0px; vertical-align:top">
+                        <svg enable-background="new 0 0 160.158 42.52" height="1.5cm" id="Layer_1" version="1.1" viewbox="0 0 160.158 42.52" width="5.65cm" x="0px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" y="0px"> <polygon fill="#3C1605" points="59.09,0.001 59.09,7.151 63.946,7.151 63.946,5.873 60.526,5.873 60.526,0.001 "></polygon> <g> <path d="M72.965,1.883c-0.557,0-1.055,0.226-1.387,0.624V1.981H70.28v5.171h1.328V4.261
+					c0-0.795,0.331-1.198,0.982-1.198c0.722,0,0.874,0.598,0.874,1.1v2.989h1.328V3.857C74.792,2.603,74.126,1.883,72.965,1.883" fill="#3C1605"></path> <path d="M79.106,2.43c-0.256-0.28-0.694-0.548-1.248-0.548c-1.301,0-2.142,0.83-2.142,2.113v1.222
+					c0,1.228,0.826,2.053,2.054,2.053c0.416,0,1.025-0.23,1.366-0.584v0.465h1.297V0h-1.327V2.43z M78.095,6.11
+					c-0.626,0-1.031-0.355-1.031-0.904v-1.25c0-0.688,0.511-0.933,0.991-0.933c0.629,0,1.051,0.367,1.051,0.913v1.241
+					C79.106,5.866,78.562,6.11,78.095,6.11" fill="#3C1605"></path> <path d="M84.242,1.882c-0.256,0-0.871,0.06-1.338,0.582V0h-1.326v7.151h1.277v-0.43
+					c0.256,0.28,0.695,0.549,1.248,0.549c1.092,0,2.191-0.654,2.191-2.113V3.936C86.294,2.708,85.47,1.882,84.242,1.882 M84.947,3.945
+					v1.252c0,0.687-0.512,0.932-0.99,0.932c-0.629,0-1.053-0.367-1.053-0.912V4.054c0-0.664,0.51-1.012,1.012-1.012
+					C84.542,3.042,84.947,3.396,84.947,3.945" fill="#3C1605"></path> <path d="M90.162,1.883c-0.578,0-1.258,0.355-1.602,0.818v-0.72h-1.297v5.171h1.326V4.508
+					c0-0.848,0.598-1.396,1.523-1.396c0.168,0,0.289,0,0.441,0.028l0.074,0.014V1.926L90.58,1.914
+					C90.445,1.883,90.296,1.883,90.162,1.883" fill="#3C1605"></path> <path d="M94.537,4.862c0,0.802-0.328,1.208-0.975,1.208c-0.729,0-0.883-0.598-0.883-1.1V1.981h-1.328v3.285
+					c0,1.242,0.688,1.984,1.836,1.984c0.566,0,1.053-0.225,1.387-0.635v0.536h1.289v-5.17h-1.326V4.862z" fill="#3C1605"></path> <polygon fill="#3C1605" points="101.675,1.981 100.072,1.981 98.32,3.959 98.31,0.063 98.31,0 96.982,0 96.982,7.152 98.31,7.152
+					98.31,5.517 98.896,4.887 100.205,7.121 100.222,7.152 101.72,7.152 99.804,3.954 	"></polygon> <path d="M105.003,4.012l-0.906-0.179c-0.51-0.093-0.756-0.15-0.756-0.409c0-0.451,0.527-0.5,0.754-0.5
+					c0.471,0,0.791,0.141,1.076,0.471l0.035,0.042l0.967-0.658l-0.037-0.051c-0.41-0.583-1.057-0.855-2.031-0.855
+					c-1.215,0-2.063,0.706-2.063,1.718c0,0.731,0.496,1.205,1.432,1.371l0.66,0.119c0.691,0.121,0.893,0.206,0.893,0.54
+					c0,0.411-0.48,0.558-0.932,0.558c-0.545,0-1.033-0.232-1.34-0.635l-0.037-0.05l-0.943,0.714l0.031,0.049
+					c0.453,0.665,1.229,1.003,2.309,1.003c1.139,0,2.289-0.611,2.289-1.778C106.404,4.711,105.906,4.189,105.003,4.012" fill="#3C1605"></path> <path d="M110.527,2.429c-0.258-0.279-0.695-0.547-1.25-0.547c-1.301,0-2.141,0.83-2.141,2.113v1.222
+					c0,1.228,0.826,2.053,2.053,2.053c0.418,0,1.025-0.23,1.367-0.583v0.464h1.297V0h-1.326V2.429z M109.515,6.11
+					c-0.627,0-1.033-0.355-1.033-0.904v-1.25c0-0.688,0.514-0.933,0.992-0.933c0.631,0,1.053,0.367,1.053,0.913v1.241
+					C110.527,5.866,109.98,6.11,109.515,6.11" fill="#3C1605"></path> <rect fill="#3C1605" height="1.407" width="1.328" x="112.994"></rect> <rect fill="#3C1605" height="5.171" width="1.328" x="112.994" y="1.981"></rect> <path d="M118.347,1.883c-0.58,0-1.26,0.356-1.605,0.819V1.981h-1.297v5.171h1.328V4.508
+					c0-0.848,0.598-1.396,1.523-1.396c0.168,0,0.289,0,0.441,0.028l0.074,0.014V1.926l-0.049-0.012
+					C118.628,1.883,118.472,1.883,118.347,1.883" fill="#3C1605"></path> <path d="M121.675,1.892c-1.395,0-2.367,0.934-2.367,2.271v0.985c0,1.466,1.209,2.122,2.406,2.122
+					c1.004,0,1.762-0.411,2.135-1.158l0.027-0.053l-1.029-0.59l-0.033,0.048c-0.26,0.378-0.67,0.623-1.041,0.623
+					c-0.539,0-1.119-0.298-1.119-0.952V4.974h3.262V3.936C123.916,2.532,122.755,1.892,121.675,1.892 M120.654,4.011V4.005
+					c0-0.717,0.527-0.972,1.021-0.972c0.441,0,0.912,0.237,0.912,0.903v0.075H120.654z" fill="#3C1605"></path> <polygon fill="#3C1605" points="129.566,1.981 127.964,1.981 126.21,3.959 126.201,0.063 126.201,0 124.875,0 124.875,7.152
+					126.201,7.152 126.201,5.517 126.789,4.887 128.095,7.121 128.113,7.152 129.609,7.152 127.695,3.954 	"></polygon> <path d="M131.953,0.454h-1.328v1.527h-0.68v1.082h0.68v2.834c0,0.835,0.551,1.333,1.473,1.333
+					c0.18,0,0.631-0.029,0.902-0.1l0.047-0.012V5.972l-0.072,0.012c-0.234,0.038-0.365,0.048-0.611,0.048
+					c-0.287,0-0.41-0.126-0.41-0.421V3.063h1.094V1.981h-1.094V0.454z" fill="#3C1605"></path> <path d="M135.962,1.892c-1.135,0-2.342,0.764-2.342,2.181v1.154c0,1.403,1.234,2.043,2.379,2.043
+					c1.135,0,2.34-0.765,2.34-2.181V4.054C138.339,2.65,137.113,1.892,135.962,1.892 M134.968,3.975c0-0.688,0.512-0.933,0.994-0.933
+					c0.615,0,1.029,0.363,1.029,0.903v1.252c0,0.687-0.512,0.932-0.992,0.932c-0.615,0-1.031-0.367-1.031-0.913V3.975z" fill="#3C1605"></path> <path d="M142.193,1.883c-0.576,0-1.256,0.354-1.602,0.816V1.981h-1.297v5.171h1.326V4.508
+					c0-0.848,0.598-1.396,1.523-1.396c0.164,0,0.291,0,0.443,0.028l0.074,0.014V1.926l-0.049-0.012
+					C142.476,1.883,142.326,1.883,142.193,1.883" fill="#3C1605"></path> <path d="M150.214,0.454h-1.328v1.527h-0.68v1.082h0.68v2.834c0,0.835,0.551,1.333,1.471,1.333
+					c0.182,0,0.631-0.029,0.904-0.1l0.045-0.012V5.972l-0.072,0.012c-0.232,0.038-0.363,0.048-0.609,0.048
+					c-0.289,0-0.41-0.126-0.41-0.421V3.063h1.092V1.981h-1.092V0.454z" fill="#3C1605"></path> <path d="M154.248,1.892c-1.395,0-2.369,0.934-2.369,2.271v0.985c0,1.466,1.209,2.122,2.408,2.122
+					c1.004,0,1.762-0.411,2.135-1.158l0.025-0.053l-1.027-0.59l-0.031,0.048c-0.264,0.378-0.672,0.623-1.043,0.623
+					c-0.541,0-1.121-0.298-1.121-0.952V4.974h3.264V3.936C156.488,2.532,155.328,1.892,154.248,1.892 M153.224,4.011V4.005
+					c0-0.717,0.529-0.972,1.023-0.972c0.439,0,0.912,0.237,0.912,0.903v0.075H153.224z" fill="#3C1605"></path> <path d="M160.158,3.062V1.981h-1.094V0.453h-1.328v1.528h-0.678v1.081h0.678v2.834c0,0.835,0.553,1.334,1.473,1.334
+					c0.18,0,0.631-0.03,0.902-0.101l0.047-0.012V5.971l-0.072,0.012c-0.234,0.038-0.363,0.048-0.611,0.048
+					c-0.287,0-0.41-0.126-0.41-0.421V3.062H160.158z" fill="#3C1605"></path> <path d="M69.175,6.006V3.553c0-1.076-0.788-1.669-2.22-1.669c-0.998,0-2.063,0.405-2.063,1.541v0.111h1.205
+					l0.006-0.055c0.049-0.381,0.293-0.536,0.841-0.536c0.608,0,0.904,0.228,0.904,0.696v0.401h-1.277c-1.264,0-1.925,0.814-1.925,1.619
+					c0,0.966,0.713,1.59,1.817,1.59c0.605,0,1.006-0.08,1.446-0.503c0,0.007,0,0.014,0.001,0.021c0.013,0.158,0.025,0.282,0.038,0.336
+					l0.011,0.048h1.346l-0.05-0.092C69.211,6.979,69.175,6.312,69.175,6.006 M66.787,6.18c-0.316,0-0.844-0.075-0.844-0.578
+					c0-0.376,0.256-0.558,0.785-0.558h1.12v0.184C67.848,5.799,67.668,6.18,66.787,6.18" fill="#3C1605"></path> <path d="M147.503,6.006V3.553c0-1.076-0.789-1.669-2.221-1.669c-0.996,0-2.063,0.405-2.063,1.541v0.111h1.205
+					l0.006-0.055c0.049-0.381,0.293-0.536,0.84-0.536c0.609,0,0.904,0.228,0.904,0.696v0.401h-1.277c-1.264,0-1.924,0.814-1.924,1.619
+					c0,0.966,0.713,1.59,1.816,1.59c0.605,0,1.006-0.08,1.445-0.503c0.014,0.157,0.027,0.301,0.041,0.358l0.012,0.047h1.346
+					l-0.049-0.092C147.541,6.979,147.503,6.312,147.503,6.006 M145.117,6.18c-0.316,0-0.846-0.075-0.846-0.578
+					c0-0.37,0.264-0.558,0.785-0.558h1.119v0.184C146.175,5.799,145.996,6.18,145.117,6.18" fill="#3C1605"></path> <polygon fill="#3C1605" points="60.005,13.04 61.937,13.04 61.937,12.345 60.005,12.345 60.005,11.206 62.264,11.206
+					62.264,10.511 59.243,10.511 59.243,15.008 62.283,15.008 62.283,14.313 60.005,14.313 	"></polygon> <path d="M65.619,14.207v-1.488c0-0.653-0.463-1.012-1.304-1.012c-0.61,0-1.262,0.25-1.262,0.952v0.168h0.665v-0.186
+					c0-0.248,0.302-0.336,0.584-0.336c0.541,0,0.604,0.268,0.604,0.469v0.293h-0.774c-0.587,0-1.219,0.319-1.219,1.019
+					c0,0.591,0.451,0.988,1.123,0.988c0.312,0,0.635-0.043,0.908-0.33c0.005,0.077,0.012,0.154,0.017,0.193l0.011,0.071h0.718
+					l-0.024-0.103C65.644,14.817,65.619,14.373,65.619,14.207 M64.906,13.641v0.16c0,0.45-0.238,0.67-0.725,0.67
+					c-0.131,0-0.56-0.03-0.56-0.415c0-0.178,0.062-0.415,0.597-0.415H64.906z" fill="#3C1605"></path> <path d="M68.006,11.707c-0.357,0-0.672,0.14-0.895,0.39v-0.323h-0.695v3.234h0.713v-1.863
+					c0-0.481,0.278-0.791,0.707-0.791c0.368,0,0.554,0.227,0.554,0.676v1.978h0.714v-2.155C69.104,12.146,68.683,11.707,68.006,11.707" fill="#3C1605"></path> <path d="M72.445,14.207v-1.488c0-0.653-0.462-1.012-1.303-1.012c-0.61,0-1.263,0.25-1.263,0.952v0.168h0.666v-0.186
+					c0-0.248,0.301-0.336,0.584-0.336c0.54,0,0.603,0.268,0.603,0.469v0.293h-0.773c-0.587,0-1.22,0.319-1.22,1.019
+					c0,0.591,0.452,0.988,1.123,0.988c0.313,0,0.636-0.043,0.908-0.329c0.006,0.077,0.012,0.153,0.018,0.192l0.011,0.071h0.717
+					l-0.024-0.103C72.471,14.817,72.445,14.373,72.445,14.207 M71.732,13.641v0.16c0,0.45-0.237,0.67-0.725,0.67
+					c-0.131,0-0.56-0.03-0.56-0.415c0-0.178,0.062-0.415,0.597-0.415H71.732z" fill="#3C1605"></path> <path d="M74.832,11.707c-0.356,0-0.672,0.14-0.895,0.39v-0.323h-0.694v3.234h0.713v-1.863
+					c0-0.481,0.277-0.791,0.706-0.791c0.368,0,0.555,0.227,0.555,0.676v1.978h0.713v-2.155C75.93,12.146,75.509,11.707,74.832,11.707" fill="#3C1605"></path> <path d="M78.695,12.044c-0.188-0.208-0.478-0.337-0.786-0.337c-0.593,0-1.285,0.337-1.285,1.286v0.875
+					c0,0.729,0.494,1.219,1.231,1.219c0.27,0,0.615-0.132,0.852-0.389v0.31h0.701v-4.497h-0.713V12.044z M78.695,13.03v0.68
+					c0,0.474-0.355,0.731-0.688,0.731c-0.4,0-0.658-0.23-0.658-0.585v-0.899c0-0.459,0.344-0.621,0.639-0.621
+					C78.405,12.336,78.695,12.621,78.695,13.03" fill="#3C1605"></path> <path d="M81.517,11.713c-0.672,0-1.395,0.418-1.395,1.335v0.76c0,0.777,0.553,1.279,1.412,1.279
+					c0.672,0,1.396-0.419,1.396-1.34v-0.711C82.931,12.245,82.361,11.713,81.517,11.713 M81.535,14.453
+					c-0.432,0-0.688-0.244-0.688-0.651v-0.79c0-0.422,0.244-0.664,0.67-0.664c0.43,0,0.688,0.239,0.688,0.639v0.796
+					C82.205,14.215,81.966,14.453,81.535,14.453" fill="#3C1605"></path> <path d="M86.21,14.207v-1.488c0-0.653-0.463-1.012-1.305-1.012c-0.609,0-1.262,0.25-1.262,0.952v0.168h0.664v-0.186
+					c0-0.248,0.303-0.336,0.586-0.336c0.541,0,0.604,0.268,0.604,0.469v0.293h-0.773c-0.588,0-1.219,0.319-1.219,1.019
+					c0,0.591,0.451,0.988,1.121,0.988c0.313,0,0.637-0.043,0.908-0.329c0.006,0.077,0.012,0.153,0.018,0.192l0.012,0.071h0.717
+					l-0.023-0.103C86.236,14.817,86.21,14.373,86.21,14.207 M85.498,13.641v0.16c0,0.45-0.236,0.67-0.725,0.67
+					c-0.131,0-0.561-0.03-0.561-0.415c0-0.178,0.063-0.415,0.596-0.415H85.498z" fill="#3C1605"></path> <path d="M87.984,14.41c-0.184,0-0.275-0.084-0.275-0.25v-3.649h-0.713v3.636c0,0.742,0.436,0.898,0.801,0.898
+					c0.199,0,0.4-0.024,0.545-0.064l0.059-0.018v-0.586l-0.133,0.014C88.173,14.402,88.091,14.41,87.984,14.41" fill="#3C1605"></path> <path d="M89.974,14.41c-0.182,0-0.275-0.084-0.275-0.25v-3.649h-0.713v3.636c0,0.742,0.436,0.898,0.801,0.898
+					c0.199,0,0.402-0.024,0.545-0.064l0.061-0.018v-0.586l-0.133,0.014C90.164,14.402,90.082,14.41,89.974,14.41" fill="#3C1605"></path> <path d="M92.244,11.713c-0.672,0-1.396,0.418-1.396,1.335v0.76c0,0.777,0.555,1.279,1.414,1.279
+					c0.672,0,1.395-0.419,1.395-1.34v-0.711C93.656,12.245,93.089,11.713,92.244,11.713 M92.261,14.453
+					c-0.43,0-0.689-0.244-0.689-0.651v-0.79c0-0.422,0.244-0.664,0.672-0.664c0.43,0,0.688,0.239,0.688,0.639v0.796
+					C92.931,14.215,92.693,14.453,92.261,14.453" fill="#3C1605"></path> <path d="M96.333,12.044c-0.188-0.208-0.479-0.337-0.785-0.337c-0.594,0-1.287,0.337-1.287,1.286v0.875
+					c0,0.729,0.496,1.219,1.232,1.219c0.27,0,0.615-0.133,0.852-0.389v0.31h0.701v-4.497h-0.713V12.044z M96.333,13.03v0.68
+					c0,0.474-0.355,0.731-0.689,0.731c-0.398,0-0.658-0.23-0.658-0.585v-0.899c0-0.459,0.346-0.621,0.641-0.621
+					C96.042,12.336,96.333,12.621,96.333,13.03" fill="#3C1605"></path> <rect fill="#3C1605" height="0.877" width="0.713" x="97.871" y="10.511"></rect> <rect fill="#3C1605" height="3.234" width="0.713" x="97.871" y="11.774"></rect> <path d="M101.101,11.719c-0.309,0-0.725,0.124-1.004,0.459v-0.404h-0.695v3.234h0.713v-1.723
+					c0-0.54,0.367-0.889,0.938-0.889c0.09,0,0.176,0,0.264,0.017l0.1,0.018v-0.68l-0.068-0.012
+					C101.279,11.726,101.189,11.719,101.101,11.719" fill="#3C1605"></path> <path d="M103.251,11.713c-0.857,0-1.432,0.565-1.432,1.408v0.631c0,0.811,0.566,1.335,1.443,1.335
+					c0.566,0,1.014-0.233,1.262-0.655l0.043-0.071l-0.555-0.33l-0.045,0.06c-0.1,0.135-0.324,0.361-0.674,0.361
+					c-0.447,0-0.738-0.26-0.738-0.663v-0.185h2.031v-0.605C104.587,12.11,103.916,11.713,103.251,11.713 M103.234,12.341
+					c0.393,0,0.639,0.25,0.639,0.652v0.062h-1.316v-0.02C102.556,12.62,102.828,12.341,103.234,12.341" fill="#3C1605"></path> <polygon fill="#3C1605" points="108.054,11.774 107.164,11.774 105.988,13.069 105.988,10.511 105.275,10.511 105.275,15.008
+					105.988,15.008 105.988,13.943 106.392,13.519 107.267,15.008 108.082,15.008 106.888,13.011 	"></polygon> <path d="M109.896,14.398c-0.221,0-0.299-0.074-0.299-0.281v-1.733h0.789v-0.61h-0.789v-0.948h-0.715v0.948h-0.492
+					v0.61h0.492v1.873c0,0.504,0.328,0.805,0.881,0.805c0.113,0,0.381-0.015,0.582-0.076l0.059-0.018V14.33l-0.1,0.021
+					C110.166,14.38,110.048,14.398,109.896,14.398" fill="#3C1605"></path> <path d="M112.261,11.713c-0.672,0-1.395,0.418-1.395,1.335v0.76c0,0.777,0.555,1.279,1.412,1.279
+					c0.674,0,1.396-0.419,1.396-1.34v-0.711C113.675,12.245,113.107,11.713,112.261,11.713 M112.279,14.453
+					c-0.43,0-0.688-0.244-0.688-0.651v-0.79c0-0.422,0.244-0.664,0.67-0.664c0.43,0,0.689,0.239,0.689,0.639v0.796
+					C112.951,14.215,112.712,14.453,112.279,14.453" fill="#3C1605"></path> <path d="M116.087,11.719c-0.309,0-0.725,0.124-1.004,0.459v-0.404h-0.697v3.234h0.715v-1.723
+					c0-0.54,0.367-0.889,0.938-0.889c0.09,0,0.174,0,0.264,0.017l0.098,0.018v-0.68l-0.066-0.012
+					C116.263,11.726,116.175,11.719,116.087,11.719" fill="#3C1605"></path> <path d="M119.496,14.207v-1.488c0-0.653-0.465-1.012-1.305-1.012c-0.609,0-1.262,0.25-1.262,0.952v0.168h0.664
+					v-0.186c0-0.248,0.303-0.336,0.586-0.336c0.539,0,0.604,0.268,0.604,0.469v0.293h-0.773c-0.588,0-1.219,0.319-1.219,1.019
+					c0,0.591,0.451,0.988,1.121,0.988c0.313,0,0.635-0.043,0.908-0.329c0.006,0.077,0.012,0.153,0.018,0.192l0.012,0.071h0.717
+					l-0.023-0.103C119.521,14.817,119.496,14.373,119.496,14.207 M118.783,13.641v0.16c0,0.45-0.238,0.67-0.725,0.67
+					c-0.133,0-0.561-0.03-0.561-0.415c0-0.178,0.063-0.415,0.596-0.415H118.783z" fill="#3C1605"></path> <polygon fill="#3C1605" points="119.279,10.462 118.423,10.462 117.765,11.582 118.396,11.582 	"></polygon> <path d="M121.882,11.707c-0.346,0-0.66,0.144-0.877,0.395v-1.591h-0.713v4.497h0.713v-1.863
+					c0-0.481,0.277-0.791,0.705-0.791c0.369,0,0.557,0.227,0.557,0.676v1.978h0.713v-2.155C122.98,12.146,122.56,11.707,121.882,11.707
+					" fill="#3C1605"></path> <path d="M125.009,14.398c-0.221,0-0.299-0.074-0.299-0.281v-1.733h0.789v-0.61h-0.789v-0.948h-0.715v0.948h-0.49
+					v0.61h0.49v1.873c0,0.504,0.33,0.805,0.881,0.805c0.113,0,0.381-0.015,0.582-0.076l0.061-0.018V14.33l-0.102,0.021
+					C125.279,14.38,125.162,14.398,125.009,14.398" fill="#3C1605"></path> <path d="M127.427,14.398c-0.221,0-0.299-0.074-0.299-0.281v-1.733h0.789v-0.61h-0.789v-0.948h-0.713v0.948h-0.494
+					v0.61h0.494v1.873c0,0.504,0.328,0.805,0.879,0.805c0.113,0,0.381-0.015,0.584-0.076l0.057-0.018V14.33l-0.1,0.021
+					C127.697,14.38,127.58,14.398,127.427,14.398" fill="#3C1605"></path> <path d="M131.166,14.905c-0.021-0.088-0.047-0.532-0.047-0.698v-1.488c0-0.653-0.465-1.012-1.305-1.012
+					c-0.609,0-1.262,0.25-1.262,0.952v0.168h0.664v-0.186c0-0.248,0.303-0.336,0.586-0.336c0.541,0,0.602,0.268,0.602,0.469v0.293
+					h-0.771c-0.588,0-1.221,0.319-1.221,1.019c0,0.591,0.451,0.988,1.123,0.988c0.313,0,0.635-0.043,0.908-0.329
+					c0.004,0.077,0.012,0.153,0.018,0.192l0.012,0.071h0.717L131.166,14.905z M130.404,13.641v0.16c0,0.45-0.234,0.67-0.723,0.67
+					c-0.133,0-0.561-0.03-0.561-0.415c0-0.178,0.061-0.415,0.596-0.415H130.404z" fill="#3C1605"></path> <polygon fill="#3C1605" points="19.284,42.109 41.63,0.082 40.309,0.082 17.965,42.109 	"></polygon> <polygon fill="#3C1605" points="15.715,42.109 38.06,0.082 36.74,0.082 14.394,42.109 	"></polygon> <polygon fill="#3C1605" points="12.145,42.109 34.491,0.082 33.169,0.082 10.824,42.109 	"></polygon> <polygon fill="#3C1605" points="8.574,42.109 30.92,0.082 29.6,0.082 7.255,42.109 	"></polygon> <polygon fill="#3C1605" points="5.005,42.109 27.35,0.082 26.031,0.082 3.686,42.109 	"></polygon> <polygon fill="#00B5DF" points="59.475,30.266 58.154,30.266 64.451,42.109 65.772,42.109 	"></polygon> <polygon fill="#00B5DF" points="55.905,30.266 54.586,30.266 60.882,42.109 62.202,42.109 	"></polygon> <polygon fill="#00B5DF" points="51.016,30.266 57.313,42.109 58.632,42.109 52.336,30.266 	"></polygon> <polygon fill="#00B5DF" points="47.445,30.266 53.742,42.109 55.062,42.109 48.766,30.266 	"></polygon> <polygon fill="#00B5DF" points="43.876,30.266 50.173,42.109 51.493,42.109 45.197,30.266 	"></polygon> <path d="M1.439,42.107L23.755,0.099c-0.908,0.205-1.724,0.788-2.194,1.675L0.128,42.107H1.439z" fill="#3C1605"></path> <path d="M41.622,30.264h-1.306l5.39,10.143c0.471,0.887,1.287,1.471,2.195,1.676L41.622,30.264z" fill="#00B5DF"></path> <polygon fill="#00B5DF" points="77.433,21.043 66.929,40.799 67.589,42.041 78.754,21.043 	"></polygon> <polygon fill="#00B5DF" points="73.863,21.043 65.144,37.442 65.805,38.684 75.184,21.043 	"></polygon> <polygon fill="#00B5DF" points="70.293,21.043 63.358,34.085 64.018,35.326 71.614,21.043 	"></polygon> <polygon fill="#00B5DF" points="66.723,21.043 61.574,30.729 62.234,31.969 68.044,21.043 	"></polygon> <polygon fill="#00B5DF" points="63.154,21.043 59.789,27.371 60.449,28.613 64.475,21.043 	"></polygon> <polygon fill="#00B5DF" points="59.584,21.043 58.004,24.016 58.663,25.256 60.903,21.043 	"></polygon> <polygon fill="#3C1605" points="44.298,28.577 36.324,13.58 35.664,14.822 42.978,28.577 	"></polygon> <polygon fill="#3C1605" points="47.867,28.577 38.108,10.223 37.448,11.465 46.546,28.577 	"></polygon> <polygon fill="#3C1605" points="51.438,28.577 39.893,6.866 39.232,8.108 50.117,28.577 	"></polygon> <polygon fill="#3C1605" points="58.577,28.577 43.464,0.152 42.803,1.394 57.256,28.577 	"></polygon> <polygon fill="#3C1605" points="55.006,28.577 41.679,3.51 41.018,4.751 53.685,28.577 	"></polygon> <polygon fill="#3C1605" points="40.727,28.577 34.539,16.937 33.879,18.178 39.407,28.577 	"></polygon> <polygon fill="#00B5DF" points="58.025,30.002 64.462,42.109 65.783,42.109 59.345,30.002 	"></polygon> <polygon fill="#00B5DF" points="54.456,30.002 60.893,42.109 62.212,42.109 55.776,30.002 	"></polygon> <polygon fill="#00B5DF" points="50.885,30.002 57.322,42.109 58.644,42.109 52.207,30.002 	"></polygon> <polygon fill="#00B5DF" points="47.315,30.002 53.752,42.109 55.073,42.109 48.635,30.002 	"></polygon> <polygon fill="#00B5DF" points="43.747,30.002 50.184,42.109 51.502,42.109 45.065,30.002 	"></polygon> <path d="M40.179,30.002l5.534,10.416c0.471,0.887,1.287,1.471,2.195,1.676l-6.423-12.092H40.179z" fill="#00B5DF"></path> </g> </svg>
+                    </td>
+                    <td colspan="70" style="border-style:none; border-width:0px; padding:0; text-align:right">
+                        <div style="font-size:13pt; font-weight:bold; line-height:15pt; margin-top:0">
+                            S&oslash;knad om konsesjon p&aring; erverv av fast eiendom<br />
+                            etter konsesjonsloven av 28. november 2003 nr. 98
+                        </div>
+
+                        <div style="font-size:11pt; line-height:13pt">Dette skjemaet er p&aring;budt &aring; bruke ved s&oslash;knader om konsesjon</div>
+
+                        <div class="info-box" style="display:inline-block; margin-top:.1cm">S&oslash;knaden skal sendes til kommunen der eiendommen ligger</div>
+                    </td>
+                </tr>
+                <tr contenteditable="false">
+                    <td colspan="100" style="border-style:none; border-width:0px; padding:0">
+                        <div class="info-box" style="margin-bottom:0.5cm; margin-left:0; margin-right:0; margin-top:0.5cm"><strong>F&oslash;r s&oslash;knaden fylles ut, b&oslash;r du unders&oslash;ke om ervervet er konsesjonsfritt, jf. rettledningen p&aring; side 3 og 4</strong></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="18" contenteditable="false" style="border-bottom:dotted 2px #ffffff; border-top:solid 1px #ffffff"><strong style="font-size:13pt">Til </strong></td>
+                    <td colspan="64" style="border-bottom:dotted 2px #000000; border-top:solid 1px #ffffff; font-size:13pt; padding-bottom:5px">&nbsp;</td>
+                    <td colspan="18" contenteditable="false" style="border-bottom:dotted 2px #ffffff; border-top:solid 1px #ffffff">&nbsp;</td>
+                </tr>
+                <tr contenteditable="false">
+                    <td colspan="18" style="border-style:none; border-width:0px; height:.3cm">&nbsp;</td>
+                    <td colspan="64" style="border-style:none; border-width:0px; font-size:7pt; height:.3cm; padding:0; text-align:center">(den kommunen der eiendommen ligger)</td>
+                    <td colspan="18" style="border-style:none; border-width:0px; height:.3cm">&nbsp;</td>
+                </tr>
+                <tr contenteditable="false">
+                    <td colspan="100" style="border-style:none; border-width:0px">
+                        <p class="small">S&oslash;knad om konsesjon skal sendes til den kommunen eiendommen ligger innen fire uker etter at avtalen er inng&aring;tt eller erververen fikk r&aring;dighet over eiendommen. P&aring; side 3 skal du redegj&oslash;re for forhold av betydning som ikke fremg&aring;r av svarene p&aring; de sp&oslash;rsm&aring;l skjemaet inneholder. Kopier av skj&oslash;te, kj&oslash;pekontrakt, leiekontrakt eller annen avtale samt takst <u>skal legges ved</u> i den utstrekning slike dokumenter foreligger. Gjelder ervervet landbrukseiendom, skal skogbruksplan legges ved dersom slik plan foreligger. En signert erkl&aelig;ring fra overdrager om hen har annen eiendom i kommunen jf. pkt. 20, skal ogs&aring; legges ved. .</p>
+                    </td>
+                </tr>
+                <tr class="sideborders">
+                    <td class="border-right header-cell info-cell text-center" colspan="4" contenteditable="false">1</td>
+                    <td class="border-right" colspan="75" data-label="Søkerens navn (slektsnavn, for- og mellomnavn)">[[*kjoper.navn]]</td>
+                    <td colspan="21" data-label="Fødselsnr. (11 siffer)"><span vitec-if="kjoper.idnummer.ToString().Length == 12">[[*kjoper.idnummer]]</span></td>
+                </tr>
+                <tr class="sideborders">
+                    <td class="border-right header-cell info-cell text-center" colspan="4" contenteditable="false">2</td>
+                    <td class="border-right" colspan="75" data-label="Adresse">[[*kjoper.gatenavnognr]], [[*kjoper.postnr]] [[*kjoper.poststed]]</td>
+                    <td colspan="21" data-label="Organisasjonsnr. (9 siffer)"><span vitec-if="kjoper.idnummer.ToString().Length == 11">[[*kjoper.idnummer]]</span></td>
+                </tr>
+                <tr class="sideborders">
+                    <td class="border-right header-cell info-cell text-center" colspan="4" contenteditable="false">3</td>
+                    <td class="border-right" colspan="21" data-label="Telefonnr. (8 siffer)">[[*kjoper.tlf]]</td>
+                    <td colspan="75" data-label="E-postadresse">[[*kjoper.emailadresse]]</td>
+                </tr>
+                <tr class="sideborders">
+                    <td class="border-right header-cell info-cell text-center" colspan="4" contenteditable="false">4</td>
+                    <td class="border-right" colspan="75" data-label="Overdragerens navn">@Model.selgere[0].navn</td>
+                    <td colspan="21" data-label="Fødselsnr. (11 siffer)"><span vitec-if="Model.selger.idnummer.ToString().Length == 12">@Model.selgere[0].idnummer</span></td>
+                </tr>
+                <tr class="sideborders">
+                    <td class="border-right header-cell info-cell text-center" colspan="4" contenteditable="false">5</td>
+                    <td class="border-right" colspan="75" data-label="Adresse">@Model.selgere[0].gatenavnognr, @Model.selgere[0].postnr @Model.selgere[0].poststed</td>
+                    <td colspan="21" data-label="Organisasjonsnr. (9 siffer)"><span vitec-if="Model.selger.idnummer.ToString().Length == 11">@Model.selgere[0].idnummer</span></td>
+                </tr>
+                <tr class="sideborders">
+                    <td class="border-right header-cell info-cell text-center" colspan="4" contenteditable="false">6</td>
+                    <td colspan="96" data-label="Eiendommen(e)s eller rettigheten(e)s betegnelse (navn, gnr., bnr., festenr. e.l.)">[[eiendom.gatenavnognr]], [[komplettmatrikkelutvidet]]</td>
+                </tr>
+                <tr class="sideborders">
+                    <td class="border-right header-cell info-cell text-center" colspan="4" contenteditable="false">7</td>
+                    <td class="border-right" colspan="48" data-label="Kjøpesum / leiesum pr. år (ved arv eller gave oppgi antatt verdi)">kr $.UD([[kontrakt.kjopesum]])</td>
+                    <td class="border-right" colspan="24" data-label="Kår av 5-årlig verdi">&nbsp;</td>
+                    <td colspan="24" data-label="Kjøpesum for løsøre">&nbsp;</td>
+                </tr>
+                <tr class="sideborders">
+                    <td class="border-right header-cell info-cell text-center" colspan="4" contenteditable="false">8</td>
+                    <td class="border-right" colspan="48" data-label="Kommune">[[eiendom.kommunenavn]]</td>
+                    <td colspan="48" data-label="Fylke">&nbsp;</td>
+                </tr>
+                <tr class="sideborders">
+                    <td class="border-right header-cell info-cell text-center" colspan="4" contenteditable="false">9</td>
+                    <td class="border-right" colspan="48" data-label="Arealets størrelse">&nbsp;</td>
+                    <td colspan="48" data-label="Arealets fordeling på dyrket jord, produktiv skog og annet areal">&nbsp;</td>
+                </tr>
+                <tr class="sideborders" style="vertical-align:top">
+                    <td class="border-right header-cell info-cell text-center" colspan="4" contenteditable="false" style="height:1.3cm">10</td>
+                    <td colspan="96" data-label="Hvis skogbruksplan foreligger, oppgi fordeling på hogstklasse I-V, bonitet og balansekvantum for produktiv skog" style="height:1.3cm">&nbsp;</td>
+                </tr>
+                <tr class="sideborders" contenteditable="false">
+                    <td class="header-cell info-cell" colspan="100">Beskrivelse av n&aring;v&aelig;rende bebyggelse p&aring; eiendommen (bolighus, hytte, driftsbygning, forretningsg&aring;rd, industri o.l.)</td>
+                </tr>
+                <tr class="sideborders">
+                    <td class="border-right header-cell info-cell text-center" colspan="4" contenteditable="false" rowspan="8">11</td>
+                    <td class="border-right" colspan="34" data-label="Bygning (type)">&nbsp;</td>
+                    <td class="border-right" colspan="18" data-label="Grunnflate i m2">&nbsp;</td>
+                    <td class="border-right" colspan="9" data-label="Byggeår">&nbsp;</td>
+                    <td class="border-right" colspan="10" data-label="Antall etasjer">&nbsp;</td>
+                    <td colspan="25" data-label="Teknisk tilstand (god, middels eller dårlig)">&nbsp;</td>
+                </tr>
+                <tr class="sideborders">
+                    <td class="border-right" colspan="34" data-label="Bygning (type)">&nbsp;</td>
+                    <td class="border-right" colspan="18" data-label="Grunnflate i m2">&nbsp;</td>
+                    <td class="border-right" colspan="9" data-label="Byggeår">&nbsp;</td>
+                    <td class="border-right" colspan="10" data-label="Antall etasjer">&nbsp;</td>
+                    <td colspan="25" data-label="Teknisk tilstand (god, middels eller dårlig)">&nbsp;</td>
+                </tr>
+                <tr class="sideborders">
+                    <td class="border-right" colspan="34" data-label="Bygning (type)">&nbsp;</td>
+                    <td class="border-right" colspan="18" data-label="Grunnflate i m2">&nbsp;</td>
+                    <td class="border-right" colspan="9" data-label="Byggeår">&nbsp;</td>
+                    <td class="border-right" colspan="10" data-label="Antall etasjer">&nbsp;</td>
+                    <td colspan="25" data-label="Teknisk tilstand (god, middels eller dårlig)">&nbsp;</td>
+                </tr>
+                <tr class="sideborders">
+                    <td class="border-right" colspan="34" data-label="Bygning (type)">&nbsp;</td>
+                    <td class="border-right" colspan="18" data-label="Grunnflate i m2">&nbsp;</td>
+                    <td class="border-right" colspan="9" data-label="Byggeår">&nbsp;</td>
+                    <td class="border-right" colspan="10" data-label="Antall etasjer">&nbsp;</td>
+                    <td colspan="25" data-label="Teknisk tilstand (god, middels eller dårlig)">&nbsp;</td>
+                </tr>
+                <tr class="sideborders">
+                    <td class="border-right" colspan="34" data-label="Bygning (type)">&nbsp;</td>
+                    <td class="border-right" colspan="18" data-label="Grunnflate i m2">&nbsp;</td>
+                    <td class="border-right" colspan="9" data-label="Byggeår">&nbsp;</td>
+                    <td class="border-right" colspan="10" data-label="Antall etasjer">&nbsp;</td>
+                    <td colspan="25" data-label="Teknisk tilstand (god, middels eller dårlig)">&nbsp;</td>
+                </tr>
+                <tr class="sideborders">
+                    <td class="border-right" colspan="34" data-label="Bygning (type)">&nbsp;</td>
+                    <td class="border-right" colspan="18" data-label="Grunnflate i m2">&nbsp;</td>
+                    <td class="border-right" colspan="9" data-label="Byggeår">&nbsp;</td>
+                    <td class="border-right" colspan="10" data-label="Antall etasjer">&nbsp;</td>
+                    <td colspan="25" data-label="Teknisk tilstand (god, middels eller dårlig)">&nbsp;</td>
+                </tr>
+                <tr class="sideborders">
+                    <td class="border-right" colspan="34" data-label="Bygning (type)">&nbsp;</td>
+                    <td class="border-right" colspan="18" data-label="Grunnflate i m2">&nbsp;</td>
+                    <td class="border-right" colspan="9" data-label="Byggeår">&nbsp;</td>
+                    <td class="border-right" colspan="10" data-label="Antall etasjer">&nbsp;</td>
+                    <td colspan="25" data-label="Teknisk tilstand (god, middels eller dårlig)">&nbsp;</td>
+                </tr>
+                <tr class="sideborders" style="vertical-align:top">
+                    <td colspan="96" data-label="Annen bebyggelse" style="height:1.3cm">&nbsp;</td>
+                </tr>
+                <tr contenteditable="false">
+                    <td colspan="100" style="border-bottom:none">
+                        <p class="small">Med sikte p&aring; &aring; redusere n&aelig;ringslivets oppgaveplikter, kan opplysninger som avgis i dette skjema i medhold av lov om Oppgaveregisteret &sect;&sect; 5 og 6, helt eller delvis bli benyttet ogs&aring; av andre offentlige organer som har hjemmel til &aring; innhente de samme opplysningene. Opplysninger om eventuell samordning kan f&aring;s ved henvendelse til Oppgaveregisteret p&aring; telefon 75 00 75 00.</p>
+
+                        <div class="page-info">
+                            <div class="version">versjon 1.3 - 1.1.2026</div>
+                            LDIR-359 B <span class="text-right" style="float:right">
+                                Landbruksdirektoratet - S&oslash;knad om konsesjon p&aring; erverv av fast eiendom etter<br />
+                                konsesjonsloven av 28. november 2003 nr. 98<br />
+                                side 1 av 4
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="main-table">
+            <tbody>
+                <tr class="sideborders" style="vertical-align:top">
+                    <td class="border-right header-cell info-cell text-center" colspan="4" contenteditable="false" style="height:1.3cm">12</td>
+                    <td colspan="96" data-label="Rettigheter som ligger til eiendommen eller som er avtalt i forbindelse med overdragelsen" style="height:1.3cm">&nbsp;</td>
+                </tr>
+                <tr class="sideborders" contenteditable="false">
+                    <td class="border-right header-cell info-cell text-center" colspan="4" contenteditable="false" rowspan="2">13</td>
+                    <td class="info-cell" colspan="96" style="border-bottom-color:#c1e5f2">Eier eller leier s&oslash;keren, hans ektefelle eller barn under 18 &aring;r annen fast eiendom i kommunen?</td>
+                </tr>
+                <tr class="sideborders">
+                    <td class="border-right info-cell" colspan="10" data-toggle="buttons">
+                        <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" />Ja</label><br />
+                        <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" />Nei</label>
+                    </td>
+                    <td class="masked-top-border" colspan="86" data-label="I tilfelle hvilke?" style="vertical-align:top">&nbsp;</td>
+                </tr>
+                <tr class="sideborders" contenteditable="false">
+                    <td class="border-right header-cell info-cell text-center" colspan="4" contenteditable="false" rowspan="2">14</td>
+                    <td class="info-cell" colspan="96" style="border-bottom-color:#c1e5f2">Eier eller leier s&oslash;keren, hans ektefelle eller barn under 18 &aring;r fast eiendom i andre kommuner?</td>
+                </tr>
+                <tr class="sideborders">
+                    <td class="border-right info-cell" colspan="10" data-toggle="buttons">
+                        <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" />Ja</label><br />
+                        <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" />Nei</label>
+                    </td>
+                    <td class="masked-top-border" colspan="86" data-label="I tilfelle hvilke?" style="vertical-align:top">&nbsp;</td>
+                </tr>
+                <tr class="sideborders" style="vertical-align:top">
+                    <td class="border-right header-cell info-cell text-center" colspan="4" contenteditable="false" style="height:2.5cm">15</td>
+                    <td colspan="96" data-label="Beskriv hvordan eiendommen brukes i dag (gjelder ervervet landbrukseiendom, beskriv eiendommens drift)" style="height:2.5cm">&nbsp;</td>
+                </tr>
+                <tr class="sideborders" style="vertical-align:top">
+                    <td class="border-right header-cell info-cell text-center" colspan="4" contenteditable="false" style="height:2.5cm">16</td>
+                    <td colspan="96" data-label="Erververens planer for bruk av eiendommen" style="height:2.5cm">&nbsp;</td>
+                </tr>
+                <tr class="sideborders" contenteditable="false">
+                    <td class="header-cell info-cell" colspan="100">Spesielt for jord- og skogbrukseiendommer (landbrukseiendommer)</td>
+                </tr>
+                <tr class="sideborders" style="vertical-align:top">
+                    <td class="border-right header-cell info-cell text-center" colspan="4" contenteditable="false" style="height:1.3cm">17</td>
+                    <td colspan="96" data-label="Ved erverv av tilleggsjord oppgi gnr. og bnr. på den eiendommen søkeren eier fra før" style="height:1.3cm">&nbsp;</td>
+                </tr>
+                <tr class="sideborders" style="vertical-align:top">
+                    <td class="border-right header-cell info-cell text-center" colspan="4" contenteditable="false" style="height:1.3cm">18</td>
+                    <td colspan="96" data-label="Søkerens kvalifikasjoner (teoretisk og/eller praktisk erfaring fra jord- og skogbruk)" style="height:1.3cm">&nbsp;</td>
+                </tr>
+                <tr class="sideborders" contenteditable="false">
+                    <td class="border-right header-cell info-cell text-center" colspan="4" contenteditable="false">19</td>
+                    <td class="info-cell" colspan="96">
+                        Vil s&oslash;keren forplikte seg til &aring; bosette seg p&aring; eiendommen innen 1 - ett - &aring;r og selv bebo eiendommen<br />
+                        i minst 5 - fem - &aring;r sammenhengende?
+                        <div data-toggle="buttons" style="margin-bottom:0.2cm; margin-left:0; margin-right:0; margin-top:0.2cm"><label class="btn inline-flex" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl03" type="radio" />Ja</label> <label class="btn inline-flex" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl03" type="radio" />Nei</label></div>
+                        <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> Jeg s&oslash;ker konsesjon fordi jeg ikke skal bosette meg p&aring; eiendommen, jf konsesjonsloven &sect; 5 annet ledd</label>
+                    </td>
+                </tr>
+                <tr class="sideborders" contenteditable="false">
+                    <td class="border-right header-cell info-cell text-center" colspan="4" contenteditable="false" rowspan="2">20</td>
+                    <td class="info-cell" colspan="96" style="border-bottom-color:#c1e5f2">Har overdrageren annen fast eiendom i kommunen som ikke omfattes av overdragelsen? Legg ved overdragers erkl&aelig;ring.</td>
+                </tr>
+                <tr class="sideborders">
+                    <td class="border-right info-cell" colspan="10" data-toggle="buttons">
+                        <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl04" type="radio" />Ja</label><br />
+                        <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl04" type="radio" />Nei</label>
+                    </td>
+                    <td class="masked-top-border" colspan="86" data-label="I tilfelle hvilke? (oppgi gnr./bnr./fnr. e.l.)" style="vertical-align:top">&nbsp;</td>
+                </tr>
+                <tr class="sideborders" style="vertical-align:top">
+                    <td class="border-right header-cell info-cell text-center" colspan="4" contenteditable="false" style="height:1.3cm">21</td>
+                    <td colspan="96" data-label="Er det flere søkere, bes opplyst om søkerne er gifte eller samboere" style="height:1.3cm">&nbsp;</td>
+                </tr>
+                <tr class="sideborders" contenteditable="false">
+                    <td class="header-cell info-cell" colspan="100">22. Underskrift</td>
+                </tr>
+                <tr class="sideborders" style="vertical-align:top">
+                    <td class="border-right" colspan="33" data-label="Dato" style="height:1.3cm">&nbsp;</td>
+                    <td colspan="67" data-label="Søkerens underskrift" style="height:1.3cm">&nbsp;</td>
+                </tr>
+                <tr class="sideborders" style="vertical-align:top">
+                    <td colspan="100" data-label="Underretning om avgjørelsen bes sendt til" style="height:1.3cm">&nbsp;</td>
+                </tr>
+                <tr class="sideborders" style="vertical-align:top">
+                    <td colspan="100" data-label="Oversikt over vedlegg til søknaden" style="height:1.3cm">&nbsp;</td>
+                </tr>
+                <tr class="sideborders" contenteditable="false" style="vertical-align:top">
+                    <td colspan="100" style="height:1.3cm">Skjemaet er tilgjengelig p&aring; <a href="http://www.landbruksdirektoratet.no">www.landbruksdirektoratet.no</a> Sp&oslash;rsm&aring;l om utfylling skal rettes til kommunen.</td>
+                </tr>
+                <tr contenteditable="false">
+                    <td colspan="100" style="border-bottom:none">
+                        <div class="page-info">
+                            <div class="version">versjon 1.3 - 1.1.2026</div>
+                            LDIR-359 B <span class="text-right" style="float:right">
+                                Landbruksdirektoratet - S&oslash;knad om konsesjon p&aring; erverv av fast eiendom etter<br />
+                                konsesjonsloven av 28. november 2003 nr. 98<br />
+                                side 2 av 4
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="main-table">
+            <tbody>
+                <tr class="sideborders" contenteditable="false">
+                    <td class="header-cell info-cell" colspan="100">Eventuelle tilleggsopplysninger</td>
+                </tr>
+                <tr class="sideborders" style="vertical-align:top">
+                    <td colspan="100" style="height:12.3cm">&nbsp;</td>
+                </tr>
+                <tr class="sideborders" contenteditable="false">
+                    <td class="header-cell info-cell" colspan="100">Rettledning</td>
+                </tr>
+                <tr class="sideborders" contenteditable="false">
+                    <td class="info-cell-light" colspan="100">
+                        <p class="x-small">
+                            <strong>Generelt om konsesjonsloven</strong><br />
+                            &laquo;Erverv&raquo; er en felles betegnelse for alle m&aring;ter man kan f&aring; en eiendom p&aring;, eksempelvis gjennom kj&oslash;p, arv, gave osv. Konsesjon er en tillatelse fra staten. Den som blir ny eier av eiendommen kalles erverver. Overdrager er forrige eier. Et konsesjonspliktig erverv kan ikke tinglyses uten at det er gitt konsesjon.
+                        </p>
+
+                        <p class="x-small"><a href="https://lovdata.no/dokument/NL/lov/2003-11-28-98">Konsesjonsloven av 28. november 2003 nr. 98</a> bestemmer at alle erverv av fast eiendom, og stiftelse av bruksrett for lengre tid enn 10 &aring;r, er undergitt konsesjonsplikt med mindre det er gjort unntak i loven eller i forskrifter fastsatt i medhold av loven. Som erverv regnes ogs&aring; erverv av andeler eller parter i en eiendom.</p>
+
+                        <p class="x-small">Er du usikker p&aring; om ervervet utl&oslash;ser konsesjonsplikt eller har du sp&oslash;rsm&aring;l om konsesjonsbehandlingen, kan du henvende deg til kommunen der eiendommen ligger for &aring; f&aring; svar.</p>
+
+                        <p class="x-small">
+                            <strong>A. Overdragelser som ikke trenger konsesjon</strong><br />
+                            Det f&oslash;lger av konsesjonsloven <a href="https://lovdata.no/dokument/NL/lov/2003-11-28-98/KAPITTEL_3#%C2%A74">&sect;&sect; 4 og 5</a> og <a href="https://lovdata.no/dokument/SF/forskrift/2003-12-08-1434?q=forskrift%20om%20konsesjonsfrihet%20mv.%2008.12.2003">forskrift om konsesjonsfrihet mv.</a> (fastsatt 8. desember 2003) hvilke erverv som er unntatt fra konsesjonsplikten. Hovedregelen er at du kan erverve bebygd eiendom som ikke er st&oslash;rre enn 100 dekar og heller ikke har mer enn 35 dekar fulldyrket/overflatedyrket jord uten &aring; s&oslash;ke konsesjon. Det samme gjelder tomter til bolig, fritidshus eller naust, og annet ubebygd areal som er utlagt til annet enn landbruks-, natur- og friluftsomr&aring;de samt reindrift. Erverv fra n&aelig;r familie og erververe med odelsrett er ogs&aring; unntatt fra konsesjonsplikt. Konsesjonsfriheten som f&oslash;lger av reglene i &sect; 4 f&oslash;rste ledd nr. 1 - 4 og &sect; 5 f&oslash;rste ledd nr. 1 og 2 skal godtgj&oslash;res ved skjema for egenerkl&aelig;ring LDIR-360. Skjemaet er tilgjengelig p&aring; <a href="http://www.landbruksdirektoratet.no/">www.landbruksdirektoratet.no</a> under &ldquo;Skjema&rdquo;. Egen&aelig;rkl&aelig;ringen skal innleveres til kommunen. Kommunen skal kontrollere og bekrefte opplysningene i erkl&aelig;ringen. Kommunen f&oslash;rer kontroll med at konsesjonsloven blir fulgt.
+                        </p>
+
+                        <p class="x-small">Konsesjonsfriheten p&aring; grunn av ekteskap, slektskap og/eller odelsrett ved erverv av landbrukseiendom over en viss st&oslash;rrelse er betinget av at du bosetter deg p&aring; eiendommen innen ett &aring;r og bor der i fem &aring;r. Dette gjelder eiendommer som har mer enn 35 dekar fulldyrket/overflatedyrket areal og/eller mer enn 500 dekar produktiv skog og som har bebyggelse som er eller har v&aelig;rt i bruk som hel&aring;rsbolig, eller har bebyggelse som er tillatt oppf&oslash;rt som hel&aring;rsbolig, eller har bebyggelse under oppf&oslash;ring hvor tillatelse til oppf&oslash;ring av hel&aring;rsbolig er gitt. Hvis du ikke skal bosette deg innen fristen p&aring; ett &aring;r, m&aring; du s&oslash;ke konsesjon. Du m&aring; da krysse av i felt 19 og gj&oslash;re konsesjonsmyndighetene oppmerksom p&aring; at dette er grunnen til at du s&oslash;ker konsesjon.</p>
+
+                        <p class="x-small">
+                            <strong>B. Kort om saksgangen</strong><br />
+                            Kommunen har avgj&oslash;relsesmyndighet i konsesjonssaker. Statsforvalteren/Landbruksdirektoratet er klageinstans.
+                        </p>
+
+                        <p class="x-small">Bestemmelser om overf&oslash;ring av myndighet fastsatt 8. desember 2003, er tilgjengelig p&aring; <a href="http://www.landbruksdirektoratet.no/">www.landbruksdirektoratet.no</a> og <a href="https://lovdata.no/">www.lovdata.no</a>.</p>
+
+                        <p class="x-small">
+                            F&oslash;r s&oslash;knaden tas opp til behandling, m&aring; du betale et behandlingsgebyr. Gebyret blir fastsatt og krevd inn av kommunen.<br />
+                            Du skal ikke betale gebyr hvis du har overtatt konsesjonsfritt p&aring; grunn av odelsrett eller slektskap, og du s&oslash;ker konsesjon fordi du ikke skal bosette deg p&aring; eiendommen
+                        </p>
+                    </td>
+                </tr>
+                <tr contenteditable="false">
+                    <td colspan="100" style="border-bottom:none">
+                        <div class="page-info">
+                            <div class="version">versjon 1.3 - 1.1.2026</div>
+                            LDIR-359 B <span class="text-right" style="float:right">
+                                Landbruksdirektoratet - S&oslash;knad om konsesjon p&aring; erverv av fast eiendom etter<br />
+                                konsesjonsloven av 28. november 2003 nr. 98<br />
+                                side 3 av 4
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="main-table">
+            <tbody>
+                <tr class="sideborders" contenteditable="false">
+                    <td class="info-cell-light" colspan="100" style="height:26.5cm; vertical-align:top">
+                        <p class="x-small">
+                            <strong>C. N&aelig;rmere om utfylling av s&oslash;knad om konsesjon</strong><br />
+                            Det er viktig at opplysningene i s&oslash;knaden gis s&aring; fullstendig som mulig. Dette kan bl.a. bidra til &aring; redusere saksbehandlingstiden og &aring; sikre at saken behandles p&aring; riktig faktisk grunnlag.
+                        </p>
+
+                        <p class="x-small">
+                            <strong>Feltene 1 - 5</strong><br />
+                            B&aring;de overdrager og du som s&oslash;ker konsesjon m&aring; oppgi navn og adresse, f&oslash;dselsdato eller organisasjonsnummer. Juridiske personer (f.eks. aksjeselskaper) tildeles et organisasjonsnummer. Organisasjonsnummeret f&aring;s oppgitt ved henvendelse til Enhetsregisteret (Br&oslash;nn&oslash;ysundregistrene <a href="https://www.brreg.no/">www.brreg.no</a>). Vennligst oppgi telefonnummer og eventuell e-postadresse ved henvendelse dit.
+                        </p>
+
+                        <p class="x-small">
+                            <strong>Feltene 6 - 11</strong><br />
+                            Omfatter overdragelsen flere g&aring;rds- og bruksnummer, m&aring; alle oppgis i felt 6. Gjelder s&oslash;knaden konsesjon p&aring; feste, skal festenummeret oppgis dersom slikt foreligger. Gjelder s&oslash;knaden konsesjon p&aring; stiftelse eller overdragelse av andre rettigheter over fast eiendom som medf&oslash;rer konsesjonsplikt etter &sect; 3 i konsesjonsloven, skal rettigheten beskrives (for eksempel grusrettighet, utbyggingskontrakt o.l.).
+                        </p>
+
+                        <p class="x-small"><strong>I felt 7</strong> gis opplysning om kj&oslash;pesummen for eiendommen. Gjelder s&oslash;knaden konsesjon p&aring; leie av eiendommen, skal leiesummen pr. &aring;r oppgis. Dersom erververen har overtatt eiendommen ved arv eller gave, skal antatt verdi fylles inn i feltet for dette. Hefter det k&aring;rytelser p&aring; eiendommen, skal verdien av disse oppgis. Som eksempel p&aring; k&aring;rytelser kan nevnes borett og naturalier (melk, poteter, ved, sn&oslash;rydding, etc.). K&aring;rforpliktelser som ikke er bundet til hvert &aring;r, skal oppgis som 5-&aring;rig verdi. Ytterligere opplysninger om omfattende k&aring;rytelser som borett og lignende, bl.a. om p&aring;regnelig varighet, forutsettes &aring; g&aring; frem av kj&oslash;pekontrakt eller fremkomme i saksutredningen under behandlingen av konsesjonss&oslash;knaden. Dersom l&oslash;s&oslash;re f&oslash;lger med i overdragelsen, skal verdien oppgis i feltet for dette.</p>
+
+                        <p class="x-small">Du trenger ikke fylle ut felt 7 dersom du har overtatt konsesjonsfritt p&aring; grunn av odelsrett eller slektskap og du s&oslash;ker konsesjon fordi du ikke skal bosette deg p&aring; eiendommen.</p>
+
+                        <p class="x-small"><strong>I felt 8</strong> oppgis hvilken kommune og fylke eiendommen ligger i. <strong>I felt 9</strong> skal opplysning om eiendommen(e)s totalareal fylles ut. Gjelder ervervet flere g&aring;rds- og bruksnummer, skal alle regnes med. I tillegg skal det opplyses om hvordan eiendommens areal fordeler seg p&aring; ulike arealkategorier. I feltet for dyrket jord f&oslash;res opp fulldyrket jord, overflatedyrket jord og innmarksbeite. I feltet for produktiv skog f&oslash;res skog med produksjonsevne p&aring; minst 100 liter (0,1 kubikkmeter) per dekar per &aring;r. Som annet areal regnes myr, grunnlendt mark, uproduktiv mark, fjell i dagen o.l. Se <a href="www.gardskart.nibio.no/">www.gardskart.nibio.no</a> for mer informasjon om din eiendom.</p>
+
+                        <p class="x-small">Foreligger det skogbruksplan for eiendommen, bes oppgitt fordeling p&aring; hogstklasse I-V og bonitet, og balansekvantumet for den produktive skogen.</p>
+
+                        <p class="x-small"><strong>I felt 11</strong> oppgis hvilke bygninger som i dag er oppf&oslash;rt p&aring; eiendommen (f.eks. bolighus, k&aring;rbolig, hytte, driftsbygning, forretningsbygg, industribygg, seter o.l.). I tillegg skal grunnflaten for den enkelte bygning oppgis i kvadratmeter og antall etasjer. Hvis opplysninger om bygningens tekniske tilstand (god, middels eller d&aring;rlig) og bygge&aring;r foreligger (f.eks. fra takst over eiendommen), oppgis dette.</p>
+
+                        <p class="x-small">
+                            <strong>Feltene 12 - 16</strong><br />
+                            F&oslash;lger andre rettigheter med i overdragelsen, skal disse oppgis i felt 12. Eksempler p&aring; slike rettigheter er beiterett (f.eks. i utmark), strandrett, jakt- og fiskerett, hugstrett, allmenningsrett, sl&aring;tterett o.l. Dersom du, din ektefelle eller barn under 18 &aring;r eier eller leier andre eiendommer i kommunen eller i andre kommuner, skal g&aring;rds- og bruksnummer p&aring; disse oppgis i henholdsvis felt 13 og 14. I felt 15 skal det gis en beskrivelse av hvordan eiendommen blir brukt i dag. For landbrukseiendommer skal det fremg&aring; om eiendommen drives med husdyrhold, planteproduksjon e.l. I felt 16 skal du opplyse hva eiendommen skal brukes til. Eksempel p&aring; slik bruk kan v&aelig;re erverv til fritidsform&aring;l, landbruksform&aring;l eller industri.
+                        </p>
+
+                        <p class="x-small">
+                            <strong>Feltene 17 - 21</strong><br />
+                            Skal eiendommen du s&oslash;ker konsesjon p&aring; brukes som tilleggsjord til eiendom du eier fra f&oslash;r, m&aring; du oppgi g&aring;rds- og bruksnummer p&aring; denne eiendommen. I felt 18 skal du opplyse om hvilken teoretisk utdannelse og praktisk erfaring innen jord- og skogbruk du har.
+                        </p>
+
+                        <p class="x-small">Det trenger ikke &aring; fylle ut felt 18 hvis du har overtatt eiendommen konsesjonsfritt p&aring; grunn av odelsrett eller slektskap, og du s&oslash;ker konsesjon fordi du ikke skal bosette deg p&aring; eiendommen.</p>
+
+                        <p class="x-small"><strong>I felt 19</strong> m&aring; du krysse av for om du vil forplikte deg til &aring; bosette deg p&aring; eiendommen innen ett &aring;r og selv bo der i minst 5 &aring;r sammenhengende. Er ervervet i utgangspunktet konsesjonsfritt p&aring; grunn av ekteskap, slektskap eller odelsrett, og du s&oslash;ker konsesjon fordi du ikke skal bosette deg p&aring; eiendommen, jf punkt A, m&aring; du krysse av for dette alternativet i felt 19. Du kan gi n&aelig;rmere opplysninger om bakgrunnen for hvorfor du ikke skal bosette deg p&aring; eiendommen p&aring; side 3, under &ldquo;Eventuelle tillegsopplysninger&rdquo;, eller vedlegge eget brev.</p>
+
+                        <p class="x-small">Gjelder s&oslash;knaden en jord- eller skogbrukseiendom, skal det i forbindelse med behandlingen av konsesjonss&oslash;knaden vurderes om det er n&oslash;dvendig med delingssamtykke etter &sect; 12 i lov av 12. mai 1995 nr. 23 om jord (jordloven). <strong>I felt 20</strong> m&aring; det derfor opplyses om overdrageren eier annen fast eiendom i kommunen enn den som n&aring; overdras. Er det flere som s&oslash;ker konsesjon p&aring; samme landbrukseiendom m&aring; hver konsesjonss&oslash;ker sende inn egen s&oslash;knad. Det m&aring; opplyses om s&oslash;kerne er gift eller samboere i <strong>felt 21</strong></p>
+
+                        <p class="x-small">
+                            <strong>Felt 22</strong><br />
+                            Erverver m&aring; undertegne konsesjonss&oslash;knaden. For umyndige - personer under 18 &aring;r eller umyndiggjorte - m&aring; vergen undertegne. Advokater kan undertegne p&aring; vegne av parten dersom fullmakt foreligger.
+                        </p>
+                    </td>
+                </tr>
+                <tr contenteditable="false">
+                    <td colspan="100" style="border-bottom:none">
+                        <div class="page-info">
+                            <div class="version">versjon 1.3 - 1.1.2026</div>
+                            LDIR-359 B <span class="text-right" style="float:right">
+                                Landbruksdirektoratet - S&oslash;knad om konsesjon p&aring; erverv av fast eiendom etter<br />
+                                konsesjonsloven av 28. november 2003 nr. 98<br />
+                                side 4 av 4
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,79 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate table {
+                                border-collapse: collapse;
+                                width: 100%;
+                                table-layout: fixed;
+                            }                       
+                    
+                            #vitecTemplate table td[data-label]:before {
+                                content: attr(data-label);
+                                text-align: left;
+                                color: #333;
+                                font-size: 7pt;
+                                line-height: 8pt;
+                                display: block;
+                                position: absolute;
+                                top: 1px;
+                            }
+                    
+                            #vitecTemplate table td[data-choice]:after {
+                                content: attr(data-choice);
+                                text-align: center;
+                                font-size: 7pt;
+                                font-weight: normal;
+                                line-height: 8pt;
+                                color: #333;
+                                display: block;
+                                position: absolute;
+                                bottom: 1px;
+                                left: 0;
+                                right: 0;
+                    
+                            }
+                    
+                            #vitecTemplate table td[data-label] {
+                                padding: 16px 2px 4px 2px;
+                                position: relative;
+                            }
+                    
+                            #vitecTemplate table td[data-choice] {
+                                padding: 4px 2px 16px 2px;
+                                position: relative;
+                            }
+</style>
+<table>
+	<tbody>
+		<tr class="no-border">
+			<td colspan="100">
+			<div vitec-template="resource: Mottaker">&nbsp;</div>
+
+			<p><strong>Klargj&oslash;ring av oppgj&oslash;r i forbindelse med kj&oslash;p av [[eiendom.gatenavnognr]] - [[komplettmatrikkel]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+			<p>Vi vil med dette orientere om at vi har mottatt oppgj&oslash;rsmappen fra megler i forbindelse med kj&oslash;p av ovennevnte eiendom. Vi ser frem til &aring; bist&aring; i oppgj&oslash;rsfasen av handelen, og i forberedelsene til denne er det enkelte ting vi &oslash;nsker &aring; minne om:</p>
+
+			<ul>
+				<li>Det er viktig at vi s&aring; snart som mulig mottar &quot;Oppgj&oslash;rsskjema kj&oslash;per&quot; i n&oslash;yaktig utfylt og undertegnet stand. I den forbindelse ber vi spesielt om:</li>
+			</ul>
+
+			<ol style="margin-left:1.5em">
+				<li>at <span vitec-if="Model.kjopere.Count == 1">du</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> fyller ut endelig finansieringsplan for kj&oslash;pet, ved &aring; bla. oppf&oslash;re l&aring;n som opptas i f.m. kj&oslash;pet, hvem som er l&aring;ngiver og l&aring;ngivers kontaktperson.</li>
+				<li>at <span vitec-if="Model.kjopere.Count == 1">du</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> p&aring;f&oslash;rer kontonummer, hvor evt. godskrevne renter og/eller for mye innbetalt bel&oslash;p kan bli overf&oslash;rt.</li>
+			</ol>
+
+			<ul>
+				<li>Videre ber vi <span vitec-if="Model.kjopere.Count == 1">deg</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> spesielt passe p&aring;:</li>
+			</ul>
+
+			<ol style="margin-left:1.5em">
+				<li>at <span vitec-if="Model.kjopere.Count == 1">du</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> informerer banken om at megler m&aring; ha mottatt fullt oppgj&oslash;r inkl. omkostninger, herunder mottatt evt. panterett i ferdig underskrevet og bevitnet stand, klar for tinglysning, innen avtalt overtakelsesdag.</li>
+				<li>at <span vitec-if="Model.kjopere.Count == 1">du</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> noen dager f&oslash;r overtakelse kontakter bankforbindelsen for &aring; unders&oslash;ke at alt er p&aring; plass hos banken, og at oppgj&oslash;r vil bli betalt til megler i tide f&oslash;r overtakelse.</li>
+			</ol>
+
+			<p>Vi ser frem til et godt samarbeid, og skulle det v&aelig;re sp&oslash;rsm&aring;l knyttet til oppgj&oslash;rsforberedelsen, st&aring;r vi gjerne til tjeneste.</p>
+
+			<div vitec-template="resource: Avsender">&nbsp;</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>

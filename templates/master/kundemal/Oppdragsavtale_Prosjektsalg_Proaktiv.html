@@ -1,0 +1,1484 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate {
+            font-size: 9pt;
+            position: relative;
+        }
+
+            #vitecTemplate h1 {
+                counter-reset: item;
+            }
+
+            #vitecTemplate .item {
+                counter-increment: item;
+            }
+
+                #vitecTemplate .item > .item {
+                    counter-reset: item;
+                }
+
+                #vitecTemplate .item ~ .item {
+                    counter-reset: article;
+                }
+
+                #vitecTemplate .item h2:before,
+                #vitecTemplate .item h3:before,
+                #vitecTemplate .item h4:before {
+                    content: counters(item, ".") ". ";
+                }
+
+            #vitecTemplate table {
+                width: 100%;
+                table-layout: fixed;
+                border-collapse: collapse;
+            }
+
+                #vitecTemplate table th {
+                    text-align: left;
+                    font-weight: normal;
+                    display: table-cell;
+                    padding: 0 0 0 0;
+                }
+
+                #vitecTemplate table td {
+                    padding: 3px 0;
+                    margin: 0;
+                }
+
+                #vitecTemplate table p,
+                #vitecTemplate table div {
+                    padding: 3px 0;
+                    margin: 0;
+                }
+
+            #vitecTemplate ul li,
+            #vitecTemplate ol li {
+                line-height: 1.25;
+                margin: 0 0;
+                padding: 0;
+            }
+
+            #vitecTemplate article {
+                margin-left: 1.5em;
+            }
+
+                #vitecTemplate article.item h4 {
+                    margin-left: 0;
+                }
+
+            #vitecTemplate .avoid-page-break {
+                page-break-inside: avoid;
+            }
+
+            #vitecTemplate h1 {
+                text-align: center;
+                font-size: 14pt;
+                margin: 0;
+                padding: 0;
+            }
+
+            #vitecTemplate h2 {
+                font-size: 11pt;
+                counter-reset: h3;
+                margin: 25px 0 0 -1em;
+                padding: 0;
+            }
+
+            #vitecTemplate h3 {
+                font-size: 10pt;
+                counter-reset: h4;
+                margin: 20px 0 0 0;
+                padding: 0;
+            }
+
+            #vitecTemplate h4 {
+                font-size: 9pt;
+                counter-reset: none;
+                margin: 0 0 0 1em;
+                padding: 12px 0 0 0;
+            }
+
+        /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+        span.insert:empty {
+            font-size: inherit !important;
+            line-height: inherit !important;
+            display: inline-block;
+            background-color: lightpink;
+            min-width: 2em !important;
+            height: .7em !important;
+            text-align: center;
+        }
+
+            span.insert:empty:before {
+                content: attr(data-label);
+            }
+
+            span.insert:empty:hover {
+                background-color: #fff;
+                cursor: pointer;
+            }
+
+        .insert-table {
+            display: inline-table;
+        }
+
+            .insert-table > span,
+            .insert-table > span.insert {
+                display: table-cell;
+            }
+
+        .insert-textbox {
+            display: inline-table;
+            vertical-align: bottom;
+            margin: 0 2px;
+        }
+
+            .insert-textbox > span {
+                padding: 4px 0;
+                line-height: 1.1;
+                border-bottom: solid 1px #000;
+                height: 1.1em;
+                width: 8cm;
+                max-width: 30em;
+                overflow: hidden;
+                display: table-cell;
+                text-align: left;
+                white-space: nowrap;
+            }
+
+        #vitecTemplate .info-table {
+            border-collapse: collapse;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+            #vitecTemplate .info-table tr:not(:first-child) td {
+                border-top: solid 1px lightgray;
+            }
+
+            #vitecTemplate .info-table td {
+                vertical-align: top;
+            }
+
+            #vitecTemplate .info-table .text-right {
+                text-align: right;
+            }
+
+            #vitecTemplate .info-table tr.sumlinje td {
+                border-top: solid 1px #000;
+                border-bottom: solid 1px #000;
+                font-weight: bold;
+                padding: 3px 0;
+                margin: 0;
+            }
+
+            #vitecTemplate .info-table tr.delsumlinje td {
+                border-top: solid 1px #000;
+                border-bottom: solid 1px #000;
+            }
+
+        #vitecTemplate .bordered-table td {
+            border: solid 1px #000;
+        }
+
+        #vitecTemplate .oppdragsparter tbody:last-child tr:last-child {
+            display: none;
+        }
+
+        #vitecTemplate .main-type {
+            display: none;
+        }
+
+        #vitecTemplate .announced-type {
+            display: none;
+        }
+
+            #vitecTemplate .announced-type[data-type="Oppgj\00f8rsoppdrag"] {
+                display: inline;
+            }
+
+        #vitecTemplate .seller:last-child .separator {
+            display: none;
+        }
+
+        #vitecTemplate .sign-field {
+            display: inline-block;
+            width: 45%;
+            margin-top: 1cm;
+            margin-right: 10px;
+            border-top: solid 1px #000;
+            vertical-align: top;
+        }
+</style>
+<style type="text/css">/* HJELP TIL UTFYLLING */
+
+        .screen-help {
+            /* bootstrap button */
+            position: absolute;
+            width: 300px;
+            white-space: unset;
+            /* pga. evt forklaring i data-help */
+            text-align: left;
+            font-family: Regular, sans-serif;
+            font-weight: normal;
+        }
+
+            .screen-help.extra-wide {
+                width: 400px;
+            }
+
+            .screen-help.left-aligned {
+                left: -1cm;
+                margin-left: -305px;
+            }
+
+            .screen-help.right-aligned {
+                right: -1.2cm;
+                margin-right: -305px;
+            }
+
+            .screen-help.left-aligned.extra-wide {
+                margin-left: -405px;
+            }
+
+            .screen-help.right-aligned.extra-wide {
+                margin-right: -405px;
+            }
+
+            .screen-help:before {
+                font-family: 'Font Awesome 5 Pro';
+                font-weight: 400;
+                content: "\f14a";
+                margin-right: 4px;
+            }
+
+        .screen-help-info {
+            pointer-events: none;
+        }
+
+            .screen-help-info:before {
+                font-family: 'Font Awesome 5 Pro';
+                font-weight: 700;
+                content: "\f05a";
+                margin-right: 4px;
+            }
+
+        .screen-help:after {
+            content: attr(data-help);
+            display: block;
+            background-color: white;
+            color: black;
+            font-size: 11.5px;
+            line-height: 13px;
+            padding: 2px;
+        }
+
+        .screen-help.collapsed {
+            background-image: linear-gradient(to bottom, #f0ad4e 0, #eb9316 100%);
+            border-color: #e38d13;
+        }
+
+            .screen-help.collapsed:hover {
+                background-image: linear-gradient(to bottom, #ec971f 0, #eb9316 100%);
+                background-color: #ec971f;
+                border-color: #d58512;
+            }
+
+            .screen-help.collapsed:before {
+                content: "\f0c8";
+            }
+
+        /* important pga cleanslate */
+
+        .collapse,
+        .collapse.collapse-span,
+        .collapse.collapse-row,
+        .collapse.collapse-list-item {
+            display: none !important;
+        }
+
+            .collapse.in {
+                display: block !important;
+            }
+
+            .collapse.collapse-span.in {
+                display: inline !important;
+            }
+
+            .collapse.collapse-tbody.in {
+                display: table-row-group !important;
+            }
+
+            .collapse.collapse-row.in {
+                display: table-row !important;
+            }
+
+            .collapse.collapse-list-item.in {
+                display: list-item !important;
+            }
+
+        .collapsing {
+            color: red;
+        }
+
+        #vitecTemplate .witness-table td {
+            height: 30px;
+            vertical-align: middle;
+            padding: 2px;
+            border: solid 1px #000;
+        }
+
+            #vitecTemplate .witness-table td.header-cell {
+                background-color: rgb(231, 230, 230);
+                text-align: center;
+            }
+
+        @("@")media print {
+            .screen-help {
+                display: none;
+            }
+        }
+</style>
+<style type="text/css">/* Klikkbare sjekkbokser og radioknapper */
+
+        label.btn {
+            display: inline;
+            text-transform: none;
+            white-space: normal;
+            padding: 0;
+            vertical-align: baseline;
+            outline: none;
+            font-size: inherit;
+        }
+
+            label.btn:active,
+            label.btn.active {
+                box-shadow: none;
+                outline: none;
+            }
+
+        .svg-toggle {
+            /* nullstiller bootstrap button-styling */
+            display: inline-block !important;
+            width: 16px;
+            height: 16px;
+            margin: 0 5px;
+            vertical-align: bottom;
+            padding: 0;
+            border: none;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none !important;
+            cursor: pointer;
+            white-space: normal;
+            text-align: left;
+            background-repeat: no-repeat;
+            background-size: 16px 16px;
+            background-position: center center;
+        }
+
+            .svg-toggle.checkbox {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+            }
+
+                .svg-toggle.checkbox.active,
+                .btn.active > .svg-toggle.checkbox {
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+                    box-shadow: none !important;
+                }
+
+            .svg-toggle.radio {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
+            }
+
+                .svg-toggle.radio.active,
+                .btn.active > .svg-toggle.radio {
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
+                    box-shadow: none !important;
+                }
+
+        /* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
+
+        #vitecTemplate [data-toggle="buttons"] input {
+            display: none;
+        }
+</style>
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<h1>OPPDRAGSAVTALE OM EIENDOMSMEGLING<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Orange bokser inneholder alternative tekster til kontrakten som du legger til ved klikke på boksen. Du kan fjerne teksten igjen ved å klikke på boksen en gang til. Turkise bokser inneholder hjelpetekster til brukeren. Ingen av hjelpeboksene vil bli tatt med ved utskrift.">INFORMASJON OM HJELPEBOKSER</span><br />
+			<em>Standard for prosjektmegling av fast eiendom til bolig- eller fritidsform&aring;l<br />
+			(utarbeidet desember 2007) </em></h1>
+
+			<article class="item">
+			<h2>OPPDRAGSNUMMER<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Fortløpende registrering av oppdrag hvert år.">Pkt. 1: Informasjon om oppdragsnummer</span></h2>
+
+			<p>[[oppdrag.nr]]</p>
+			</article>
+
+			<article class="item">
+			<h2>OPPDRAGSGIVEREN (KUNDEN)<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Ved flere oppdragsgivere skal det alltid avklares hvorvidt begge/alle oppdragsgivere må orienteres fortløpende og hvorvidt begge/alle må akseptere kjøperen og for øvrig opptre som eiere, ELLER om det skal utstedes fullmakt.">Pkt. 2: Informasjon om oppdragsgiver</span></h2>
+
+			<table class="info-table item oppdragsparter">
+				<thead>
+					<tr>
+						<th colspan="100">
+						<h3>Oppdragsgiver</h3>
+						</th>
+					</tr>
+				</thead>
+			</table>
+
+			<table class="info-table item" vitec-if="Model.selger.erfirma == false">
+				<tbody vitec-if="Model.selgere.Count &gt; 0">
+					<tr>
+						<td colspan="20" style="border-top:none"><strong>Navn 1:</strong></td>
+						<td colspan="80" style="border-top:none">@Model.selgere[0].navnutenfullmektigogkontaktperson</td>
+					</tr>
+					<tr>
+						<td colspan="20">Adresse:</td>
+						<td colspan="80">@Model.selgere[0].gatenavnognr, @Model.selgere[0].postnr @Model.selgere[0].poststed</td>
+					</tr>
+					<tr>
+						<td colspan="20">Telefon:</td>
+						<td colspan="30">@Model.selgere[0].tlf</td>
+						<td colspan="10">E-post:</td>
+						<td colspan="40">@Model.selgere[0].emailadresse</td>
+					</tr>
+					<tr style="border-bottom:solid 1px lightgray">
+						<td colspan="20">@Model.selgere[0].ledetekst_idnummer</td>
+						<td colspan="30">@Model.selgere[0].idnummer</td>
+						<td colspan="50"><strong>Legitimasjon</strong> (Type og kontrollnr.): &nbsp;</td>
+					</tr>
+					<tr style="border-bottom:solid 1px lightgray">
+						<td colspan="70">Konto for utbetaling av nettoprovenyet:</td>
+						<td colspan="30">Andel i prosent:</td>
+					</tr>
+					<tr>
+						<td colspan="100" style="border-bottom:none; border-top:none">&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="20" style="border-top:none">Vedlegg <span style="color:Red">x</span>:</td>
+						<td colspan="80" style="border-top:none">Kopi av legitimasjon</td>
+					</tr>
+				</tbody>
+				<tbody vitec-if="Model.selgere.Count &gt; 1">
+					<tr>
+						<td colspan="100" style="border-top:none">&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="20" style="border-top:none"><strong>Navn 2:</strong></td>
+						<td colspan="80" style="border-top:none">@Model.selgere[1].navnutenfullmektigogkontaktperson</td>
+					</tr>
+					<tr>
+						<td colspan="20">Adresse:</td>
+						<td colspan="80">@Model.selgere[1].gatenavnognr, @Model.selgere[1].postnr @Model.selgere[1].poststed</td>
+					</tr>
+					<tr>
+						<td colspan="20">Telefon:</td>
+						<td colspan="30">@Model.selgere[1].tlf</td>
+						<td colspan="10">E-post:</td>
+						<td colspan="40">@Model.selgere[1].emailadresse</td>
+					</tr>
+					<tr style="border-bottom:solid 1px lightgray">
+						<td colspan="20">@Model.selgere[1].ledetekst_idnummer</td>
+						<td colspan="30">@Model.selgere[1].idnummer</td>
+						<td colspan="50"><strong>Legitimasjon</strong> (Type og kontrollnr.): &nbsp;</td>
+					</tr>
+					<tr style="border-bottom:solid 1px lightgray">
+						<td colspan="70">Konto for utbetaling av nettoprovenyet:</td>
+						<td colspan="30">Andel i prosent:</td>
+					</tr>
+					<tr>
+						<td colspan="100" style="border-bottom:none; border-top:none">&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="20" style="border-top:none">Vedlegg <span style="color:Red">x</span>:</td>
+						<td colspan="80" style="border-top:none">Kopi av legitimasjon</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<table class="info-table item" vitec-if="Model.selger.erfirma == true">
+				<tbody>
+					<tr>
+						<td colspan="20" style="border-top:none"><strong>Foretakets navn:</strong></td>
+						<td colspan="80" style="border-top:none">[[selger.firmanavn]]</td>
+					</tr>
+					<tr>
+						<td colspan="20">Org.nummer:</td>
+						<td colspan="30">[[selger.idnummer]]</td>
+						<td colspan="30">Registrert i merverdiavgiftsmantallet:</td>
+						<td colspan="20" data-toggle="buttons">
+						<div><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" /></label> Ja &nbsp;&nbsp;<label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" /></label> <span style="display:inline-block; vertical-align:middle"> Nei </span></div>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="20">Kontaktperson:</td>
+						<td colspan="30"><span vitec-if="Model.selger.hovedkontakt.navn != &quot;Mangler data&quot;">[[selger.hovedkontakt.navn]]</span></td>
+						<td colspan="20">Signaturberettiget:</td>
+						<td colspan="30"><span vitec-if="Model.selger.signaturberettiget.navn != &quot;Mangler data&quot;">[[selger.signaturberettiget.navn]]</span></td>
+					</tr>
+					<tr style="border-bottom:solid 1px lightgray">
+						<td colspan="70">Konto for utbetaling av nettoprovenyet:</td>
+						<td colspan="30">Andel i prosent:</td>
+					</tr>
+					<tr>
+						<td colspan="100" style="border-bottom:none; border-top:none">&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="20" style="border-top:none">Vedlegg <span style="color:Red">x</span>:</td>
+						<td colspan="80" style="border-top:none">Firmaattest</td>
+					</tr>
+					<tr>
+						<td colspan="20" style="border-top:none">Vedlegg <span style="color:Red">x</span>:</td>
+						<td colspan="80" style="border-top:none">Kopi av legitimasjon fra signaturberettiget</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<table vitec-if="Model.selger.fullmektig.navn != &quot;Mangler data&quot;">
+				<tbody>
+					<tr>
+						<td colspan="100" style="border-bottom:none; border-top:none">&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="100" style="border-top:none"><strong>Oppdragsgiver representeres av:</strong></td>
+					</tr>
+					<tr>
+						<td colspan="20" style="border-top:none"><strong>Navn:</strong></td>
+						<td colspan="80" style="border-top:none">[[selger.fullmektig.navn]]</td>
+					</tr>
+					<tr vitec-if="Model.selger.fullmektig.idnummer.ToString().Length == 11">
+						<td colspan="20" style="border-top:none">[[selger.fullmektig.ledetekst_idnummer]]</td>
+						<td colspan="30" style="border-top:none">[[selger.fullmektig.idnummer]]</td>
+						<td colspan="30">Registrert i merverdiavgiftsmantallet:</td>
+						<td colspan="20" data-toggle="buttons" vitec-if="Model.selger.fullmektig.idnummer.ToString().Length == 11">
+						<div><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" /></label> Ja &nbsp;&nbsp;<label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" /></label> <span style="display:inline-block; vertical-align:middle"> Nei </span></div>
+						</td>
+					</tr>
+					<tr vitec-if="Model.selger.fullmektig.idnummer.ToString().Length == 12">
+						<td colspan="20" style="border-top:none">[[selger.fullmektig.ledetekst_idnummer]]</td>
+						<td colspan="30" style="border-top:none">[[selger.fullmektig.idnummer]]</td>
+						<td colspan="10" vitec-if="Model.selger.fullmektig.idnummer.ToString().Length == 12">Adresse:</td>
+						<td colspan="40" vitec-if="Model.selger.fullmektig.idnummer.ToString().Length == 12">[[selger.fullmektig.gatenavnognr]], [[selger.fullmektig.postnr]] [[selger.fullmektig.poststed]]</td>
+					</tr>
+					<tr>
+						<td colspan="20">Telefon:</td>
+						<td colspan="30">[[selger.fullmektig.tlf]]</td>
+						<td colspan="10">E-post:</td>
+						<td colspan="40">[[selger.fullmektig.epost]]</td>
+					</tr>
+					<tr>
+						<td colspan="100" style="border-bottom:none; border-top:none">&nbsp;</td>
+					</tr>
+					<tr aria-expanded="false" vitec-if="Model.selger.fullmektig.idnummer.ToString().Length == 11">
+						<td colspan="20" style="border-top:none; height:0px">Vedlegg <span style="color:Red">x</span>:</td>
+						<td colspan="80" style="border-top:none; height:0px">Firmaattest</td>
+					</tr>
+					<tr>
+						<td colspan="20" style="border-top:none">Vedlegg <span style="color:Red">x</span>:</td>
+						<td colspan="80" style="border-top:none">Kopi av legitimasjon <span aria-expanded="false" class="collapse collapse-span hjelp20">fra signaturberettiget</span></td>
+					</tr>
+					<tr>
+						<td colspan="20" style="border-top:none">Vedlegg <span style="color:Red">x</span>:</td>
+						<td colspan="80" style="border-top:none">Fullmaktsdokument</td>
+					</tr>
+					<tr>
+						<td colspan="100">
+						<p><span class="insert-table"><span class="insert" data-label="Beskrivelse av fullmaktens innhold og virkninger - stillingsfullmakt/frasagnsfullmakt/oppdragsfullmakt"></span></span></p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</article>
+
+			<article class="item">
+			<h2>OPPDRAGSTAKEREN (MEGLEREN)</h2>
+
+			<table class="info-table item">
+				<thead>
+					<tr>
+						<th colspan="100">
+						<h3>Eiendomsmegleren</h3>
+						</th>
+					</tr>
+					<tr>
+						<th colspan="100">
+						<h4>Foretaksbevilling</h4>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan="20"><strong>Meglerforetakets navn:</strong></td>
+						<td colspan="80">[[meglerkontor.navn]]</td>
+					</tr>
+					<tr>
+						<td colspan="20">Adresse:</td>
+						<td colspan="80">[[meglerkontor.besoksadresse]], [[meglerkontor.postnr]] [[meglerkontor.poststed]]</td>
+					</tr>
+					<tr>
+						<td colspan="20">Org.nummer:</td>
+						<td colspan="80">[[meglerkontor.orgnr]]</td>
+					</tr>
+					<tr style="border-bottom:solid 1px lightgray">
+						<td colspan="20">Telefon:</td>
+						<td colspan="30">[[meglerkontor.tlf]]</td>
+						<td colspan="10">E-post:</td>
+						<td colspan="40">[[meglerkontor.epost]]</td>
+					</tr>
+					<tr>
+						<td colspan="100" style="border-bottom:none; border-top:none">&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="20" style="border-bottom:solid 1px lightgray">Fagansvarlig i foretaket:</td>
+						<td colspan="80"><span class="insert-table"><span class="insert" data-label="Navn"></span></span></td>
+					</tr>
+					<tr style="border-bottom:solid 1px lightgray">
+						<td colspan="20">Telefon:</td>
+						<td colspan="30"><span class="insert-table"><span class="insert" data-label="Telefon"></span></span></td>
+						<td colspan="10">E-post:</td>
+						<td colspan="40"><span class="insert-table"><span class="insert" data-label="E-post"></span></span></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<table class="avoid-page-break info-table item">
+				<thead>
+					<tr>
+						<th colspan="100">
+						<h4>Enkeltpersonforetak (personlig bevilling)</h4>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan="20"><strong>Bevillingshavers navn:</strong></td>
+						<td colspan="80"><span class="insert-table"><span class="insert" data-label="Navn"></span></span></td>
+					</tr>
+					<tr>
+						<td colspan="20">Adresse:</td>
+						<td colspan="80"><span class="insert-table"><span class="insert" data-label="Adresse"></span></span></td>
+					</tr>
+					<tr>
+						<td colspan="20">F&oslash;dt:</td>
+						<td colspan="80"><span class="insert-table"><span class="insert" data-label="Født"></span></span></td>
+					</tr>
+					<tr style="border-bottom:solid 1px lightgray">
+						<td colspan="20">Telefon:</td>
+						<td colspan="30"><span class="insert-table"><span class="insert" data-label="Telefon"></span></span></td>
+						<td colspan="10">E-post:</td>
+						<td colspan="40"><span class="insert-table"><span class="insert" data-label="E-post"></span></span></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<table class="avoid-page-break info-table item">
+				<thead>
+					<tr>
+						<th colspan="100">
+						<h3>Ansvarlig megler</h3>
+						</th>
+					</tr>
+					<tr>
+						<td colspan="20"><strong>Navn:</strong></td>
+						<td colspan="80"><span vitec-if="(Model.ansvarligmegler.navn != &quot;Mangler data&quot; &amp;&amp; Model.operativmegler.navn != Model.ansvarligmegler.navn)">[[ansvarligmegler.navn]]</span><span vitec-if="(Model.ansvarligmegler.navn == &quot;Mangler data&quot; || Model.operativmegler.navn == Model.ansvarligmegler.navn)">[[operativmegler.navn]]</span></td>
+					</tr>
+					<tr style="border-bottom:solid 1px lightgray">
+						<td colspan="20">Telefon:</td>
+						<td colspan="30"><span vitec-if="(Model.ansvarligmegler.navn != &quot;Mangler data&quot; &amp;&amp; Model.operativmegler.navn != Model.ansvarligmegler.navn)">[[ansvarligmegler.mobiltlf]]</span><span vitec-if="(Model.ansvarligmegler.navn == &quot;Mangler data&quot; || Model.operativmegler.navn == Model.ansvarligmegler.navn)">[[operativmegler.mobiltlf]]</span></td>
+						<td colspan="10">E-post:</td>
+						<td colspan="40"><span vitec-if="(Model.ansvarligmegler.navn != &quot;Mangler data&quot; &amp;&amp; Model.operativmegler.navn != Model.ansvarligmegler.navn)">[[ansvarligmegler.epost]]</span><span vitec-if="(Model.ansvarligmegler.navn == &quot;Mangler data&quot; || Model.operativmegler.navn == Model.ansvarligmegler.navn)">[[operativmegler.epost]]</span></td>
+					</tr>
+				</thead>
+			</table>
+
+			<p>Skifte av ansvarlig megler skal skriftlig opplyses til oppdragsgiveren.</p>
+
+			<table class="avoid-page-break info-table item">
+				<thead>
+					<tr>
+						<th colspan="100">
+						<h3>Eiendomsmeglerfullmektig</h3>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan="20"><strong>Navn:</strong></td>
+						<td colspan="80"><span vitec-if="(Model.operativmegler.navn != &quot;Mangler data&quot; &amp;&amp; Model.operativmegler.navn != Model.ansvarligmegler.navn)">[[operativmegler.navn]]</span><span vitec-if="Model.operativmegler.navn == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="Navn"></span></span></span></td>
+					</tr>
+					<tr style="border-bottom:solid 1px lightgray">
+						<td colspan="20">Telefon:</td>
+						<td colspan="30"><span vitec-if="(Model.operativmegler.navn != &quot;Mangler data&quot; &amp;&amp; Model.operativmegler.navn != Model.ansvarligmegler.navn)">[[operativmegler.navn]]</span><span vitec-if="Model.operativmegler.navn == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="Telefon"></span></span></span></td>
+						<td colspan="10">E-post:</td>
+						<td colspan="40"><span vitec-if="(Model.operativmegler.navn != &quot;Mangler data&quot; &amp;&amp; Model.operativmegler.navn != Model.ansvarligmegler.navn)">[[operativmegler.navn]]</span><span vitec-if="Model.operativmegler.navn == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="E-post"></span></span></span></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<table class="avoid-page-break info-table item">
+				<thead>
+					<tr>
+						<th colspan="100">
+						<h3>Medhjelper</h3>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan="20">Navn:</td>
+						<td colspan="80"><span vitec-if="Model.megler2.navn != &quot;Mangler data&quot;">[[megler2.navn]]</span><span vitec-if="Model.megler2.navn == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="Navn"></span></span></span></td>
+					</tr>
+					<tr style="border-bottom:solid 1px lightgray">
+						<td colspan="20">Telefon:</td>
+						<td colspan="30"><span vitec-if="Model.megler2.navn != &quot;Mangler data&quot;">[[megler2.tlf]]</span><span vitec-if="Model.megler2.navn == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="Telefon"></span></span></span></td>
+						<td colspan="10">E-post:</td>
+						<td colspan="40"><span vitec-if="Model.megler2.navn != &quot;Mangler data&quot;">[[megler2.epost]]</span><span vitec-if="Model.megler2.navn == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="E-post"></span></span></span></td>
+					</tr>
+					<tr>
+						<td colspan="100">
+						<p>Medhjelpers oppgaver:<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Legg til oppgavene medhjelperen skal utføre">Pkt. 3.6: Info om medhjelperens oppgaver</span></p>
+
+						<ol>
+							<li>Gjennomf&oslash;re visning</li>
+							<li>&Oslash;vrige arbeidsoppgaver medhjelper kan utf&oslash;re i henhold til lov om eiendomsmegling og eiendomsmeglingsforskriften <span style="white-space:nowrap">&sect; 6-1</span> annet ledd.</li>
+						</ol>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</article>
+
+			<article class="item">
+			<h2>MEGLERENS BRUK AV KONTRAKTSMEDHJELPERE</h2>
+
+			<table class="info-table item">
+				<thead>
+					<tr>
+						<th colspan="100">
+						<h3>Standard</h3>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan="20"><strong>Meglerforetakets navn:</strong></td>
+						<td colspan="80">[[meglerkontor.navn]]</td>
+					</tr>
+					<tr>
+						<td colspan="20">Adresse:</td>
+						<td colspan="80">[[meglerkontor.besoksadresse]], [[meglerkontor.postnr]] [[meglerkontor.poststed]]</td>
+					</tr>
+					<tr>
+						<td colspan="20">Org.nummer:</td>
+						<td colspan="80">[[meglerkontor.orgnr]]</td>
+					</tr>
+					<tr style="border-bottom:solid 1px lightgray">
+						<td colspan="20">Telefon:</td>
+						<td colspan="30">[[meglerkontor.tlf]]</td>
+						<td colspan="10">E-post:</td>
+						<td colspan="40">[[meglerkontor.epost]]</td>
+					</tr>
+					<tr>
+						<td colspan="100" style="border-bottom:none; border-top:none">&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="20" style="border-bottom:solid 1px lightgray">Fagansvarlig i foretaket:</td>
+						<td colspan="80"><span class="insert-table"><span class="insert" data-label="Navn"></span></span></td>
+					</tr>
+					<tr style="border-bottom:solid 1px lightgray">
+						<td colspan="20">Telefon:</td>
+						<td colspan="30"><span class="insert-table"><span class="insert" data-label="Telefon"></span></span></td>
+						<td colspan="10">E-post:</td>
+						<td colspan="40"><span class="insert-table"><span class="insert" data-label="E-post"></span></span></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<table class="avoid-page-break info-table item">
+				<thead>
+					<tr>
+						<th colspan="100">
+						<h3>Spesialtilpasning</h3>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan="20"><strong>Kontraktsmedjelper:</strong></td>
+						<td colspan="80">[[oppgjor.kontornavn]]</td>
+					</tr>
+					<tr>
+						<td colspan="20">Adresse:</td>
+						<td colspan="80">[[oppgjor.postadresse]], [[oppgjor.postnr]] [[oppgjor.poststed]]</td>
+					</tr>
+					<tr>
+						<td colspan="20">Org.nummer:</td>
+						<td colspan="80">[[oppgjor.orgnr]]</td>
+					</tr>
+					<tr style="border-bottom:solid 1px lightgray">
+						<td colspan="20">Telefon:</td>
+						<td colspan="30">[[oppgjor.kontortlf]]</td>
+						<td colspan="10">E-post:</td>
+						<td colspan="40">[[oppgjor.kontorepost]]</td>
+					</tr>
+					<tr>
+						<td colspan="100">
+						<p>Kontraktsmedhjelperens oppgaver:<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Legg til oppgavene kontraktsmedhelperen skal utføre">Pkt. 3.6: Info om kontraktsmedhjelperens oppgaver</span></p>
+
+						<ol>
+							<li><em>Beskriv oppgavene, for eksempel &quot;Det &oslash;konomiske oppgj&oslash;ret mellom partene&quot;</em></li>
+						</ol>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="100" style="border-bottom:none; border-top:none">&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="20" style="border-bottom:solid 1px lightgray">Fagansvarlig i foretaket:</td>
+						<td colspan="80"><span class="insert-table"><span class="insert" data-label="Navn"></span></span></td>
+					</tr>
+					<tr style="border-bottom:solid 1px lightgray">
+						<td colspan="20">Telefon:</td>
+						<td colspan="30"><span class="insert-table"><span class="insert" data-label="Telefon"></span></span></td>
+						<td colspan="10">E-post:</td>
+						<td colspan="40"><span class="insert-table"><span class="insert" data-label="E-post"></span></span></td>
+					</tr>
+					<tr>
+						<td colspan="100" style="border-bottom:none; border-top:none">&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="20" style="border-bottom:solid 1px lightgray">Ansvarlig oppgj&oslash;rsmedarbeider:</td>
+						<td colspan="80"><br />
+						[[oppgjor.ansvarlig.navn]]</td>
+					</tr>
+					<tr style="border-bottom:solid 1px lightgray">
+						<td colspan="20">Telefon:</td>
+						<td colspan="30">[[oppgjor.ansvarlig.tlf]]</td>
+						<td colspan="10">E-post:</td>
+						<td colspan="40">[[oppgjor.ansvarlig.epost]]</td>
+					</tr>
+					<tr>
+						<td colspan="100">
+						<p>Bruk av kontraktsmedhjelper fratar ikke eiendomsmeglerforetaket og den ansvarlige megler for noe ansvar for utf&oslash;ring av oppdraget.</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</article>
+
+			<article class="item">
+			<h2>OPPDRAGETS KARAKTER</h2>
+			<!-- @{
+                                                            var erSalg ="";
+                                                            var erKjop ="";
+                                                            var erUtleie ="";
+                                                            var erOppgjorsoppdrag ="";
+                                                            if ((Model.oppdrag.hovedtype == "Salgsoppdrag" || Model.oppdrag.hovedtype == "Prosjektsalg") && !Model.oppdrag.type.Contains("\xF8")) {
+                                                                erSalg = "active";
+                                                            } else if (Model.oppdrag.hovedtype != "Oppgj\xF8rsoppdrag" && Model.oppdrag.type.Contains("\xF8")) {
+                                                                erKjop = "active";
+                                                            } else if (Model.oppdrag.hovedtype == "Utleieoppdrag") {
+                                                                erUtleie = "active";
+                                                            } else if (Model.oppdrag.hovedtype == "Oppgj\xF8rsoppdrag") {
+                                                                erOppgjorsoppdrag = "active";
+                                                            }
+                                                        }-->
+
+			<table class="info-table item">
+				<thead>
+					<tr>
+						<th colspan="100">
+						<h3>Klassifisering</h3>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr data-toggle="buttons">
+						<td colspan="20"><label class="btn @erSalg" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" />Salg </label></td>
+						<td colspan="20"><label class="btn @erUtleie" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" />Utleie </label></td>
+						<td colspan="30"><label class="btn @erOppgjorsoppdrag" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" />Kontrakt/Oppgj&oslash;r </label></td>
+						<td colspan="20"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" />Annet </label><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="I dette punktet beskrives forhold eiendomsmegleren har ansvaret for, og hvordan en eventuell ansvarsfordeling med oppdragsgiveren skal være. Alle øvrige oppgaver i prosjekteringen er oppdragsgiveren alene ansvarlig for.">Pkt. 5.2: Standardtekst om prosjektfasen</span></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div class="item">
+			<div class="avoid-page-break">
+			<h3>Prosjektfasen - forberedelse til salg</h3>
+
+			<p><span class="insert-table"><span class="insert" data-label="Beskrivelse"></span></span></p>
+			</div>
+
+			<article class="avoid-page-break item">
+			<h4>Tomteforhold<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Består prosjektområdet av en eller flere tomter? Skal det skje sammenføyning eller deling av tomter før prosjektet legges ut for salg? Hvordan skal arbeidsfordelingen mellom megler og oppdragsgiver være for tilrettelegging av tomt?">Pkt. 5.2.1: Hjelpetekst om tomteforhold</span></h4>
+
+			<p><span class="insert-table"><span class="insert" data-label="Beskrivelse"></span></span><span class="btn btn-info btn-xs extra-wide left-aligned screen-help screen-help-info" contenteditable="false" data-help="Det må oppgis i salgsoppgaven hvilke heftelser som ligger på eiendommen, se NEFs veiledning for utarbeidelse av salgsoppgaven. Eiendomsmegler må foreta en grundig gjennomgang av tinglyste heftelser og søke å klarlegge eventuelle ikke tinglyste heftelser. På samme måte må forhold omkring regulering og konsesjon bringes på det rene før prosjektet kan selges via megler. Dersom det er behov for å følge opp kommunen eller andre offentlige myndigheter, bør det avklares hvilken av partene som har ansvaret for dette.">Pkt. 5.2.2: Hjelpetekst om annen klargj&oslash;ring av eiendommen</span></p>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h4>Annen klargj&oslash;ring av eiendommen for salg</h4>
+
+			<p><span class="insert-table"><span class="insert" data-label="Beskrivelse"></span></span></p>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h4>Seksjonering<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Hvilken av partene har ansvaret for seksjoneringen? Hvilket materiale må eiendomsmegleren eventuelt motta fra utbyggeren for å besørge seksjoneringen?">Pkt. 5.2.3: Hjelpetekst om seksjonering</span></h4>
+
+			<p><span class="insert-table"><span class="insert" data-label="Beskrivelse"></span></span></p>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h4>Fullmakter for dokumenth&aring;ndtering</h4>
+
+			<p><span class="insert-table"><span class="insert" data-label="Beskrivelse"></span></span><span class="btn btn-info btn-xs extra-wide left-aligned screen-help screen-help-info" contenteditable="false" data-help="Dersom utbyggeren ikke har tinglyst grunnbokshjemmel, slik at hjemmelen skal overføres direkte fra grunneier til kjøperne, kan det utstedes en såkalt generalfullmakt fra grunneieren til utbyggeren slik at grunneieren ikke behøver medvirke ved hver overskjøting. Det er i disse tilfellene vanlig å tinglyse en urådighetserklæring på eiendommen for å unngå at grunneieren kan disponere over eiendommen under prosjektets gang. Merk at fullmakten faller bort dersom hjemmelshaveren er et selskap og selskapet bortfaller som rettssubjekt ved konkurs eller andre grunner. Er hjemmelshaver et selskap, bør det derfor eksplisitt avtales at eiendomsmegleren ikke har ansvaret for de økonomiske konsekvensene dette kan ha for oppdragsgiveren.">Pkt. 5.2.4: Hjelpetekst om fullmakter</span></p>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h4>Garantier<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="I avtaler som omfattes av bustadoppføringslova, plikter entreprenøren å stille garanti etter § 12 umiddelbart etter avtaleinngåelse.">Pkt. 5.2.5: Hjelpetekst om garantier</span></h4>
+
+			<p><span class="insert-table"><span class="insert" data-label="Beskrivelse"></span></span></p>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h4>Markedsanalyser</h4>
+
+			<p>Eiendomsmegleren skal/skal ikke utarbeide markedsanalyse f&oslash;r byggestart/f&oslash;r prosjektet legges ut for salg. Analysen skal overleveres til oppdragsgiver innen n&aelig;rmere avtalt frist.</p>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h4>Reklamemateriell og annonsering</h4>
+
+			<p>Oppdragsgiveren skal godkjenne og dekke utgiftene for alt reklamemateriell og all annonsering i forbindelse med salget. Partene er enige om &aring; f&oslash;lge bransjenormen for markedsf&oslash;ring av prosjekterte boliger.<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Ved ønske om å trekke inn eiendomsmegleren som rådgiver kan det presiseres hvilke forventninger partene har til dette samarbeidet og evt. presisere behov for møter med megler før prosjektet legges ut for salg.">Pkt. 5.2.8: Hjelpetekst om eiendomsmeglerens rolle</span></p>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h4>Eiendomsmeglerens rolle som r&aring;dgiver i prosjektfasen</h4>
+
+			<p><span class="insert-table"><span class="insert" data-label="Beskrivelse"></span></span></p>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h4>Byggel&aring;nsfinansiering<span class="btn btn-info btn-xs extra-wide left-aligned screen-help screen-help-info" contenteditable="false" data-help="Skal eiendomsmegleren bistå på noen måte knyttet til byggelånet?">Pkt. 5.2.9: Hjelpetekst om byggel&aring;nsforsikring</span></h4>
+
+			<p><span class="insert-table"><span class="insert" data-label="Beskrivelse"></span></span></p>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h4>Annet</h4>
+
+			<p><span class="insert-table"><span class="insert" data-label="Beskrivelse"></span></span></p>
+			</article>
+			</div>
+
+			<div class="item">
+			<h3>Salgs- og byggeprosessen</h3>
+
+			<article class="avoid-page-break item">
+			<h4>Avtaleinng&aring;else<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Der boliger tilbys i markedet til fast pris, må det opplyses at salgsoppgaven ikke anses som et bindende tilbud i avtalerettslig forstand som automatisk binder partene dersom en kjøper aksepterer det.">Pkt. 5.3.1: Hjelpetekst om avtaleinng&aring;else</span></h4>
+
+			<p>Eiendomsmegleren plikter &aring; opplyse interessenter om at det ikke er inng&aring;tt bindende avtale om kj&oslash;p av bolig f&oslash;r selger har akseptert kj&oslash;pers bud. (Det skal fremg&aring; tydelig av alt salgsmateriell at salg/utleie til fast pris ikke inneb&aelig;rer et tilbud fra oppdragsgiver som leder til en bindende avtale dersom det blir akseptert av kunden.)</p>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h4>Unders&oslash;kelse av finansiering</h4>
+
+			<p>Eiendomsmegleren har ikke noe ansvar for &aring; unders&oslash;ke kj&oslash;pers finansiering.</p>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h4>Prosjektm&oslash;ter under salgsprosessen<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Det anbefales at man avtaler prosjektmøter for å sikre god kommunikasjon, teksten som står i punktet er et eksempel på en slik avtale.">Pkt. 5.3.3: Hjelpetekst om prosjektm&oslash;ter</span></h4>
+
+			<p>Partene skal gjennomf&oslash;re <span class="insert-table"><span class="insert" data-label="Antall"></span></span> prosjektm&oslash;ter hver m&aring;ned/kvartal under salgsprosessen, ved eiendomsmeglerens/oppdragsgiverens kontor.</p>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h4>Skriftlig kommunikasjon og rapportering under salgsprosessen<span class="btn btn-info btn-xs extra-wide left-aligned screen-help screen-help-info" contenteditable="false" data-help="Det anbefales at partene avtaler forutsigbare rutiner for rapportering og annen oppdatering under prosjektets fremdrift, enten i tillegg til eller i stedet for prosjektmøter.">Pkt. 5.3.4: Hjelpetekst om kommunikasjon og rapportering</span></h4>
+
+			<p><span class="insert-table"><span class="insert" data-label="Beskrivelse"></span></span></p>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h4>Rutiner for kj&oslash;pernes &oslash;nsker om endringsarbeider og tilvalg<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Det anbefales at partene har klare rutiner for håndtering av endringer og tilvalg fra kjøperne, hvordan inngås bindende avtaler om disse endringene? Skal alle slike henvendelser henvises videre til utbyggeren? Har utbyggeren en standard tilvalgsliste?">Pkt. 5.3.5: Hjelpetekst om endringer og tilvalg</span></h4>
+
+			<p><span class="insert-table"><span class="insert" data-label="Beskrivelse"></span></span></p>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h4>Rutiner for fakturering, betaling og innkreving<span class="btn btn-info btn-xs extra-wide left-aligned screen-help screen-help-info" contenteditable="false" data-help="Det anbefales at partene avtaler hvordan kjøperne skal faktureres.">Pkt. 5.3.6: Hjelpetekst om fakturering, betaling og innkreving</span></h4>
+
+			<p><span class="insert-table"><span class="insert" data-label="Beskrivelse"></span></span></p>
+			</article>
+			</div>
+
+			<div class="item">
+			<h3>Overtakelse og oppgj&oslash;r</h3>
+
+			<article class="avoid-page-break item">
+			<h4>Overtakelsesprotokoll og overtakelsesforretning<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="En representant fra utbygger bør være tilstede under overtakelsesforretningen, og det må oppstilles protokoll i samsvar med bustadoppføringslovas krav. En mal for protokollen bør utarbeides og godkjennes i god tid før første overtakelse.">Pkt. 5.4.1: Hjelpetekst om overtakelsen</span></h4>
+
+			<p><span class="insert-table"><span class="insert" data-label="Beskrivelse"></span></span></p>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h4>Midlertidig brukstillatelse/ferdigattest<span class="btn btn-info btn-xs extra-wide left-aligned screen-help screen-help-info" contenteditable="false" data-help="For objekter som omfattes av bustadoppføringslova § 1 første ledd bokstav b følger det av § 46 første ledd at kjøperen har instruksjonsretten i behold helt til hjemmelsovergangen er tinglyst (selv om eiendommen er overtatt). Bestemmelsen er ufravikelig, og megleren kan i et slikt tilfelle ikke betale ut kjøpesummen til selgeren før hjemmelsovergangen er tinglyst. Dersom hele eller deler av kjøpesummen skal betales ut før hjemmelsovergangen er tinglyst, må det foreligge sikkerhetsstillelse som beskrevet i § 47. Det kan tenkes unntak fra dette dersom det avtales løsninger som er gunstigere for forbrukeren. Ta kontakt med intern eller ekstern ekspertise dersom det er aktuelt å inngå slike avtaler.">Pkt. 5.4.2: Hjelpetekst om ferdigattest/midl. brukstillatelse</span></h4>
+
+			<p><span class="insert-table"><span class="insert" data-label="Beskrivelse"></span></span></p>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h4>Seksjonering<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Hvilken av partene har ansvaret for å følge opp kommunen og tinglysingsmyndighetene?">Pkt. 5.4.3: Hjelpetekst om seksjonering</span></h4>
+
+			<p><span class="insert-table"><span class="insert" data-label="Beskrivelse"></span></span></p>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h4>Oppgj&oslash;r og instrukser om &aring; holde tilbake midler</h4>
+
+			<p><span class="insert-table"><span class="insert" data-label="Beskrivelse"></span></span></p>
+
+			<table>
+				<tbody>
+					<tr>
+						<td colspan="80">Skal utbygger tillate overtakelse f&oslash;r hjemmelsovergangen er tinglyst?<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Eiendomsmegleren må undersøke at det foreligger midlertidig brukstillatelse eller ferdigattest før det kan anbefales for kjøperne å overta boligen. Det bør avtales hvilke rutiner partene skal ha for fremskaffelse av og formidling av brukstillatelsene. NEF anbefaler at eiendomsmeglere gjør selvstendige undersøkelser og selv innhenter brukstillatelse eller ferdigattest.">Pkt. 5.4.4: Hjelpetekst om tilbakeholdelse</span></td>
+						<td colspan="20" data-toggle="buttons">
+						<div><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" /></label> Ja &nbsp;&nbsp;<label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" /></label> <span style="display:inline-block; vertical-align:middle"> Nei </span></div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</article>
+			</div>
+			</article>
+
+			<article>
+			<div class="avoid-page-break item">
+			<h2>OBJEKTET FOR OPPDRAGET</h2>
+
+			<table class="info-table item">
+				<thead>
+					<tr>
+						<th colspan="100">
+						<h3>Eiendom</h3>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan="100"><strong>Eiendommens registerbetegnelse</strong></td>
+					</tr>
+					<tr style="border-bottom:solid 1px lightgray">
+						<td colspan="20">Matrikkel:</td>
+						<td colspan="80">[[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune (kommunenr. [[eiendom.kommunenr]])</td>
+					</tr>
+				</tbody>
+			</table>
+			</div>
+
+			<table class="info-table">
+				<tbody>
+					<tr>
+						<td colspan="100">&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="100" style="border-bottom:none; border-top:none"><strong>Eiendommens adresse:</strong></td>
+					</tr>
+					<tr style="border-bottom:solid 1px lightgray">
+						<td colspan="20">Adresse:</td>
+						<td colspan="80">[[eiendom.gatenavnognr]], [[eiendom.postnr]] [[eiendom.poststed]].<br />
+						By: <span class="insert-table"><span class="insert" data-label="By"></span></span>. Land: <span class="insert-table"><span class="insert" data-label="Land"></span></span>.</td>
+					</tr>
+					<tr style="border-bottom:none">
+						<td colspan="100">&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="100" style="border-bottom:solid 1px lightgray; border-top:none"><strong>Beskrivelse av eiendommen (kryss av):</strong></td>
+					</tr>
+				</tbody>
+				<tbody>
+					<tr data-toggle="buttons"><!-- @{
+                                                var erEieformAndel ="";
+                                                var erEieformSameie ="";
+                                                var erEieformAksje ="";
+                                                var erEieformObligasjonsleilighet ="";
+                                                var erGrunntypeFritid ="";
+                                                var erGrunntypeNaering ="";
+                                                if (Model.eiendom.eieform == "Andel") {
+                                                    erEieformAndel = "active";
+                                                } else if (Model.eiendom.eieform == "Sameie") {
+                                                    erEieformSameie = "active";
+                                                } else if (Model.eiendom.eieform == "Aksje") {
+                                                    erEieformAksje = "active";
+                                                } else if (Model.eiendom.eieform == "Obligasjonsleilighet") {
+                                                    erEieformObligasjonsleilighet = "active";
+                                                } else if (Model.eiendom.grunntype == "Fritid") {
+                                                    erGrunntypeFritid = "active";
+                                                } else if (Model.eiendom.grunntype == "N\xE6ring") {
+                                                    erGrunntypeNaering = "active";
+                                                }
+                                    }-->
+						<td colspan="25"><label class="btn @erGrunntypeNaering" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" />N&aelig;ringslokale</label></td>
+						<td colspan="25"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" />Enebolig </label></td>
+						<td colspan="25"><label class="btn @erEieformAndel" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" />Andelsleilighet </label></td>
+						<td colspan="25"><label class="btn @erEieformSameie" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" />Seksjonert leilighet </label></td>
+					</tr>
+					<tr data-toggle="buttons">
+						<td colspan="25" style="border-bottom:solid 1px lightgray"><label class="btn @erEieformAksje" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" />Aksjeleilighet </label></td>
+						<td colspan="25" style="border-bottom:solid 1px lightgray"><label class="btn @erEieformObligasjonsleilighet" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" />Obligasjonsleilighet </label></td>
+						<td colspan="25" style="border-bottom:solid 1px lightgray"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" />Kombinert n&aelig;ringslokale og boligutnyttelse </label></td>
+						<td colspan="25" style="border-bottom:solid 1px lightgray"><label class="btn @erGrunntypeFritid" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" />Fritidseiendom</label></td>
+					</tr>
+					<tr>
+						<td colspan="100">&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="100" style="border-bottom:none; border-top:none"><span class="btn btn-info btn-xs extra-wide left-aligned screen-help screen-help-info" contenteditable="false" data-help="Den rettslige klassifiseringen har betydning for hvilken lovregulering avtalen er underlagt, og dermed hvilken avtalefrihet partene har og hvilken standardavtale som eventuelt bør benyttes. Klassifiseringen kan endres underveis i et prosjekt, for eksempel ved avslutning av et byggetrinn fordi objektene er fullført på avtaletidspunktet." style="left:-1.5cm">Hjelpetekst om lovreguleringen</span><strong>Navn og organisasjonsnummer for <span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">borettslaget</span><span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">sameiet</span><span vitec-if="(Model.eiendom.eieform != &quot;Sameie&quot; &amp;&amp; Model.eiendom.eieform != &quot;Andel&quot;)">selskapet</span>:</strong><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Bokstav a kommer til anvendelse når oppføringen av boligen skjer på forbrukerens grunn. Bokstav a gjelder også for entreprisedelen der kjøpet av tomten/avtale om feste av tomten skjer fra en annen grunneier enn utbyggeren (utbygger har bare utbyggingsrett). I disse tilfellene omfattes tomtekjøpet/festeforholdet av hhv. avhendingsloven eller tomtefesteloven. Full ombygging skal regnes likt med ”oppføring”.">Lovreguleringen - F&oslash;rste punkt: Hjelpetekst</span></td>
+					</tr>
+					<tr style="border-bottom:solid 1px lightgray">
+						<td colspan="20">Navn:</td>
+						<td colspan="80"><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">[[brl.navn]]</span><span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">[[sameie.navn]]</span><span vitec-if="Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;">[[aksjeselskap.navn]]</span><span vitec-if="Model.eiendom.eieform == &quot;Selveier&quot;"><span class="insert-table"><span class="insert" data-label="Navn"></span></span></span></td>
+					</tr>
+					<tr style="border-bottom:solid 1px lightgray">
+						<td colspan="20">Org.nummer:</td>
+						<td colspan="80"><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">[[brl.orgnr]]</span><span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">[[sameie.orgnr]]</span><span vitec-if="Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;">[[aksjeselskap.orgnr]]</span><span vitec-if="Model.eiendom.eieform == &quot;Selveier&quot;"><span class="insert-table"><span class="insert" data-label="Org.nr."></span></span></span></td>
+					</tr>
+					<tr>
+						<td colspan="100">&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="100" style="border-bottom:none; border-top:none"><strong>Lovreguleringen av objektet som megles</strong></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<ul>
+				<li><span class="btn btn-info btn-xs extra-wide left-aligned screen-help screen-help-info" contenteditable="false" data-help="Oppføring av ny ”eigarbustad” omfatter også fritidsbolig. Eierseksjon regnes som ”eigarbustad”. Reglene i bustadoppføringslova § 1 første ledd bokstav b gjelder tilsvarende for avtale mellom forbruker og boligbyggelag eller annen yrkesutøver om rett til bolig som knytter seg til eller skal knyttes til andel i borettslag, dersom arbeid som er omfattet av avtalen, ikke er fullført på avtaletidspunktet. Overføring eller tegning av andel i borettslaget skal regnes som hjemmelsoverføring dersom borettslaget har hjemmel til eiendommen.">Lovreguleringen - Andre punkt: Hjelpetekst 1</span>avtale om oppf&oslash;ring av bygning til bustadf&oslash;rem&aring;l og avtale om arbeid som vert utf&oslash;rt direkte som ledd i slik oppf&oslash;ring (bustadoppf&oslash;ringslova &sect; 1 f&oslash;rste ledd a)<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Det avgjørende for forholdet mellom avhendingsloven og bustadoppføringslova  § 1 første ledd bokstav b er om arbeidet er ”fullført” på det tidspunktet hvor avtalen blir bindende. Arbeidet regnes som fullført dersom det bare gjenstår rydding, rengjøring av boligen o.l. Arbeidet regnes som hovedregel ikke som fullført dersom det gjenstår arbeid av håndverksmessig karakter som entreprenøren skal stå for, for eksempel maling innvendig eller utvendig, innsetting av kjøkken- eller badeinnredning eller legging av gulv. Avtalen omfattes derimot av loven selv om det gjenstår utbedring av enkelte mangler, dersom arbeidet i utgangspunktet er utført, men mangelfullt. Tvilsomme tilfeller kan oppstå dersom kjøperen påpeker mangler allerede ved avtaleinngåelsen, i disse tilfellene bør intern eller ekstern ekspertise konsulteres. Dersom det gjenstår arbeid på tomten (området som er omfattet av kjøperens enerett til bruk), kan boligen som hovedregel ikke regnes som fullført. Tvilsomme tilfeller kan oppstå dersom det gjenstår arbeider på fellesområder, parkeringsplasser, stikkveier, lekeplasser, felles grøntarealer og lignende. Ved tvil bør intern eller ekstern ekspertise konsulteres.">Lovreguleringen - Andre punkt: Hjelpetekst 2</span></li>
+				<li>avtale om rett til fast eigedom med ny eigarbustad n&aring;r arbeid som entrepren&oslash;ren st&aring;r for, enno ikkje er fullf&oslash;rt p&aring; avtaletida (bustadoppf&oslash;ringslova &sect; 1 f&oslash;rste ledd b)</li>
+				<li>avtale om rett til fast eiendom med ny bolig n&aring;r boligen er fullf&oslash;rt p&aring; avtaletidspunktet (avhendingsloven &sect; 1-1)</li>
+			</ul>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h2>EIENDOMSMEGLERENS VEDERLAG OG RETT TIL &Aring; KREVE DEKNING FOR UTLEGG</h2>
+
+			<div class="item">
+			<h3>Fastsettelse av vederlaget<span class="btn btn-info btn-xs extra-wide left-aligned screen-help screen-help-info" contenteditable="false" data-help="Avhendingsloven er ufravikelig også ved forbrukerkjøp av nyoppført eierbolig som ikke har vært brukt som bolig i mer enn ett år på avtaletidspunktet, dersom selgeren har gjort avtalen som ledd i næringsvirksomhet.">Lovreguleringen - Tredje punkt: Hjelpetekst</span></h3>
+
+			<article class="avoid-page-break item">
+			<h4>Provisjonsbetaling</h4>
+
+			<p vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">Eiendomsmegleren har krav p&aring; [[oppdrag.provisjonprosenteksmva]]% provisjon eks. mva / [[oppdrag.provisjonprosent]]% provisjon inkl. mva av kj&oslash;pesummen opp til <span class="insert-table"><span class="insert" data-label="Beløp"></span></span>.</p>
+
+			<p vitec-if="Model.oppdrag.vederlagtypefastpris == true">Eiendomsmegleren har krav p&aring; en fast provisjon p&aring; kr $.UD([[oppdrag.fastpris]]).</p>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h4>Vederlag for arbeid etter medg&aring;tt tid</h4>
+
+			<p>Eiendomsmegleren har krav p&aring; vederlag for arbeid etter medg&aring;tt tid som for tiden er NOK $.UD([[oppdrag.timepriseksmva]]) pr. time eks. mva. / NOK $.UD([[oppdrag.timeprisinklmva]]) pr. time inkl. mva.</p>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h4>Kombinasjon av provisjon og timebetaling<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Det er særlig aktuelt å avtale timepris for rådgivende tjenester i tillegg til provisjon eller fast pris pr. solgte enhet hvor eiendomsmegleren engasjeres tidlig i prosjektet. I et vedlagt regneark kan man ha mer avanserte systemer for fastsettelse av vederlaget, for eksempel med progressive satser i flere trinn for stort volum på salg inne for gitte tidsrammer samt kombinasjon av provisjon, timepris (differensierte satser for ansvarlig megler og andre utførende).">Punkt 7.1.3: Hjelpetekst</span></h4>
+
+			<p>Meglerens vederlag fastsettes etter modellen som f&oslash;lger i vedlegg <span style="color:red">X.</span></p>
+			</article>
+			</div>
+
+			<div class="item">
+			<h3>Eiendomsmeglerens vederlag dersom handel ikke kommer i stand</h3>
+
+			<article class="avoid-page-break item">
+			<h4>Standard</h4>
+
+			<p>Eiendomsmeglingsloven kapittel 7 kommer til anvendelse.</p>
+
+			<p>Vedlegg <span style="color:Red">X</span>: Eiendomsmeglingsloven kapittel 7.</p>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h4><span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="No cure no pay" data-target="#hjelp4" data-toggle="collapse">Punkt 7.2.2. Alternativ a)</span> <span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Dekning av arbeid etter medgått tid" data-target="#hjelp5" data-toggle="collapse" style="margin-top:46px">Punkt 7.2.2. Alternativ b)</span> S&aelig;rlig avtale<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Velg alternativ a) eller b)">Punkt 7.2.2: Infotekst</span></h4>
+
+			<p aria-expanded="false" class="collapse" id="hjelp4" style="height:6px">Eiendomsmegleren har ikke krav p&aring; noe vederlag dersom handel ikke er kommet i stand innen oppdragstidens utl&oslash;p.</p>
+
+			<p aria-expanded="false" class="collapse" id="hjelp5" style="height:6px">Eiendomsmegleren har krav p&aring; dekning av vederlag for utf&oslash;rt arbeid med [bel&oslash;p] pr. time eks. mva. og [bel&oslash;p] pr. time inkl. mva., i henhold til vedlagt timeliste.</p>
+			</article>
+			</div>
+
+			<div class="item">
+			<h3>Eiendomsmeglerens vederlag dersom handel er sluttet gjennom andre eller uten mellommann</h3>
+
+			<p>Eiendomsmegleren har rett til vederlag i samsvar med eiendomsmeglingsloven kapittel 7.</p>
+			</div>
+
+			<div class="item">
+			<h3>Andre inntekter, utlegg og andre utgifter</h3>
+
+			<p>Eiendomsmegleren kan kreve dekning for f&oslash;lgende andre inntekter, utlegg og andre utgifter:</p>
+
+			<p>&nbsp;</p>
+
+			<p>Andre inntekter:</p>
+
+			<table class="info-table">
+				<tbody vitec-foreach="vederlag in Model.selgervederlag.alleposter">
+					<tr>
+						<td colspan="82">[[*vederlag.beskrivelse]]:</td>
+						<td colspan="3">kr</td>
+						<td colspan="15" style="text-align:right">$.UD([[*vederlag.belop]])</td>
+					</tr>
+				</tbody>
+				<tbody>
+					<tr class="sumlinje">
+						<td colspan="82">Et forel&oslash;pig estimat over andre inntekter:</td>
+						<td colspan="3">kr</td>
+						<td colspan="15" style="text-align:right">$.UD([[oppdrag.selgervederlagsum]])</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>&nbsp;</p>
+
+			<p>Utlegg og andre utgifter:</p>
+
+			<table class="info-table">
+				<tbody vitec-foreach="utlegg in Model.selgerutlegg.alleposter">
+					<tr>
+						<td colspan="82">[[*utlegg.beskrivelse]]:</td>
+						<td colspan="3">kr</td>
+						<td colspan="15" style="text-align:right">$.UD([[*utlegg.belop]])</td>
+					</tr>
+				</tbody>
+				<tbody vitec-foreach="utgifter in Model.selgerutgifter.alleposter">
+					<tr>
+						<td colspan="82">[[*utgifter.beskrivelse]]:</td>
+						<td colspan="3">kr</td>
+						<td colspan="15" style="text-align:right">$.UD([[*utgifter.belop]])</td>
+					</tr>
+				</tbody>
+				<tbody>
+					<tr class="sumlinje">
+						<td colspan="82">Et forel&oslash;pig estimat over utlegg og andre utgifter:</td>
+						<td colspan="3">kr</td>
+						<td colspan="15" style="text-align:right">$.UD([[oppdrag.selgerutleggogutgiftersum]])</td>
+					</tr>
+				</tbody>
+			</table>
+			</div>
+
+			<div class="item">
+			<h3>Samlet kostnadsoverslag</h3>
+
+			<p>Objektet for oppdraget i henhold til avtalens punkt 6 har en estimert markedsverdi p&aring; NOK [bel&oslash;p].</p>
+
+			<p>Dersom objektet blir solgt for dette bel&oslash;pet, har megleren krav p&aring;:</p>
+
+			<p>&nbsp;</p>
+
+			<table class="avoid-page-break info-table item">
+				<tbody>
+					<tr>
+						<td colspan="82">Vederlag i henhold til punkt 7.1/7.2:</td>
+						<td colspan="3">kr</td>
+						<td colspan="15" style="text-align:right"><span vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">$.UD([[oppdrag.provisjonberegnet]])</span><span vitec-if="Model.oppdrag.vederlagtypefastpris == true">$.UD([[oppdrag.fastpris]])</span><span vitec-if="Model.oppdrag.vederlagtypetimepris == true">$.UD([[oppdrag.timevederlagberegnet]])</span></td>
+					</tr>
+					<tr>
+						<td colspan="82">Andre inntekter i henhold til punkt 7.3:</td>
+						<td colspan="3">kr</td>
+						<td colspan="15" style="text-align:right">$.UD([[oppdrag.selgervederlagsum]])</td>
+					</tr>
+					<tr>
+						<td colspan="82">Utlegg og andre utgifter i henhold til punkt 7.3:</td>
+						<td colspan="3">kr</td>
+						<td colspan="15" style="text-align:right">$.UD([[oppdrag.selgerutleggogutgiftersum]])</td>
+					</tr>
+					<tr class="sumlinje">
+						<td colspan="82">Totalt</td>
+						<td colspan="3">kr</td>
+						<td colspan="15" style="text-align:right"><span vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">$.UD([[oppdrag.selgersamletsum]])</span><span vitec-if="Model.oppdrag.vederlagtypefastpris == true">$.UD([[oppdrag.selgersamletfastprissum]])</span><span vitec-if="Model.oppdrag.vederlagtypetimepris == true">$.UD([[oppdrag.timevederlagberegnetogselgerutleggogutgiftersum]])</span></td>
+					</tr>
+					<tr>
+						<td colspan="100">&nbsp;</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>De ulike kostnadene ved et salg til estimert markedsverdi er n&aelig;rmere spesifisert i vedlegg <span style="color:red">X</span>.</p>
+			</div>
+
+			<div class="item">
+			<h3>Eiendomsmeglerens vederlag ved oppsigelse fra en av partene</h3>
+
+			<article class="avoid-page-break item">
+			<h4>Vederlag fastsatt som provisjonsbetaling</h4>
+
+			<p>Eiendomsmegleren har krav p&aring; et rimelig vederlag for utf&oslash;rt arbeid dersom oppdraget sies opp av en av partene. Dekning av utlegg kan kreves i samsvar med avtalen uten hensyn til oppsigelsen, jf. eiendomsmeglingsloven &sect; 6-4.</p>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h4>Vederlag fastsatt som timepris eller fast pris</h4>
+
+			<p>Eiendomsmegleren har krav p&aring; forholdsmessig betaling fastsatt med utgangspunkt i det avtalte vederlaget. Dekning av utlegg kan kreves i samsvar med avtalen uten hensyn til oppsigelsen, jf. eiendomsmeglingsloven &sect; 6-4.</p>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h4>Alternativ l&oslash;sning med vederlaget fastsatt i vedlegg</h4>
+
+			<p>Eiendomsmegleren har krav p&aring; vederlag for utf&oslash;rt arbeid dersom oppdraget sies opp av en av partene, i samsvar med matrise som f&oslash;lger av vedlegg <span style="color:red">X</span>, jf. ogs&aring; punkt 7.1.</p>
+			</article>
+			</div>
+
+			<div class="item">
+			<h3>Vederlagets forfallstidspunkt</h3>
+
+			<article class="avoid-page-break item">
+			<h4>Provisjonsbetaling</h4>
+
+			<p>Eiendomsmeglerens krav p&aring; vederlag forfaller til betaling n&aring;r handel er kommet i stand mellom kunden (for eksempel selger) og kundens medkontrahent (for eksempel kj&oslash;per) eller ved p&aring;krav (dersom oppdraget blir sagt opp).</p>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h4>Timepris</h4>
+
+			<p>Eiendomsmeglerens krav p&aring; vederlag faktureres m&aring;nedlig og forfaller til betaling etterskuddsvis. Eiendomsmegleren sender faktura med timeliste i etterf&oslash;lgende m&aring;ned med forfall 14 dager etter fakturadato.</p>
+			</article>
+			</div>
+
+			<div class="item">
+			<h3>Oppdragsgivers tilbakeholdsrett</h3>
+
+			<p>Kunden har rett til &aring; holde tilbake s&aring; mye av vederlaget at det sikrer de kravene kunden har som f&oslash;lge av mislighold fra eiendomsmeglerens side.</p>
+			</div>
+
+			<div class="item">
+			<h3>Avregning av eiendomsmeglerens honorar i midler p&aring; klientkonto<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Uten denne avtalereguleringen vil § 7-4 tredje ledd komme utfyllende til anvendelse, med den følge at megleren ikke kan ta dekning i innestående – han må mao. etterfakturere. Bestemmelsen må leses i sammenheng med vederlagets forfallstidspunkt og kundens tilbakeholdsrett, jf. eiendomsmeglingsloven § 7-4 første og andre ledd.">Pkt. 7.9: Hjelpetekst om avregning</span></h3>
+
+			<p>Eiendomsmegleren kan dekke sitt krav p&aring; vederlag i klientmidler som tilh&oslash;rer kunden.</p>
+			</div>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h2>OPPDRAGETS VARIGHET. OPPSIGELSE.</h2>
+
+			<p>F&oslash;lgende oppdragstakere har arbeidet med det samme oppdraget de siste tre m&aring;nedene:</p>
+
+			<p><span class="insert-table"><span class="insert" data-label="Fyll inn"></span></span></p>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h2>ANDRE OPPDRAGSTAKERE<span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Ingen" data-target="#hjelp6" data-toggle="collapse">Punkt 9. Alternativ a)</span><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Velg alternativ a) eller b)">Punkt 9: Infotekst</span></h2>
+
+			<p><span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Et gitt eiendomsmeglerforetak" data-target="#hjelp7" data-toggle="collapse" style="margin-top:46px">Punkt 9. Alternativ b)</span>F&oslash;lgende oppdragstakere har arbeidet med det samme oppdraget de siste tre m&aring;nedene:</p>
+
+			<p aria-expanded="false" class="collapse" id="hjelp6">Ingen.</p>
+
+			<p aria-expanded="false" class="collapse" id="hjelp7"><span class="insert-table"><span class="insert" data-label="Navn på meglerforetak"></span></span>.</p>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h2>TAUSHETSPLIKT</h2>
+
+			<p>Eiendomsmegleren skal bevare taushet overfor uvedkommende om det de under utf&oslash;relsen av sitt arbeid eller verv f&aring;r vite om noens personlige forhold eller drifts- og forretningsforhold.</p>
+
+			<p>Ved foresp&oslash;rsel om utlevering av opplysninger til ligningsmyndighetene gjelder f&oslash;lgende:</p>
+
+			<ul>
+				<li>Megleren kan ikke utlevere opplysninger underlagt taushetsplikt etter eiendomsmeglingsloven &sect; 3-6 til uvedkommende, herunder ligningsmyndighetene.</li>
+				<li>Eiendomsmeglere plikter p&aring; anmodning fra ligningsmyndighetene &aring; utlevere en oversikt over alle oppdragsgivere, samt kj&oslash;pesum og meglerens vederlag for det enkelte oppdrag. Megleren kan utlevere b&aring;de oppdragsjournalen og meglingsjournalen til ligningsmyndighetene for dette form&aring;l uten at det kommer i konflikt med taushetsplikten i eiendomsmeglingsloven &sect; 3-6.</li>
+				<li>Uten at det er til hinder av taushetsplikten, kan megleren utlevere oppgj&oslash;rsoppstillinger og kontrakter dersom eventuelle opplysninger underlagt taushetsplikt er sladdet.</li>
+				<li>Dersom ligningsmyndighetene finner at meglerens oppdragsgiver er n&aelig;ringsdrivende, plikter megleren &aring; utlevere ytterligere opplysninger vedr&oslash;rende de aktuelle oppdragsgiverne, herunder meglingsjournalen, oppgj&oslash;rsoppstilling og kontrakter dersom eventuelle opplysninger underlagt taushetsplikt er sladdet.</li>
+			</ul>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h2>FULLMAKT FRA KUNDEN TIL EIENDOMSMEGLEREN</h2>
+
+			<div class="item">
+			<h3>Standard</h3>
+
+			<p>Ingen fullmakter.</p>
+			</div>
+
+			<div class="item">
+			<h3>Fullmakt</h3>
+
+			<p><span class="insert-table"><span class="insert" data-label="Eventuelle fullmakter beskrives her"></span></span></p>
+			</div>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h2>TVISTER<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Lovens hovedregel, kan fravikes utenfor forbrukerforhold">Pkt. 12: Hjelpetekst om avsnitt 2 (nemndsbehandling)</span></h2>
+
+			<p>Eventuelle tvister skal s&oslash;kes l&oslash;st i minnelighet.</p>
+
+			<p>Tvister for domstolene reguleres av norsk rett og skal g&aring; ved [Sted] tingrett som verneting.<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Voldgift kan være bedre egnet til å bevare konfidensialitet enn alminnelig domstolsbehandling. Etter omstendighetene kan voldgift dessuten være en måte å løse konflikter på som legger et bedre grunnlag for fortsatt samarbeid">Pkt. 12: Hjelpetekst om avsnitt 3 (voldgift)</span></p>
+
+			<p>Enhver tvist som m&aring;tte oppst&aring; i tilknytning til denne kontrakten, skal avgj&oslash;res ved voldgift i henhold til lov 14. mai 2004 nr. 25 om voldgift.</p>
+
+			<p>Voldgiftsretten skal best&aring; av tre medlemmer, som s&aring; vidt mulig, skal utnevnes i fellesskap. I tilfelle partene ikke blir enige om sammensetningen, oppnevner hver part ett medlem. Fristen er &eacute;n m&aring;ned etter at parten mottok anmodning om oppnevning. Disse medlemmene oppnevner i fellesskap voldgiftsrettens leder innen &eacute;n m&aring;ned. Hvis voldgiftsretten ikke lar seg etablere, i henhold til denne fremgangsm&aring;ten, kan hver av partene kreve at domstolen oppnevner en tredje voldgiftsdommer.<br />
+			&nbsp;<br />
+			Voldgiftsforhandlingene skal holdes i <span class="insert-table"><span class="insert" data-label="Sted"></span></span>, og voldgiftsspr&aring;ket skal v&aelig;re norsk.</p>
+
+			<p>Voldgiftssaken skal anses innledet den dag saks&oslash;kte mottok krav om at tvisten skal behandles ved voldgift. Straks voldgiftssak er innledet, er partene forpliktet til &aring; inng&aring; separat avtale om at voldgiftsbehandlingen og voldgiftsrettens avgj&oslash;relse skal v&aelig;re underlagt taushetsplikt.</p>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h2>S&AElig;RLIGE FORHOLD</h2>
+
+			<p><span class="insert-table"><span class="insert" data-label="Fyll inn"></span></span></p>
+			</article>
+
+			<article class="avoid-page-break item">
+			<h2>SIGNATUR</h2>
+
+			<p style="margin-top:12px">[[meglerkontor.poststed]], den [[dagensdato]]</p>
+
+			<table>
+				<tbody>
+					<tr>
+						<td colspan="48" style="vertical-align:top"><strong>Oppdragsgiver</strong></td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="48"><strong>Oppdragstaker v/oppdragsansvarlig</strong></td>
+					</tr>
+					<tr>
+						<td colspan="48" style="padding-top:20px; vertical-align:top">
+						<table vitec-if="Model.selgere.Count &gt; 0">
+							<tbody vitec-foreach="selger in Model.selgere">
+								<tr>
+									<td colspan="100" style="border-bottom:solid 1px #000000">
+									<p>&nbsp;</p>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="100" style="vertical-align:bottom">[[*selger.navn]]</td>
+								</tr>
+							</tbody>
+						</table>
+						</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="48" style="padding-top:20px; vertical-align:top">
+						<table>
+							<tbody>
+								<tr>
+									<td colspan="100" style="border-bottom:solid 1px #000000">
+									<p>&nbsp;</p>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="100" style="vertical-align:bottom">[[operativmegler.navn]], [[operativmegler.tittel]]</td>
+								</tr>
+							</tbody>
+						</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</article>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>

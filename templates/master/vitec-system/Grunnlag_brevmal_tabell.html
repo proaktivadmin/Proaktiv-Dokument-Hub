@@ -1,0 +1,92 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate table {
+                border-collapse: collapse;
+                width: 100%;
+                table-layout: fixed;
+            }
+    
+            #vitecTemplate strong {
+                font-size: unset;
+            }
+    
+            /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+    
+            #vitecTemplate span.insert:empty {
+                font-size: inherit !important;
+                line-height: inherit !important;
+                display: inline-block;
+                background-color: lightpink;
+                min-width: 2em !important;
+                height: .7em !important;
+                text-align: center;
+            }
+    
+            #vitecTemplate span.insert:empty:before {
+                content: attr(data-label);
+            }
+    
+            #vitecTemplate span.insert:empty:hover {
+                background-color: #fff;
+                cursor: pointer;
+            }
+    
+            #vitecTemplate .insert-table {
+                display: inline-table;
+            }
+    
+            #vitecTemplate .insert-table>span,
+            #vitecTemplate .insert-table>span.insert {
+                display: table-cell;
+    
+            }
+</style>
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<div vitec-template="resource: Mottaker">&nbsp;</div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="100">
+			<p><strong>Vedr&oslash;rende salg av [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+			<p>Du kan legge inn en ny rad ved &aring; bruke tabulator-tasten for &aring; hoppe fremover i cellene. N&aring;r du kommer til siste celle vil du da f&aring; lagt inn en ny rad n&aring;r du bruker tabulatoren.</p>
+
+			<p>For &aring; legge til ny kolonne; h&oslash;yreklikk i en kolonne og velg &quot;Kolonne&quot; og &quot;Sett inn ny kolonne f&oslash;r/etter&quot;.</p>
+
+			<p>Om du &oslash;nsker &aring; justere tabellen - g&aring; inn i kilden og s&oslash;k etter &quot;&lt;td colspan=&quot;&quot;&gt;. Juster tallet som st&aring;r mellom &quot;&quot;. Tallene i hver kolonne&nbsp;m&aring; f&aring; opp i 100. Hver rad st&aring;r mellom &lt;tr&gt; og &lt;/tr&gt;, og hver kolonne beskrives mellom &lt;td&gt; og &lt;/td&gt;</p>
+
+			<table border="1" cellpadding="1" cellspacing="1">
+				<tbody>
+					<tr>
+						<td colspan="20"><strong>Overskrift 1</strong></td>
+						<td colspan="30"><strong>Overskrift 2</strong></td>
+						<td colspan="50"><strong>Overskrift 3</strong></td>
+					</tr>
+					<tr>
+						<td colspan="20">Tekst her...</td>
+						<td colspan="30">Tekst her...</td>
+						<td colspan="50">&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="20">&nbsp;</td>
+						<td colspan="30">&nbsp;</td>
+						<td colspan="50">&nbsp;</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>&nbsp;</p>
+
+			<p>Her er et utfyllingsfelt: <span class="insert-table"> <span class="insert" data-label="Fyll inn"></span> </span></p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="100">
+			<div vitec-template="resource: Avsender">&nbsp;</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>

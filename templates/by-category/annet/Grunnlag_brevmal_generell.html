@@ -1,0 +1,55 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">/* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+        
+        span.insert:empty {
+            font-size: inherit !important;
+            line-height: inherit !important;
+            display: inline-block;
+            background-color: lightpink;
+            min-width: 2em !important;
+            height: .7em !important;
+            text-align: center;
+        }
+
+        span.insert:empty:before {
+            content: attr(data-label);
+        }
+
+        span.insert:empty:hover {
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+        .insert-table {
+            display: inline-table;
+        }
+
+        .insert-table>span,
+        .insert-table>span.insert {
+            display: table-cell;
+        }
+</style>
+<table style="width:100%">
+	<tbody>
+		<tr>
+			<td>
+			<div vitec-template="resource: Mottaker">&nbsp;</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<p><strong>Vedr. eiendommen [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+			<p>Tekst her.</p>
+
+			<p><span class="insert-table"> <span class="insert" data-label="Fyll inn"></span> </span></p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<div vitec-template="resource: Avsender">&nbsp;</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>

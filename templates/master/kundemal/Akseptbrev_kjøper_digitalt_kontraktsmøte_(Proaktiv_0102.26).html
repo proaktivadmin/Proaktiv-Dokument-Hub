@@ -1,0 +1,223 @@
+<div id="vitecTemplate">
+<p><span vitec-template="resource:Vitec Stilark">&nbsp;</span></p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<table>
+	<tbody>
+		<tr class="no-border">
+			<td colspan="100">
+			<div vitec-template="resource: Mottaker">&nbsp;</div>
+
+			<p><strong>Kj&oslash;p av [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+			<p>Vi viser til <span vitec-if="Model.kjopere.Count == 1">ditt</span> <span vitec-if="Model.kjopere.Count &gt; 1">deres</span> uforbeholdne kj&oslash;petilbud p&aring; ovennevnte eiendom stort</p>
+
+			<p>kr $.UD([[kontrakt.kjopesum]]) + omkostninger, med overtagelse den [[kontrakt.overtagelse.dato]] kl. [[kontrakt.overtagelse.klokkeslett]]</p>
+
+			<p>Vi gratulerer <span vitec-if="Model.kjopere.Count == 1">deg</span><span vitec-if="Model.kjopere.Count &gt; 1">dere</span> med at budet er akseptert av selger. <span vitec-if="Model.eiendom.eieform== &quot;Sameie&quot;">S&oslash;knad om styrets godkjenning vil bli oversendt forretningsf&oslash;rer. </span><span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">Etter lov om borettslag er det 20 dagers frist for avklaring av forkj&oslash;psrett for borettslagets medlemmer. Vi vil underette dere straks dette er avklart. S&oslash;knad om styrets godkjenning vil bli oversendt forretningsf&oslash;rer.</span> For &oslash;vrig er tilbud og aksept gitt uten forbehold.</p>
+
+			<p>Vedlagt f&oslash;lger kj&oslash;pekontrakten for gjennomlesing. Ta kontakt dersom det er noe som er uklart eller&nbsp;<span vitec-if="Model.selgere.Count == 1">du</span> <span vitec-if="Model.selgere.Count &gt; 1">dere</span>&nbsp;har sp&oslash;rsm&aring;l til den. Om kort tid vil vi sende ut kj&oslash;pekontrakten for elektronisk signering med BankID.</p>
+
+			<p style="margin-left:2px; text-indent:-1.7pt">Ved 2 kj&oslash;pere eller flere legger vi til grunn lik eierbr&oslash;k, om ikke annet blir opplyst/avtalt.</p>
+
+			<p style="margin-left:2px; text-indent:-1.7pt">Vi gj&oslash;r oppmerksom p&aring; at vi forbeholder oss retten til &aring; benytte salgsinformasjon tilknyttet boligen i markedsf&oslash;ring av kontoret. Ta kontakt dersom dere &oslash;nsker &aring; reservere dere mot dette.</p>
+
+			<p style="margin-left:2px; text-indent:-1.7pt">Boligkj&oslash;perforsikring&nbsp;er en forsikring megler anbefaler. Det er en rettshjelpsforsikring som gir trygghet og profesjonell juridisk hjelp dersom det oppdages uventede feil eller mangler ved boligen de neste fem &aring;rene. Les mer om Boligkj&oslash;perforsikring i vedlagte materiell eller kontakt megler. Forsikringen m&aring; bestilles gjennom megler senest ved kontraktsunderskrift.</p>
+
+			<p>Er det noe <span vitec-if="Model.kjopere.Count == 1">du</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> &oslash;nsker &aring; dr&oslash;fte med oss, st&aring;r vi med glede til tjeneste.&nbsp;Vi ser frem til et fortsatt godt samarbeid i denne kj&oslash;psprosessen.</p>
+
+			<div vitec-template="resource: Avsender">Vedlegg: budjournal, tilbeh&oslash;rsliste, informasjon boligkj&oslash;perforsikring</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>
+<style type="text/css">#vitecTemplate table {
+            border-collapse: collapse;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+            #vitecTemplate table td {
+                border: solid 1px #000;
+                height: 35px;
+                vertical-align: middle;
+            }
+
+            #vitecTemplate table tr.no-border td {
+                border: none;
+                height: auto;
+            }
+
+            #vitecTemplate table td.overskrift1 {
+                background-color: rgb(224,224,224);
+                color: #000;
+                line-height: 25px;
+                height: 25px;
+                padding-left: 5px;
+                font-weight: bold;
+            }
+
+            #vitecTemplate table td.overskrift2 {
+                color: #000;
+                line-height: 25px;
+                height: 25px;
+                padding-left: 5px;
+                font-weight: bold;
+            }
+
+            #vitecTemplate table td[data-label]:before {
+                content: attr(data-label);
+                text-align: left;
+                color: #333;
+                font-size: 9pt;
+                line-height: 8pt;
+                display: block;
+                position: absolute;
+                top: 2px;
+            }
+
+            #vitecTemplate table td[data-choice]:after {
+                content: attr(data-choice);
+                text-align: center;
+                font-size: 7pt;
+                font-weight: normal;
+                line-height: 8pt;
+                color: #333;
+                display: block;
+                position: absolute;
+                bottom: 1px;
+                left: 0;
+                right: 0;
+            }
+
+            #vitecTemplate table td[data-label] {
+                padding: 16px 2px 4px 2px;
+                position: relative;
+            }
+
+            #vitecTemplate table td[data-choice] {
+                padding: 4px 2px 16px 2px;
+                position: relative;
+            }
+
+            /* tabellceller med B?DE label og valg-tekst */
+
+            #vitecTemplate table td[data-label][data-choice] {
+                padding: 16px 2px 16px 2px;
+                position: relative;
+            }
+
+        #vitecTemplate [contenteditable="false"] * {
+            user-select: none;
+        }
+
+        #vitecTemplate .checkbox-table {
+            /* 13/15 av full bredde */
+            width: 100%;
+            margin-left: 10px;
+            table-layout: fixed;
+            margin-bottom: 8px;
+        }
+
+            #vitecTemplate .checkbox-table td {
+                padding-bottom: 5px;
+                border: 0px;
+            }
+
+                /* checkbox-cell */
+
+                #vitecTemplate .checkbox-table td:first-child {
+                    font-weight: 700;
+                    vertical-align: top;
+                }
+
+        .checkbox-table-one-row {
+            width: 86.7%;
+            margin-left: 10px;
+            table-layout: fixed;
+        }
+
+        #vitecTemplate .sign-field {
+            display: inline-block;
+            width: 45%;
+            margin-top: 1cm;
+            margin-right: 10px;
+            border-top: solid 1px #000;
+            vertical-align: top;
+        }
+
+        #vitecTemplate .buyer:last-child .separator {
+            display: none;
+        }
+</style>
+<style type="text/css">/* Klikkbare sjekkbokser og radioknapper */
+        label.btn {
+            display: inline;
+            text-transform: none;
+            white-space: normal;
+            padding: 0;
+            vertical-align: baseline;
+            outline: none;
+            font-size: inherit;
+        }
+
+            label.btn:active,
+            label.btn.active {
+                box-shadow: none;
+                outline: none;
+            }
+
+        .svg-toggle { /* nullstiller bootstrap button-styling */
+            display: inline-block !important;
+            width: 16px;
+            height: 16px;
+            margin: 0 5px;
+            vertical-align: bottom;
+            padding: 0;
+            border: none;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none !important;
+            cursor: pointer;
+            white-space: normal;
+            text-align: left;
+            background-repeat: no-repeat;
+            background-size: 16px 16px;
+            background-position: center center;
+        }
+
+            .svg-toggle.large {
+                width: 24px;
+                height: 24px;
+                background-size: 24px 24px;
+            }
+
+            .svg-toggle.checkbox {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+            }
+
+                .svg-toggle.checkbox.active,
+                .btn.active > .svg-toggle.checkbox {
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+                    box-shadow: none !important;
+                }
+
+            .svg-toggle.radio {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
+            }
+
+                .svg-toggle.radio.active,
+                .btn.active > .svg-toggle.radio {
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
+                    box-shadow: none !important;
+                }
+
+        /* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
+        #vitecTemplate [data-toggle="buttons"] input {
+            display: none;
+        }
+</style>

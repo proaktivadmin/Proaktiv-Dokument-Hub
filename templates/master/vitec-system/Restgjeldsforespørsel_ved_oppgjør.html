@@ -1,0 +1,105 @@
+<div id="vitecTemplate">
+	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+	<style type="text/css">
+		/* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+		span.insert:empty {
+			font-size: inherit !important;
+			line-height: inherit !important;
+			display: inline-block;
+			background-color: lightpink;
+			min-width: 2em !important;
+			height: .7em !important;
+			text-align: center;
+		}
+
+			span.insert:empty:before {
+				content: attr(data-label);
+			}
+
+			span.insert:empty:hover {
+				background-color: #fff;
+				cursor: pointer;
+			}
+
+		.insert-table {
+			display: inline-table;
+		}
+
+			.insert-table > span,
+			.insert-table > span.insert {
+				display: table-cell;
+			}
+
+		#vitecTemplate table {
+			width: 100%;
+			table-layout: fixed;
+			border-collapse: collapse;
+			box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+		}
+	</style>
+	<table>
+		<tbody>
+			<tr>
+				<td>
+					<div vitec-template="resource: Mottaker">&nbsp;</div>
+
+					<p><strong>Restgjeld p&aring; eiendommen [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+					<p>Selger/eier av eiendommen:</p>
+
+					<table vitec-if="Model.selgere.Count &gt; 0">
+						<thead>
+							<tr>
+								<th colspan="37"><strong>Navn </strong></th>
+								<th colspan="45"><strong>Adresse</strong></th>
+								<th colspan="18"><strong>[[selger.ledetekst_fdato_orgnr]]</strong></th>
+							</tr>
+						</thead>
+						<tbody vitec-foreach="selger in Model.selgere">
+							<tr>
+								<td colspan="37">[[*selger.navnutenfullmektigogkontaktperson]]</td>
+								<td colspan="45">[[*selger.gatenavnognr]], [[*selger.postnr]] [[*selger.poststed]]</td>
+								<td colspan="18">[[*selger.fdato_orgnr]]</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<p>Vi har solgt ovennevnte eiendom for <strong>kr $.UD([[kontrakt.kjopesum]])</strong> og skal foreta oppgj&oslash;r <strong>pr. <span vitec-if="Model.kontrakt.oppgjor.dato != &quot;Mangler data&quot;">[[kontrakt.oppgjor.dato]]</span><span vitec-if="Model.kontrakt.oppgjor.dato == &quot;Mangler data&quot;"><span class="insert-table"> <span class="insert" data-label="Dato"></span> </span></span></strong>. F&oslash;lgende pant hefter til dere p&aring; eiendommen:</p>
+
+					<table>
+						<tbody>
+							<tr>
+								<td colspan="25"><strong>Type</strong></td>
+								<td colspan="20"><strong>Bel&oslash;p</strong></td>
+								<td colspan="20"><strong><span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">Tinglyst </span><span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Notert </span>dato</strong></td>
+								<td colspan="20"><strong><span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">Dokumentnr.</span></strong></td>
+								<td colspan="15">&nbsp;</td>
+							</tr>
+						</tbody>
+						<tbody vitec-foreach="pant in Model.oppdrag.mottakerspantforinnfrielse">
+							<tr>
+								<td colspan="25">[[*pant.type]]</td>
+								<td colspan="20">kr $.UD([[*pant.belop]])</td>
+								<td colspan="20">[[*pant.tinglystdato]]</td>
+								<td colspan="20"><span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">[[*pant.dokumentnr]]</span></td>
+								<td colspan="15">&nbsp;</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<p>I forbindelse med oppgj&oslash;ret skal l&aring;net/l&aring;nene innfris, og vi ber i den anledning om &aring; f&aring; oppgitt l&aring;nenummer p&aring; alle l&aring;n som hefter p&aring; eiendommen, samt innfrielsesbel&oslash;p inkl. renter.</p>
+
+					<p>Vi forutsetter at panthaver vil slette ovennevnte pant ved full innfrielse av oppgitt(e) l&aring;nenummer.</p>
+
+					<p>Vi ber om et snarlig svar.</p>
+
+					<p>P&aring; forh&aring;nd takk!</p>
+
+					<div vitec-template="resource: Avsender">&nbsp;</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

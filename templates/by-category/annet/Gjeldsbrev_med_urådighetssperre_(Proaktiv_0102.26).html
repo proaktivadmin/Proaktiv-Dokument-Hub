@@ -1,0 +1,117 @@
+<div id="vitecTemplate"><span contenteditable="false" vitec-template="resource:Vitec Stilark"> </span>
+<style type="text/css">/* SJEKKBOKSER (v3.0 STANDARD) */
+    label.btn { display: inline-block !important; cursor: pointer; margin: 0 !important; padding: 0 !important; vertical-align: middle !important; line-height: 1 !important; }
+.svg-toggle { display: inline-block !important; width: 14px !important; height: 14px !important; margin-right: 6px !important; vertical-align: middle !important; border: none !important; background-color: transparent !important; position: relative; top: -1px; }
+/* Custom SVG */
+    .svg-toggle.checkbox { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect x='25' y='25' width='462' height='462' fill='none' stroke='%23272630' stroke-width='40'/%3E%3C/svg%3E"); }
+.svg-toggle.checkbox.active, .btn.active > .svg-toggle.checkbox { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect x='25' y='25' width='462' height='462' fill='none' stroke='%23272630' stroke-width='40'/%3E%3Crect x='100' y='100' width='312' height='312' fill='%23272630'/%3E%3C/svg%3E"); }
+</style>
+<p style="text-align:left">Oppdragsnr.: <strong>[[oppdrag.nr]]</strong></p>
+
+<h1>Gjeldsbrev med ur&aring;dighetssperre</h1>
+<br />
+<!-- SKYLDNER TABELL -->
+<table border="1" cellspacing="0" style="padding:10px; width:100%">
+	<colgroup>
+		<col style="width: 100%" />
+	</colgroup>
+	<tbody>
+		<tr vitec-foreach="selger in Model.selgere">
+			<td style="padding:5px"><strong>[[*selger.navn]]</strong><br />
+			(Fnr: [[*selger.idnummer]])</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>erkjenner &aring; skylde <strong>[[oppgjor.kontornavn]]</strong> (Org.nr: [[oppgjor.orgnr]])<br />
+et bel&oslash;p stort <strong>kr. [[kontrakt.kjopesum]]</strong>,-.</p>
+
+<p>Bel&oslash;pet representerer salgssum for pantobjektet. Gjeldsbrevet skal dekke det til enhver tid utbetalte bel&oslash;p av salgssummen.</p>
+<br />
+<!-- PANTEOBJEKT -->
+<h2>Til sikkerhet pantsettes:</h2>
+
+<table cellspacing="0" style="width:100%">
+	<colgroup>
+		<col style="width: 140px" />
+		<col style="width: auto" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td class="info-label">Matrikkel:</td>
+			<td>[[komplettmatrikkel]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Adresse:</td>
+			<td>[[eiendom.adresse]]</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>Panthaver har rett til &aring; kreve full innfrielse straks, dersom skyldneren vesentlig misligholder sine forpliktelser etter den inng&aring;tte kj&oslash;pekontrakt. Foruten gjennom salg av pantobjektet, kan tvangsfullbyrdelseslovens &sect; 7-2 (a) komme til anvendelse.</p>
+
+<h2>Ur&aring;dighetserkl&aelig;ring</h2>
+
+<p>Undertegnede erkl&aelig;rer at pantobjektet ikke kan selges, pantsettes eller p&aring; annen m&aring;te disponeres over, uten etter skriftlig samtykke fra <strong>[[oppgjor.kontornavn]]</strong> (Org.nr: [[oppgjor.orgnr]]).</p>
+<br />
+<!-- SIVILSTAND SJEKKLISTE -->
+<table border="1" style="padding:10px">
+	<colgroup>
+		<col style="width: 40px" />
+		<col style="width: auto" />
+	</colgroup>
+	<tbody class="v-middle">
+		<tr>
+			<td><label aria-pressed="false" class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+			<td>Jeg/vi er ugift</td>
+		</tr>
+		<tr>
+			<td><label aria-pressed="false" class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+			<td>Jeg/vi er gift/registrerte partnere, men pantsettelsen gjelder ikke felles bolig</td>
+		</tr>
+		<tr>
+			<td><label aria-pressed="false" class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+			<td>Jeg/vi er gift/registrerte partnere og begge signerer som skyldnere</td>
+		</tr>
+	</tbody>
+</table>
+<br />
+<br />
+<!-- SIGNATUR -->
+<div style="page-break-inside:avoid">
+<p><strong>Sted og dato:</strong> [[meglerkontor.poststed]], [[dagensdato]]</p>
+
+<table style="margin-top:20px; width:100%">
+	<tbody vitec-foreach="selger in Model.selgere">
+		<tr>
+			<td style="padding-bottom:30px">
+			<div class="sign-line">&nbsp;</div>
+			Eiers underskrift: <strong>[[*selger.navn]]</strong></td>
+		</tr>
+	</tbody>
+</table>
+
+<p>Det bekreftes herved at ovenst&aring;ende har undertegnet dette dokument i v&aring;rt n&aelig;rv&aelig;r, og at undertegnede er over 18 &aring;r. Jeg/vi er myndig(e) og bosatt i Norge.</p>
+<br />
+<br />
+<!-- VITNER -->
+<table cellspacing="0" style="width:100%">
+	<colgroup>
+		<col style="width: 45%" />
+		<col style="width: 10%" />
+		<col style="width: 45%" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td>
+			<div class="sign-line">&nbsp;</div>
+			Vitne</td>
+			<td>&nbsp;</td>
+			<td>
+			<div class="sign-line">&nbsp;</div>
+			Vitne</td>
+		</tr>
+	</tbody>
+</table>
+</div>
+</div>

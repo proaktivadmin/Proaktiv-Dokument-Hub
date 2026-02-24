@@ -1,0 +1,212 @@
+<!-- 
+=============================================================================
+SYSTEM:      Vitec Next
+MODUL:       Proaktiv Master Mal
+MALNAVN:     Fullmakt
+VERSJON:     3.0 (Gold Master - Oppgradert fra Legacy)
+DATO:        28.11.2025
+FORFATTER:   Senior Developer / Proaktiv
+FRAMEWORK:   v3.0
+BESKRIVELSE: Fullmaktsskjema for salg av eiendom.
+             - Oppdatert sjekkbokser til klikkbare inputs.
+             - Flyttet fullmektig-løkke til tabell for stabilitet.
+=============================================================================
+-->
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&family=Playfair+Display:wght@400;700&display=swap');
+    /* Nullstill marginer for å unngå konflikt med Editor-rammen */
+    #vitecTemplate { font-family: 'Open Sans', sans-serif; font-size: 10pt; color: #333; margin: 0; padding: 0; }
+    
+    /* TYPOGRAFI */
+    h1, h2, h3 { font-family: 'Playfair Display', serif; color: #272630; page-break-after: avoid; }
+    h1 { font-size: 22pt; text-transform: uppercase; border-bottom: 3px solid #bcab8a; padding-bottom: 10px; margin-bottom: 25px; }
+    h2 { font-size: 14pt; border-left: 5px solid #bcab8a; padding-left: 15px; margin-top: 30px; background-color: #f9f9f7; padding: 5px 0 5px 15px; }
+    a { color: #272630; font-weight: bold; text-decoration: underline; }
+
+    /* SJEKKBOKSER (v3.0 STANDARD) */
+    label.btn { display: inline-block !important; cursor: pointer; margin: 0 !important; padding: 0 !important; vertical-align: middle !important; line-height: 1 !important; }
+    #vitecTemplate input[type="checkbox"] { display: none !important; } 
+    .svg-toggle { display: inline-block !important; width: 14px !important; height: 14px !important; margin-right: 6px !important; vertical-align: middle !important; border: none !important; background-color: transparent !important; position: relative; top: -1px; }
+    
+    /* Custom SVG */
+    .svg-toggle.checkbox { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect x='25' y='25' width='462' height='462' fill='none' stroke='%23272630' stroke-width='40'/%3E%3C/svg%3E"); }
+    .svg-toggle.checkbox.active, .btn.active > .svg-toggle.checkbox { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect x='25' y='25' width='462' height='462' fill='none' stroke='%23272630' stroke-width='40'/%3E%3Crect x='100' y='100' width='312' height='312' fill='%23272630'/%3E%3C/svg%3E"); }
+
+    /* TABELLER */
+    table { width: 100%; border-collapse: collapse; margin-bottom: 15px; table-layout: fixed; page-break-inside: avoid; }
+    td, th { padding: 5px; vertical-align: top; border: 1px solid #ccc; }
+    
+    /* HELPER CLASSES */
+    .info-label { background-color: #f2f2f2; font-weight: bold; color: #272630; }
+    .v-middle td { vertical-align: middle !important; }
+    .sig-box { height: 40px; border-bottom: 1px dotted #000; }
+    .no-border td { border: none; }
+</style>
+<!-- HEADER -->
+<table class="no-border">
+	<colgroup>
+		<col style="width: 50%;" />
+		<col style="width: 50%;" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td>
+			<h1>Fullmakt</h1>
+			</td>
+			<td style="padding-bottom:15px; text-align:right; vertical-align:bottom">Sted, dato: _____________________________</td>
+		</tr>
+	</tbody>
+</table>
+<!-- EIENDOMSINFO -->
+
+<table>
+	<colgroup>
+		<col style="width: 30%;" />
+		<col style="width: 70%;" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td class="info-label">Matrikkel</td>
+			<td>[[komplettmatrikkel]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Adresse</td>
+			<td>[[eiendom.adresse]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Meglers oppdragsnr</td>
+			<td>[[oppdrag.nr]]</td>
+		</tr>
+	</tbody>
+</table>
+<br />
+<!-- FULLMAKTSTEKST -->
+<p>Det gis herved ugjenkallelig fullmakt til &aring; forhandle og undertegne p&aring; mine/v&aring;re vegne ved salg av ovennevnte eiendom til:</p>
+<!-- Fullmektig Tabell (Erstatter usikker inline-loop) -->
+
+<table cellspacing="0" style="border-collapse:collapse; width:100%">
+	<colgroup>
+		<col style="width: 60%;" />
+		<col style="width: 40%;" />
+	</colgroup>
+	<thead>
+		<tr style="background-color:#f9f9f7">
+			<th style="text-align: left; padding: 5px; border: 1px solid #ccc;">Fullmektigens Navn</th>
+			<th style="text-align: left; padding: 5px; border: 1px solid #ccc;">F&oslash;dselsnummer</th>
+		</tr>
+	</thead>
+	<!-- 
+       Her bruker vi en "fallback" strategi. Hvis det ligger fullmektig-data i systemet,
+       vises det. Hvis ikke, vises en tom linje for utfylling.
+    -->
+	<tbody vitec-if="Model.selger.fullmektig.navn != ''">
+		<tr>
+			<td>[[selger.fullmektig.navn]]</td>
+			<td>[[selger.fullmektig.idnummer]]</td>
+		</tr>
+	</tbody>
+	<!-- Tomme linjer for manuell utfylling hvis systemdata mangler -->
+	<tbody vitec-if="Model.selger.fullmektig.navn == ''">
+		<tr>
+			<td style="height:30px">&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>Fullmakten omfatter rett til &aring; gi salgsoppdrag, akseptere bud, undertegne kj&oslash;pekontrakt, skj&oslash;te og ellers undertegne pantedokumenter og alle andre n&oslash;dvendige dokumenter i forbindelse med salget, herunder transport av festekontrakt, samt rett til &aring; disponere over oppgj&oslash;ret. Denne fullmakten kan ikke transporteres.</p>
+<br />
+<!-- SIGNATUR-TABELL -->
+<div style="background-color:#e6e6e6; border-bottom:none; border:1px solid #cccccc; font-weight:bold; padding:5px">Fullmaktsgiver(e):</div>
+
+<table>
+	<colgroup>
+		<col style="width: 30%;" />
+		<col style="width: 30%;" />
+		<col style="width: 25%;" />
+		<col style="width: 15%;" />
+	</colgroup>
+	<thead>
+		<tr style="background-color:#f2f2f2">
+			<th style="text-align:center;">Signatur</th>
+			<th style="text-align:center;">Navn i blokkbokstaver</th>
+			<th style="text-align:center;">F&oslash;dselsnr / Org.nr</th>
+			<th style="text-align:center;">PEP*</th>
+		</tr>
+	</thead>
+	<tbody vitec-foreach="selger in Model.selgere">
+		<tr class="v-middle">
+			<td>
+			<div class="sig-box">&nbsp;</div>
+			</td>
+			<td>[[*selger.navn]]</td>
+			<td style="text-align:center">[[*selger.idnummer]]</td>
+			<td style="text-align:center">
+			<div style="font-size:8pt; white-space:nowrap"><label aria-pressed="false" class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> JA<br />
+			<label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label> NEI</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<p style="font-size:8pt; font-style:italic">*PEP: Politisk Eksponert Person</p>
+<br />
+<!-- EKTEFELLE SAMTYKKE -->
+<div style="background-color:#f9f9f7; border:1px solid #cccccc; padding:10px">
+<table class="no-border" style="margin:0">
+	<colgroup>
+		<col style="width: 30px;" />
+		<col style="width: auto;" />
+	</colgroup>
+	<tbody class="v-middle">
+		<tr>
+			<td><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+			<td>Ektefelle/partner samtykke er ikke aktuelt, ettersom eiendommen eies sammen.</td>
+		</tr>
+		<tr>
+			<td><label class="btn" contenteditable="false" data-toggle="button"><input type="checkbox" /><span class="checkbox svg-toggle"></span></label></td>
+			<td>Eiendommen tjener ikke til felles bolig for ektefeller/registrerte partnere.</td>
+		</tr>
+	</tbody>
+</table>
+</div>
+<br />
+<!-- VITNEBEKREFTELSE -->
+<div style="background-color:#e6e6e6; border-bottom:none; border:1px solid #cccccc; padding:10px"><strong>Vitnebekreftelse:</strong><br />
+Jeg bekrefter at underskriver(ne) er over 18 &aring;r og har underskrevet eller vedkjent seg sin(e) underskrift(er) i mitt/v&aring;rt n&aelig;rv&aelig;r. Jeg/vi er myndig(e) og bosatt i Norge.</div>
+
+<table>
+	<colgroup>
+		<col style="width: 30%;" />
+		<col style="width: 40%;" />
+		<col style="width: 30%;" />
+	</colgroup>
+	<thead>
+		<tr style="background-color:#f2f2f2">
+			<th style="text-align:center;">Signatur</th>
+			<th style="text-align:center;">Navn og Adresse</th>
+			<th style="text-align:center;">F&oslash;dselsnummer</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="vertical-align:bottom">
+			<div class="sig-box">&nbsp;</div>
+			</td>
+			<td style="height:80px">&nbsp;</td>
+			<td style="vertical-align:bottom">
+			<div class="sig-box">&nbsp;</div>
+			</td>
+		</tr>
+		<tr>
+			<td style="vertical-align:bottom">
+			<div class="sig-box">&nbsp;</div>
+			</td>
+			<td style="height:80px">&nbsp;</td>
+			<td style="vertical-align:bottom">
+			<div class="sig-box">&nbsp;</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>

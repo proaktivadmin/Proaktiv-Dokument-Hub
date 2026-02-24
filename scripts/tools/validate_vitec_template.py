@@ -39,7 +39,7 @@ def validate(html: str, tier: int = 4) -> list[tuple[str, bool, str]]:
           has_vitec_id,
           'Missing id="vitecTemplate"' if not has_vitec_id else "")
 
-    check("A", "No proaktiv-theme class (not used by reference templates)",
+    check("A", "No proaktiv-theme class (Proaktiv convention, not Vitec standard — 0/249 official templates use it)",
           not has_proaktiv_theme,
           'Remove class="proaktiv-theme" from root div')
 
@@ -62,10 +62,41 @@ def validate(html: str, tier: int = 4) -> list[tuple[str, bool, str]]:
           has_h1_css,
           "Add #vitecTemplate h1 { text-align: center; font-size: 14pt; } to <style>")
 
-    has_h2_css = bool(re.search(r"margin:\s*30px\s+0\s+0\s+-\d+px", html))
-    check("A", "H2 CSS styling with negative margin",
+    has_h2_css = bool(re.search(r"margin:\s*30px\s+0\s+0\s+-20px", html))
+    check("A", "H2 CSS styling with negative margin (-20px)",
           has_h2_css,
-          "Add #vitecTemplate h2 { font-size: 11pt; margin: 30px 0 0 -26px; } to <style>")
+          "Add #vitecTemplate h2 { font-size: 11pt; margin: 30px 0 0 -20px; } to <style>")
+
+    has_article_padding = bool(re.search(r"article\s*\{[^}]*padding-left:\s*20px", html))
+    check("A", "Article padding-left: 20px (production standard)",
+          has_article_padding or tier < 3,
+          "Use padding-left: 20px (not 26px) — matches production Bruktbolig/FORBRUKER")
+
+    has_insert_table = "display: inline-table" in html or "display:inline-table" in html
+    check("A", "Chromium insert-table fix (.insert-table { display: inline-table })",
+          has_insert_table or tier < 3,
+          "Missing .insert-table { display: inline-table; } — critical for Chromium rendering")
+
+    # ===================== A2. Post-Processor Checks =====================
+    has_svg_css = "svg-toggle" in html and "label.btn" in html
+    check("A2", "SVG checkbox CSS present (from PATTERNS.md)",
+          has_svg_css or tier < 3,
+          "Missing SVG checkbox CSS block. Copy from PATTERNS.md section 4." if tier >= 3 else "")
+
+    has_insert_css = "span.insert:empty" in html
+    check("A2", "Insert field CSS present",
+          has_insert_css or tier < 3,
+          "Missing insert-field CSS block. Copy from PATTERNS.md section 3." if tier >= 3 else "")
+
+    style_end_pos = html.rfind("</style>")
+    if style_end_pos > 0:
+        after_style = html[style_end_pos + 8:].strip()
+        has_table_after_style = after_style.startswith("<table")
+        check("A2", "Outer table wrapper after </style>",
+              has_table_after_style,
+              "Body content must be inside <table><tbody><tr><td colspan=\"100\">")
+    else:
+        check("A2", "Has style block", False, "No </style> tag found")
 
     # ===================== B. Table Structure =====================
     check("B", "No CSS flexbox/grid",
@@ -151,15 +182,17 @@ def validate(html: str, tier: int = 4) -> list[tuple[str, bool, str]]:
     check("H", "Insert fields use insert-table wrapper", has_insert_table,
           "Wrap insert spans in <span class=\"insert-table\">")
 
-    unicode_checkboxes = re.findall(r"&#9744;|&#9745;|☐|☑", html)
+    unicode_checkboxes = re.findall(r"&#9744;|&#9745;|\u2610|\u2611|☐|☑", html)
     check("H", "No Unicode checkboxes (render as ? in PDF)",
           len(unicode_checkboxes) == 0,
-          f"Found {len(unicode_checkboxes)} Unicode checkboxes — use SVG checkbox pattern instead")
+          f"Found {len(unicode_checkboxes)} Unicode checkboxes — replace with SVG pattern from PATTERNS.md section 5/6")
 
-    has_svg_checkbox_css = "svg-toggle" in html and "label.btn" in html
-    if tier >= 3:
-        check("H", "SVG checkbox CSS present", has_svg_checkbox_css,
-              "Include SVG checkbox CSS block in <style>")
+    data_driven_with_input = re.findall(
+        r'vitec-if="[^"]*">\s*<label[^>]*>\s*<input\s+type="checkbox"', html
+    )
+    check("H", "Data-driven checkboxes have no <input> tag",
+          len(data_driven_with_input) == 0,
+          f"Found {len(data_driven_with_input)} data-driven checkboxes with <input> — remove the input element")
 
     # ===================== I. Text and Formatting =====================
     font_tags = re.findall(r"<font\b", html)

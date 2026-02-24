@@ -1,0 +1,15 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<table style="height:1.5cm; table-layout:fixed; width:20cm">
+	<tbody>
+		<tr>
+			<td style="font-size:8pt; padding:0.25cm 0.5cm 0.5cm 2cm; vertical-align:bottom">
+			<div style="border-top:solid 1px #000000; text-align:center; width:3cm"><span vitec-if="!Model.oppdrag.type.Contains(&quot;tleie&quot;)">Selger</span><span vitec-if="Model.oppdrag.type.Contains(&quot;tleie&quot;)">Utleier</span></div>
+			</td>
+			<td style="padding:0.5cm; text-align:center"><span style="font-size:8pt">side [[p]] av [[P]]</span></td>
+			<td style="font-size:8pt; padding:0.25cm 1cm 0.5cm 0.5cm; text-align:right; vertical-align:bottom">
+			<div style="border-top:solid 1px #000000; float:right; text-align:center; width:3cm"><span vitec-if="!Model.oppdrag.type.Contains(&quot;tleie&quot;)">Kj&oslash;per</span><span vitec-if="Model.oppdrag.type.Contains(&quot;tleie&quot;)">Leietaker</span></div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>

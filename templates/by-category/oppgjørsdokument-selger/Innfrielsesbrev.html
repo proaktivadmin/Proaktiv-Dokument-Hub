@@ -1,0 +1,167 @@
+<!-- Aktiverer visuell hjelp med en html-kommentar: --><!--VITEC-VISUAL-HELP-ENABLED--><!-- "Visuelle hint" / rosa sett-inn-felt:  -->
+<style type="text/css">.vitec-data-missing {
+        display: inline-table;
+    }
+
+        .vitec-data-missing > span {
+            display: table-cell;
+        }
+
+            .vitec-data-missing > span:empty {
+                font-size: inherit !important;
+                line-height: inherit !important;
+                display: inline-block;
+                background-color: lightpink;
+                min-width: 2em !important;
+                height: inherit !important;
+                text-align: center;
+            }
+
+                .vitec-data-missing > span:empty:before {
+                    content: attr(data-label);
+                }
+
+                .vitec-data-missing > span:empty:hover {
+                    background-color: #fff;
+                    cursor: pointer;
+                }
+</style>
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark"></span>
+<p><span vitec-template="resource:Vitec Stilark"><span id="cke_bm_3779S" style="display:none">&nbsp;</span>&nbsp;</span>
+<style type="text/css">#vitecTemplate table {
+            border-collapse: collapse;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        #vitecTemplate ul {
+            list-style-type: none;
+        }
+
+        #vitecTemplate table td[data-label] {
+            padding: 16px 2px 4px 2px;
+            position: relative;
+        }
+
+        #vitecTemplate table td[data-choice] {
+            padding: 4px 2px 16px 2px;
+            position: relative;
+        }
+
+        /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+        span.insert:empty {
+            font-size: inherit !important;
+            line-height: inherit !important;
+            display: inline-block;
+            background-color: lightpink;
+            min-width: 2em !important;
+            height: .7em !important;
+            text-align: center;
+        }
+
+            span.insert:empty:before {
+                content: attr(data-label);
+            }
+
+            span.insert:empty:hover {
+                background-color: #fff;
+                cursor: pointer;
+            }
+
+        .insert-table {
+            display: inline-table;
+        }
+
+            .insert-table > span,
+            .insert-table > span.insert {
+                display: table-cell;
+            }
+
+        #vitecTemplate .liste:last-child .separator {
+            display: none;
+        }
+</style>
+</p>
+
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<div vitec-template="resource: Mottaker">&nbsp;</div>
+
+			<p><strong><span vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot;">Innfrielse av l&aring;n p&aring; </span><span vitec-if="Model.oppdrag.hovedtype == &quot;Tvangssalg&quot;">Tvangssalg av </span><strong>[[eiendom.gatenavnognr]]</strong> - <strong>[[komplettmatrikkelutvidet]]</strong> i <strong>[[eiendom.kommunenavn]]</strong> kommune</strong></p>
+
+			<table vitec-if="Model.oppdrag.hovedtype == &quot;Tvangssalg&quot;">
+				<tbody>
+					<tr>
+						<td colspan="25"><strong>Tingrettens saksnr.:</strong></td>
+						<td colspan="75">[[tvangssalgrefnr]]</td>
+					</tr>
+					<tr>
+						<td colspan="25"><strong>Saks&oslash;kte:</strong></td>
+						<td colspan="75"><span vitec-foreach="saksokte in Model.saksokteliste"> <span class="liste"><span vitec-foreach="saksokte in Model.saksokteliste"><span class="liste">[[*saksokte.navnutenfullmektigogkontaktperson]]</span></span><span class="separator">, </span> </span> </span></td>
+					</tr>
+					<tr>
+						<td colspan="25"><strong>Saks&oslash;ker:</strong></td>
+						<td colspan="75">[[saksoker.navnutenfullmektigogkontaktperson]]</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<table vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot;">
+				<tbody>
+					<tr>
+						<td colspan="25" style="vertical-align:top"><strong>L&aring;ntaker<span vitec-if="Model.selgere.Count &gt; 1">e</span>:</strong></td>
+						<td colspan="75" vitec-foreach="selger in Model.selgere">
+						<div>[[*selger.navnutenfullmektigogkontaktperson]] - [[*selger.ledetekst_fdato_orgnr]]: [[*selger.fdato_orgnr]]</div>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="25" style="vertical-align:top"><strong>L&aring;nnr:</strong></td>
+						<td colspan="75"><span vitec-foreach="pant in Model.oppdrag.mottakerspant"><span vitec-foreach="laan in pant.laan"><span class="liste"><span vitec-foreach="pant in Model.oppdrag.mottakerspant"><span vitec-foreach="laan in pant.laan"><span class="liste">[[*laan.nr]]</span></span></span><span class="separator">, </span> </span> </span></span></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot;">Etter avtale med [[laan.kontaktperson]] har vi i dag overf&oslash;rt</p>
+
+			<p vitec-if="Model.oppdrag.hovedtype == &quot;Tvangssalg&quot;">Vi viser til fordelingskjennelse datert [[tvangssalg.fordelingskjennelse.dato]] og bekrefter at vi i dag har overf&oslash;rt</p>
+
+			<div vitec-foreach="postering in Model.mottaker.utbetalingsposter">
+			<ul>
+				<li><strong>Kr <strong>[[*postering.belop]]</strong></strong>, til konto <strong><strong>[[*postering.kontonr]]</strong></strong><span vitec-if="postering.kontonr != postering.referanse"> - referanse <strong><span vitec-if="postering.kontonr != postering.referanse"><strong>[[*postering.referanse]]</strong></span></strong></span>.</li>
+			</ul>
+			</div>
+
+			<div style="page-break-inside:avoid" vitec-if="(Model.eiendom.eieform == &quot;Andel&quot; || Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">
+			<p>Bel&oslash;p<span vitec-if="Model.mottaker.utbetalingsposter.Count == 1">et</span><span vitec-if="Model.mottaker.utbetalingsposter.Count &gt; 1">ene</span> er overf&oslash;rt <span vitec-if="Model.oppdrag.hovedtype == &quot;Tvangssalg&quot;">for innfrielse av pantekrav pr. <span class="insert-table"> <span class="insert" data-label="Dato"></span></span></span> under forutsetning av at</p>
+
+			<div vitec-foreach="pant in Model.oppdrag.mottakerspantforinnfrielse">
+			<ul>
+				<li>[[*pant.type]] stor<span vitec-if="Model.pant.ertypefrivilligpant == true">t</span><strong> kr $.UD(<strong>[[*pant.belop]]</strong>)</strong> tinglyst [[*pant.tinglystdato]] med dokumentnr. [[*pant.dokumentnr]]</li>
+			</ul>
+			</div>
+
+			<p>i ovennevnte eiendom blir sendt for sletting snarest mulig, med melding til undertegnede senest innen 14 dager.</p>
+			</div>
+
+			<p vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Bel&oslash;p<span vitec-if="Model.mottaker.utbetalingsposter.Count == 1">et</span><span vitec-if="Model.mottaker.utbetalingsposter.Count &gt; 1">ene</span> er overf&oslash;rt under forutsetning av at dere omg&aring;ende sender skriftlig bekreftelse til forretningsf&oslash;rer p&aring; at deres panteinteresse i ovennevnte aksje(leilighet) er opph&oslash;rt, og samtidig returnerer partialobligasjonen dersom dere besitter denne. Vi ber om &aring; f&aring; kopi av bekreftelsen, gjerne p&aring; e-post til undertegnede.</p>
+			Skulle denne forutsetningen ikke kunne innfris m&aring; de overf&oslash;rte bel&oslash;pene snarest i sin helhet returneres til klientkonto ​[[kontrakt.klientkonto]]​ og merkes KID-kode ​[[kontrakt.kid]]​
+
+			<p>&nbsp;</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<div vitec-template="resource: Avsender">&nbsp;</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>

@@ -1,0 +1,99 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate table {
+                    border-collapse: collapse;
+                    width: 100%;
+                    table-layout: fixed;
+                }
+        
+                #vitecTemplate .liste:last-child .separator {
+                    display: none;
+                }
+        
+                /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+        
+                #vitecTemplate span.insert:empty {
+                    font-size: inherit !important;
+                    line-height: inherit !important;
+                    display: inline-block;
+                    background-color: lightpink;
+                    min-width: 2em !important;
+                    height: .7em !important;
+                    text-align: center;
+                }
+        
+                #vitecTemplate span.insert:empty:before {
+                    content: attr(data-label);
+                }
+        
+                #vitecTemplate span.insert:empty:hover {
+                    background-color: #fff;
+                    cursor: pointer;
+                }
+        
+                #vitecTemplate .insert-table {
+                    display: inline-table;
+                }
+        
+                #vitecTemplate .insert-table>span,
+                #vitecTemplate .insert-table>span.insert {
+                    display: table-cell;
+        
+                }
+</style>
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<div vitec-template="resource: Mottaker">&nbsp;</div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="100">
+			<p><strong>Bistand til taksering i forbindelse med tvangssalg av [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+			<table>
+				<tbody>
+					<tr>
+						<td colspan="25"><strong>Tingrettens saksnr.:</strong></td>
+						<td colspan="75">[[tvangssalgrefnr]]</td>
+					</tr>
+					<tr>
+						<td colspan="25"><strong>Saks&oslash;kte:</strong></td>
+						<td colspan="75"><span vitec-foreach="saksokte  in Model.saksokteliste"> <span class="liste">[[*saksokte.navn]]<span class="separator">, </span> </span> </span></td>
+					</tr>
+					<tr>
+						<td colspan="25"><strong>Saks&oslash;ker<span vitec-if="Model.saksokere.Count &gt; 1">e</span>:</strong></td>
+						<td colspan="75"><span vitec-foreach="saksoker  in Model.saksokere"> <span class="liste">[[*saksoker.firmanavn]]<span class="separator">, </span> </span> </span></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>Det vises til dagens telefonsamtale.</p>
+
+			<p>Undertegnede er oppnevnt som medhjelper for tvangssalg av ovennevnte eiendom.</p>
+
+			<p>Undertegnede har tilskrevet saks&oslash;kte ved 3 anledninger med henblikk p&aring; &aring; f&aring; tilgang til eiendommen for &aring; f&aring; den taksert uten at <span vitec-if="Model.saksokteliste.Count == 1"><span style="color:red">han/hun</span></span> <span vitec-if="Model.saksokteliste.Count &gt; 1">de</span> har besvart henvendelsene.</p>
+
+			<p>P&aring; bakgrunn av ovenst&aring;ende ber jeg om namsmannens bistand til &aring; f&aring; gjennomf&oslash;rt taksering av ovennevnte eiendom i samsvar med tvangsl. &sect; 5-9.</p>
+
+			<p>Som tidspunkt for forretningen foresl&aring;s [[eiendom.takstdato]] kl. <span class="insert-table"><span class="insert" data-label="Klokkeslett"></span></span>. Dersom nevnte tidspunkt ikke skulle v&aelig;re passende, vennligst underrett undertegnede.</p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="100">
+			<div vitec-template="resource: Avsender">&nbsp;</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>&nbsp;</p>
+
+<p>Vedlegg</p>
+
+<ul>
+	<li>Bilag 1: Kopi av begj&aelig;ring om tvangssalg</li>
+	<li>Bilag 2: Kopi av medhjelperoppnevnelse</li>
+	<li>Bilag 3: Kopi av brev til <span vitec-foreach="saksokte  in Model.saksokteliste"> <span class="liste">[[*saksokte.navn]]<span class="separator">, </span> </span> </span></li>
+</ul>
+</div>

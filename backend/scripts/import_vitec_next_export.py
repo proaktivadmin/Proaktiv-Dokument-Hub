@@ -561,6 +561,13 @@ async def import_vitec_export(
                     stats = stats.add(skipped=1)
                     continue
 
+                if content.startswith("PK") or "\x00" in content:
+                    logger.warning(
+                        f"[{idx}/{len(templates)}] Skipping binary/DOCX content: {file_name} ({title})"
+                    )
+                    stats = stats.add(skipped=1)
+                    continue
+
                 processed_content = sanitizer.sanitize(content) if auto_sanitize else content
                 file_size_bytes = len(processed_content.encode("utf-8"))
 

@@ -1,0 +1,36 @@
+<!-- IF-OUTPUT: PDF -->
+<style type="text/css">#Mottaker td {
+		padding-left: 0;
+	}
+</style>
+<table id="Mottaker" style="table-layout:fixed; width:100%" vitec-if="Model.dokumentoutput == &quot;pdf&quot;">
+	<tbody>
+		<tr>
+			<td colspan="100" style="height:1.25cm">&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="67" style="vertical-align:top">
+			<div><strong>[[mottaker.navn]]</strong></div>
+
+			<div>&nbsp;</div>
+
+			<div>[[mottaker.adresse]]</div>
+
+			<div>[[mottaker.postnr]] [[mottaker.poststed]]</div>
+			</td>
+			<td colspan="33" style="vertical-align:top">
+			<div>&nbsp;</div>
+
+			<div>&nbsp;</div>
+
+			<div style="text-align:right">V&aring;r ref: [[oppdrag.nr]]</div>
+
+			<div style="text-align:right">[[avsender.meglerkontor.poststed]], [[dagensdato]]</div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="100" style="height:2cm">&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+<!-- /IF-OUTPUT: PDF -->

@@ -1,0 +1,221 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate table {
+			width: 100%;
+			table-layout: fixed;
+			border-collapse: collapse;
+			box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+		}
+
+		#vitecTemplate table tr.no-border td {
+			border: none;
+			height: auto;
+		}
+
+		#vitecTemplate .sign-field {
+			display: inline-block;
+			width: 48%;
+			margin-top: 1cm;
+			margin-right: 10px;
+			border-top: solid 1px #000;
+			vertical-align: top;
+		}
+
+		#vitecTemplate .witness-table {
+			table-layout: fixed;
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+		#vitecTemplate .witness-table td {
+			border: solid 1px #000;
+			height: 30px;
+			vertical-align: middle;
+			padding: 2px;
+		}
+
+		#vitecTemplate .witness-table td.header-cell {
+			background-color: rgb(231, 230, 230);
+			text-align: center;
+		}
+
+		#vitecTemplate td[data-label]:before {
+			content: attr(data-label);
+			text-align: left;
+			color: #333;
+			font-size: 7pt;
+			line-height: 8pt;
+			text-transform: uppercase;
+			display: block;
+			position: absolute;
+			top: 1px;
+		}
+
+		#vitecTemplate td[data-label] {
+			padding: 14px 2px 2px 2px;
+			position: relative;
+		}
+		/* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+        #vitecTemplate span.insert:empty {
+            font-size: inherit !important;
+            line-height: inherit !important;
+            display: inline-block;
+            background-color: lightpink;
+            min-width: 2em !important;
+            height: .7em !important;
+            text-align: center;
+        }
+
+        #vitecTemplate span.insert:empty:before {
+            content: attr(data-label);
+        }
+
+        #vitecTemplate span.insert:empty:hover {
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+        #vitecTemplate .insert-table {
+            display: inline-table;
+        }
+
+        #vitecTemplate .insert-table>span,
+        #vitecTemplate .insert-table>span.insert {
+            display: table-cell;
+
+        }
+</style>
+<table style="table-layout:fixed; width:100%">
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<p style="text-align:right">Oppdragsnr: [[oppdrag.nr]]</p>
+
+			<p style="text-align:center"><span style="font-size:14pt"> <strong>UGJENKALLELIG SALGSFULLMAKT</strong> </span></p>
+
+			<p>Undertegnede</p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="37"><strong>Navn</strong></td>
+			<td colspan="45"><strong>Adresse</strong></td>
+			<td colspan="18"><strong>[[selger.ledetekst_idnummer]]</strong></td>
+		</tr>
+	</tbody>
+	<tbody vitec-foreach="selger in Model.selgere" vitec-if="Model.selgere.Count &gt; 0">
+		<tr>
+			<td colspan="37">[[*selger.navn]]</td>
+			<td colspan="45">[[*selger.gatenavnognr]], [[*selger.postnr]] [[*selger.poststed]]</td>
+			<td colspan="18">[[*selger.idnummer]]</td>
+		</tr>
+	</tbody>
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<p>gir herved fullmakt til</p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="37"><strong>Navn</strong></td>
+			<td colspan="45"><strong>Adresse</strong></td>
+			<td colspan="18"><strong>F&oslash;dselsnummer/Org.nr.</strong></td>
+		</tr>
+		<tr>
+			<td colspan="37">&nbsp;</td>
+			<td colspan="45">&nbsp;</td>
+			<td colspan="18">&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="100">
+			<p>til p&aring; mine vegne &aring; forest&aring; salg av eiendommen</p>
+
+			<p><strong>[[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+			<p>p&aring; best mulig betingelser.</p>
+
+			<p>Fullmakten omfatter rett til &aring; gi salgsoppdrag, akseptere bud, undertegne kj&oslash;pekontrakt og <span vitec-if="(Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Selveier&quot;)">skj&oslash;te </span> <span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">hjemmelsoverf&oslash;ring </span> <span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">transportfullmakt </span>og/eller undertegne pantedokumenter og alle andre n&oslash;dvendige dokumenter i forbindelse med salget <span vitec-if="Model.eiendom.tomtetype == &quot;festetomt&quot;">, herunder transport av festekontrakt</span>. Fullmakten gir rett til &aring; motta oppgj&oslash;r. Fullmakten faller ikke bort ved sykdom eller d&oslash;d. Fullmakten gjelder kun forf&oslash;yning over ovennevnte eiendom og <span class="insert-table"> <span class="insert" data-label="fullmaktshaver"></span> </span> har s&aring;ledes ingen adgang til &aring; forplikte hjemmelshaver personlig i henhold til n&aelig;rv&aelig;rende fullmakt.</p>
+			</td>
+		</tr>
+	</tbody>
+	<tbody>
+		<tr>
+			<td colspan="5" style="border-bottom:1px solid black">&nbsp;</td>
+			<td colspan="95">Jeg er ikke gift</td>
+		</tr>
+		<tr>
+			<td colspan="5" style="border-bottom:1px solid black">&nbsp;</td>
+			<td colspan="95">Jeg er gift/registrert partner og ektefelle samtykker nedenfor</td>
+		</tr>
+		<tr>
+			<td colspan="5">
+			<div style="border-bottom:1px solid black">&nbsp;</div>
+			</td>
+			<td colspan="95">Jeg er gift/registrert partner, men eiendommen tjener ikke til felles bolig for meg og min ektefelle/registrerte partner</td>
+		</tr>
+	</tbody>
+</table>
+
+<table style="table-layout:fixed; width:48%">
+	<tbody>
+		<tr class="no-border">
+			<td colspan="100" style="border-bottom:solid 1px #000000"><br />
+			&nbsp;</td>
+		</tr>
+		<tr class="no-border">
+			<td colspan="100">Sted / dato</td>
+		</tr>
+	</tbody>
+</table>
+
+<div style="page-break-inside:avoid">
+<table>
+	<tbody>
+		<tr class="no-border">
+			<td colspan="100" style="vertical-align:top"><span vitec-foreach="selger in Model.selgere"> <span class="sign-field">[[*selger.navn]]</span> </span> <span class="sign-field">Samtykke fra ektefelle</span></td>
+		</tr>
+	</tbody>
+</table>
+</div>
+
+<p>Jeg/vi bevitner herved at denne fullmakten er undertegnet i mitt/v&aring;rt n&aelig;rv&aelig;r og at underskriverne er over 18 &aring;r. Jeg/vi er myndig(e) og fast bosatt i Norge.</p>
+
+<table class="witness-table">
+	<tbody>
+		<tr>
+			<td colspan="41" data-label="Navn">&nbsp;</td>
+			<td class="header-cell" colspan="8">1. vitne</td>
+			<td colspan="2" style="border-style:none; border-width:0px">&nbsp;</td>
+			<td colspan="41" data-label="Navn">&nbsp;</td>
+			<td class="header-cell" colspan="8">2. vitne</td>
+		</tr>
+		<tr>
+			<td colspan="49" data-label="Fødselsnummer">&nbsp;</td>
+			<td colspan="2" style="border-style:none; border-width:0px">&nbsp;</td>
+			<td colspan="49" data-label="Fødselsnummer">&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="49" data-label="Adresse">&nbsp;</td>
+			<td colspan="2" style="border-style:none; border-width:0px">&nbsp;</td>
+			<td colspan="49" data-label="Adresse">&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="49" data-label="Telefon">&nbsp;</td>
+			<td colspan="2" style="border-style:none; border-width:0px">&nbsp;</td>
+			<td colspan="49" data-label="Telefon">&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="49" data-label="Sted/dato">&nbsp;</td>
+			<td colspan="2" style="border-style:none; border-width:0px">&nbsp;</td>
+			<td colspan="49" data-label="Sted/dato">&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="49" data-label="Signatur">&nbsp;</td>
+			<td colspan="2" style="border-style:none; border-width:0px">&nbsp;</td>
+			<td colspan="49" data-label="Signatur">&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><small>Vitner skal v&aelig;re to myndige personer som bor i Norge, evt. en person nevnt i tinglysingsforskriftens &sect; 3. N&aelig;re slektninger til fullmaktmottakeren kan ikke opptre som vitne. Dette gjelder ektefeller, foreldre, barn eller s&oslash;sken</small></p>
+</div>

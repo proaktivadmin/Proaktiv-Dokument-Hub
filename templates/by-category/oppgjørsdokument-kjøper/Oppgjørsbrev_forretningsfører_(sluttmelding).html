@@ -1,0 +1,170 @@
+<!-- Aktiverer visuell hjelp med en html-kommentar: --><!--VITEC-VISUAL-HELP-ENABLED--><!-- "Visuelle hint" / rosa sett-inn-felt:  -->
+<style type="text/css">
+	.vitec-data-missing {
+		display: inline-table;
+	}
+
+		.vitec-data-missing > span {
+			display: table-cell;
+		}
+
+			.vitec-data-missing > span:empty {
+				font-size: inherit !important;
+				line-height: inherit !important;
+				display: inline-block;
+				background-color: lightpink;
+				min-width: 2em !important;
+				height: inherit !important;
+				text-align: center;
+			}
+
+				.vitec-data-missing > span:empty:before {
+					content: attr(data-label);
+				}
+
+				.vitec-data-missing > span:empty:hover {
+					background-color: #fff;
+					cursor: pointer;
+				}
+</style>
+<div id="vitecTemplate">
+	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+	<style type="text/css">
+		#vitecTemplate table {
+			border-collapse: collapse;
+			width: 100%;
+			table-layout: fixed;
+		}
+
+			#vitecTemplate table td[data-label] {
+				padding: 16px 2px 4px 2px;
+				position: relative;
+			}
+
+			#vitecTemplate table td[data-choice] {
+				padding: 4px 2px 16px 2px;
+				position: relative;
+			}
+
+		/* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+		span.insert:empty {
+			font-size: inherit !important;
+			line-height: inherit !important;
+			display: inline-block;
+			background-color: lightpink;
+			min-width: 2em !important;
+			height: .7em !important;
+			text-align: center;
+		}
+
+			span.insert:empty:before {
+				content: attr(data-label);
+			}
+
+			span.insert:empty:hover {
+				background-color: #fff;
+				cursor: pointer;
+			}
+
+		.insert-table {
+			display: inline-table;
+		}
+
+			.insert-table > span,
+			.insert-table > span.insert {
+				display: table-cell;
+			}
+	</style>
+	<table>
+		<tbody>
+			<tr>
+				<td>
+					<div vitec-template="resource: Mottaker">&nbsp;</div>
+
+					<p><strong>Sluttmelding<span vitec-if="(Model.eiendom.eieform != &quot;Aksje&quot; &amp;&amp; Model.eiendom.eieform != &quot;Obligasjonsleilighet&quot;)"> vedr. salg av</span><span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)"> og aksjetransport p&aring;</span> [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+					<p>Vi viser til tidligere korrespondanse vedr. salg av ovennevnte eiendom, og vil med dette orientere om at eiendommen n&aring; er overdratt fra</p>
+
+					<table style="table-layout:fixed; width:100%" vitec-if="Model.selgere.Count &gt; 0">
+						<thead>
+							<tr>
+								<th colspan="37"><strong>Selger<span vitec-if="Model.selgere.Count &gt; 1">e</span></strong></th>
+								<th colspan="45"><strong>Adresse/Kontaktinfo</strong></th>
+								<th colspan="18">[[selger.ledetekst_fdato_orgnr]]</th>
+							</tr>
+						</thead>
+						<tbody vitec-foreach="selger in Model.selgere">
+							<tr>
+								<td colspan="37" rowspan="2">[[*selger.navn]]</td>
+								<td colspan="45">[[*selger.gatenavnognr]], [[*selger.postnr]] [[*selger.poststed]]</td>
+								<td colspan="18">[[*selger.fdato_orgnr]]</td>
+							</tr>
+							<tr>
+								<td colspan="63"><span vitec-if="selger.tlf != &quot;Mangler data&quot;">Tlf: [[*selger.tlf]]</span> <span vitec-if="(selger.tlf != &quot;Mangler data&quot; &amp;&amp; selger.emailadresse != &quot;&quot;)"> / </span> <span vitec-if="selger.emailadresse != &quot;&quot;">E-post: [[*selger.emailadresse]]</span></td>
+							</tr>
+						</tbody>
+					</table>
+
+					<p>til</p>
+
+					<table style="table-layout:fixed; width:100%" vitec-if="Model.kjopere.Count &gt; 0">
+						<thead>
+							<tr>
+								<th colspan="37"><strong>Kj&oslash;per<span vitec-if="Model.kjopere.Count &gt; 1">e</span></strong></th>
+								<th colspan="45"><strong>Adresse/Kontaktinfo</strong></th>
+								<th colspan="18">[[kjoper.ledetekst_fdato_orgnr]]</th>
+							</tr>
+						</thead>
+						<tbody vitec-foreach="kjoper in Model.kjopere">
+							<tr>
+								<td colspan="37" rowspan="2">[[*kjoper.navn]]</td>
+								<td colspan="45">[[*kjoper.gatenavnognr]],&nbsp;[[*kjoper.postnr]]&nbsp;[[*kjoper.poststed]]</td>
+								<td colspan="18">[[*kjoper.fdato_orgnr]]</td>
+							</tr>
+							<tr>
+								<td colspan="63"><span vitec-if="kjoper.tlf != &quot;Mangler data&quot;">Tlf: [[*kjoper.tlf]]</span> <span vitec-if="(kjoper.tlf != &quot;Mangler data&quot; &amp;&amp; kjoper.emailadresse != &quot;&quot;)"> / </span> <span vitec-if="kjoper.emailadresse != &quot;&quot;">E-post: [[*kjoper.emailadresse]]</span></td>
+							</tr>
+						</tbody>
+					</table>
+
+					<p>Overtakelsen fant sted den <strong>[[kontrakt.overtagelse.dato]].</strong></p>
+
+					<p>Kj&oslash;per betaler felleskostnadene fra og med <span class="insert-table"><span class="insert" data-label="dato"></span></span>.</p>
+
+					<p>Selgers nye adresse er: <span class="insert-table"><span class="insert" data-label="Ny adresse"></span></span>.</p>
+
+					<div style="page-break-inside:avoid" vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">
+						<p>Vi ber om at aksje/r og evt. partialobligasjon tiltransporteres kj&oslash;per og at kj&oslash;per innf&oslash;res som ny eier av aksjen/e i aksjeeierboken.</p>
+
+						<div style="page-break-inside:avoid">
+							<p>Med prioritet etter borettslagets panterett i hht borettslagsloven &sect; 14-18 og inng&aring;tt Pantsettelseserkl&aelig;ring ber vi dere notere f&oslash;lgende heftelser p&aring; kj&oslash;per, i prioritert rekkef&oslash;lge:</p>
+
+							<div vitec-if="Model.oppdrag.kjoperspant.Count &gt; 0">
+								<ul vitec-foreach="pant in Model.oppdrag.kjoperspant">
+									<li>[[*pant.navn]] - p&aring;lydende kr $.UD([[*pant.belop]])</li>
+								</ul>
+							</div>
+
+							<div vitec-if="Model.oppdrag.kjoperspant.Count == 0">
+								<ul>
+									<li><span class="insert-table"><span class="insert" data-label="Panthavers navn"></span></span> - p&aring;lydende kr <span class="insert-table"><span class="insert" data-label="beløp/referanse"></span></span></li>
+								</ul>
+							</div>
+						</div>
+
+						<p style="page-break-inside:avoid">Kj&oslash;pers heftelser bes bekreftet med besittelseserkl&aelig;ring til den enkelte rettighetshaver angitt ovenfor, med kopi til oss.</p>
+
+						<p style="page-break-inside:avoid">Vi ber dere slette v&aring;r noterte panterett og ur&aring;dighetserkl&aelig;ring n&aring;r ovennevnte er ordnet, og vedlegger besittelseserkl&aelig;ring i slettet stand.</p>
+					</div>
+
+					<p style="page-break-inside:avoid">Vi har i dag kreditert <strong>kr $.UD([[postering.belop]])</strong> til deres konto <strong>[[postering.utbetalingskontonr]]</strong> som betaling for eierskiftegebyr<span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">, transportgebyr og gebyr for pantenotering(er)</span>.</p>
+
+					<p style="page-break-inside:avoid"><span style="color:red">Selgers restanse for skyldige felleskostnader <strong>kr <span class="insert-table"><span class="insert" data-label="beløp"></span></span></strong> er innbetalt til konto <strong><span class="insert-table"><span class="insert" data-label="kontonummer"></span></span></strong>.</span></p>
+
+					<div vitec-template="resource: Avsender">&nbsp;</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

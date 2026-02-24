@@ -1,0 +1,71 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate table {
+        border-collapse: collapse;
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    #vitecTemplate ul {
+        list-style-type: none;
+    }
+        
+    #vitecTemplate table td[data-label] {
+        padding: 16px 2px 4px 2px;
+        position: relative;
+    }
+       
+    #vitecTemplate table td[data-choice] {
+                    padding: 4px 2px 16px 2px;
+                    position: relative;
+                }    
+        
+               /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+        span.insert:empty {
+            font-size: inherit !important;
+            line-height: inherit !important;
+            display: inline-block;
+            background-color: lightpink;
+            min-width: 2em !important;
+            height: .7em !important;
+            text-align: center;
+        }
+
+        span.insert:empty:before {
+            content: attr(data-label);
+        }
+
+        span.insert:empty:hover {
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+        .insert-table {
+            display: inline-table;
+        }
+
+        .insert-table>span,
+        .insert-table>span.insert {
+            display: table-cell;
+        }
+</style>
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<div vitec-template="resource: Mottaker">&nbsp;</div>
+
+			<p><strong>Foreldet pantedokument tinglyst p&aring;&nbsp;[[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+			<p>Vi ber om at pantedokument til <span class="insert-table"> <span class="insert" data-label="navn panthaver"></span> </span> tinglyst p&aring; ovennevnte eiendom, den <span class="insert-table"> <span class="insert" data-label="tinglyst dato"></span> </span> med dokumentnr. <span class="insert-table"> <span class="insert" data-label="dokumentnr."></span></span>, slettes i ovennevnte eiendom under henvisning til tingll. &sect;&sect; 28 og 31.</p>
+
+			<p>Vi ber om &aring; f&aring; tilsendt bekreftelse p&aring; slettingen.</p>
+
+			<p>Innsenders org.nr.: [[oppgjor.orgnr]].</p>
+
+			<div vitec-template="resource: Avsender">&nbsp;</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>

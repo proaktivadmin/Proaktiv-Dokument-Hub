@@ -1,0 +1,107 @@
+<div id="vitecTemplate">
+	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+	<style type="text/css">
+		/* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+		span.insert:empty {
+			font-size: inherit !important;
+			line-height: inherit !important;
+			display: inline-block;
+			background-color: lightpink;
+			min-width: 2em !important;
+			height: .7em !important;
+			text-align: center;
+		}
+
+			span.insert:empty:before {
+				content: attr(data-label);
+			}
+
+			span.insert:empty:hover {
+				background-color: #fff;
+				cursor: pointer;
+			}
+
+		.insert-table {
+			display: inline-table;
+		}
+
+			.insert-table > span,
+			.insert-table > span.insert {
+				display: table-cell;
+			}
+
+		#vitecTemplate table {
+			width: 100%;
+			table-layout: fixed;
+		}
+	</style>
+	<table>
+		<tbody>
+			<tr>
+				<td>
+					<div vitec-template="resource: Mottaker">&nbsp;</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p><strong>Tinglysing av pantedokument med tinglysingssperre p&aring; [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+					<p>Vi har for salg ovennevnte eiendom tilh&oslash;rende:</p>
+
+					<div vitec-if="!Model.oppdrag.hovedtype.Contains(&quot;N\xE6ring&quot;)">
+						<table style="table-layout:fixed; width:100%" vitec-if="Model.selgere.Count &gt; 0">
+							<thead>
+								<tr>
+									<th colspan="37"><strong>Navn</strong></th>
+									<th colspan="45"><strong>Adresse/Kontaktinfo</strong></th>
+									<th colspan="18">[[selger.ledetekst_fdato_orgnr]]</th>
+								</tr>
+							</thead>
+							<tbody vitec-foreach="selger in Model.selgere">
+								<tr>
+									<td colspan="37">[[*selger.navnutenfullmektigogkontaktperson]]</td>
+									<td colspan="45">[[*selger.gatenavnognr]], [[*selger.postnr]] [[*selger.poststed]]</td>
+									<td colspan="18">[[*selger.fdato_orgnr]]</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div vitec-if="Model.oppdrag.hovedtype.Contains(&quot;N\xE6ring&quot;)">
+						<table style="table-layout:fixed; width:100%" vitec-if="Model.hjemmelshavere.Count &gt; 0">
+							<thead>
+								<tr>
+									<th colspan="37"><strong>Navn</strong></th>
+									<th colspan="45"><strong>Adresse/Kontaktinfo</strong></th>
+									<th colspan="18">[[hjemmelshaver.ledetekst_fdato_orgnr]]</th>
+								</tr>
+							</thead>
+							<tbody vitec-foreach="hjemmelshaver in Model.hjemmelshavere">
+								<tr>
+									<td colspan="37">[[*hjemmelshaver.navnutenfullmektigogkontaktperson]]</td>
+									<td colspan="45">[[*hjemmelshaver.gatenavnognr]], [[*hjemmelshaver.postnr]] [[*hjemmelshaver.poststed]]</td>
+									<td colspan="18">[[*hjemmelshaver.fdato_orgnr]]</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<p>Vedlagt oversendes pantedokument med tinglysingssperre p&aring;lydende <strong><span vitec-if="Model.depotdokument.rettighetshaver != &quot;Mangler data&quot;">kr $.UD([[depotdokument.belop]])</span><span vitec-if="Model.depotdokument.rettighetshaver == &quot;Mangler data&quot;">kr $.UD([[kontrakt.kjopesum]])</span></strong> i undertegnet og attestert stand for tinglysing.</p>
+
+					<p>
+						<u><strong>Etter behandling bes dokumentet returnert til:</strong> </u><br />
+						[[oppgjor.kontornavn]]<br />
+						[[oppgjor.postadresse]]<br />
+						[[oppgjor.postnr]]&nbsp;[[oppgjor.poststed]]
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div vitec-template="resource: Avsender">&nbsp;</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

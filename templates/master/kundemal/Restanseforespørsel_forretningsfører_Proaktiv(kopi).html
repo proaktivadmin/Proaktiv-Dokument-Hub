@@ -1,0 +1,73 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate table {
+                    border-collapse: collapse;
+                    width: 100%;
+                    table-layout: fixed;            
+            }
+</style>
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<div vitec-template="resource: Mottaker">&nbsp;</div>
+
+			<p><strong>Restanseforesp&oslash;rsel p&aring; [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+			<p>Vi viser til tidligere korrespondanse vedr. salg av ovennevnte eiendom, og vil med dette orientere om at eiendommen&nbsp;er solgt fra</p>
+
+			<table style="table-layout:fixed; width:100%" vitec-if="Model.selgere.Count &gt; 0">
+				<thead>
+					<tr>
+						<th colspan="37"><strong>Selger<span vitec-if="Model.selgere.Count &gt; 1">e</span></strong></th>
+						<th colspan="45"><strong>Adresse/Kontaktinfo</strong></th>
+						<th colspan="18">[[selger.ledetekst_fdato_orgnr]]</th>
+					</tr>
+				</thead>
+				<tbody vitec-foreach="selger in Model.selgere">
+					<tr>
+						<td colspan="37" rowspan="2">[[*selger.navn]]</td>
+						<td colspan="45">[[*selger.gatenavnognr]], [[*selger.postnr]] [[*selger.poststed]]</td>
+						<td colspan="18">[[*selger.fdato_orgnr]]</td>
+					</tr>
+					<tr>
+						<td colspan="63"><span vitec-if="selger.tlf != &quot;Mangler data&quot;">Tlf: [[*selger.tlf]]</span> <span vitec-if="(selger.tlf != &quot;Mangler data&quot; &amp;&amp; selger.emailadresse != &quot;&quot;)"> / </span> <span vitec-if="selger.emailadresse != &quot;&quot;">E-post: [[*selger.emailadresse]]</span></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>til</p>
+
+			<table style="table-layout:fixed; width:100%" vitec-if="Model.kjopere.Count &gt; 0">
+				<thead>
+					<tr>
+						<th colspan="37"><strong>Kj&oslash;per<span vitec-if="Model.kjopere.Count &gt; 1">e</span></strong></th>
+						<th colspan="45"><strong>Adresse/Kontaktinfo</strong></th>
+						<th colspan="18">[[kjoper.ledetekst_fdato_orgnr]]</th>
+					</tr>
+				</thead>
+				<tbody vitec-foreach="kjoper in Model.kjopere">
+					<tr>
+						<td colspan="37" rowspan="2">[[*kjoper.navn]]</td>
+						<td colspan="45">[[*kjoper.gatenavnognr]],&nbsp;[[*kjoper.postnr]]&nbsp;[[*kjoper.poststed]]</td>
+						<td colspan="18">[[*kjoper.fdato_orgnr]]</td>
+					</tr>
+					<tr>
+						<td colspan="63"><span vitec-if="kjoper.tlf != &quot;Mangler data&quot;">Tlf: [[*kjoper.tlf]]</span> <span vitec-if="(kjoper.tlf != &quot;Mangler data&quot; &amp;&amp; kjoper.emailadresse != &quot;&quot;)"> / </span> <span vitec-if="kjoper.emailadresse != &quot;&quot;">E-post: [[*kjoper.emailadresse]]</span></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>Overtakelsen fant sted den <strong>[[kontrakt.overtagelse.dato]].</strong></p>
+
+			<p>Vi skal n&aring; foreta oppgj&oslash;r p&aring; eiendommen, og ber om &aring; f&aring; oppgitt om det foreligger restanser p&aring; fellesutgiftene og evt. til hvilket kontonummer vi skal foreta betalingen. Vi ber ogs&aring; om &aring; f&aring; tilsendt faktura p&aring; eierskiftegebyr<span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">, transportgebyr og gebyr for pantenotering(er)</span> dersom vi ikke har mottatt <span vitec-if="(Model.eiendom.eieform != &quot;Aksje&quot; &amp;&amp; Model.eiendom.eieform != &quot;Obligasjonsleilighet&quot;)">denne</span><span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">disse</span> tidligere.</p>
+
+			<p>Opplysningene bes returnert snarest til [[avsender.epost]].</p>
+
+			<p>P&aring; forh&aring;nd takk!</p>
+
+			<div vitec-template="resource: Avsender">&nbsp;</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>

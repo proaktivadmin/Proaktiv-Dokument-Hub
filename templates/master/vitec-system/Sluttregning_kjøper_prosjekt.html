@@ -1,0 +1,85 @@
+<div id="vitecTemplate">
+	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+	<style type="text/css">
+		/* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+		span.insert:empty {
+			font-size: inherit !important;
+			line-height: inherit !important;
+			display: inline-block;
+			background-color: lightpink;
+			min-width: 2em !important;
+			height: .7em !important;
+			text-align: center;
+		}
+
+			span.insert:empty:before {
+				content: attr(data-label);
+			}
+
+			span.insert:empty:hover {
+				background-color: #fff;
+				cursor: pointer;
+			}
+
+		.insert-table {
+			display: inline-table;
+		}
+
+			.insert-table > span,
+			.insert-table > span.insert {
+				display: table-cell;
+			}
+
+		#vitecTemplate table {
+			width: 100%;
+			table-layout: fixed;
+		}
+
+		#vitecTemplate ul {
+			list-style-type: none;
+			margin-left: 0;
+		}
+
+		.insert-table {
+			display: inline-table;
+		}
+
+			.insert-table > span,
+			.insert-table > span.insert {
+				display: table-cell;
+			}
+	</style>
+	<table>
+		<tbody>
+			<tr>
+				<td>
+					<div vitec-template="resource: Mottaker">&nbsp;</div>
+
+					<p><strong>Sluttoppgj&oslash;r ved kj&oslash;p av [[eiendom.alfanavn]] i [[eiendom.prosjektnavn]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+					<p>I henhold til kj&oslash;pekontrakt, og etter instruks fra utbygger, faktureres n&aring; sluttoppgj&oslash;ret. Eiendommen vil v&aelig;re klar for overtakelse og innflytting <strong>[[kontrakt.overtagelse.dato]]</strong>. Utbygger vil melde fra om eksakt tidspunkt.</p>
+
+					<p>Sluttoppgj&oslash;r og eventuelle tilh&oslash;rende pantedokumenter m&aring; v&aelig;re oss i hende senest en arbeidsdag f&oslash;r overtakelsesdato. Pantedokumenter skal sendes til [[oppgjor.kontornavn]], [[oppgjor.postadresse]], [[oppgjor.postnr]] [[oppgjor.poststed]].</p>
+
+					<p>Bel&oslash;pet som skal innbetales, fremg&aring;r av vedlagte oppstilling. Dersom det ikke skal tinglyses pant, kan bel&oslash;pet reduseres med kr <span class="insert-table"> <span class="insert" data-label="Beløp"></span></span>. Hvis flere pantedokumenter skal tinglyses, m&aring; det legges til kr <span class="insert-table"> <span class="insert" data-label="Beløp"></span></span> per dokument. Innbetalingen skal foretas til meglerens klientkonto nummer <strong>[[kontrakt.klientkonto]]</strong> med <strong>KID [[kontrakt.kid]]</strong>, eventuelt merket med oppdragsnummer [[oppdrag.nr]]. Kopi av innbetaling sendes p&aring; e-post til: [[oppgjor.kontorepost]].</p>
+
+					<p>N&oslash;kler blir utlevert ved overtakelsen n&aring;r fullt oppgj&oslash;r er innbetalt og eventuelle pantedokumenter er mottatt av megler. I motsatt fall m&aring; overtakelse utsettes, i tillegg til at det p&aring;l&oslash;per forsinkelsesrente.</p>
+
+					<p>Du som kj&oslash;per har ingen plikt til &aring; overta eller innbetale oppgj&oslash;r hvis ikke midlertidig brukstillatelse eller ferdigattest foreligger. Dersom du likevel velger &aring; overta, er du innforst&aring;tt med at det er ulovlig &aring; bebo boligen/ta boligen i bruk. &Aring; bebo uten brukstillatelse kan medf&oslash;re krav om utflytting og eventuelle b&oslash;ter fra kommunen. Dersom boligen blir overtatt, regnes den i henhold til loven som ferdigstilt og retten til dagmulkt bortfaller. Dette gjelder ogs&aring; om det foreligger midlertidig brukstillatelse.</p>
+
+					<p>
+						Vi opplyser ogs&aring; om muligheten til &aring; tilbakeholde n&oslash;dvendig bel&oslash;p p&aring; meglers klientkonto som sikkerhet for eventuelle mangler. Tilbakeholdt bel&oslash;p m&aring; st&aring; i samsvar med manglene.<br />
+						Ingen del av oppgj&oslash;ret vil bli utbetalt til utbygger f&oslash;r det foreligger undertegnet overtakelsesprotokoll, midlertidig brukstillatelse/ferdigattest og tinglyst skj&oslash;te, eller utbetalingsgaranti.
+					</p>
+
+					<p>Vi tar forbehold om endring i offentlige gebyrer. Eventuelle tilleggsarbeider som er bestilt direkte, vil bli fakturert direkte fra leverand&oslash;r. Sp&oslash;rsm&aring;l om tilleggsarbeider rettes til utbygger. <span vitec-if="Model.eiendom.grunntype != &quot;Fritid&quot;">Husk &aring; melde flytting til folkeregisteret.</span></p>
+
+					<p>Vi &oslash;nsker tillykke med ny <span vitec-if="Model.eiendom.grunntype != &quot;Fritid&quot;">bolig</span><span vitec-if="Model.eiendom.grunntype == &quot;Fritid&quot;">fritidsbolig</span>, og st&aring;r gjerne til tjeneste ved en senere anledning.</p>
+
+					<div vitec-template="resource: Avsender">&nbsp;</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

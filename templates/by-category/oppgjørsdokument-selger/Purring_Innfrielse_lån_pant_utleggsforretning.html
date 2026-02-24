@@ -1,0 +1,118 @@
+<div id="vitecTemplate">
+	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+	<style type="text/css">
+		#vitecTemplate table {
+			border-collapse: collapse;
+			width: 100%;
+			table-layout: fixed;
+		}
+
+		#vitecTemplate ul {
+			list-style-type: none;
+		}
+
+		#vitecTemplate table td[data-label] {
+			padding: 16px 2px 4px 2px;
+			position: relative;
+		}
+
+		#vitecTemplate table td[data-choice] {
+			padding: 4px 2px 16px 2px;
+			position: relative;
+		}
+
+		/* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+		span.insert:empty {
+			font-size: inherit !important;
+			line-height: inherit !important;
+			display: inline-block;
+			background-color: lightpink;
+			min-width: 2em !important;
+			height: .7em !important;
+			text-align: center;
+		}
+
+			span.insert:empty:before {
+				content: attr(data-label);
+			}
+
+			span.insert:empty:hover {
+				background-color: #fff;
+				cursor: pointer;
+			}
+
+		.insert-table {
+			display: inline-table;
+		}
+
+			.insert-table > span,
+			.insert-table > span.insert {
+				display: table-cell;
+			}
+
+		#vitecTemplate .liste:last-child .separator {
+			display: none;
+		}
+	</style>
+	<table>
+		<tbody>
+			<tr>
+				<td colspan="100">
+					<div vitec-template="resource: Mottaker">&nbsp;</div>
+
+					<p>
+						<strong>
+							PURRING:<br />
+							<span vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot;">Innfrielse av l&aring;n p&aring; </span><span vitec-if="Model.oppdrag.hovedtype == &quot;Tvangssalg&quot;">Tvangssalg av </span>[[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune
+						</strong>
+					</p>
+
+					<table vitec-if="Model.oppdrag.hovedtype == &quot;Tvangssalg&quot;">
+						<tbody>
+							<tr>
+								<td colspan="25"><strong>Tingrettens saksnr.:</strong></td>
+								<td colspan="75">[[tvangssalgrefnr]]</td>
+							</tr>
+							<tr>
+								<td colspan="25"><strong>Saks&oslash;kte:</strong></td>
+								<td colspan="75"><span vitec-foreach="saksokte in Model.saksokteliste"> <span class="liste">[[*saksokte.navnutenfullmektigogkontaktperson]]<span class="separator">, </span> </span> </span></td>
+							</tr>
+							<tr>
+								<td colspan="25"><strong>Saks&oslash;ker:</strong></td>
+								<td colspan="75">[[saksoker.navnutenfullmektigogkontaktperson]]</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<table vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot;">
+						<tbody>
+							<tr>
+								<td colspan="25" style="vertical-align:top"><strong>L&aring;ntaker<span vitec-if="Model.selgere.Count &gt; 1">e</span>:</strong></td>
+								<td colspan="75" vitec-foreach="selger in Model.selgere">
+									<div>[[*selger.navnutenfullmektigogkontaktperson]] - [[*selger.ledetekst_fdato_orgnr]]: [[*selger.fdato_orgnr]]</div>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="25" style="vertical-align:top"><strong>L&aring;nnr:</strong></td>
+								<td colspan="75"><span vitec-foreach="pant in Model.oppdrag.mottakerspant"><span vitec-foreach="laan in pant.laan"><span class="liste">[[*laan.nr]]<span class="separator">, </span> </span> </span> </span></td>
+							</tr>
+						</tbody>
+					</table>
+
+					<p>Viser til overf&oslash;ring<span vitec-if="Model.oppdrag.mottakerspantforinnfrielse.Count &gt; 1">er</span> knyttet til:</p>
+
+					<div vitec-foreach="pant in Model.oppdrag.mottakerspantforinnfrielse">
+						<ul>
+							<li>[[*pant.type]] stor<span vitec-if="Model.pant.ertypefrivilligpant == true">t</span><strong> kr $.UD([[*pant.belop]])</strong> tinglyst [[*pant.tinglystdato]] med dokumentnr. [[*pant.dokumentnr]]</li>
+						</ul>
+					</div>
+
+					<p>Overf&oslash;ringen<span vitec-if="Model.oppdrag.mottakerspantforinnfrielse.Count &gt; 1">e</span> ble gjort under forutsetning av at samtlige tinglyste heftelser knyttet til eiendommens matrikler skulle slettes. Vi m&aring; be om at <span vitec-if="Model.oppdrag.mottakerspantforinnfrielse.Count &gt; 1">disse</span><span vitec-if="Model.oppdrag.mottakerspantforinnfrielse.Count == 1">denne</span> omg&aring;ende sendes til sletting, med bekreftelse til undertegnede.</p>
+
+					<div vitec-template="resource: Avsender">&nbsp;</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

@@ -1,0 +1,547 @@
+<div id="vitecTemplate">
+	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+	<style type="text/css">
+		#vitecTemplate table {
+			border-collapse: collapse;
+			width: 100%;
+			page-break-inside: avoid;
+		}
+
+		#vitecTemplate > div > table { /* foreach kunde */
+			margin: 0.5cm 0;
+			border: solid 1px #000;
+			table-layout: fixed;
+		}
+
+		#vitecTemplate th {
+			text-align: left;
+			border: solid 1px #000;
+			vertical-align: middle;
+			padding: 2px;
+		}
+
+			#vitecTemplate th p {
+				font-weight: normal;
+			}
+
+			#vitecTemplate th small {
+				display: block;
+				font-weight: normal;
+			}
+
+		#vitecTemplate td {
+			vertical-align: middle;
+			border: solid 1px #000;
+			padding: 2px;
+			font-size: 14px;
+		}
+
+		#vitecTemplate h1 {
+			font-size: 16px;
+			margin-top: 0;
+		}
+
+		#vitecTemplate .bg-color {
+			background-color: lightgray;
+		}
+
+		#vitecTemplate .vtop {
+			vertical-align: top;
+		}
+
+		#vitecTemplate .hcenter {
+			text-align: center;
+		}
+
+		#vitecTemplate .vcenter {
+			vertical-align: middle;
+		}
+
+		#vitecTemplate .no-border {
+			border: none;
+		}
+
+		#vitecTemplate .border-bottom {
+			border-bottom: solid 1px #000;
+		}
+
+		#vitecTemplate .border-left {
+			border-left: solid 1px #000;
+		}
+		/* Ett skjema pr. kunde. Sideskift når det finnes flere kunder. */
+		#vitecTemplate .first-table {
+			margin: 0;
+		}
+
+		#vitecTemplate .last-table:not(:only-child):not(:last-child) {
+			page-break-after: always;
+			margin-bottom: 0;
+		}
+
+		#vitecTemplate table td[data-label] {
+			padding: 16px 2px 5px 4px;
+			position: relative;
+		}
+
+			#vitecTemplate table td[data-label]:before {
+				content: attr(data-label);
+				text-align: left;
+				font-size: 9pt;
+				line-height: 8pt;
+				display: block;
+				position: absolute;
+				top: 5px;
+			}
+
+		#vitecTemplate .insert-textbox {
+			display: inline-table;
+		}
+
+			#vitecTemplate .insert-textbox > span {
+				padding: 0 4px;
+				line-height: 1.1;
+				border-bottom: dotted 1px #000;
+				width: 4cm;
+				max-width: 18cm;
+				overflow: hidden;
+				display: table-cell;
+				text-align: left;
+				white-space: nowrap;
+			}
+
+		span.insert:empty {
+			font-size: inherit !important;
+			line-height: inherit !important;
+			display: inline-block;
+			background-color: lightpink;
+			min-width: 2em !important;
+			height: .7em !important;
+			text-align: center;
+		}
+
+			span.insert:empty:before {
+				content: attr(data-label);
+			}
+
+			span.insert:empty:hover {
+				background-color: #fff;
+				cursor: pointer;
+			}
+
+		.insert-table {
+			display: inline-table;
+		}
+
+			.insert-table > span,
+			.insert-table > span.insert {
+				display: table-cell;
+			}
+	</style>
+	<style type="text/css">
+		/* Klikkbare sjekkbokser og radioknapper */
+		label.btn {
+			display: inline;
+			text-transform: none;
+			white-space: normal;
+			padding: 0;
+			vertical-align: baseline;
+			outline: none;
+			font-size: inherit;
+		}
+
+			label.btn:active,
+			label.btn.active {
+				box-shadow: none;
+				outline: none;
+			}
+
+		.svg-toggle { /* nullstiller bootstrap button-styling */
+			display: inline-block !important;
+			width: 16px;
+			height: 16px;
+			margin: 0 2px;
+			vertical-align: bottom;
+			padding: 0;
+			border: none;
+			background: transparent;
+			border-radius: 0;
+			box-shadow: none !important;
+			cursor: pointer;
+			white-space: normal;
+			text-align: left;
+			background-repeat: no-repeat;
+			background-size: 16px 16px;
+			background-position: center center;
+		}
+
+			.svg-toggle.checkbox {
+				background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+			}
+
+				.svg-toggle.checkbox.active,
+				.btn.active > .svg-toggle.checkbox {
+					background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+					box-shadow: none !important;
+				}
+
+			.svg-toggle.radio {
+				background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
+			}
+
+				.svg-toggle.radio.active,
+				.btn.active > .svg-toggle.radio {
+					background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
+					box-shadow: none !important;
+				}
+
+		/* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
+		#vitecTemplate [data-toggle="buttons"] input {
+			display: none;
+		}
+	</style>
+	<div vitec-foreach="selger in Model.selgere">
+		<h1>Skjema for opplysninger om kunde og kundeforhold [[oppdrag.nr]]</h1>
+
+		<p>[[meglerkontor.navn]] (Foretaket) er underlagt reglene i lov om tiltak mot hvitvasking og terrorfinansiering (Hvitvaskingsloven) og m&aring; innhente n&aelig;rmere bestemt informasjon og dokumentasjon om sine kunder, inkludert reelle rettighetshavere og de som opptrer p&aring; vegne av/representerer kunden.</p>
+
+		<p>Opplysningene som skal innhentes fremg&aring;r nedenfor. Opplysningene i dette skjemaet kan ogs&aring; utgj&oslash;re personopplysninger. Vi viser til Foretakets behandling av personopplysninger og rettigheter.</p>
+
+		<p>Ta kontakt med Foretaket dersom det er sp&oslash;rsm&aring;l.</p>
+
+		<table class="first-table">
+			<thead>
+				<tr contenteditable="false">
+					<th class="bg-color" colspan="100">1. Kunde</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th class="vtop hcenter bg-color" colspan="6" contenteditable="false" rowspan="3">1.1</th>
+					<td colspan="94" data-label="Navn">[[*selger.navnutenfullmektigogkontaktperson]]</td>
+				</tr>
+				<tr>
+					<td colspan="94" data-label="Adresse">[[*selger.gatenavnognr]], <span style="white-space:nowrap">[[*selger.postnr]] [[*selger.poststed]]</span></td>
+				</tr>
+				<tr vitec-if="Model.selger.erfirma == false">
+					<td colspan="94" data-label="Fødselsnummer">[[*selger.idnummer]]</td>
+				</tr>
+				<tr vitec-if="Model.selger.erfirma == true">
+					<td colspan="94" data-label="Organisasjonsnummer">[[*selger.idnummer]]</td>
+				</tr>
+			</tbody>
+			<tbody data-toggle="buttons">
+				<tr contenteditable="false">
+					<th class="bg-color vtop hcenter" colspan="6" rowspan="6">1.2</th>
+					<td class="bg-color" colspan="94">Organisasjonsform:</td>
+				</tr>
+				<tr>
+					<td class="no-border" colspan="47"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Aksjeselskap (AS) </label></td>
+					<td class="no-border" colspan="47"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Enkeltperson / enkeltpersonforetak </label></td>
+				</tr>
+				<tr>
+					<td class="no-border" colspan="47"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Ansvarlig selskap (ANS/DA) </label></td>
+					<td class="no-border" colspan="47"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Lag / forening </label></td>
+				</tr>
+				<tr>
+					<td class="no-border" colspan="47"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Stiftelse </label></td>
+					<td class="no-border" colspan="47"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> NUF/LTD </label></td>
+				</tr>
+				<tr>
+					<td class="no-border" colspan="47"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Selskap under stiftelse </label></td>
+					<td class="no-border" colspan="47"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Norsk statlig eller kommunalt forvaltningsorgan </label></td>
+				</tr>
+				<tr>
+					<td class="border-bottom no-border vtop" colspan="47"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Allmenaksjeselskap (ASA) </label></td>
+					<td class="border-bottom no-border" colspan="47" style="height:34px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Annet: </label> <span class="insert-textbox"><span style="width:6cm"> &nbsp;</span></span></td>
+				</tr>
+			</tbody>
+			<tbody>
+				<tr contenteditable="false">
+					<th class="bg-color vtop hcenter" colspan="6" rowspan="4">1.3</th>
+					<td class="bg-color" colspan="94">Styremedlemmer:</td>
+				</tr>
+				<tr>
+					<td colspan="47" data-label="Navn">&nbsp;</td>
+					<td colspan="47" data-label="Navn">&nbsp;</td>
+				</tr>
+				<tr>
+					<td colspan="47" data-label="Navn">&nbsp;</td>
+					<td colspan="47" data-label="Navn">&nbsp;</td>
+				</tr>
+				<tr>
+					<td colspan="47" data-label="Navn">&nbsp;</td>
+					<td colspan="47" data-label="Navn">&nbsp;</td>
+				</tr>
+				<tr>
+					<th class="bg-color vtop hcenter" colspan="6" contenteditable="false">1.4</th>
+					<td colspan="94" data-label="Daglig leder">&nbsp;</td>
+				</tr>
+				<tr>
+					<th class="bg-color vtop hcenter" colspan="6" contenteditable="false">1.5</th>
+					<td colspan="94" data-label="Hovedvirksomhet (bransje)">&nbsp;</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<table>
+			<thead>
+				<tr contenteditable="false">
+					<th class="bg-color" colspan="100">2. Kundeforholdets form&aring;l og tilsiktede art</th>
+				</tr>
+			</thead>
+			<tbody data-toggle="buttons">
+				<tr contenteditable="false">
+					<th class="bg-color vtop hcenter" colspan="6" rowspan="7">2.1</th>
+					<td class="bg-color" colspan="94">Form&aring;l med avtalen:</td>
+				</tr>
+				<tr>
+					<!-- @{
+											var erHovedtypeSalg ="";
+											var erHovedtypeProsjektsalg ="";
+											var erHovedtypeNaeringssalg ="";
+											var erHovedtypeUtleie ="";
+											var erHovedtypeNaeringsutleie ="";
+											var erHovedtypeOppgjorsOppdrag ="";
+											var erHovedtypeVerdivurdering ="";
+											if (Model.eiendom.grunntype == "Salg") {
+												erHovedtypeSalg = "active";
+											} else if (Model.oppdrag.hovedtype == "Prosjektsalg") {
+												erHovedtypeProsjektsalg = "active";
+											} else if (Model.oppdrag.hovedtype == "N\xE6ringssalg") {
+												erHovedtypeNaeringssalg = "active";
+											} else if (Model.oppdrag.hovedtype == "Utleie") {
+												erHovedtypeUtleie = "active";
+											} else if (Model.oppdrag.hovedtype == "N\xE6ringsutleie") {
+												erHovedtypeNaeringsutleie = "active";
+											} else if (Model.oppdrag.hovedtype == "Oppgj\xF8rsoppdrag") {
+												erHovedtypeOppgjorsOppdrag = "active";
+											} else if (Model.oppdrag.hovedtype == "Verdivurdering") {
+												erHovedtypeVerdivurdering = "active";
+											}
+								}-->
+					<td class="no-border" colspan="47"><label class="btn @erHovedtypeSalg @erHovedtypeProsjektsalg @erHovedtypeNaeringssalg" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" /> Salg fast eiendom/andeler i eiendomsselskap </label></td>
+					<td colspan="47" data-label="Ved salg: eid hvor lenge?">&nbsp;</td>
+				</tr>
+				<tr>
+					<td class="no-border" colspan="47"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" /> Kj&oslash;p fast eiendom/andeler i eiendomsselskap </label></td>
+					<td class="vtop" colspan="47" data-label="Eventuelle tilleggsopplysninger" rowspan="5">&nbsp;</td>
+				</tr>
+				<tr>
+					<td class="no-border" colspan="24"><label class="btn @erHovedtypeUtleie @erHovedtypeNaeringsutleie" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" /> Utleie av fast eiendom </label></td>
+					<td class="no-border" colspan="23"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" /> Leie av fast eiendom </label></td>
+				</tr>
+				<tr>
+					<td class="no-border" colspan="24"><label class="btn @erHovedtypeOppgjorsOppdrag" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" /> Oppgj&oslash;r </label></td>
+					<td class="no-border" colspan="23"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" /> R&aring;dgivning </label></td>
+				</tr>
+				<tr>
+					<td class="no-border" colspan="24"><label class="btn @erHovedtypeVerdivurdering" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" /> Verdivurdering </label></td>
+					<td class="no-border" colspan="23"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" /> Analyse </label></td>
+				</tr>
+			</tbody>
+			<tbody>
+				<tr contenteditable="false">
+					<th class="bg-color vtop hcenter" colspan="6" rowspan="9">2.2</th>
+					<td class="bg-color" colspan="94">Ved kj&oslash;p: finansieres kj&oslash;pet helt eller delvis med egenkapital?</td>
+				</tr>
+				<tr>
+					<td class="hcenter vcenter" colspan="6" contenteditable="false" data-toggle="buttons" rowspan="8">
+						<label class="btn" data-toggle="button">
+							<span class="checkbox svg-toggle"></span> <input name="rbl03" type="radio" /><br />
+							Nei
+						</label><br />
+						<br />
+						<label class="btn" contenteditable="false" data-toggle="button">
+							<span class="checkbox svg-toggle"></span> <input name="rbl03" type="radio" /><br />
+							Ja
+						</label>
+					</td>
+					<td class="no-border vcenter" colspan="35" contenteditable="false"><strong>Hvis nei</strong>; hvor finansieres kj&oslash;pet hen:</td>
+					<td class="no-border vcenter" colspan="53" style="height:40px"><span class="insert-textbox"><span style="width:9cm"> &nbsp;</span></span></td>
+				</tr>
+				<tr data-toggle="buttons">
+					<td class="no-border vtop" colspan="38"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl04" type="radio" /> Finansinstitusjon i Norge/E&Oslash;S </label></td>
+					<td class="no-border" colspan="50" style="height:34px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl04" type="radio" /> Annet, land: </label> <span class="insert-textbox"><span style="width:5cm"> &nbsp;</span></span></td>
+				</tr>
+				<tr contenteditable="false">
+					<td class="no-border" colspan="88"><strong>Hvis ja</strong>, hva er kapitalens opprinnelse?</td>
+				</tr>
+				<tr>
+					<td class="no-border vtop" colspan="38"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> Salg av aktiva </label></td>
+					<td class="no-border" colspan="50"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> Opptjent kapital (oppspart over tid, emisjon ol.) </label></td>
+				</tr>
+				<tr>
+					<td class="no-border" colspan="88" style="height:34px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> Annet: </label> <span class="insert-textbox"><span style="width:7cm"> &nbsp;</span></span></td>
+				</tr>
+				<tr data-toggle="buttons">
+					<td class="no-border" colspan="38" contenteditable="false">Innbetales egenkapitalen fra <label class="btn" contenteditable="false" data-toggle="button"> <span class="checkbox svg-toggle"></span> <input name="rbl06" type="radio" /> Kj&oslash;per </label></td>
+					<td class="no-border" colspan="50" style="height:34px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl06" type="radio" /> Andre, i s&aring; fall hvem: </label> <span class="insert-textbox"><span style="width:3.5cm"> &nbsp;</span></span></td>
+				</tr>
+				<tr contenteditable="false">
+					<td class="no-border" colspan="88">Hvor er egenkapitalen:</td>
+				</tr>
+				<tr data-toggle="buttons">
+					<td class="no-border" colspan="38"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl07" type="radio" /> Finansinstitusjon i Norge/E&Oslash;S </label></td>
+					<td class="no-border" colspan="50" style="height:34px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl07" type="radio" /> Annet, land: </label> <span class="insert-textbox"><span style="width:5cm"> &nbsp;</span></span></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<table>
+			<thead>
+				<tr contenteditable="false">
+					<th class="bg-color" colspan="100">3. Eierskap og reelle rettighetshavere</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr contenteditable="false">
+					<td class="bg-color" colspan="100"><strong>Reell rettighetshaver</strong> er fysisk person som, alene eller sammen med n&aelig;re familiemedlemmer, i siste instans eier eller kontrollerer kunden (for eksempel eier eller kontrollerer mer enn 25 % av stemmene eller andelene i selskapet), eller som en transaksjon eller aktivitet gjennomf&oslash;res p&aring; vegne av, ref. Hvitvaskingslovens &sect; 2 e) og &sect;&sect; 12-14</td>
+				</tr>
+				<tr contenteditable="false">
+					<th class="bg-color vtop hcenter" colspan="6">3.1</th>
+					<td class="bg-color" colspan="78">Er det noen fysiske personer som eier eller kontrollerer mer enn 25% av kunden eller som en transaksjon eller aktivitet gjennomf&oslash;res p&aring; vegne av?</td>
+					<td class="hcenter vcenter" colspan="16" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl08" type="radio" /> Nei </label> &nbsp; <label class="btn" contenteditable="false" data-toggle="button"> <span class="checkbox svg-toggle"></span> <input name="rbl08" type="radio" /> Ja </label></td>
+				</tr>
+				<tr contenteditable="false">
+					<th class="bg-color vtop hcenter" colspan="6">3.2</th>
+					<td class="bg-color" colspan="78">Foreligger det aksjon&aelig;ravtale, selskapsavtale eller lignende som har betydning for hvem som er reelle rettighetshavere? I s&aring; fall b&oslash;r aksjon&aelig;ravtale og aksjeeierbok vedlegges.</td>
+					<td class="hcenter vcenter" colspan="16" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl09" type="radio" /> Nei </label> &nbsp; <label class="btn" contenteditable="false" data-toggle="button"> <span class="checkbox svg-toggle"></span> <input name="rbl09" type="radio" /> Ja </label></td>
+				</tr>
+				<tr contenteditable="false">
+					<th class="bg-color vtop hcenter" colspan="6" rowspan="2">3.3</th>
+					<td class="bg-color" colspan="94">Beskriv hele eierstrukturen (F.eks. kart over selskapsstruktur)</td>
+				</tr>
+				<tr>
+					<td class="vtop" colspan="94" style="height:1.5cm">&nbsp;</td>
+				</tr>
+				<tr contenteditable="false">
+					<th class="bg-color vtop hcenter" colspan="6" rowspan="4">3.4</th>
+					<td class="bg-color" colspan="94"><strong>Politisk eksponert person (PEP)</strong> eller n&aelig;rt familiemedlem eller kjent medarbeider til politisk eksponert person, ref. Hvitvaskingslovens &sect; 2 f) &ndash; h).</td>
+				</tr>
+				<tr>
+					<td colspan="50" data-label="Reell rettighetshavers fulle navn">&nbsp;</td>
+					<td colspan="16" data-label="Fødselsdato">&nbsp;</td>
+					<td colspan="28" contenteditable="false" data-label="Politisk eksponert person (PEP)" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl10" type="radio" /> Nei </label> &nbsp; &nbsp; <label class="btn" contenteditable="false" data-toggle="button"> <span class="checkbox svg-toggle"></span> <input name="rbl10" type="radio" /> Ja </label></td>
+				</tr>
+				<tr>
+					<td colspan="50" data-label="Adresse">&nbsp;</td>
+					<td colspan="16" data-label="Statsborgerskap">&nbsp;</td>
+					<td colspan="28" data-label="Hvis JA, stilling/rolle">&nbsp;</td>
+				</tr>
+				<tr>
+					<td colspan="94" data-label="Reell rettighetshaver fordi">&nbsp;</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<table>
+			<tbody>
+				<tr>
+					<th class="bg-color vtop hcenter" colspan="6" contenteditable="false" rowspan="6">&nbsp;</th>
+					<td colspan="50" data-label="Reell rettighetshavers fulle navn">&nbsp;</td>
+					<td colspan="16" data-label="Fødselsdato">&nbsp;</td>
+					<td colspan="28" contenteditable="false" data-label="Politisk eksponert person (PEP)" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl11" type="radio" /> Nei </label> &nbsp; &nbsp; <label class="btn" contenteditable="false" data-toggle="button"> <span class="checkbox svg-toggle"></span> <input name="rbl11" type="radio" /> Ja </label></td>
+				</tr>
+				<tr>
+					<td colspan="50" data-label="Adresse">&nbsp;</td>
+					<td colspan="16" data-label="Statsborgerskap">&nbsp;</td>
+					<td colspan="28" data-label="Hvis JA, stilling/rolle">&nbsp;</td>
+				</tr>
+				<tr>
+					<td colspan="94" data-label="Reell rettighetshaver fordi">&nbsp;</td>
+				</tr>
+				<tr>
+					<td colspan="50" data-label="Reell rettighetshavers fulle navn">&nbsp;</td>
+					<td colspan="16" data-label="Fødselsdato">&nbsp;</td>
+					<td colspan="28" contenteditable="false" data-label="Politisk eksponert person (PEP)" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl12" type="radio" /> Nei </label> &nbsp; &nbsp; <label class="btn" contenteditable="false" data-toggle="button"> <span class="checkbox svg-toggle"></span> <input name="rbl12" type="radio" /> Ja </label></td>
+				</tr>
+				<tr>
+					<td colspan="50" data-label="Adresse">&nbsp;</td>
+					<td colspan="16" data-label="Statsborgerskap">&nbsp;</td>
+					<td colspan="28" data-label="Hvis JA, stilling/rolle">&nbsp;</td>
+				</tr>
+				<tr>
+					<td colspan="94" data-label="Reell rettighetshaver fordi">&nbsp;</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<table>
+			<thead>
+				<tr contenteditable="false">
+					<th class="bg-color" colspan="100">4. Representant</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr contenteditable="false">
+					<td class="bg-color" colspan="100">Representanten er den som opptrer p&aring; vegne av kunden (dvs. signaturberettiget i henhold til kundens firmaattest eller etter gyldig fullmakt eller i egenskap av sin stilling).</td>
+				</tr>
+				<tr>
+					<th class="bg-color vtop hcenter" colspan="6" contenteditable="false" rowspan="2">4.1</th>
+					<td colspan="66" data-label="Navn">[[selger.hovedkontakt.navn]]</td>
+					<td colspan="28" data-label="Fødselsnummer">&nbsp;</td>
+				</tr>
+				<tr>
+					<td colspan="94" data-label="Adresse">&nbsp;</td>
+				</tr>
+				<tr>
+					<th class="bg-color vtop hcenter" colspan="6" contenteditable="false">4.2</th>
+					<td colspan="94" data-label="Stilling/tittel">&nbsp;</td>
+				</tr>
+				<tr>
+					<th class="bg-color vtop hcenter" colspan="6" contenteditable="false">4.3</th>
+					<td colspan="28" contenteditable="false" data-label="Politisk eksponert person (PEP)" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl13" type="radio" /> Nei </label> &nbsp; &nbsp; <label class="btn" contenteditable="false" data-toggle="button"> <span class="checkbox svg-toggle"></span> <input name="rbl13" type="radio" /> Ja </label></td>
+					<td colspan="66" data-label="Hvis ja, stilling/rolle">&nbsp;</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<table>
+			<thead>
+				<tr contenteditable="false">
+					<th class="bg-color" colspan="100">5. Erkl&aelig;ring</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr contenteditable="false">
+					<td class="bg-color" colspan="100">Skjemaet signeres av kundens representant.</td>
+				</tr>
+				<tr contenteditable="false">
+					<td colspan="100">P&aring; vegne av kunden bekrefter jeg at opplysningene som er gitt i dette skjemaet er korrekte og at eventuelle endringer vil bli rapportert til Foretaket.</td>
+				</tr>
+				<tr>
+					<td colspan="50" data-label="Signatur kundens representant" style="height:0.75cm">&nbsp;</td>
+					<td colspan="50" data-label="Sted og dato">&nbsp;</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<table class="bg-color last-table" contenteditable="false">
+			<tbody>
+				<tr>
+					<td class="no-border" colspan="100"><em>Til intern bruk i Foretaket:</em></td>
+				</tr>
+				<tr>
+					<td class="hcenter no-border vtop" colspan="6"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> </label></td>
+					<td class="no-border" colspan="94">Firmaattest eller utskrift fra offentlig register som ikke er eldre enn 3 m&aring;neder</td>
+				</tr>
+				<tr>
+					<td class="hcenter no-border vtop" colspan="6"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> </label></td>
+					<td class="no-border" colspan="94">Dokumentasjon av eierskaps- og kontrollstrukturen, for eksempel kart over selskapsstruktur, evt. aksjeeierbok</td>
+				</tr>
+				<tr>
+					<td class="hcenter no-border vtop" colspan="6"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> </label></td>
+					<td class="no-border" colspan="94">Kopi av gyldig legitimasjon fra representanten som opptrer p&aring; vegne av kunden</td>
+				</tr>
+				<tr>
+					<td class="hcenter no-border vtop" colspan="6"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> </label></td>
+					<td class="no-border" colspan="94">Kopi av faktura for vann, str&oslash;m, skatt eller lignende utstedt til Signaturberettiget som ikke er eldre enn 3 m&aring;neder (kun dersom identiteten til Signaturberettiget ikke bekreftes ved personlig fremm&oslash;te eller elektronisk signatur)</td>
+				</tr>
+				<tr>
+					<td class="hcenter no-border vtop" colspan="6"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> </label></td>
+					<td class="no-border" colspan="94">Hvis representanten ikke er signaturberettiget: bekreftelse p&aring; at vedkommende kan representere kunden utad (for eksempel prokura eller fullmakt)</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

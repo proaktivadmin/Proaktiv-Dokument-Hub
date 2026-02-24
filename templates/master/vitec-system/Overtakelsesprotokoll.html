@@ -1,0 +1,409 @@
+<div id="vitecTemplate">
+	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+	<style type="text/css">
+		#vitecTemplate h1 {
+			font-size: 14pt;
+			font-weight: bold;
+			padding: 0;
+			margin: 0;
+		}
+
+		#vitecTemplate table {
+			table-layout: fixed;
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+
+			#vitecTemplate table tr {
+				page-break-inside: avoid;
+			}
+
+			#vitecTemplate table td {
+				vertical-align: top;
+			}
+
+				#vitecTemplate table td p {
+					margin: 1em 0;
+				}
+
+
+
+		#vitecTemplate .part:last-child .separator {
+			display: none;
+		}
+
+		#vitecTemplate .text-center {
+			text-align: center;
+		}
+
+		#vitecTemplate table td[data-label]:before {
+			content: attr(data-label);
+			text-align: left;
+			color: #333;
+			font-size: 9pt;
+			line-height: 8pt;
+			display: block;
+			position: absolute;
+			top: 5px;
+			left: 2px;
+		}
+
+		#vitecTemplate table td[data-label] {
+			padding: 20px 2px 4px 2px;
+			position: relative;
+		}
+
+			#vitecTemplate table td[data-label] p {
+				margin: 0;
+				padding: 0;
+			}
+
+		#vitecTemplate td.insert-box {
+			height: 30px;
+			position: relative;
+		}
+
+			#vitecTemplate td.insert-box:after {
+				position: absolute;
+				display: block;
+				content: " ";
+				border: solid 1px black;
+				top: 2px;
+				right: 0;
+				bottom: 2px;
+				left: 0;
+			}
+
+		#vitecTemplate .sign-field {
+			min-height: 52px;
+			width: 8cm;
+		}
+
+			#vitecTemplate .sign-field div:last-child {
+				margin-top: 5px;
+				border-top: solid 1px #222;
+			}
+
+		#vitecTemplate ul.foreach-list {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+		}
+
+			#vitecTemplate ul.foreach-list li {
+				padding: 0;
+				margin: 0;
+			}
+
+		#vitecTemplate .ledetekst {
+			font-size: 10pt;
+			color: #333;
+			vertical-align: middle;
+			background-color: rgb(224,224,224);
+		}
+	</style>
+	<style type="text/css">
+		/* Klikkbare sjekkbokser og radioknapper */
+		label.btn {
+			display: inline;
+			text-transform: none;
+			white-space: normal;
+			padding: 0;
+			vertical-align: baseline;
+			outline: none;
+			font-size: inherit;
+		}
+
+			label.btn:active,
+			label.btn.active {
+				box-shadow: none;
+				outline: none;
+			}
+
+		.svg-toggle { /* nullstiller bootstrap button-styling */
+			display: inline-block !important;
+			width: 16px;
+			height: 16px;
+			margin: 0 5px;
+			vertical-align: bottom;
+			padding: 0;
+			border: none;
+			background: transparent;
+			border-radius: 0;
+			box-shadow: none !important;
+			cursor: pointer;
+			white-space: normal;
+			text-align: left;
+			background-repeat: no-repeat;
+			background-size: 16px 16px;
+			background-position: center center;
+		}
+
+			.svg-toggle.checkbox {
+				background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+			}
+
+				.svg-toggle.checkbox.active,
+				.btn.active > .svg-toggle.checkbox {
+					background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+					box-shadow: none !important;
+				}
+
+			.svg-toggle.radio {
+				background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
+			}
+
+				.svg-toggle.radio.active,
+				.btn.active > .svg-toggle.radio {
+					background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
+					box-shadow: none !important;
+				}
+
+		/* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
+		#vitecTemplate [data-toggle="buttons"] input {
+			display: none;
+		}
+	</style>
+	<table>
+		<tbody>
+			<tr>
+				<td colspan="100" style="text-align:center">
+					<h1>Overtakelsesprotokoll</h1>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="50">Eiendom: [[eiendom.gatenavnognr]]</td>
+				<td colspan="50" style="text-align:right">Oppdragsnr: [[oppdrag.nr]]</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<table style="margin-top:10px">
+		<tbody>
+			<tr>
+				<td colspan="100">
+					<table>
+						<tbody>
+							<tr>
+								<td class="insert-box" colspan="49" data-label="Selger"><span vitec-foreach="selger in Model.selgere"><span class="part">[[*selger.navn]]<span class="separator">,</span></span></span></td>
+								<td colspan="2">&nbsp;</td>
+								<td class="insert-box" colspan="49" data-label="Kjøper"><span vitec-foreach="kjoper in Model.kjopere"><span class="part">[[*kjoper.navn]]<span class="separator">,</span></span></span></td>
+							</tr>
+						</tbody>
+					</table>
+
+					<p>Selgeren og kj&oslash;peren skal i fellesskap gjennomg&aring; eiendommen p&aring; overtakelsestidspunktet. Kj&oslash;peren m&aring; selv s&oslash;rge for &aring; nedfelle eventuelle feil og mangler som han mener selgeren er ansvarlig for. Dersom kj&oslash;peren mener det er grunnlag for &aring; instruere megleren om &aring; tilbakeholde deler av kj&oslash;pesummen som sikkerhet for kravet (feil og mangler, mangelfull rengj&oslash;ring m.v.), m&aring; dette nedfelles i overtakelsesprotokollen, samt s&oslash;rge for &aring; varsle megleren s&aelig;rskilt (for eksempel pr. telefon) f&oslash;r overtakelsen er gjennomf&oslash;rt.</p>
+				</td>
+			</tr>
+			<tr>
+				<td class="text-center" colspan="5">Ja</td>
+				<td class="text-center" colspan="5">Nei</td>
+				<td colspan="90">&nbsp;</td>
+			</tr>
+			<tr data-toggle="buttons">
+				<td class="text-center" colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" /></label></td>
+				<td class="text-center" colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" /></label></td>
+				<td colspan="90">Kj&oslash;per erkl&aelig;rer boligen for ryddet, t&oslash;mt og rengjort, og overtar boligen i henhold til kj&oslash;pekontrakt datert [[kontrakt.dato]].</td>
+			</tr>
+			<tr data-toggle="buttons">
+				<td class="text-center" colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" /></label></td>
+				<td class="text-center" colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" /></label></td>
+				<td colspan="90">Selger har betalt felleskostnader og eventuelle andre avgifter for innev&aelig;rende m&aring;ned/kvartal, og dette er avregnet mellom partene.</td>
+			</tr>
+			<tr data-toggle="buttons">
+				<td class="text-center" colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" /></label></td>
+				<td class="text-center" colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" /></label></td>
+				<td colspan="71">Selger har overlevert samtlige n&oslash;kler til kj&oslash;per</td>
+				<td class="insert-box" colspan="19" data-label="Antall">&nbsp;</td>
+			</tr>
+			<tr data-toggle="buttons">
+				<td class="text-center" colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" /></label></td>
+				<td class="text-center" colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" /></label></td>
+				<td colspan="50">
+					Vannm&aring;ler er avlest i fellesskap.<br />
+					Selger er ansvarlig for innsending til leverand&oslash;r.
+				</td>
+				<td class="insert-box" colspan="19" data-label="Målernr.">&nbsp;</td>
+				<td colspan="2">&nbsp;</td>
+				<td class="insert-box" colspan="19" data-label="Målerstand">&nbsp;</td>
+			</tr>
+			<tr data-toggle="buttons">
+				<td class="text-center" colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl005" type="radio" /></label></td>
+				<td class="text-center" colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl005" type="radio" /></label></td>
+				<td colspan="50">
+					Str&oslash;mm&aring;ler er avlest i fellesskap.<br />
+					Selger er selv ansvarlig for innsending til leverand&oslash;r.
+				</td>
+				<td class="insert-box" colspan="19" data-label="Målernr.">&nbsp;</td>
+				<td colspan="2">&nbsp;</td>
+				<td class="insert-box" colspan="19" data-label="Målerstand">&nbsp;</td>
+			</tr>
+			<tr data-toggle="buttons">
+				<td class="text-center" colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl006" type="radio" /></label></td>
+				<td class="text-center" colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl006" type="radio" /></label></td>
+				<td colspan="90">Forskriftsmessig brannslukningsutstyr og r&oslash;ykvarsler finnes i boligen.</td>
+			</tr>
+			<tr>
+				<td colspan="100">
+					<p><strong>Vedr. overlevering. Kryss av for det som passer:</strong></p>
+				</td>
+			</tr>
+		</tbody>
+		<tbody data-toggle="buttons">
+			<tr>
+				<td class="text-center" colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl007" type="radio" /></label></td>
+				<td colspan="95">Overlevering er i henhold til avtale. Oppgj&oslash;ret kan gjennomf&oslash;res som avtalt i henhold til kontrakt.</td>
+			</tr>
+			<tr>
+				<td class="text-center" colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl007" type="radio" /></label></td>
+				<td colspan="74">Overlevering er ikke i henhold til avtale. Kj&oslash;peren instruerer om tilbakehold som sikkerhet for feil/mangler/krav som nevnt under kommentarene nedenfor. Kj&oslash;per har r&aring;deretten over bel&oslash;pet og rentene tilfaller kj&oslash;per.</td>
+				<td colspan="2">&nbsp;</td>
+				<td class="insert-box" colspan="19" data-label="Tilbakeholdt beløp kr">&nbsp;</td>
+			</tr>
+			<tr>
+				<td class="text-center" colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl007" type="radio" /></label></td>
+				<td colspan="74">Overlevering er ikke i henhold til avtale. Partene er enige om at bel&oslash;pet deponeres p&aring; meglers klientkonto grunnet feil/mangler/krav som nevnt under. Bel&oslash;pet utbetales n&aring;r kj&oslash;per og selger bekrefter overfor megler hvem som skal ha pengene. Renter p&aring; bel&oslash;pet tilfaller kj&oslash;per.</td>
+				<td colspan="2">&nbsp;</td>
+				<td class="insert-box" colspan="19" data-label="Deponert beløp kr">&nbsp;</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td class="insert-box" colspan="100" data-label="Partene er blitt enige om at nedennevnte feil/mangler straks skal utbedres av selger uten ekstra kostnad for kjøper/eventuell annen enighet mellom kjøper og selger." style="height:72px">&nbsp;</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<table style="margin-top:10px">
+		<tbody>
+			<tr>
+				<td class="insert-box" colspan="49" data-label="Frist for retting:">&nbsp;</td>
+				<td colspan="2">&nbsp;</td>
+				<td class="insert-box" colspan="49" data-label="Dersom frist ikke overholdes:">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="100">
+					<p>N&aelig;rv&aelig;rende skjema er utfylt og undertegnet i et eksemplar. Det er selgers ansvar &aring; f&aring; sendt dette skjema pr. e-post <a href="mailto:[[meglerkontor.epost]]">[[meglerkontor.epost]]</a> umiddelbart. Megler har partenes ugjenkallelige fullmakt til &aring; foreta oppgj&oslash;r i henhold til kontrakten og n&aelig;rv&aelig;rende overtakelsesprotokoll. Det vil ikke bli foretatt oppgj&oslash;r f&oslash;r protokollen er mottatt.</p>
+
+					<div class="sign-field">
+						<div>&nbsp;</div>
+
+						<div>Sted, dato</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="50">
+					<div vitec-foreach="selger in Model.selgere">
+						<div class="sign-field">
+							<div>&nbsp;</div>
+
+							<div><strong>Selger:</strong> [[*selger.navn]]</div>
+						</div>
+					</div>
+				</td>
+				<td colspan="50">
+					<div vitec-foreach="kjoper in Model.kjopere">
+						<div class="sign-field">
+							<div>&nbsp;</div>
+
+							<div><strong>Kj&oslash;per:</strong> [[*kjoper.navn]]</div>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="50">
+					<div class="sign-field">
+						<div>&nbsp;</div>
+
+						<div contenteditable="false">Selgers nye adresse</div>
+					</div>
+				</td>
+				<td colspan="50">
+					<div class="sign-field">
+						<div>&nbsp;</div>
+
+						<div contenteditable="false">Innflyttingsdato (hvis kj&oslash;per flytter inn selv)</div>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<table style="page-break-before:always">
+		<tbody>
+			<tr>
+				<td colspan="100" style="padding-top:0.4cm">
+					<h1>TILBEH&Oslash;R OG L&Oslash;S&Oslash;RE</h1>
+
+					<p>I henhold til avhendingsloven &sect; 3-4 skal eiendommen overdras med innredninger og utstyr som etter lov, forskrift eller annet offentlig vedtak skal f&oslash;lge med. Det samme gjelder varig innredning og utstyr som enten er fastmontert eller er s&aelig;rskilt tilpasset bygningen, jf. avhendingsloven &sect; 3-5. Partene kan imidlertid fritt avtale hva som skal f&oslash;lge med eiendommen ved salg.</p>
+
+					<p><strong>VEILEDENDE LISTE OVER HVA SOM F&Oslash;LGER EIENDOMMEN.</strong> <small>Dersom ikke annet er avtalt eller fremg&aring;r av salgsoppgaven:</small></p>
+
+					<table>
+						<tbody>
+							<tr>
+								<td colspan="49">
+									<p><strong>1. HVITEVARER</strong> medf&oslash;lger der dette er spesielt angitt i salgsoppgaven.</p>
+
+									<p><strong>2. HELDEKKENDE TEPPER</strong> medf&oslash;lger med uansett festem&aring;te.</p>
+
+									<p><strong>3. VARMEKILDER</strong> slik som ovner, kaminer, peiser, varmepumper&nbsp;og panelovner, f&oslash;lger med uansett festem&aring;te. Frittst&aring;ende biopeiser/varmeovner og terrassevarmere medf&oslash;lger ikke. Det f&oslash;lger ikke med varmekilder i rom som ikke har veggeller fastmonterte varmekilder p&aring; visning.</p>
+
+									<p><strong>4. TV, RADIO OG MUSIKKANLEGG.</strong> TV-antenner og fellesanlegg for TV, herunder parabolantenne, og tuneren/dekoder/tv-boks medf&oslash;lger der dette eies av selger. Veggmontert TV/flatskjerm med tilh&oslash;rende festeordning samt musikkanlegg f&oslash;lger ikke med (se ogs&aring; punkt 12).</p>
+
+									<p><strong>5. BADEROMSINNREDNING/UTSTYR.</strong> Badekar, dusjkabinett, dusjvegger, alle fastmonterte speil og hyller, fastmonterte glass- og h&aring;ndkleholdere, herunder h&aring;ndklevarmere samt baderomsinnredning, medf&oslash;lger.</p>
+
+									<p><strong>6. GARDEROBESKAP</strong> medf&oslash;lger, selv om disse er l&oslash;se.Fastmonterte&nbsp;garderobehyller og knagger medf&oslash;lger.&nbsp;Innredning i garderobeskap, for eksempel l&oslash;se eller fastmonterte tr&aring;dkurver, hyller, stenger og lignende, medf&oslash;lger.</p>
+
+									<p><strong>7. KJ&Oslash;KKENINNREDNING</strong> medf&oslash;lger, herunder ogs&aring; &aring;pne, fastmonterte hyller og l&oslash;s eller fastmontert kj&oslash;kken&oslash;y.</p>
+
+									<p><strong>8. MARKISER, PERSIENNER</strong> og annen type innvendig og utvendig solskjerming, gardinoppheng, lamellgardiner og liftgardiner medf&oslash;lger.</p>
+
+									<p><strong>9. AVTREKKSVIFTER</strong> av alle slag, samt fastmonterte aircondition-/ventilasjonsanlegg, medf&oslash;lger.</p>
+
+									<p><strong>10.&nbsp;SENTRALST&Oslash;VSUGER</strong> medf&oslash;lger med komplett anlegg, herunder slange, munnstykke mm.</p>
+
+									<p><strong>11.&nbsp;LYSKILDER.</strong> Kupler, lysstoffarmatur, fastmonterte &ldquo;spotlights&rdquo;, oppheng og skinner med spotlights samt utelys og hagebelysning&nbsp;medf&oslash;lger. Vegglamper, krokhengte lamper, lysekroner,&nbsp; prismelamper og lignende som er koblet til sukkerbit eller stikkontakt f&oslash;lger likevel ikke med.</p>
+								</td>
+								<td colspan="2">&nbsp;</td>
+								<td colspan="49" style="vertical-align:top">
+									<p><strong>12.&nbsp;INSTALLERTE SMARTHUSL&Oslash;SNINGER </strong>med sentral som&nbsp;styrer lys, varme, lyd o.l., samt tilh&oslash;rende tr&aring;dl&oslash;se enheter som brytere, sensorer, kameraer, integrerte h&oslash;yttalere el. medf&oslash;lger. Enkle lysstyringssystem f.eks. med en sentral som kun styrer lysp&aelig;rer eller smartp&aelig;rer montert i sokkel medf&oslash;lger likevel ikke.</p>
+
+									<p><strong>13. UTVENDIGE S&Oslash;PPELKASSER</strong> og eventuelt holder/hus til disse medf&oslash;lger.</p>
+
+									<p><strong>14. POSTKASSE</strong>&nbsp;medf&oslash;lger.</p>
+
+									<p><strong>15. UTEND&Oslash;RS INNRETNINGER</strong> slik som flaggstang, fastmontert t&oslash;rkestativ, samt andre faste utearrangementer som f.eks. badestamp, boblekar/jacuzzi og liknende utend&oslash;rs kar, lekestue, lekestativ, utepeis, fastmontert trommel til&nbsp;annslange, medf&oslash;lger. Guidekabel/avgrensingskabel til robotgressklipper medf&oslash;lger, men robotgressklipper og ladestasjon for denne medf&oslash;lger ikke.</p>
+
+									<p><strong>16. FASTMONTERT VEGGLADER/ LADESTASJON TIL EL-BIL</strong> medf&oslash;lger uavhengig av hvor laderen er montert.</p>
+
+									<p><strong>17. SOLCELLEANLEGG</strong> med tilh&oslash;rende teknisk infrastruktur&nbsp;medf&oslash;lger.</p>
+
+									<p><strong>18. GASSBEHOLDER</strong> til gasskomfyr og gasspeis medf&oslash;lger.</p>
+
+									<p><strong>19. BRANNSTIGE, BRANNTAU</strong>, feiestige og lignende medf&oslash;lger der dette er p&aring;budt. L&oslash;se stiger medf&oslash;lger ikke.</p>
+
+									<p><strong>20.&nbsp;BRANNSLUKNINGSAPPARAT, BRANNSLANGE og R&Oslash;YKVARSLER</strong> medf&oslash;lger der dette er p&aring;budt. Det er eier og brukers plikt til &aring; se til at utstyret forefinnes p&aring; enhver eiendom. Hvis annet ikke er uttrykkelig avtalt, skal dette derfor alltid f&oslash;lge med ved salg av eiendom.</p>
+
+									<p><strong>21. SAMTLIGE N&Oslash;KLER</strong> til eiendommen som selger er i besittelse av skal overleveres kj&oslash;per p&aring; overtakelsen, herunder n&oslash;kler til eventuelle boder, uthus, garasjeport&aring;pner el. L&aring;ses boder, uthus el. med hengel&aring;s, skal l&aring;s og n&oslash;kler til disse medf&oslash;lge.</p>
+
+									<p><strong>22. GARASJEHYLLER</strong>, bodhyller, lagringshyller og oppheng til bildekk medf&oslash;lger s&aring;fremt de er fastmontert.</p>
+
+									<p>Planter, busker og tr&aelig;r som er plantet p&aring; tomten, eller fastmonterte kasser og lignende er en del av eiendommen og medf&oslash;lger i handelen.</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<p><small>Oversikten er utarbeidet av Norges Eiendomsmeglerforbund, Eiendom Norge og Advokatforeningens Eiendomsmeglingsgruppe, og er gjeldende fra 1. januar 2020.</small></p>
+
+					<p style="text-align:right"><em><small>Oppdatert 10.12.19</small></em></p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

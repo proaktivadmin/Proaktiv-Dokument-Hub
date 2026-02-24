@@ -60,6 +60,22 @@ A document template management system for Norwegian real estate brokers, integra
 - WebDAV storage for network file access
 - Vitec export + import workflow docs in `docs/`
 
+### Template Source of Truth (IMPORTANT)
+
+When building or editing Vitec HTML templates, the authoritative references are:
+
+1. **Working reference templates** — `scripts/reference_templates/`, `scripts/golden standard/`
+2. **Master template library** — `templates/master/` (249 official templates, scraped 2026-02-23)
+3. **Vitec Stilark** — `docs/vitec-stilark.md` (default style system)
+4. **Builder knowledge base** — `.agents/skills/vitec-template-builder/` (LESSONS.md, PATTERNS.md, SKILL.md)
+
+**Do NOT** use `.planning/vitec-html-ruleset-FULL.md` as the primary authority — it was
+generated from the old database of 133 Proaktiv-customized templates. Where it conflicts
+with the above references (e.g., `proaktiv-theme` class), the official templates win.
+
+When Vitec sends a newsletter or hotfix notification about template changes, run `/sync-templates`
+to fetch, diff, and reconcile. See `.cursor/commands/sync-templates.md`.
+
 ### Authentication (V2.9)
 
 - Simple password-based authentication (single user)
@@ -507,6 +523,8 @@ Use `/entra-architect`, `/entra-builder`, `/entra-qa` commands.
 | `/entra-qa`           | Test Entra ID sync                  |
 | `/entra-sync`         | Run Entra ID sync (usage docs)      |
 | `/notification`       | Maintain/update notification system |
+| `/review-builds`      | Run QA review of builder pipeline   |
+| `/sync-templates`     | Sync templates after Vitec newsletter/hotfix |
 | `/signature-qa`       | Run signature QA testing stages     |
 
 ---

@@ -1,0 +1,86 @@
+<div id="vitecTemplate">
+	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+	<style type="text/css">
+		#vitecTemplate table {
+			border-collapse: collapse;
+			width: 100%;
+			table-layout: fixed;
+		}
+
+		#vitecTemplate .saksokte:last-child .separator {
+			display: none;
+		}
+
+		/* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+		#vitecTemplate span.insert:empty {
+			font-size: inherit !important;
+			line-height: inherit !important;
+			display: inline-block;
+			background-color: lightpink;
+			min-width: 2em !important;
+			height: .7em !important;
+			text-align: center;
+		}
+
+			#vitecTemplate span.insert:empty:before {
+				content: attr(data-label);
+			}
+
+			#vitecTemplate span.insert:empty:hover {
+				background-color: #fff;
+				cursor: pointer;
+			}
+
+		#vitecTemplate .insert-table {
+			display: inline-table;
+		}
+
+			#vitecTemplate .insert-table > span,
+			#vitecTemplate .insert-table > span.insert {
+				display: table-cell;
+			}
+	</style>
+	<table>
+		<tbody>
+			<tr>
+				<td colspan="100">
+					<div vitec-template="resource: Mottaker">&nbsp;</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="100">
+					<p><strong>UNDERRETTING ETTER TVANGSFULLBYRDELSESLOVEN &sect; 11-32</strong></p>
+
+					<p><strong>Varsel om forsinket betaling i forbindelse med tvangssalg av [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+					<table>
+						<tbody>
+							<tr>
+								<td colspan="25"><strong>Tingrettens saksnr.:</strong></td>
+								<td colspan="75">[[tvangssalgrefnr]]</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<p>Det vises til tidligere oversendt oppgj&oslash;rsoppstilling.</p>
+
+					<p>I henhold til den inng&aring;tte kj&oslash;psavtale, skulle kj&oslash;pesummen v&aelig;rt innbetalt til medhjelpers klientkonto nummer [[kontrakt.klientkonto]]&nbsp;pr. dato <strong>[[kontrakt.oppgjor.dato]]</strong>.</p>
+
+					<p>Vi kan pr. dags dato ikke se &aring; ha mottatt innbetalingen.</p>
+
+					<p><span vitec-if="Model.kjopere.Count == 1">Du</span> <span vitec-if="Model.kjopere.Count &gt; 1">Dere</span> varsles herved om at kj&oslash;pet vil bli hevet dersom vi ikke snarest og senest innen 14 dager fra dags dato mottar hele kj&oslash;pesummen fra <span vitec-if="Model.kjopere.Count == 1">deg</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> med tillegg av omkostninger. Det p&aring;l&oslash;per lovens forsinkelsesrente fra forfall (opprinnelig betalingsdato) til betaling finner sted.</p>
+
+					<p>Blir kj&oslash;pet hevet pga. ditt mislighold av kontrakten, vil <span vitec-if="Model.kjopere.Count == 1">du</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> bli erstatningsansvarlig for eventuelle tap rettighetshaverne i eiendommen lider som f&oslash;lge av betalingsmisligholdet.</p>
+
+					<p>Ved eventuelle uklarheter ber vi om at <span vitec-if="Model.kjopere.Count == 1">du</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> tar kontakt omg&aring;ende.</p>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="100">
+					<div vitec-template="resource: Avsender">&nbsp;</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

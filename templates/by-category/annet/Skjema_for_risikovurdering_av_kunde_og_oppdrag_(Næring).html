@@ -1,0 +1,503 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate table {
+			border-collapse: collapse;
+			width: 100%;
+			table-layout: fixed;
+			border: solid 1px #000;
+			margin: 0.5cm 0;
+			page-break-inside: avoid;
+		}
+
+		#vitecTemplate th {
+			text-align: left;
+			border: solid 1px #000;
+			vertical-align: middle;
+			padding: 2px;
+		}
+
+			#vitecTemplate th p {
+				font-weight: normal;
+			}
+
+			#vitecTemplate th small {
+				display: block;
+				font-weight: normal;
+			}
+
+		#vitecTemplate td {
+			vertical-align: middle;
+			border: solid 1px #000;
+			padding: 2px;
+			font-size: 14px;
+		}
+
+		#vitecTemplate h1 {
+			font-size: 16px;
+			margin-top: 0;
+		}
+
+		#vitecTemplate .bg-color {
+			background-color: lightgray;
+		}
+
+		#vitecTemplate .vtop {
+			vertical-align: top;
+		}
+
+		#vitecTemplate .no-border {
+			border: none;
+		}
+
+		#vitecTemplate .border-bottom {
+			border-bottom: solid 1px #000;
+		}
+		/* Ett skjema pr. kontakt. Sideskift n?r det finnes flere kontakter. */
+		#vitecTemplate .first-table {
+			margin: 0;
+		}
+
+		#vitecTemplate .last-table:not(:only-child) {
+			page-break-after: always;
+			margin-bottom: 0;
+		}
+
+		#vitecTemplate table td[data-label] {
+			padding: 16px 2px 5px 4px;
+			position: relative;
+		}
+
+			#vitecTemplate table td[data-label]:before {
+				content: attr(data-label);
+				text-align: left;
+				font-size: 9pt;
+				line-height: 8pt;
+				display: block;
+				position: absolute;
+				top: 5px;
+			}
+
+		#vitecTemplate .insert-textbox {
+			display: inline-table;
+		}
+
+			#vitecTemplate .insert-textbox > span {
+				padding: 0 4px;
+				line-height: 1.1;
+				border-bottom: dotted 1px #000;
+				width: 4cm;
+				max-width: 18cm;
+				overflow: hidden;
+				display: table-cell;
+				text-align: left;
+				white-space: nowrap;
+			}
+</style>
+<style type="text/css">/* Klikkbare sjekkbokser og radioknapper */
+		label.btn {
+			display: inline;
+			text-transform: none;
+			white-space: normal;
+			padding: 0;
+			vertical-align: baseline;
+			outline: none;
+			font-size: inherit;
+		}
+
+			label.btn:active,
+			label.btn.active {
+				box-shadow: none;
+				outline: none;
+			}
+
+		.svg-toggle { /* nullstiller bootstrap button-styling */
+			display: inline-block !important;
+			width: 16px;
+			height: 16px;
+			margin: 0 2px;
+			vertical-align: bottom;
+			padding: 0;
+			border: none;
+			background: transparent;
+			border-radius: 0;
+			box-shadow: none !important;
+			cursor: pointer;
+			white-space: normal;
+			text-align: left;
+			background-repeat: no-repeat;
+			background-size: 16px 16px;
+			background-position: center center;
+		}
+
+			.svg-toggle.checkbox {
+				background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+			}
+
+				.svg-toggle.checkbox.active,
+				.btn.active > .svg-toggle.checkbox {
+					background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+					box-shadow: none !important;
+				}
+
+			.svg-toggle.radio {
+				background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
+			}
+
+				.svg-toggle.radio.active,
+				.btn.active > .svg-toggle.radio {
+					background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
+					box-shadow: none !important;
+				}
+
+		/* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
+		#vitecTemplate [data-toggle="buttons"] input {
+			display: none;
+		}
+</style>
+<div vitec-if="Model.kjoper.navn == &quot;Mangler data&quot;">
+<div vitec-foreach="selger in Model.selgere">
+<h1>Skjema for risikovurdering av kunde og oppdrag [[oppdrag.nr]]</h1>
+
+<p>Foretakets kundetiltak og l&oslash;pende oppf&oslash;lging skal foretas p&aring; grunnlag av en konkret helhetsvurdering av risiko for hvitvasking og terrorfinansiering knyttet til ethvert oppdrag.</p>
+
+<p>Det skal vies s&aelig;rlig oppmerksomhet til tjenester og transaksjoner som fremmer anonymitet, og indikasjoner p&aring; mistenkelige transaksjoner som beskrevet i hvitvaskingsrutinene. Risikovurderingen skal ogs&aring; ta i betraktning Foretakets overordnede risikovurdering.</p>
+
+<p>Risikovurderingen gjennomf&oslash;res og dokumenteres ved utfylling av dette skjemaet. <strong>Utf&oslash;rt [[dagensdato]] av <span style="white-space:nowrap">[[operativmegler.navn]]</span></strong></p>
+
+<table class="first-table" data-toggle="buttons">
+	<thead>
+		<tr contenteditable="false">
+			<th class="bg-color" colspan="100">1. Kunde</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th class="bg-color" colspan="25" contenteditable="false">1.1 Navn</th>
+			<td colspan="75">[[*selger.firmanavn]], [[*selger.ledetekst_fdato_orgnr]]: [[*selger.fdato_orgnr]]</td>
+		</tr>
+		<tr contenteditable="false">
+			<th class="bg-color vtop" colspan="25" rowspan="18">1.2 Kundetype <small>For mer informasjon, se hvitvaskingsrutinene.</small></th>
+			<th class="no-border" colspan="75">Lav risiko:</th>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Norsk statlig eller kommunalt forvaltningsorgan </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> B&oslash;rsnotert selskap i E&Oslash;S-land eller andre markeder underlagt informasjonsplikt som sikrer tilstrekkelig kunnskap om reelle rettighetshavere </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Finansinstitusjoner og verdipapirforetak hjemmeh&oslash;rende i Norge </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> &Oslash;vrige akt&oslash;rer som er underlagt hvitvaskingsregelverket, jf. hvitvaskingsloven &sect; 4 </label></td>
+		</tr>
+		<tr contenteditable="false">
+			<th class="no-border" colspan="75">Moderat risiko:</th>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Norske statsborgere bosatt i Norge </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Selskaper hjemmeh&oslash;rende i Norge </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Lokale kunder Foretaket kjenner godt </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Personer eller selskaper hjemmeh&oslash;rende i i) andre E&Oslash;S-stater eller ii) tredjeland som er identifisert som land som har gjennomf&oslash;rt tilfredsstillende og effektive tiltak for &aring; bekjempe hvitvasking og terrorfinansiering, og som har lavt niv&aring; av korrupsjon og annen kriminalitet </label></td>
+		</tr>
+		<tr contenteditable="false">
+			<th class="no-border" colspan="75">H&oslash;y risiko:</th>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Norske statsborgere som ikke er bosatt i Norge </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Utenlandsk kunde hjemmeh&oslash;rende i et h&oslash;yrisikoland som angitt i hvitvaskingsforskriften og i Kommisjonsforordning (EU) 2016/1675, se hvitvaskingsrutinene (se vedlegg). </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Utenlandsk kunde hjemmeh&oslash;rende i land som er identifisert som i) land med betydelig omfang av korrupsjon og annen kriminalitet, ii) land som ikke har gjennomf&oslash;rt tilfredsstillende og effektive tiltak for &aring; bekjempe hvitvasking og terrorfinansiering eller iii) land som finansierer eller st&oslash;tter terrorvirksomhet eller der kjente terrororganisasjonen opererer i landet </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Politisk eksponert person (PEP) eller n&aelig;rt familiemedlem eller kjent medarbeider til politisk eksponert person </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Kunder som omfattes av sanksjonsregelverket, se FNs og EUS konsoliderte lister over personer og enheter underlagt finansielle restriksjoner </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Kunden er kjent kriminell </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle" style="vertical-align:top"></span> <input name="rbl01" type="radio" /> Annet: </label> <span class="insert-textbox"><span style="width:11.5cm"></span></span></td>
+		</tr>
+	</tbody>
+</table>
+
+<table data-toggle="buttons">
+	<thead>
+		<tr contenteditable="false">
+			<th class="bg-color" colspan="100">2. Oppdrag</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr contenteditable="false">
+			<th class="bg-color vtop" colspan="25" rowspan="10">2.1 Oppdragstype <small>For mer informasjon, se hvitvaskingsrutinene.</small></th>
+			<th class="no-border" colspan="75">Lav risiko:</th>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="25"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" />R&aring;dgivning </label></td>
+			<td class="no-border" colspan="25"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" />Utleie av fast eiendom </label></td>
+			<td class="no-border" colspan="25"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" />Leie av fast eiendom </label></td>
+		</tr>
+		<tr>
+			<th class="no-border" colspan="75" contenteditable="false">Lav/Moderat risiko:</th>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" />Verdivurdering </label></td>
+		</tr>
+		<tr>
+			<th class="no-border" colspan="75" contenteditable="false">Moderat risiko:</th>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" />Salg fast eiendom/andeler i eiendomsselskap </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" />Kj&oslash;p fast eiendom/andeler i eiendomsselskap </label></td>
+		</tr>
+		<tr>
+			<th class="no-border" colspan="75" contenteditable="false">H&oslash;y risiko:</th>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" />Rent oppgj&oslash;rsoppdrag (Foretaket bist&aring;r ikke med selve salgs- eller kj&oslash;psprosessen) </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle" style="vertical-align:top"></span> <input name="rbl02" type="radio" /> Annet: </label><span class="insert-textbox"><span style="width:11cm"></span></span></td>
+		</tr>
+		<tr contenteditable="false">
+			<th class="bg-color vtop" colspan="25" rowspan="3">2.2 Transaksjonens st&oslash;rrelse</th>
+			<th class="no-border" colspan="75">Salg/kj&oslash;p:</th>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75">Antatt markedsverdi fast eiendom/andeler i eiendomsselskap: NOK <span class="insert-textbox"><span style="width:2.5cm"></span></span></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75">Utleie/leie: Antatt markedsleie: NOK <span class="insert-textbox"><span style="width:2.5cm"></span></span></td>
+		</tr>
+	</tbody>
+</table>
+
+<table>
+	<thead>
+		<tr contenteditable="false">
+			<th class="bg-color" colspan="100">3. Risiko knyttet til transaksjonen</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr contenteditable="false">
+			<th class="bg-color vtop" colspan="25" rowspan="2">3.1 Noen s&aelig;rlige risikomomenter knyttet til selve transaksjonen? <small>For mer informasjon, se hvitvaskingsrutinene.</small></th>
+			<td class="no-border" colspan="75" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl03" type="radio" />Nei </label> &nbsp; &nbsp; <label class="btn" contenteditable="false" data-toggle="button"> <span class="checkbox svg-toggle"></span> <input name="rbl03" type="radio" />Ja </label> &nbsp; &nbsp; Hvis JA krysses av, kontakt hvitvaskingsansvarlig</td>
+		</tr>
+		<tr>
+			<td colspan="75" data-label="Beskrivelse" style="height:2cm">&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+
+<table class="last-table">
+	<thead>
+		<tr contenteditable="false">
+			<th class="bg-color" colspan="100">4. Foretakets risikovurdering</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr contenteditable="false" data-toggle="buttons">
+			<th class="bg-color vtop" colspan="25" rowspan="2">4.1 Foretakets vurdering av risikoen knyttet til kunden og oppdraget</th>
+			<td class="no-border" colspan="25"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl04" type="radio" /> Normal risiko </label></td>
+			<td class="no-border" colspan="25"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl04" type="radio" />Lav risiko </label></td>
+			<td class="no-border" colspan="25"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl04" type="radio" />H&oslash;y risiko </label></td>
+		</tr>
+		<tr>
+			<td class="border-bottom" colspan="75" data-label="Eventuelle tilleggsopplysninger" style="height:2cm">&nbsp;</td>
+		</tr>
+		<tr contenteditable="false">
+			<th class="bg-color vtop" colspan="25">4.2 Behov for ytterligere unders&oslash;kelser, jf. hvitvaskingsrutinene.</th>
+			<td class="no-border" colspan="75" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl05" type="radio" /> Nei </label> &nbsp; &nbsp; <label class="btn" contenteditable="false" data-toggle="button"> <span class="checkbox svg-toggle"></span> <input name="rbl05" type="radio" /> Ja </label> &nbsp; &nbsp; Hvis JA krysses av, kontakt hvitvaskingsansvarlig</td>
+		</tr>
+	</tbody>
+</table>
+</div>
+</div>
+
+<div vitec-if="Model.kjoper.navn != &quot;Mangler data&quot;">
+<div vitec-foreach="kjoper in Model.kjopere">
+<h1>Skjema for risikovurdering av kunde og oppdrag [[oppdrag.nr]]</h1>
+
+<p>Foretakets kundetiltak og l&oslash;pende oppf&oslash;lging skal foretas p&aring; grunnlag av en konkret helhetsvurdering av risiko for hvitvasking og terrorfinansiering knyttet til ethvert oppdrag.</p>
+
+<p>Det skal vies s&aelig;rlig oppmerksomhet til tjenester og transaksjoner som fremmer anonymitet, og indikasjoner p&aring; mistenkelige transaksjoner som beskrevet i hvitvaskingsrutinene. Risikovurderingen skal ogs&aring; ta i betraktning Foretakets overordnede risikovurdering.</p>
+
+<p>Risikovurderingen gjennomf&oslash;res og dokumenteres ved utfylling av dette skjemaet. <strong>Utf&oslash;rt [[dagensdato]] av <span style="white-space:nowrap">[[operativmegler.navn]]</span></strong></p>
+
+<table class="first-table" data-toggle="buttons">
+	<thead>
+		<tr contenteditable="false">
+			<th class="bg-color" colspan="100">1. Kunde</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th class="bg-color" colspan="25" contenteditable="false">1.1 Navn</th>
+			<td colspan="75">[[*kjoper.firmanavn]], [[*kjoper.ledetekst_fdato_orgnr]]: [[*kjoper.fdato_orgnr]]</td>
+		</tr>
+		<tr contenteditable="false">
+			<th class="bg-color vtop" colspan="25" rowspan="18">1.2 Kundetype <small>For mer informasjon, se hvitvaskingsrutinene.</small></th>
+			<th class="no-border" colspan="75">Lav risiko:</th>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Norsk statlig eller kommunalt forvaltningsorgan </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> B&oslash;rsnotert selskap i E&Oslash;S-land eller andre markeder underlagt informasjonsplikt som sikrer tilstrekkelig kunnskap om reelle rettighetshavere </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Finansinstitusjoner og verdipapirforetak hjemmeh&oslash;rende i Norge </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> &Oslash;vrige akt&oslash;rer som er underlagt hvitvaskingsregelverket, jf. hvitvaskingsloven &sect; 4 </label></td>
+		</tr>
+		<tr contenteditable="false">
+			<th class="no-border" colspan="75">Moderat risiko:</th>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Norske statsborgere bosatt i Norge </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Selskaper hjemmeh&oslash;rende i Norge </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Lokale kunder Foretaket kjenner godt </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Personer eller selskaper hjemmeh&oslash;rende i i) andre E&Oslash;S-stater eller ii) tredjeland som er identifisert som land som har gjennomf&oslash;rt tilfredsstillende og effektive tiltak for &aring; bekjempe hvitvasking og terrorfinansiering, og som har lavt niv&aring; av korrupsjon og annen kriminalitet </label></td>
+		</tr>
+		<tr contenteditable="false">
+			<th class="no-border" colspan="75">H&oslash;y risiko:</th>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Norske statsborgere som ikke er bosatt i Norge </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Utenlandsk kunde hjemmeh&oslash;rende i et h&oslash;yrisikoland som angitt i hvitvaskingsforskriften og i Kommisjonsforordning (EU) 2016/1675, se hvitvaskingsrutinene (se vedlegg). </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Utenlandsk kunde hjemmeh&oslash;rende i land som er identifisert som i) land med betydelig omfang av korrupsjon og annen kriminalitet, ii) land som ikke har gjennomf&oslash;rt tilfredsstillende og effektive tiltak for &aring; bekjempe hvitvasking og terrorfinansiering eller iii) land som finansierer eller st&oslash;tter terrorvirksomhet eller der kjente terrororganisasjonen opererer i landet </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Politisk eksponert person (PEP) eller n&aelig;rt familiemedlem eller kjent medarbeider til politisk eksponert person </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Kunder som omfattes av sanksjonsregelverket, se FNs og EUS konsoliderte lister over personer og enheter underlagt finansielle restriksjoner </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" /> Kunden er kjent kriminell </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle" style="vertical-align:top"></span> <input name="rbl01" type="radio" /> Annet: </label> <span class="insert-textbox"><span style="width:11.5cm"></span></span></td>
+		</tr>
+	</tbody>
+</table>
+
+<table data-toggle="buttons">
+	<thead>
+		<tr contenteditable="false">
+			<th class="bg-color" colspan="100">2. Oppdrag</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr contenteditable="false">
+			<th class="bg-color vtop" colspan="25" rowspan="10">2.1 Oppdragstype <small>For mer informasjon, se hvitvaskingsrutinene.</small></th>
+			<th class="no-border" colspan="75">Lav risiko:</th>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="25"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" />R&aring;dgivning </label></td>
+			<td class="no-border" colspan="25"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" />Utleie av fast eiendom </label></td>
+			<td class="no-border" colspan="25"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" />Leie av fast eiendom </label></td>
+		</tr>
+		<tr>
+			<th class="no-border" colspan="75" contenteditable="false">Lav/Moderat risiko:</th>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" />Verdivurdering </label></td>
+		</tr>
+		<tr>
+			<th class="no-border" colspan="75" contenteditable="false">Moderat risiko:</th>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" />Salg fast eiendom/andeler i eiendomsselskap </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" />Kj&oslash;p fast eiendom/andeler i eiendomsselskap </label></td>
+		</tr>
+		<tr>
+			<th class="no-border" colspan="75" contenteditable="false">H&oslash;y risiko:</th>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" />Rent oppgj&oslash;rsoppdrag (Foretaket bist&aring;r ikke med selve salgs- eller kj&oslash;psprosessen) </label></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle" style="vertical-align:top"></span> <input name="rbl02" type="radio" /> Annet: </label><span class="insert-textbox"><span style="width:11cm"></span></span></td>
+		</tr>
+		<tr contenteditable="false">
+			<th class="bg-color vtop" colspan="25" rowspan="3">2.2 Transaksjonens st&oslash;rrelse</th>
+			<th class="no-border" colspan="75">Salg/kj&oslash;p:</th>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75">Antatt markedsverdi fast eiendom/andeler i eiendomsselskap: NOK <span class="insert-textbox"><span style="width:2.5cm"></span></span></td>
+		</tr>
+		<tr>
+			<td class="no-border" colspan="75">Utleie/leie: Antatt markedsleie: NOK <span class="insert-textbox"><span style="width:2.5cm"></span></span></td>
+		</tr>
+	</tbody>
+</table>
+
+<table>
+	<thead>
+		<tr contenteditable="false">
+			<th class="bg-color" colspan="100">3. Risiko knyttet til transaksjonen</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr contenteditable="false">
+			<th class="bg-color vtop" colspan="25" rowspan="2">3.1 Noen s&aelig;rlige risikomomenter knyttet til selve transaksjonen? <small>For mer informasjon, se hvitvaskingsrutinene.</small></th>
+			<td class="no-border" colspan="75" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl03" type="radio" />Nei </label> &nbsp; &nbsp; <label class="btn" contenteditable="false" data-toggle="button"> <span class="checkbox svg-toggle"></span> <input name="rbl03" type="radio" />Ja </label> &nbsp; &nbsp; Hvis JA krysses av, kontakt hvitvaskingsansvarlig</td>
+		</tr>
+		<tr>
+			<td colspan="75" data-label="Beskrivelse" style="height:2cm">&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+
+<table class="last-table">
+	<thead>
+		<tr contenteditable="false">
+			<th class="bg-color" colspan="100">4. Foretakets risikovurdering</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr contenteditable="false" data-toggle="buttons">
+			<th class="bg-color vtop" colspan="25" rowspan="2">4.1 Foretakets vurdering av risikoen knyttet til kunden og oppdraget</th>
+			<td class="no-border" colspan="25"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl04" type="radio" /> Normal risiko </label></td>
+			<td class="no-border" colspan="25"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl04" type="radio" />Lav risiko </label></td>
+			<td class="no-border" colspan="25"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl04" type="radio" />H&oslash;y risiko </label></td>
+		</tr>
+		<tr>
+			<td class="border-bottom" colspan="75" data-label="Eventuelle tilleggsopplysninger" style="height:2cm">&nbsp;</td>
+		</tr>
+		<tr contenteditable="false">
+			<th class="bg-color vtop" colspan="25">4.2 Behov for ytterligere unders&oslash;kelser, jf. hvitvaskingsrutinene.</th>
+			<td class="no-border" colspan="75" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl05" type="radio" /> Nei </label> &nbsp; &nbsp; <label class="btn" contenteditable="false" data-toggle="button"> <span class="checkbox svg-toggle"></span> <input name="rbl05" type="radio" /> Ja </label> &nbsp; &nbsp; Hvis JA krysses av, kontakt hvitvaskingsansvarlig</td>
+		</tr>
+	</tbody>
+</table>
+</div>
+</div>
+</div>

@@ -1,0 +1,103 @@
+<!-- Aktiverer visuell hjelp med en html-kommentar: --><!--VITEC-VISUAL-HELP-ENABLED--><!-- "Visuelle hint" / rosa sett-inn-felt:  -->
+<style type="text/css">.vitec-data-missing {
+    display: inline-table;
+}
+
+    .vitec-data-missing > span {
+        display: table-cell;
+    }
+
+        .vitec-data-missing > span:empty {
+            font-size: inherit !important;
+            line-height: inherit !important;
+            display: inline-block;
+            background-color: lightpink;
+            min-width: 2em !important;
+            height: inherit !important;
+            text-align: center;
+        }
+
+            .vitec-data-missing > span:empty:before {
+                content: attr(data-label);
+            }
+
+            .vitec-data-missing > span:empty:hover {
+                background-color: #fff;
+                cursor: pointer;
+            }
+</style>
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate table {
+        border-collapse: collapse;
+        width: 100%;
+        table-layout: fixed;
+    }
+ 
+    #vitecTemplate table td[data-label] {
+        padding: 16px 2px 4px 2px;
+        position: relative;
+    }
+       
+    #vitecTemplate table td[data-choice] {
+                    padding: 4px 2px 16px 2px;
+                    position: relative;
+                }    
+        
+               /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+        span.insert:empty {
+            font-size: inherit !important;
+            line-height: inherit !important;
+            display: inline-block;
+            background-color: lightpink;
+            min-width: 2em !important;
+            height: .7em !important;
+            text-align: center;
+        }
+
+        span.insert:empty:before {
+            content: attr(data-label);
+        }
+
+        span.insert:empty:hover {
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+        .insert-table {
+            display: inline-table;
+        }
+
+        .insert-table>span,
+        .insert-table>span.insert {
+            display: table-cell;
+        }
+</style>
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<div vitec-template="resource: Mottaker">&nbsp;</div>
+
+			<p><strong>Vedr&oslash;rende kj&oslash;p av [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+			<p>Vi viser til bud p&aring; ovennevnte leilighet, med aksept gitt under forutsetning av at:</p>
+
+			<ul>
+				<li>forkj&oslash;psrett ikke ble benyttet</li>
+				<li>ny eier ble godkjent av styret i <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">sameiet</span><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">borettslaget</span><span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">aksjelaget</span></li>
+			</ul>
+
+			<p>Vi beklager &aring; m&aring;tte meddele at forkj&oslash;psretten ble benyttet av en kj&oslash;per med lengre ansiennitet enn deg/dere. Kj&oslash;pekontrakten vil derfor annuleres for din/deres del, da den nye kj&oslash;peren vil tre inn i ditt/deres sted.</p>
+
+			<p>Vi h&aring;per at vi kan v&aelig;re behjelpelig med kj&oslash;p og/eller salg av bolig ved en senere anledning.</p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="100">
+			<div vitec-template="resource: Avsender">&nbsp;</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>

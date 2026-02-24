@@ -1,0 +1,321 @@
+<div id="vitecTemplate">
+    <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+    <style type="text/css">
+        #vitecTemplate h1 {
+            font-size: 14pt;
+            font-weight: bold;
+            padding: 0;
+            margin: 1cm 0;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        #vitecTemplate table {
+            table-layout: fixed;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            #vitecTemplate table th {
+                text-align: left;
+                background-color: #ccc;
+                vertical-align: middle;
+                font-size: 12pt;
+                padding: 4px 8px;
+            }
+
+            #vitecTemplate table td p {
+                margin: 1em 0;
+                line-height: 1.5;
+            }
+
+
+        #vitecTemplate .bordered-table tr {
+            border: solid 1px #000;
+            page-break-inside: avoid;
+        }
+
+        #vitecTemplate .bordered-table td {
+            padding: 8px;
+            vertical-align: top;
+        }
+
+        #vitecTemplate table td[data-toggle="buttons"] {
+            text-align: right;
+        }
+
+        #vitecTemplate .rbl-list label.btn {
+            display: inline-flex;
+            align-items: center;
+            font-size: small;
+        }
+
+        #vitecTemplate .rbl-list .svg-toggle {
+            margin-left: 4px;
+            margin-right: 8px;
+        }
+
+
+        #vitecTemplate .text-center {
+            text-align: center;
+        }
+
+        #vitecTemplate .sign-fields {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+        }
+
+            #vitecTemplate .sign-fields li {
+                height: 1cm;
+                border-top: solid 1px black;
+                display: block;
+                padding-left: 0;
+            }
+
+        span.insert:empty {
+            font-size: inherit !important;
+            line-height: inherit !important;
+            display: inline-block;
+            background-color: lightpink;
+            min-width: 2em !important;
+            height: .7em !important;
+            text-align: center;
+        }
+
+            span.insert:empty:before {
+                content: attr(data-label);
+            }
+
+            span.insert:empty:hover {
+                background-color: #fff;
+                cursor: pointer;
+            }
+
+        .insert-table {
+            display: inline-table;
+        }
+
+            .insert-table > span,
+            .insert-table > span.insert {
+                display: table-cell;
+            }
+    </style>
+    <style type="text/css">
+        /* Klikkbare sjekkbokser og radioknapper */
+        label.btn {
+            display: inline;
+            text-transform: none;
+            white-space: normal;
+            padding: 0;
+            vertical-align: baseline;
+            outline: none;
+            font-size: inherit;
+        }
+
+            label.btn:active,
+            label.btn.active {
+                box-shadow: none;
+                outline: none;
+            }
+
+        .svg-toggle { /* nullstiller bootstrap button-styling */
+            display: inline-block !important;
+            width: 16px;
+            height: 16px;
+            margin: 0 5px;
+            vertical-align: bottom;
+            padding: 0;
+            border: none;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none !important;
+            cursor: pointer;
+            white-space: normal;
+            text-align: left;
+            background-repeat: no-repeat;
+            background-size: 16px 16px;
+            background-position: center center;
+        }
+
+            .svg-toggle.checkbox {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+            }
+
+                .svg-toggle.checkbox.active,
+                .btn.active > .svg-toggle.checkbox {
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+                    box-shadow: none !important;
+                }
+
+            .svg-toggle.radio {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
+            }
+
+                .svg-toggle.radio.active,
+                .btn.active > .svg-toggle.radio {
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
+                    box-shadow: none !important;
+                }
+
+        /* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
+        #vitecTemplate [data-toggle="buttons"] input {
+            display: none;
+        }
+    </style>
+    <table>
+        <tbody>
+            <tr>
+                <td colspan="100">
+                    <div vitec-if="Model.oppdrag.hovedtype == &quot;N\xE6ringsutleie&quot;">BILAG TIL STANDARD LEIEAVTALE FOR N&AElig;RINGSLOKALER/-BYGG</div>
+
+                    <h1>Overtakelsesprotokoll</h1>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5" style="vertical-align:top"><strong>1</strong></td>
+                <td colspan="95">
+                    <strong>BAKGRUNN</strong>
+                    <p>I henhold til leieavtale av <span class="insert-table"> <span class="insert" data-label="dato"></span> </span> mellom [[kjoper.navn]] (<strong>Utleier</strong>) og [[selger.navn]] (<strong>Leietaker</strong>) om leie av leieobjektet [[eiendom.gatenavnognr]] (<strong>Leieobjektet</strong>), er det i dag gjennomf&oslash;rt overtakelsesbefaring i forbindelse med Leietakers overtakelse av Leieobjektet.</p>
+
+                    <p>
+                        Utleiers representant p&aring; overtakelsesbefaringen: <span class="insert-table"> <span class="insert" data-label="navn"></span> </span><br />
+                        Leietakers representant p&aring; overtakelsesbefaringen: <span class="insert-table"> <span class="insert" data-label="navn"></span> </span>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5" style="vertical-align:top"><strong>2</strong></td>
+                <td colspan="95">
+                    <strong>SJEKKLISTE</strong>
+                    <p>Nedenst&aring;ende sjekkliste er gjennomg&aring;tt og protokollert fra overtakelsesbefaringen.</p>
+
+                    <table class="bordered-table">
+                        <tbody>
+                            <tr>
+                                <th colspan="100">SJEKKLISTE OVERTAKELSESBEFARING</th>
+                            </tr>
+                            <tr>
+                                <td colspan="80">Det er foretatt avlesning av Leieobjektets str&oslash;mm&aring;ler</td>
+                                <td colspan="20" data-toggle="buttons">
+                                    <div class="rbl-list"><label class="btn" contenteditable="false" data-toggle="button">JA <span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" /></label> <label class="btn" contenteditable="false" data-toggle="button">NEI <span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" /></label></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="100">Hvis ja, angi m&aring;lerstand:</td>
+                            </tr>
+                            <tr>
+                                <td colspan="80">Leietaker har f&aring;tt overlevert n&oslash;kler/n&oslash;kkelkort til Leieobjektet</td>
+                                <td colspan="20" data-toggle="buttons">
+                                    <div class="rbl-list"><label class="btn" contenteditable="false" data-toggle="button">JA <span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" /></label> <label class="btn" contenteditable="false" data-toggle="button">NEI <span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" /></label></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="100">Hvis ja, angi antall n&oslash;kler/n&oslash;kkelkort som er overlevert:</td>
+                            </tr>
+                            <tr>
+                                <td colspan="80">Leieobjektets tilstand er dokumentert med bilder, video, teknisk tilstandsrapport e.l.</td>
+                                <td colspan="20" data-toggle="buttons">
+                                    <div class="rbl-list"><label class="btn" contenteditable="false" data-toggle="button">JA <span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" /></label> <label class="btn" contenteditable="false" data-toggle="button">NEI <span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" /></label></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="25">Hvis ja, angi hva:</td>
+                                <td colspan="75" data-toggle="buttons">
+                                    <div class="rbl-list"><label class="btn" contenteditable="false" data-toggle="button">BILDER <span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" /></label> <label class="btn" contenteditable="false" data-toggle="button">VIDEO <span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" /></label> <label class="btn" contenteditable="false" data-toggle="button">TEKNISK TILSTANDSRAPPORT <span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" /></label> <label class="btn" contenteditable="false" data-toggle="button">ANNET <span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" /></label></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="80">Leieobjektet er i henhold til leieavtalen</td>
+                                <td colspan="20" data-toggle="buttons">
+                                    <div class="rbl-list"><label class="btn" contenteditable="false" data-toggle="button">JA <span class="checkbox svg-toggle"></span> <input name="rbl005" type="radio" /></label> <label class="btn" contenteditable="false" data-toggle="button">NEI <span class="checkbox svg-toggle"></span> <input name="rbl005" type="radio" /></label></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="70" style="height:2cm; vertical-align:top">Hvis nei, beskriv avvik fra leieavtalen:</td>
+                                <td colspan="30" style="vertical-align:top">Frist for utbedring av avvik:</td>
+                            </tr>
+                            <tr>
+                                <td colspan="80">Leieobjektet er ryddet og rengjort</td>
+                                <td colspan="20" data-toggle="buttons">
+                                    <div class="rbl-list"><label class="btn" contenteditable="false" data-toggle="button">JA <span class="checkbox svg-toggle"></span> <input name="rbl006" type="radio" /></label> <label class="btn" contenteditable="false" data-toggle="button">NEI <span class="checkbox svg-toggle"></span> <input name="rbl006" type="radio" /></label></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="70" style="height:2cm; vertical-align:top">Hvis nei, beskriv avvik:</td>
+                                <td colspan="30" style="vertical-align:top">Frist for utbedring av avvik:</td>
+                            </tr>
+                            <tr>
+                                <td colspan="80">Leieobjektet er uten mangler</td>
+                                <td colspan="20" data-toggle="buttons">
+                                    <div class="rbl-list"><label class="btn" contenteditable="false" data-toggle="button">JA <span class="checkbox svg-toggle"></span> <input name="rbl007" type="radio" /></label> <label class="btn" contenteditable="false" data-toggle="button">NEI <span class="checkbox svg-toggle"></span> <input name="rbl007" type="radio" /></label></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="70" style="height:2cm">Hvis nei, beskriv manglene:</td>
+                                <td colspan="30">Frist for utbedring av mangler:</td>
+                            </tr>
+                            <tr>
+                                <td colspan="80">Leietaker erkl&aelig;rer &aring; ha overtatt Leieobjektet</td>
+                                <td colspan="20" data-toggle="buttons">
+                                    <div class="rbl-list"><label class="btn" contenteditable="false" data-toggle="button">JA <span class="checkbox svg-toggle"></span> <input name="rbl008" type="radio" /></label> <label class="btn" contenteditable="false" data-toggle="button">NEI <span class="checkbox svg-toggle"></span> <input name="rbl008" type="radio" /></label></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="80">Leietaker har stilt sikkerhet/betalt depositum i henhold til Leiekontrakten</td>
+                                <td colspan="20" data-toggle="buttons">
+                                    <div class="rbl-list"><label class="btn" contenteditable="false" data-toggle="button">JA <span class="checkbox svg-toggle"></span> <input name="rbl009" type="radio" /></label> <label class="btn" contenteditable="false" data-toggle="button">NEI <span class="checkbox svg-toggle"></span> <input name="rbl009" type="radio" /></label></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="100" style="height:8cm; vertical-align:top">EVENTUELLE TILLEGGSMERKNADER:</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="100">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="5" style="vertical-align:top"><strong>3</strong></td>
+                <td colspan="95">
+                    <strong>VEDLEGG TIL OVERTAKELSESPROTOKOLLEN</strong>
+                    <p>
+                        Vedlegg 1: Bilder/dokumentasjon fra overtakelsesbefaringen<br />
+                        Vedlegg [...]: [Evt. annen tilleggsdokumentasjon fra overtakelsesbefaringen.]
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5" style="vertical-align:top"><strong>4</strong></td>
+                <td colspan="95">
+                    <strong>SIGNATUR</strong>
+                    <p>Utleier og Leietaker erkl&aelig;rer at overtakelsesbefaring er gjennomf&oslash;rt i henhold til denne overtakelsesprotokoll.</p>
+
+                    <p>&nbsp;</p>
+
+                    <p class="text-center"><span class="insert-table"> <span class="insert" data-label="Sted og dato"></span> </span></p>
+
+                    <p>&nbsp;</p>
+
+                    <p>&nbsp;</p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">&nbsp;</td>
+                <td colspan="35">
+                    <ul class="sign-fields">
+                        <li>Utleier</li>
+                    </ul>
+                </td>
+                <td colspan="25">&nbsp;</td>
+                <td colspan="35">
+                    <ul class="sign-fields">
+                        <li>Leietaker</li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

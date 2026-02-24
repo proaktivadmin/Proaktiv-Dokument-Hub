@@ -1,0 +1,85 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate table {
+                border-collapse: collapse;
+                width: 100%;
+                table-layout: fixed;
+            }
+    
+            #vitecTemplate .liste:last-child .separator {
+                display: none;
+            }
+    
+    /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+    
+            #vitecTemplate span.insert:empty {
+                font-size: inherit !important;
+                line-height: inherit !important;
+                display: inline-block;
+                background-color: lightpink;
+                min-width: 2em !important;
+                height: .7em !important;
+                text-align: center;
+            }
+    
+           #vitecTemplate span.insert:empty:before {
+                content: attr(data-label);
+            }
+    
+            #vitecTemplate span.insert:empty:hover {
+                background-color: #fff;
+                cursor: pointer;
+            }
+    
+            #vitecTemplate .insert-table {
+                display: inline-table;
+            }
+    
+            #vitecTemplate .insert-table>span,
+            #vitecTemplate .insert-table>span.insert {
+                display: table-cell;
+    
+            }
+</style>
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<div vitec-template="resource: Mottaker">&nbsp;</div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="100">
+			<p><strong>Varsel om tvangssalg av [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+			<table>
+				<tbody>
+					<tr>
+						<td colspan="25"><strong>Tingrettens saksnr.:</strong></td>
+						<td colspan="75">[[tvangssalgrefnr]]</td>
+					</tr>
+					<tr>
+						<td colspan="25"><strong>Saks&oslash;kte:</strong></td>
+						<td colspan="75"><span vitec-foreach="saksokte  in Model.saksokteliste"> <span class="liste">[[*saksokte.navn]]<span class="separator">, </span> </span> </span></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>[[selger.navn]] har etter din bej&aelig;ring besluttet tvangssalg av ovennevnte eiendom.</p>
+
+			<p>Da du i begj&aelig;ringen om tvangssalg har inngitt kravspesifikasjon, er ytterligere informasjon un&oslash;dvendig p&aring; dette tidspunkt.</p>
+
+			<p>Vi vil komme tilbake i anledning saken, etter hvert som salgsarbeidet fremskrider.</p>
+
+			<p>I tilfelle begj&aelig;ringen om tvangssalg blir trukket tilbake som f&oslash;lge av debitors betaling eller av andre grunner, ber jeg om &aring; bli underrettet omg&aring;ende. Det samme gjelder ved eventuell begj&aelig;ring til retten om berostillelse for en periode.</p>
+
+			<p>Skulle noe v&aelig;re uklart, vennligst kontakt undertegnede.</p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="100">
+			<div vitec-template="resource: Avsender">&nbsp;</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>

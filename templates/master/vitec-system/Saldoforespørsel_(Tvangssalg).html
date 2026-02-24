@@ -1,0 +1,87 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">/* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+        
+                span.insert:empty {
+                    font-size: inherit !important;
+                    line-height: inherit !important;
+                    display: inline-block;
+                    background-color: lightpink;
+                    min-width: 2em !important;
+                    height: .7em !important;
+                    text-align: center;
+                }
+        
+                span.insert:empty:before {
+                    content: attr(data-label);
+                }
+        
+                span.insert:empty:hover {
+                    background-color: #fff;
+                    cursor: pointer;
+                }
+        
+                .insert-table {
+                    display: inline-table;
+                }
+        
+                .insert-table>span,
+                .insert-table>span.insert {
+                    display: table-cell;
+                }
+        
+                #vitecTemplate table {
+                    width: 100%;
+                    table-layout: fixed;
+                    border-collapse: collapse;
+                    box-sizing: border-box;
+                    -webkit-box-sizing: border-box;
+                }
+                #vitecTemplate .liste:last-child .separator {
+                    display: none;
+                }
+</style>
+<table>
+	<tbody>
+		<tr>
+			<td>
+			<div vitec-template="resource: Mottaker">&nbsp;</div>
+
+			<p><strong>Tvangssalg av [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune </strong></p>
+
+			<table>
+				<tbody>
+					<tr>
+						<td colspan="25"><strong>Tingrettens saksnr.:</strong></td>
+						<td colspan="75">[[tvangssalgrefnr]]</td>
+					</tr>
+					<tr>
+						<td colspan="25"><strong>Saks&oslash;kte:</strong></td>
+						<td colspan="75"><span vitec-foreach="saksokte  in Model.saksokteliste"> <span class="liste">[[*saksokte.navn]]<span class="separator">, </span> </span> </span></td>
+					</tr>
+					<tr>
+						<td colspan="25"><strong>Saks&oslash;ker<span vitec-if="Model.saksokere.Count &gt; 1">e</span>:</strong></td>
+						<td colspan="75"><span vitec-foreach="saksoker  in Model.saksokere"> <span class="liste">[[*saksoker.firmanavn]]<span class="separator">, </span> </span> </span></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>Vi underretter med dette om at v&aring;rt eiendomsmeglerforetak har blitt oppnevnt som medhjelper ved tvangssalg av ovennevnte eiendom.</p>
+
+			<p>I henhold til tvangsfullbyrdelseslovens paragraf 11-16 <span vitec-if="Model.pant.ertypelegalpant == false &amp;&amp; (Model.saksokere.Any(x =&gt; x.firmanavn != Model.mottaker.navn) || Model.saksokere.Any(x =&gt; x.navn != Model.mottaker.navn))"> <span>2.</span> </span> <span vitec-if="Model.pant.ertypelegalpant == true || (Model.saksokere.Any(x =&gt; x.firmanavn == Model.mottaker.navn) || Model.saksokere.Any(x =&gt; x.navn == Model.mottaker.navn))"> <span>3.</span> </span> ledd oppfordres dere til &aring; opplyse hvor stort krav dere har i eiendommen. Samtidig ber vi om at det spesifiseres p&aring;l&oslash;pte renter og eventuelle kostnader som ogs&aring; kreves dekket ved tvangssalget.</p>
+
+			<p>Vi gj&oslash;r oppmerksom p&aring; at unnlatelse av &aring; gi ovennevnte opplysninger kan gj&oslash;re dere ansvarlig for &oslash;kning i godtgj&oslash;relsen til medhjelper som skyldes merarbeid som f&oslash;lge av unnlatelsen.</p>
+
+			<p>Dersom dere kjenner til andre rettigheter i eiendommen enn de som fremg&aring;r av utskrift av grunnboken datert <span class="insert-table"> <span class="insert" data-label="Dato"></span> </span> ber vi om at dette opplyses. Opplysningene bes gitt snarest ved retur av vedlagte skjema. <span vitec-if="Model.pant.ertypelegalpant == false &amp;&amp; (Model.saksokere.Any(x =&gt; x.firmanavn != Model.mottaker.navn) || Model.saksokere.Any(x =&gt; x.navn != Model.mottaker.navn))"> <span>Spesielt ber vi om &aring; f&aring; tilsendt kopi av gjeldsbrev og pantedokument.</span></span></p>
+
+			<p>Samtidig ber vi om &aring; f&aring; meddelt annen informasjon om eiendommen som dere m&aring;tte besitte, og som er av betydning for salgsarbeidet og for utarbeidelsen av dokumentene i tilknytning til salget.</p>
+
+			<p>Vi h&aring;per p&aring; et godt samarbeid, og ber dere ta kontakt dersom dere har sp&oslash;rsm&aring;l i sakens anledning.</p>
+
+			<p>P&aring; forh&aring;nd takk!</p>
+
+			<div vitec-template="resource: Avsender">&nbsp;</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>

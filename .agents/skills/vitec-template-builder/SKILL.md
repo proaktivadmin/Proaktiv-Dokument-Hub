@@ -8,6 +8,38 @@ description: Build production-ready Vitec Next HTML templates. Handles three ope
 Build production-ready Vitec Next HTML templates with merge fields, conditional logic, party
 loops, and the full template shell.
 
+**Track record:** 11 production templates built, 6/6 validated at 100% pass rate.
+
+## MANDATORY Pre-Read Files
+
+Before ANY build, read these files in order:
+
+1. **LESSONS.md** (this directory) — Every known mistake and its fix. Apply proactively.
+   Includes the **Source of Truth Hierarchy** — follow it when sources conflict.
+2. **PATTERNS.md** (this directory) — Copy-pasteable reference patterns. Use verbatim.
+3. **CHANGELOG.md** (this directory) — Recent changes to the knowledge base. Check for relevant updates.
+4. This file (SKILL.md) — Pipeline stages and quick reference.
+
+These four files together form the complete knowledge base for one-shot perfection.
+
+**Maintenance rule:** Any agent that modifies LESSONS.md, PATTERNS.md, SKILL.md, the validator
+(`scripts/tools/validate_vitec_template.py`), or the post-processor
+(`scripts/tools/post_process_template.py`) MUST append a dated entry to CHANGELOG.md
+describing what changed and why.
+
+### Primary References (the actual source of truth)
+
+- **Working reference templates** — `scripts/reference_templates/` and `scripts/golden standard/`
+  Verified production templates from Vitec Next that render correctly in PDF.
+- **Master template library** — `templates/master/` (249 official templates, scraped 2026-02-23)
+  The complete set of Vitec system and Proaktiv custom templates from production.
+- **Vitec Stilark** — `docs/vitec-stilark.md`
+  The default style system loaded by Vitec Next. Templates inherit these styles.
+
+**Do NOT use** `.planning/vitec-html-ruleset-FULL.md` as the primary authority.
+It was generated from the old database (133 Proaktiv-customized templates) and contains
+conventions specific to Proaktiv that do not reflect the Vitec standard.
+
 ## When to Use
 
 - User provides a Word document (.htm, .docx, .rtf) to convert into a Vitec Next template
@@ -108,14 +140,58 @@ Launch 2 validation subagents in parallel:
 
 ### Pass/Fail Decision:
 
-- **All pass:** Write the handoff summary (see Section 12 of PRODUCTION-TEMPLATE-PIPELINE.md for format)
+- **All pass:** Proceed to STEP 4 (Post-Processing)
 - **Validation fails:** Resume the builder subagent with specific failure details
 - **Content issues:** Resume the builder subagent with the content verifier's report
 - Iterate until both validators pass
 
 ### For T1/T2 or Mode A:
 
-Build directly, then run `scripts/tools/validate_vitec_template.py` yourself. No subagents needed.
+Build directly, then proceed to STEP 4 (Post-Processing).
+
+## STEP 4: Post-Processing (MANDATORY — ALL builds)
+
+**This step is NON-NEGOTIABLE.** Run the post-processor on every template before final validation:
+
+```bash
+python scripts/tools/post_process_template.py <production_html> --in-place
+```
+
+This automatically applies:
+- **E1:** Norwegian character → HTML entity encoding
+- **E3:** ASCII-ifies Norwegian characters in comments
+- **S2:** Removes `proaktiv-theme` class if present
+
+And warns about issues needing manual attention:
+- **S1:** Missing outer table wrapper
+- **S3:** Wrong title tag level (H5 instead of H1)
+- **CB1:** Unicode checkboxes still present
+- **MF2:** Bare monetary fields without `$.UD()`
+- **V2:** Foreach loops without guards/fallbacks
+
+**If warnings are reported, fix them before proceeding.**
+
+## STEP 5: Final Validation
+
+Run the validator on the post-processed template:
+
+```bash
+python scripts/tools/validate_vitec_template.py <production_html> --tier {tier}
+```
+
+If any checks fail, fix and re-run. Do NOT skip this step.
+
+## STEP 6: Handoff
+
+Write the handoff summary to `scripts/handoffs/{name}_HANDOFF.md` documenting:
+- Spec sheet (mode, tier, template name)
+- Production file path and size
+- Template stats (sections, merge fields, vitec-if count, foreach count, etc.)
+- Validation result
+- Fixes applied (both manual and post-processor)
+- Potential issues and uncertainties
+- Known limitations
+- Pipeline execution summary
 
 ## STEP 3 (legacy): Direct Pipeline Execution
 
@@ -279,13 +355,25 @@ Vitec's PDF renderer splits content at arbitrary points unless explicitly contro
 
 **Minimum coverage:** At least half the article sections should have page break protection. Golden standard templates use 20-30 wrappers per document.
 
-### Insert Fields (with data-label)
+### Insert Fields (with data-label) — Chromium Fix
 
 ```html
 <span class="insert-table"><span class="insert" data-label="dato"></span></span>
 ```
 
-The `data-label` attribute shows placeholder text (e.g., "dato", "beløp") in the CKEditor. The `insert-table` wrapper provides inline-table layout. See `PRODUCTION-TEMPLATE-PIPELINE.md` Section 7 for the required CSS block.
+The `data-label` attribute shows placeholder text (e.g., "dato", "beløp") in the CKEditor.
+The `.insert-table { display: inline-table }` CSS is the **Chromium-compatible fix** — critical
+for correct rendering in both Vitec's Chromium-based editor and PDF output.
+
+**Required CSS** (UNSCOPED — no `#vitecTemplate` prefix):
+```css
+span.insert:empty { font-size: inherit !important; line-height: inherit !important; display: inline-block; background-color: lightpink; min-width: 2em !important; height: .7em !important; text-align: center; }
+span.insert:empty:before { content: attr(data-label); }
+span.insert:empty:hover { background-color: #fff; cursor: pointer; }
+.insert-table { display: inline-table; }
+.insert-table > span, .insert-table > span.insert { display: table-cell; }
+```
+See PATTERNS.md section 3 for full formatted version.
 
 ### Entity Encoding (mandatory)
 
@@ -377,6 +465,8 @@ ORDER BY LENGTH(content) DESC LIMIT 1
 - [ ] `costs-table` on financial tables
 - [ ] Signature block with signing lines (T3+)
 - [ ] `insert-table` + `span.insert` with `data-label` for fill-in fields
+- [ ] `.insert-table { display: inline-table }` CSS present (Chromium fix)
+- [ ] Article padding `20px`, H2 margin-left `-20px` (production standard)
 - [ ] All Norwegian characters are HTML entities (`&oslash;`, `&aring;`, etc.) — NO literal UTF-8
 - [ ] No Unicode checkboxes (`&#9744;`/`&#9745;`) — SVG checkboxes only
 - [ ] Data-driven checkboxes have NO `<input>` tag — broker-interactive checkboxes may

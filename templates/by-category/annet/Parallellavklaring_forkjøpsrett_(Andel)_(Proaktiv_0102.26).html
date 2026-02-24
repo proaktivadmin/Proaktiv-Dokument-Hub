@@ -1,0 +1,103 @@
+<div id="vitecTemplate"><span contenteditable="false" vitec-template="resource:Vitec Stilark"> </span>
+<style type="text/css">/* 1. RESET & FONTS: Professional, simple sans-serif look */
+    #vitecTemplate { 
+        font-family: 'Open Sans', Arial, sans-serif; 
+        font-size: 10pt; 
+        color: #000; 
+        line-height: 1.4; 
+    }
+
+    /* 2. HEADER: Cleaned of decorative gold and uppercase */
+    #vitecTemplate h1 { 
+        font-size: 18pt; 
+        font-weight: bold; 
+        text-transform: none; 
+        border: none; 
+        margin: 0 0 20px 0; 
+        padding: 0; 
+    }
+
+    /* 3. TABLE LOGIC: Clean, neutral borders for data presentation */
+    #vitecTemplate table { border-collapse: collapse; table-layout: fixed; width: 100%; margin-bottom: 15px; }
+    #vitecTemplate td { padding: 6px 8px; vertical-align: top; border: 1px solid #eeeeee; }
+    
+    .info-label { font-weight: bold; width: 140px; color: #333; }
+
+    /* 4. SIGNATURE SECTION: Subtle neutral divider */
+    .signature-section { 
+        border-top: 1px solid #ccc; 
+        padding-top: 20px; 
+        margin-top: 30px; 
+        page-break-inside: avoid; 
+    }
+</style>
+<!-- CONTENT START -->
+<h1>Parallellavklaring forkj&oslash;psrett</h1>
+
+<p><strong>[[brl.navn]]</strong></p>
+
+<p>Vi har f&aring;tt i oppdrag &aring; selge f&oslash;lgende eiendom, og &oslash;nsker &aring; utlyse p&aring; forkj&oslash;psrett snarest:</p>
+<!-- Property Info Table -->
+
+<table>
+	<colgroup>
+		<col style="width: 140px;" />
+		<col style="width: auto;" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td class="info-label">Adresse:</td>
+			<td>[[eiendom.adresse]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Hjemmelshaver(e):</td>
+			<td>[[selger.navn]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Andelsnr:</td>
+			<td>[[eiendom.andelsnr]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Borettslag org.nr:</td>
+			<td>[[brl.orgnr]]</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="border-style:none; height:5px">&nbsp;</td>
+		</tr>
+		<tr>
+			<td class="info-label">Prisantydning:</td>
+			<td>Kr. [[eiendom.pris]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Visning:</td>
+			<td>[[eiendom.nestevisning.formaterttekst]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Arealer:</td>
+			<td>[[eiendom.bruksareal]] m&sup2;</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>Eventuelle sp&oslash;rsm&aring;l bes rettet til <strong>[[avsender.navn]]</strong>.</p>
+
+<p>Vi ber om at det snarest mulig avklares hvorvidt noen &oslash;nsker &aring; benytte seg av sin forkj&oslash;psrett. Melding kan gis v&aring;rt kontor ved undertegnede straks fristen er utl&oslash;pt, slik at vi kan fortsette saksbehandlingen.</p>
+
+<p>Hvis vi ikke har oppgitt prisantydning, er denne pt. ikke fastsatt og vi ber om at andelen lyses ut uten prisantydning.</p>
+<!-- Signature Section -->
+
+<div class="signature-section">
+<p>Med vennlig hilsen<br />
+<strong>[[meglerkontor.navn]]</strong></p>
+
+<table border="0" cellpadding="0" cellspacing="0" style="border:none; width:100%">
+	<tbody>
+		<tr>
+			<td style="border-style:none; padding:0">[[avsender.navn]]<br />
+			[[avsender.tittel]]<br />
+			Tlf: [[avsender.tlf]] | E-post: [[avsender.epost]]</td>
+		</tr>
+	</tbody>
+</table>
+</div>
+</div>

@@ -1,0 +1,97 @@
+<p>F&oslash;lgebrev - Tinglyst pantedokument til kj&oslash;pers bank // Proaktiv QA-1HTML</p>
+
+<div id="vitecTemplate"><span contenteditable="false" vitec-template="resource:Vitec Stilark"> </span><!-- Laster Vitec standardstiler (Må ligge her) -->
+<style type="text/css">/* SJEKKBOKSER (Standard Framework) */
+    label.btn { display: inline-block !important; cursor: pointer; margin: 0 !important; padding: 0 !important; vertical-align: middle !important; line-height: 1 !important; }
+.svg-toggle { display: inline-block !important; width: 16px !important; height: 16px !important; margin-right: 10px !important; vertical-align: text-bottom; border: none !important; background-color: transparent !important; content: " " !important; }
+#vitecTemplate [data-toggle="buttons"] input { display: none !important; }
+.svg-toggle.checkbox { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect x='25' y='25' width='462' height='462' fill='none' stroke='%23272630' stroke-width='40'/%3E%3C/svg%3E"); }
+</style>
+<!-- --- START: PROAKTIV BREVHODE (Zero Margin Version) --- --> <!-- FIX v2.4: Fjernet margin-top herfra. Innholdet starter nå helt øverst i dokumentkroppen. -->
+<div class="letter-head" style="margin-bottom:40px; margin-top:0px">
+<table cellspacing="0" style="table-layout:fixed; width:100%">
+	<colgroup>
+		<col style="width: 60%" /><!-- Venstre: Adresse -->
+		<col style="width: 40%" /><!-- Høyre: Metadata -->
+	</colgroup>
+	<tbody>
+		<tr><!-- MOTTAKER ADRESSE (Venstre side) --><!-- FIX v2.4: Fjernet padding-top og margin-top på div. Nullstilt. -->
+			<td style="padding-left:10px; padding-top:0; vertical-align:top">
+			<div>[[mottaker.navn]]<br />
+			[[mottaker.adresse]]<br />
+			[[mottaker.postnr]] [[mottaker.poststed]]</div>
+			</td>
+			<!-- METADATA (Høyre side) -->
+			<td style="padding-top:0; text-align:right; vertical-align:top">
+			<table style="table-layout:fixed; width:100%">
+				<tbody>
+					<tr>
+						<td style="padding-bottom:4px; text-align:right"><strong>Dato:</strong></td>
+						<td style="padding-bottom:4px; text-align:right; width:80px">[[dagensdato]]</td>
+					</tr>
+					<tr>
+						<td style="padding-bottom:4px; text-align:right"><strong>V&aring;r ref:</strong></td>
+						<td style="padding-bottom:4px; text-align:right">[[oppdrag.nr]]</td>
+					</tr>
+					<tr>
+						<td style="padding-bottom:4px; text-align:right"><strong>Saksbeh:</strong></td>
+						<td style="padding-bottom:4px; text-align:right">[[ansvarligmegler.navn]]</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>
+<!-- --- SLUTT: PROAKTIV BREVHODE --- --> <!-- START DOKUMENTINNHOLD HER -->
+
+<h1>Oversendelse av tinglyst pantedokument</h1>
+<!-- Nøkkelinformasjon -->
+
+<table border="1" cellspacing="0" style="margin-bottom:20px; padding:10px; table-layout:fixed; width:100%">
+	<colgroup>
+		<col style="width: 160px" />
+		<col style="width: auto" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td class="info-label">L&aring;ntaker(e):</td>
+			<td><!-- Løkke for kjøpere i nøstet tabell (Sikker metode) -->
+			<table cellspacing="0" style="margin:0; padding:0; table-layout:fixed; width:100%">
+				<tbody vitec-foreach="kjoper in Model.kjopere">
+					<tr>
+						<td style="margin:0; padding:0 0 5px 0"><strong>[[*kjoper.navn]]</strong> (Fnr: [[*kjoper.idnummer]])</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+		<!-- Spacer -->
+		<tr>
+			<td colspan="2" style="height:15px; margin-bottom:15px">&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="height:15px">&nbsp;</td>
+		</tr>
+		<tr>
+			<td class="info-label">Panteobjekt:</td>
+			<td>
+			<div style="margin-bottom:5px">[[eiendom.adresse]]</div>
+
+			<div style="margin-bottom:5px">[[komplettmatrikkel]]</div>
+
+			<div>[[eiendom.kommunenavn]] kommune</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><strong>Til L&aring;neforvalter / Bank,</strong></p>
+
+<p>Det vises til oppgj&oslash;r av ovennevnte eiendom.</p>
+
+<p>Vedlagt oversendes pantedokument i tinglyst stand. Vi bekrefter at dokumentet er tinglyst med rett prioritet i henhold til forutsetningene i panteinstruksen.</p>
+
+<p>Ta gjerne kontakt med v&aring;rt oppgj&oslash;rskontor dersom det er sp&oslash;rsm&aring;l knyttet til dokumentet eller oppgj&oslash;ret for &oslash;vrig.</p>
+<!-- Ingen signaturfelt her - Systemet legger til automatisk bunntekst/signatur --></div>

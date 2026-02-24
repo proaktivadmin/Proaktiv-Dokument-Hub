@@ -1,0 +1,550 @@
+<div id="vitecTemplate">
+    <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+    <style type="text/css">
+        #vitecTemplate table {
+            border-collapse: collapse;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+            #vitecTemplate table td {
+                border: solid 1px #000;
+                height: 35px;
+                vertical-align: middle;
+                padding-left: 5px;
+            }
+
+            #vitecTemplate table tr.no-border td {
+                border: none;
+                height: auto;
+            }
+
+            #vitecTemplate table td.overskrift1 {
+                background-color: rgb(224,224,224);
+                color: #000;
+                line-height: 25px;
+                height: 25px;
+                padding-left: 5px;
+            }
+
+            #vitecTemplate table td[data-label]:before {
+                content: attr(data-label);
+                text-align: left;
+                color: #333;
+                font-size: 9pt;
+                line-height: 8pt;
+                display: block;
+                position: absolute;
+                top: 1px;
+                padding-left: 5px;
+            }
+
+            #vitecTemplate table td[data-choice]:after {
+                content: attr(data-choice);
+                text-align: center;
+                font-size: 9pt;
+                font-weight: normal;
+                line-height: 8pt;
+                color: #333;
+                display: block;
+                position: absolute;
+                bottom: 1px;
+                left: 0;
+                right: 0;
+            }
+
+            #vitecTemplate table td[data-label] {
+                padding: 16px 2px 4px 0px;
+                position: relative;
+            }
+
+            #vitecTemplate table td[data-choice] {
+                padding: 4px 2px 16px 2px;
+                position: relative;
+            }
+
+            /* tabellceller med baade label og valg-tekst */
+            #vitecTemplate table td[data-label][data-choice] {
+                padding: 16px 2px 16px 2px;
+                position: relative;
+            }
+
+        /* tabellceller med lange data-choice-tekster */
+        #vitecTemplate tr.checkbox-row td[data-choice] {
+            padding-bottom: 24px;
+        }
+    </style>
+    <style type="text/css">
+        /* Klikkbare sjekkbokser og radioknapper */
+        label.btn {
+            display: inline;
+            text-transform: none;
+            white-space: normal;
+            padding: 0;
+            vertical-align: baseline;
+            outline: none;
+            font-size: inherit;
+        }
+
+            label.btn:active,
+            label.btn.active {
+                box-shadow: none;
+                outline: none;
+            }
+
+        .svg-toggle { /* nullstiller bootstrap button-styling */
+            display: inline-block !important;
+            width: 16px;
+            height: 16px;
+            margin: 0 2px;
+            vertical-align: bottom;
+            padding: 0;
+            border: none;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none !important;
+            cursor: pointer;
+            white-space: normal;
+            text-align: left;
+            background-repeat: no-repeat;
+            background-size: 16px 16px;
+            background-position: center center;
+        }
+
+            .svg-toggle.checkbox {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+            }
+
+                .svg-toggle.checkbox.active,
+                .btn.active > .svg-toggle.checkbox {
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+                    box-shadow: none !important;
+                }
+
+            .svg-toggle.radio {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
+            }
+
+                .svg-toggle.radio.active,
+                .btn.active > .svg-toggle.radio {
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
+                    box-shadow: none !important;
+                }
+
+        /* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
+        #vitecTemplate [data-toggle="buttons"] input {
+            display: none;
+        }
+    </style>
+    <table>
+        <tbody>
+            <tr class="no-border">
+                <td colspan="100">
+                    <div vitec-template="resource: Mottaker">&nbsp;</div>
+
+                    <p><strong>Megleropplysninger p&aring; [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+                    <p>V&aring;rt firma har for salg ovennevnte eiendom tilh&oslash;rende:</p>
+                </td>
+            </tr>
+            <tr class="no-border" vitec-if="Model.selgere.Count &gt; 0">
+                <td colspan="37"><strong>Navn</strong></td>
+                <td colspan="45"><strong>Adresse</strong></td>
+                <td colspan="18"><strong>[[selger.ledetekst_fdato_orgnr]]</strong></td>
+            </tr>
+        </tbody>
+        <tbody vitec-foreach="selger in Model.selgere">
+            <tr class="no-border">
+                <td colspan="37">[[*selger.navnutenfullmektigogkontaktperson]]</td>
+                <td colspan="45">[[*selger.gatenavnognr]], [[*selger.postnr]] [[*selger.poststed]]</td>
+                <td colspan="18">[[*selger.fdato_orgnr]]</td>
+            </tr>
+        </tbody>
+        <tbody>
+            <tr class="no-border">
+                <td colspan="100">
+                    <p>Under henvisning til eiendomsmeglingsloven &sect; 6-7, ber vi om f&oslash;lgende opplysninger:</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table style="page-break-inside:avoid">
+        <tbody>
+            <tr>
+                <td colspan="30">Navn p&aring; <span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">andels<span vitec-if="(Model.eiendom.eieform== &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">aksje</span>eier(e):</span></td>
+                <td colspan="70">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="12">Styreleder</td>
+                <td colspan="27" data-label="Navn">&nbsp;</td>
+                <td colspan="25" data-label="Tlf.">&nbsp;</td>
+                <td colspan="36" data-label="E-post.">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table style="page-break-inside:avoid">
+        <tbody>
+            <tr>
+                <td class="overskrift1" colspan="100">Informasjon om eiendommen</td>
+            </tr>
+            <tr>
+                <td colspan="30"><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">Borettslagets</span> <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">Sameiets</span> <span vitec-if="(Model.eiendom.eieform== &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Aksjeselskapets</span> eiendommer:</td>
+                <td colspan="16" data-label="Gnr.">&nbsp;</td>
+                <td colspan="16" data-label="Bnr.">&nbsp;</td>
+                <td colspan="16" data-label="Snr.">&nbsp;</td>
+                <td colspan="22" data-label="Kommune">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="30"><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">Borettslagets</span> <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">Sameiets</span> <span vitec-if="(Model.eiendom.eieform== &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Aksjeselskapets</span> org.nr:</td>
+                <td colspan="25">&nbsp;</td>
+                <td colspan="45" data-toggle="buttons">Tomten er &nbsp; <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" />eiet</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" />festet</label></td>
+            </tr>
+            <tr>
+                <td colspan="23">Navn p&aring; bortfester:</td>
+                <td colspan="32">&nbsp;</td>
+                <td colspan="28">Festekontrakten utl&oslash;per:</td>
+                <td colspan="17">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="38">Har <span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">borettslaget</span> <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">sameiet</span> <span vitec-if="(Model.eiendom.eieform== &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">aksjeselskapet</span> mottatt nabovarsel?</td>
+                <td colspan="17" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" />Nei</label></td>
+                <td colspan="45" data-label="Hvis ja, hvem har sendt varselet?">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="30">Foreligger det ferdigattest?</td>
+                <td colspan="17" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" />Nei</label></td>
+                <td colspan="36">F&oslash;lger det s&aelig;rskilte forpliktelser med <span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">denne andelen?</span> <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">denne seksjonen?</span> <span vitec-if="(Model.eiendom.eieform== &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">disse aksjene?</span></td>
+                <td colspan="17" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" />Nei</label></td>
+            </tr>
+            <tr>
+                <td colspan="38">Forsikring for <span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">borettslaget</span> <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">sameiet</span> <span vitec-if="(Model.eiendom.eieform== &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">aksjeselskapet</span></td>
+                <td colspan="62" data-label="Forsikringsselskap og polisenr.">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="38">Har <span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">borettslaget</span> <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">sameiet</span> <span vitec-if="(Model.eiendom.eieform== &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">aksjeselskapet</span> hussoppforsikring?</td>
+                <td colspan="17" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl005" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl005" type="radio" />Nei</label></td>
+                <td colspan="45" data-label="Hvis ja, oppgi forsikringsselskap og polisenr.">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table style="page-break-inside:avoid">
+        <tbody>
+            <tr>
+                <td class="overskrift1" colspan="100">Parkering og garasje</td>
+            </tr>
+            <tr>
+                <td colspan="43">Medf&oslash;lger det p-/garasjeplass?</td>
+                <td colspan="17" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl006" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl006" type="radio" />Nei</label></td>
+                <td colspan="23">Plassens nummer:</td>
+                <td colspan="17">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="43">Hvordan blir kj&oslash;per eier av plassen?</td>
+                <td colspan="57">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="43">Er det mulig for el-bil lading i <span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">borettslaget?</span> <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">sameiet?</span> <span vitec-if="(Model.eiendom.eieform== &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">aksjeselskapet?</span></td>
+                <td colspan="17" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl007" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl007" type="radio" />Nei</label></td>
+                <td colspan="23">Evt. ekstra kostnad:</td>
+                <td colspan="17" data-label="Beløp kr">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table style="page-break-inside:avoid">
+        <tbody>
+            <tr>
+                <td class="overskrift1" colspan="100">Dyrehold</td>
+            </tr>
+            <tr>
+                <td colspan="23">Er dyrehold tillatt?</td>
+                <td colspan="17" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl008" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl008" type="radio" />Nei</label></td>
+                <td colspan="60" data-label="Hvis ja, hvordan praktiseres dyreholdet?">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table style="page-break-inside:avoid">
+        <tbody>
+            <tr vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">
+                <td class="overskrift1" colspan="100">Godkjennelse/forkj&oslash;psrett</td>
+            </tr>
+            <tr vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">
+                <td class="overskrift1" colspan="100">Fremleie/godkjennelse</td>
+            </tr>
+            <tr vitec-if="(Model.eiendom.eieform== &quot;Andel&quot; || Model.eiendom.eieform== &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">
+                <td colspan="38">Er det forkj&oslash;psrett i <span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">borettslaget?</span> <span vitec-if="(Model.eiendom.eieform== &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">aksjeselskapet?</span></td>
+                <td colspan="17" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl009" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl009" type="radio" />Nei</label></td>
+                <td colspan="35">Antall dagers forkj&oslash;psrett:</td>
+                <td colspan="10">&nbsp;</td>
+            </tr>
+            <tr vitec-if="(Model.eiendom.eieform== &quot;Andel&quot; || Model.eiendom.eieform== &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">
+                <td colspan="55">Er det spesielle forhold knyttet til utpr&oslash;ving av forkj&oslash;psretten?</td>
+                <td colspan="17" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl010" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl010" type="radio" />Nei</label></td>
+                <td colspan="28" data-label="Hvis ja, hvilke?">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="23">Er fremleie tillatt?</td>
+                <td colspan="17" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl011" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl011" type="radio" />Nei</label></td>
+                <td colspan="32">Evt. vilk&aring;r for fremleie?</td>
+                <td colspan="28">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="38">Kreves styregodkjenning av ny eier?</td>
+                <td colspan="17" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl012" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl012" type="radio" />Nei</label></td>
+                <td colspan="45" data-label="Hvis ja, hvor skal søknaden sendes?">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table style="page-break-inside:avoid">
+        <tbody>
+            <tr>
+                <td class="overskrift1" colspan="100">L&aring;n, andel fellesgjeld og formue</td>
+            </tr>
+            <tr>
+                <td colspan="30"><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">Borettslagets</span> <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">Sameiets</span> <span vitec-if="(Model.eiendom.eieform== &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Aksjeselskapets</span> l&aring;ngiver(e):</td>
+                <td colspan="17">Saldo:</td>
+                <td colspan="15">Nedbet. dato:</td>
+                <td colspan="12">Rentesats:</td>
+                <td colspan="14">Avdrag:</td>
+                <td colspan="12">Bet. f.o.m.:</td>
+            </tr>
+            <tr>
+                <td colspan="3">1</td>
+                <td colspan="27">&nbsp;</td>
+                <td colspan="17">&nbsp;</td>
+                <td colspan="15">&nbsp;</td>
+                <td colspan="12">&nbsp;</td>
+                <td colspan="14">&nbsp;</td>
+                <td colspan="12">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="3">2</td>
+                <td colspan="27">&nbsp;</td>
+                <td colspan="17">&nbsp;</td>
+                <td colspan="15">&nbsp;</td>
+                <td colspan="12">&nbsp;</td>
+                <td colspan="14">&nbsp;</td>
+                <td colspan="12">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="46">Betaler <span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">borettslaget</span> <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">sameiet</span> <span vitec-if="(Model.eiendom.eieform== &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">aksjeselskapet</span> avdrag p&aring; fellesgjelden?</td>
+                <td colspan="17" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl013" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl013" type="radio" />Nei</label></td>
+                <td colspan="37" data-label="Hvis ja, hvor mye gjenstår av nedbetalingstiden?">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="38" data-label="Hvis nei, når begynner det å løpe avdrag?">&nbsp;</td>
+                <td colspan="62" data-label="Hvis nei, hva blir de månedlige felleskostnadene etter avdragsfri periode?">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="38">Hva er <span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">andelens</span> <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">seksjonens</span> <span vitec-if="(Model.eiendom.eieform== &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">aksjens</span> andel fellesgjeld?</td>
+                <td colspan="62">Kr</td>
+            </tr>
+            <tr vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">
+                <td colspan="30">Har borettslaget formue?</td>
+                <td colspan="17" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl014" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl014" type="radio" />Nei</label></td>
+                <td colspan="27" data-label="Hvis ja: Hva er total formue?" style="padding-left:5px">Kr</td>
+                <td colspan="26" data-label="Hva er andelens andel formue?" style="padding-left:5px">Kr</td>
+            </tr>
+            <tr vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">
+                <td colspan="30">Har sameiet formue?</td>
+                <td colspan="17" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl015" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl015" type="radio" />Nei</label></td>
+                <td colspan="27" data-label="Hvis ja: Hva er total formue?" style="padding-left:5px">Kr</td>
+                <td colspan="26" data-label="Seksjonens andel formue?" style="padding-left:5px">Kr</td>
+            </tr>
+            <tr vitec-if="(Model.eiendom.eieform== &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">
+                <td colspan="30">Har aksjeselskapet formue?</td>
+                <td colspan="15" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl016" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl016" type="radio" />Nei</label></td>
+                <td colspan="29" data-label="Hvis ja: Hva er total formue?" style="padding-left:5px">Kr</td>
+                <td colspan="26" data-label="Hva er aksjens andel formue?" style="padding-left:5px">Kr</td>
+            </tr>
+            <tr vitec-if="(Model.eiendom.eieform== &quot;Aksje&quot;)">
+                <td colspan="70">Finnes det tilh&oslash;rende partialobligasjon/innskuddsbevis til aksjen?</td>
+                <td colspan="30" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl016" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl016" type="radio" />Nei</label></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table style="page-break-inside:avoid">
+        <tbody>
+            <tr vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">
+                <td class="overskrift1" colspan="100">IN-ordning</td>
+            </tr>
+            <tr vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">
+                <td colspan="38">Har Borettslaget vedtatt IN-ordning (individuell nedbetaling)?</td>
+                <td colspan="17" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl017" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl017" type="radio" />Nei</label></td>
+                <td colspan="28">Hvis ja, har denne andelen benyttet seg av ordningen?</td>
+                <td colspan="17" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl018" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl018" type="radio" />Nei</label></td>
+            </tr>
+            <tr vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">
+                <td colspan="83">Er IN-ordningen pantesikret i borettslaget sin eiendom?</td>
+                <td colspan="17" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl019" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl019" type="radio" />Nei</label></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table style="page-break-inside:avoid">
+        <tbody>
+            <tr vitec-if="(Model.eiendom.eieform == &quot;Andel&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">
+                <td class="overskrift1" colspan="100">Fellesutgifter og andre kostnader</td>
+            </tr>
+            <tr vitec-if="(Model.eiendom.eieform== &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">
+                <td class="overskrift1" colspan="100">Husleie og andre kostnader</td>
+            </tr>
+            <tr>
+                <td colspan="23"><span vitec-if="(Model.eiendom.eieform == &quot;Andel&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">Fellesutgifter</span> <span vitec-if="(Model.eiendom.eieform== &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Husleie</span> pr. mnd.</td>
+                <td colspan="17" data-label="Kr">&nbsp;</td>
+                <td colspan="25">Er det restanse?</td>
+                <td colspan="17" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl020" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl020" type="radio" />Nei</label></td>
+                <td colspan="18" data-label="Hvis ja, restanse kr">&nbsp;</td>
+            </tr>
+            <tr vitec-if="(Model.eiendom.eieform == &quot;Andel&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">
+                <td colspan="15">Forfallsdato:</td>
+                <td colspan="17">&nbsp;</td>
+                <td colspan="68" data-label="Fellesutgiftene inkluderer:">&nbsp;</td>
+            </tr>
+            <tr vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">
+                <td colspan="15">Forfallsdato:</td>
+                <td colspan="17">&nbsp;</td>
+                <td colspan="68" data-label="Husleien inkluderer:">&nbsp;</td>
+            </tr>
+            <tr vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">
+                <td colspan="100" data-label="Felleskostnadenes fordeling på ulike poster pr. mnd. hhv. renteutgifter, avdrag og driftsutgifter:">&nbsp;</td>
+            </tr>
+            <tr vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">
+                <td colspan="100" data-label="Husleiens fordeling på ulike poster pr. mnd. hhv. renteutgifter, avdrag og driftsutgifter:">&nbsp;</td>
+            </tr>
+            <tr style="border-top:solid 1px black">
+                <td colspan="24">Avregnes <span vitec-if="(Model.eiendom.eieform == &quot;Andel&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">fellesutg.?</span> <span vitec-if="(Model.eiendom.eieform== &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">husleien?</span></td>
+                <td colspan="17" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl021" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl021" type="radio" />Nei</label></td>
+                <td colspan="42">Er det planlagt endringer av <span vitec-if="(Model.eiendom.eieform == &quot;Andel&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">fellesutg.?</span> <span vitec-if="(Model.eiendom.eieform== &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">husleien?</span></td>
+                <td colspan="17" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl022" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl022" type="radio" />Nei</label></td>
+            </tr>
+            <tr>
+                <td colspan="24">Hvis ja, ny <span vitec-if="(Model.eiendom.eieform == &quot;Andel&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">fellesutgift:</span> <span vitec-if="(Model.eiendom.eieform== &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">husleie:</span></td>
+                <td colspan="17" data-label="kr">&nbsp;</td>
+                <td colspan="42">N&aring;r trer eventuell endring i kraft?</td>
+                <td colspan="17" data-label="Dato">&nbsp;</td>
+            </tr>
+            <tr vitec-if="(Model.eiendom.eieform == &quot;Andel&quot; || Model.eiendom.eieform== &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">
+                <td colspan="34">Har <span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">borettslaget</span> <span vitec-if="(Model.eiendom.eieform== &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">aksjeselskapet</span> sikringsfond?</td>
+                <td colspan="17" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl023" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl023" type="radio" />Nei</label></td>
+                <td colspan="49" data-label="Hvis ja, i hvilken bank/forsikringsselskap?">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table style="page-break-inside:avoid">
+        <tbody>
+            <tr>
+                <td class="overskrift1" colspan="100">Poster til skattemeldingen</td>
+            </tr>
+            <tr>
+                <td colspan="34"><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">Andelens</span> <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">Seksjonens</span> <span vitec-if="(Model.eiendom.eieform== &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Aksjens</span> renteinntekter kr:</td>
+                <td colspan="17">&nbsp;</td>
+                <td colspan="32"><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">Andelens</span> <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">Seksjonens</span> <span vitec-if="(Model.eiendom.eieform== &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Aksjens</span> renteutgifter kr:</td>
+                <td colspan="17">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table style="page-break-inside:avoid">
+        <tbody>
+            <tr>
+                <td class="overskrift1" colspan="100">Gebyr</td>
+            </tr>
+            <tr>
+                <td colspan="38">Tas det et gebyr for eierskiftet?</td>
+                <td colspan="17" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl024" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl024" type="radio" />Nei</label></td>
+                <td colspan="17" data-label="Hvis ja, kr">&nbsp;</td>
+                <td colspan="28" data-label="Kontonummer for betaling:">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="38">Tas det et gebyr for opplysningene?</td>
+                <td colspan="17" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl025" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl025" type="radio" />Nei</label></td>
+                <td colspan="17" data-label="Hvis ja, kr">&nbsp;</td>
+                <td colspan="28" data-label="Kontonummer for betaling:">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="28">Eventuelle andre gebyrer:</td>
+                <td colspan="27" data-label="Beskrivelse:">&nbsp;</td>
+                <td colspan="17" data-label="kr">&nbsp;</td>
+                <td colspan="28" data-label="Kontonummer for betaling:">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table style="page-break-inside:avoid">
+        <tbody>
+            <tr>
+                <td class="overskrift1" colspan="100">Andre viktige opplysninger av interesse for ny eier</td>
+            </tr>
+            <tr>
+                <td colspan="100" data-label="Skriv her:">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table style="page-break-inside:avoid">
+        <tbody>
+            <tr class="no-border">
+                <td colspan="100">
+                    <p><strong>For [[mottaker.navn]]</strong></p>
+                </td>
+            </tr>
+            <tr class="no-border">
+                <td colspan="30" style="border-bottom:solid 1px #000000; height:30px">&nbsp;</td>
+                <td colspan="10">&nbsp;</td>
+                <td colspan="55" style="border-bottom:solid 1px #000000; height:30px">&nbsp;</td>
+                <td colspan="5">&nbsp;</td>
+            </tr>
+            <tr class="no-border">
+                <td colspan="30"><small>Sted, dato</small></td>
+                <td colspan="10">&nbsp;</td>
+                <td colspan="55"><small>Signatur</small></td>
+                <td colspan="5">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table style="page-break-inside:avoid">
+        <tbody>
+            <tr class="no-border">
+                <td colspan="100">
+                    <p>
+                        <br />
+                        I tillegg ber vi om &aring; f&aring; tilsendt:
+                    </p>
+
+                    <ul>
+                        <li>Kopi av siste &aring;rs regnskap/budsjett/&aring;rsberetning</li>
+                        <li>Kopi av siste innkalling og referat fra siste &aring;rsm&oslash;te/generalforsamling</li>
+                        <li>Kopi av vedtekter/husordensregler</li>
+                        <li>Kopi av nedbetalingsplanen for <span vitec-if="(Model.eiendom.eieform == &quot;Andel&quot; || Model.eiendom.eieform== &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">fellesgjelden</span> <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">sameiets l&aring;n</span></li>
+                        <li>Kopi av styrevedtak som kan v&aelig;re av interesse for interessenter/ny eier</li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <tbody>
+            <tr class="no-border">
+                <td colspan="100">
+                    <div style="page-break-inside:avoid">
+                        <p>Opplysningene bes returnert til v&aring;rt kontor snarest mulig, gjerne p&aring; e-post [[meglerkontor.epost]].</p>
+
+                        <p>P&aring; forh&aring;nd takk!</p>
+                    </div>
+
+                    <div vitec-template="resource: Avsender">&nbsp;</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,42 @@
+<style type="text/css">#Avsender td {
+		padding-left: 0;
+	}
+</style>
+<table id="Avsender" style="page-break-inside:avoid; width:100%" vitec-if="Model.dokumentoutput == &quot;pdf&quot;">
+	<tbody>
+		<tr>
+			<td><br />
+			<br />
+			<strong>Med vennlig hilsen</strong></td>
+		</tr>
+		<tr>
+			<td>[[avsender.meglerkontor.markedsforingsnavn]]</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>[[avsender.navn]]</td>
+		</tr>
+		<tr>
+			<td>[[avsender.tittel]]</td>
+		</tr>
+		<tr>
+			<td>Mobil: [[avsender.mobiltlf]]</td>
+		</tr>
+		<tr>
+			<td>E-post: [[avsender.epost]]</td>
+		</tr>
+	</tbody>
+</table>
+
+<div style="font-family:calibri,sans-serif; font-size:11pt" vitec-if="Model.dokumentoutput == &quot;email&quot;"><br />
+<br />
+<br />
+<span style="font-family:calibri,sans-serif; font-size:11pt">Med vennlig hilsen</span><br />
+<span style="font-family:calibri,sans-serif; font-size:11pt">[[avsender.navn]]</span><br />
+<br />
+<span style="font-family:calibri,sans-serif; font-size:11pt">[[avsender.tittel]]</span><br />
+<span style="font-family:calibri,sans-serif; font-size:11pt">[[avsender.meglerkontor.markedsforingsnavn]]</span><br />
+<span style="font-family:calibri,sans-serif; font-size:11pt">Mobil: [[avsender.mobiltlf]], e-post: [[avsender.epost]]</span><br />
+<span style="font-family:calibri,sans-serif; font-size:11pt">Bes&oslash;ksadresse:&nbsp;[[avsender.meglerkontor.besoksadresse]],&nbsp;[[avsender.meglerkontor.postnr]]&nbsp;[[avsender.meglerkontor.poststed]]</span></div>

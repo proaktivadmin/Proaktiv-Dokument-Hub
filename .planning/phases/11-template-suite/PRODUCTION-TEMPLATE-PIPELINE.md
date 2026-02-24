@@ -127,7 +127,10 @@ Operations:
 **Input:** Complete template
 **Output:** Validation report (pass/fail per checklist item)
 
-Run the 14-point Section 12 checklist from `.planning/vitec-html-ruleset.md`:
+Run the automated validator `scripts/tools/validate_vitec_template.py` (61 checks).
+The old 14-point checklist from `.planning/vitec-html-ruleset.md` is supplementary only
+(based on 133 Proaktiv-customized templates, not the official Vitec standard).
+Validation sections:
 - A. Template Shell (3 checks)
 - B. Table Structure (6 checks)
 - C. Inline Styles (4 checks)
@@ -761,9 +764,9 @@ These are the templates that still need production conversion. Based on the pilo
 
 Before starting any template conversion:
 
-1. Read `CLAUDE.md` for project context
-2. Read this document (`PRODUCTION-TEMPLATE-PIPELINE.md`) in full
-3. Read `.planning/vitec-html-ruleset.md` Section 12 (Conversion Checklist)
+1. Read `CLAUDE.md` for project context (includes Template Source of Truth hierarchy)
+2. Read builder knowledge base: `.agents/skills/vitec-template-builder/LESSONS.md`, `PATTERNS.md`, `SKILL.md`
+3. Read this document (`PRODUCTION-TEMPLATE-PIPELINE.md`) in full
 4. Have the source `.htm` file saved from Word (Web Page, Filtered format)
 5. Have the original PDF for content verification
 
@@ -914,7 +917,7 @@ production HTML. Place it at `scripts/handoffs/<TemplateName>_HANDOFF.md`.
 | `scripts/reference_templates/` | Working Vitec reference templates for pattern comparison |
 | `scripts/snapshots/` | Pre-edit snapshots for Mode A regression comparison |
 | `scripts/qa_artifacts/` | Testfletting PDF downloads from Live Verification |
-| `.planning/vitec-html-ruleset/` | HTML ruleset split into 15 section files (00-14) |
+| `.planning/vitec-html-ruleset/` | HTML ruleset (supplementary — based on old Proaktiv DB, not authoritative) |
 | `.planning/field-registry.md` | Structured merge field registry (668 fields) |
 | `.cursor/Alle-flettekoder-25.9.md` | Complete merge field reference (6,494 lines) |
 | `docs/vitec-stilark.md` | Vitec Stilark CSS |

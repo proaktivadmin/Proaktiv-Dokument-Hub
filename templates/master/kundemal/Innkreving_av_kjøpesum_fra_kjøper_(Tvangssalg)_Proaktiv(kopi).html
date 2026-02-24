@@ -1,0 +1,123 @@
+<div id="vitecTemplate">
+	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+	<style type="text/css">
+		#vitecTemplate table {
+			border-collapse: collapse;
+			width: 100%;
+			table-layout: fixed;
+		}
+
+		#vitecTemplate .saksokte:last-child .separator {
+			display: none;
+		}
+
+		#vitecTemplate table .borders {
+			width: 100%;
+			table-layout: fixed;
+			border-bottom: solid 1px black;
+			border-top: solid 1px black;
+		}
+
+		/* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+		#vitecTemplate span.insert:empty {
+			font-size: inherit !important;
+			line-height: inherit !important;
+			display: inline-block;
+			background-color: lightpink;
+			min-width: 2em !important;
+			height: .7em !important;
+			text-align: center;
+		}
+
+			#vitecTemplate span.insert:empty:before {
+				content: attr(data-label);
+			}
+
+			#vitecTemplate span.insert:empty:hover {
+				background-color: #fff;
+				cursor: pointer;
+			}
+
+		#vitecTemplate .insert-table {
+			display: inline-table;
+		}
+
+			#vitecTemplate .insert-table > span,
+			#vitecTemplate .insert-table > span.insert {
+				display: table-cell;
+			}
+	</style>
+	<table>
+		<tbody>
+			<tr>
+				<td colspan="100">
+					<div vitec-template="resource: Mottaker">&nbsp;</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="100">
+					<p><strong>Innbetaling av kj&oslash;pesum i forbindelse med tvangssalg av [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+					<table>
+						<tbody>
+							<tr>
+								<td colspan="25"><strong>Tingrettens saksnr.:</strong></td>
+								<td colspan="75">[[tvangssalgrefnr]]</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<p>Det vises til tvangssalg av ovennevnte eiendom og [[selger.navn]]s stadfestelseskjennelse datert <span class="insert-table"><span class="insert" data-label="Dato"></span></span>. Denne er n&aring; rettskraftig.</p>
+
+					<p>Eiendommen kan tidligst overtas <strong>[[kontrakt.overtagelse.dato]]</strong> mot innbetaling av kj&oslash;pesummen.</p>
+
+					<p>Oppgj&oslash;rsdagen er den <strong>[[kontrakt.oppgjor.dato]]</strong>. Kj&oslash;pesummen m.m. m&aring; v&aelig;re oss i hende og disponible for fordeling til kreditorene innen denne dato. &nbsp;Jeg gj&oslash;r oppmerksom p&aring; at betaling etter dette tidspunkt medf&oslash;rer en rentebelastning p&aring; <span class="insert-table"><span class="insert" data-label="Rente"></span></span> % p.a., jfr. tvangsl. &sect; 11 - 32, 1. ledd, og en risiko for heving av kj&oslash;pet, jfr. tvangsl. &sect; 11 - 32, 2. ledd.</p>
+
+					<p>Kj&oslash;pesummen m.m. m&aring; v&aelig;re oss i hende og disponible for fordeling til kreditorene innen siste betalingsfrist oppgitt over. Kj&oslash;pesummen, stor kr $.UD([[kontrakt.kjopesum]]) med tillegg av nedenfornevnte omkostninger, bes innbetalt til v&aring;r klientkonto nummer <strong>[[kontrakt.klientkonto]]</strong> med <strong>KID [[kontrakt.kid]]</strong>. Kopi av overf&oslash;rselskvitteringen bes oversendt pr. e-post til v&aring;r oppgj&oslash;rsavdeling samme dag.</p>
+
+					<p vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">Vi bes&oslash;rger <span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">skj&oslash;te </span><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">hjemmelsdokument </span>utstedt fra [[selger.navn]], samt tinglysing av <span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">skj&oslash;te </span><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">hjemmelsdokument </span>og pantedokument hos Statens Kartverk.</p>
+
+					<p vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Vi bes&oslash;rger transport av aksjebrev <span vitec-if="Model.aksjeselskap.partoblnr != &quot;0&quot;">og partialobligasjon </span>hos forretningsf&oslash;rer.</p>
+
+					<p>Det blir ikke utformet egen kontrakt ved tvangssalg, men stadfestelseskjennelsen trer inn i dennes sted. Dette innb&aelig;rer at f&oslash;lgende skal innbetales:</p>
+
+					<table>
+						<tbody>
+							<tr>
+								<td colspan="75">Kj&oslash;pesum:</td>
+								<td colspan="5">kr</td>
+								<td colspan="20" style="text-align:right">$.UD([[kontrakt.kjopesum]])</td>
+							</tr>
+						</tbody>
+						<tbody vitec-foreach="kostnad in Model.kjoperskostnader.alleposter">
+							<tr>
+								<td colspan="75">[[*kostnad.beskrivelse]]:</td>
+								<td colspan="5">kr</td>
+								<td colspan="20" style="text-align:right">$.UD([[*kostnad.belop]])</td>
+							</tr>
+						</tbody>
+						<tbody>
+							<tr>
+								<td class="borders" colspan="75"><strong>Totalt</strong></td>
+								<td class="borders" colspan="5"><strong>kr</strong></td>
+								<td class="borders" colspan="20" style="text-align:right"><strong>$.UD([[kontrakt.kjopesumogomkostn]])</strong></td>
+							</tr>
+						</tbody>
+					</table>
+
+					<p>Dersom gebyrsatsene blir endret skal bel&oslash;pene justeres i henhold til disse. Det gj&oslash;res oppmerksom p&aring; at det ikke utbetales renter for den tid kj&oslash;pesummen blir st&aring;ende p&aring; v&aring;r klientkonto frem til oppgj&oslash;rsdag.</p>
+
+					<p vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">Samtidig ber vi om at <span vitec-if="Model.kjopere.Count == 1">du</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> en dag i n&aelig;rmeste fremtid kommer innom v&aring;rt kontor og signerer p&aring; <span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">skj&oslash;tet</span><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">hjemmelsdokumentet</span>, slik at vi kan f&aring; dette tinglyst innen oppgj&oslash;rsdagen.</p>
+
+					<p>Har <span vitec-if="Model.kjopere.Count == 1">du</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> sp&oslash;rsm&aring;l h&oslash;rer jeg gjerne fra <span vitec-if="Model.kjopere.Count == 1">deg</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span>.</p>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="100">
+					<div vitec-template="resource: Avsender">&nbsp;</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
