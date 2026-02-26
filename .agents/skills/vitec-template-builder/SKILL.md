@@ -414,8 +414,11 @@ Literal characters cause mojibake in Vitec PDF rendering.
 | Script | Usage |
 |--------|-------|
 | `scripts/tools/validate_vitec_template.py` | `python scripts/tools/validate_vitec_template.py template.html --tier 4` |
+| `scripts/tools/post_process_template.py` | `python scripts/tools/post_process_template.py template.html --in-place` |
 | `scripts/tools/build_preview.py` | Visual preview with Stilark CSS |
-| `scripts/build_production_template.py` | Pilot template builder (reference) |
+| `scripts/tools/monthly_diff.py` | Monthly release diff: `python scripts/tools/monthly_diff.py` |
+| `scripts/tools/mine_template_library.py` | Re-mine library for KB patterns: `python scripts/tools/mine_template_library.py` |
+| `scripts/tools/build_template_library.py` | Rebuild master library from export JSON |
 
 ## Output Locations
 
@@ -455,8 +458,8 @@ ORDER BY LENGTH(content) DESC LIMIT 1
 - [ ] Outer `<table>` body wrapper with `<small>` header info
 - [ ] `<h1>` for template title (not `<h5>` or other levels)
 - [ ] CSS block includes counters + SVG checkbox + insert field styles (T3+)
-- [ ] Counter `::before` has `display: inline-block; width: 26px;` (double-digit alignment)
-- [ ] Article `padding-left: 26px` matches h2 `margin-left: -26px` (heading/body alignment)
+- [ ] Counter `::before` uses content-only pattern (no `display`/`width` overrides)
+- [ ] Article `padding-left: 20px` matches h2 `margin-left: -20px` (heading/body alignment)
 - [ ] All `<article class="item">` with `<h2>` headings (T3+)
 - [ ] No legacy `#field¤` syntax remaining
 - [ ] All `vitec-if` use `&quot;` for quotes
