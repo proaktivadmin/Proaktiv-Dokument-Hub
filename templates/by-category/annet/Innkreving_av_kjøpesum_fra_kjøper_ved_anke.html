@@ -1,137 +1,137 @@
-<div id="vitecTemplate">
-	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
-	<style type="text/css">
-		#vitecTemplate table {
-			border-collapse: collapse;
-			width: 100%;
-			table-layout: fixed;
-		}
-
-		#vitecTemplate .saksokte:last-child .separator {
-			display: none;
-		}
-
-		#vitecTemplate table .borders {
-			width: 100%;
-			table-layout: fixed;
-			border-bottom: solid 1px black;
-			border-top: solid 1px black;
-		}
-
-		/* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
-
-		#vitecTemplate span.insert:empty {
-			font-size: inherit !important;
-			line-height: inherit !important;
-			display: inline-block;
-			background-color: lightpink;
-			min-width: 2em !important;
-			height: .7em !important;
-			text-align: center;
-		}
-
-			#vitecTemplate span.insert:empty:before {
-				content: attr(data-label);
-			}
-
-			#vitecTemplate span.insert:empty:hover {
-				background-color: #fff;
-				cursor: pointer;
-			}
-
-		#vitecTemplate .insert-table {
-			display: inline-table;
-		}
-
-			#vitecTemplate .insert-table > span,
-			#vitecTemplate .insert-table > span.insert {
-				display: table-cell;
-			}
-	</style>
-	<table>
-		<tbody>
-			<tr>
-				<td colspan="100">
-					<div vitec-template="resource: Mottaker">&nbsp;</div>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="100">
-					<p><strong>Innbetaling av kj&oslash;pesum i forbindelse med tvangssalg av [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
-
-					<table>
-						<tbody>
-							<tr>
-								<td colspan="25"><strong>Tingrettens saksnr.:</strong></td>
-								<td colspan="75">[[tvangssalgrefnr]]</td>
-							</tr>
-						</tbody>
-					</table>
-
-					<p>Det vises til tvangssalg av ovennevnte eiendom og [[selger.navn]]s stadfestelseskjennelse datert <span class="insert-table"><span class="insert" data-label="Dato"></span></span>. Denne er p&aring;anket.</p>
-
-					<p>Eiendommen kan tidligst overtas p&aring; oppgj&oslash;rsdagen den <strong>[[kontrakt.oppgjor.dato]]</strong> mot innbetaling av kj&oslash;pesummen. <span vitec-if="Model.kjopere.Count == 1">Du</span> <span vitec-if="Model.kjopere.Count &gt; 1">Dere</span> kan velge &aring; ikke tiltre boligen f&oslash;r 2 uker etter at stadfestelseskjennelsen er rettskraftig, men da m&aring; det i tillegg betales et rentetillegg jf. tvangsl. &sect; 11-27. Rentetillegget utgj&oslash;r for tiden 6%. <span vitec-if="Model.kjopere.Count == 1">Du</span> <span vitec-if="Model.kjopere.Count &gt; 1">Dere</span> gj&oslash;res oppmerksom p&aring; at uavhengig av n&aring;r <span vitec-if="Model.kjopere.Count == 1">du</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> velger &aring; betale, overtar <span vitec-if="Model.kjopere.Count == 1">du</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> risiko for formuesgodet p&aring; oppgj&oslash;rsdagen.</p>
-
-					<p>
-						<strong>Ytterligere klargj&oslash;ring av status ved anke:</strong><br />
-						<span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">Tinglysning av </span><span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">skj&oslash;te og </span><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">hjemmelsdokument og </span><span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Transport og notering av </span>pantedokumenter kan f&oslash;rst skje n&aring;r stadfestelseskjennelsen er rettskraftig, jf. tvangsl. &sect; 11-33. Rettskraft tidspunktet vil inntreffe en m&aring;ned etter lagmannsretten har avsagt kjennelse, jf. tvangsl. &sect; 11-34, 2 ledd, under forutsetning av at saks&oslash;kte ikke anker videre til H&oslash;yesterett.&nbsp;
-					</p>
-
-					<p>Kj&oslash;perne har i denne situasjonen valget mellom &aring; foreta oppgj&oslash;r p&aring; oppgj&oslash;rsdagen eller to uker etter at stadfestelseskjennelsen er rettskraftig, jf. tvangsl. &sect; 11-27. Dersom kj&oslash;perne benytter siste alternativ og betaler etter stadfestelsen er rettskraftig, m&aring; kj&oslash;per svare rente &nbsp;(6 % pro anno, jf. forskrift av 28. april 2000 nr. 368) p&aring; kj&oslash;pesummen fra oppgj&oslash;rsdato til betaling finner sted.&nbsp;</p>
-
-					<p>Kj&oslash;perne har i denne saken valgt &aring; betale inn p&aring; oppgj&oslash;rsdato. Oppgj&oslash;ret st&aring;r p&aring; egen klientkonto frem til fordelingskjennelsen er rettskraftig. Dette skjer etter at stadfestelseskjennelsen ogs&aring; er rettskraftig, jf. tvangsl. &sect; 11-38, 1 ledd.&nbsp;</p>
-
-					<p>Kj&oslash;perne fra betalingen p&aring; oppgj&oslash;rsdagen ha &quot;eierrett&quot; til tvangssalgsobjektene etter tvangsl. &sect; 11-31, og kan disponere over eiendommene som eier av objektene. Saks&oslash;kte i saken m&aring; derfor fraflytte bolig/tomt. Registrering av eierrett i realregisteret vil imidlertid ikke v&aelig;re mulig f&oslash;r etter stadfestelseskjennelsen er rettskraftig, jf. over.&nbsp;</p>
-
-					<p>Ved tinglysning vil alle rene pengeheftelser uansett slettes uavhengig av dekning, jf. tvangsl. &sect; 11-31, 4 ledd. Kj&oslash;pers bank (l&aring;ngiver) vil da uansett f&aring; dekning for sitt pant p&aring; tidspunkt for tinglysning, uavhengig av eventuelle nye heftelser som kommer til i mellomperioden.&nbsp;</p>
-
-					<p>For det tilfelle saks&oslash;kte f&aring;r medhold i sin anke vil transaksjon bli omst&oslash;t og penger tilbakef&oslash;rt jf. tvangsl. &sect; 11-35.&nbsp;</p>
-
-					<p>
-						<strong>For oppgj&oslash;r:</strong><br />
-						Kj&oslash;pesummen m.m. m&aring; v&aelig;re oss i hende og disponible for fordeling til kreditorene innen siste betalingsfrist oppgitt over. Kj&oslash;pesummen, stor kr $.UD([[kontrakt.kjopesum]]) med tillegg av nedenfornevnte omkostninger, bes innbetalt til v&aring;r klientkonto nummer <strong>[[kontrakt.klientkonto]]</strong> med <strong>KID [[kontrakt.kid]]</strong>. Kopi av overf&oslash;rselskvitteringen bes oversendt pr. e-post til v&aring;r oppgj&oslash;rsavdeling samme dag.
-					</p>
-
-					<p vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">Vi bes&oslash;rger <span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">skj&oslash;te </span><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">hjemmelsdokument </span>utstedt fra [[selger.navn]], samt tinglysing av <span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">skj&oslash;te </span><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">hjemmelsdokument </span>og pantedokument hos Statens Kartverk.</p>
-
-					<p vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Vi bes&oslash;rger transport av aksjebrev <span vitec-if="Model.aksjeselskap.partoblnr != &quot;0&quot;">og partialobligasjon </span>hos forretningsf&oslash;rer.</p>
-
-					<p>Det blir ikke utformet egen kontrakt ved tvangssalg, men stadfestelseskjennelsen trer inn i denne sted. Dette innb&aelig;rer at f&oslash;lgende skal innbetales:</p>
-
-					<table>
-						<tbody>
-							<tr>
-								<td colspan="75">Kj&oslash;pesum:</td>
-								<td colspan="5">kr</td>
-								<td colspan="20" style="text-align:right">$.UD([[kontrakt.kjopesum]])</td>
-							</tr>
-						</tbody>
-						<tbody vitec-foreach="kostnad in Model.kjoperskostnader.alleposter">
-							<tr>
-								<td colspan="75">[[*kostnad.beskrivelse]]:</td>
-								<td colspan="5">kr</td>
-								<td colspan="20" style="text-align:right">$.UD([[*kostnad.belop]])</td>
-							</tr>
-						</tbody>
-						<tbody>
-							<tr>
-								<td class="borders" colspan="75"><strong>Totalt</strong></td>
-								<td class="borders" colspan="5"><strong>kr</strong></td>
-								<td class="borders" colspan="20" style="text-align:right"><strong>$.UD([[kontrakt.kjopesumogomkostn]])</strong></td>
-							</tr>
-						</tbody>
-					</table>
-
-					<p>Dersom gebyrsatsene blir endret skal bel&oslash;pene justeres i henhold til disse. Det gj&oslash;res oppmerksom p&aring; at det ikke utbetales renter for den tid kj&oslash;pesummen blir st&aring;ende p&aring; v&aring;r klientkonto frem til oppgj&oslash;rsdag.</p>
-
-					<p>Har <span vitec-if="Model.kjopere.Count == 1">du</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> sp&oslash;rsm&aring;l h&oslash;rer jeg gjerne fra <span vitec-if="Model.kjopere.Count == 1">deg</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span>.</p>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="100">
-					<div vitec-template="resource: Avsender">&nbsp;</div>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+<div id="vitecTemplate">
+	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+	<style type="text/css">
+		#vitecTemplate table {
+			border-collapse: collapse;
+			width: 100%;
+			table-layout: fixed;
+		}
+
+		#vitecTemplate .saksokte:last-child .separator {
+			display: none;
+		}
+
+		#vitecTemplate table .borders {
+			width: 100%;
+			table-layout: fixed;
+			border-bottom: solid 1px black;
+			border-top: solid 1px black;
+		}
+
+		/* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+		#vitecTemplate span.insert:empty {
+			font-size: inherit !important;
+			line-height: inherit !important;
+			display: inline-block;
+			background-color: lightpink;
+			min-width: 2em !important;
+			height: .7em !important;
+			text-align: center;
+		}
+
+			#vitecTemplate span.insert:empty:before {
+				content: attr(data-label);
+			}
+
+			#vitecTemplate span.insert:empty:hover {
+				background-color: #fff;
+				cursor: pointer;
+			}
+
+		#vitecTemplate .insert-table {
+			display: inline-table;
+		}
+
+			#vitecTemplate .insert-table > span,
+			#vitecTemplate .insert-table > span.insert {
+				display: table-cell;
+			}
+	</style>
+	<table>
+		<tbody>
+			<tr>
+				<td colspan="100">
+					<div vitec-template="resource: Mottaker">&nbsp;</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="100">
+					<p><strong>Innbetaling av kj&oslash;pesum i forbindelse med tvangssalg av [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+					<table>
+						<tbody>
+							<tr>
+								<td colspan="25"><strong>Tingrettens saksnr.:</strong></td>
+								<td colspan="75">[[tvangssalgrefnr]]</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<p>Det vises til tvangssalg av ovennevnte eiendom og [[selger.navn]]s stadfestelseskjennelse datert <span class="insert-table"><span class="insert" data-label="Dato"></span></span>. Denne er p&aring;anket.</p>
+
+					<p>Eiendommen kan tidligst overtas p&aring; oppgj&oslash;rsdagen den <strong>[[kontrakt.oppgjor.dato]]</strong> mot innbetaling av kj&oslash;pesummen. <span vitec-if="Model.kjopere.Count == 1">Du</span> <span vitec-if="Model.kjopere.Count &gt; 1">Dere</span> kan velge &aring; ikke tiltre boligen f&oslash;r 2 uker etter at stadfestelseskjennelsen er rettskraftig, men da m&aring; det i tillegg betales et rentetillegg jf. tvangsl. &sect; 11-27. Rentetillegget utgj&oslash;r for tiden 6%. <span vitec-if="Model.kjopere.Count == 1">Du</span> <span vitec-if="Model.kjopere.Count &gt; 1">Dere</span> gj&oslash;res oppmerksom p&aring; at uavhengig av n&aring;r <span vitec-if="Model.kjopere.Count == 1">du</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> velger &aring; betale, overtar <span vitec-if="Model.kjopere.Count == 1">du</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> risiko for formuesgodet p&aring; oppgj&oslash;rsdagen.</p>
+
+					<p>
+						<strong>Ytterligere klargj&oslash;ring av status ved anke:</strong><br />
+						<span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">Tinglysning av </span><span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">skj&oslash;te og </span><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">hjemmelsdokument og </span><span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Transport og notering av </span>pantedokumenter kan f&oslash;rst skje n&aring;r stadfestelseskjennelsen er rettskraftig, jf. tvangsl. &sect; 11-33. Rettskraft tidspunktet vil inntreffe en m&aring;ned etter lagmannsretten har avsagt kjennelse, jf. tvangsl. &sect; 11-34, 2 ledd, under forutsetning av at saks&oslash;kte ikke anker videre til H&oslash;yesterett.&nbsp;
+					</p>
+
+					<p>Kj&oslash;perne har i denne situasjonen valget mellom &aring; foreta oppgj&oslash;r p&aring; oppgj&oslash;rsdagen eller to uker etter at stadfestelseskjennelsen er rettskraftig, jf. tvangsl. &sect; 11-27. Dersom kj&oslash;perne benytter siste alternativ og betaler etter stadfestelsen er rettskraftig, m&aring; kj&oslash;per svare rente &nbsp;(6 % pro anno, jf. forskrift av 28. april 2000 nr. 368) p&aring; kj&oslash;pesummen fra oppgj&oslash;rsdato til betaling finner sted.&nbsp;</p>
+
+					<p>Kj&oslash;perne har i denne saken valgt &aring; betale inn p&aring; oppgj&oslash;rsdato. Oppgj&oslash;ret st&aring;r p&aring; egen klientkonto frem til fordelingskjennelsen er rettskraftig. Dette skjer etter at stadfestelseskjennelsen ogs&aring; er rettskraftig, jf. tvangsl. &sect; 11-38, 1 ledd.&nbsp;</p>
+
+					<p>Kj&oslash;perne fra betalingen p&aring; oppgj&oslash;rsdagen ha &quot;eierrett&quot; til tvangssalgsobjektene etter tvangsl. &sect; 11-31, og kan disponere over eiendommene som eier av objektene. Saks&oslash;kte i saken m&aring; derfor fraflytte bolig/tomt. Registrering av eierrett i realregisteret vil imidlertid ikke v&aelig;re mulig f&oslash;r etter stadfestelseskjennelsen er rettskraftig, jf. over.&nbsp;</p>
+
+					<p>Ved tinglysning vil alle rene pengeheftelser uansett slettes uavhengig av dekning, jf. tvangsl. &sect; 11-31, 4 ledd. Kj&oslash;pers bank (l&aring;ngiver) vil da uansett f&aring; dekning for sitt pant p&aring; tidspunkt for tinglysning, uavhengig av eventuelle nye heftelser som kommer til i mellomperioden.&nbsp;</p>
+
+					<p>For det tilfelle saks&oslash;kte f&aring;r medhold i sin anke vil transaksjon bli omst&oslash;t og penger tilbakef&oslash;rt jf. tvangsl. &sect; 11-35.&nbsp;</p>
+
+					<p>
+						<strong>For oppgj&oslash;r:</strong><br />
+						Kj&oslash;pesummen m.m. m&aring; v&aelig;re oss i hende og disponible for fordeling til kreditorene innen siste betalingsfrist oppgitt over. Kj&oslash;pesummen, stor kr $.UD([[kontrakt.kjopesum]]) med tillegg av nedenfornevnte omkostninger, bes innbetalt til v&aring;r klientkonto nummer <strong>[[kontrakt.klientkonto]]</strong> med <strong>KID [[kontrakt.kid]]</strong>. Kopi av overf&oslash;rselskvitteringen bes oversendt pr. e-post til v&aring;r oppgj&oslash;rsavdeling samme dag.
+					</p>
+
+					<p vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">Vi bes&oslash;rger <span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">skj&oslash;te </span><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">hjemmelsdokument </span>utstedt fra [[selger.navn]], samt tinglysing av <span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">skj&oslash;te </span><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">hjemmelsdokument </span>og pantedokument hos Statens Kartverk.</p>
+
+					<p vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Vi bes&oslash;rger transport av aksjebrev <span vitec-if="Model.aksjeselskap.partoblnr != &quot;0&quot;">og partialobligasjon </span>hos forretningsf&oslash;rer.</p>
+
+					<p>Det blir ikke utformet egen kontrakt ved tvangssalg, men stadfestelseskjennelsen trer inn i denne sted. Dette innb&aelig;rer at f&oslash;lgende skal innbetales:</p>
+
+					<table>
+						<tbody>
+							<tr>
+								<td colspan="75">Kj&oslash;pesum:</td>
+								<td colspan="5">kr</td>
+								<td colspan="20" style="text-align:right">$.UD([[kontrakt.kjopesum]])</td>
+							</tr>
+						</tbody>
+						<tbody vitec-foreach="kostnad in Model.kjoperskostnader.alleposter">
+							<tr>
+								<td colspan="75">[[*kostnad.beskrivelse]]:</td>
+								<td colspan="5">kr</td>
+								<td colspan="20" style="text-align:right">$.UD([[*kostnad.belop]])</td>
+							</tr>
+						</tbody>
+						<tbody>
+							<tr>
+								<td class="borders" colspan="75"><strong>Totalt</strong></td>
+								<td class="borders" colspan="5"><strong>kr</strong></td>
+								<td class="borders" colspan="20" style="text-align:right"><strong>$.UD([[kontrakt.kjopesumogomkostn]])</strong></td>
+							</tr>
+						</tbody>
+					</table>
+
+					<p>Dersom gebyrsatsene blir endret skal bel&oslash;pene justeres i henhold til disse. Det gj&oslash;res oppmerksom p&aring; at det ikke utbetales renter for den tid kj&oslash;pesummen blir st&aring;ende p&aring; v&aring;r klientkonto frem til oppgj&oslash;rsdag.</p>
+
+					<p>Har <span vitec-if="Model.kjopere.Count == 1">du</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> sp&oslash;rsm&aring;l h&oslash;rer jeg gjerne fra <span vitec-if="Model.kjopere.Count == 1">deg</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span>.</p>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="100">
+					<div vitec-template="resource: Avsender">&nbsp;</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </div>

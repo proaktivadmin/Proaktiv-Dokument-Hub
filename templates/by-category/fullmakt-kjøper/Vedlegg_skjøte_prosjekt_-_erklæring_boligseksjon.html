@@ -1,133 +1,133 @@
-<div id="vitecTemplate">
-    <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
-    <style type="text/css">
-        #vitecTemplate * {
-            text-align: center;
-        }
-
-        #vitecTemplate table {
-            border-collapse: collapse;
-        }
-
-            #vitecTemplate table tr.no-border td {
-                border: none;
-                height: auto;
-            }
-
-        #vitecTemplate .sign-field1 {
-            display: inline-block;
-            width: 100%;
-            margin-top: 1cm;
-            margin-right: 10px;
-            border-top: solid 1px #000;
-            vertical-align: top;
-        }
-
-        #vitecTemplate .sign-field {
-            display: inline-block;
-            width: 48%;
-            margin-top: 1cm;
-            margin-right: 10px;
-            border-top: solid 1px #000;
-            vertical-align: top;
-        }
-
-        #vitecTemplate td[data-label]:before {
-            content: attr(data-label);
-            text-align: left;
-            color: #333;
-            font-size: 7pt;
-            line-height: 8pt;
-            text-transform: uppercase;
-            display: block;
-            position: absolute;
-            top: 1px;
-        }
-
-        #vitecTemplate td[data-label] {
-            padding: 14px 2px 2px 2px;
-            position: relative;
-        }
-    </style>
-    <p>&nbsp;</p>
-
-    <table style="table-layout:fixed; width:100%">
-        <tbody>
-            <tr>
-                <td colspan="100">
-                    <p style="text-align:right">Oppdragsnr: [[oppdrag.nr]]</p>
-
-                    <p>&nbsp;</p>
-
-                    <p><span style="font-size:14pt"><strong>VEDLEGG TIL SKJ&Oslash;TE</strong></span></p>
-
-                    <p>&nbsp;</p>
-
-                    <p><strong>Kj&oslash;pers erkl&aelig;ring ved overdragelse av boligseksjon</strong></p>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="100"> </td>
-            </tr>
-            <tr>
-                <td colspan="100">
-                    <table style="table-layout: fixed; margin: 0 auto;">
-                        <tbody vitec-foreach="matrikkel in Model.matrikler">
-                            <tr>
-                                <td colspan="15">Gnr. [[*matrikkel.gnr]]</td>
-                                <td colspan="15">Bnr. [[*matrikkel.bnr]]</td>
-                                <td colspan="15">Snr. [[*matrikkel.snr]]</td>
-                                <td colspan="15">
-                                    <span vitec-if="matrikkel.fnr &gt; 0">Fnr.[[*matrikkel.fnr]]</span>
-                                </td>
-                                <td colspan="30">i [[eiendom.kommunenavn]] kommune</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="100">
-                    <p>
-                        Jeg erkl&aelig;rer at mitt erverv av seksjonen ikke er i strid med bestemmelsene i<br />
-                        eierseksjonsloven &sect; 23 i lov av 16. juni 2017, nr. 65.
-                    </p>
-
-                    <p>
-                        &laquo;Ingen kan kj&oslash;pe eller p&aring; annen m&aring;te erverve flere enn to boligseksjoner<br />
-                        i ett og samme eierseksjonssameie..&raquo;
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="100"> </td>
-            </tr>
-            <tr>
-                <td colspan="25"></td>
-                <td colspan="50" style="border-bottom:solid 1px #000000"></td>
-                <td colspan="25"></td>
-            </tr>
-            <tr>
-                <td colspan="25"></td>
-                <td colspan="50">Sted / dato</td>
-                <td colspan="25"></td>
-            </tr>
-            <tr>
-                <td colspan="100"> </td>
-            </tr>
-            <tr>
-                <td colspan="100">
-                    <div style="page-break-inside:avoid" vitec-if="Model.kjopere.Count &gt; 0">
-                        <table style="width:48%; margin: 0 auto;">
-                            <tbody>
-                                <tr>
-                                    <td colspan="100" style="vertical-align:top"><span vitec-foreach="kjoper in Model.kjopere"> <span class="sign-field1">[[*kjoper.navn]]</span> </span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<div id="vitecTemplate">
+    <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+    <style type="text/css">
+        #vitecTemplate * {
+            text-align: center;
+        }
+
+        #vitecTemplate table {
+            border-collapse: collapse;
+        }
+
+            #vitecTemplate table tr.no-border td {
+                border: none;
+                height: auto;
+            }
+
+        #vitecTemplate .sign-field1 {
+            display: inline-block;
+            width: 100%;
+            margin-top: 1cm;
+            margin-right: 10px;
+            border-top: solid 1px #000;
+            vertical-align: top;
+        }
+
+        #vitecTemplate .sign-field {
+            display: inline-block;
+            width: 48%;
+            margin-top: 1cm;
+            margin-right: 10px;
+            border-top: solid 1px #000;
+            vertical-align: top;
+        }
+
+        #vitecTemplate td[data-label]:before {
+            content: attr(data-label);
+            text-align: left;
+            color: #333;
+            font-size: 7pt;
+            line-height: 8pt;
+            text-transform: uppercase;
+            display: block;
+            position: absolute;
+            top: 1px;
+        }
+
+        #vitecTemplate td[data-label] {
+            padding: 14px 2px 2px 2px;
+            position: relative;
+        }
+    </style>
+    <p>&nbsp;</p>
+
+    <table style="table-layout:fixed; width:100%">
+        <tbody>
+            <tr>
+                <td colspan="100">
+                    <p style="text-align:right">Oppdragsnr: [[oppdrag.nr]]</p>
+
+                    <p>&nbsp;</p>
+
+                    <p><span style="font-size:14pt"><strong>VEDLEGG TIL SKJ&Oslash;TE</strong></span></p>
+
+                    <p>&nbsp;</p>
+
+                    <p><strong>Kj&oslash;pers erkl&aelig;ring ved overdragelse av boligseksjon</strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="100"> </td>
+            </tr>
+            <tr>
+                <td colspan="100">
+                    <table style="table-layout: fixed; margin: 0 auto;">
+                        <tbody vitec-foreach="matrikkel in Model.matrikler">
+                            <tr>
+                                <td colspan="15">Gnr. [[*matrikkel.gnr]]</td>
+                                <td colspan="15">Bnr. [[*matrikkel.bnr]]</td>
+                                <td colspan="15">Snr. [[*matrikkel.snr]]</td>
+                                <td colspan="15">
+                                    <span vitec-if="matrikkel.fnr &gt; 0">Fnr.[[*matrikkel.fnr]]</span>
+                                </td>
+                                <td colspan="30">i [[eiendom.kommunenavn]] kommune</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="100">
+                    <p>
+                        Jeg erkl&aelig;rer at mitt erverv av seksjonen ikke er i strid med bestemmelsene i<br />
+                        eierseksjonsloven &sect; 23 i lov av 16. juni 2017, nr. 65.
+                    </p>
+
+                    <p>
+                        &laquo;Ingen kan kj&oslash;pe eller p&aring; annen m&aring;te erverve flere enn to boligseksjoner<br />
+                        i ett og samme eierseksjonssameie..&raquo;
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="100"> </td>
+            </tr>
+            <tr>
+                <td colspan="25"></td>
+                <td colspan="50" style="border-bottom:solid 1px #000000"></td>
+                <td colspan="25"></td>
+            </tr>
+            <tr>
+                <td colspan="25"></td>
+                <td colspan="50">Sted / dato</td>
+                <td colspan="25"></td>
+            </tr>
+            <tr>
+                <td colspan="100"> </td>
+            </tr>
+            <tr>
+                <td colspan="100">
+                    <div style="page-break-inside:avoid" vitec-if="Model.kjopere.Count &gt; 0">
+                        <table style="width:48%; margin: 0 auto;">
+                            <tbody>
+                                <tr>
+                                    <td colspan="100" style="vertical-align:top"><span vitec-foreach="kjoper in Model.kjopere"> <span class="sign-field1">[[*kjoper.navn]]</span> </span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>

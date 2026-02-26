@@ -1,118 +1,118 @@
-<div id="vitecTemplate">
-    <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
-    <style type="text/css">
-        #vitecTemplate table {
-            border-collapse: collapse;
-            width: 100%;
-            table-layout: fixed;
-        }
-
-            #vitecTemplate table td[data-label]:before {
-                content: attr(data-label);
-                text-align: left;
-                color: #333;
-                font-size: 7pt;
-                line-height: 8pt;
-                display: block;
-                position: absolute;
-                top: 1px;
-            }
-
-            #vitecTemplate table td[data-choice]:after {
-                content: attr(data-choice);
-                text-align: center;
-                font-size: 7pt;
-                font-weight: normal;
-                line-height: 8pt;
-                color: #333;
-                display: block;
-                position: absolute;
-                bottom: 1px;
-                left: 0;
-                right: 0;
-            }
-
-            #vitecTemplate table td[data-choice] {
-                padding: 4px 2px 16px 2px;
-                position: relative;
-            }
-
-        #vitecTemplate .seller:last-child .separator {
-            display: none;
-        }
-
-        #vitecTemplate .buyer:last-child .separator {
-            display: none;
-        }
-
-        /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
-
-        span.insert:empty {
-            font-size: inherit !important;
-            line-height: inherit !important;
-            display: inline-block;
-            background-color: lightpink;
-            min-width: 2em !important;
-            height: .7em !important;
-            text-align: center;
-        }
-
-            span.insert:empty:before {
-                content: attr(data-label);
-            }
-
-            span.insert:empty:hover {
-                background-color: #fff;
-                cursor: pointer;
-            }
-
-        .insert-table {
-            display: inline-table;
-        }
-
-            .insert-table > span,
-            .insert-table > span.insert {
-                display: table-cell;
-            }
-    </style>
-    <table>
-        <tbody>
-            <tr class="no-border">
-                <td colspan="100">
-                    <div vitec-template="resource: Mottaker">&nbsp;</div>
-
-                    <p><strong>Tinglysing p&aring; [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
-
-                    <p>For tinglysing og retur oversendes f&oslash;lgende dokumenter:</p>
-
-                    <ul>
-                        <li><span vitec-if="(Model.eiendom.eieform== &quot;Selveier&quot; || Model.eiendom.eieform== &quot;Sameie&quot;)">Skj&oslash;te </span> <span vitec-if="Model.eiendom.eieform== &quot;Andel&quot;">Overf&oslash;ring av hjemmel til andel i borettslag </span> fra <span vitec-foreach="selger in Model.selgere"><span class="seller">[[*selger.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span> til <span vitec-foreach="kjoper in Model.kjopere"><span class="buyer">[[*kjoper.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span></li>
-                    </ul>
-
-                    <div vitec-if="Model.depotdokument.rettighetshaver != &quot;Mangler data&quot;">
-                        <ul vitec-foreach="depotdokument in Model.oppdrag.pantedokumenterkjoper">
-                            <li>Pantedokument kr $.UD([[*depotdokument.belop]]) til [[*depotdokument.rettighetshaver]]</li>
-                        </ul>
-                    </div>
-
-                    <div vitec-if="Model.depotdokument.rettighetshaver == &quot;Mangler data&quot;">
-                        <ul vitec-foreach="pant in Model.oppdrag.kjoperspant">
-                            <li>Pantedokument kr $.UD([[*pant.belop]]) til [[*pant.navn]]</li>
-                        </ul>
-                    </div>
-
-                    <p>Vennligst ta kontakt med undertegnede p&aring; telefon [[avsender.tlf]] eller e-post [[avsender.epost]] dersom dokumentene har mangler.</p>
-
-                    <p>
-                        <u><strong>Etter tinglysing bes dokumentene returnert til:</strong> </u><br />
-                        [[oppgjor.kontornavn]]<br />
-                        [[oppgjor.postadresse]]<br />
-                        [[oppgjor.postnr]]&nbsp;[[oppgjor.poststed]]
-                    </p>
-
-                    <div vitec-template="resource: Avsender">&nbsp;</div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<div id="vitecTemplate">
+    <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+    <style type="text/css">
+        #vitecTemplate table {
+            border-collapse: collapse;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+            #vitecTemplate table td[data-label]:before {
+                content: attr(data-label);
+                text-align: left;
+                color: #333;
+                font-size: 7pt;
+                line-height: 8pt;
+                display: block;
+                position: absolute;
+                top: 1px;
+            }
+
+            #vitecTemplate table td[data-choice]:after {
+                content: attr(data-choice);
+                text-align: center;
+                font-size: 7pt;
+                font-weight: normal;
+                line-height: 8pt;
+                color: #333;
+                display: block;
+                position: absolute;
+                bottom: 1px;
+                left: 0;
+                right: 0;
+            }
+
+            #vitecTemplate table td[data-choice] {
+                padding: 4px 2px 16px 2px;
+                position: relative;
+            }
+
+        #vitecTemplate .seller:last-child .separator {
+            display: none;
+        }
+
+        #vitecTemplate .buyer:last-child .separator {
+            display: none;
+        }
+
+        /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+        span.insert:empty {
+            font-size: inherit !important;
+            line-height: inherit !important;
+            display: inline-block;
+            background-color: lightpink;
+            min-width: 2em !important;
+            height: .7em !important;
+            text-align: center;
+        }
+
+            span.insert:empty:before {
+                content: attr(data-label);
+            }
+
+            span.insert:empty:hover {
+                background-color: #fff;
+                cursor: pointer;
+            }
+
+        .insert-table {
+            display: inline-table;
+        }
+
+            .insert-table > span,
+            .insert-table > span.insert {
+                display: table-cell;
+            }
+    </style>
+    <table>
+        <tbody>
+            <tr class="no-border">
+                <td colspan="100">
+                    <div vitec-template="resource: Mottaker">&nbsp;</div>
+
+                    <p><strong>Tinglysing p&aring; [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+                    <p>For tinglysing og retur oversendes f&oslash;lgende dokumenter:</p>
+
+                    <ul>
+                        <li><span vitec-if="(Model.eiendom.eieform== &quot;Selveier&quot; || Model.eiendom.eieform== &quot;Sameie&quot;)">Skj&oslash;te </span> <span vitec-if="Model.eiendom.eieform== &quot;Andel&quot;">Overf&oslash;ring av hjemmel til andel i borettslag </span> fra <span vitec-foreach="selger in Model.selgere"><span class="seller">[[*selger.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span> til <span vitec-foreach="kjoper in Model.kjopere"><span class="buyer">[[*kjoper.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span></li>
+                    </ul>
+
+                    <div vitec-if="Model.depotdokument.rettighetshaver != &quot;Mangler data&quot;">
+                        <ul vitec-foreach="depotdokument in Model.oppdrag.pantedokumenterkjoper">
+                            <li>Pantedokument kr $.UD([[*depotdokument.belop]]) til [[*depotdokument.rettighetshaver]]</li>
+                        </ul>
+                    </div>
+
+                    <div vitec-if="Model.depotdokument.rettighetshaver == &quot;Mangler data&quot;">
+                        <ul vitec-foreach="pant in Model.oppdrag.kjoperspant">
+                            <li>Pantedokument kr $.UD([[*pant.belop]]) til [[*pant.navn]]</li>
+                        </ul>
+                    </div>
+
+                    <p>Vennligst ta kontakt med undertegnede p&aring; telefon [[avsender.tlf]] eller e-post [[avsender.epost]] dersom dokumentene har mangler.</p>
+
+                    <p>
+                        <u><strong>Etter tinglysing bes dokumentene returnert til:</strong> </u><br />
+                        [[oppgjor.kontornavn]]<br />
+                        [[oppgjor.postadresse]]<br />
+                        [[oppgjor.postnr]]&nbsp;[[oppgjor.poststed]]
+                    </p>
+
+                    <div vitec-template="resource: Avsender">&nbsp;</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>

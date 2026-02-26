@@ -102,6 +102,11 @@ def build_library(
         stats["by_channel"][channel] += 1
         stats["by_category"][category] += 1
 
+        # Normalize CRLF from Vitec's Windows server before writing to disk.
+        # Without this, Python text mode on Windows double-converts \r\n → \r\r\n,
+        # which reads back as \n\n (extra blank lines in stored files).
+        content = content.replace("\r\n", "\n").replace("\r", "\n")
+
         if not content:
             stats["without_content"] += 1
             index_entries.append({

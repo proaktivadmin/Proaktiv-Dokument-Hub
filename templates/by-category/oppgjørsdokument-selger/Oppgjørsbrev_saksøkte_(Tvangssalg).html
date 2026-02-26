@@ -1,83 +1,83 @@
-<div id="vitecTemplate">
-    <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
-    <style type="text/css">
-        #vitecTemplate table {
-            border-collapse: collapse;
-            width: 100%;
-            table-layout: fixed;
-        }
-
-        #vitecTemplate .liste:last-child .separator {
-            display: none;
-        }
-
-        /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
-
-        #vitecTemplate span.insert:empty {
-            font-size: inherit !important;
-            line-height: inherit !important;
-            display: inline-block;
-            background-color: lightpink;
-            min-width: 2em !important;
-            height: .7em !important;
-            text-align: center;
-        }
-
-            #vitecTemplate span.insert:empty:before {
-                content: attr(data-label);
-            }
-
-            #vitecTemplate span.insert:empty:hover {
-                background-color: #fff;
-                cursor: pointer;
-            }
-
-        #vitecTemplate .insert-table {
-            display: inline-table;
-        }
-
-            #vitecTemplate .insert-table > span,
-            #vitecTemplate .insert-table > span.insert {
-                display: table-cell;
-            }
-    </style>
-    <table>
-        <tbody>
-            <tr>
-                <td colspan="100">
-                    <div vitec-template="resource: Mottaker">&nbsp;</div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="100">
-                    <p><strong>Oppgj&oslash;r i forbindelse med tvangssalg av [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
-
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td colspan="25"><strong>Tingrettens saksnr.:</strong></td>
-                                <td colspan="75">[[tvangssalgrefnr]]</td>
-                            </tr>
-                            <tr>
-                                <td colspan="25"><strong>Saks&oslash;ker<span vitec-if="Model.saksokere.Count &gt; 1">e</span>:</strong></td>
-                                <td colspan="75"><span vitec-foreach="saksoker  in Model.saksokere"> <span class="liste">[[*saksoker.firmanavn]]<span class="separator">, </span> </span> </span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <p>
-                        Vi viser til salg av ovennevnte eiendom og oversender vedlagt oppgj&oslash;rsoppstilling.<br />
-                        Som det fremg&aring;r av oppgj&oslash;rsoppstillingen er fullstendig oppgj&oslash;r foretatt i henhold til fordelingskjennelse datert <span class="insert-table"><span class="insert" data-label="Dato"></span></span>.
-                    </p>
-
-                    <p><span style="color:red">Iht. fordelingskjennelsen har vi i dag overf&oslash;rt kr [[postering.belop]] til konto [[postering.utbetalingskontonr]].</span></p>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="100">
-                    <div vitec-template="resource: Avsender">&nbsp;</div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<div id="vitecTemplate">
+    <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+    <style type="text/css">
+        #vitecTemplate table {
+            border-collapse: collapse;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        #vitecTemplate .liste:last-child .separator {
+            display: none;
+        }
+
+        /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+        #vitecTemplate span.insert:empty {
+            font-size: inherit !important;
+            line-height: inherit !important;
+            display: inline-block;
+            background-color: lightpink;
+            min-width: 2em !important;
+            height: .7em !important;
+            text-align: center;
+        }
+
+            #vitecTemplate span.insert:empty:before {
+                content: attr(data-label);
+            }
+
+            #vitecTemplate span.insert:empty:hover {
+                background-color: #fff;
+                cursor: pointer;
+            }
+
+        #vitecTemplate .insert-table {
+            display: inline-table;
+        }
+
+            #vitecTemplate .insert-table > span,
+            #vitecTemplate .insert-table > span.insert {
+                display: table-cell;
+            }
+    </style>
+    <table>
+        <tbody>
+            <tr>
+                <td colspan="100">
+                    <div vitec-template="resource: Mottaker">&nbsp;</div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="100">
+                    <p><strong>Oppgj&oslash;r i forbindelse med tvangssalg av [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td colspan="25"><strong>Tingrettens saksnr.:</strong></td>
+                                <td colspan="75">[[tvangssalgrefnr]]</td>
+                            </tr>
+                            <tr>
+                                <td colspan="25"><strong>Saks&oslash;ker<span vitec-if="Model.saksokere.Count &gt; 1">e</span>:</strong></td>
+                                <td colspan="75"><span vitec-foreach="saksoker  in Model.saksokere"> <span class="liste">[[*saksoker.firmanavn]]<span class="separator">, </span> </span> </span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>
+                        Vi viser til salg av ovennevnte eiendom og oversender vedlagt oppgj&oslash;rsoppstilling.<br />
+                        Som det fremg&aring;r av oppgj&oslash;rsoppstillingen er fullstendig oppgj&oslash;r foretatt i henhold til fordelingskjennelse datert <span class="insert-table"><span class="insert" data-label="Dato"></span></span>.
+                    </p>
+
+                    <p><span style="color:red">Iht. fordelingskjennelsen har vi i dag overf&oslash;rt kr [[postering.belop]] til konto [[postering.utbetalingskontonr]].</span></p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="100">
+                    <div vitec-template="resource: Avsender">&nbsp;</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>

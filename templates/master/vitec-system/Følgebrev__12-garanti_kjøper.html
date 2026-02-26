@@ -1,64 +1,64 @@
-<div id="vitecTemplate">
-    <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
-    <style type="text/css">
-        /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
-
-        span.insert:empty {
-            font-size: inherit !important;
-            line-height: inherit !important;
-            display: inline-block;
-            background-color: lightpink;
-            min-width: 2em !important;
-            height: .7em !important;
-            text-align: center;
-        }
-
-            span.insert:empty:before {
-                content: attr(data-label);
-            }
-
-            span.insert:empty:hover {
-                background-color: #fff;
-                cursor: pointer;
-            }
-
-        .insert-table {
-            display: inline-table;
-        }
-
-            .insert-table > span,
-            .insert-table > span.insert {
-                display: table-cell;
-            }
-
-        #vitecTemplate table {
-            width: 100%;
-            table-layout: fixed;
-        }
-    </style>
-    <table>
-        <tbody>
-            <tr>
-                <td>
-                    <div vitec-template="resource: Mottaker">&nbsp;</div>
-
-                    <h3>Oversendelse av &sect; 12-garanti</h3>
-
-                    <p><strong>Vedr. [[eiendom.alfanavn]] i [[eiendom.prosjektnavn]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
-
-                    <p>Vi viser til kj&oslash;p av ovennevnte eiendom og oversender med dette originalt garantidokument som er stilt ovenfor <span vitec-if="Model.kjopere.Count == 1">deg</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> som kj&oslash;per.</p>
-
-                    <p>Garantier lyder p&aring; 3% av kj&oslash;pesummen mens byggearbeider p&aring;g&aring;r og frem til overtakelse. Etter overtakelsen trappes den opp til 5% av kj&oslash;pesummen og gjelder frem til fem &aring;r etter overtakelsen av boligen. Garantien gjelder for alle slags krav <span vitec-if="Model.kjopere.Count == 1">du</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> som kj&oslash;per kan f&aring; mot selger i forbindelse med inng&aring;tt kj&oslash;pekontrakt.</p>
-
-                    <p>Vi oppfordrer <span vitec-if="Model.kjopere.Count == 1">deg</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> til &aring; lese garantidokumentet n&oslash;ye. Skulle det oppst&aring; sp&oslash;rsm&aring;l, ta gjerne kontakt med megler. Dersom <span vitec-if="Model.kjopere.Count == 1">du</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> m&aring; gj&oslash;re krav gjeldende mot selger anbefaler vi at dette gj&oslash;res skriftlig ovenfor selger med kopi til garantisten, dvs. <span class="insert-table"> <span class="insert" data-label="Navn"></span> </span>.</p>
-
-                    <p>Garantien skal returneres til <span class="insert-table"> <span class="insert" data-label="Navn"></span> </span> n&aring;r den er utl&oslash;pt. Garantien er et verdidokument, s&aring; vi ber <span vitec-if="Model.kjopere.Count == 1">deg</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> oppbevare garantien i forhold til dette, inntil den returneres til garantistiller.</p>
-
-                    <p>Til slutt &oslash;nsker vi <span vitec-if="Model.kjopere.Count == 1">deg</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> lykke til med ny bolig og takker for et hyggelig samarbeid!</p>
-
-                    <div vitec-template="resource: Avsender">&nbsp;</div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<div id="vitecTemplate">
+    <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+    <style type="text/css">
+        /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+        span.insert:empty {
+            font-size: inherit !important;
+            line-height: inherit !important;
+            display: inline-block;
+            background-color: lightpink;
+            min-width: 2em !important;
+            height: .7em !important;
+            text-align: center;
+        }
+
+            span.insert:empty:before {
+                content: attr(data-label);
+            }
+
+            span.insert:empty:hover {
+                background-color: #fff;
+                cursor: pointer;
+            }
+
+        .insert-table {
+            display: inline-table;
+        }
+
+            .insert-table > span,
+            .insert-table > span.insert {
+                display: table-cell;
+            }
+
+        #vitecTemplate table {
+            width: 100%;
+            table-layout: fixed;
+        }
+    </style>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <div vitec-template="resource: Mottaker">&nbsp;</div>
+
+                    <h3>Oversendelse av &sect; 12-garanti</h3>
+
+                    <p><strong>Vedr. [[eiendom.alfanavn]] i [[eiendom.prosjektnavn]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+                    <p>Vi viser til kj&oslash;p av ovennevnte eiendom og oversender med dette originalt garantidokument som er stilt ovenfor <span vitec-if="Model.kjopere.Count == 1">deg</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> som kj&oslash;per.</p>
+
+                    <p>Garantier lyder p&aring; 3% av kj&oslash;pesummen mens byggearbeider p&aring;g&aring;r og frem til overtakelse. Etter overtakelsen trappes den opp til 5% av kj&oslash;pesummen og gjelder frem til fem &aring;r etter overtakelsen av boligen. Garantien gjelder for alle slags krav <span vitec-if="Model.kjopere.Count == 1">du</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> som kj&oslash;per kan f&aring; mot selger i forbindelse med inng&aring;tt kj&oslash;pekontrakt.</p>
+
+                    <p>Vi oppfordrer <span vitec-if="Model.kjopere.Count == 1">deg</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> til &aring; lese garantidokumentet n&oslash;ye. Skulle det oppst&aring; sp&oslash;rsm&aring;l, ta gjerne kontakt med megler. Dersom <span vitec-if="Model.kjopere.Count == 1">du</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> m&aring; gj&oslash;re krav gjeldende mot selger anbefaler vi at dette gj&oslash;res skriftlig ovenfor selger med kopi til garantisten, dvs. <span class="insert-table"> <span class="insert" data-label="Navn"></span> </span>.</p>
+
+                    <p>Garantien skal returneres til <span class="insert-table"> <span class="insert" data-label="Navn"></span> </span> n&aring;r den er utl&oslash;pt. Garantien er et verdidokument, s&aring; vi ber <span vitec-if="Model.kjopere.Count == 1">deg</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> oppbevare garantien i forhold til dette, inntil den returneres til garantistiller.</p>
+
+                    <p>Til slutt &oslash;nsker vi <span vitec-if="Model.kjopere.Count == 1">deg</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> lykke til med ny bolig og takker for et hyggelig samarbeid!</p>
+
+                    <div vitec-template="resource: Avsender">&nbsp;</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>

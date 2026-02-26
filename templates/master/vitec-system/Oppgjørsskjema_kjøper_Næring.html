@@ -1,251 +1,251 @@
-<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
-<style type="text/css">#vitecTemplate table {
-            border-collapse: collapse;
-            width: 100%;
-            table-layout: fixed;
-        }
-
-        #vitecTemplate table td {
-            border: solid 1px #000;
-            height: 32px;
-            vertical-align: middle;
-            padding-left: 5px;
-            font-size: 12px;
-        }
-
-        #vitecTemplate table tr.no-border td {
-            border: none;
-            height: auto;
-        }
-
-        #vitecTemplate table td.overskrift1 {
-            background-color: rgb(224,224,224);
-            color: #000;
-            line-height: 25px;
-            height: 25px;
-            padding-left: 5px;
-            font-weight: bold;
-        }
-
-        #vitecTemplate table td.overskrift2 {
-            color: #000;
-            line-height: 25px;
-            height: 25px;
-            padding-left: 5px;
-            font-weight: bold;
-        }
-
-        #vitecTemplate table td[data-label]:before {
-            content: attr(data-label);
-            text-align: left;
-            color: #333;
-            font-size: 9pt;
-            line-height: 8pt;
-            display: block;
-            position: absolute;
-            top: 2px;
-        }
-
-        #vitecTemplate table td[data-choice]:after {
-            content: attr(data-choice);
-            text-align: center;
-            font-size: 7pt;
-            font-weight: normal;
-            line-height: 8pt;
-            color: #333;
-            display: block;
-            position: absolute;
-            bottom: 1px;
-            left: 0;
-            right: 0;
-        }
-
-        #vitecTemplate table td[data-label] {
-            padding: 16px 2px 4px 2px;
-            position: relative;
-        }
-
-        #vitecTemplate table td[data-choice] {
-            padding: 4px 2px 16px 2px;
-            position: relative;
-        }
-
-        #vitecTemplate tr td.bg-color {
-            background-color: #ccc;
-        }
-
-        #vitecTemplate tr td.bold-text {
-            font-weight: bold;
-        }
-
-        #vitecTemplate tr td.border-top {
-            border-top: solid 1px #000;
-        }
-
-        #vitecTemplate tr td.border-bottom {
-            border-bottom: solid 1px #000;
-        }
-</style>
-<style type="text/css">/* Klikkbare sjekkbokser og radioknapper */
-
-        label.btn {
-            display: inline;
-            text-transform: none;
-            white-space: normal;
-            padding: 0;
-            vertical-align: baseline;
-            outline: none;
-            font-size: inherit;
-        }
-
-        label.btn:active,
-        label.btn.active {
-            box-shadow: none;
-            outline: none;
-        }
-
-        .svg-toggle {
-            /* nullstiller bootstrap button-styling */
-            display: inline-block !important;
-            width: 16px;
-            height: 16px;
-            margin: 0 5px;
-            vertical-align: bottom;
-            padding: 0;
-            border: none;
-            background: transparent;
-            border-radius: 0;
-            box-shadow: none !important;
-            cursor: pointer;
-            white-space: normal;
-            text-align: left;
-            background-repeat: no-repeat;
-            background-size: 16px 16px;
-            background-position: center center;
-        }
-
-        .svg-toggle.checkbox {
-            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
-        }
-
-        .svg-toggle.checkbox.active,
-        .btn.active>.svg-toggle.checkbox {
-            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
-            box-shadow: none !important;
-        }
-
-        /* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
-
-        #vitecTemplate [data-toggle="buttons"] input {
-            display: none;
-        }
-</style>
-<table>
-	<tbody>
-		<tr class="no-border">
-			<td colspan="50" contenteditable="false">&nbsp;</td>
-			<td colspan="37" style="font-size:9pt; text-align:right">Oppdragsnr:</td>
-			<td colspan="13" style="border-bottom:solid 1px #000000; font-size:9pt">[[oppdrag.nr]]</td>
-		</tr>
-		<tr class="no-border">
-			<td colspan="100">
-			<p><span style="font-size:12pt"> <strong>Skjema for oppgj&oslash;r - kj&oslash;per</strong> </span></p>
-
-			<p><span style="font-size:10pt">[[meglerkontor.navn]] (Foretaket) er underlagt reglene i hvitvaskingsloven og m&aring; innhente n&aelig;rmere bestemt informasjon og dokumentasjon om sine kunder og deres medkontrahenter, herunder opplysninger om kj&oslash;pers finansiering. Se for &oslash;vrig skjema for kundeopplysninger.<br />
-			&nbsp;</span></p>
-			</td>
-		</tr>
-		<tr class="border">
-			<td class="bg-color border-bottom border-top" colspan="100"><span style="font-size:10pt"> <strong>1. Kj&oslash;per av eiendom [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune<span vitec-if="Model.aksjeselskap.navn != &quot;Mangler data&quot;">, evt. via selskap [[aksjeselskap.navn ]]</span> </strong> </span></td>
-		</tr>
-		<tr class="border">
-			<td class="bg-color border-bottom" colspan="5" rowspan="2">1.1</td>
-			<td class="bg-color" colspan="20">Navn</td>
-			<td class="bold-text border-bottom" colspan="75">[[kjoper.firmanavn]]</td>
-		</tr>
-		<tr class="border">
-			<td class="bg-color border-bottom" colspan="20">Organisasjonsnummer</td>
-			<td class="bold-text border-bottom" colspan="75">[[kjoper.idnummer]]</td>
-		</tr>
-		<tr class="no-border">
-			<td colspan="100">&nbsp;</td>
-		</tr>
-		<tr class="border">
-			<td class="bg-color border-bottom border-top" colspan="100"><span style="font-size:10pt"> <strong>2. Finansiering av kj&oslash;pet</strong> </span></td>
-		</tr>
-		<tr class="border">
-			<td class="bg-color border-bottom border-top" colspan="5" rowspan="4">2.1</td>
-			<td class="bg-color border-top" colspan="20">Bank/Kontakt/Tlf.</td>
-			<td class="bold-text border-bottom border-top" colspan="75">&nbsp;</td>
-		</tr>
-		<tr class="border">
-			<td class="bg-color" colspan="20">L&aring;nebel&oslash;p i NOK</td>
-			<td class="bold-text border-bottom" colspan="75">&nbsp;</td>
-		</tr>
-		<tr class="border">
-			<td class="bg-color border-bottom" colspan="20" rowspan="2">Skal banken ha pant</td>
-			<td colspan="37">I eiendommen</td>
-			<td colspan="38">I aksjene</td>
-		</tr>
-		<tr class="border">
-			<td class="border-bottom" colspan="37" contenteditable="false" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" />Ja</label> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <label class="btn" contenteditable="false" data-toggle="button"> <span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" />Nei</label></td>
-			<td class="border-bottom" colspan="38" contenteditable="false" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" />Ja</label> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <label class="btn" contenteditable="false" data-toggle="button"> <span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" />Nei</label></td>
-		</tr>
-		<tr class="border">
-			<td class="bg-color border-bottom" colspan="5" rowspan="2">2.2</td>
-			<td class="bg-color" colspan="20">Type egenkapital</td>
-			<td class="border-bottom border-top" colspan="75" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl03" type="radio" />Salg av aktiva</label> &nbsp; &nbsp; <label class="btn" contenteditable="false" data-toggle="button"> <span class="checkbox svg-toggle"></span> <input name="rbl03" type="radio" />Opptjent kapital</label> &nbsp; &nbsp; <label class="btn" contenteditable="false" data-toggle="button"> <span class="checkbox svg-toggle"></span> <input name="rbl03" type="radio" />Annet:</label></td>
-		</tr>
-		<tr class="border">
-			<td class="bg-color border-bottom" colspan="20">Bel&oslash;p i NOK</td>
-			<td class="border-bottom" colspan="75">&nbsp;</td>
-		</tr>
-		<tr class="border">
-			<td class="bg-color border-bottom" colspan="5" rowspan="2">2.3</td>
-			<td class="bg-color" colspan="20">Kj&oslash;pesum inkl. evt. omkostninger overf&oslash;res samlet fra bank:</td>
-			<td class="bold-text border-bottom border-top" colspan="75">&nbsp;</td>
-		</tr>
-		<tr class="border">
-			<td class="bg-color border-bottom" colspan="20">Bel&oslash;p i NOK</td>
-			<td class="border-bottom" colspan="75">&nbsp;</td>
-		</tr>
-		<tr class="border">
-			<td class="bg-color border-bottom" colspan="5">2.4</td>
-			<td class="bg-color border-bottom" colspan="20">Hvis kj&oslash;pesummen ikke overf&oslash;res samlet fra &eacute;n norsk bank, redegj&oslash;r for forholdene:</td>
-			<td class="border-bottom border-top" colspan="75">&nbsp;</td>
-		</tr>
-		<tr class="no-border">
-			<td colspan="100">&nbsp;</td>
-		</tr>
-		<tr class="border">
-			<td class="bg-color border-bottom border-top" colspan="100"><span style="font-size:10pt"> <strong>3. Utbetaling av eventuelt tilgodehavende (for eksempel renter p&aring; klientkonto) foretas til:</strong> </span></td>
-		</tr>
-		<tr class="border">
-			<td class="bg-color border-bottom" colspan="5" rowspan="3">3.1</td>
-			<td class="bg-color" colspan="20">Bank</td>
-			<td class="border-bottom" colspan="75">&nbsp;</td>
-		</tr>
-		<tr class="border">
-			<td class="bg-color" colspan="20">Kontonummer</td>
-			<td class="border-bottom" colspan="75">&nbsp;</td>
-		</tr>
-		<tr class="border">
-			<td class="bg-color border-bottom" colspan="20">Kontoholders navn</td>
-			<td class="border-bottom" colspan="75">&nbsp;</td>
-		</tr>
-		<tr class="no-border">
-			<td colspan="100">&nbsp;</td>
-		</tr>
-		<tr class="border">
-			<td class="bg-color border-bottom" colspan="100"><span style="font-size:10pt"> <strong>4. Erkl&aelig;ring</strong> </span></td>
-		</tr>
-		<tr class="border">
-			<td class="border-bottom" colspan="100">P&aring; vegne av kj&oslash;per bekrefter jeg at opplysningene som er gitt i dette skjemaet er korrekte. Jeg bekrefter ogs&aring; at kj&oslash;per er forpliktet til &aring; rapportere eventuelle endringer skriftlig til Foretaket. Videre gir Kj&oslash;per Foretaket fullmakt til &aring; f&aring; bekreftet opplysninger om l&aring;n/finansiering og egenkapital:</td>
-		</tr>
-		<tr class="border">
-			<td class="border-bottom" colspan="50" data-label="Kjøpers representant" style="height:2cm">&nbsp;</td>
-			<td class="border-bottom" colspan="50" data-label="Sted og dato:">&nbsp;</td>
-		</tr>
-	</tbody>
-</table>
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate table {
+            border-collapse: collapse;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        #vitecTemplate table td {
+            border: solid 1px #000;
+            height: 32px;
+            vertical-align: middle;
+            padding-left: 5px;
+            font-size: 12px;
+        }
+
+        #vitecTemplate table tr.no-border td {
+            border: none;
+            height: auto;
+        }
+
+        #vitecTemplate table td.overskrift1 {
+            background-color: rgb(224,224,224);
+            color: #000;
+            line-height: 25px;
+            height: 25px;
+            padding-left: 5px;
+            font-weight: bold;
+        }
+
+        #vitecTemplate table td.overskrift2 {
+            color: #000;
+            line-height: 25px;
+            height: 25px;
+            padding-left: 5px;
+            font-weight: bold;
+        }
+
+        #vitecTemplate table td[data-label]:before {
+            content: attr(data-label);
+            text-align: left;
+            color: #333;
+            font-size: 9pt;
+            line-height: 8pt;
+            display: block;
+            position: absolute;
+            top: 2px;
+        }
+
+        #vitecTemplate table td[data-choice]:after {
+            content: attr(data-choice);
+            text-align: center;
+            font-size: 7pt;
+            font-weight: normal;
+            line-height: 8pt;
+            color: #333;
+            display: block;
+            position: absolute;
+            bottom: 1px;
+            left: 0;
+            right: 0;
+        }
+
+        #vitecTemplate table td[data-label] {
+            padding: 16px 2px 4px 2px;
+            position: relative;
+        }
+
+        #vitecTemplate table td[data-choice] {
+            padding: 4px 2px 16px 2px;
+            position: relative;
+        }
+
+        #vitecTemplate tr td.bg-color {
+            background-color: #ccc;
+        }
+
+        #vitecTemplate tr td.bold-text {
+            font-weight: bold;
+        }
+
+        #vitecTemplate tr td.border-top {
+            border-top: solid 1px #000;
+        }
+
+        #vitecTemplate tr td.border-bottom {
+            border-bottom: solid 1px #000;
+        }
+</style>
+<style type="text/css">/* Klikkbare sjekkbokser og radioknapper */
+
+        label.btn {
+            display: inline;
+            text-transform: none;
+            white-space: normal;
+            padding: 0;
+            vertical-align: baseline;
+            outline: none;
+            font-size: inherit;
+        }
+
+        label.btn:active,
+        label.btn.active {
+            box-shadow: none;
+            outline: none;
+        }
+
+        .svg-toggle {
+            /* nullstiller bootstrap button-styling */
+            display: inline-block !important;
+            width: 16px;
+            height: 16px;
+            margin: 0 5px;
+            vertical-align: bottom;
+            padding: 0;
+            border: none;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none !important;
+            cursor: pointer;
+            white-space: normal;
+            text-align: left;
+            background-repeat: no-repeat;
+            background-size: 16px 16px;
+            background-position: center center;
+        }
+
+        .svg-toggle.checkbox {
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+        }
+
+        .svg-toggle.checkbox.active,
+        .btn.active>.svg-toggle.checkbox {
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+            box-shadow: none !important;
+        }
+
+        /* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
+
+        #vitecTemplate [data-toggle="buttons"] input {
+            display: none;
+        }
+</style>
+<table>
+	<tbody>
+		<tr class="no-border">
+			<td colspan="50" contenteditable="false">&nbsp;</td>
+			<td colspan="37" style="font-size:9pt; text-align:right">Oppdragsnr:</td>
+			<td colspan="13" style="border-bottom:solid 1px #000000; font-size:9pt">[[oppdrag.nr]]</td>
+		</tr>
+		<tr class="no-border">
+			<td colspan="100">
+			<p><span style="font-size:12pt"> <strong>Skjema for oppgj&oslash;r - kj&oslash;per</strong> </span></p>
+
+			<p><span style="font-size:10pt">[[meglerkontor.navn]] (Foretaket) er underlagt reglene i hvitvaskingsloven og m&aring; innhente n&aelig;rmere bestemt informasjon og dokumentasjon om sine kunder og deres medkontrahenter, herunder opplysninger om kj&oslash;pers finansiering. Se for &oslash;vrig skjema for kundeopplysninger.<br />
+			&nbsp;</span></p>
+			</td>
+		</tr>
+		<tr class="border">
+			<td class="bg-color border-bottom border-top" colspan="100"><span style="font-size:10pt"> <strong>1. Kj&oslash;per av eiendom [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune<span vitec-if="Model.aksjeselskap.navn != &quot;Mangler data&quot;">, evt. via selskap [[aksjeselskap.navn ]]</span> </strong> </span></td>
+		</tr>
+		<tr class="border">
+			<td class="bg-color border-bottom" colspan="5" rowspan="2">1.1</td>
+			<td class="bg-color" colspan="20">Navn</td>
+			<td class="bold-text border-bottom" colspan="75">[[kjoper.firmanavn]]</td>
+		</tr>
+		<tr class="border">
+			<td class="bg-color border-bottom" colspan="20">Organisasjonsnummer</td>
+			<td class="bold-text border-bottom" colspan="75">[[kjoper.idnummer]]</td>
+		</tr>
+		<tr class="no-border">
+			<td colspan="100">&nbsp;</td>
+		</tr>
+		<tr class="border">
+			<td class="bg-color border-bottom border-top" colspan="100"><span style="font-size:10pt"> <strong>2. Finansiering av kj&oslash;pet</strong> </span></td>
+		</tr>
+		<tr class="border">
+			<td class="bg-color border-bottom border-top" colspan="5" rowspan="4">2.1</td>
+			<td class="bg-color border-top" colspan="20">Bank/Kontakt/Tlf.</td>
+			<td class="bold-text border-bottom border-top" colspan="75">&nbsp;</td>
+		</tr>
+		<tr class="border">
+			<td class="bg-color" colspan="20">L&aring;nebel&oslash;p i NOK</td>
+			<td class="bold-text border-bottom" colspan="75">&nbsp;</td>
+		</tr>
+		<tr class="border">
+			<td class="bg-color border-bottom" colspan="20" rowspan="2">Skal banken ha pant</td>
+			<td colspan="37">I eiendommen</td>
+			<td colspan="38">I aksjene</td>
+		</tr>
+		<tr class="border">
+			<td class="border-bottom" colspan="37" contenteditable="false" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" />Ja</label> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <label class="btn" contenteditable="false" data-toggle="button"> <span class="checkbox svg-toggle"></span> <input name="rbl01" type="radio" />Nei</label></td>
+			<td class="border-bottom" colspan="38" contenteditable="false" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" />Ja</label> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <label class="btn" contenteditable="false" data-toggle="button"> <span class="checkbox svg-toggle"></span> <input name="rbl02" type="radio" />Nei</label></td>
+		</tr>
+		<tr class="border">
+			<td class="bg-color border-bottom" colspan="5" rowspan="2">2.2</td>
+			<td class="bg-color" colspan="20">Type egenkapital</td>
+			<td class="border-bottom border-top" colspan="75" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl03" type="radio" />Salg av aktiva</label> &nbsp; &nbsp; <label class="btn" contenteditable="false" data-toggle="button"> <span class="checkbox svg-toggle"></span> <input name="rbl03" type="radio" />Opptjent kapital</label> &nbsp; &nbsp; <label class="btn" contenteditable="false" data-toggle="button"> <span class="checkbox svg-toggle"></span> <input name="rbl03" type="radio" />Annet:</label></td>
+		</tr>
+		<tr class="border">
+			<td class="bg-color border-bottom" colspan="20">Bel&oslash;p i NOK</td>
+			<td class="border-bottom" colspan="75">&nbsp;</td>
+		</tr>
+		<tr class="border">
+			<td class="bg-color border-bottom" colspan="5" rowspan="2">2.3</td>
+			<td class="bg-color" colspan="20">Kj&oslash;pesum inkl. evt. omkostninger overf&oslash;res samlet fra bank:</td>
+			<td class="bold-text border-bottom border-top" colspan="75">&nbsp;</td>
+		</tr>
+		<tr class="border">
+			<td class="bg-color border-bottom" colspan="20">Bel&oslash;p i NOK</td>
+			<td class="border-bottom" colspan="75">&nbsp;</td>
+		</tr>
+		<tr class="border">
+			<td class="bg-color border-bottom" colspan="5">2.4</td>
+			<td class="bg-color border-bottom" colspan="20">Hvis kj&oslash;pesummen ikke overf&oslash;res samlet fra &eacute;n norsk bank, redegj&oslash;r for forholdene:</td>
+			<td class="border-bottom border-top" colspan="75">&nbsp;</td>
+		</tr>
+		<tr class="no-border">
+			<td colspan="100">&nbsp;</td>
+		</tr>
+		<tr class="border">
+			<td class="bg-color border-bottom border-top" colspan="100"><span style="font-size:10pt"> <strong>3. Utbetaling av eventuelt tilgodehavende (for eksempel renter p&aring; klientkonto) foretas til:</strong> </span></td>
+		</tr>
+		<tr class="border">
+			<td class="bg-color border-bottom" colspan="5" rowspan="3">3.1</td>
+			<td class="bg-color" colspan="20">Bank</td>
+			<td class="border-bottom" colspan="75">&nbsp;</td>
+		</tr>
+		<tr class="border">
+			<td class="bg-color" colspan="20">Kontonummer</td>
+			<td class="border-bottom" colspan="75">&nbsp;</td>
+		</tr>
+		<tr class="border">
+			<td class="bg-color border-bottom" colspan="20">Kontoholders navn</td>
+			<td class="border-bottom" colspan="75">&nbsp;</td>
+		</tr>
+		<tr class="no-border">
+			<td colspan="100">&nbsp;</td>
+		</tr>
+		<tr class="border">
+			<td class="bg-color border-bottom" colspan="100"><span style="font-size:10pt"> <strong>4. Erkl&aelig;ring</strong> </span></td>
+		</tr>
+		<tr class="border">
+			<td class="border-bottom" colspan="100">P&aring; vegne av kj&oslash;per bekrefter jeg at opplysningene som er gitt i dette skjemaet er korrekte. Jeg bekrefter ogs&aring; at kj&oslash;per er forpliktet til &aring; rapportere eventuelle endringer skriftlig til Foretaket. Videre gir Kj&oslash;per Foretaket fullmakt til &aring; f&aring; bekreftet opplysninger om l&aring;n/finansiering og egenkapital:</td>
+		</tr>
+		<tr class="border">
+			<td class="border-bottom" colspan="50" data-label="Kjøpers representant" style="height:2cm">&nbsp;</td>
+			<td class="border-bottom" colspan="50" data-label="Sted og dato:">&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
 </div>

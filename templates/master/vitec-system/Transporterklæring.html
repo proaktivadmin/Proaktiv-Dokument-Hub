@@ -1,213 +1,213 @@
-<div id="vitecTemplate">
-	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
-	<style type="text/css">
-		#vitecTemplate table {
-			width: 100%;
-			table-layout: fixed;
-			border-collapse: collapse;
-			box-sizing: border-box;
-			-webkit-box-sizing: border-box;
-		}
-
-			#vitecTemplate table tr.no-border td {
-				border: none;
-				height: auto;
-			}
-
-		#vitecTemplate .sign-field {
-			display: inline-block;
-			width: 48%;
-			margin-top: 1cm;
-			margin-right: 10px;
-			border-top: solid 1px #000;
-			vertical-align: top;
-		}
-
-		#vitecTemplate .witness-table {
-			table-layout: fixed;
-			width: 100%;
-			border-collapse: collapse;
-		}
-
-			#vitecTemplate .witness-table td {
-				border: solid 1px #000;
-				height: 30px;
-				vertical-align: middle;
-				padding: 2px;
-			}
-
-				#vitecTemplate .witness-table td.header-cell {
-					background-color: rgb(231, 230, 230);
-					text-align: center;
-				}
-
-		#vitecTemplate td[data-label]:before {
-			content: attr(data-label);
-			text-align: left;
-			color: #333;
-			font-size: 7pt;
-			line-height: 8pt;
-			text-transform: uppercase;
-			display: block;
-			position: absolute;
-			top: 1px;
-		}
-
-		#vitecTemplate td[data-label] {
-			padding: 14px 2px 2px 2px;
-			position: relative;
-		}
-
-		.insert-checkbox {
-			display: inline-table;
-			vertical-align: bottom;
-			margin: 0 2px;
-		}
-
-			.insert-checkbox > span {
-				line-height: 1.1;
-				border: solid 1px #000;
-				height: 1.1em;
-				width: 1.1em;
-				max-width: 1.1em;
-				overflow: hidden;
-				display: table-cell;
-				text-align: center;
-				white-space: nowrap;
-			}
-
-		/* tabellceller med lange data-choice-tekster */
-
-		#vitecTemplate tr.checkbox-row td[data-choice] {
-			padding-bottom: 24px;
-		}
-	</style>
-	<table style="table-layout:fixed; width:100%">
-		<tbody>
-			<tr>
-				<td colspan="100">
-					<p style="text-align:right">Oppdragsnr: [[oppdrag.nr]]</p>
-
-					<p style="text-align:center"><span style="font-size:14pt"> <strong>TRANSPORTERKL&AElig;RING</strong> </span></p>
-
-					<p>Undertegnede</p>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="37"><strong>Navn</strong></td>
-				<td colspan="45"><strong>Adresse</strong></td>
-				<td colspan="18"><strong>[[selger.ledetekst_fdato_orgnr]]</strong></td>
-			</tr>
-		</tbody>
-		<tbody vitec-foreach="selger in Model.selgere" vitec-if="Model.selgere.Count &gt; 0">
-			<tr>
-				<td colspan="37">[[*selger.navnutenfullmektigogkontaktperson]]</td>
-				<td colspan="45">[[*selger.gatenavnognr]], [[*selger.postnr]] [[*selger.poststed]]</td>
-				<td colspan="18">[[*selger.fdato_orgnr]]</td>
-			</tr>
-		</tbody>
-	</table>
-
-	<table>
-		<tbody>
-			<tr>
-				<td colspan="100">&nbsp;</td>
-			</tr>
-			<tr>
-				<td colspan="33">transporterer med dette kr</td>
-				<td colspan="40" style="border-bottom:solid 1px black">&nbsp;</td>
-				<td colspan="27">&nbsp;</td>
-			</tr>
-		</tbody>
-	</table>
-
-	<p>av <span vitec-if="Model.selgere.Count == 1">mitt</span> <span vitec-if="Model.selgere.Count &gt; 1">v&aring;rt</span> tilgodehavende ved salg av:</p>
-
-	<p><strong>[[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
-
-	<table>
-		<tbody>
-			<tr>
-				<td colspan="5">til</td>
-				<td colspan="40" style="border-bottom:solid 1px black">&nbsp;</td>
-				<td colspan="55">&nbsp;</td>
-			</tr>
-			<tr>
-				<td colspan="100">&nbsp;</td>
-			</tr>
-			<tr>
-				<td colspan="33">Bel&oslash;pet bes overf&oslash;rt til kontonr.</td>
-				<td colspan="40" style="border-bottom:solid 1px black">&nbsp;</td>
-				<td colspan="27">&nbsp;</td>
-			</tr>
-			<tr>
-				<td colspan="100">&nbsp;</td>
-			</tr>
-			<tr>
-				<td colspan="100">
-					<p>Eiendommen selges via [[meglerkontor.navn]], [[meglerkontor.adresse]], [[meglerkontor.poststed]]. Tlf. [[meglerkontor.tlf]]</p>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="100">
-					<table style="table-layout:fixed; width:48%">
-						<tbody>
-							<tr class="no-border">
-								<td colspan="100" style="border-bottom:solid 1px #000000">
-									<br />
-									&nbsp;
-								</td>
-							</tr>
-							<tr class="no-border">
-								<td colspan="100">Sted / dato</td>
-							</tr>
-						</tbody>
-					</table>
-
-					<div style="page-break-inside:avoid">
-						<table>
-							<tbody>
-								<tr class="no-border">
-									<td colspan="100" style="vertical-align:top"><span vitec-foreach="selger in Model.selgere"> <span class="sign-field">[[*selger.navn]]</span> </span></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-
-					<p>&nbsp;</p>
-
-					<p>Transporten er notert.</p>
-
-					<table style="table-layout:fixed; width:48%">
-						<tbody>
-							<tr class="no-border">
-								<td colspan="100" style="border-bottom:solid 1px #000000">
-									<br />
-									&nbsp;
-								</td>
-							</tr>
-							<tr class="no-border">
-								<td colspan="100">Sted / dato</td>
-							</tr>
-						</tbody>
-					</table>
-
-					<div style="page-break-inside:avoid">
-						<table>
-							<tbody>
-								<tr class="no-border">
-									<td colspan="100" style="vertical-align:top">
-										<span class="sign-field">
-											[[avsender.navn]]<br />
-											[[avsender.tittel]]
-										</span>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+<div id="vitecTemplate">
+	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+	<style type="text/css">
+		#vitecTemplate table {
+			width: 100%;
+			table-layout: fixed;
+			border-collapse: collapse;
+			box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+		}
+
+			#vitecTemplate table tr.no-border td {
+				border: none;
+				height: auto;
+			}
+
+		#vitecTemplate .sign-field {
+			display: inline-block;
+			width: 48%;
+			margin-top: 1cm;
+			margin-right: 10px;
+			border-top: solid 1px #000;
+			vertical-align: top;
+		}
+
+		#vitecTemplate .witness-table {
+			table-layout: fixed;
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+			#vitecTemplate .witness-table td {
+				border: solid 1px #000;
+				height: 30px;
+				vertical-align: middle;
+				padding: 2px;
+			}
+
+				#vitecTemplate .witness-table td.header-cell {
+					background-color: rgb(231, 230, 230);
+					text-align: center;
+				}
+
+		#vitecTemplate td[data-label]:before {
+			content: attr(data-label);
+			text-align: left;
+			color: #333;
+			font-size: 7pt;
+			line-height: 8pt;
+			text-transform: uppercase;
+			display: block;
+			position: absolute;
+			top: 1px;
+		}
+
+		#vitecTemplate td[data-label] {
+			padding: 14px 2px 2px 2px;
+			position: relative;
+		}
+
+		.insert-checkbox {
+			display: inline-table;
+			vertical-align: bottom;
+			margin: 0 2px;
+		}
+
+			.insert-checkbox > span {
+				line-height: 1.1;
+				border: solid 1px #000;
+				height: 1.1em;
+				width: 1.1em;
+				max-width: 1.1em;
+				overflow: hidden;
+				display: table-cell;
+				text-align: center;
+				white-space: nowrap;
+			}
+
+		/* tabellceller med lange data-choice-tekster */
+
+		#vitecTemplate tr.checkbox-row td[data-choice] {
+			padding-bottom: 24px;
+		}
+	</style>
+	<table style="table-layout:fixed; width:100%">
+		<tbody>
+			<tr>
+				<td colspan="100">
+					<p style="text-align:right">Oppdragsnr: [[oppdrag.nr]]</p>
+
+					<p style="text-align:center"><span style="font-size:14pt"> <strong>TRANSPORTERKL&AElig;RING</strong> </span></p>
+
+					<p>Undertegnede</p>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="37"><strong>Navn</strong></td>
+				<td colspan="45"><strong>Adresse</strong></td>
+				<td colspan="18"><strong>[[selger.ledetekst_fdato_orgnr]]</strong></td>
+			</tr>
+		</tbody>
+		<tbody vitec-foreach="selger in Model.selgere" vitec-if="Model.selgere.Count &gt; 0">
+			<tr>
+				<td colspan="37">[[*selger.navnutenfullmektigogkontaktperson]]</td>
+				<td colspan="45">[[*selger.gatenavnognr]], [[*selger.postnr]] [[*selger.poststed]]</td>
+				<td colspan="18">[[*selger.fdato_orgnr]]</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<table>
+		<tbody>
+			<tr>
+				<td colspan="100">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="33">transporterer med dette kr</td>
+				<td colspan="40" style="border-bottom:solid 1px black">&nbsp;</td>
+				<td colspan="27">&nbsp;</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<p>av <span vitec-if="Model.selgere.Count == 1">mitt</span> <span vitec-if="Model.selgere.Count &gt; 1">v&aring;rt</span> tilgodehavende ved salg av:</p>
+
+	<p><strong>[[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+	<table>
+		<tbody>
+			<tr>
+				<td colspan="5">til</td>
+				<td colspan="40" style="border-bottom:solid 1px black">&nbsp;</td>
+				<td colspan="55">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="100">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="33">Bel&oslash;pet bes overf&oslash;rt til kontonr.</td>
+				<td colspan="40" style="border-bottom:solid 1px black">&nbsp;</td>
+				<td colspan="27">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="100">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="100">
+					<p>Eiendommen selges via [[meglerkontor.navn]], [[meglerkontor.adresse]], [[meglerkontor.poststed]]. Tlf. [[meglerkontor.tlf]]</p>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="100">
+					<table style="table-layout:fixed; width:48%">
+						<tbody>
+							<tr class="no-border">
+								<td colspan="100" style="border-bottom:solid 1px #000000">
+									<br />
+									&nbsp;
+								</td>
+							</tr>
+							<tr class="no-border">
+								<td colspan="100">Sted / dato</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<div style="page-break-inside:avoid">
+						<table>
+							<tbody>
+								<tr class="no-border">
+									<td colspan="100" style="vertical-align:top"><span vitec-foreach="selger in Model.selgere"> <span class="sign-field">[[*selger.navn]]</span> </span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<p>&nbsp;</p>
+
+					<p>Transporten er notert.</p>
+
+					<table style="table-layout:fixed; width:48%">
+						<tbody>
+							<tr class="no-border">
+								<td colspan="100" style="border-bottom:solid 1px #000000">
+									<br />
+									&nbsp;
+								</td>
+							</tr>
+							<tr class="no-border">
+								<td colspan="100">Sted / dato</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<div style="page-break-inside:avoid">
+						<table>
+							<tbody>
+								<tr class="no-border">
+									<td colspan="100" style="vertical-align:top">
+										<span class="sign-field">
+											[[avsender.navn]]<br />
+											[[avsender.tittel]]
+										</span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </div>

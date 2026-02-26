@@ -1,129 +1,129 @@
-<div id="vitecTemplate">
-	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
-	<style type="text/css">
-		#vitecTemplate table {
-			border-collapse: collapse;
-			width: 100%;
-			table-layout: fixed;
-		}
-
-		#vitecTemplate .liste:last-child .separator {
-			display: none;
-		}
-
-		/* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
-
-		#vitecTemplate span.insert:empty {
-			font-size: inherit !important;
-			line-height: inherit !important;
-			display: inline-block;
-			background-color: lightpink;
-			min-width: 2em !important;
-			height: .7em !important;
-			text-align: center;
-		}
-
-			#vitecTemplate span.insert:empty:before {
-				content: attr(data-label);
-			}
-
-			#vitecTemplate span.insert:empty:hover {
-				background-color: #fff;
-				cursor: pointer;
-			}
-
-		#vitecTemplate .insert-table {
-			display: inline-table;
-		}
-
-			#vitecTemplate .insert-table > span,
-			#vitecTemplate .insert-table > span.insert {
-				display: table-cell;
-			}
-	</style>
-	<table>
-		<tbody>
-			<tr>
-				<td colspan="100">
-					<div vitec-template="resource: Mottaker">&nbsp;</div>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="100">
-					<p><strong>Varsel om tvangssalg av [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
-
-					<table>
-						<tbody>
-							<tr>
-								<td colspan="25"><strong>Tingrettens saksnr.:</strong></td>
-								<td colspan="75">[[tvangssalgrefnr]]</td>
-							</tr>
-							<tr>
-								<td colspan="25"><strong>Saks&oslash;ker<span vitec-if="Model.saksokere.Count &gt; 1">e</span>:</strong></td>
-								<td colspan="75"><span vitec-foreach="saksoker  in Model.saksokere"><span class="liste">[[*saksoker.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span></td>
-							</tr>
-						</tbody>
-					</table>
-
-					<p>V&aring;rt eiendomsmeglingsforetak har blitt oppnevnt som medhjelper av [[selger.navn]] i forbindelse med at det er besluttet &aring; gjennomf&oslash;re tvangssalg av ovennevnte eiendom.</p>
-
-					<p>Tvangssalget skal gjennomf&oslash;res s&aring; likt et frivillig salg som mulig, selv om salgsarbeidet styres av tingretten. Vi &oslash;nsker et n&aelig;rt samarbeid med deg, slik at saken etter omstendighetene kan l&oslash;ses p&aring; en tilfredsstillende m&aring;te.</p>
-
-					<p>At salget skal skje mest mulig likt et frivillig salg inneb&aelig;rer bl.a. at det skal utarbeides en salgsoppgave med opplysninger om eiendommen. Eiendommen vil bli markedsf&oslash;rt sammen med v&aring;re &oslash;vrige oppdrag, og det vil bli arrangert visninger av eiendommen, fortrinnsvis etter forutg&aring;ende avtale med deg .</p>
-
-					<p>For &aring; gjennomf&oslash;re tvangssalget mest mulig likt et frivillig salg, er vi avhengige av &aring; motta opplysninger om eiendommen fra deg. For &aring; komme i gang med arbeidet &oslash;nsker undertegnede &aring; besiktige din eiendom den <strong>[[besiktigelse.dato]] kl. [[besiktigelse.klokkeslett]]</strong>.</p>
-
-					<p>Vennligst ta kontakt omg&aring;ende for avtale om nytt tidspunkt dersom oppsatt tidspunkt ikke passer.</p>
-
-					<p>Du plikter i henhold til tvangsfullbyrdelsesloven &aring; opplyse om det finnes andre heftelser, rettigheter eller private avtaler enn de som fremg&aring;r av grunnboken for eiendommen. I f&oslash;lge innhentet grunnboksutskrift er det pr.<span class="insert-table"><span class="insert" data-label="Dato"></span></span> f&oslash;lgende tinglyste heftelser p&aring; eiendommen:</p>
-
-					<table>
-						<tbody>
-							<tr>
-								<td colspan="25"><strong>Type</strong></td>
-								<td colspan="20"><strong>Bel&oslash;p</strong></td>
-								<td colspan="20"><strong><span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">Tinglyst </span> <span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Notert </span>dato</strong></td>
-								<td colspan="20"><strong><span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">Dokumentnr.</span> </strong></td>
-								<td colspan="15">&nbsp;</td>
-							</tr>
-						</tbody>
-						<tbody vitec-foreach="pant in Model.oppdrag.pantforinnfrielse">
-							<tr>
-								<td colspan="25">[[*pant.type]]</td>
-								<td colspan="20">kr $.UD([[*pant.belop]])</td>
-								<td colspan="20">[[*pant.tinglystdato]]</td>
-								<td colspan="20"><span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">[[*pant.dokumentnr]]</span></td>
-								<td colspan="15">&nbsp;</td>
-							</tr>
-						</tbody>
-					</table>
-
-					<p style="page-break-inside:avoid">Vi ber deg samtidig opplyse om det er andre enn du som har rettigheter i eiendommen, deler av denne eller tilbeh&oslash;r til eiendommen.</p>
-
-					<p style="page-break-inside:avoid">Du gj&oslash;res oppmerksom p&aring; at dersom du unnlater &aring; gi opplysninger om slike heftelser som nevnt ovenfor, og som du kjenner til, kan du gj&oslash;res ansvarlig for eventuelle tap noen blir p&aring;f&oslash;rt p&aring; grunn av unnlatelsen.</p>
-
-					<p style="page-break-inside:avoid">Opplysninger bes gitt v&aring;rt kontor skriftlig snarest og senest innen <span class="insert-table"> <span class="insert" data-label="Dato"></span> </span> ved retur av vedlagte erkl&aelig;ring. Du kan ogs&aring; overlevere erkl&aelig;ringen ved v&aring;r besiktigelse den [[besiktigelse.dato]].</p>
-
-					<p style="page-break-inside:avoid">Vi h&aring;per p&aring; et godt samarbeid, og vil gj&oslash;re v&aring;rt beste for at det oppn&aring;s en best mulig pris for eiendommen.</p>
-
-					<p style="page-break-inside:avoid">Skulle du ha behov for v&aring;r bistand i et eventuelt fors&oslash;k p&aring; &aring; unng&aring; tvangssalg gjennom frivillige avtaler med l&aring;ngiverne, refinansiering e.l. st&aring;r vi med glede til tjeneste. Ta i tilfelle kontakt omg&aring;ende for &aring; avtale tid for et m&oslash;te.</p>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="100">
-					<div vitec-template="resource: Avsender">&nbsp;</div>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-
-	<p>&nbsp;</p>
-
-	<p>Vedlegg</p>
-
-	<ul>
-		<li>Kjennelse p&aring; begj&aelig;ring av tvangssalg</li>
-		<li>Kopi av grunnboksutskrift</li>
-		<li>Erkl&aelig;ring fra saks&oslash;kte - til utfylling</li>
-	</ul>
+<div id="vitecTemplate">
+	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+	<style type="text/css">
+		#vitecTemplate table {
+			border-collapse: collapse;
+			width: 100%;
+			table-layout: fixed;
+		}
+
+		#vitecTemplate .liste:last-child .separator {
+			display: none;
+		}
+
+		/* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+		#vitecTemplate span.insert:empty {
+			font-size: inherit !important;
+			line-height: inherit !important;
+			display: inline-block;
+			background-color: lightpink;
+			min-width: 2em !important;
+			height: .7em !important;
+			text-align: center;
+		}
+
+			#vitecTemplate span.insert:empty:before {
+				content: attr(data-label);
+			}
+
+			#vitecTemplate span.insert:empty:hover {
+				background-color: #fff;
+				cursor: pointer;
+			}
+
+		#vitecTemplate .insert-table {
+			display: inline-table;
+		}
+
+			#vitecTemplate .insert-table > span,
+			#vitecTemplate .insert-table > span.insert {
+				display: table-cell;
+			}
+	</style>
+	<table>
+		<tbody>
+			<tr>
+				<td colspan="100">
+					<div vitec-template="resource: Mottaker">&nbsp;</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="100">
+					<p><strong>Varsel om tvangssalg av [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+					<table>
+						<tbody>
+							<tr>
+								<td colspan="25"><strong>Tingrettens saksnr.:</strong></td>
+								<td colspan="75">[[tvangssalgrefnr]]</td>
+							</tr>
+							<tr>
+								<td colspan="25"><strong>Saks&oslash;ker<span vitec-if="Model.saksokere.Count &gt; 1">e</span>:</strong></td>
+								<td colspan="75"><span vitec-foreach="saksoker  in Model.saksokere"><span class="liste">[[*saksoker.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span></td>
+							</tr>
+						</tbody>
+					</table>
+
+					<p>V&aring;rt eiendomsmeglingsforetak har blitt oppnevnt som medhjelper av [[selger.navn]] i forbindelse med at det er besluttet &aring; gjennomf&oslash;re tvangssalg av ovennevnte eiendom.</p>
+
+					<p>Tvangssalget skal gjennomf&oslash;res s&aring; likt et frivillig salg som mulig, selv om salgsarbeidet styres av tingretten. Vi &oslash;nsker et n&aelig;rt samarbeid med deg, slik at saken etter omstendighetene kan l&oslash;ses p&aring; en tilfredsstillende m&aring;te.</p>
+
+					<p>At salget skal skje mest mulig likt et frivillig salg inneb&aelig;rer bl.a. at det skal utarbeides en salgsoppgave med opplysninger om eiendommen. Eiendommen vil bli markedsf&oslash;rt sammen med v&aring;re &oslash;vrige oppdrag, og det vil bli arrangert visninger av eiendommen, fortrinnsvis etter forutg&aring;ende avtale med deg .</p>
+
+					<p>For &aring; gjennomf&oslash;re tvangssalget mest mulig likt et frivillig salg, er vi avhengige av &aring; motta opplysninger om eiendommen fra deg. For &aring; komme i gang med arbeidet &oslash;nsker undertegnede &aring; besiktige din eiendom den <strong>[[besiktigelse.dato]] kl. [[besiktigelse.klokkeslett]]</strong>.</p>
+
+					<p>Vennligst ta kontakt omg&aring;ende for avtale om nytt tidspunkt dersom oppsatt tidspunkt ikke passer.</p>
+
+					<p>Du plikter i henhold til tvangsfullbyrdelsesloven &aring; opplyse om det finnes andre heftelser, rettigheter eller private avtaler enn de som fremg&aring;r av grunnboken for eiendommen. I f&oslash;lge innhentet grunnboksutskrift er det pr.<span class="insert-table"><span class="insert" data-label="Dato"></span></span> f&oslash;lgende tinglyste heftelser p&aring; eiendommen:</p>
+
+					<table>
+						<tbody>
+							<tr>
+								<td colspan="25"><strong>Type</strong></td>
+								<td colspan="20"><strong>Bel&oslash;p</strong></td>
+								<td colspan="20"><strong><span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">Tinglyst </span> <span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Notert </span>dato</strong></td>
+								<td colspan="20"><strong><span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">Dokumentnr.</span> </strong></td>
+								<td colspan="15">&nbsp;</td>
+							</tr>
+						</tbody>
+						<tbody vitec-foreach="pant in Model.oppdrag.pantforinnfrielse">
+							<tr>
+								<td colspan="25">[[*pant.type]]</td>
+								<td colspan="20">kr $.UD([[*pant.belop]])</td>
+								<td colspan="20">[[*pant.tinglystdato]]</td>
+								<td colspan="20"><span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">[[*pant.dokumentnr]]</span></td>
+								<td colspan="15">&nbsp;</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<p style="page-break-inside:avoid">Vi ber deg samtidig opplyse om det er andre enn du som har rettigheter i eiendommen, deler av denne eller tilbeh&oslash;r til eiendommen.</p>
+
+					<p style="page-break-inside:avoid">Du gj&oslash;res oppmerksom p&aring; at dersom du unnlater &aring; gi opplysninger om slike heftelser som nevnt ovenfor, og som du kjenner til, kan du gj&oslash;res ansvarlig for eventuelle tap noen blir p&aring;f&oslash;rt p&aring; grunn av unnlatelsen.</p>
+
+					<p style="page-break-inside:avoid">Opplysninger bes gitt v&aring;rt kontor skriftlig snarest og senest innen <span class="insert-table"> <span class="insert" data-label="Dato"></span> </span> ved retur av vedlagte erkl&aelig;ring. Du kan ogs&aring; overlevere erkl&aelig;ringen ved v&aring;r besiktigelse den [[besiktigelse.dato]].</p>
+
+					<p style="page-break-inside:avoid">Vi h&aring;per p&aring; et godt samarbeid, og vil gj&oslash;re v&aring;rt beste for at det oppn&aring;s en best mulig pris for eiendommen.</p>
+
+					<p style="page-break-inside:avoid">Skulle du ha behov for v&aring;r bistand i et eventuelt fors&oslash;k p&aring; &aring; unng&aring; tvangssalg gjennom frivillige avtaler med l&aring;ngiverne, refinansiering e.l. st&aring;r vi med glede til tjeneste. Ta i tilfelle kontakt omg&aring;ende for &aring; avtale tid for et m&oslash;te.</p>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="100">
+					<div vitec-template="resource: Avsender">&nbsp;</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<p>&nbsp;</p>
+
+	<p>Vedlegg</p>
+
+	<ul>
+		<li>Kjennelse p&aring; begj&aelig;ring av tvangssalg</li>
+		<li>Kopi av grunnboksutskrift</li>
+		<li>Erkl&aelig;ring fra saks&oslash;kte - til utfylling</li>
+	</ul>
 </div>

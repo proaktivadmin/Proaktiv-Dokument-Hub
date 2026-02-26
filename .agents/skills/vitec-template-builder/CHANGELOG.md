@@ -1,10 +1,43 @@
 # Knowledge Base Changelog
 
 Reverse-chronological log of every change to the Vitec Template Builder knowledge base.
-Covers: LESSONS.md, PATTERNS.md, SKILL.md, `validate_vitec_template.py`, `post_process_template.py`.
+Covers: LESSONS.md, PATTERNS.md, SKILL.md, `validate_vitec_template.py`, `post_process_template.py`,
+and monthly sync tooling.
 
 **Rule:** Any agent that modifies LESSONS.md, PATTERNS.md, SKILL.md, the validator, or the
 post-processor MUST append a dated entry to this file describing what changed and why.
+
+---
+
+## [2026-02-26] Monthly update pipeline created
+
+**Files changed:** `scripts/tools/monthly_diff.py` (new), `.cursor/commands/monthly-update.md` (new)
+**Trigger:** First monthly Vitec Next release since master library was established (2026-02-23).
+
+**Changes:**
+- Created `monthly_diff.py` — content-level bulk diff between a fresh Vitec export JSON and
+  `templates/master/`. Unlike `vitec_sync_check.py --full-scan` (metadata only), this compares
+  actual HTML content for every template:
+  - Matches by `vitec_template_id` first, then normalized title, then ASCII-folded title
+  - For changed templates: computes merge field delta, vitec-if delta, vitec-foreach delta,
+    CSS change flag, byte delta, and a composite risk score
+  - Risk classification: critical (≥10) / structural (≥4) / cosmetic (≥1) / trivial (0)
+  - Outputs: `scripts/qa_artifacts/MONTHLY-DIFF-{date}.md` + `monthly-diff-{date}.json`
+  - `--changed-only` flag suppresses unchanged entries for large-library clarity
+- Created `.cursor/commands/monthly-update.md` — full 8-phase orchestration command:
+  - Phase 0: pre-flight (check if fresh export exists)
+  - Phase 1: browser scrape (with safety rules enforced)
+  - Phase 2: run monthly_diff.py
+  - Phase 3: tier-1 summary to user
+  - Phase 4: per-template review for critical/structural changes
+  - Phase 5: handle new templates
+  - Phase 6: rebuild library (`build_template_library.py`)
+  - Phase 7: re-mine + KB update
+  - Phase 8: report generation + git commit
+- Added decision matrix covering all change types and default actions
+
+**Impact:** Closes the gap between targeted newsletter syncs (`/sync-templates`) and full
+monthly release cycles. The pipeline is now end-to-end from browser scrape to committed library.
 
 ---
 

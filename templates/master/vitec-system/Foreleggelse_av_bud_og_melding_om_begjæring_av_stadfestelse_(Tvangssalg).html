@@ -1,111 +1,111 @@
-<div id="vitecTemplate">
-	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
-	<style type="text/css">
-		#vitecTemplate table {
-			border-collapse: collapse;
-			width: 100%;
-			table-layout: fixed;
-		}
-
-		#vitecTemplate .liste:last-child .separator {
-			display: none;
-		}
-
-		/* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
-
-		#vitecTemplate span.insert:empty {
-			font-size: inherit !important;
-			line-height: inherit !important;
-			display: inline-block;
-			background-color: lightpink;
-			min-width: 2em !important;
-			height: .7em !important;
-			text-align: center;
-		}
-
-			#vitecTemplate span.insert:empty:before {
-				content: attr(data-label);
-			}
-
-			#vitecTemplate span.insert:empty:hover {
-				background-color: #fff;
-				cursor: pointer;
-			}
-
-		#vitecTemplate .insert-table {
-			display: inline-table;
-		}
-
-			#vitecTemplate .insert-table > span,
-			#vitecTemplate .insert-table > span.insert {
-				display: table-cell;
-			}
-	</style>
-	<table>
-		<tbody>
-			<tr>
-				<td colspan="100">
-					<div vitec-template="resource: Mottaker">&nbsp;</div>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="100">
-					<p><strong>FORELEGGELSE AV BUD IHHT. TVANGSFULLBYRDELSESLOVEN &sect; 11-29</strong></p>
-
-					<p><strong>Vedr. tvangssalg av [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune.</strong></p>
-
-					<table>
-						<tbody>
-							<tr>
-								<td colspan="25"><strong>Tingrettens saksnr.:</strong></td>
-								<td colspan="75">[[tvangssalgrefnr]]</td>
-							</tr>
-						</tbody>
-					</table>
-
-					<p><u>Melding til:</u></p>
-
-					<ul>
-						<li>Tingretten: [[selger.navn]]</li>
-						<li>Saks&oslash;ker<span vitec-if="Model.saksokere.Count &gt; 1">e</span>: <span vitec-foreach="saksoker  in Model.saksokere"> <span class="liste">[[*saksoker.navnutenfullmektigogkontaktperson]]<span class="separator">, </span> </span> </span></li>
-						<li>Saks&oslash;kte: <span vitec-foreach="saksokte  in Model.saksokteliste"> <span class="liste">[[*saksokte.navnutenfullmektigogkontaktperson]]<span class="separator">, </span> </span> </span></li>
-						<li>Saks&oslash;ktes ektefelle og/eller husstandsmedlem</li>
-						<li>Budgivere som har gitt bud som er begj&aelig;rt stadfestet</li>
-						<li>Andre kjente rettighetshavere</li>
-						<li>Kreditorer/rettighetshavere</li>
-						<li>Forretningsf&oslash;rer: [[forretningsforer.navn]]</li>
-					</ul>
-
-					<p>Tvangssalget skjer p&aring; bakgrunn av</p>
-
-					<ul vitec-foreach="pant in Model.oppdrag.saksokerspant">
-						<li>[[*pant.type]], opprinnelig stor kr $.UD([[*pant.belop]]), n&aring; til rest kr $.UD([[*pant.restbelop]]), med tillegg av renter og omkostninger anf&oslash;rt p&aring; <strong>[[*pant.prioritet]]. prioritet</strong></li>
-					</ul>
-
-					<p>Boligen med har v&aelig;rt annonsert for salg og det er innkommet bud stort <strong>kr $.UD([[hoyestebud.belop]])</strong> avgitt av [[hoyestebud.budgiver.navn]], [[hoyestebud.budgiver.ledetekst_fdato_orgnr]] [[hoyestebud.budgiver.fdato_orgnr]], adresse [[hoyestebud.budgiver.gatenavnognr]], [[hoyestebud.budgiver.postnr]] [[hoyestebud.budgiver.poststed]]. Budet er avgitt den [[hoyestebud.avgitt.dato]]&nbsp;og er bindende til og med <strong>[[hoyestebud.akseptfrist.dato]] kl. [[hoyestebud.akseptfrist.klokkeslett]]</strong>. Det er ikke stillet sikkerhet for budet, men finansieringsplan er presentert. Budet er begj&aelig;rt stadfestet av saks&oslash;ker.</p>
-
-					<p>Det er ingen heftelser av typen &quot;ikke pengeheftelser&quot; som skal settes til side, jf.tvbl. &sect; 11 - 29 d).</p>
-
-					<p>Det er avholdt takst som angir kr $.UD([[eiendom.laanetakst]]) som l&aring;neverdi, og kr $.UD([[eiendom.verditakst]]) som salgsverdi. Det er avholdt [[oppdrag.antallvisninger]] visning<span vitec-if="Model.oppdrag.antallvisninger != 1">er</span>. <span style="color:red">(Individuell beskrivelse av salgsarbeidet fra den enkelte medhjelper).</span></p>
-
-					<p>P&aring; denne bakgrunn, samt salgsformen, boligens beliggenhet og takstverdiene, er medhjelpers vurdering at ytterligere salgsfremst&oslash;t neppe vil innbringe kreditorene bedre netto dekning.</p>
-
-					<p>Oppgj&oslash;rsdagen er <span vitec-if="Model.kontrakt.oppgjor.dato != &quot;Mangler data&quot;">[[kontrakt.oppgjor.dato]]</span><span vitec-if="Model.kontrakt.oppgjor.dato == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="3 måneder fra dagens dato"></span></span></span>.</p>
-
-					<p>Innsigelser mot stadfestelse, eller mot vedlagte utkast til fordelingskjennelse, m&aring; v&aelig;re kommet frem til (domstol) innen 2 uker fra avsendelsen av denne underretning.</p>
-
-					<p>Foreleggelsen er sendt [[selger.navn]], partene, rettighetshavere og budgiver.</p>
-
-					<p>Vedlagt f&oslash;lger kopi av salgsoppgave, takst og forslag til fordelingskjennelse.</p>
-
-					<p>For pantekrav som er knyttet til et verdipapir, skal det ikke utbetales del av kj&oslash;pesummen f&oslash;r panthaveren har fremlagt dokumentet, jf. tvfbl. &sect; 11-38 2. ledd. Dette inneb&aelig;rer at <span class="insert-table"><span class="insert" data-label="Panthaver"></span></span>, <span class="insert-table"><span class="insert" data-label="Panthaver"></span></span> og <span class="insert-table"><span class="insert" data-label="Panthaver"></span></span> m&aring; sende inn pantedokument med tilh&oslash;rende gjeldsbrev i original, f&oslash;r medhjelper kan utbetale kj&oslash;pesummen.</p>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="100">
-					<div vitec-template="resource: Avsender">&nbsp;</div>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+<div id="vitecTemplate">
+	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+	<style type="text/css">
+		#vitecTemplate table {
+			border-collapse: collapse;
+			width: 100%;
+			table-layout: fixed;
+		}
+
+		#vitecTemplate .liste:last-child .separator {
+			display: none;
+		}
+
+		/* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+		#vitecTemplate span.insert:empty {
+			font-size: inherit !important;
+			line-height: inherit !important;
+			display: inline-block;
+			background-color: lightpink;
+			min-width: 2em !important;
+			height: .7em !important;
+			text-align: center;
+		}
+
+			#vitecTemplate span.insert:empty:before {
+				content: attr(data-label);
+			}
+
+			#vitecTemplate span.insert:empty:hover {
+				background-color: #fff;
+				cursor: pointer;
+			}
+
+		#vitecTemplate .insert-table {
+			display: inline-table;
+		}
+
+			#vitecTemplate .insert-table > span,
+			#vitecTemplate .insert-table > span.insert {
+				display: table-cell;
+			}
+	</style>
+	<table>
+		<tbody>
+			<tr>
+				<td colspan="100">
+					<div vitec-template="resource: Mottaker">&nbsp;</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="100">
+					<p><strong>FORELEGGELSE AV BUD IHHT. TVANGSFULLBYRDELSESLOVEN &sect; 11-29</strong></p>
+
+					<p><strong>Vedr. tvangssalg av [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune.</strong></p>
+
+					<table>
+						<tbody>
+							<tr>
+								<td colspan="25"><strong>Tingrettens saksnr.:</strong></td>
+								<td colspan="75">[[tvangssalgrefnr]]</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<p><u>Melding til:</u></p>
+
+					<ul>
+						<li>Tingretten: [[selger.navn]]</li>
+						<li>Saks&oslash;ker<span vitec-if="Model.saksokere.Count &gt; 1">e</span>: <span vitec-foreach="saksoker  in Model.saksokere"> <span class="liste">[[*saksoker.navnutenfullmektigogkontaktperson]]<span class="separator">, </span> </span> </span></li>
+						<li>Saks&oslash;kte: <span vitec-foreach="saksokte  in Model.saksokteliste"> <span class="liste">[[*saksokte.navnutenfullmektigogkontaktperson]]<span class="separator">, </span> </span> </span></li>
+						<li>Saks&oslash;ktes ektefelle og/eller husstandsmedlem</li>
+						<li>Budgivere som har gitt bud som er begj&aelig;rt stadfestet</li>
+						<li>Andre kjente rettighetshavere</li>
+						<li>Kreditorer/rettighetshavere</li>
+						<li>Forretningsf&oslash;rer: [[forretningsforer.navn]]</li>
+					</ul>
+
+					<p>Tvangssalget skjer p&aring; bakgrunn av</p>
+
+					<ul vitec-foreach="pant in Model.oppdrag.saksokerspant">
+						<li>[[*pant.type]], opprinnelig stor kr $.UD([[*pant.belop]]), n&aring; til rest kr $.UD([[*pant.restbelop]]), med tillegg av renter og omkostninger anf&oslash;rt p&aring; <strong>[[*pant.prioritet]]. prioritet</strong></li>
+					</ul>
+
+					<p>Boligen med har v&aelig;rt annonsert for salg og det er innkommet bud stort <strong>kr $.UD([[hoyestebud.belop]])</strong> avgitt av [[hoyestebud.budgiver.navn]], [[hoyestebud.budgiver.ledetekst_fdato_orgnr]] [[hoyestebud.budgiver.fdato_orgnr]], adresse [[hoyestebud.budgiver.gatenavnognr]], [[hoyestebud.budgiver.postnr]] [[hoyestebud.budgiver.poststed]]. Budet er avgitt den [[hoyestebud.avgitt.dato]]&nbsp;og er bindende til og med <strong>[[hoyestebud.akseptfrist.dato]] kl. [[hoyestebud.akseptfrist.klokkeslett]]</strong>. Det er ikke stillet sikkerhet for budet, men finansieringsplan er presentert. Budet er begj&aelig;rt stadfestet av saks&oslash;ker.</p>
+
+					<p>Det er ingen heftelser av typen &quot;ikke pengeheftelser&quot; som skal settes til side, jf.tvbl. &sect; 11 - 29 d).</p>
+
+					<p>Det er avholdt takst som angir kr $.UD([[eiendom.laanetakst]]) som l&aring;neverdi, og kr $.UD([[eiendom.verditakst]]) som salgsverdi. Det er avholdt [[oppdrag.antallvisninger]] visning<span vitec-if="Model.oppdrag.antallvisninger != 1">er</span>. <span style="color:red">(Individuell beskrivelse av salgsarbeidet fra den enkelte medhjelper).</span></p>
+
+					<p>P&aring; denne bakgrunn, samt salgsformen, boligens beliggenhet og takstverdiene, er medhjelpers vurdering at ytterligere salgsfremst&oslash;t neppe vil innbringe kreditorene bedre netto dekning.</p>
+
+					<p>Oppgj&oslash;rsdagen er <span vitec-if="Model.kontrakt.oppgjor.dato != &quot;Mangler data&quot;">[[kontrakt.oppgjor.dato]]</span><span vitec-if="Model.kontrakt.oppgjor.dato == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="3 måneder fra dagens dato"></span></span></span>.</p>
+
+					<p>Innsigelser mot stadfestelse, eller mot vedlagte utkast til fordelingskjennelse, m&aring; v&aelig;re kommet frem til (domstol) innen 2 uker fra avsendelsen av denne underretning.</p>
+
+					<p>Foreleggelsen er sendt [[selger.navn]], partene, rettighetshavere og budgiver.</p>
+
+					<p>Vedlagt f&oslash;lger kopi av salgsoppgave, takst og forslag til fordelingskjennelse.</p>
+
+					<p>For pantekrav som er knyttet til et verdipapir, skal det ikke utbetales del av kj&oslash;pesummen f&oslash;r panthaveren har fremlagt dokumentet, jf. tvfbl. &sect; 11-38 2. ledd. Dette inneb&aelig;rer at <span class="insert-table"><span class="insert" data-label="Panthaver"></span></span>, <span class="insert-table"><span class="insert" data-label="Panthaver"></span></span> og <span class="insert-table"><span class="insert" data-label="Panthaver"></span></span> m&aring; sende inn pantedokument med tilh&oslash;rende gjeldsbrev i original, f&oslash;r medhjelper kan utbetale kj&oslash;pesummen.</p>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="100">
+					<div vitec-template="resource: Avsender">&nbsp;</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </div>

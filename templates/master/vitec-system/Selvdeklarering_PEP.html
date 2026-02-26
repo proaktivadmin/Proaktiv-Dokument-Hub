@@ -1,261 +1,261 @@
-<div id="vitecTemplate">
-    <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
-    <style type="text/css">
-
-        #vitecTemplate h1 {
-            font-size: 1.5em;
-            margin-bottom: 0.5em;
-        }
-        #vitecTemplate h2 {
-            font-size: 1.2em;
-            margin-bottom: 0.5em;
-        }
-        #vitecTemplate table {
-            border-collapse: collapse;
-            width: 100%;
-            table-layout: fixed;
-        }
-
-        #vitecTemplate .insert-checkbox {
-            display: inline-table;
-            vertical-align: bottom;
-            margin: 0 2px;
-        }
-
-            #vitecTemplate .insert-checkbox > span {
-                line-height: 1;
-                border: solid 1px black;
-                height: 1em;
-                width: 1em;
-                max-width: 1em;
-                overflow: hidden;
-                display: table-cell;
-                text-align: center;
-                white-space: nowrap;
-            }
-
-        #vitecTemplate .checklist-role {
-            list-style: none;
-            display: block;
-            margin: 0;
-            padding: 0;
-        }
-
-            #vitecTemplate .checklist-role li {
-                display: inline-block;
-                padding-left: 0;
-                margin: 0 20px;
-            }
-
-                #vitecTemplate .checklist-role li:first-child {
-                    margin-left: 0;
-                }
-
-                #vitecTemplate .sign-field {
-                    margin-top: 0.7cm;
-                    margin-bottom: 0.3cm;
-                    border-top: solid 1px black;
-                }
-    </style>
-    <style type="text/css">
-        /* Klikkbare sjekkbokser og radioknapper */
-        label.btn {
-            display: inline;
-            text-transform: none;
-            white-space: normal;
-            padding: 0;
-            vertical-align: baseline;
-            outline: none;
-            font-size: inherit;
-        }
-
-            label.btn:active,
-            label.btn.active {
-                box-shadow: none;
-                outline: none;
-            }
-
-        .svg-toggle { /* nullstiller bootstrap button-styling */
-            display: inline-block !important;
-            width: 20px;
-            height: 20px;
-            margin: 0 2px;
-            vertical-align: bottom;
-            padding: 0;
-            border: none;
-            background: transparent;
-            border-radius: 0;
-            box-shadow: none !important;
-            cursor: pointer;
-            white-space: normal;
-            text-align: left;
-            background-repeat: no-repeat;
-            background-size: 20px 20px;
-            background-position: center center;
-        }
-
-            .svg-toggle.checkbox {
-                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
-            }
-
-                .svg-toggle.checkbox.active,
-                .btn.active > .svg-toggle.checkbox {
-                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
-                    box-shadow: none !important;
-                }
-
-            .svg-toggle.radio {
-                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
-            }
-
-                .svg-toggle.radio.active,
-                .btn.active > .svg-toggle.radio {
-                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
-                    box-shadow: none !important;
-                }
-
-        /* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
-        #vitecTemplate [data-toggle="buttons"] input {
-            display: none;
-        }
-    </style>
-    <div vitec-foreach="selger in Model.selgere">
-        <table style="page-break-inside:avoid">
-            <tbody>
-                <tr>
-                    <td colspan="100">
-                        <p style="text-align:right">[[oppdrag.nr]]/[[megler1.brukerid]]</p>
-                        <h1>SELVDEKLARERING PEP</h1>
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td colspan="100"><h2>Jeg er eller har v&aelig;rt:</h2></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
-                                    <td colspan="95">Statsoverhode, regjeringssjef, minister eller assisterende minister</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
-                                    <td colspan="95">Medlem av nasjonalforsamling</td>
-                                </tr> 
-                                <tr>
-                                    <td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
-                                    <td colspan="95">Medlem av h&oslash;yere rettsinstans som treffer beslutninger som bare unntaksvis kan ankes</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
-                                    <td colspan="95">Medlem av styre i riksrevisjon, revisjonsdomstol eller sentralbank</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
-                                    <td colspan="95">Ambassad&oslash;r, charg&eacute; d&rsquo;affaires eller milit&aelig;r offiser av h&oslash;yere rang</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
-                                    <td colspan="95">Medlem av administrativt, ledende eller kontrollerende organ i et statseid foretak</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
-                                    <td colspan="95">En person som har eller har hatt en funksjon i ledelsen i en internasjonal organisasjon</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
-                                    <td colspan="95">Intet av ovenst&aring;ende</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="100">&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="100"><h2>Jeg er n&aelig;rst&aring;ende til en person med en av de ovennevnte verv/stillinger:</h2></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="100">
-                                        <ul class="checklist-role">
-                                            <li><span><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label> Ektefelle</span></li>
-                                            <li><span><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label> Partner</span></li>
-                                            <li><span><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label> Barn</span></li>
-                                            <li><span><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label> Barns ektefelle</span></li>
-                                            <li><span><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label> Foreldre</span></li>
-                                        </ul>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="48">
-                                        <div class="sign-field">
-                                            <small>Relasjon til (Navn)</small>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
-                                    <td colspan="95">Intet av ovenst&aring;ende</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="100">&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="100"><h2>Jeg er kjent medarbeider av en person som har eller har hatt en av rollene i listen over:</h2></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
-                                    <td colspan="95">Reell rettighetshaver i juridisk person eller formuesmasse i fellesskap med en person som har eller har hatt en av rollene i listen over</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
-                                    <td colspan="95">En person som p&aring; annen m&aring;te har eller har hatt en forretningsforbindelse med en person som har eller har hatt en av rollene i listen over.</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
-                                    <td colspan="95">Eneste reelle rettighetshaver i juridisk person eller formuesmasse som i realiteten er etablert for &aring; begunstige en person som har eller som har hatt en av rollene i listen over.</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="48">
-                                        <div class="sign-field">
-                                            <small>Relasjon til (Navn)</small>
-                                        </div>
-                                    </td>
-                                    <td colspan="2">&nbsp;</td>
-                                    <td colspan="24">
-                                        <div class="sign-field">
-                                            <small>Land/organisasjon/verv</small>
-                                        </div>
-                                    </td>
-                                    <td colspan="2">&nbsp;</td>
-                                    <td colspan="24">
-                                        <div class="sign-field">
-                                            <small>Tidsperiode</small>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
-                                    <td colspan="95">Intet av ovenst&aring;ende</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="100">&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="100">&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="48">
-                                        <div class="sign-field">
-                                            Sted / dato
-                                        </div>
-                                    </td>
-                                    <td colspan="2"></td>
-                                    <td colspan="48">
-                                        <div class="sign-field">
-                                            [[*selger.navn]]
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+<div id="vitecTemplate">
+    <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+    <style type="text/css">
+
+        #vitecTemplate h1 {
+            font-size: 1.5em;
+            margin-bottom: 0.5em;
+        }
+        #vitecTemplate h2 {
+            font-size: 1.2em;
+            margin-bottom: 0.5em;
+        }
+        #vitecTemplate table {
+            border-collapse: collapse;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        #vitecTemplate .insert-checkbox {
+            display: inline-table;
+            vertical-align: bottom;
+            margin: 0 2px;
+        }
+
+            #vitecTemplate .insert-checkbox > span {
+                line-height: 1;
+                border: solid 1px black;
+                height: 1em;
+                width: 1em;
+                max-width: 1em;
+                overflow: hidden;
+                display: table-cell;
+                text-align: center;
+                white-space: nowrap;
+            }
+
+        #vitecTemplate .checklist-role {
+            list-style: none;
+            display: block;
+            margin: 0;
+            padding: 0;
+        }
+
+            #vitecTemplate .checklist-role li {
+                display: inline-block;
+                padding-left: 0;
+                margin: 0 20px;
+            }
+
+                #vitecTemplate .checklist-role li:first-child {
+                    margin-left: 0;
+                }
+
+                #vitecTemplate .sign-field {
+                    margin-top: 0.7cm;
+                    margin-bottom: 0.3cm;
+                    border-top: solid 1px black;
+                }
+    </style>
+    <style type="text/css">
+        /* Klikkbare sjekkbokser og radioknapper */
+        label.btn {
+            display: inline;
+            text-transform: none;
+            white-space: normal;
+            padding: 0;
+            vertical-align: baseline;
+            outline: none;
+            font-size: inherit;
+        }
+
+            label.btn:active,
+            label.btn.active {
+                box-shadow: none;
+                outline: none;
+            }
+
+        .svg-toggle { /* nullstiller bootstrap button-styling */
+            display: inline-block !important;
+            width: 20px;
+            height: 20px;
+            margin: 0 2px;
+            vertical-align: bottom;
+            padding: 0;
+            border: none;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none !important;
+            cursor: pointer;
+            white-space: normal;
+            text-align: left;
+            background-repeat: no-repeat;
+            background-size: 20px 20px;
+            background-position: center center;
+        }
+
+            .svg-toggle.checkbox {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+            }
+
+                .svg-toggle.checkbox.active,
+                .btn.active > .svg-toggle.checkbox {
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+                    box-shadow: none !important;
+                }
+
+            .svg-toggle.radio {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
+            }
+
+                .svg-toggle.radio.active,
+                .btn.active > .svg-toggle.radio {
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
+                    box-shadow: none !important;
+                }
+
+        /* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
+        #vitecTemplate [data-toggle="buttons"] input {
+            display: none;
+        }
+    </style>
+    <div vitec-foreach="selger in Model.selgere">
+        <table style="page-break-inside:avoid">
+            <tbody>
+                <tr>
+                    <td colspan="100">
+                        <p style="text-align:right">[[oppdrag.nr]]/[[megler1.brukerid]]</p>
+                        <h1>SELVDEKLARERING PEP</h1>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td colspan="100"><h2>Jeg er eller har v&aelig;rt:</h2></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
+                                    <td colspan="95">Statsoverhode, regjeringssjef, minister eller assisterende minister</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
+                                    <td colspan="95">Medlem av nasjonalforsamling</td>
+                                </tr> 
+                                <tr>
+                                    <td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
+                                    <td colspan="95">Medlem av h&oslash;yere rettsinstans som treffer beslutninger som bare unntaksvis kan ankes</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
+                                    <td colspan="95">Medlem av styre i riksrevisjon, revisjonsdomstol eller sentralbank</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
+                                    <td colspan="95">Ambassad&oslash;r, charg&eacute; d&rsquo;affaires eller milit&aelig;r offiser av h&oslash;yere rang</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
+                                    <td colspan="95">Medlem av administrativt, ledende eller kontrollerende organ i et statseid foretak</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
+                                    <td colspan="95">En person som har eller har hatt en funksjon i ledelsen i en internasjonal organisasjon</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
+                                    <td colspan="95">Intet av ovenst&aring;ende</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="100">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="100"><h2>Jeg er n&aelig;rst&aring;ende til en person med en av de ovennevnte verv/stillinger:</h2></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="100">
+                                        <ul class="checklist-role">
+                                            <li><span><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label> Ektefelle</span></li>
+                                            <li><span><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label> Partner</span></li>
+                                            <li><span><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label> Barn</span></li>
+                                            <li><span><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label> Barns ektefelle</span></li>
+                                            <li><span><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label> Foreldre</span></li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="48">
+                                        <div class="sign-field">
+                                            <small>Relasjon til (Navn)</small>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
+                                    <td colspan="95">Intet av ovenst&aring;ende</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="100">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="100"><h2>Jeg er kjent medarbeider av en person som har eller har hatt en av rollene i listen over:</h2></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
+                                    <td colspan="95">Reell rettighetshaver i juridisk person eller formuesmasse i fellesskap med en person som har eller har hatt en av rollene i listen over</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
+                                    <td colspan="95">En person som p&aring; annen m&aring;te har eller har hatt en forretningsforbindelse med en person som har eller har hatt en av rollene i listen over.</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
+                                    <td colspan="95">Eneste reelle rettighetshaver i juridisk person eller formuesmasse som i realiteten er etablert for &aring; begunstige en person som har eller som har hatt en av rollene i listen over.</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="48">
+                                        <div class="sign-field">
+                                            <small>Relasjon til (Navn)</small>
+                                        </div>
+                                    </td>
+                                    <td colspan="2">&nbsp;</td>
+                                    <td colspan="24">
+                                        <div class="sign-field">
+                                            <small>Land/organisasjon/verv</small>
+                                        </div>
+                                    </td>
+                                    <td colspan="2">&nbsp;</td>
+                                    <td colspan="24">
+                                        <div class="sign-field">
+                                            <small>Tidsperiode</small>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
+                                    <td colspan="95">Intet av ovenst&aring;ende</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="100">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="100">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="48">
+                                        <div class="sign-field">
+                                            Sted / dato
+                                        </div>
+                                    </td>
+                                    <td colspan="2"></td>
+                                    <td colspan="48">
+                                        <div class="sign-field">
+                                            [[*selger.navn]]
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>

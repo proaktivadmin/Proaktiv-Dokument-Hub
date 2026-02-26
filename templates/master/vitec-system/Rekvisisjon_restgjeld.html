@@ -1,281 +1,281 @@
-<div id="vitecTemplate">
-	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
-	<style type="text/css">
-		#vitecTemplate table {
-			border-collapse: collapse;
-			width: 100%;
-			table-layout: fixed;
-		}
-
-			#vitecTemplate table td {
-				border: solid 1px #000;
-				height: 35px;
-				vertical-align: middle;
-				padding-left: 5px;
-			}
-
-			#vitecTemplate table tr.no-border td {
-				border: none;
-				height: auto;
-			}
-
-			#vitecTemplate table td.overskrift1 {
-				background-color: rgb(224,224,224);
-				color: #000;
-				line-height: 25px;
-				height: 25px;
-				padding-left: 5px;
-			}
-
-			#vitecTemplate table td[data-label]:before {
-				content: attr(data-label);
-				text-align: left;
-				color: #333;
-				font-size: 9pt;
-				line-height: 8pt;
-				display: block;
-				position: absolute;
-				top: 1px;
-				padding-left: 5px;
-			}
-
-			#vitecTemplate table td[data-choice]:after {
-				content: attr(data-choice);
-				text-align: center;
-				font-size: 9pt;
-				font-weight: normal;
-				line-height: 8pt;
-				color: #333;
-				display: block;
-				position: absolute;
-				bottom: 1px;
-				left: 0;
-				right: 0;
-			}
-
-			#vitecTemplate table td[data-label] {
-				padding: 16px 2px 4px 2px;
-				position: relative;
-			}
-
-			#vitecTemplate table td[data-choice] {
-				padding: 4px 2px 16px 2px;
-				position: relative;
-			}
-
-			/* tabellceller med baade label og valg-tekst */
-
-			#vitecTemplate table td[data-label][data-choice] {
-				padding: 16px 2px 16px 2px;
-				position: relative;
-			}
-
-		/* tabellceller med lange data-choice-tekster */
-
-		#vitecTemplate tr.checkbox-row td[data-choice] {
-			padding-bottom: 24px;
-		}
-
-		/* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
-
-		span.insert:empty {
-			font-size: inherit !important;
-			line-height: inherit !important;
-			display: inline-block;
-			background-color: lightpink;
-			min-width: 2em !important;
-			height: .7em !important;
-			text-align: center;
-		}
-
-			span.insert:empty:before {
-				content: attr(data-label);
-			}
-
-			span.insert:empty:hover {
-				background-color: #fff;
-				cursor: pointer;
-			}
-
-		.insert-table {
-			display: inline-table;
-		}
-
-			.insert-table > span,
-			.insert-table > span.insert {
-				display: table-cell;
-			}
-
-		#vitecTemplate ul {
-			list-style-type: none;
-		}
-	</style>
-	<style type="text/css">
-		/* Klikkbare sjekkbokser og radioknapper */
-		label.btn {
-			display: inline;
-			text-transform: none;
-			white-space: normal;
-			padding: 0;
-			vertical-align: baseline;
-			outline: none;
-			font-size: inherit;
-		}
-
-			label.btn:active,
-			label.btn.active {
-				box-shadow: none;
-				outline: none;
-			}
-
-		.svg-toggle { /* nullstiller bootstrap button-styling */
-			display: inline-block !important;
-			width: 16px;
-			height: 16px;
-			margin: 0 2px;
-			vertical-align: bottom;
-			padding: 0;
-			border: none;
-			background: transparent;
-			border-radius: 0;
-			box-shadow: none !important;
-			cursor: pointer;
-			white-space: normal;
-			text-align: left;
-			background-repeat: no-repeat;
-			background-size: 16px 16px;
-			background-position: center center;
-		}
-
-			.svg-toggle.checkbox {
-				background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
-			}
-
-				.svg-toggle.checkbox.active,
-				.btn.active > .svg-toggle.checkbox {
-					background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
-					box-shadow: none !important;
-				}
-
-			.svg-toggle.radio {
-				background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
-			}
-
-				.svg-toggle.radio.active,
-				.btn.active > .svg-toggle.radio {
-					background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
-					box-shadow: none !important;
-				}
-
-		/* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
-		#vitecTemplate [data-toggle="buttons"] input {
-			display: none;
-		}
-	</style>
-	<table>
-		<tbody>
-			<tr class="no-border">
-				<td colspan="100">
-					<div vitec-template="resource: Mottaker">&nbsp;</div>
-
-					<p><strong>Restgjeld p&aring; [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
-
-					<p>V&aring;rt firma har for salg ovennevnte eiendom tilh&oslash;rende:</p>
-				</td>
-			</tr>
-			<tr class="no-border" vitec-if="Model.selgere.Count &gt; 0">
-				<td colspan="37"><strong>Navn</strong></td>
-				<td colspan="45"><strong>Adresse</strong></td>
-				<td colspan="18"><strong>[[selger.ledetekst_fdato_orgnr]]</strong></td>
-			</tr>
-		</tbody>
-		<tbody vitec-foreach="selger in Model.selgere">
-			<tr class="no-border">
-				<td colspan="37">[[*selger.navn]]</td>
-				<td colspan="45">[[*selger.gatenavnognr]], [[*selger.postnr]] [[*selger.poststed]]</td>
-				<td colspan="18">[[*selger.fdato_orgnr]]</td>
-			</tr>
-		</tbody>
-		<tbody>
-			<tr class="no-border">
-				<td colspan="100">
-					<p>hvor dere har pant i eiendommen:</p>
-
-					<div vitec-foreach="pant in Model.oppdrag.mottakerspant">
-						<ul>
-							<li>stort <strong>kr $.UD([[*pant.belop]])</strong> <span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">tinglyst </span><span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">notert </span>[[*pant.tinglystdato]]<span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)"> med dokumentnr. [[*pant.dokumentnr]]</span></li>
-						</ul>
-					</div>
-
-					<p>Vi ber derfor om en tilbakemelding p&aring; hvilke l&aring;n som <u>m&aring; innl&oslash;ses/nedbetales</u> for at pantet skal kunne slettes <span vitec-if="(Model.eiendom.eieform == &quot;Andel&quot; || Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)"> i grunnboken </span>:</p>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-
-	<table style="page-break-inside:avoid">
-		<tbody>
-			<tr>
-				<td class="overskrift1" colspan="20">L&aring;nenummer</td>
-				<td class="overskrift1" colspan="23">L&aring;netakers navn</td>
-				<td class="overskrift1" colspan="20">Restgjeldsbel&oslash;p</td>
-				<td class="overskrift1" colspan="20">Restgjeld pr. dato</td>
-				<td class="overskrift1" colspan="17">Fastrentel&aring;n?</td>
-			</tr>
-			<tr>
-				<td colspan="20">&nbsp;</td>
-				<td colspan="23">&nbsp;</td>
-				<td colspan="20">Kr</td>
-				<td colspan="20">&nbsp;</td>
-				<td colspan="17" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" />Nei</label></td>
-			</tr>
-			<tr>
-				<td colspan="20">&nbsp;</td>
-				<td colspan="23">&nbsp;</td>
-				<td colspan="20">Kr</td>
-				<td colspan="20">&nbsp;</td>
-				<td colspan="17" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" />Nei</label></td>
-			</tr>
-		</tbody>
-	</table>
-
-	<table style="page-break-inside:avoid">
-		<tbody>
-			<tr class="no-border">
-				<td colspan="100">
-					<p>Vi ber samtidig om en bekreftelse p&aring; at pantet ikke vil bli ytterligere oppl&aring;nt uten v&aring;rt samtykke:</p>
-
-					<p><strong>For [[mottaker.navn]]</strong></p>
-				</td>
-			</tr>
-			<tr class="no-border">
-				<td colspan="30" style="border-bottom:solid 1px #000000; height:30px">&nbsp;</td>
-				<td colspan="10">&nbsp;</td>
-				<td colspan="55" style="border-bottom:solid 1px #000000; height:30px">&nbsp;</td>
-				<td colspan="5">&nbsp;</td>
-			</tr>
-			<tr class="no-border">
-				<td colspan="30"><small>Sted, dato</small></td>
-				<td colspan="10">&nbsp;</td>
-				<td colspan="55"><small>Signatur</small></td>
-				<td colspan="5">&nbsp;</td>
-			</tr>
-		</tbody>
-	</table>
-
-	<table>
-		<tbody>
-			<tr class="no-border">
-				<td colspan="100">
-					<div style="page-break-inside:avoid">
-						<p>Opplysningene bes returnert til v&aring;rt kontor snarest mulig, gjerne p&aring; e-post [[meglerkontor.epost]].</p>
-
-						<p>P&aring; forh&aring;nd takk!</p>
-					</div>
-
-					<div vitec-template="resource: Avsender">&nbsp;</div>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+<div id="vitecTemplate">
+	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+	<style type="text/css">
+		#vitecTemplate table {
+			border-collapse: collapse;
+			width: 100%;
+			table-layout: fixed;
+		}
+
+			#vitecTemplate table td {
+				border: solid 1px #000;
+				height: 35px;
+				vertical-align: middle;
+				padding-left: 5px;
+			}
+
+			#vitecTemplate table tr.no-border td {
+				border: none;
+				height: auto;
+			}
+
+			#vitecTemplate table td.overskrift1 {
+				background-color: rgb(224,224,224);
+				color: #000;
+				line-height: 25px;
+				height: 25px;
+				padding-left: 5px;
+			}
+
+			#vitecTemplate table td[data-label]:before {
+				content: attr(data-label);
+				text-align: left;
+				color: #333;
+				font-size: 9pt;
+				line-height: 8pt;
+				display: block;
+				position: absolute;
+				top: 1px;
+				padding-left: 5px;
+			}
+
+			#vitecTemplate table td[data-choice]:after {
+				content: attr(data-choice);
+				text-align: center;
+				font-size: 9pt;
+				font-weight: normal;
+				line-height: 8pt;
+				color: #333;
+				display: block;
+				position: absolute;
+				bottom: 1px;
+				left: 0;
+				right: 0;
+			}
+
+			#vitecTemplate table td[data-label] {
+				padding: 16px 2px 4px 2px;
+				position: relative;
+			}
+
+			#vitecTemplate table td[data-choice] {
+				padding: 4px 2px 16px 2px;
+				position: relative;
+			}
+
+			/* tabellceller med baade label og valg-tekst */
+
+			#vitecTemplate table td[data-label][data-choice] {
+				padding: 16px 2px 16px 2px;
+				position: relative;
+			}
+
+		/* tabellceller med lange data-choice-tekster */
+
+		#vitecTemplate tr.checkbox-row td[data-choice] {
+			padding-bottom: 24px;
+		}
+
+		/* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+		span.insert:empty {
+			font-size: inherit !important;
+			line-height: inherit !important;
+			display: inline-block;
+			background-color: lightpink;
+			min-width: 2em !important;
+			height: .7em !important;
+			text-align: center;
+		}
+
+			span.insert:empty:before {
+				content: attr(data-label);
+			}
+
+			span.insert:empty:hover {
+				background-color: #fff;
+				cursor: pointer;
+			}
+
+		.insert-table {
+			display: inline-table;
+		}
+
+			.insert-table > span,
+			.insert-table > span.insert {
+				display: table-cell;
+			}
+
+		#vitecTemplate ul {
+			list-style-type: none;
+		}
+	</style>
+	<style type="text/css">
+		/* Klikkbare sjekkbokser og radioknapper */
+		label.btn {
+			display: inline;
+			text-transform: none;
+			white-space: normal;
+			padding: 0;
+			vertical-align: baseline;
+			outline: none;
+			font-size: inherit;
+		}
+
+			label.btn:active,
+			label.btn.active {
+				box-shadow: none;
+				outline: none;
+			}
+
+		.svg-toggle { /* nullstiller bootstrap button-styling */
+			display: inline-block !important;
+			width: 16px;
+			height: 16px;
+			margin: 0 2px;
+			vertical-align: bottom;
+			padding: 0;
+			border: none;
+			background: transparent;
+			border-radius: 0;
+			box-shadow: none !important;
+			cursor: pointer;
+			white-space: normal;
+			text-align: left;
+			background-repeat: no-repeat;
+			background-size: 16px 16px;
+			background-position: center center;
+		}
+
+			.svg-toggle.checkbox {
+				background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+			}
+
+				.svg-toggle.checkbox.active,
+				.btn.active > .svg-toggle.checkbox {
+					background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+					box-shadow: none !important;
+				}
+
+			.svg-toggle.radio {
+				background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
+			}
+
+				.svg-toggle.radio.active,
+				.btn.active > .svg-toggle.radio {
+					background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
+					box-shadow: none !important;
+				}
+
+		/* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
+		#vitecTemplate [data-toggle="buttons"] input {
+			display: none;
+		}
+	</style>
+	<table>
+		<tbody>
+			<tr class="no-border">
+				<td colspan="100">
+					<div vitec-template="resource: Mottaker">&nbsp;</div>
+
+					<p><strong>Restgjeld p&aring; [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+					<p>V&aring;rt firma har for salg ovennevnte eiendom tilh&oslash;rende:</p>
+				</td>
+			</tr>
+			<tr class="no-border" vitec-if="Model.selgere.Count &gt; 0">
+				<td colspan="37"><strong>Navn</strong></td>
+				<td colspan="45"><strong>Adresse</strong></td>
+				<td colspan="18"><strong>[[selger.ledetekst_fdato_orgnr]]</strong></td>
+			</tr>
+		</tbody>
+		<tbody vitec-foreach="selger in Model.selgere">
+			<tr class="no-border">
+				<td colspan="37">[[*selger.navn]]</td>
+				<td colspan="45">[[*selger.gatenavnognr]], [[*selger.postnr]] [[*selger.poststed]]</td>
+				<td colspan="18">[[*selger.fdato_orgnr]]</td>
+			</tr>
+		</tbody>
+		<tbody>
+			<tr class="no-border">
+				<td colspan="100">
+					<p>hvor dere har pant i eiendommen:</p>
+
+					<div vitec-foreach="pant in Model.oppdrag.mottakerspant">
+						<ul>
+							<li>stort <strong>kr $.UD([[*pant.belop]])</strong> <span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">tinglyst </span><span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">notert </span>[[*pant.tinglystdato]]<span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)"> med dokumentnr. [[*pant.dokumentnr]]</span></li>
+						</ul>
+					</div>
+
+					<p>Vi ber derfor om en tilbakemelding p&aring; hvilke l&aring;n som <u>m&aring; innl&oslash;ses/nedbetales</u> for at pantet skal kunne slettes <span vitec-if="(Model.eiendom.eieform == &quot;Andel&quot; || Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)"> i grunnboken </span>:</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<table style="page-break-inside:avoid">
+		<tbody>
+			<tr>
+				<td class="overskrift1" colspan="20">L&aring;nenummer</td>
+				<td class="overskrift1" colspan="23">L&aring;netakers navn</td>
+				<td class="overskrift1" colspan="20">Restgjeldsbel&oslash;p</td>
+				<td class="overskrift1" colspan="20">Restgjeld pr. dato</td>
+				<td class="overskrift1" colspan="17">Fastrentel&aring;n?</td>
+			</tr>
+			<tr>
+				<td colspan="20">&nbsp;</td>
+				<td colspan="23">&nbsp;</td>
+				<td colspan="20">Kr</td>
+				<td colspan="20">&nbsp;</td>
+				<td colspan="17" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" />Nei</label></td>
+			</tr>
+			<tr>
+				<td colspan="20">&nbsp;</td>
+				<td colspan="23">&nbsp;</td>
+				<td colspan="20">Kr</td>
+				<td colspan="20">&nbsp;</td>
+				<td colspan="17" data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" />Ja</label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" />Nei</label></td>
+			</tr>
+		</tbody>
+	</table>
+
+	<table style="page-break-inside:avoid">
+		<tbody>
+			<tr class="no-border">
+				<td colspan="100">
+					<p>Vi ber samtidig om en bekreftelse p&aring; at pantet ikke vil bli ytterligere oppl&aring;nt uten v&aring;rt samtykke:</p>
+
+					<p><strong>For [[mottaker.navn]]</strong></p>
+				</td>
+			</tr>
+			<tr class="no-border">
+				<td colspan="30" style="border-bottom:solid 1px #000000; height:30px">&nbsp;</td>
+				<td colspan="10">&nbsp;</td>
+				<td colspan="55" style="border-bottom:solid 1px #000000; height:30px">&nbsp;</td>
+				<td colspan="5">&nbsp;</td>
+			</tr>
+			<tr class="no-border">
+				<td colspan="30"><small>Sted, dato</small></td>
+				<td colspan="10">&nbsp;</td>
+				<td colspan="55"><small>Signatur</small></td>
+				<td colspan="5">&nbsp;</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<table>
+		<tbody>
+			<tr class="no-border">
+				<td colspan="100">
+					<div style="page-break-inside:avoid">
+						<p>Opplysningene bes returnert til v&aring;rt kontor snarest mulig, gjerne p&aring; e-post [[meglerkontor.epost]].</p>
+
+						<p>P&aring; forh&aring;nd takk!</p>
+					</div>
+
+					<div vitec-template="resource: Avsender">&nbsp;</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </div>

@@ -1,70 +1,70 @@
-<div id="vitecTemplate">
-	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
-	<style type="text/css">
-		/* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
-
-		span.insert:empty {
-			font-size: inherit !important;
-			line-height: inherit !important;
-			display: inline-block;
-			background-color: lightpink;
-			min-width: 2em !important;
-			height: .7em !important;
-			text-align: center;
-		}
-
-			span.insert:empty:before {
-				content: attr(data-label);
-			}
-
-			span.insert:empty:hover {
-				background-color: #fff;
-				cursor: pointer;
-			}
-
-		.insert-table {
-			display: inline-table;
-		}
-
-			.insert-table > span,
-			.insert-table > span.insert {
-				display: table-cell;
-			}
-
-		#vitecTemplate table {
-			width: 100%;
-			table-layout: fixed;
-		}
-
-		#vitecTemplate .parts:last-child .separator {
-			display: none;
-		}
-	</style>
-	<table>
-		<tbody>
-			<tr>
-				<td>
-					<div vitec-template="resource: Mottaker">&nbsp;</div>
-
-					<h3>Manglende entrepren&oslash;rgaranti ihht. Bustadoppf&oslash;ringslova &sect; 12</h3>
-
-					<p><strong>Vedr. [[eiendom.alfanavn]] i [[eiendom.prosjektnavn]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
-
-					<p><strong><span style="color:red">Alternativ 1:</span></strong> Ved salg av <span vitec-if="Model.eiendom.grunntype != &quot;Fritid&quot;">bolig</span><span vitec-if="Model.eiendom.grunntype == &quot;Fritid&quot;">fritidsbolig</span> under oppf&oslash;ring til forbruker har utbygger en plikt til &aring; stille entrepren&oslash;rgaranti n&aring;r bindende avtale med kj&oslash;per er inng&aring;tt, jf. bustadoppf&oslash;ringslova &sect; 12.</p>
-
-					<p><strong><span style="color:red">Alternativ 2</span>:</strong> Ved salg av <span vitec-if="Model.eiendom.grunntype != &quot;Fritid&quot;">bolig</span><span vitec-if="Model.eiendom.grunntype == &quot;Fritid&quot;">fritidsbolig</span> under oppf&oslash;ring til forbruker har utbygger en plikt til &aring; stille entrepren&oslash;rgaranti straks etter at forbeholdet faller bort, men f&oslash;r byggearbeidet starter, jf. bustadoppf&oslash;ringslova &sect; 12.</p>
-
-					<p><strong><span style="color:red">Alternativ 1:</span></strong> Bindene avtale er inng&aring;tt mellom <span vitec-foreach="selger in Model.selgere"> <span class="parts"><strong>[[*selger.navnutenfullmektigogkontaktperson]]</strong><span class="separator">, </span> </span> </span> og <span vitec-foreach="kjoper in Model.kjopere"> <span class="parts"><strong>[[*kjoper.navnutenfullmektigogkontaktperson]]</strong><span class="separator">, </span> </span> </span> den [[kontrakt.dato]], men garanti er ikke stillet som forutsatt.</p>
-
-					<p><strong><span style="color:red">Alternativ 2:</span></strong> Bindene avtale er inng&aring;tt mellom <span vitec-foreach="selger in Model.selgere"> <span class="parts"><strong>[[*selger.navnutenfullmektigogkontaktperson]]</strong><span class="separator">, </span> </span> </span> og <span vitec-foreach="kjoper in Model.kjopere"> <span class="parts"><strong>[[*kjoper.navnutenfullmektigogkontaktperson]]</strong><span class="separator">, </span> </span> </span> den [[kontrakt.dato]] og forbeholdet gikk ut <span class="insert-table"> <span class="insert" data-label="Dato"></span></span>, men garanti er ikke stillet som forutsatt. Konsekvensen av dette er at kj&oslash;per kan gi dere et&nbsp;skriftlig varsel med en frist p&aring; minst ti virkedager til &aring; rette forholdet. Hvis dere ikke innen denne fristen dokumenterer at garantien er stilt i henhold til &sect; 12, har kj&oslash;per rett til &aring; heve avtalen.</p>
-
-					<p>Vi gj&oslash;r oppmerksom p&aring; at kj&oslash;per blir varslet om at entrepren&oslash;rgaranti etter bustadoppf&oslash;ringslova &sect; 12 ikke er stillet, og at det s&aring;ledes foreligger et mislighold av kontrakten fra utbyggers side. Kj&oslash;per er ogs&aring; orientert om at <span vitec-if="Model.kjopere.Count == 1">han/hun</span> <span vitec-if="Model.kjopere.Count &gt; 1">de</span> som en f&oslash;lge av misligholdet ikke har plikt til &aring; innbetale kj&oslash;pesummen, f&oslash;r det er bekreftet at garantien foreligger.</p>
-
-					<p>Eventuelle sp&oslash;rsm&aring;l kan rettes til undertegnede.</p>
-
-					<div vitec-template="resource: Avsender">&nbsp;</div>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+<div id="vitecTemplate">
+	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+	<style type="text/css">
+		/* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+		span.insert:empty {
+			font-size: inherit !important;
+			line-height: inherit !important;
+			display: inline-block;
+			background-color: lightpink;
+			min-width: 2em !important;
+			height: .7em !important;
+			text-align: center;
+		}
+
+			span.insert:empty:before {
+				content: attr(data-label);
+			}
+
+			span.insert:empty:hover {
+				background-color: #fff;
+				cursor: pointer;
+			}
+
+		.insert-table {
+			display: inline-table;
+		}
+
+			.insert-table > span,
+			.insert-table > span.insert {
+				display: table-cell;
+			}
+
+		#vitecTemplate table {
+			width: 100%;
+			table-layout: fixed;
+		}
+
+		#vitecTemplate .parts:last-child .separator {
+			display: none;
+		}
+	</style>
+	<table>
+		<tbody>
+			<tr>
+				<td>
+					<div vitec-template="resource: Mottaker">&nbsp;</div>
+
+					<h3>Manglende entrepren&oslash;rgaranti ihht. Bustadoppf&oslash;ringslova &sect; 12</h3>
+
+					<p><strong>Vedr. [[eiendom.alfanavn]] i [[eiendom.prosjektnavn]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+					<p><strong><span style="color:red">Alternativ 1:</span></strong> Ved salg av <span vitec-if="Model.eiendom.grunntype != &quot;Fritid&quot;">bolig</span><span vitec-if="Model.eiendom.grunntype == &quot;Fritid&quot;">fritidsbolig</span> under oppf&oslash;ring til forbruker har utbygger en plikt til &aring; stille entrepren&oslash;rgaranti n&aring;r bindende avtale med kj&oslash;per er inng&aring;tt, jf. bustadoppf&oslash;ringslova &sect; 12.</p>
+
+					<p><strong><span style="color:red">Alternativ 2</span>:</strong> Ved salg av <span vitec-if="Model.eiendom.grunntype != &quot;Fritid&quot;">bolig</span><span vitec-if="Model.eiendom.grunntype == &quot;Fritid&quot;">fritidsbolig</span> under oppf&oslash;ring til forbruker har utbygger en plikt til &aring; stille entrepren&oslash;rgaranti straks etter at forbeholdet faller bort, men f&oslash;r byggearbeidet starter, jf. bustadoppf&oslash;ringslova &sect; 12.</p>
+
+					<p><strong><span style="color:red">Alternativ 1:</span></strong> Bindene avtale er inng&aring;tt mellom <span vitec-foreach="selger in Model.selgere"> <span class="parts"><strong>[[*selger.navnutenfullmektigogkontaktperson]]</strong><span class="separator">, </span> </span> </span> og <span vitec-foreach="kjoper in Model.kjopere"> <span class="parts"><strong>[[*kjoper.navnutenfullmektigogkontaktperson]]</strong><span class="separator">, </span> </span> </span> den [[kontrakt.dato]], men garanti er ikke stillet som forutsatt.</p>
+
+					<p><strong><span style="color:red">Alternativ 2:</span></strong> Bindene avtale er inng&aring;tt mellom <span vitec-foreach="selger in Model.selgere"> <span class="parts"><strong>[[*selger.navnutenfullmektigogkontaktperson]]</strong><span class="separator">, </span> </span> </span> og <span vitec-foreach="kjoper in Model.kjopere"> <span class="parts"><strong>[[*kjoper.navnutenfullmektigogkontaktperson]]</strong><span class="separator">, </span> </span> </span> den [[kontrakt.dato]] og forbeholdet gikk ut <span class="insert-table"> <span class="insert" data-label="Dato"></span></span>, men garanti er ikke stillet som forutsatt. Konsekvensen av dette er at kj&oslash;per kan gi dere et&nbsp;skriftlig varsel med en frist p&aring; minst ti virkedager til &aring; rette forholdet. Hvis dere ikke innen denne fristen dokumenterer at garantien er stilt i henhold til &sect; 12, har kj&oslash;per rett til &aring; heve avtalen.</p>
+
+					<p>Vi gj&oslash;r oppmerksom p&aring; at kj&oslash;per blir varslet om at entrepren&oslash;rgaranti etter bustadoppf&oslash;ringslova &sect; 12 ikke er stillet, og at det s&aring;ledes foreligger et mislighold av kontrakten fra utbyggers side. Kj&oslash;per er ogs&aring; orientert om at <span vitec-if="Model.kjopere.Count == 1">han/hun</span> <span vitec-if="Model.kjopere.Count &gt; 1">de</span> som en f&oslash;lge av misligholdet ikke har plikt til &aring; innbetale kj&oslash;pesummen, f&oslash;r det er bekreftet at garantien foreligger.</p>
+
+					<p>Eventuelle sp&oslash;rsm&aring;l kan rettes til undertegnede.</p>
+
+					<div vitec-template="resource: Avsender">&nbsp;</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </div>

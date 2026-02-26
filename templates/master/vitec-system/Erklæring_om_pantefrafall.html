@@ -1,139 +1,139 @@
-<div id="vitecTemplate">
-    <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
-    <style type="text/css">
-        #vitecTemplate table {
-            width: 100%;
-            table-layout: fixed;
-            border-collapse: collapse;
-            box-sizing: border-box;
-            -webkit-box-sizing: border-box;
-        }
-
-        /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
-
-        span.insert:empty {
-            font-size: inherit !important;
-            line-height: inherit !important;
-            display: inline-block;
-            background-color: lightpink;
-            min-width: 2em !important;
-            height: .7em !important;
-            text-align: center;
-        }
-
-            span.insert:empty:before {
-                content: attr(data-label);
-            }
-
-            span.insert:empty:hover {
-                background-color: #fff;
-                cursor: pointer;
-            }
-
-        .insert-table {
-            display: inline-table;
-        }
-
-            .insert-table > span,
-            .insert-table > span.insert {
-                display: table-cell;
-            }
-
-        #vitecTemplate table {
-            width: 100%;
-            table-layout: fixed;
-            border-collapse: collapse;
-            box-sizing: border-box;
-            -webkit-box-sizing: border-box;
-        }
-    </style>
-    <table>
-        <tbody>
-            <tr>
-                <td colspan="100">
-                    <p style="text-align:right">Oppdragsnr.: [[oppdrag.nr]]</p>
-
-                    <p>&nbsp;</p>
-
-                    <p style="text-align:center"><span style="font-size:14pt"> <strong>ERKL&AElig;RING OM PANTEFRAFALL</strong> </span></p>
-
-                    <p>Undertegnede har f&oslash;lgende pant i [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune:</p>
-
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td colspan="25"><strong>Type</strong></td>
-                                <td colspan="20"><strong>Bel&oslash;p</strong></td>
-                                <td colspan="20"><strong><span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">Tinglyst </span><span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Notert </span>dato</strong></td>
-                                <td colspan="20"><strong><span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">Dokumentnr.</span></strong></td>
-                                <td colspan="15">&nbsp;</td>
-                            </tr>
-                        </tbody>
-                        <tbody vitec-foreach="pant in Model.oppdrag.mottakerspant">
-                            <tr>
-                                <td colspan="25">[[*pant.type]]</td>
-                                <td colspan="20">kr $.UD([[*pant.belop]])</td>
-                                <td colspan="20">[[*pant.tinglystdato]]</td>
-                                <td colspan="20"><span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">[[*pant.dokumentnr]]</span></td>
-                                <td colspan="15">&nbsp;</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <p>Vi viser til brev fra</p>
-
-                    <p><strong>[[meglerkontor.navn]], [[meglerkontor.adresse]], [[meglerkontor.poststed]]</strong></p>
-
-                    <p>vedr&oslash;rende salg av ovennevnte eiendom, og aksepterer med dette at eiendommen blir lagt ut for &quot;frivillig salg&quot;. Vi erkl&aelig;rer herved at vi vil slette v&aring;rt pant i ovennevnte eiendom, straks det viser seg hvilken dekning vi oppn&aring;r ved salget, det v&aelig;re seg full, delvis eller ingen dekning.</p>
-
-                    <p>Forutsetningen for at vi vil slette v&aring;rt pant er at salget skjer til den h&oslash;yest oppn&aring;elige markedspris p&aring; det aktuelle tidspunkt.</p>
-
-                    <p>Videre forutsettes det at nettoprovenyet, dvs. salgssum med fradrag av meglerens vederlag og eventuelt tilbakehold krevet av kj&oslash;per, g&aring;r til dekning av panthaver(e)s krav i henhold til prioriteringsbestemmelsene i lov om tinglysing av 7. juni 1935 og lov om pant av 8. februar 1980. Vi aksepterer dog at kostnader til dekning av annonsering, taksering, eventuell premie for eierskifteforsikring, samt eventuelt tilbakehold fra kj&oslash;per og andre n&oslash;dvendige kostnader som m&aring; til for &aring; gjennomf&oslash;re salget, dekkes forlodds av salgssummen og godskrives den som har forskuttert disse.</p>
-
-                    <p>Ved mottak av fullstendig oppgj&oslash;rsoppstilling som viser hvorledes oppgj&oslash;ret er gjennomf&oslash;rt, vil vi bes&oslash;rge sletting av v&aring;rt pant i eiendommen.</p>
-
-                    <p>
-                        <br />
-                        <strong>For [[mottaker.navn]]</strong>
-                    </p>
-                </td>
-            </tr>
-            <tr contenteditable="false">
-                <td colspan="30" style="border-bottom:solid 1px #000000; height:50px">&nbsp;</td>
-                <td colspan="10">&nbsp;</td>
-                <td colspan="55" style="border-bottom:solid 1px #000000; height:50px">&nbsp;</td>
-                <td colspan="5">&nbsp;</td>
-            </tr>
-            <tr contenteditable="false">
-                <td colspan="30"><small>Sted, dato</small></td>
-                <td colspan="10">&nbsp;</td>
-                <td colspan="55"><small>Signatur</small></td>
-                <td colspan="5">&nbsp;</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table style="margin-top:20px">
-        <tbody>
-            <tr>
-                <td colspan="100"><strong>Kontaktinformasjon</strong></td>
-            </tr>
-            <tr>
-                <td colspan="20">Saksnummer:</td>
-                <td colspan="60" style="border-bottom:solid 1px black">&nbsp;</td>
-            </tr>
-            <tr>
-                <td colspan="20">Saksbehandler:</td>
-                <td colspan="60" style="border-bottom:solid 1px black">&nbsp;</td>
-            </tr>
-            <tr>
-                <td colspan="20">Telefonnummer:</td>
-                <td colspan="60" style="border-bottom:solid 1px black">&nbsp;</td>
-            </tr>
-            <tr>
-                <td colspan="20">E-post:</td>
-                <td colspan="60" style="border-bottom:solid 1px black">&nbsp;</td>
-            </tr>
-        </tbody>
-    </table>
+<div id="vitecTemplate">
+    <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+    <style type="text/css">
+        #vitecTemplate table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
+
+        /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+        span.insert:empty {
+            font-size: inherit !important;
+            line-height: inherit !important;
+            display: inline-block;
+            background-color: lightpink;
+            min-width: 2em !important;
+            height: .7em !important;
+            text-align: center;
+        }
+
+            span.insert:empty:before {
+                content: attr(data-label);
+            }
+
+            span.insert:empty:hover {
+                background-color: #fff;
+                cursor: pointer;
+            }
+
+        .insert-table {
+            display: inline-table;
+        }
+
+            .insert-table > span,
+            .insert-table > span.insert {
+                display: table-cell;
+            }
+
+        #vitecTemplate table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
+    </style>
+    <table>
+        <tbody>
+            <tr>
+                <td colspan="100">
+                    <p style="text-align:right">Oppdragsnr.: [[oppdrag.nr]]</p>
+
+                    <p>&nbsp;</p>
+
+                    <p style="text-align:center"><span style="font-size:14pt"> <strong>ERKL&AElig;RING OM PANTEFRAFALL</strong> </span></p>
+
+                    <p>Undertegnede har f&oslash;lgende pant i [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune:</p>
+
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td colspan="25"><strong>Type</strong></td>
+                                <td colspan="20"><strong>Bel&oslash;p</strong></td>
+                                <td colspan="20"><strong><span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">Tinglyst </span><span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Notert </span>dato</strong></td>
+                                <td colspan="20"><strong><span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">Dokumentnr.</span></strong></td>
+                                <td colspan="15">&nbsp;</td>
+                            </tr>
+                        </tbody>
+                        <tbody vitec-foreach="pant in Model.oppdrag.mottakerspant">
+                            <tr>
+                                <td colspan="25">[[*pant.type]]</td>
+                                <td colspan="20">kr $.UD([[*pant.belop]])</td>
+                                <td colspan="20">[[*pant.tinglystdato]]</td>
+                                <td colspan="20"><span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">[[*pant.dokumentnr]]</span></td>
+                                <td colspan="15">&nbsp;</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>Vi viser til brev fra</p>
+
+                    <p><strong>[[meglerkontor.navn]], [[meglerkontor.adresse]], [[meglerkontor.poststed]]</strong></p>
+
+                    <p>vedr&oslash;rende salg av ovennevnte eiendom, og aksepterer med dette at eiendommen blir lagt ut for &quot;frivillig salg&quot;. Vi erkl&aelig;rer herved at vi vil slette v&aring;rt pant i ovennevnte eiendom, straks det viser seg hvilken dekning vi oppn&aring;r ved salget, det v&aelig;re seg full, delvis eller ingen dekning.</p>
+
+                    <p>Forutsetningen for at vi vil slette v&aring;rt pant er at salget skjer til den h&oslash;yest oppn&aring;elige markedspris p&aring; det aktuelle tidspunkt.</p>
+
+                    <p>Videre forutsettes det at nettoprovenyet, dvs. salgssum med fradrag av meglerens vederlag og eventuelt tilbakehold krevet av kj&oslash;per, g&aring;r til dekning av panthaver(e)s krav i henhold til prioriteringsbestemmelsene i lov om tinglysing av 7. juni 1935 og lov om pant av 8. februar 1980. Vi aksepterer dog at kostnader til dekning av annonsering, taksering, eventuell premie for eierskifteforsikring, samt eventuelt tilbakehold fra kj&oslash;per og andre n&oslash;dvendige kostnader som m&aring; til for &aring; gjennomf&oslash;re salget, dekkes forlodds av salgssummen og godskrives den som har forskuttert disse.</p>
+
+                    <p>Ved mottak av fullstendig oppgj&oslash;rsoppstilling som viser hvorledes oppgj&oslash;ret er gjennomf&oslash;rt, vil vi bes&oslash;rge sletting av v&aring;rt pant i eiendommen.</p>
+
+                    <p>
+                        <br />
+                        <strong>For [[mottaker.navn]]</strong>
+                    </p>
+                </td>
+            </tr>
+            <tr contenteditable="false">
+                <td colspan="30" style="border-bottom:solid 1px #000000; height:50px">&nbsp;</td>
+                <td colspan="10">&nbsp;</td>
+                <td colspan="55" style="border-bottom:solid 1px #000000; height:50px">&nbsp;</td>
+                <td colspan="5">&nbsp;</td>
+            </tr>
+            <tr contenteditable="false">
+                <td colspan="30"><small>Sted, dato</small></td>
+                <td colspan="10">&nbsp;</td>
+                <td colspan="55"><small>Signatur</small></td>
+                <td colspan="5">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table style="margin-top:20px">
+        <tbody>
+            <tr>
+                <td colspan="100"><strong>Kontaktinformasjon</strong></td>
+            </tr>
+            <tr>
+                <td colspan="20">Saksnummer:</td>
+                <td colspan="60" style="border-bottom:solid 1px black">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="20">Saksbehandler:</td>
+                <td colspan="60" style="border-bottom:solid 1px black">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="20">Telefonnummer:</td>
+                <td colspan="60" style="border-bottom:solid 1px black">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="20">E-post:</td>
+                <td colspan="60" style="border-bottom:solid 1px black">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
 </div>

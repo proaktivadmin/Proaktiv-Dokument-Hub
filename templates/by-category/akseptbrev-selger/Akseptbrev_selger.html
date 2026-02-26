@@ -1,364 +1,364 @@
-<div id="vitecTemplate">
-	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
-	<style type="text/css">
-		#vitecTemplate table {
-			border-collapse: collapse;
-			width: 100%;
-			table-layout: fixed;
-		}
-
-			#vitecTemplate table td {
-				border: solid 1px #000;
-				height: 35px;
-				vertical-align: middle;
-			}
-
-			#vitecTemplate table tr.no-border td {
-				border: none;
-				height: auto;
-			}
-
-			#vitecTemplate table td.overskrift1 {
-				background-color: rgb(224,224,224);
-				color: #000;
-				line-height: 25px;
-				height: 25px;
-				padding-left: 5px;
-				font-weight: bold;
-			}
-
-			#vitecTemplate table td.overskrift2 {
-				color: #000;
-				line-height: 25px;
-				height: 25px;
-				padding-left: 5px;
-				font-weight: bold;
-			}
-
-			#vitecTemplate table td[data-label]:before {
-				content: attr(data-label);
-				text-align: left;
-				color: #333;
-				font-size: 9pt;
-				line-height: 8pt;
-				display: block;
-				position: absolute;
-				top: 2px;
-			}
-
-			#vitecTemplate table td[data-choice]:after {
-				content: attr(data-choice);
-				text-align: center;
-				font-size: 7pt;
-				font-weight: normal;
-				line-height: 8pt;
-				color: #333;
-				display: block;
-				position: absolute;
-				bottom: 1px;
-				left: 0;
-				right: 0;
-			}
-
-			#vitecTemplate table td[data-label] {
-				padding: 16px 2px 4px 2px;
-				position: relative;
-			}
-
-			#vitecTemplate table td[data-choice] {
-				padding: 4px 2px 16px 2px;
-				position: relative;
-			}
-
-			/* tabellceller med B?DE label og valg-tekst */
-
-			#vitecTemplate table td[data-label][data-choice] {
-				padding: 16px 2px 16px 2px;
-				position: relative;
-			}
-
-		#vitecTemplate [contenteditable="false"] * {
-			user-select: none;
-		}
-
-		#vitecTemplate .checkbox-table {
-			/* 13/15 av full bredde */
-			width: 100%;
-			margin-left: 10px;
-			table-layout: fixed;
-			margin-bottom: 8px;
-		}
-
-			#vitecTemplate .checkbox-table td {
-				padding-bottom: 5px;
-				border: 0px;
-			}
-
-				/* checkbox-cell */
-
-				#vitecTemplate .checkbox-table td:first-child {
-					font-weight: 700;
-					vertical-align: top;
-				}
-
-		.checkbox-table-one-row {
-			width: 86.7%;
-			margin-left: 10px;
-			table-layout: fixed;
-		}
-
-		#vitecTemplate .sign-field {
-			display: inline-block;
-			width: 45%;
-			margin-top: 1cm;
-			margin-right: 10px;
-			border-top: solid 1px #000;
-			vertical-align: top;
-		}
-
-		#vitecTemplate .seller:last-child .separator {
-			display: none;
-		}
-	</style>
-	<style type="text/css">
-		/* Klikkbare sjekkbokser og radioknapper */
-		label.btn {
-			display: inline;
-			text-transform: none;
-			white-space: normal;
-			padding: 0;
-			vertical-align: baseline;
-			outline: none;
-			font-size: inherit;
-		}
-
-			label.btn:active,
-			label.btn.active {
-				box-shadow: none;
-				outline: none;
-			}
-
-		.svg-toggle { /* nullstiller bootstrap button-styling */
-			display: inline-block !important;
-			width: 16px;
-			height: 16px;
-			margin: 0 5px;
-			vertical-align: bottom;
-			padding: 0;
-			border: none;
-			background: transparent;
-			border-radius: 0;
-			box-shadow: none !important;
-			cursor: pointer;
-			white-space: normal;
-			text-align: left;
-			background-repeat: no-repeat;
-			background-size: 16px 16px;
-			background-position: center center;
-		}
-
-			.svg-toggle.large {
-				width: 24px;
-				height: 24px;
-				background-size: 24px 24px;
-			}
-
-			.svg-toggle.checkbox {
-				background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
-			}
-
-				.svg-toggle.checkbox.active,
-				.btn.active > .svg-toggle.checkbox {
-					background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
-					box-shadow: none !important;
-				}
-
-			.svg-toggle.radio {
-				background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
-			}
-
-				.svg-toggle.radio.active,
-				.btn.active > .svg-toggle.radio {
-					background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
-					box-shadow: none !important;
-				}
-
-		/* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
-		#vitecTemplate [data-toggle="buttons"] input {
-			display: none;
-		}
-	</style>
-	<table>
-		<tbody>
-			<tr class="no-border">
-				<td colspan="100">
-					<div vitec-template="resource: Mottaker">&nbsp;</div>
-
-					<p><strong>Salg av [[eiendom.gatenavnognr]] - [[komplettmatrikkel]] i [[eiendom.kommunenavn]] kommune</strong></p>
-
-					<p>Vi viser til <span vitec-if="Model.selgere.Count == 1">ditt</span> <span vitec-if="Model.selgere.Count &gt; 1">deres</span> uforbeholdne aksept av kj&oslash;petilbud p&aring; ovennevnte eiendom stort</p>
-
-					<p>kr $.UD([[kontrakt.kjopesum]]) + omkostninger, med overtakelse den [[kontrakt.overtagelse.dato]] kl. [[kontrakt.overtagelse.klokkeslett]]</p>
-
-					<p>Vi gratulerer <span vitec-if="Model.selgere.Count == 1">deg</span> <span vitec-if="Model.selgere.Count &gt; 1">dere</span> med salget, og bekrefter at det derved er inng&aring;tt bindende avtale mellom <span vitec-if="Model.selgere.Count == 1">deg</span> <span vitec-if="Model.selgere.Count &gt; 1">dere</span> og kj&oslash;per. <span vitec-if="Model.eiendom.eieform != &quot;Selveier&quot;">Dog forutsettes det at <span vitec-if="Model.oppdrag.erdetforkjopsfrist == true">forkj&oslash;psretten ikke blir benyttet og at </span> <span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">aksjelaget </span> <span vitec-if="Model.eiendom.eieform== &quot;Andel&quot;">borettslaget </span> <span vitec-if="Model.eiendom.eieform== &quot;Sameie&quot;">sameiet </span> godkjenner kj&oslash;per som ny eier.</span></p>
-
-					<p>Kontraktsm&oslash;tet avholdes p&aring; v&aring;rt kontor den <strong>[[kontrakt.dato]] kl. [[kontrakt.klokkeslett]]</strong> for &aring; gjennomg&aring; og undertegne n&oslash;dvendige dokumenter sammen med kj&oslash;per. Skulle forannevnte tidspunkt ikke passe, ta kontakt med oss snarest mulig slik at vi kan f&aring; avtalt annen tid. Vi forutsetter at <span vitec-if="Model.selgere.Count == 1">du</span> <span vitec-if="Model.selgere.Count &gt; 1">dere</span> gjennomg&aring;r vedlagte forslag til kj&oslash;pekontrakt f&oslash;r m&oslash;tet.</p>
-
-					<p>Til kontraktsm&oslash;tet ber vi <span vitec-if="Model.selgere.Count == 1">deg</span> <span vitec-if="Model.selgere.Count &gt; 1">dere</span> medbringe:</p>
-
-					<ol>
-						<li>Utfylt og signert oppgj&oslash;rsskjema (vedlagt dette brev).</li>
-						<li>Utfylt og signert pro&amp;contra-skjema (vedlagt dette brev).</li>
-						<li>Siste kvitteringer for l&aring;n, kommunale avgifter, forsikringer og annet som vedr&oslash;rer eiendommen.</li>
-						<li>Eventuelle originale dokumenter.</li>
-					</ol>
-
-					<p>Vi ser fram til fortsatt &aring; bist&aring; p&aring; best mulig m&aring;te. Er det noe <span vitec-if="Model.selgere.Count == 1">du</span> <span vitec-if="Model.selgere.Count &gt; 1">dere</span> &oslash;nsker &aring; dr&oslash;fte med oss f&oslash;r m&oslash;tet, st&aring;r vi med glede til tjeneste!</p>
-
-					<div vitec-template="resource: Avsender">&nbsp;</div>
-
-					<p>&nbsp;</p>
-
-					<p>Vedlegg</p>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-
-	<div style="page-break-after:always"><span style="display:none">&nbsp;</span></div>
-	<!-- Oppgjørsskjema -->
-
-	<table>
-		<tbody>
-			<tr class="no-border">
-				<td colspan="100" style="text-align:center">
-					<strong style="font-size:12pt">OPPGJ&Oslash;RSSKJEMA SELGER</strong><br />
-					<em>Dette skjema m&aring; fylles ut og returneres megler til kontraktsm&oslash;tet</em>
-				</td>
-			</tr>
-			<tr class="no-border">
-				<td colspan="100">&nbsp;</td>
-			</tr>
-			<tr class="no-border">
-				<td colspan="25"><strong>Adresse/oppdragsnr:</strong></td>
-				<td colspan="75">[[eiendom.gatenavnognr]], [[eiendom.postnr]] [[eiendom.poststed]] / [[oppdrag.nr]]</td>
-			</tr>
-			<tr class="no-border">
-				<td colspan="25"><strong>Megler:</strong></td>
-				<td colspan="75">[[operativmegler.navn]]</td>
-			</tr>
-			<tr class="no-border">
-				<td colspan="25"><strong>Selger:</strong></td>
-				<td colspan="75"><span vitec-foreach="selger in Model.selgere"> <span class="seller">[[*selger.navnutenfullmektigogkontaktperson]]<span class="separator">, </span> </span> </span></td>
-			</tr>
-			<tr class="no-border">
-				<td colspan="100">&nbsp;</td>
-			</tr>
-			<tr>
-				<td colspan="70" data-label="Ny adresse">&nbsp;</td>
-				<td colspan="30" data-label="Fra dato">&nbsp;</td>
-			</tr>
-			<tr class="no-border">
-				<td colspan="100">
-					<p style="margin-top:0; padding-top:0"><small><em>(Vennligst noter om <span vitec-if="Model.selgere.Count == 1">du</span> <span vitec-if="Model.selgere.Count &gt; 1">dere</span> planlegger senere innflytting, slik at v&aring;r korrespondanse blir sendt til riktig adresse)</em> </small></p>
-				</td>
-			</tr>
-			<tr>
-				<td class="overskrift1" colspan="100">L&aring;n og evt. uavklarte krav/offentlige utlegg</td>
-			</tr>
-			<tr>
-				<td class="overskrift2" colspan="10">L&aring;n 1</td>
-				<td colspan="50" data-label="Bank/finansinstitusjon">&nbsp;</td>
-				<td colspan="40" data-label="Kontaktperson navn/telefon/e-post">&nbsp;</td>
-			</tr>
-			<tr>
-				<td colspan="20" data-label="Pålydende verdi">&nbsp;</td>
-				<td colspan="20" data-label="Lånenummer">&nbsp;</td>
-				<td colspan="20" data-label="Saldo kr">&nbsp;</td>
-				<td colspan="20" data-label="Saldo pr. dato">&nbsp;</td>
-				<td colspan="20" data-label="Skal lånet innfris?" data-toggle="buttons" style="text-align:center"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" /> Ja &nbsp;&nbsp;&nbsp; </label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" /> Nei </label></td>
-			</tr>
-			<tr>
-				<td class="overskrift2" colspan="10">L&aring;n 2</td>
-				<td colspan="50" data-label="Bank/finansinstitusjon">&nbsp;</td>
-				<td colspan="40" data-label="Kontaktperson navn/telefon/e-post">&nbsp;</td>
-			</tr>
-			<tr>
-				<td colspan="20" data-label="Pålydende verdi">&nbsp;</td>
-				<td colspan="20" data-label="Lånenummer">&nbsp;</td>
-				<td colspan="20" data-label="Saldo kr">&nbsp;</td>
-				<td colspan="20" data-label="Saldo pr. dato">&nbsp;</td>
-				<td colspan="20" data-label="Skal lånet innfris?" data-toggle="buttons" style="text-align:center"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" /> Ja &nbsp;&nbsp;&nbsp; </label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" /> Nei </label></td>
-			</tr>
-			<tr>
-				<td class="overskrift2" colspan="28">Evt. krav/off. utlegg</td>
-				<td colspan="52" style="border-right:0">Har <span vitec-if="Model.selgere.Count == 1">eier</span> <span vitec-if="Model.selgere.Count &gt; 1">en eller flere eiere</span> uoppgjorte krav mot seg?</td>
-				<td colspan="20" data-toggle="buttons" style="border-left:0; text-align:center"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" /> Ja &nbsp;&nbsp;&nbsp; </label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" /> Nei </label></td>
-			</tr>
-			<tr>
-				<td class="overskrift1" colspan="100">Oppgj&oslash;r/tilgodehavende</td>
-			</tr>
-			<tr vitec-if="Model.selgere.Count == 1">
-				<td colspan="35" data-label="Overføres til bankkontonummer">&nbsp;</td>
-				<td colspan="65" data-label="Kontoholders navn">&nbsp;</td>
-			</tr>
-		</tbody>
-		<tbody vitec-if="Model.selgere.Count &gt; 1">
-			<tr>
-				<td colspan="80" style="border-right:0">Hver eier skal gj&oslash;res opp separat ihht. reg. eierandel og evt. personlig l&aring;neopptak</td>
-				<td colspan="20" data-toggle="buttons" style="border-left:0; text-align:center"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" /> Ja &nbsp;&nbsp;&nbsp; </label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" /> Nei </label></td>
-			</tr>
-			<tr>
-				<td colspan="50" data-label="Lånenummer/kommentar">&nbsp;</td>
-				<td colspan="50" data-label="Lånenummer/kommentar">&nbsp;</td>
-			</tr>
-		</tbody>
-		<tbody vitec-foreach="selger in Model.selgere" vitec-if="Model.selgere.Count &gt; 1">
-			<tr>
-				<td colspan="35" data-label="Tilgodeh. overføres til bankkontonr.">&nbsp;</td>
-				<td colspan="45" data-label="Kontoholders navn">&nbsp;</td>
-				<td colspan="20" data-label="Utbetalingsfordeling">&nbsp;</td>
-			</tr>
-		</tbody>
-		<tbody>
-			<tr>
-				<td class="overskrift1" colspan="100">Evt. beskjeder til oppgj&oslash;rsavdelingen</td>
-			</tr>
-			<tr>
-				<td colspan="100" data-label="Beskjeder som må hensyntas ved oppgjør">&nbsp;</td>
-			</tr>
-		</tbody>
-	</table>
-
-	<table style="page-break-inside:avoid">
-		<tbody>
-			<tr class="no-border">
-				<td colspan="100">
-					<p>Som selger samtykker <span vitec-if="Model.selgere.Count == 1">jeg</span> <span vitec-if="Model.selgere.Count &gt; 1">vi</span> i at [[meglerkontor.navn]] benytter dette salget som eventuelt referansesalg i forbindelse med sin markedsf&oslash;ring. <em>Selgers og kj&oslash;pers navn oppgis ikke.</em></p>
-
-					<table style="width:45%">
-						<tbody>
-							<tr class="no-border">
-								<td colspan="100" style="border-bottom:solid 1px #000000">
-									<br />
-									&nbsp;
-								</td>
-							</tr>
-							<tr class="no-border">
-								<td colspan="100">Sted / dato</td>
-							</tr>
-						</tbody>
-					</table>
-
-					<table>
-						<tbody>
-							<tr class="no-border">
-								<td colspan="100" style="vertical-align:top"><span vitec-foreach="selger in Model.selgere"> <span class="sign-field">[[*selger.navn]]</span> </span></td>
-							</tr>
-						</tbody>
-					</table>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+<div id="vitecTemplate">
+	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+	<style type="text/css">
+		#vitecTemplate table {
+			border-collapse: collapse;
+			width: 100%;
+			table-layout: fixed;
+		}
+
+			#vitecTemplate table td {
+				border: solid 1px #000;
+				height: 35px;
+				vertical-align: middle;
+			}
+
+			#vitecTemplate table tr.no-border td {
+				border: none;
+				height: auto;
+			}
+
+			#vitecTemplate table td.overskrift1 {
+				background-color: rgb(224,224,224);
+				color: #000;
+				line-height: 25px;
+				height: 25px;
+				padding-left: 5px;
+				font-weight: bold;
+			}
+
+			#vitecTemplate table td.overskrift2 {
+				color: #000;
+				line-height: 25px;
+				height: 25px;
+				padding-left: 5px;
+				font-weight: bold;
+			}
+
+			#vitecTemplate table td[data-label]:before {
+				content: attr(data-label);
+				text-align: left;
+				color: #333;
+				font-size: 9pt;
+				line-height: 8pt;
+				display: block;
+				position: absolute;
+				top: 2px;
+			}
+
+			#vitecTemplate table td[data-choice]:after {
+				content: attr(data-choice);
+				text-align: center;
+				font-size: 7pt;
+				font-weight: normal;
+				line-height: 8pt;
+				color: #333;
+				display: block;
+				position: absolute;
+				bottom: 1px;
+				left: 0;
+				right: 0;
+			}
+
+			#vitecTemplate table td[data-label] {
+				padding: 16px 2px 4px 2px;
+				position: relative;
+			}
+
+			#vitecTemplate table td[data-choice] {
+				padding: 4px 2px 16px 2px;
+				position: relative;
+			}
+
+			/* tabellceller med B?DE label og valg-tekst */
+
+			#vitecTemplate table td[data-label][data-choice] {
+				padding: 16px 2px 16px 2px;
+				position: relative;
+			}
+
+		#vitecTemplate [contenteditable="false"] * {
+			user-select: none;
+		}
+
+		#vitecTemplate .checkbox-table {
+			/* 13/15 av full bredde */
+			width: 100%;
+			margin-left: 10px;
+			table-layout: fixed;
+			margin-bottom: 8px;
+		}
+
+			#vitecTemplate .checkbox-table td {
+				padding-bottom: 5px;
+				border: 0px;
+			}
+
+				/* checkbox-cell */
+
+				#vitecTemplate .checkbox-table td:first-child {
+					font-weight: 700;
+					vertical-align: top;
+				}
+
+		.checkbox-table-one-row {
+			width: 86.7%;
+			margin-left: 10px;
+			table-layout: fixed;
+		}
+
+		#vitecTemplate .sign-field {
+			display: inline-block;
+			width: 45%;
+			margin-top: 1cm;
+			margin-right: 10px;
+			border-top: solid 1px #000;
+			vertical-align: top;
+		}
+
+		#vitecTemplate .seller:last-child .separator {
+			display: none;
+		}
+	</style>
+	<style type="text/css">
+		/* Klikkbare sjekkbokser og radioknapper */
+		label.btn {
+			display: inline;
+			text-transform: none;
+			white-space: normal;
+			padding: 0;
+			vertical-align: baseline;
+			outline: none;
+			font-size: inherit;
+		}
+
+			label.btn:active,
+			label.btn.active {
+				box-shadow: none;
+				outline: none;
+			}
+
+		.svg-toggle { /* nullstiller bootstrap button-styling */
+			display: inline-block !important;
+			width: 16px;
+			height: 16px;
+			margin: 0 5px;
+			vertical-align: bottom;
+			padding: 0;
+			border: none;
+			background: transparent;
+			border-radius: 0;
+			box-shadow: none !important;
+			cursor: pointer;
+			white-space: normal;
+			text-align: left;
+			background-repeat: no-repeat;
+			background-size: 16px 16px;
+			background-position: center center;
+		}
+
+			.svg-toggle.large {
+				width: 24px;
+				height: 24px;
+				background-size: 24px 24px;
+			}
+
+			.svg-toggle.checkbox {
+				background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+			}
+
+				.svg-toggle.checkbox.active,
+				.btn.active > .svg-toggle.checkbox {
+					background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+					box-shadow: none !important;
+				}
+
+			.svg-toggle.radio {
+				background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
+			}
+
+				.svg-toggle.radio.active,
+				.btn.active > .svg-toggle.radio {
+					background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
+					box-shadow: none !important;
+				}
+
+		/* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
+		#vitecTemplate [data-toggle="buttons"] input {
+			display: none;
+		}
+	</style>
+	<table>
+		<tbody>
+			<tr class="no-border">
+				<td colspan="100">
+					<div vitec-template="resource: Mottaker">&nbsp;</div>
+
+					<p><strong>Salg av [[eiendom.gatenavnognr]] - [[komplettmatrikkel]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+					<p>Vi viser til <span vitec-if="Model.selgere.Count == 1">ditt</span> <span vitec-if="Model.selgere.Count &gt; 1">deres</span> uforbeholdne aksept av kj&oslash;petilbud p&aring; ovennevnte eiendom stort</p>
+
+					<p>kr $.UD([[kontrakt.kjopesum]]) + omkostninger, med overtakelse den [[kontrakt.overtagelse.dato]] kl. [[kontrakt.overtagelse.klokkeslett]]</p>
+
+					<p>Vi gratulerer <span vitec-if="Model.selgere.Count == 1">deg</span> <span vitec-if="Model.selgere.Count &gt; 1">dere</span> med salget, og bekrefter at det derved er inng&aring;tt bindende avtale mellom <span vitec-if="Model.selgere.Count == 1">deg</span> <span vitec-if="Model.selgere.Count &gt; 1">dere</span> og kj&oslash;per. <span vitec-if="Model.eiendom.eieform != &quot;Selveier&quot;">Dog forutsettes det at <span vitec-if="Model.oppdrag.erdetforkjopsfrist == true">forkj&oslash;psretten ikke blir benyttet og at </span> <span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">aksjelaget </span> <span vitec-if="Model.eiendom.eieform== &quot;Andel&quot;">borettslaget </span> <span vitec-if="Model.eiendom.eieform== &quot;Sameie&quot;">sameiet </span> godkjenner kj&oslash;per som ny eier.</span></p>
+
+					<p>Kontraktsm&oslash;tet avholdes p&aring; v&aring;rt kontor den <strong>[[kontrakt.dato]] kl. [[kontrakt.klokkeslett]]</strong> for &aring; gjennomg&aring; og undertegne n&oslash;dvendige dokumenter sammen med kj&oslash;per. Skulle forannevnte tidspunkt ikke passe, ta kontakt med oss snarest mulig slik at vi kan f&aring; avtalt annen tid. Vi forutsetter at <span vitec-if="Model.selgere.Count == 1">du</span> <span vitec-if="Model.selgere.Count &gt; 1">dere</span> gjennomg&aring;r vedlagte forslag til kj&oslash;pekontrakt f&oslash;r m&oslash;tet.</p>
+
+					<p>Til kontraktsm&oslash;tet ber vi <span vitec-if="Model.selgere.Count == 1">deg</span> <span vitec-if="Model.selgere.Count &gt; 1">dere</span> medbringe:</p>
+
+					<ol>
+						<li>Utfylt og signert oppgj&oslash;rsskjema (vedlagt dette brev).</li>
+						<li>Utfylt og signert pro&amp;contra-skjema (vedlagt dette brev).</li>
+						<li>Siste kvitteringer for l&aring;n, kommunale avgifter, forsikringer og annet som vedr&oslash;rer eiendommen.</li>
+						<li>Eventuelle originale dokumenter.</li>
+					</ol>
+
+					<p>Vi ser fram til fortsatt &aring; bist&aring; p&aring; best mulig m&aring;te. Er det noe <span vitec-if="Model.selgere.Count == 1">du</span> <span vitec-if="Model.selgere.Count &gt; 1">dere</span> &oslash;nsker &aring; dr&oslash;fte med oss f&oslash;r m&oslash;tet, st&aring;r vi med glede til tjeneste!</p>
+
+					<div vitec-template="resource: Avsender">&nbsp;</div>
+
+					<p>&nbsp;</p>
+
+					<p>Vedlegg</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<div style="page-break-after:always"><span style="display:none">&nbsp;</span></div>
+	<!-- Oppgjørsskjema -->
+
+	<table>
+		<tbody>
+			<tr class="no-border">
+				<td colspan="100" style="text-align:center">
+					<strong style="font-size:12pt">OPPGJ&Oslash;RSSKJEMA SELGER</strong><br />
+					<em>Dette skjema m&aring; fylles ut og returneres megler til kontraktsm&oslash;tet</em>
+				</td>
+			</tr>
+			<tr class="no-border">
+				<td colspan="100">&nbsp;</td>
+			</tr>
+			<tr class="no-border">
+				<td colspan="25"><strong>Adresse/oppdragsnr:</strong></td>
+				<td colspan="75">[[eiendom.gatenavnognr]], [[eiendom.postnr]] [[eiendom.poststed]] / [[oppdrag.nr]]</td>
+			</tr>
+			<tr class="no-border">
+				<td colspan="25"><strong>Megler:</strong></td>
+				<td colspan="75">[[operativmegler.navn]]</td>
+			</tr>
+			<tr class="no-border">
+				<td colspan="25"><strong>Selger:</strong></td>
+				<td colspan="75"><span vitec-foreach="selger in Model.selgere"> <span class="seller">[[*selger.navnutenfullmektigogkontaktperson]]<span class="separator">, </span> </span> </span></td>
+			</tr>
+			<tr class="no-border">
+				<td colspan="100">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="70" data-label="Ny adresse">&nbsp;</td>
+				<td colspan="30" data-label="Fra dato">&nbsp;</td>
+			</tr>
+			<tr class="no-border">
+				<td colspan="100">
+					<p style="margin-top:0; padding-top:0"><small><em>(Vennligst noter om <span vitec-if="Model.selgere.Count == 1">du</span> <span vitec-if="Model.selgere.Count &gt; 1">dere</span> planlegger senere innflytting, slik at v&aring;r korrespondanse blir sendt til riktig adresse)</em> </small></p>
+				</td>
+			</tr>
+			<tr>
+				<td class="overskrift1" colspan="100">L&aring;n og evt. uavklarte krav/offentlige utlegg</td>
+			</tr>
+			<tr>
+				<td class="overskrift2" colspan="10">L&aring;n 1</td>
+				<td colspan="50" data-label="Bank/finansinstitusjon">&nbsp;</td>
+				<td colspan="40" data-label="Kontaktperson navn/telefon/e-post">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="20" data-label="Pålydende verdi">&nbsp;</td>
+				<td colspan="20" data-label="Lånenummer">&nbsp;</td>
+				<td colspan="20" data-label="Saldo kr">&nbsp;</td>
+				<td colspan="20" data-label="Saldo pr. dato">&nbsp;</td>
+				<td colspan="20" data-label="Skal lånet innfris?" data-toggle="buttons" style="text-align:center"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" /> Ja &nbsp;&nbsp;&nbsp; </label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" /> Nei </label></td>
+			</tr>
+			<tr>
+				<td class="overskrift2" colspan="10">L&aring;n 2</td>
+				<td colspan="50" data-label="Bank/finansinstitusjon">&nbsp;</td>
+				<td colspan="40" data-label="Kontaktperson navn/telefon/e-post">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="20" data-label="Pålydende verdi">&nbsp;</td>
+				<td colspan="20" data-label="Lånenummer">&nbsp;</td>
+				<td colspan="20" data-label="Saldo kr">&nbsp;</td>
+				<td colspan="20" data-label="Saldo pr. dato">&nbsp;</td>
+				<td colspan="20" data-label="Skal lånet innfris?" data-toggle="buttons" style="text-align:center"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" /> Ja &nbsp;&nbsp;&nbsp; </label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" /> Nei </label></td>
+			</tr>
+			<tr>
+				<td class="overskrift2" colspan="28">Evt. krav/off. utlegg</td>
+				<td colspan="52" style="border-right:0">Har <span vitec-if="Model.selgere.Count == 1">eier</span> <span vitec-if="Model.selgere.Count &gt; 1">en eller flere eiere</span> uoppgjorte krav mot seg?</td>
+				<td colspan="20" data-toggle="buttons" style="border-left:0; text-align:center"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" /> Ja &nbsp;&nbsp;&nbsp; </label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" /> Nei </label></td>
+			</tr>
+			<tr>
+				<td class="overskrift1" colspan="100">Oppgj&oslash;r/tilgodehavende</td>
+			</tr>
+			<tr vitec-if="Model.selgere.Count == 1">
+				<td colspan="35" data-label="Overføres til bankkontonummer">&nbsp;</td>
+				<td colspan="65" data-label="Kontoholders navn">&nbsp;</td>
+			</tr>
+		</tbody>
+		<tbody vitec-if="Model.selgere.Count &gt; 1">
+			<tr>
+				<td colspan="80" style="border-right:0">Hver eier skal gj&oslash;res opp separat ihht. reg. eierandel og evt. personlig l&aring;neopptak</td>
+				<td colspan="20" data-toggle="buttons" style="border-left:0; text-align:center"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" /> Ja &nbsp;&nbsp;&nbsp; </label> <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" /> Nei </label></td>
+			</tr>
+			<tr>
+				<td colspan="50" data-label="Lånenummer/kommentar">&nbsp;</td>
+				<td colspan="50" data-label="Lånenummer/kommentar">&nbsp;</td>
+			</tr>
+		</tbody>
+		<tbody vitec-foreach="selger in Model.selgere" vitec-if="Model.selgere.Count &gt; 1">
+			<tr>
+				<td colspan="35" data-label="Tilgodeh. overføres til bankkontonr.">&nbsp;</td>
+				<td colspan="45" data-label="Kontoholders navn">&nbsp;</td>
+				<td colspan="20" data-label="Utbetalingsfordeling">&nbsp;</td>
+			</tr>
+		</tbody>
+		<tbody>
+			<tr>
+				<td class="overskrift1" colspan="100">Evt. beskjeder til oppgj&oslash;rsavdelingen</td>
+			</tr>
+			<tr>
+				<td colspan="100" data-label="Beskjeder som må hensyntas ved oppgjør">&nbsp;</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<table style="page-break-inside:avoid">
+		<tbody>
+			<tr class="no-border">
+				<td colspan="100">
+					<p>Som selger samtykker <span vitec-if="Model.selgere.Count == 1">jeg</span> <span vitec-if="Model.selgere.Count &gt; 1">vi</span> i at [[meglerkontor.navn]] benytter dette salget som eventuelt referansesalg i forbindelse med sin markedsf&oslash;ring. <em>Selgers og kj&oslash;pers navn oppgis ikke.</em></p>
+
+					<table style="width:45%">
+						<tbody>
+							<tr class="no-border">
+								<td colspan="100" style="border-bottom:solid 1px #000000">
+									<br />
+									&nbsp;
+								</td>
+							</tr>
+							<tr class="no-border">
+								<td colspan="100">Sted / dato</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<table>
+						<tbody>
+							<tr class="no-border">
+								<td colspan="100" style="vertical-align:top"><span vitec-foreach="selger in Model.selgere"> <span class="sign-field">[[*selger.navn]]</span> </span></td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </div>

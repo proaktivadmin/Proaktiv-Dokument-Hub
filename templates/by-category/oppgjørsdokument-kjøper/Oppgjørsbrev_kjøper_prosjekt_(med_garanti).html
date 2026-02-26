@@ -1,35 +1,35 @@
-<div id="vitecTemplate">
-	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
-	<style type="text/css">
-		#vitecTemplate table {
-			border-collapse: collapse;
-			width: 100%;
-			table-layout: fixed;
-		}
-	</style>
-	<table>
-		<tbody>
-			<tr class="no-border">
-				<td colspan="100">
-					<div vitec-template="resource: Mottaker">&nbsp;</div>
-
-					<p><strong>Oppgj&oslash;r ved kj&oslash;p av [[eiendom.alfanavn]] i [[eiendom.prosjektnavn]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
-
-					<p>Vedlagt oversendes oppgj&oslash;rsoppstilling vedr&oslash;rende kj&oslash;p av ovennevnte eiendom.</p>
-
-					<p>Eventuelle renter som er godskrevet i oppgj&oslash;ret, og som fremg&aring;r av oppstillingen, er oppgavepliktige p&aring; skattemeldingen. Dersom noe skulle v&aelig;re uklart eller ytterligere opplysninger &oslash;nskes omkring oppgj&oslash;ret, vennligst kontakt oss snarest.</p>
-
-					<p vitec-if="Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;">Tinglyst <span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;"> hjemmelsoverf&oslash;ring</span> <span vitec-if="Model.eiendom.eieform != &quot;Andel&quot;"> skj&oslash;te</span> f&oslash;lger vedlagt.</p>
-
-					<p>Vi vedlegger ogs&aring; entrepren&oslash;rgaranti iht. Bustadoppf&oslash;ringslova &sect; 12. Garantien skal returneres garantisten ved utl&oslash;p av garantitiden. Ved eventuelt salg av eiendommen f&oslash;r garantitidens utl&oslash;p, m&aring; dokumentet leveres videre til ny kj&oslash;per.</p>
-
-					<p>Vi takker for en hyggelig handel og &oslash;nsker <span vitec-if="Model.kjopere.Count == 1">deg</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> lykke til med den nye eiendommen.</p>
-
-					<p>Velkommen tilbake ved en senere anledning.</p>
-
-					<div vitec-template="resource: Avsender">&nbsp;</div>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+<div id="vitecTemplate">
+	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+	<style type="text/css">
+		#vitecTemplate table {
+			border-collapse: collapse;
+			width: 100%;
+			table-layout: fixed;
+		}
+	</style>
+	<table>
+		<tbody>
+			<tr class="no-border">
+				<td colspan="100">
+					<div vitec-template="resource: Mottaker">&nbsp;</div>
+
+					<p><strong>Oppgj&oslash;r ved kj&oslash;p av [[eiendom.alfanavn]] i [[eiendom.prosjektnavn]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+					<p>Vedlagt oversendes oppgj&oslash;rsoppstilling vedr&oslash;rende kj&oslash;p av ovennevnte eiendom.</p>
+
+					<p>Eventuelle renter som er godskrevet i oppgj&oslash;ret, og som fremg&aring;r av oppstillingen, er oppgavepliktige p&aring; skattemeldingen. Dersom noe skulle v&aelig;re uklart eller ytterligere opplysninger &oslash;nskes omkring oppgj&oslash;ret, vennligst kontakt oss snarest.</p>
+
+					<p vitec-if="Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;">Tinglyst <span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;"> hjemmelsoverf&oslash;ring</span> <span vitec-if="Model.eiendom.eieform != &quot;Andel&quot;"> skj&oslash;te</span> f&oslash;lger vedlagt.</p>
+
+					<p>Vi vedlegger ogs&aring; entrepren&oslash;rgaranti iht. Bustadoppf&oslash;ringslova &sect; 12. Garantien skal returneres garantisten ved utl&oslash;p av garantitiden. Ved eventuelt salg av eiendommen f&oslash;r garantitidens utl&oslash;p, m&aring; dokumentet leveres videre til ny kj&oslash;per.</p>
+
+					<p>Vi takker for en hyggelig handel og &oslash;nsker <span vitec-if="Model.kjopere.Count == 1">deg</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> lykke til med den nye eiendommen.</p>
+
+					<p>Velkommen tilbake ved en senere anledning.</p>
+
+					<div vitec-template="resource: Avsender">&nbsp;</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </div>

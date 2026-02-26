@@ -1,1009 +1,1009 @@
-<div id="vitecTemplate">
-    <style type="text/css">
-        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap');
-
-        html, body {
-            margin: 0;
-            padding: 0;
-        }
-
-        #vitecTemplate * {
-            font-variant-ligatures: none;
-        }
-
-        #vitecTemplate ol {
-            margin: 0;
-            padding: 0;
-            font-family: 'Open sans', sans-serif;
-            font-size: 8pt;
-            line-height: 10pt;
-        }
-
-            #vitecTemplate ol > li {
-                margin: 0;
-                padding: 0;
-                font-family: 'Open sans', sans-serif;
-                font-size: 8pt;
-                line-height: 10pt;
-                list-style-position: outside;
-            }
-
-        #vitecTemplate p {
-            font-family: 'Open sans', sans-serif;
-            font-size: 8pt;
-            line-height: 10pt;
-        }
-
-        #vitecTemplate strong {
-            font-family: 'Open sans', sans-serif;
-            font-weight: 700;
-        }
-
-        #vitecTemplate > table {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-            page-break-inside: avoid;
-            margin-bottom: 5px;
-        }
-
-        #vitecTemplate table tr {
-            page-break-inside: avoid;
-        }
-
-        #vitecTemplate tr th,
-        #vitecTemplate tr td {
-            vertical-align: middle;
-            border: solid 1px #000;
-            font-family: 'Open sans', sans-serif;
-            font-size: 8pt;
-            line-height: 9pt;
-            padding: 1px 2px;
-        }
-
-        #vitecTemplate td p,
-        #vitecTemplate td.no-border p {
-            margin-top: 0;
-            margin-bottom: 0;
-        }
-
-        #vitecTemplate td.border-right {
-            border-right: solid 1px #959595;
-        }
-
-        #vitecTemplate tr.no-border td {
-            border: none;
-        }
-
-            #vitecTemplate tr.no-border td:first-child {
-                border-left: solid 1px #000;
-            }
-
-            #vitecTemplate tr.no-border td:last-child {
-                border-right: solid 1px #000;
-            }
-
-        #vitecTemplate tr.border-bottom td {
-            border: none;
-            border-bottom: solid 1px #000;
-        }
-
-            #vitecTemplate tr.border-bottom td:first-child {
-                border-left: solid 1px #000;
-            }
-
-            #vitecTemplate tr.border-bottom td:last-child {
-                border-right: solid 1px #000;
-            }
-
-        #vitecTemplate td.no-border {
-            border: none;
-        }
-
-        #vitecTemplate td.with-nested-table {
-            padding: 0;
-        }
-
-            #vitecTemplate td.with-nested-table table {
-                table-layout: fixed;
-                width: 100%;
-            }
-
-                #vitecTemplate td.with-nested-table table td {
-                    border: none;
-                }
-
-                    #vitecTemplate td.with-nested-table table td[data-label]:before {
-                        text-align: center;
-                    }
-
-        #vitecTemplate td.row-header {
-            font-size: 9pt;
-            font-weight: bold;
-            background-color: #f2f2f2;
-            height: .35cm;
-        }
-
-        #vitecTemplate td[data-label]:before {
-            content: attr(data-label);
-            text-align: left;
-            color: #333;
-            font-size: 7pt;
-            line-height: 8pt;
-            display: block;
-            position: absolute;
-            top: 1px;
-            right: 1px;
-            left: 1px;
-        }
-
-        #vitecTemplate td.bold-data-label[data-label]:before {
-            font-weight: 700;
-        }
-
-        #vitecTemplate td[data-choice]:after {
-            content: attr(data-choice);
-            text-align: center;
-            font-size: 7pt;
-            line-height: 8pt;
-            color: #333;
-            display: block;
-            position: absolute;
-            bottom: 1px;
-            left: 0;
-            right: 0;
-        }
-
-        #vitecTemplate td[data-label] {
-            padding: 14px 2px 2px 2px;
-            position: relative;
-        }
-
-        #vitecTemplate td[data-choice] {
-            padding: 0 2px 14px 2px;
-            position: relative;
-        }
-
-        /* tabellceller med BÅDE label og valg-tekst */
-
-        #vitecTemplate td[data-label][data-choice] {
-            padding: 16px 2px 16px 2px;
-            position: relative;
-        }
-
-        /* Malredigering: Hindre placeholder-plugin fra å sprenge tabell-celler (matrikkel-rad)*/
-
-        .cke_widget_inline {
-            white-space: pre-wrap;
-            word-break: break-all;
-        }
-
-        #vitecTemplate [contenteditable="false"] * {
-            user-select: none;
-        }
-
-        #vitecTemplate .foreach-list td {
-            min-height: 34px;
-            vertical-align: top;
-        }
-
-        #vitecTemplate .foreach-list ul {
-            list-style: none;
-            margin: 0 0 0 2px;
-            padding: 0;
-            min-height: 13px;
-            /* min-height when empty forech-loop */
-        }
-
-            #vitecTemplate .foreach-list ul li {
-                padding: 0;
-                margin: 0;
-                min-height: 14px;
-                line-height: normal;
-            }
-
-        /* tabellceller med lange data-choice-tekster */
-
-        #vitecTemplate tr.checkbox-row td[data-choice] {
-            padding-bottom: 24px;
-        }
-    </style>
-    <style type="text/css">
-        /* Klikkbare sjekkbokser og radioknapper */
-        label.btn {
-            display: inline-flex;
-            align-items: center;
-            text-transform: none;
-            white-space: normal;
-            padding: 0;
-            outline: none;
-            font-size: 7pt;
-            line-height: 8pt;
-            height: 24px;
-            text-align: left;
-        }
-
-            label.btn:active,
-            label.btn.active {
-                box-shadow: none;
-                outline: none;
-            }
-
-            label.btn.normal-text {
-                font-size: 8pt;
-                line-height: 10pt;
-            }
-
-        .svg-toggle { /* nullstiller bootstrap button-styling */
-            display: inline-block !important;
-            width: 13px;
-            height: 13px;
-            margin: 0 5px 0 2px;
-            vertical-align: bottom;
-            padding: 0;
-            border: none;
-            background: transparent;
-            border-radius: 0;
-            box-shadow: none !important;
-            cursor: pointer;
-            white-space: normal;
-            text-align: left;
-            background-repeat: no-repeat;
-            background-size: 13px 13px;
-            background-position: center center;
-        }
-
-            .svg-toggle.checkbox {
-                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
-            }
-
-                .svg-toggle.checkbox.active,
-                .btn.active > .svg-toggle.checkbox {
-                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
-                    box-shadow: none !important;
-                }
-
-            .svg-toggle.radio {
-                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
-            }
-
-                .svg-toggle.radio.active,
-                .btn.active > .svg-toggle.radio {
-                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
-                    box-shadow: none !important;
-                }
-
-        /* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
-        #vitecTemplate [data-toggle="buttons"] input {
-            display: none;
-        }
-    </style>
-    <p contenteditable="false" style="font-size:16pt; font-weight:bold; margin-bottom:0px; margin-left:0px; margin-right:0px; margin-top:0px; padding:5px 0 10px 0; text-align:right">Skj&oslash;te</p>
-
-    <table>
-        <tbody>
-            <tr>
-                <td class="border-right" colspan="50" data-label="Innsenders navn:">[[skjema.innsender.navn]]</td>
-                <td colspan="50" contenteditable="false" data-label="Plass for tinglysingsstempel" rowspan="4" style="text-align:center">&nbsp;</td>
-            </tr>
-            <tr>
-                <td colspan="50" data-label="Adresse:">[[skjema.innsender.adresse]]</td>
-            </tr>
-            <tr>
-                <td colspan="10" data-label="Postnr:">[[skjema.innsender.postnr]]</td>
-                <td colspan="40" data-label="Poststed:">[[skjema.innsender.poststed]]</td>
-            </tr>
-            <tr>
-                <td colspan="30" data-label="(Under-) organisasjonsnr/fødselsnr.">[[skjema.innsender.orgnr]]</td>
-                <td colspan="20" data-label="Ref.nr.">[[skjema.referansenr]]</td>
-            </tr>
-            <tr>
-                <td class="no-border" colspan="100" contenteditable="false">Opplysningene i feltene <strong>1-6</strong> registreres i grunnboken</td>
-            </tr>
-            <tr>
-                <td class="row-header" colspan="100" contenteditable="false">1. Eiendommen(e)</td>
-            </tr>
-            <tr class="foreach-list">
-                <td colspan="15" data-label="Kommunenr.">
-                    <ul vitec-foreach="matrikkel in Model.matrikler">
-                        <li>[[eiendom.kommunenr]]</li>
-                    </ul>
-                </td>
-                <td colspan="35" data-label="Kommunenavn">
-                    <ul vitec-foreach="matrikkel in Model.matrikler">
-                        <li>[[eiendom.kommunenavn]]</li>
-                    </ul>
-                </td>
-                <td colspan="10" data-label="Gnr.">
-                    <ul vitec-foreach="matrikkel in Model.matrikler">
-                        <li>[[*matrikkel.gnr]]</li>
-                    </ul>
-                </td>
-                <td colspan="10" data-label="Bnr.">
-                    <ul vitec-foreach="matrikkel in Model.matrikler">
-                        <li>[[*matrikkel.bnr]]</li>
-                    </ul>
-                </td>
-                <td colspan="10" data-label="Festenr.">
-                    <ul vitec-foreach="matrikkel in Model.matrikler">
-                        <li><span vitec-if="matrikkel.fnr != 0">[[*matrikkel.fnr]]</span></li>
-                    </ul>
-                </td>
-                <td colspan="10" data-label="Seksjonsnr.">
-                    <ul vitec-foreach="matrikkel in Model.matrikler">
-                        <li><span vitec-if="matrikkel.snr != 0">[[*matrikkel.snr]]</span></li>
-                    </ul>
-                </td>
-                <td colspan="10" data-label="Ideell andel">
-                    <ul vitec-foreach="matrikkel in Model.matrikler">
-                        <li>[[*matrikkel.andel]]</li>
-                    </ul>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="34" contenteditable="false" style="border-right:none">Overdragelsen gjelder bygg p&aring; festet grunn</td>
-                <td colspan="16" data-toggle="buttons" style="border-left:none">
-                    <!-- @{
-                        var erTomtetypeEiertomt="";
-                        var erTomtetypeFestetomt ="";
-                        if (Model.eiendom.tomtetype == "eiertomt") {
-                            erTomtetypeEiertomt = "active";
-                            } else if (Model.eiendom.tomtetype == "festetomt") {
-                                erTomtetypeFestetomt = "active";
-                            }
-                    }-->
-                    <label class="btn normal-text @erTomtetypeEiertomt" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" /> Nei &nbsp; &nbsp;</label> <label class="btn normal-text @erTomtetypeFestetomt" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" /> Ja</label>
-                </td>
-                <td colspan="34" contenteditable="false" style="border-right:none">Overdragelsen omfatter transport av festeretten</td>
-                <td colspan="16" data-toggle="buttons" style="border-left:none"><label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" /> Nei &nbsp; &nbsp;</label> <label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" /> Ja</label></td>
-            </tr>
-            <tr>
-                <td colspan="34" contenteditable="false" style="border-right:none">
-                    Godkjenning fra bortfester er<br />
-                    n&oslash;dvendig iht. kapittel 4 eller avtale
-                </td>
-                <td colspan="16" data-toggle="buttons" style="border-left:none"><label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" /> Nei &nbsp; &nbsp;</label> <label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" /> Ja</label></td>
-                <td colspan="34" contenteditable="false" style="border-right:none">Bortfester har godkjent overdragelsen og underskrevet i felt for underskrifter og bekreftelser</td>
-                <td colspan="16" data-toggle="buttons" style="border-left:none"><label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" /> Nei &nbsp; &nbsp;</label> <label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" /> Ja</label></td>
-            </tr>
-            <tr>
-                <td colspan="34" contenteditable="false">
-                    Omfatter overdragelsen ideell andel,<br />
-                    herunder eierseksjon, skal andelens<br />
-                    st&oslash;rrelse oppgis
-                </td>
-                <td colspan="16" data-label="Størrelse ideell andel" style="text-align:center"><span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">[[sameie.sameiebrok]]</span></td>
-                <td colspan="34" contenteditable="false" style="border-right:none">
-                    Eiendommen ligger til en annen eiendom<br />
-                    som tilbeh&oslash;r etter avhendingsloven &sect; 3-4<br />
-                    annet ledd bokstav d
-                </td>
-                <td colspan="16" data-toggle="buttons" style="border-left:none"><label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl005" type="radio" /> Nei &nbsp; &nbsp;</label> <label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl005" type="radio" /> Ja</label></td>
-            </tr>
-            <tr class="border-bottom" data-toggle="buttons">
-                <!-- @{
-                    var erGrunntypeTomt = "";
-                    var erIkkeGrunntypeTomt = "";
-                    if (Model.eiendom.grunntype == "Tomt") {
-                        erGrunntypeTomt = "active";
-                        } else {
-                            erIkkeGrunntypeTomt = "active";
-                        }
-                }-->
-                <td colspan="14" data-label="Beskaffenhet"><label class="btn @erIkkeGrunntypeTomt" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl006" type="radio" /> <span><strong>1</strong> Bebygd</span></label></td>
-                <td colspan="14" data-label=" "><label class="btn @erGrunntypeTomt" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl006" type="radio" /> <span><strong>2</strong> Ubebygd</span></label></td>
-                <td colspan="72">&nbsp;</td>
-            </tr>
-            <tr class="border-bottom checkbox-row" data-toggle="buttons">
-                <!-- @{
-
-                    var erTypeGrunnBoligeiendom = "";
-                    var erTypeGrunnFritidseiendom = "";
-                    var erTypeGrunnForretningKontor = "";
-                    var erTypeGrunnIndustriBergverk = "";
-                    var erTypeGrunnLandbrukFiske = "";
-                    var erTypeGrunnOffentligVei = "";
-                    var erTypeGrunnAnnet = "";
-
-                    if (Model.eiendom.typegrunn == "Boligeiendom") {
-                        erTypeGrunnBoligeiendom = "active";
-                    } else if (Model.eiendom.typegrunn == "Fritidseiendom") {
-                        erTypeGrunnFritidseiendom = "active";
-                    } else if (Model.eiendom.typegrunn == "Forretning - kontor") {
-                        erTypeGrunnForretningKontor = "active";
-                    } else if (Model.eiendom.typegrunn == "Industri - bergverk") {
-                        erTypeGrunnIndustriBergverk = "active";
-                    } else if (Model.eiendom.typegrunn == "Landbruk - fiske") {
-                        erTypeGrunnLandbrukFiske = "active";
-                    } else if (Model.eiendom.typegrunn == "Offentlig vei") {
-                        erTypeGrunnOffentligVei = "active";
-                    } else if (Model.eiendom.typegrunn == "Annet") {
-                        erTypeGrunnAnnet = "active";
-                    }
-                }-->
-                <td colspan="14" data-label="Bruk av grunn">
-                    <label class="btn @erTypeGrunnBoligeiendom" contenteditable="false" data-toggle="button">
-                        <span class="checkbox svg-toggle"></span> <input name="rbl007" type="radio" /> <span>
-                            <strong>B</strong> Bolig<br />
-                            eiendom
-                        </span>
-                    </label>
-                </td>
-                <td colspan="14" data-label=" ">
-                    <label class="btn @erTypeGrunnFritidseiendom" contenteditable="false" data-toggle="button">
-                        <span class="checkbox svg-toggle"></span> <input name="rbl007" type="radio" /> <span>
-                            <strong>F</strong> Fritids-<br />
-                            eiendom
-                        </span>
-                    </label>
-                </td>
-                <td colspan="14" data-label=" ">
-                    <label class="btn @erTypeGrunnForretningKontor" contenteditable="false" data-toggle="button">
-                        <span class="checkbox svg-toggle"></span> <input name="rbl007" type="radio" /> <span>
-                            <strong>V</strong> Forretning/<br />
-                            kontor
-                        </span>
-                    </label>
-                </td>
-                <td colspan="14" data-label=" "><label class="btn @erTypeGrunnIndustriBergverk" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl007" type="radio" /> <span><strong>I</strong> Industri</span></label></td>
-                <td colspan="14" data-label=" "><label class="btn @erTypeGrunnLandbrukFiske" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl007" type="radio" /> <span><strong>L</strong> Landbruk</span></label></td>
-                <td colspan="14" data-label=" "><label class="btn @erTypeGrunnOffentligVei" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl007" type="radio" /> <span><strong>K</strong> Off. vei</span></label></td>
-                <td colspan="16" data-label=" "><label class="btn @erTypeGrunnAnnet" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl007" type="radio" /> <span><strong>A</strong> Annet</span></label></td>
-            </tr>
-            <tr class="border-bottom checkbox-row" data-toggle="buttons">
-                <!-- @{
-                    var erTypeBoligFrittliggendeEnebolig = "";
-                    var erTypeBoligTomannsbolig = "";
-                    var erTypeBoligRekkehusKjede = "";
-                    var erTypeBoligBlokkleilighet = "";
-                    var erTypeBoligAnnet = "";
-                    if (Model.eiendom.typebolig == "Frittliggende enebolig") {
-                        erTypeBoligFrittliggendeEnebolig = "active";
-                        } else if (Model.eiendom.typebolig == "Tomannsbolig") {
-                            erTypeBoligTomannsbolig = "active";
-                        } else if (Model.eiendom.typebolig == "Rekkehus/Kjede") {
-                            erTypeBoligRekkehusKjede = "active";
-                        } else if (Model.eiendom.typebolig == "Blokkleilighet") {
-                            erTypeBoligBlokkleilighet = "active";
-                        } else if (Model.eiendom.typebolig == "Annet") {
-                            erTypeBoligAnnet = "active";
-                    }
-                }-->
-                <td colspan="14" data-label="Type bolig">
-                    <label class="btn @erTypeBoligFrittliggendeEnebolig" contenteditable="false" data-toggle="button">
-                        <span class="checkbox svg-toggle"></span> <input name="rbl008" type="radio" /> <span>
-                            <strong>FB</strong> Frittligg.<br />
-                            enebolig
-                        </span>
-                    </label>
-                </td>
-                <td colspan="14" data-label=" ">
-                    <label class="btn @erTypeBoligTomannsbolig" contenteditable="false" data-toggle="button">
-                        <span class="checkbox svg-toggle"></span> <input name="rbl008" type="radio" /> <span>
-                            <strong>TB</strong> Tomanns-<br />
-                            bolig
-                        </span>
-                    </label>
-                </td>
-                <td colspan="14" data-label=" ">
-                    <label class="btn @erTypeBoligRekkehusKjede" contenteditable="false" data-toggle="button">
-                        <span class="checkbox svg-toggle"></span> <input name="rbl008" type="radio" /> <span>
-                            <strong>RK</strong> Rekkehus<br />
-                            kjede
-                        </span>
-                    </label>
-                </td>
-                <td colspan="14" data-label=" ">
-                    <label class="btn @erTypeBoligBlokkleilighet" contenteditable="false" data-toggle="button">
-                        <span class="checkbox svg-toggle"></span> <input name="rbl008" type="radio" /> <span>
-                            <strong>BL</strong> Blokk-<br />
-                            leilighet
-                        </span>
-                    </label>
-                </td>
-                <td colspan="14" data-label=" "><label class="btn @erTypeBoligAnnet" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl008" type="radio" /> <span><strong>AN</strong> Annet</span></label></td>
-                <td colspan="30">&nbsp;</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table>
-        <tbody>
-            <tr contenteditable="false">
-                <td class="row-header" colspan="100">2. Kj&oslash;pesum</td>
-            </tr>
-            <tr>
-                <!-- @{
-                        var erOppgjorsOppdrag ="";
-                        var erIkkeOppgjorsOppdrag ="";
-                        if (Model.oppdrag.hovedtype == "Oppgj\xF8rsoppdrag") {
-                            erOppgjorsOppdrag = "active";
-                            } else {
-                                erIkkeOppgjorsOppdrag = "active";
-                            }
-                    }-->
-                <td colspan="80" style="font-size:10pt; line-height:12pt">kr $.UD([[kontrakt.kjopesum]])&nbsp;-&nbsp;[[kontrakt.kjopesumibokstaver]]</td>
-                <td colspan="20" contenteditable="false" data-label="Utlyst til salg på det frie marked?" data-toggle="buttons"><label class="btn normal-text @erIkkeOppgjorsOppdrag" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl009" type="radio" /> Ja &nbsp;&nbsp;</label> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <label class="btn normal-text @erOppgjorsOppdrag" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl009" type="radio" /> Nei</label></td>
-            </tr>
-            <tr class="border-bottom checkbox-row" data-toggle="buttons">
-                <!-- @{
-                    var erTvangssalg ="";
-                    var erIkkeTvangssalg ="";
-                    if (Model.oppdrag.hovedtype == "Tvangssalg") {
-                        erTvangssalg = "active";
-                        } else {
-                            erIkkeTvangssalg = "active";
-                        }
-                }-->
-                <td colspan="13" data-label="Omsetningstype">
-                    <label class="btn @erIkkeTvangssalg" contenteditable="false" data-toggle="button">
-                        <span class="checkbox svg-toggle"></span> <input name="rbl010" type="radio" /> <span>
-                            <strong>1</strong> Fritt<br />
-                            salg
-                        </span>
-                    </label>
-                </td>
-                <td colspan="13" data-label=" ">
-                    <label class="btn" contenteditable="false" data-toggle="button">
-                        <span class="checkbox svg-toggle"></span> <input name="rbl010" type="radio" /> <span>
-                            <strong>2</strong> Gave (helt<br />
-                            eller delvis)
-                        </span>
-                    </label>
-                </td>
-                <td colspan="13" data-label=" ">
-                    <label class="btn" contenteditable="false" data-toggle="button">
-                        <span class="checkbox svg-toggle"></span> <input name="rbl010" type="radio" /> <span>
-                            <strong>3</strong> Ekspro-<br />
-                            priasjon
-                        </span>
-                    </label>
-                </td>
-                <td colspan="12" data-label=" ">
-                    <label class="btn @erTvangssalg" contenteditable="false" data-toggle="button">
-                        <span class="checkbox svg-toggle"></span> <input name="rbl010" type="radio" /> <span>
-                            <strong>4</strong> Tvangs-<br />
-                            auksjon
-                        </span>
-                    </label>
-                </td>
-                <td colspan="12" data-label=" "><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl010" type="radio" /> <span><strong>5</strong> Uskifte</span></label></td>
-                <td colspan="12" data-label=" ">
-                    <label class="btn" contenteditable="false" data-toggle="button">
-                        <span class="checkbox svg-toggle"></span> <input name="rbl010" type="radio" /> <span>
-                            <strong>6</strong> Skifte-<br />
-                            oppgj&oslash;r
-                        </span>
-                    </label>
-                </td>
-                <td colspan="13" data-label=" ">
-                    <label class="btn" contenteditable="false" data-toggle="button">
-                        <span class="checkbox svg-toggle"></span> <input name="rbl010" type="radio" /> <span>
-                            <strong>7</strong> Opph&oslash;r av<br />
-                            samboerskap
-                        </span>
-                    </label>
-                </td>
-                <td colspan="12" data-label=" "><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl010" type="radio" /> <span><strong>8</strong> Annet</span></label></td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table>
-        <tbody>
-            <tr contenteditable="false">
-                <td class="no-border" colspan="100"><strong style="display:inline-block; margin-bottom:5px">Kj&oslash;pesummen er oppgjort p&aring; avtalt m&aring;te</strong></td>
-            </tr>
-            <tr contenteditable="false">
-                <td class="row-header" colspan="100">3. Salgsverdi/avgiftsgrunnlag</td>
-            </tr>
-            <tr>
-                <td colspan="25" style="border-right:none; font-size:10pt; line-height:12pt">kr $.UD([[kontrakt.avgiftsgrunnlag]])</td>
-                <td colspan="75" data-label="" style="border-left:none"><span vitec-if="(Model.eiendom.eieform == &quot;Sameie&quot; &amp;&amp; Model.eiendom.fellesgjeld != &quot;0,00&quot; &amp;&amp; Model.oppdrag.hovedtype != &quot;Prosjektsalg&quot;)">Inkl. fellesgjeld. </span><span vitec-if="Model.oppdrag.hovedtype == &quot;Prosjektsalg&quot;">Vi erkl&aelig;rer at overf&oslash;ringen gjelder f&oslash;rstegangsoverf&oslash;ring av en selvstendig og i sin helhet nyoppf&oslash;rt bygning som ikke er tatt i bruk, og avgiftsgrunnlaget tilsvarer eiendommens tomteverdi.</span></td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table>
-        <tbody>
-            <tr contenteditable="false">
-                <td class="row-header" colspan="100">4. Overdras fra</td>
-            </tr>
-            <tr class="foreach-list">
-                <td colspan="25" data-label="Fødselsnr./Org.nr.">
-                    <div vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot; &amp;&amp; Model.oppdrag.erdodsbo == false">
-                        <ul vitec-foreach="selger in Model.selgere">
-                            <li>[[*selger.idnummer]]</li>
-                        </ul>
-                    </div>
-
-                    <div vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot; &amp;&amp; Model.oppdrag.erdodsbo == true">
-                        <ul vitec-foreach="arving in Model.arvinger">
-                            <li>[[*arving.idnummer]]</li>
-                        </ul>
-                    </div>
-
-                    <div vitec-if="Model.oppdrag.hovedtype == &quot;Tvangssalg&quot;">
-                        <ul vitec-foreach="saksokte in Model.saksokteliste">
-                            <li>[[*saksokte.idnummer]]</li>
-                        </ul>
-                    </div>
-                </td>
-                <td colspan="59" data-label="Navn">
-                    <div vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot; &amp;&amp; Model.oppdrag.erdodsbo == false">
-                        <ul vitec-foreach="selger in Model.selgere">
-                            <li>[[*selger.navnutenfullmektigogkontaktperson]]</li>
-                        </ul>
-                    </div>
-
-                    <div vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot; &amp;&amp; Model.oppdrag.erdodsbo == true">
-                        <ul vitec-foreach="arving in Model.arvinger">
-                            <li>[[*arving.navnutenfullmektigogkontaktperson]]</li>
-                        </ul>
-                    </div>
-
-                    <div vitec-if="Model.oppdrag.hovedtype == &quot;Tvangssalg&quot;">
-                        <ul vitec-foreach="saksokte in Model.saksokteliste">
-                            <li>[[*saksokte.navnutenfullmektigogkontaktperson]]</li>
-                        </ul>
-                    </div>
-                </td>
-                <td colspan="16" data-label="Ideell andel">
-                    <div vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot; &amp;&amp; Model.oppdrag.erdodsbo == false">
-                        <ul vitec-foreach="selger in Model.selgere">
-                            <li>[[*selger.eierbrok]]</li>
-                        </ul>
-                    </div>
-
-                    <div vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot; &amp;&amp; Model.oppdrag.erdodsbo == true">
-                        <ul vitec-foreach="arving in Model.arvinger">
-                            <li>[[*arving.eierbrok]]</li>
-                        </ul>
-                    </div>
-
-                    <div vitec-if="Model.oppdrag.hovedtype == &quot;Tvangssalg&quot;">
-                        <ul vitec-foreach="saksokte in Model.saksokteliste">
-                            <li>[[*saksokte.eierbrok]]</li>
-                        </ul>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table>
-        <tbody>
-            <tr contenteditable="false">
-                <td class="row-header" colspan="100">5. Til</td>
-            </tr>
-            <tr class="foreach-list">
-                <td colspan="25" data-label="Fødselsnr./Org.nr.">
-                    <ul vitec-foreach="kjoper in Model.kjopere">
-                        <li>[[*kjoper.idnummer]]</li>
-                    </ul>
-                </td>
-                <td colspan="49" data-label="Navn">
-                    <ul vitec-foreach="kjoper in Model.kjopere">
-                        <li>[[*kjoper.navnutenfullmektigogkontaktperson]]</li>
-                    </ul>
-                </td>
-                <td colspan="14" data-label="Fast bosatt i Norge">
-                    <ul vitec-foreach="kjoper in Model.kjopere">
-                        <li data-toggle="buttons"><label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl017" type="radio" /> Ja &nbsp; &nbsp;</label> <label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl017" type="radio" /> Nei</label></li>
-                    </ul>
-                </td>
-                <td colspan="12" data-label="Ideell andel">
-                    <ul vitec-foreach="kjoper in Model.kjopere">
-                        <li>[[*kjoper.eierbrok]]</li>
-                    </ul>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table>
-        <tbody>
-            <tr contenteditable="false">
-                <td class="row-header" colspan="100">6. S&aelig;rskilte avtaler</td>
-            </tr>
-            <tr>
-                <td colspan="100" data-label="OBS! Her påføres kun opplysninger som skal og kan tinglyses" style="height:1.9cm; vertical-align:top">
-                    <span vitec-if="Model.oppdrag.prosjekt.saerskilteavtaler != &quot;Mangler data&quot;">[[oppdrag.prosjekt.saerskilteavtaler]]</span>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table>
-        <tbody>
-            <tr vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot;">
-                <td colspan="100" data-label="Andre avtaler (som ikke skal tinglyses)" style="height:1.9cm; vertical-align:top">
-                    <span vitec-if="Model.oppdrag.prosjekt.andreavtaler != &quot;Mangler data&quot;">[[oppdrag.prosjekt.andreavtaler]]</span>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table>
-        <tbody>
-            <tr contenteditable="false">
-                <td class="row-header" colspan="100">7. Kj&oslash;pers/erververs erkl&aelig;ring ved overdragelse av boligseksjon</td>
-            </tr>
-            <tr contenteditable="false">
-                <td colspan="100">Jeg/vi erkl&aelig;rer at mitt/v&aring;rt erverv av seksjonen ikke strider med bestemmelsene i eierseksjonsloven &sect; 23.</td>
-            </tr>
-            <tr>
-                <td colspan="25" data-label="Dato">&nbsp;</td>
-                <td colspan="75" data-label="Sted">&nbsp;</td>
-            </tr>
-            <tr class="foreach-list">
-                <td colspan="55" data-label="Kjøpers/erververs underskrift" style="height:1.9cm; vertical-align:top">&nbsp;</td>
-                <td colspan="45" data-label="Gjenta med blokkbokstaver" style="height:1.9cm; vertical-align:top">
-                    <div vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">
-                        <ul vitec-foreach="kjoper in Model.kjopere">
-                            <li style="text-transform: uppercase;">[[*kjoper.navn]]</li>
-                        </ul>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table>
-        <tbody>
-            <tr contenteditable="false">
-                <td class="row-header" colspan="100">8. Erkl&aelig;ring om sivilstand mv.</td>
-            </tr>
-            <tr class="no-border" contenteditable="false">
-                <td colspan="100"><strong style="font-size:7.8pt">1. Er utsteder(ne) gift eller registrert(e) partner(e)?</strong></td>
-            </tr>
-            <tr class="no-border" data-toggle="buttons">
-                <td colspan="10"><label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl011" type="radio" /> Ja</label></td>
-                <td colspan="10"><label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl011" type="radio" /> Nei</label></td>
-                <td colspan="80" contenteditable="false">Hvis ja, m&aring; ogs&aring; sp&oslash;rsm&aring;l 2 besvares.</td>
-            </tr>
-            <tr class="no-border" contenteditable="false">
-                <td colspan="100"><strong style="font-size:7.8pt">2. Er utstederne gift eller registrerte partnere med hverandre og begge underskriver som utsteder?</strong></td>
-            </tr>
-            <tr class="no-border" data-toggle="buttons">
-                <td colspan="10"><label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl012" type="radio" /> Ja</label></td>
-                <td colspan="10"><label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl012" type="radio" />Nei</label></td>
-                <td colspan="80" contenteditable="false">Hvis nei, m&aring; ogs&aring; sp&oslash;rsm&aring;l 3 besvares.</td>
-            </tr>
-            <tr class="no-border" contenteditable="false">
-                <td colspan="100"><strong style="font-size:7.8pt">3. Gjelder overdragelsen bolig som utsteder(ne) og dennes/deres ektefelle(r) eller reg partner(e) bruker som felles bolig?</strong></td>
-            </tr>
-            <tr class="no-border" data-toggle="buttons">
-                <td colspan="10" style="border-bottom:solid 1px #000000"><label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl013" type="radio" />Ja </label></td>
-                <td colspan="10" style="border-bottom:solid 1px #000000"><label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl013" type="radio" />Nei </label></td>
-                <td colspan="80" contenteditable="false" style="border-bottom:solid 1px #000000">Hvis ja, m&aring; ektefellen(e)/registrert(e) partner(e) samtykke i overdragelsen.</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table>
-        <tbody>
-            <tr contenteditable="false">
-                <td class="row-header" colspan="100">9. Underskrifter og bekreftelser</td>
-            </tr>
-            <tr>
-                <td colspan="25" data-label="Dato">&nbsp;</td>
-                <td colspan="75" data-label="Sted">&nbsp;</td>
-            </tr>
-            <tr class="foreach-list">
-                <td class="bold-data-label" colspan="65" data-label="Utsteders underskrift" style="height:1.9cm">&nbsp;</td>
-                <td colspan="35" data-label="Gjenta med maskin eller blokkbokstaver" style="height:1.9cm">
-                    <div vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot; &amp;&amp; Model.oppdrag.erdodsbo == false">
-                        <ul vitec-foreach="selger in Model.selgere">
-                            <li style="text-transform: uppercase;">[[*selger.navn]]</li>
-                        </ul>
-                    </div>
-
-                    <div vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot; &amp;&amp; Model.oppdrag.erdodsbo == true">
-                        <ul vitec-foreach="arving in Model.arvinger">
-                            <li style="text-transform: uppercase;">[[*arving.navn]]</li>
-                        </ul>
-                    </div>
-
-                    <div vitec-if="Model.oppdrag.hovedtype == &quot;Tvangssalg&quot;">
-                        <ul vitec-foreach="saksokte in Model.saksokteliste">
-                            <li style="text-transform: uppercase;">[[*saksokte.navn]]</li>
-                        </ul>
-                    </div>
-                </td>
-            </tr>
-            <tr contenteditable="false">
-                <td colspan="100" style="height:24px">Som ektefelle/registrert partner samtykker jeg i overdragelsen</td>
-            </tr>
-            <tr class="foreach-list">
-                <td colspan="25" data-label="Dato" style="height:2.4cm; vertical-align:top">&nbsp;</td>
-                <td class="bold-data-label" colspan="40" data-label="Ektefelles/registrert partners underskrift" style="height:2.4cm; vertical-align:top">&nbsp;</td>
-                <td colspan="35" data-label="Gjenta med blokkbokstaver" style="height:2.4cm; vertical-align:top">
-                    <ul vitec-foreach="selger in Model.selgere">
-                        <li style="text-transform: uppercase;" vitec-if="selger.ergift">[[*selger.selgersektefelle.navnutenfullmektig]]</li>
-                    </ul>
-                </td>
-            </tr>
-            <tr class="no-border" contenteditable="false">
-                <td colspan="100" style="padding-left:5px; vertical-align:top">
-                    Jeg/vi bekrefter at underskriver(ne) er over 18 &aring;r og har underskrevet eller vedkjent seg sin(e) underskrift(er) p&aring; dette<br />
-                    dokument i mitt/v&aring;rt n&aelig;rv&aelig;r. Jeg/vi er myndig(e) og bosatt i Norge.
-                </td>
-            </tr>
-            <tr>
-                <td colspan="65" data-label="1. Vitnes underskrift">&nbsp;</td>
-                <td colspan="35" data-label="Gjenta med blokkbokstaver">&nbsp;</td>
-            </tr>
-            <tr>
-                <td colspan="100" data-label="Adresse">&nbsp;</td>
-            </tr>
-            <tr>
-                <td colspan="65" data-label="2. Vitnes underskrift">&nbsp;</td>
-                <td colspan="35" data-label="Gjenta med blokkbokstaver">&nbsp;</td>
-            </tr>
-            <tr>
-                <td colspan="100" data-label="Adresse">&nbsp;</td>
-            </tr>
-            <tr contenteditable="false">
-                <td class="no-border" colspan="100">&nbsp;</td>
-            </tr>
-            <tr class="foreach-list">
-                <td class="bold-data-label" colspan="65" data-label="Bortfesters underskrift">&nbsp;</td>
-                <td colspan="35" data-label="Gjenta med blokkbokstaver">
-                    <div vitec-if="Model.grunneiere.Count &gt; 0">
-                        <ul vitec-foreach="grunneier in Model.grunneiere">
-                            <li style="text-transform: uppercase;">[[*grunneier.navn]]</li>
-                        </ul>
-                    </div>
-
-                    <div vitec-if="Model.hjemmelshavere.Count &gt; 0">
-                        <ul vitec-foreach="hjemmelshaver in Model.hjemmelshavere">
-                            <li style="text-transform: uppercase;">[[*hjemmelshaver.navn]]</li>
-                        </ul>
-                    </div>
-
-                    <div vitec-if="Model.grunneiere.Count &gt; 0 || Model.hjemmelshavere.Count &gt; 0">
-                        <ul>
-                            <li>&nbsp;</li>
-                        </ul>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table style="height:1cm; page-break-before:always" vitec-if="Model.grunneier.navn != &quot;Mangler data&quot; || Model.hjemmelshaver.navn != &quot;Mangler data&quot;">
-        <tbody>
-            <tr contenteditable="false">
-                <td class="row-header" colspan="100">10. Erkl&aelig;ring om sivilstand mv. for hjemmelshaver</td>
-            </tr>
-            <tr class="no-border" contenteditable="false">
-                <td colspan="100"><strong>1. Er hjemmelshaveren gift eller registrert(e) partnere?</strong></td>
-            </tr>
-            <tr class="no-border" data-toggle="buttons">
-                <td colspan="10"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl014" type="radio" /> Ja</label></td>
-                <td colspan="10"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl014" type="radio" /> Nei</label></td>
-                <td colspan="80" contenteditable="false">Hvis ja, m&aring; ogs&aring; sp&oslash;rsm&aring;l 2 besvares.</td>
-            </tr>
-            <tr class="no-border" contenteditable="false">
-                <td colspan="100"><strong>2. Er hjemmelshaverne gift eller registrerte partnere med hverandre og begge underskriver som hjemmelshavere?</strong></td>
-            </tr>
-            <tr class="no-border" data-toggle="buttons">
-                <td colspan="10"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl015" type="radio" /> Ja</label></td>
-                <td colspan="10"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl015" type="radio" /> Nei</label></td>
-                <td colspan="80" contenteditable="false">Hvis nei, m&aring; ogs&aring; sp&oslash;rsm&aring;l 3 besvares.</td>
-            </tr>
-            <tr class="no-border" contenteditable="false">
-                <td colspan="100"><strong>3. Gjelder overdragelsen bolig som hjemmelshaveren(e) og dennes/deres ektefelle(r) eller reg partner(e) bruker som felles bolig?</strong></td>
-            </tr>
-            <tr class="no-border" data-toggle="buttons">
-                <td colspan="10" style="border-bottom:solid 1px #000000"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl016" type="radio" /> Ja</label></td>
-                <td colspan="10" style="border-bottom:solid 1px #000000"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl016" type="radio" /> Nei</label></td>
-                <td colspan="80" contenteditable="false" style="border-bottom:solid 1px #000000">Hvis ja, m&aring; ektefellen(e)/registrert(e) partner(e) samtykke i overdragelsen.</td>
-            </tr>
-            <tr contenteditable="false">
-                <td class="no-border" colspan="100">&nbsp;</td>
-            </tr>
-            <tr>
-                <td class="row-header" colspan="100" contenteditable="false">11. Underskrifter og bekreftelser</td>
-            </tr>
-            <tr contenteditable="false">
-                <td colspan="100">Som eier/fester (hjemmelshaver) samtykker jeg i overdragelsen</td>
-            </tr>
-            <tr>
-                <td colspan="100" data-label="Sted, dato">&nbsp;</td>
-            </tr>
-            <tr class="foreach-list">
-                <td colspan="25" data-label="Fødselsnr./Org.nr." style="height:1.9cm; vertical-align:top">
-                    <div vitec-if="Model.grunneiere.Count &gt; 0">
-                        <ul vitec-foreach="grunneier in Model.grunneiere">
-                            <li style="text-transform: uppercase;">[[*grunneier.idnummer]]</li>
-                        </ul>
-                    </div>
-
-                    <div vitec-if="Model.hjemmelshavere.Count &gt; 0">
-                        <ul vitec-foreach="hjemmelshaver in Model.hjemmelshavere">
-                            <li style="text-transform: uppercase;">[[*hjemmelshaver.idnummer]]</li>
-                        </ul>
-                    </div>
-
-                    <div vitec-if="Model.grunneiere.Count &gt; 0 || Model.hjemmelshavere.Count &gt; 0">
-                        <ul>
-                            <li>&nbsp;</li>
-                        </ul>
-                    </div>
-                </td>
-                <td class="bold-data-label" colspan="40" data-label="Underskrift" style="height:1.9cm; vertical-align:top">&nbsp;</td>
-                <td colspan="35" data-label="Gjenta med blokkbokstaver" style="height:1.9cm; vertical-align:top">
-                    <div vitec-if="Model.grunneiere.Count &gt; 0">
-                        <ul vitec-foreach="grunneier in Model.grunneiere">
-                            <li style="text-transform: uppercase;">[[*grunneier.navn]]</li>
-                        </ul>
-                    </div>
-
-                    <div vitec-if="Model.hjemmelshavere.Count &gt; 0">
-                        <ul vitec-foreach="hjemmelshaver in Model.hjemmelshavere">
-                            <li style="text-transform: uppercase;">[[*hjemmelshaver.navn]]</li>
-                        </ul>
-                    </div>
-
-                    <div vitec-if="Model.grunneiere.Count &gt; 0 || Model.hjemmelshavere.Count &gt; 0">
-                        <ul>
-                            <li>&nbsp;</li>
-                        </ul>
-                    </div>
-                </td>
-            </tr>
-            <tr contenteditable="false">
-                <td colspan="100">Som hjemmelshavers ektefelle/registrert partner samtykker jeg i overdragelsen</td>
-            </tr>
-            <tr>
-                <td colspan="25" data-label="Dato" style="height:1.9cm; vertical-align:top">&nbsp;</td>
-                <td class="bold-data-label" colspan="40" data-label="Ektefelles/registrert partners underskrift" style="height:1.9cm; vertical-align:top">&nbsp;</td>
-                <td colspan="35" data-label="Gjenta med blokkbokstaver" style="height:1.9cm; vertical-align:top">&nbsp;</td>
-            </tr>
-            <tr class="no-border" contenteditable="false">
-                <td colspan="100" style="padding-left:5px; vertical-align:top">Jeg/vi bekrefter at underskriver(ne) er over 18 &aring;r og har underskrevet eller vedkjent seg sin(e) underskrift(er) p&aring; dette dokument i mitt/v&aring;rt n&aelig;rv&aelig;r. Jeg/vi er myndig(e) og bosatt i Norge.</td>
-            </tr>
-            <tr>
-                <td colspan="65" data-label="1. vitnes underskrift">&nbsp;</td>
-                <td colspan="35" data-label="Gjenta med blokkbokstaver">&nbsp;</td>
-            </tr>
-            <tr>
-                <td colspan="100" data-label="Adresse">&nbsp;</td>
-            </tr>
-            <tr>
-                <td colspan="65" data-label="2. vitnes underskrift">&nbsp;</td>
-                <td colspan="35" data-label="Gjenta med blokkbokstaver">&nbsp;</td>
-            </tr>
-            <tr>
-                <td colspan="100" data-label="Adresse">&nbsp;</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table>
-        <tbody>
-            <tr contenteditable="false">
-                <td colspan="100" style="background-color:#f2f2f2; border-color:#666666; border-style:solid; border-width:1px; padding:5px 5px 5px 0.4cm">
-                    <strong>Innsending og veiledning</strong>
-
-                    <p style="margin-bottom:1em">Ferdig utfylt skj&oslash;te sender du i to eksemplarer til:</p>
-
-                    <p style="margin-bottom:1em">
-                        Kartverket Tinglysing<br />
-                        Postboks 600 Sentrum<br />
-                        3507 H&oslash;nefoss
-                    </p>
-
-                    <p style="margin-bottom:1em">
-                        Hjelp til utfylling av skj&oslash;tet finner du p&aring; siden, <a href="https://kartverket.no/skjote" style="text-decoration: none; color: #000;">www.kartverket.no/skjote</a><br />
-                        Mer informasjon om tinglysing finner du ogs&aring; p&aring; v&aring;r nettside, <a href="https://kartverket.no/eiendom" style="text-decoration: none; color: #000;">www.kartverket.no/eiendom</a>
-                    </p>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<div id="vitecTemplate">
+    <style type="text/css">
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap');
+
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #vitecTemplate * {
+            font-variant-ligatures: none;
+        }
+
+        #vitecTemplate ol {
+            margin: 0;
+            padding: 0;
+            font-family: 'Open sans', sans-serif;
+            font-size: 8pt;
+            line-height: 10pt;
+        }
+
+            #vitecTemplate ol > li {
+                margin: 0;
+                padding: 0;
+                font-family: 'Open sans', sans-serif;
+                font-size: 8pt;
+                line-height: 10pt;
+                list-style-position: outside;
+            }
+
+        #vitecTemplate p {
+            font-family: 'Open sans', sans-serif;
+            font-size: 8pt;
+            line-height: 10pt;
+        }
+
+        #vitecTemplate strong {
+            font-family: 'Open sans', sans-serif;
+            font-weight: 700;
+        }
+
+        #vitecTemplate > table {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            page-break-inside: avoid;
+            margin-bottom: 5px;
+        }
+
+        #vitecTemplate table tr {
+            page-break-inside: avoid;
+        }
+
+        #vitecTemplate tr th,
+        #vitecTemplate tr td {
+            vertical-align: middle;
+            border: solid 1px #000;
+            font-family: 'Open sans', sans-serif;
+            font-size: 8pt;
+            line-height: 9pt;
+            padding: 1px 2px;
+        }
+
+        #vitecTemplate td p,
+        #vitecTemplate td.no-border p {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        #vitecTemplate td.border-right {
+            border-right: solid 1px #959595;
+        }
+
+        #vitecTemplate tr.no-border td {
+            border: none;
+        }
+
+            #vitecTemplate tr.no-border td:first-child {
+                border-left: solid 1px #000;
+            }
+
+            #vitecTemplate tr.no-border td:last-child {
+                border-right: solid 1px #000;
+            }
+
+        #vitecTemplate tr.border-bottom td {
+            border: none;
+            border-bottom: solid 1px #000;
+        }
+
+            #vitecTemplate tr.border-bottom td:first-child {
+                border-left: solid 1px #000;
+            }
+
+            #vitecTemplate tr.border-bottom td:last-child {
+                border-right: solid 1px #000;
+            }
+
+        #vitecTemplate td.no-border {
+            border: none;
+        }
+
+        #vitecTemplate td.with-nested-table {
+            padding: 0;
+        }
+
+            #vitecTemplate td.with-nested-table table {
+                table-layout: fixed;
+                width: 100%;
+            }
+
+                #vitecTemplate td.with-nested-table table td {
+                    border: none;
+                }
+
+                    #vitecTemplate td.with-nested-table table td[data-label]:before {
+                        text-align: center;
+                    }
+
+        #vitecTemplate td.row-header {
+            font-size: 9pt;
+            font-weight: bold;
+            background-color: #f2f2f2;
+            height: .35cm;
+        }
+
+        #vitecTemplate td[data-label]:before {
+            content: attr(data-label);
+            text-align: left;
+            color: #333;
+            font-size: 7pt;
+            line-height: 8pt;
+            display: block;
+            position: absolute;
+            top: 1px;
+            right: 1px;
+            left: 1px;
+        }
+
+        #vitecTemplate td.bold-data-label[data-label]:before {
+            font-weight: 700;
+        }
+
+        #vitecTemplate td[data-choice]:after {
+            content: attr(data-choice);
+            text-align: center;
+            font-size: 7pt;
+            line-height: 8pt;
+            color: #333;
+            display: block;
+            position: absolute;
+            bottom: 1px;
+            left: 0;
+            right: 0;
+        }
+
+        #vitecTemplate td[data-label] {
+            padding: 14px 2px 2px 2px;
+            position: relative;
+        }
+
+        #vitecTemplate td[data-choice] {
+            padding: 0 2px 14px 2px;
+            position: relative;
+        }
+
+        /* tabellceller med BÅDE label og valg-tekst */
+
+        #vitecTemplate td[data-label][data-choice] {
+            padding: 16px 2px 16px 2px;
+            position: relative;
+        }
+
+        /* Malredigering: Hindre placeholder-plugin fra å sprenge tabell-celler (matrikkel-rad)*/
+
+        .cke_widget_inline {
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        #vitecTemplate [contenteditable="false"] * {
+            user-select: none;
+        }
+
+        #vitecTemplate .foreach-list td {
+            min-height: 34px;
+            vertical-align: top;
+        }
+
+        #vitecTemplate .foreach-list ul {
+            list-style: none;
+            margin: 0 0 0 2px;
+            padding: 0;
+            min-height: 13px;
+            /* min-height when empty forech-loop */
+        }
+
+            #vitecTemplate .foreach-list ul li {
+                padding: 0;
+                margin: 0;
+                min-height: 14px;
+                line-height: normal;
+            }
+
+        /* tabellceller med lange data-choice-tekster */
+
+        #vitecTemplate tr.checkbox-row td[data-choice] {
+            padding-bottom: 24px;
+        }
+    </style>
+    <style type="text/css">
+        /* Klikkbare sjekkbokser og radioknapper */
+        label.btn {
+            display: inline-flex;
+            align-items: center;
+            text-transform: none;
+            white-space: normal;
+            padding: 0;
+            outline: none;
+            font-size: 7pt;
+            line-height: 8pt;
+            height: 24px;
+            text-align: left;
+        }
+
+            label.btn:active,
+            label.btn.active {
+                box-shadow: none;
+                outline: none;
+            }
+
+            label.btn.normal-text {
+                font-size: 8pt;
+                line-height: 10pt;
+            }
+
+        .svg-toggle { /* nullstiller bootstrap button-styling */
+            display: inline-block !important;
+            width: 13px;
+            height: 13px;
+            margin: 0 5px 0 2px;
+            vertical-align: bottom;
+            padding: 0;
+            border: none;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none !important;
+            cursor: pointer;
+            white-space: normal;
+            text-align: left;
+            background-repeat: no-repeat;
+            background-size: 13px 13px;
+            background-position: center center;
+        }
+
+            .svg-toggle.checkbox {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+            }
+
+                .svg-toggle.checkbox.active,
+                .btn.active > .svg-toggle.checkbox {
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+                    box-shadow: none !important;
+                }
+
+            .svg-toggle.radio {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
+            }
+
+                .svg-toggle.radio.active,
+                .btn.active > .svg-toggle.radio {
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
+                    box-shadow: none !important;
+                }
+
+        /* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
+        #vitecTemplate [data-toggle="buttons"] input {
+            display: none;
+        }
+    </style>
+    <p contenteditable="false" style="font-size:16pt; font-weight:bold; margin-bottom:0px; margin-left:0px; margin-right:0px; margin-top:0px; padding:5px 0 10px 0; text-align:right">Skj&oslash;te</p>
+
+    <table>
+        <tbody>
+            <tr>
+                <td class="border-right" colspan="50" data-label="Innsenders navn:">[[skjema.innsender.navn]]</td>
+                <td colspan="50" contenteditable="false" data-label="Plass for tinglysingsstempel" rowspan="4" style="text-align:center">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="50" data-label="Adresse:">[[skjema.innsender.adresse]]</td>
+            </tr>
+            <tr>
+                <td colspan="10" data-label="Postnr:">[[skjema.innsender.postnr]]</td>
+                <td colspan="40" data-label="Poststed:">[[skjema.innsender.poststed]]</td>
+            </tr>
+            <tr>
+                <td colspan="30" data-label="(Under-) organisasjonsnr/fødselsnr.">[[skjema.innsender.orgnr]]</td>
+                <td colspan="20" data-label="Ref.nr.">[[skjema.referansenr]]</td>
+            </tr>
+            <tr>
+                <td class="no-border" colspan="100" contenteditable="false">Opplysningene i feltene <strong>1-6</strong> registreres i grunnboken</td>
+            </tr>
+            <tr>
+                <td class="row-header" colspan="100" contenteditable="false">1. Eiendommen(e)</td>
+            </tr>
+            <tr class="foreach-list">
+                <td colspan="15" data-label="Kommunenr.">
+                    <ul vitec-foreach="matrikkel in Model.matrikler">
+                        <li>[[eiendom.kommunenr]]</li>
+                    </ul>
+                </td>
+                <td colspan="35" data-label="Kommunenavn">
+                    <ul vitec-foreach="matrikkel in Model.matrikler">
+                        <li>[[eiendom.kommunenavn]]</li>
+                    </ul>
+                </td>
+                <td colspan="10" data-label="Gnr.">
+                    <ul vitec-foreach="matrikkel in Model.matrikler">
+                        <li>[[*matrikkel.gnr]]</li>
+                    </ul>
+                </td>
+                <td colspan="10" data-label="Bnr.">
+                    <ul vitec-foreach="matrikkel in Model.matrikler">
+                        <li>[[*matrikkel.bnr]]</li>
+                    </ul>
+                </td>
+                <td colspan="10" data-label="Festenr.">
+                    <ul vitec-foreach="matrikkel in Model.matrikler">
+                        <li><span vitec-if="matrikkel.fnr != 0">[[*matrikkel.fnr]]</span></li>
+                    </ul>
+                </td>
+                <td colspan="10" data-label="Seksjonsnr.">
+                    <ul vitec-foreach="matrikkel in Model.matrikler">
+                        <li><span vitec-if="matrikkel.snr != 0">[[*matrikkel.snr]]</span></li>
+                    </ul>
+                </td>
+                <td colspan="10" data-label="Ideell andel">
+                    <ul vitec-foreach="matrikkel in Model.matrikler">
+                        <li>[[*matrikkel.andel]]</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="34" contenteditable="false" style="border-right:none">Overdragelsen gjelder bygg p&aring; festet grunn</td>
+                <td colspan="16" data-toggle="buttons" style="border-left:none">
+                    <!-- @{
+                        var erTomtetypeEiertomt="";
+                        var erTomtetypeFestetomt ="";
+                        if (Model.eiendom.tomtetype == "eiertomt") {
+                            erTomtetypeEiertomt = "active";
+                            } else if (Model.eiendom.tomtetype == "festetomt") {
+                                erTomtetypeFestetomt = "active";
+                            }
+                    }-->
+                    <label class="btn normal-text @erTomtetypeEiertomt" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" /> Nei &nbsp; &nbsp;</label> <label class="btn normal-text @erTomtetypeFestetomt" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" /> Ja</label>
+                </td>
+                <td colspan="34" contenteditable="false" style="border-right:none">Overdragelsen omfatter transport av festeretten</td>
+                <td colspan="16" data-toggle="buttons" style="border-left:none"><label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" /> Nei &nbsp; &nbsp;</label> <label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" /> Ja</label></td>
+            </tr>
+            <tr>
+                <td colspan="34" contenteditable="false" style="border-right:none">
+                    Godkjenning fra bortfester er<br />
+                    n&oslash;dvendig iht. kapittel 4 eller avtale
+                </td>
+                <td colspan="16" data-toggle="buttons" style="border-left:none"><label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" /> Nei &nbsp; &nbsp;</label> <label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" /> Ja</label></td>
+                <td colspan="34" contenteditable="false" style="border-right:none">Bortfester har godkjent overdragelsen og underskrevet i felt for underskrifter og bekreftelser</td>
+                <td colspan="16" data-toggle="buttons" style="border-left:none"><label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" /> Nei &nbsp; &nbsp;</label> <label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" /> Ja</label></td>
+            </tr>
+            <tr>
+                <td colspan="34" contenteditable="false">
+                    Omfatter overdragelsen ideell andel,<br />
+                    herunder eierseksjon, skal andelens<br />
+                    st&oslash;rrelse oppgis
+                </td>
+                <td colspan="16" data-label="Størrelse ideell andel" style="text-align:center"><span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">[[sameie.sameiebrok]]</span></td>
+                <td colspan="34" contenteditable="false" style="border-right:none">
+                    Eiendommen ligger til en annen eiendom<br />
+                    som tilbeh&oslash;r etter avhendingsloven &sect; 3-4<br />
+                    annet ledd bokstav d
+                </td>
+                <td colspan="16" data-toggle="buttons" style="border-left:none"><label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl005" type="radio" /> Nei &nbsp; &nbsp;</label> <label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl005" type="radio" /> Ja</label></td>
+            </tr>
+            <tr class="border-bottom" data-toggle="buttons">
+                <!-- @{
+                    var erGrunntypeTomt = "";
+                    var erIkkeGrunntypeTomt = "";
+                    if (Model.eiendom.grunntype == "Tomt") {
+                        erGrunntypeTomt = "active";
+                        } else {
+                            erIkkeGrunntypeTomt = "active";
+                        }
+                }-->
+                <td colspan="14" data-label="Beskaffenhet"><label class="btn @erIkkeGrunntypeTomt" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl006" type="radio" /> <span><strong>1</strong> Bebygd</span></label></td>
+                <td colspan="14" data-label=" "><label class="btn @erGrunntypeTomt" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl006" type="radio" /> <span><strong>2</strong> Ubebygd</span></label></td>
+                <td colspan="72">&nbsp;</td>
+            </tr>
+            <tr class="border-bottom checkbox-row" data-toggle="buttons">
+                <!-- @{
+
+                    var erTypeGrunnBoligeiendom = "";
+                    var erTypeGrunnFritidseiendom = "";
+                    var erTypeGrunnForretningKontor = "";
+                    var erTypeGrunnIndustriBergverk = "";
+                    var erTypeGrunnLandbrukFiske = "";
+                    var erTypeGrunnOffentligVei = "";
+                    var erTypeGrunnAnnet = "";
+
+                    if (Model.eiendom.typegrunn == "Boligeiendom") {
+                        erTypeGrunnBoligeiendom = "active";
+                    } else if (Model.eiendom.typegrunn == "Fritidseiendom") {
+                        erTypeGrunnFritidseiendom = "active";
+                    } else if (Model.eiendom.typegrunn == "Forretning - kontor") {
+                        erTypeGrunnForretningKontor = "active";
+                    } else if (Model.eiendom.typegrunn == "Industri - bergverk") {
+                        erTypeGrunnIndustriBergverk = "active";
+                    } else if (Model.eiendom.typegrunn == "Landbruk - fiske") {
+                        erTypeGrunnLandbrukFiske = "active";
+                    } else if (Model.eiendom.typegrunn == "Offentlig vei") {
+                        erTypeGrunnOffentligVei = "active";
+                    } else if (Model.eiendom.typegrunn == "Annet") {
+                        erTypeGrunnAnnet = "active";
+                    }
+                }-->
+                <td colspan="14" data-label="Bruk av grunn">
+                    <label class="btn @erTypeGrunnBoligeiendom" contenteditable="false" data-toggle="button">
+                        <span class="checkbox svg-toggle"></span> <input name="rbl007" type="radio" /> <span>
+                            <strong>B</strong> Bolig<br />
+                            eiendom
+                        </span>
+                    </label>
+                </td>
+                <td colspan="14" data-label=" ">
+                    <label class="btn @erTypeGrunnFritidseiendom" contenteditable="false" data-toggle="button">
+                        <span class="checkbox svg-toggle"></span> <input name="rbl007" type="radio" /> <span>
+                            <strong>F</strong> Fritids-<br />
+                            eiendom
+                        </span>
+                    </label>
+                </td>
+                <td colspan="14" data-label=" ">
+                    <label class="btn @erTypeGrunnForretningKontor" contenteditable="false" data-toggle="button">
+                        <span class="checkbox svg-toggle"></span> <input name="rbl007" type="radio" /> <span>
+                            <strong>V</strong> Forretning/<br />
+                            kontor
+                        </span>
+                    </label>
+                </td>
+                <td colspan="14" data-label=" "><label class="btn @erTypeGrunnIndustriBergverk" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl007" type="radio" /> <span><strong>I</strong> Industri</span></label></td>
+                <td colspan="14" data-label=" "><label class="btn @erTypeGrunnLandbrukFiske" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl007" type="radio" /> <span><strong>L</strong> Landbruk</span></label></td>
+                <td colspan="14" data-label=" "><label class="btn @erTypeGrunnOffentligVei" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl007" type="radio" /> <span><strong>K</strong> Off. vei</span></label></td>
+                <td colspan="16" data-label=" "><label class="btn @erTypeGrunnAnnet" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl007" type="radio" /> <span><strong>A</strong> Annet</span></label></td>
+            </tr>
+            <tr class="border-bottom checkbox-row" data-toggle="buttons">
+                <!-- @{
+                    var erTypeBoligFrittliggendeEnebolig = "";
+                    var erTypeBoligTomannsbolig = "";
+                    var erTypeBoligRekkehusKjede = "";
+                    var erTypeBoligBlokkleilighet = "";
+                    var erTypeBoligAnnet = "";
+                    if (Model.eiendom.typebolig == "Frittliggende enebolig") {
+                        erTypeBoligFrittliggendeEnebolig = "active";
+                        } else if (Model.eiendom.typebolig == "Tomannsbolig") {
+                            erTypeBoligTomannsbolig = "active";
+                        } else if (Model.eiendom.typebolig == "Rekkehus/Kjede") {
+                            erTypeBoligRekkehusKjede = "active";
+                        } else if (Model.eiendom.typebolig == "Blokkleilighet") {
+                            erTypeBoligBlokkleilighet = "active";
+                        } else if (Model.eiendom.typebolig == "Annet") {
+                            erTypeBoligAnnet = "active";
+                    }
+                }-->
+                <td colspan="14" data-label="Type bolig">
+                    <label class="btn @erTypeBoligFrittliggendeEnebolig" contenteditable="false" data-toggle="button">
+                        <span class="checkbox svg-toggle"></span> <input name="rbl008" type="radio" /> <span>
+                            <strong>FB</strong> Frittligg.<br />
+                            enebolig
+                        </span>
+                    </label>
+                </td>
+                <td colspan="14" data-label=" ">
+                    <label class="btn @erTypeBoligTomannsbolig" contenteditable="false" data-toggle="button">
+                        <span class="checkbox svg-toggle"></span> <input name="rbl008" type="radio" /> <span>
+                            <strong>TB</strong> Tomanns-<br />
+                            bolig
+                        </span>
+                    </label>
+                </td>
+                <td colspan="14" data-label=" ">
+                    <label class="btn @erTypeBoligRekkehusKjede" contenteditable="false" data-toggle="button">
+                        <span class="checkbox svg-toggle"></span> <input name="rbl008" type="radio" /> <span>
+                            <strong>RK</strong> Rekkehus<br />
+                            kjede
+                        </span>
+                    </label>
+                </td>
+                <td colspan="14" data-label=" ">
+                    <label class="btn @erTypeBoligBlokkleilighet" contenteditable="false" data-toggle="button">
+                        <span class="checkbox svg-toggle"></span> <input name="rbl008" type="radio" /> <span>
+                            <strong>BL</strong> Blokk-<br />
+                            leilighet
+                        </span>
+                    </label>
+                </td>
+                <td colspan="14" data-label=" "><label class="btn @erTypeBoligAnnet" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl008" type="radio" /> <span><strong>AN</strong> Annet</span></label></td>
+                <td colspan="30">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <tbody>
+            <tr contenteditable="false">
+                <td class="row-header" colspan="100">2. Kj&oslash;pesum</td>
+            </tr>
+            <tr>
+                <!-- @{
+                        var erOppgjorsOppdrag ="";
+                        var erIkkeOppgjorsOppdrag ="";
+                        if (Model.oppdrag.hovedtype == "Oppgj\xF8rsoppdrag") {
+                            erOppgjorsOppdrag = "active";
+                            } else {
+                                erIkkeOppgjorsOppdrag = "active";
+                            }
+                    }-->
+                <td colspan="80" style="font-size:10pt; line-height:12pt">kr $.UD([[kontrakt.kjopesum]])&nbsp;-&nbsp;[[kontrakt.kjopesumibokstaver]]</td>
+                <td colspan="20" contenteditable="false" data-label="Utlyst til salg på det frie marked?" data-toggle="buttons"><label class="btn normal-text @erIkkeOppgjorsOppdrag" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl009" type="radio" /> Ja &nbsp;&nbsp;</label> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <label class="btn normal-text @erOppgjorsOppdrag" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl009" type="radio" /> Nei</label></td>
+            </tr>
+            <tr class="border-bottom checkbox-row" data-toggle="buttons">
+                <!-- @{
+                    var erTvangssalg ="";
+                    var erIkkeTvangssalg ="";
+                    if (Model.oppdrag.hovedtype == "Tvangssalg") {
+                        erTvangssalg = "active";
+                        } else {
+                            erIkkeTvangssalg = "active";
+                        }
+                }-->
+                <td colspan="13" data-label="Omsetningstype">
+                    <label class="btn @erIkkeTvangssalg" contenteditable="false" data-toggle="button">
+                        <span class="checkbox svg-toggle"></span> <input name="rbl010" type="radio" /> <span>
+                            <strong>1</strong> Fritt<br />
+                            salg
+                        </span>
+                    </label>
+                </td>
+                <td colspan="13" data-label=" ">
+                    <label class="btn" contenteditable="false" data-toggle="button">
+                        <span class="checkbox svg-toggle"></span> <input name="rbl010" type="radio" /> <span>
+                            <strong>2</strong> Gave (helt<br />
+                            eller delvis)
+                        </span>
+                    </label>
+                </td>
+                <td colspan="13" data-label=" ">
+                    <label class="btn" contenteditable="false" data-toggle="button">
+                        <span class="checkbox svg-toggle"></span> <input name="rbl010" type="radio" /> <span>
+                            <strong>3</strong> Ekspro-<br />
+                            priasjon
+                        </span>
+                    </label>
+                </td>
+                <td colspan="12" data-label=" ">
+                    <label class="btn @erTvangssalg" contenteditable="false" data-toggle="button">
+                        <span class="checkbox svg-toggle"></span> <input name="rbl010" type="radio" /> <span>
+                            <strong>4</strong> Tvangs-<br />
+                            auksjon
+                        </span>
+                    </label>
+                </td>
+                <td colspan="12" data-label=" "><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl010" type="radio" /> <span><strong>5</strong> Uskifte</span></label></td>
+                <td colspan="12" data-label=" ">
+                    <label class="btn" contenteditable="false" data-toggle="button">
+                        <span class="checkbox svg-toggle"></span> <input name="rbl010" type="radio" /> <span>
+                            <strong>6</strong> Skifte-<br />
+                            oppgj&oslash;r
+                        </span>
+                    </label>
+                </td>
+                <td colspan="13" data-label=" ">
+                    <label class="btn" contenteditable="false" data-toggle="button">
+                        <span class="checkbox svg-toggle"></span> <input name="rbl010" type="radio" /> <span>
+                            <strong>7</strong> Opph&oslash;r av<br />
+                            samboerskap
+                        </span>
+                    </label>
+                </td>
+                <td colspan="12" data-label=" "><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl010" type="radio" /> <span><strong>8</strong> Annet</span></label></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <tbody>
+            <tr contenteditable="false">
+                <td class="no-border" colspan="100"><strong style="display:inline-block; margin-bottom:5px">Kj&oslash;pesummen er oppgjort p&aring; avtalt m&aring;te</strong></td>
+            </tr>
+            <tr contenteditable="false">
+                <td class="row-header" colspan="100">3. Salgsverdi/avgiftsgrunnlag</td>
+            </tr>
+            <tr>
+                <td colspan="25" style="border-right:none; font-size:10pt; line-height:12pt">kr $.UD([[kontrakt.avgiftsgrunnlag]])</td>
+                <td colspan="75" data-label="" style="border-left:none"><span vitec-if="(Model.eiendom.eieform == &quot;Sameie&quot; &amp;&amp; Model.eiendom.fellesgjeld != &quot;0,00&quot; &amp;&amp; Model.oppdrag.hovedtype != &quot;Prosjektsalg&quot;)">Inkl. fellesgjeld. </span><span vitec-if="Model.oppdrag.hovedtype == &quot;Prosjektsalg&quot;">Vi erkl&aelig;rer at overf&oslash;ringen gjelder f&oslash;rstegangsoverf&oslash;ring av en selvstendig og i sin helhet nyoppf&oslash;rt bygning som ikke er tatt i bruk, og avgiftsgrunnlaget tilsvarer eiendommens tomteverdi.</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <tbody>
+            <tr contenteditable="false">
+                <td class="row-header" colspan="100">4. Overdras fra</td>
+            </tr>
+            <tr class="foreach-list">
+                <td colspan="25" data-label="Fødselsnr./Org.nr.">
+                    <div vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot; &amp;&amp; Model.oppdrag.erdodsbo == false">
+                        <ul vitec-foreach="selger in Model.selgere">
+                            <li>[[*selger.idnummer]]</li>
+                        </ul>
+                    </div>
+
+                    <div vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot; &amp;&amp; Model.oppdrag.erdodsbo == true">
+                        <ul vitec-foreach="arving in Model.arvinger">
+                            <li>[[*arving.idnummer]]</li>
+                        </ul>
+                    </div>
+
+                    <div vitec-if="Model.oppdrag.hovedtype == &quot;Tvangssalg&quot;">
+                        <ul vitec-foreach="saksokte in Model.saksokteliste">
+                            <li>[[*saksokte.idnummer]]</li>
+                        </ul>
+                    </div>
+                </td>
+                <td colspan="59" data-label="Navn">
+                    <div vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot; &amp;&amp; Model.oppdrag.erdodsbo == false">
+                        <ul vitec-foreach="selger in Model.selgere">
+                            <li>[[*selger.navnutenfullmektigogkontaktperson]]</li>
+                        </ul>
+                    </div>
+
+                    <div vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot; &amp;&amp; Model.oppdrag.erdodsbo == true">
+                        <ul vitec-foreach="arving in Model.arvinger">
+                            <li>[[*arving.navnutenfullmektigogkontaktperson]]</li>
+                        </ul>
+                    </div>
+
+                    <div vitec-if="Model.oppdrag.hovedtype == &quot;Tvangssalg&quot;">
+                        <ul vitec-foreach="saksokte in Model.saksokteliste">
+                            <li>[[*saksokte.navnutenfullmektigogkontaktperson]]</li>
+                        </ul>
+                    </div>
+                </td>
+                <td colspan="16" data-label="Ideell andel">
+                    <div vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot; &amp;&amp; Model.oppdrag.erdodsbo == false">
+                        <ul vitec-foreach="selger in Model.selgere">
+                            <li>[[*selger.eierbrok]]</li>
+                        </ul>
+                    </div>
+
+                    <div vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot; &amp;&amp; Model.oppdrag.erdodsbo == true">
+                        <ul vitec-foreach="arving in Model.arvinger">
+                            <li>[[*arving.eierbrok]]</li>
+                        </ul>
+                    </div>
+
+                    <div vitec-if="Model.oppdrag.hovedtype == &quot;Tvangssalg&quot;">
+                        <ul vitec-foreach="saksokte in Model.saksokteliste">
+                            <li>[[*saksokte.eierbrok]]</li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <tbody>
+            <tr contenteditable="false">
+                <td class="row-header" colspan="100">5. Til</td>
+            </tr>
+            <tr class="foreach-list">
+                <td colspan="25" data-label="Fødselsnr./Org.nr.">
+                    <ul vitec-foreach="kjoper in Model.kjopere">
+                        <li>[[*kjoper.idnummer]]</li>
+                    </ul>
+                </td>
+                <td colspan="49" data-label="Navn">
+                    <ul vitec-foreach="kjoper in Model.kjopere">
+                        <li>[[*kjoper.navnutenfullmektigogkontaktperson]]</li>
+                    </ul>
+                </td>
+                <td colspan="14" data-label="Fast bosatt i Norge">
+                    <ul vitec-foreach="kjoper in Model.kjopere">
+                        <li data-toggle="buttons"><label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl017" type="radio" /> Ja &nbsp; &nbsp;</label> <label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl017" type="radio" /> Nei</label></li>
+                    </ul>
+                </td>
+                <td colspan="12" data-label="Ideell andel">
+                    <ul vitec-foreach="kjoper in Model.kjopere">
+                        <li>[[*kjoper.eierbrok]]</li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <tbody>
+            <tr contenteditable="false">
+                <td class="row-header" colspan="100">6. S&aelig;rskilte avtaler</td>
+            </tr>
+            <tr>
+                <td colspan="100" data-label="OBS! Her påføres kun opplysninger som skal og kan tinglyses" style="height:1.9cm; vertical-align:top">
+                    <span vitec-if="Model.oppdrag.prosjekt.saerskilteavtaler != &quot;Mangler data&quot;">[[oppdrag.prosjekt.saerskilteavtaler]]</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <tbody>
+            <tr vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot;">
+                <td colspan="100" data-label="Andre avtaler (som ikke skal tinglyses)" style="height:1.9cm; vertical-align:top">
+                    <span vitec-if="Model.oppdrag.prosjekt.andreavtaler != &quot;Mangler data&quot;">[[oppdrag.prosjekt.andreavtaler]]</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <tbody>
+            <tr contenteditable="false">
+                <td class="row-header" colspan="100">7. Kj&oslash;pers/erververs erkl&aelig;ring ved overdragelse av boligseksjon</td>
+            </tr>
+            <tr contenteditable="false">
+                <td colspan="100">Jeg/vi erkl&aelig;rer at mitt/v&aring;rt erverv av seksjonen ikke strider med bestemmelsene i eierseksjonsloven &sect; 23.</td>
+            </tr>
+            <tr>
+                <td colspan="25" data-label="Dato">&nbsp;</td>
+                <td colspan="75" data-label="Sted">&nbsp;</td>
+            </tr>
+            <tr class="foreach-list">
+                <td colspan="55" data-label="Kjøpers/erververs underskrift" style="height:1.9cm; vertical-align:top">&nbsp;</td>
+                <td colspan="45" data-label="Gjenta med blokkbokstaver" style="height:1.9cm; vertical-align:top">
+                    <div vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">
+                        <ul vitec-foreach="kjoper in Model.kjopere">
+                            <li style="text-transform: uppercase;">[[*kjoper.navn]]</li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <tbody>
+            <tr contenteditable="false">
+                <td class="row-header" colspan="100">8. Erkl&aelig;ring om sivilstand mv.</td>
+            </tr>
+            <tr class="no-border" contenteditable="false">
+                <td colspan="100"><strong style="font-size:7.8pt">1. Er utsteder(ne) gift eller registrert(e) partner(e)?</strong></td>
+            </tr>
+            <tr class="no-border" data-toggle="buttons">
+                <td colspan="10"><label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl011" type="radio" /> Ja</label></td>
+                <td colspan="10"><label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl011" type="radio" /> Nei</label></td>
+                <td colspan="80" contenteditable="false">Hvis ja, m&aring; ogs&aring; sp&oslash;rsm&aring;l 2 besvares.</td>
+            </tr>
+            <tr class="no-border" contenteditable="false">
+                <td colspan="100"><strong style="font-size:7.8pt">2. Er utstederne gift eller registrerte partnere med hverandre og begge underskriver som utsteder?</strong></td>
+            </tr>
+            <tr class="no-border" data-toggle="buttons">
+                <td colspan="10"><label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl012" type="radio" /> Ja</label></td>
+                <td colspan="10"><label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl012" type="radio" />Nei</label></td>
+                <td colspan="80" contenteditable="false">Hvis nei, m&aring; ogs&aring; sp&oslash;rsm&aring;l 3 besvares.</td>
+            </tr>
+            <tr class="no-border" contenteditable="false">
+                <td colspan="100"><strong style="font-size:7.8pt">3. Gjelder overdragelsen bolig som utsteder(ne) og dennes/deres ektefelle(r) eller reg partner(e) bruker som felles bolig?</strong></td>
+            </tr>
+            <tr class="no-border" data-toggle="buttons">
+                <td colspan="10" style="border-bottom:solid 1px #000000"><label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl013" type="radio" />Ja </label></td>
+                <td colspan="10" style="border-bottom:solid 1px #000000"><label class="btn normal-text" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl013" type="radio" />Nei </label></td>
+                <td colspan="80" contenteditable="false" style="border-bottom:solid 1px #000000">Hvis ja, m&aring; ektefellen(e)/registrert(e) partner(e) samtykke i overdragelsen.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <tbody>
+            <tr contenteditable="false">
+                <td class="row-header" colspan="100">9. Underskrifter og bekreftelser</td>
+            </tr>
+            <tr>
+                <td colspan="25" data-label="Dato">&nbsp;</td>
+                <td colspan="75" data-label="Sted">&nbsp;</td>
+            </tr>
+            <tr class="foreach-list">
+                <td class="bold-data-label" colspan="65" data-label="Utsteders underskrift" style="height:1.9cm">&nbsp;</td>
+                <td colspan="35" data-label="Gjenta med maskin eller blokkbokstaver" style="height:1.9cm">
+                    <div vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot; &amp;&amp; Model.oppdrag.erdodsbo == false">
+                        <ul vitec-foreach="selger in Model.selgere">
+                            <li style="text-transform: uppercase;">[[*selger.navn]]</li>
+                        </ul>
+                    </div>
+
+                    <div vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot; &amp;&amp; Model.oppdrag.erdodsbo == true">
+                        <ul vitec-foreach="arving in Model.arvinger">
+                            <li style="text-transform: uppercase;">[[*arving.navn]]</li>
+                        </ul>
+                    </div>
+
+                    <div vitec-if="Model.oppdrag.hovedtype == &quot;Tvangssalg&quot;">
+                        <ul vitec-foreach="saksokte in Model.saksokteliste">
+                            <li style="text-transform: uppercase;">[[*saksokte.navn]]</li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            <tr contenteditable="false">
+                <td colspan="100" style="height:24px">Som ektefelle/registrert partner samtykker jeg i overdragelsen</td>
+            </tr>
+            <tr class="foreach-list">
+                <td colspan="25" data-label="Dato" style="height:2.4cm; vertical-align:top">&nbsp;</td>
+                <td class="bold-data-label" colspan="40" data-label="Ektefelles/registrert partners underskrift" style="height:2.4cm; vertical-align:top">&nbsp;</td>
+                <td colspan="35" data-label="Gjenta med blokkbokstaver" style="height:2.4cm; vertical-align:top">
+                    <ul vitec-foreach="selger in Model.selgere">
+                        <li style="text-transform: uppercase;" vitec-if="selger.ergift">[[*selger.selgersektefelle.navnutenfullmektig]]</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr class="no-border" contenteditable="false">
+                <td colspan="100" style="padding-left:5px; vertical-align:top">
+                    Jeg/vi bekrefter at underskriver(ne) er over 18 &aring;r og har underskrevet eller vedkjent seg sin(e) underskrift(er) p&aring; dette<br />
+                    dokument i mitt/v&aring;rt n&aelig;rv&aelig;r. Jeg/vi er myndig(e) og bosatt i Norge.
+                </td>
+            </tr>
+            <tr>
+                <td colspan="65" data-label="1. Vitnes underskrift">&nbsp;</td>
+                <td colspan="35" data-label="Gjenta med blokkbokstaver">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="100" data-label="Adresse">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="65" data-label="2. Vitnes underskrift">&nbsp;</td>
+                <td colspan="35" data-label="Gjenta med blokkbokstaver">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="100" data-label="Adresse">&nbsp;</td>
+            </tr>
+            <tr contenteditable="false">
+                <td class="no-border" colspan="100">&nbsp;</td>
+            </tr>
+            <tr class="foreach-list">
+                <td class="bold-data-label" colspan="65" data-label="Bortfesters underskrift">&nbsp;</td>
+                <td colspan="35" data-label="Gjenta med blokkbokstaver">
+                    <div vitec-if="Model.grunneiere.Count &gt; 0">
+                        <ul vitec-foreach="grunneier in Model.grunneiere">
+                            <li style="text-transform: uppercase;">[[*grunneier.navn]]</li>
+                        </ul>
+                    </div>
+
+                    <div vitec-if="Model.hjemmelshavere.Count &gt; 0">
+                        <ul vitec-foreach="hjemmelshaver in Model.hjemmelshavere">
+                            <li style="text-transform: uppercase;">[[*hjemmelshaver.navn]]</li>
+                        </ul>
+                    </div>
+
+                    <div vitec-if="Model.grunneiere.Count &gt; 0 || Model.hjemmelshavere.Count &gt; 0">
+                        <ul>
+                            <li>&nbsp;</li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table style="height:1cm; page-break-before:always" vitec-if="Model.grunneier.navn != &quot;Mangler data&quot; || Model.hjemmelshaver.navn != &quot;Mangler data&quot;">
+        <tbody>
+            <tr contenteditable="false">
+                <td class="row-header" colspan="100">10. Erkl&aelig;ring om sivilstand mv. for hjemmelshaver</td>
+            </tr>
+            <tr class="no-border" contenteditable="false">
+                <td colspan="100"><strong>1. Er hjemmelshaveren gift eller registrert(e) partnere?</strong></td>
+            </tr>
+            <tr class="no-border" data-toggle="buttons">
+                <td colspan="10"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl014" type="radio" /> Ja</label></td>
+                <td colspan="10"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl014" type="radio" /> Nei</label></td>
+                <td colspan="80" contenteditable="false">Hvis ja, m&aring; ogs&aring; sp&oslash;rsm&aring;l 2 besvares.</td>
+            </tr>
+            <tr class="no-border" contenteditable="false">
+                <td colspan="100"><strong>2. Er hjemmelshaverne gift eller registrerte partnere med hverandre og begge underskriver som hjemmelshavere?</strong></td>
+            </tr>
+            <tr class="no-border" data-toggle="buttons">
+                <td colspan="10"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl015" type="radio" /> Ja</label></td>
+                <td colspan="10"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl015" type="radio" /> Nei</label></td>
+                <td colspan="80" contenteditable="false">Hvis nei, m&aring; ogs&aring; sp&oslash;rsm&aring;l 3 besvares.</td>
+            </tr>
+            <tr class="no-border" contenteditable="false">
+                <td colspan="100"><strong>3. Gjelder overdragelsen bolig som hjemmelshaveren(e) og dennes/deres ektefelle(r) eller reg partner(e) bruker som felles bolig?</strong></td>
+            </tr>
+            <tr class="no-border" data-toggle="buttons">
+                <td colspan="10" style="border-bottom:solid 1px #000000"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl016" type="radio" /> Ja</label></td>
+                <td colspan="10" style="border-bottom:solid 1px #000000"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl016" type="radio" /> Nei</label></td>
+                <td colspan="80" contenteditable="false" style="border-bottom:solid 1px #000000">Hvis ja, m&aring; ektefellen(e)/registrert(e) partner(e) samtykke i overdragelsen.</td>
+            </tr>
+            <tr contenteditable="false">
+                <td class="no-border" colspan="100">&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="row-header" colspan="100" contenteditable="false">11. Underskrifter og bekreftelser</td>
+            </tr>
+            <tr contenteditable="false">
+                <td colspan="100">Som eier/fester (hjemmelshaver) samtykker jeg i overdragelsen</td>
+            </tr>
+            <tr>
+                <td colspan="100" data-label="Sted, dato">&nbsp;</td>
+            </tr>
+            <tr class="foreach-list">
+                <td colspan="25" data-label="Fødselsnr./Org.nr." style="height:1.9cm; vertical-align:top">
+                    <div vitec-if="Model.grunneiere.Count &gt; 0">
+                        <ul vitec-foreach="grunneier in Model.grunneiere">
+                            <li style="text-transform: uppercase;">[[*grunneier.idnummer]]</li>
+                        </ul>
+                    </div>
+
+                    <div vitec-if="Model.hjemmelshavere.Count &gt; 0">
+                        <ul vitec-foreach="hjemmelshaver in Model.hjemmelshavere">
+                            <li style="text-transform: uppercase;">[[*hjemmelshaver.idnummer]]</li>
+                        </ul>
+                    </div>
+
+                    <div vitec-if="Model.grunneiere.Count &gt; 0 || Model.hjemmelshavere.Count &gt; 0">
+                        <ul>
+                            <li>&nbsp;</li>
+                        </ul>
+                    </div>
+                </td>
+                <td class="bold-data-label" colspan="40" data-label="Underskrift" style="height:1.9cm; vertical-align:top">&nbsp;</td>
+                <td colspan="35" data-label="Gjenta med blokkbokstaver" style="height:1.9cm; vertical-align:top">
+                    <div vitec-if="Model.grunneiere.Count &gt; 0">
+                        <ul vitec-foreach="grunneier in Model.grunneiere">
+                            <li style="text-transform: uppercase;">[[*grunneier.navn]]</li>
+                        </ul>
+                    </div>
+
+                    <div vitec-if="Model.hjemmelshavere.Count &gt; 0">
+                        <ul vitec-foreach="hjemmelshaver in Model.hjemmelshavere">
+                            <li style="text-transform: uppercase;">[[*hjemmelshaver.navn]]</li>
+                        </ul>
+                    </div>
+
+                    <div vitec-if="Model.grunneiere.Count &gt; 0 || Model.hjemmelshavere.Count &gt; 0">
+                        <ul>
+                            <li>&nbsp;</li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            <tr contenteditable="false">
+                <td colspan="100">Som hjemmelshavers ektefelle/registrert partner samtykker jeg i overdragelsen</td>
+            </tr>
+            <tr>
+                <td colspan="25" data-label="Dato" style="height:1.9cm; vertical-align:top">&nbsp;</td>
+                <td class="bold-data-label" colspan="40" data-label="Ektefelles/registrert partners underskrift" style="height:1.9cm; vertical-align:top">&nbsp;</td>
+                <td colspan="35" data-label="Gjenta med blokkbokstaver" style="height:1.9cm; vertical-align:top">&nbsp;</td>
+            </tr>
+            <tr class="no-border" contenteditable="false">
+                <td colspan="100" style="padding-left:5px; vertical-align:top">Jeg/vi bekrefter at underskriver(ne) er over 18 &aring;r og har underskrevet eller vedkjent seg sin(e) underskrift(er) p&aring; dette dokument i mitt/v&aring;rt n&aelig;rv&aelig;r. Jeg/vi er myndig(e) og bosatt i Norge.</td>
+            </tr>
+            <tr>
+                <td colspan="65" data-label="1. vitnes underskrift">&nbsp;</td>
+                <td colspan="35" data-label="Gjenta med blokkbokstaver">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="100" data-label="Adresse">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="65" data-label="2. vitnes underskrift">&nbsp;</td>
+                <td colspan="35" data-label="Gjenta med blokkbokstaver">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="100" data-label="Adresse">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <tbody>
+            <tr contenteditable="false">
+                <td colspan="100" style="background-color:#f2f2f2; border-color:#666666; border-style:solid; border-width:1px; padding:5px 5px 5px 0.4cm">
+                    <strong>Innsending og veiledning</strong>
+
+                    <p style="margin-bottom:1em">Ferdig utfylt skj&oslash;te sender du i to eksemplarer til:</p>
+
+                    <p style="margin-bottom:1em">
+                        Kartverket Tinglysing<br />
+                        Postboks 600 Sentrum<br />
+                        3507 H&oslash;nefoss
+                    </p>
+
+                    <p style="margin-bottom:1em">
+                        Hjelp til utfylling av skj&oslash;tet finner du p&aring; siden, <a href="https://kartverket.no/skjote" style="text-decoration: none; color: #000;">www.kartverket.no/skjote</a><br />
+                        Mer informasjon om tinglysing finner du ogs&aring; p&aring; v&aring;r nettside, <a href="https://kartverket.no/eiendom" style="text-decoration: none; color: #000;">www.kartverket.no/eiendom</a>
+                    </p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>

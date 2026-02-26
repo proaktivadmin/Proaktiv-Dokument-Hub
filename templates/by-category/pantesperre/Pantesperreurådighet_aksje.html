@@ -1,362 +1,362 @@
-<div id="vitecTemplate">
-	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
-	<style type="text/css">
-		#vitecTemplate table {
-			border-collapse: collapse;
-			width: 100%;
-			table-layout: fixed;
-			font-size: 10px;
-		}
-
-			#vitecTemplate table thead th {
-				text-align: left;
-				font-size: 10pt;
-			}
-
-			#vitecTemplate table tr {
-				page-break-inside: avoid;
-			}
-
-			#vitecTemplate table td {
-				vertical-align: top;
-				font-size: 9pt;
-			}
-
-				#vitecTemplate table td p {
-					font-size: 9pt;
-					margin: 1em 0;
-				}
-
-		#vitecTemplate p {
-			font-size: 9pt;
-		}
-
-		#vitecTemplate ul li {
-			font-size: 9pt;
-		}
-
-		#vitecTemplate table tr.border td {
-			border: solid 1px #000;
-			height: auto
-		}
-
-		#vitecTemplate table td[data-label]:before {
-			content: attr(data-label);
-			text-align: left;
-			color: #333;
-			font-size: 7pt;
-			line-height: 8pt;
-			text-transform: uppercase;
-			display: block;
-			position: absolute;
-			top: 1px;
-		}
-
-		#vitecTemplate table td[data-label] {
-			position: relative;
-		}
-
-		#vitecTemplate [contenteditable="false"] * {
-			user-select: none;
-		}
-
-		span.insert:empty {
-			font-size: inherit !important;
-			line-height: inherit !important;
-			display: inline-block;
-			background-color: lightpink;
-			min-width: 2em !important;
-			height: .7em !important;
-			text-align: center;
-		}
-
-			span.insert:empty:before {
-				content: attr(data-label);
-			}
-
-			span.insert:empty:hover {
-				background-color: #fff;
-				cursor: pointer;
-			}
-
-		.insert-table {
-			display: inline-table;
-		}
-
-			.insert-table > span,
-			.insert-table > span.insert {
-				display: table-cell;
-			}
-
-		.insert-textbox {
-			display: inline-table;
-			vertical-align: middle;
-			margin: 0 2px;
-		}
-
-			.insert-textbox > span {
-				padding: 0 4px;
-				line-height: 1.1;
-				border-bottom: dotted 1px #000;
-				height: 1.1em;
-				width: 10em;
-				max-width: 20em;
-				overflow: hidden;
-				display: table-cell;
-				text-align: left;
-				white-space: nowrap;
-			}
-
-		#vitecTemplate .sign-field {
-			display: inline-block;
-			width: 48%;
-			margin-top: 1cm;
-			margin-right: 10px;
-			border-top: solid 1px #000;
-			vertical-align: top;
-		}
-
-		#vitecTemplate .numbered-list {
-			margin: 20px;
-		}
-
-			#vitecTemplate .numbered-list li {
-				list-style-position: outside;
-				margin-left: 20px;
-			}
-
-
-		#vitecTemplate .witness-table td {
-			border: solid 1px #000;
-			height: 30px;
-			vertical-align: middle;
-			padding: 2px;
-		}
-
-			#vitecTemplate .witness-table td.header-cell {
-				background-color: rgb(231, 230, 230);
-				text-align: center;
-			}
-
-		#vitecTemplate td[data-label]:before {
-			content: attr(data-label);
-			text-align: left;
-			color: #333;
-			font-size: 7pt;
-			line-height: 8pt;
-			text-transform: uppercase;
-			display: block;
-			position: absolute;
-			top: 1px;
-		}
-
-		#vitecTemplate td[data-label] {
-			padding: 14px 2px 2px 2px;
-			position: relative;
-		}
-	</style>
-	<style type="text/css">
-		/* Klikkbare sjekkbokser og radioknapper */
-		label.btn {
-			display: inline;
-			text-transform: none;
-			white-space: normal;
-			padding: 0;
-			vertical-align: baseline;
-			outline: none;
-			font-size: inherit;
-		}
-
-			label.btn:active,
-			label.btn.active {
-				box-shadow: none;
-				outline: none;
-			}
-
-		.svg-toggle { /* nullstiller bootstrap button-styling */
-			display: inline-block !important;
-			width: 16px;
-			height: 16px;
-			margin: 0 5px;
-			vertical-align: bottom;
-			padding: 0;
-			border: none;
-			background: transparent;
-			border-radius: 0;
-			box-shadow: none !important;
-			cursor: pointer;
-			white-space: normal;
-			text-align: left;
-			background-repeat: no-repeat;
-			background-size: 16px 16px;
-			background-position: center center;
-		}
-
-			.svg-toggle.checkbox {
-				background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
-			}
-
-				.svg-toggle.checkbox.active,
-				.btn.active > .svg-toggle.checkbox {
-					background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
-					box-shadow: none !important;
-				}
-
-			.svg-toggle.radio {
-				background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
-			}
-
-				.svg-toggle.radio.active,
-				.btn.active > .svg-toggle.radio {
-					background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
-					box-shadow: none !important;
-				}
-
-		/* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
-		#vitecTemplate [data-toggle="buttons"] input {
-			display: none;
-		}
-	</style>
-	<table>
-		<tbody>
-			<tr>
-				<td colspan="100">
-					<p style="text-align:right"><strong>Oppdragsnr:&nbsp;</strong>[[oppdrag.nr]]&nbsp;</p>
-
-					<p style="text-align:center"><span style="font-size:14pt"> <strong>PANTSETTELSES- OG UR&Aring;DIGHETSERKL&AElig;RING</strong> </span></p>
-
-					<p>Undertegnede</p>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="100">
-					<table vitec-if="Model.selgere.Count &gt; 0">
-						<thead>
-							<tr>
-								<th colspan="75">Navn</th>
-								<th colspan="25">[[selger.ledetekst_idnummer]]</th>
-							</tr>
-						</thead>
-						<tbody vitec-foreach="selger in Model.selgere">
-							<tr>
-								<td colspan="75">[[*selger.navn]]</td>
-								<td colspan="25">[[*selger.idnummer]]</td>
-							</tr>
-						</tbody>
-					</table>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="100">
-					<p>pantsetter herved:</p>
-
-					<p><strong>Aksjebrev nr. [[eiendom.aksjenr]], p&aring;lydende kr $.UD([[aksjeselskap.paalydende]]) med innskudd i henhold til partialobligasjon nr. [[eiendom.partoblnr]], p&aring;lydende kr $.UD([[aksjeselskap.oblbelop]]) i [[aksjeselskap.navn]] i [[eiendom.kommunenavn]] kommune med leierett og leieplikt til ovennevnte leilighet. Adresse: [[eiendom.gatenavnognr]], [[eiendom.postnr]] [[eiendom.poststed]]. </strong></p>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="20">for en sum stor:</td>
-				<td colspan="30">kr $.UD([[eiendom.pris]])</td>
-				<td colspan="20">til sikkerhet for:</td>
-				<td colspan="30">[[meglerkontor.navn]]</td>
-			</tr>
-			<tr>
-				<td colspan="100">
-					<p>Sikkerheten skal gjelde eventuelle krav mot meg/oss i henhold til inng&aring;tt salgsoppdrag, kj&oslash;pekontrakt og oppgj&oslash;rsfullmakt, samt til sikkerhet for at kj&oslash;pers eventuelle pantekreditorer f&aring;r rett prioritet, for at adkomstdokumentene kan overf&oslash;res til kj&oslash;per uten uvedkommende heftelser og for den til enhver tid utbetalte del av salgssummen. Megler forplikter seg til &aring; slette pantet straks salget er avsluttet eller oppdraget er bortfalt og alle krav til megleren er betalt.</p>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="100">
-					<strong>UR&Aring;DIGHETSERKL&AElig;RING</strong><br />
-					Undertegnede erkl&aelig;rer at panteobjektet ikke kan selges, pantsettes eller p&aring; annen m&aring;te disponeres over uten etter skriftlig samtykke fra [[meglerkontor.navn]].
-				</td>
-			</tr>
-			<tr>
-				<td colspan="100" style="padding-top:0.4cm"><strong>UNDERSKRIFTER</strong></td>
-			</tr>
-			<tr data-toggle="buttons">
-				<td colspan="3">1</td>
-				<td colspan="40">Er aksjeeier(ne) gift/registrert(e) partnere?</td>
-				<td colspan="10" style="text-align:center"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" />JA</label></td>
-				<td colspan="10"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" />NEI</label></td>
-				<td colspan="37">Hvis ja, m&aring; ogs&aring; sp&oslash;rsm&aring;l 2 besvares.</td>
-			</tr>
-			<tr data-toggle="buttons">
-				<td colspan="3">2</td>
-				<td colspan="40">Er aksjeeierne gift/registrert partner med hverandre og begge underskriver som aksjeeiere?</td>
-				<td colspan="10" style="text-align:center"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" />JA</label></td>
-				<td colspan="10"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" />NEI</label></td>
-				<td colspan="37">Hvis nei, m&aring; ogs&aring; sp&oslash;rsm&aring;l 3 besvares.</td>
-			</tr>
-			<tr data-toggle="buttons">
-				<td colspan="3">3</td>
-				<td colspan="40">Gjelder pantsettelsen bolig som aksjeeier og dennes ektefelle/registrerte partner bruker som felles bolig?</td>
-				<td colspan="10" style="text-align:center"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" />JA</label></td>
-				<td colspan="10"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" />NEI</label></td>
-				<td colspan="37">Hvis ja, m&aring; ektefellen / registrert partner samtykke i pantsettelsen.</td>
-			</tr>
-			<tr>
-				<td colspan="100">
-					<table style="table-layout:fixed; width:48%">
-						<tbody>
-							<tr class="no-border">
-								<td colspan="100" style="border-bottom:solid 1px #000000">
-									<br />
-									&nbsp;
-								</td>
-							</tr>
-							<tr class="no-border">
-								<td colspan="100">Sted / dato</td>
-							</tr>
-						</tbody>
-					</table>
-
-					<div style="page-break-inside:avoid">
-						<table>
-							<tbody>
-								<tr class="no-border">
-									<td colspan="100" style="vertical-align:top"><span vitec-foreach="selger in Model.selgere"> <span class="sign-field">[[*selger.navn]]</span> </span> <span class="sign-field">Samtykke fra ektefelle</span></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-
-					<p>Jeg/vi bevitner herved at n&aelig;rv&aelig;rende dokument er undertegnet i mitt/v&aring;rt n&aelig;rv&aelig;r og at underskriverne er over 18 &aring;r. Jeg/vi er myndig(e) og fast bosatt i Norge.</p>
-
-					<table class="witness-table">
-						<tbody>
-							<tr>
-								<td colspan="41" data-label="Navn">&nbsp;</td>
-								<td class="header-cell" colspan="8">1. vitne</td>
-								<td colspan="2" style="border-width:0px">&nbsp;</td>
-								<td colspan="41" data-label="Navn">&nbsp;</td>
-								<td class="header-cell" colspan="8">2. vitne</td>
-							</tr>
-							<tr>
-								<td colspan="49" data-label="Adresse">&nbsp;</td>
-								<td colspan="2" style="border-width:0px">&nbsp;</td>
-								<td colspan="49" data-label="Adresse">&nbsp;</td>
-							</tr>
-							<tr>
-								<td colspan="49" data-label="Telefon">&nbsp;</td>
-								<td colspan="2" style="border-width:0px">&nbsp;</td>
-								<td colspan="49" data-label="Telefon">&nbsp;</td>
-							</tr>
-							<tr>
-								<td colspan="49" data-label="Sted/dato">&nbsp;</td>
-								<td colspan="2" style="border-width:0px">&nbsp;</td>
-								<td colspan="49" data-label="Sted/dato">&nbsp;</td>
-							</tr>
-							<tr>
-								<td colspan="49" data-label="Signatur">&nbsp;</td>
-								<td colspan="2" style="border-width:0px">&nbsp;</td>
-								<td colspan="49" data-label="Signatur">&nbsp;</td>
-							</tr>
-						</tbody>
-					</table>
-
-					<p><small>Vitner skal v&aelig;re to myndige personer som bor i Norge, evt. en person nevnt i tinglysingsforskriftens &sect; 3. N&aelig;re slektninger til fullmaktmottakeren kan ikke opptre som vitne. Dette gjelder ektefeller, foreldre, barn eller s&oslash;sken </small></p>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+<div id="vitecTemplate">
+	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+	<style type="text/css">
+		#vitecTemplate table {
+			border-collapse: collapse;
+			width: 100%;
+			table-layout: fixed;
+			font-size: 10px;
+		}
+
+			#vitecTemplate table thead th {
+				text-align: left;
+				font-size: 10pt;
+			}
+
+			#vitecTemplate table tr {
+				page-break-inside: avoid;
+			}
+
+			#vitecTemplate table td {
+				vertical-align: top;
+				font-size: 9pt;
+			}
+
+				#vitecTemplate table td p {
+					font-size: 9pt;
+					margin: 1em 0;
+				}
+
+		#vitecTemplate p {
+			font-size: 9pt;
+		}
+
+		#vitecTemplate ul li {
+			font-size: 9pt;
+		}
+
+		#vitecTemplate table tr.border td {
+			border: solid 1px #000;
+			height: auto
+		}
+
+		#vitecTemplate table td[data-label]:before {
+			content: attr(data-label);
+			text-align: left;
+			color: #333;
+			font-size: 7pt;
+			line-height: 8pt;
+			text-transform: uppercase;
+			display: block;
+			position: absolute;
+			top: 1px;
+		}
+
+		#vitecTemplate table td[data-label] {
+			position: relative;
+		}
+
+		#vitecTemplate [contenteditable="false"] * {
+			user-select: none;
+		}
+
+		span.insert:empty {
+			font-size: inherit !important;
+			line-height: inherit !important;
+			display: inline-block;
+			background-color: lightpink;
+			min-width: 2em !important;
+			height: .7em !important;
+			text-align: center;
+		}
+
+			span.insert:empty:before {
+				content: attr(data-label);
+			}
+
+			span.insert:empty:hover {
+				background-color: #fff;
+				cursor: pointer;
+			}
+
+		.insert-table {
+			display: inline-table;
+		}
+
+			.insert-table > span,
+			.insert-table > span.insert {
+				display: table-cell;
+			}
+
+		.insert-textbox {
+			display: inline-table;
+			vertical-align: middle;
+			margin: 0 2px;
+		}
+
+			.insert-textbox > span {
+				padding: 0 4px;
+				line-height: 1.1;
+				border-bottom: dotted 1px #000;
+				height: 1.1em;
+				width: 10em;
+				max-width: 20em;
+				overflow: hidden;
+				display: table-cell;
+				text-align: left;
+				white-space: nowrap;
+			}
+
+		#vitecTemplate .sign-field {
+			display: inline-block;
+			width: 48%;
+			margin-top: 1cm;
+			margin-right: 10px;
+			border-top: solid 1px #000;
+			vertical-align: top;
+		}
+
+		#vitecTemplate .numbered-list {
+			margin: 20px;
+		}
+
+			#vitecTemplate .numbered-list li {
+				list-style-position: outside;
+				margin-left: 20px;
+			}
+
+
+		#vitecTemplate .witness-table td {
+			border: solid 1px #000;
+			height: 30px;
+			vertical-align: middle;
+			padding: 2px;
+		}
+
+			#vitecTemplate .witness-table td.header-cell {
+				background-color: rgb(231, 230, 230);
+				text-align: center;
+			}
+
+		#vitecTemplate td[data-label]:before {
+			content: attr(data-label);
+			text-align: left;
+			color: #333;
+			font-size: 7pt;
+			line-height: 8pt;
+			text-transform: uppercase;
+			display: block;
+			position: absolute;
+			top: 1px;
+		}
+
+		#vitecTemplate td[data-label] {
+			padding: 14px 2px 2px 2px;
+			position: relative;
+		}
+	</style>
+	<style type="text/css">
+		/* Klikkbare sjekkbokser og radioknapper */
+		label.btn {
+			display: inline;
+			text-transform: none;
+			white-space: normal;
+			padding: 0;
+			vertical-align: baseline;
+			outline: none;
+			font-size: inherit;
+		}
+
+			label.btn:active,
+			label.btn.active {
+				box-shadow: none;
+				outline: none;
+			}
+
+		.svg-toggle { /* nullstiller bootstrap button-styling */
+			display: inline-block !important;
+			width: 16px;
+			height: 16px;
+			margin: 0 5px;
+			vertical-align: bottom;
+			padding: 0;
+			border: none;
+			background: transparent;
+			border-radius: 0;
+			box-shadow: none !important;
+			cursor: pointer;
+			white-space: normal;
+			text-align: left;
+			background-repeat: no-repeat;
+			background-size: 16px 16px;
+			background-position: center center;
+		}
+
+			.svg-toggle.checkbox {
+				background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+			}
+
+				.svg-toggle.checkbox.active,
+				.btn.active > .svg-toggle.checkbox {
+					background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+					box-shadow: none !important;
+				}
+
+			.svg-toggle.radio {
+				background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
+			}
+
+				.svg-toggle.radio.active,
+				.btn.active > .svg-toggle.radio {
+					background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
+					box-shadow: none !important;
+				}
+
+		/* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
+		#vitecTemplate [data-toggle="buttons"] input {
+			display: none;
+		}
+	</style>
+	<table>
+		<tbody>
+			<tr>
+				<td colspan="100">
+					<p style="text-align:right"><strong>Oppdragsnr:&nbsp;</strong>[[oppdrag.nr]]&nbsp;</p>
+
+					<p style="text-align:center"><span style="font-size:14pt"> <strong>PANTSETTELSES- OG UR&Aring;DIGHETSERKL&AElig;RING</strong> </span></p>
+
+					<p>Undertegnede</p>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="100">
+					<table vitec-if="Model.selgere.Count &gt; 0">
+						<thead>
+							<tr>
+								<th colspan="75">Navn</th>
+								<th colspan="25">[[selger.ledetekst_idnummer]]</th>
+							</tr>
+						</thead>
+						<tbody vitec-foreach="selger in Model.selgere">
+							<tr>
+								<td colspan="75">[[*selger.navn]]</td>
+								<td colspan="25">[[*selger.idnummer]]</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="100">
+					<p>pantsetter herved:</p>
+
+					<p><strong>Aksjebrev nr. [[eiendom.aksjenr]], p&aring;lydende kr $.UD([[aksjeselskap.paalydende]]) med innskudd i henhold til partialobligasjon nr. [[eiendom.partoblnr]], p&aring;lydende kr $.UD([[aksjeselskap.oblbelop]]) i [[aksjeselskap.navn]] i [[eiendom.kommunenavn]] kommune med leierett og leieplikt til ovennevnte leilighet. Adresse: [[eiendom.gatenavnognr]], [[eiendom.postnr]] [[eiendom.poststed]]. </strong></p>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="20">for en sum stor:</td>
+				<td colspan="30">kr $.UD([[eiendom.pris]])</td>
+				<td colspan="20">til sikkerhet for:</td>
+				<td colspan="30">[[meglerkontor.navn]]</td>
+			</tr>
+			<tr>
+				<td colspan="100">
+					<p>Sikkerheten skal gjelde eventuelle krav mot meg/oss i henhold til inng&aring;tt salgsoppdrag, kj&oslash;pekontrakt og oppgj&oslash;rsfullmakt, samt til sikkerhet for at kj&oslash;pers eventuelle pantekreditorer f&aring;r rett prioritet, for at adkomstdokumentene kan overf&oslash;res til kj&oslash;per uten uvedkommende heftelser og for den til enhver tid utbetalte del av salgssummen. Megler forplikter seg til &aring; slette pantet straks salget er avsluttet eller oppdraget er bortfalt og alle krav til megleren er betalt.</p>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="100">
+					<strong>UR&Aring;DIGHETSERKL&AElig;RING</strong><br />
+					Undertegnede erkl&aelig;rer at panteobjektet ikke kan selges, pantsettes eller p&aring; annen m&aring;te disponeres over uten etter skriftlig samtykke fra [[meglerkontor.navn]].
+				</td>
+			</tr>
+			<tr>
+				<td colspan="100" style="padding-top:0.4cm"><strong>UNDERSKRIFTER</strong></td>
+			</tr>
+			<tr data-toggle="buttons">
+				<td colspan="3">1</td>
+				<td colspan="40">Er aksjeeier(ne) gift/registrert(e) partnere?</td>
+				<td colspan="10" style="text-align:center"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" />JA</label></td>
+				<td colspan="10"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" />NEI</label></td>
+				<td colspan="37">Hvis ja, m&aring; ogs&aring; sp&oslash;rsm&aring;l 2 besvares.</td>
+			</tr>
+			<tr data-toggle="buttons">
+				<td colspan="3">2</td>
+				<td colspan="40">Er aksjeeierne gift/registrert partner med hverandre og begge underskriver som aksjeeiere?</td>
+				<td colspan="10" style="text-align:center"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" />JA</label></td>
+				<td colspan="10"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" />NEI</label></td>
+				<td colspan="37">Hvis nei, m&aring; ogs&aring; sp&oslash;rsm&aring;l 3 besvares.</td>
+			</tr>
+			<tr data-toggle="buttons">
+				<td colspan="3">3</td>
+				<td colspan="40">Gjelder pantsettelsen bolig som aksjeeier og dennes ektefelle/registrerte partner bruker som felles bolig?</td>
+				<td colspan="10" style="text-align:center"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" />JA</label></td>
+				<td colspan="10"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" />NEI</label></td>
+				<td colspan="37">Hvis ja, m&aring; ektefellen / registrert partner samtykke i pantsettelsen.</td>
+			</tr>
+			<tr>
+				<td colspan="100">
+					<table style="table-layout:fixed; width:48%">
+						<tbody>
+							<tr class="no-border">
+								<td colspan="100" style="border-bottom:solid 1px #000000">
+									<br />
+									&nbsp;
+								</td>
+							</tr>
+							<tr class="no-border">
+								<td colspan="100">Sted / dato</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<div style="page-break-inside:avoid">
+						<table>
+							<tbody>
+								<tr class="no-border">
+									<td colspan="100" style="vertical-align:top"><span vitec-foreach="selger in Model.selgere"> <span class="sign-field">[[*selger.navn]]</span> </span> <span class="sign-field">Samtykke fra ektefelle</span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<p>Jeg/vi bevitner herved at n&aelig;rv&aelig;rende dokument er undertegnet i mitt/v&aring;rt n&aelig;rv&aelig;r og at underskriverne er over 18 &aring;r. Jeg/vi er myndig(e) og fast bosatt i Norge.</p>
+
+					<table class="witness-table">
+						<tbody>
+							<tr>
+								<td colspan="41" data-label="Navn">&nbsp;</td>
+								<td class="header-cell" colspan="8">1. vitne</td>
+								<td colspan="2" style="border-width:0px">&nbsp;</td>
+								<td colspan="41" data-label="Navn">&nbsp;</td>
+								<td class="header-cell" colspan="8">2. vitne</td>
+							</tr>
+							<tr>
+								<td colspan="49" data-label="Adresse">&nbsp;</td>
+								<td colspan="2" style="border-width:0px">&nbsp;</td>
+								<td colspan="49" data-label="Adresse">&nbsp;</td>
+							</tr>
+							<tr>
+								<td colspan="49" data-label="Telefon">&nbsp;</td>
+								<td colspan="2" style="border-width:0px">&nbsp;</td>
+								<td colspan="49" data-label="Telefon">&nbsp;</td>
+							</tr>
+							<tr>
+								<td colspan="49" data-label="Sted/dato">&nbsp;</td>
+								<td colspan="2" style="border-width:0px">&nbsp;</td>
+								<td colspan="49" data-label="Sted/dato">&nbsp;</td>
+							</tr>
+							<tr>
+								<td colspan="49" data-label="Signatur">&nbsp;</td>
+								<td colspan="2" style="border-width:0px">&nbsp;</td>
+								<td colspan="49" data-label="Signatur">&nbsp;</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<p><small>Vitner skal v&aelig;re to myndige personer som bor i Norge, evt. en person nevnt i tinglysingsforskriftens &sect; 3. N&aelig;re slektninger til fullmaktmottakeren kan ikke opptre som vitne. Dette gjelder ektefeller, foreldre, barn eller s&oslash;sken </small></p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </div>

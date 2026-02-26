@@ -1,645 +1,645 @@
-<div id="vitecTemplate">
-    <style type="text/css">
-        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap');
-
-        html, body {
-            margin: 0;
-            padding: 0;
-        }
-
-        #vitecTemplate * {
-            font-variant-ligatures: none;
-        }
-
-        #vitecTemplate ol {
-            margin: 0;
-            padding: 0;
-            font-family: 'Open sans', sans-serif;
-            font-size: 8pt;
-            line-height: 10pt;
-        }
-
-            #vitecTemplate ol > li {
-                margin: 0;
-                padding: 0;
-                font-family: 'Open sans', sans-serif;
-                font-size: 8pt;
-                line-height: 10pt;
-            }
-
-        #vitecTemplate p {
-            font-family: 'Open sans', sans-serif;
-            font-size: 8pt;
-            line-height: 10pt;
-        }
-
-        #vitecTemplate strong {
-            font-family: 'Open sans', sans-serif;
-            font-size: 8pt;
-            line-height: 10pt;
-            font-weight: 700;
-        }
-
-        #vitecTemplate > table {
-            table-layout: fixed;
-            width: 100%;
-            page-break-inside: avoid;
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            border-collapse: collapse;
-            font-family: 'Open sans', sans-serif;
-            font-size: 8pt;
-            line-height: 10pt;
-        }
-
-        #vitecTemplate table:not(:last-child) {
-            margin-bottom: .3cm;
-        }
-
-        #vitecTemplate tr th,
-        #vitecTemplate tr td {
-            vertical-align: middle;
-            border: solid 1px #000;
-            font-family: 'Open sans', sans-serif;
-            font-size: 8pt;
-            line-height: 10pt;
-        }
-
-        #vitecTemplate td p,
-        #vitecTemplate td.no-border p {
-            margin-top: 0;
-            margin-bottom: 0;
-        }
-
-        #vitecTemplate td.border-right {
-            border-right: solid 1px #959595;
-        }
-
-        #vitecTemplate tr.no-border td {
-            border: none;
-        }
-
-            #vitecTemplate tr.no-border td:first-child {
-                border-left: solid 1px #000;
-            }
-
-            #vitecTemplate tr.no-border td:last-child {
-                border-right: solid 1px #000;
-            }
-
-        #vitecTemplate tr.border-bottom td {
-            border: none;
-            border-bottom: solid 1px #000;
-        }
-
-            #vitecTemplate tr.border-bottom td:first-child {
-                border-left: solid 1px #000;
-            }
-
-
-            #vitecTemplate tr.border-bottom td:last-child {
-                border-right: solid 1px #000;
-            }
-
-        #vitecTemplate td.no-border {
-            border: none;
-        }
-
-        #vitecTemplate td.row-header {
-            font-size: 9pt;
-            font-weight: bold;
-            background-color: #f2f2f2;
-            height: .35cm;
-        }
-
-        #vitecTemplate td[data-label]:before {
-            content: attr(data-label);
-            text-align: left;
-            font-size: 7.5pt;
-            line-height: 8pt;
-            display: block;
-            position: absolute;
-            top: 1px;
-        }
-
-
-        #vitecTemplate td[data-choice]:after {
-            content: attr(data-choice);
-            text-align: center;
-            font-size: 7.5pt;
-            line-height: 8pt;
-            display: block;
-            position: absolute;
-            bottom: 1px;
-            left: 0;
-            right: 0;
-        }
-
-        #vitecTemplate td[data-label] {
-            padding: 16px 2px 4px 2px;
-            position: relative;
-        }
-
-        #vitecTemplate td[data-choice] {
-            padding: 4px 2px 16px 2px;
-            position: relative;
-        }
-        /* tabellceller med BÅDE label og valg-tekst */
-        #vitecTemplate td[data-label][data-choice] {
-            padding: 16px 2px 16px 2px;
-            position: relative;
-        }
-
-        /* Malredigering: Hindre placeholder-plugin fra å sprenge tabell-celler (matrikkel-rad)*/
-        .cke_widget_inline {
-            white-space: pre-wrap;
-            word-break: break-all;
-        }
-
-        #vitecTemplate [contenteditable="false"] * {
-            user-select: none;
-        }
-
-        #vitecTemplate .foreach-list td {
-            min-height: 34px;
-            vertical-align: top;
-        }
-
-        #vitecTemplate .foreach-list ul {
-            list-style: none;
-            margin: 0 0 0 2px;
-            padding: 0;
-            min-height: 13px;
-            /* min-height when empty forech-loop */
-        }
-
-            #vitecTemplate .foreach-list ul li {
-                padding: 0;
-                margin: 0;
-                min-height: 14px;
-                line-height: normal;
-            }
-    </style>
-    <style type="text/css">
-        /* Klikkbare sjekkbokser og radioknapper */
-        label.btn {
-            display: inline;
-            text-transform: none;
-            white-space: normal;
-            padding: 0;
-            vertical-align: baseline;
-            outline: none;
-            font-size: inherit;
-        }
-
-            label.btn:active,
-            label.btn.active {
-                box-shadow: none;
-                outline: none;
-            }
-
-        .svg-toggle { /* nullstiller bootstrap button-styling */
-            display: inline-block !important;
-            width: 14px;
-            height: 14px;
-            margin: 0 5px;
-            vertical-align: bottom;
-            padding: 0;
-            border: none;
-            background: transparent;
-            border-radius: 0;
-            box-shadow: none !important;
-            cursor: pointer;
-            white-space: normal;
-            text-align: left;
-            background-repeat: no-repeat;
-            background-size: 14px 14px;
-            background-position: center center;
-        }
-
-            .svg-toggle.large {
-                width: 20px;
-                height: 20px;
-                background-size: 20px 20px;
-            }
-
-            .svg-toggle.checkbox {
-                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
-            }
-
-                .svg-toggle.checkbox.active,
-                .btn.active > .svg-toggle.checkbox {
-                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
-                    box-shadow: none !important;
-                }
-
-            .svg-toggle.radio {
-                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
-            }
-
-                .svg-toggle.radio.active,
-                .btn.active > .svg-toggle.radio {
-                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
-                    box-shadow: none !important;
-                }
-
-        /* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
-        #vitecTemplate [data-toggle="buttons"] input {
-            display: none;
-        }
-    </style>
-    <table>
-        <tbody>
-            <tr contenteditable="false">
-                <td class="no-border" colspan="30"><strong style="font-size:16pt; font-weight:bold">Pantedokument </strong></td>
-                <td class="no-border" colspan="70"><span style="font-size:12pt">Panterett i <span vitec-if="Model.eiendom.eieform != &quot;Andel&quot;">fast eiendom</span><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">andel i borettslag</span></span></td>
-            </tr>
-            <tr vitec-if="Model.eiendom.eieform != &quot;Andel&quot;">
-                <td class="no-border" colspan="52" style="font-size:10pt; text-align:right; vertical-align:middle"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
-                <td class="no-border" colspan="48" contenteditable="false" style="padding-top:6px">Pantsettelsen gjelder refinansiering av l&aring;n, jf. forskrift om gebyr for tinglysing MV. &sect; 1 andre ledd</td>
-            </tr>
-            <tr vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">
-                <td class="no-border" colspan="100">&nbsp;</td>
-            </tr>
-            <tr contenteditable="false">
-                <td class="no-border" colspan="100">&nbsp;</td>
-            </tr>
-            <tr>
-                <td class="border-right" colspan="50" data-label="Innsenders navn (rekvirent):">[[skjema.innsender.navn]]</td>
-                <td colspan="50" contenteditable="false" data-label="Plass for tinglysningsstempel" rowspan="4" style="text-align:center">&nbsp;</td>
-            </tr>
-            <tr>
-                <td colspan="50" data-label="Adresse:">[[skjema.innsender.adresse]]</td>
-            </tr>
-            <tr>
-                <td colspan="10" data-label="Postnummer:">[[skjema.innsender.postnr]]</td>
-                <td colspan="40" data-label="Poststed:">[[skjema.innsender.poststed]]</td>
-            </tr>
-            <tr>
-                <td colspan="30" data-label="Fødselsnummer/Organisasjonsnummer">[[skjema.innsender.orgnr]]</td>
-                <td colspan="20" data-label="Ref.nr.">[[skjema.referansenr]]</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table>
-        <tbody>
-            <tr contenteditable="false">
-                <td class="no-border" colspan="100" style="vertical-align:bottom">Opplysningene i feltene 1-5 registreres i grunnboken</td>
-            </tr>
-            <tr contenteditable="false">
-                <td class="row-header" colspan="100">1. Pantsetter(e)</td>
-            </tr>
-            <tr class="foreach-list">
-                <td colspan="65" data-label="Navn">
-                    <ul vitec-foreach="selger in Model.selgere">
-                        <li>[[*selger.navnutenfullmektigogkontaktperson]]</li>
-                    </ul>
-                </td>
-                <td colspan="35" data-label="Fødselsnummer/Organisasjonsnummer">
-                    <ul vitec-foreach="selger in Model.selgere">
-                        <li>[[*selger.idnummer]]</li>
-                    </ul>
-                </td>
-            </tr>
-            <tr contenteditable="false">
-                <td colspan="100">Angivelse av pantekravets st&oslash;rrelse</td>
-            </tr>
-            <tr>
-                <td colspan="25" data-label="Beløp"><span vitec-if="Model.kontrakt.kjopesum == &quot;0,00&quot;">kr $.UD([[eiendom.pris]])</span><span vitec-if="Model.kontrakt.kjopesum != &quot;0,00&quot;">kr $.UD([[kontrakt.kjopesum]])</span></td>
-                <td colspan="15" contenteditable="false" data-label="Valuta">NOK</td>
-                <td colspan="60" data-label="Beløp med bokstaver"><span vitec-if="Model.kontrakt.kjopesum == &quot;0,00&quot;">[[eiendom.prisibokstaver]]</span><span vitec-if="Model.kontrakt.kjopesum != &quot;0,00&quot;">[[kontrakt.kjopesumibokstaver]]</span></td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table>
-        <tbody>
-            <tr contenteditable="false">
-                <td class="row-header" colspan="100">2. Panthaver</td>
-            </tr>
-            <tr>
-                <td colspan="65" data-label="Navn">[[skjema.pantsetter.navn]]</td>
-                <td colspan="35" data-label="Fødselsnummer/Organisasjonsnummer.">[[skjema.pantsetter.orgnr]]</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table>
-        <tbody>
-            <tr contenteditable="false">
-                <td class="row-header" colspan="100">3. Pantobjekt</td>
-            </tr>
-            <tr class="foreach-list" vitec-if="Model.eiendom.eieform != &quot;Andel&quot;">
-                <td colspan="15" data-label="Kommunenr.">
-                    <ul vitec-foreach="matrikkel in Model.matrikler">
-                        <li>[[eiendom.kommunenr]]</li>
-                    </ul>
-                </td>
-                <td colspan="35" data-label="Kommunens navn">
-                    <ul vitec-foreach="matrikkel in Model.matrikler">
-                        <li>[[eiendom.kommunenavn]]</li>
-                    </ul>
-                </td>
-                <td colspan="10" data-label="Gnr.">
-                    <ul vitec-foreach="matrikkel in Model.matrikler">
-                        <li>[[*matrikkel.gnr]]</li>
-                    </ul>
-                </td>
-                <td colspan="10" data-label="Bnr.">
-                    <ul vitec-foreach="matrikkel in Model.matrikler">
-                        <li>[[*matrikkel.bnr]]</li>
-                    </ul>
-                </td>
-                <td colspan="10" data-label="Festenr.">
-                    <ul vitec-foreach="matrikkel in Model.matrikler">
-                        <li>[[*matrikkel.fnr]]</li>
-                    </ul>
-                </td>
-                <td colspan="10" data-label="Seksjonsnr.">
-                    <ul vitec-foreach="matrikkel in Model.matrikler">
-                        <li>[[*matrikkel.snr]]</li>
-                    </ul>
-                </td>
-                <td colspan="10" data-label="Ideell andel">
-                    <ul vitec-foreach="matrikkel in Model.matrikler">
-                        <li>[[*matrikkel.andel]]</li>
-                    </ul>
-                </td>
-            </tr>
-            <tr vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">
-                <td colspan="40" data-label="Borettslagets navn">[[brl.navn]]</td>
-                <td colspan="30" data-label="Organisasjonsnr.">[[brl.orgnr]]</td>
-                <td colspan="15" data-label="Andelsnr.">[[eiendom.andelsnr]]</td>
-                <td colspan="15" data-label="Ideell Andel">[[brl.andel]]</td>
-            </tr>
-            <tr vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">
-                <td colspan="40" style="height:35px">&nbsp;</td>
-                <td colspan="30" style="height:35px">&nbsp;</td>
-                <td colspan="15" style="height:35px">&nbsp;</td>
-                <td colspan="15" style="height:35px">&nbsp;</td>
-            </tr>
-            <tr vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">
-                <td colspan="40" style="height:35px">&nbsp;</td>
-                <td colspan="30" style="height:35px">&nbsp;</td>
-                <td colspan="15" style="height:35px">&nbsp;</td>
-                <td colspan="15" style="height:35px">&nbsp;</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table>
-        <tbody>
-            <tr contenteditable="false">
-                <td class="row-header" colspan="100">4. Avtalt prioritet</td>
-            </tr>
-            <tr>
-                <td colspan="100" style="border-bottom:0; height:1cm; vertical-align:top">&nbsp;</td>
-            </tr>
-            <tr contenteditable="false">
-                <td colspan="100" style="border-top:0; vertical-align:bottom">Panteretten har opptrinnsrett</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table>
-        <tbody>
-            <tr contenteditable="false">
-                <td class="row-header" colspan="100">5. Forbud mot visse rettslige disposisjoner</td>
-            </tr>
-            <tr>
-                <td colspan="100" style="height:1cm; vertical-align:top">Pantsetter erkl&aelig;rer at eiendommen ikke kan overskj&oslash;tes, pantsettes, utleies eller beheftes p&aring; noen m&aring;te uten etter skriftlig samtykke fra [[skjema.pantsetter.navn]], org.nr [[skjema.pantsetter.orgnr]].</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table>
-        <tbody>
-            <tr contenteditable="false">
-                <td class="row-header" colspan="100">6. Supplerende tekst (tinglyses ikke)</td>
-            </tr>
-            <tr>
-                <td colspan="25" contenteditable="false" style="vertical-align:top">Forsikring ev. bestemmelser om pantsetters plikt til forsikring av pantet</td>
-                <td colspan="75" data-label="Gjeldsansvar" style="vertical-align:top">Dette pantedokumentet skal sikre den til enhver tid utbetalte del av kj&oslash;pesummen samt meglers krav p&aring; vederlag og dekning av utlegg.</td>
-            </tr>
-            <tr>
-                <td colspan="25" contenteditable="false" style="height:1.5cm; vertical-align:top">Mislighold/s&aelig;rlige bestemmelser om ekstraordin&aelig;rt forfall</td>
-                <td colspan="75" data-label="Panthaver kan kreve pantekravet innfridd i henhold til pantelovens § 1-9." style="height:1.5cm; vertical-align:top">&nbsp;</td>
-            </tr>
-            <tr>
-                <td colspan="25" contenteditable="false" style="vertical-align:top">Innsigelser ved overdragelse av pantedokumenter</td>
-                <td colspan="75" style="vertical-align:top">Dersom pantsetter er forbruker, og panthaver overdrar eller pantsetter dette pantedokumentet, kan pantsetteren gj&oslash;re gjeldende overfor erververen de samme innsigelser og motkrav som pantsetteren kunne gjort gjeldende overfor panthaveren p&aring; grunnlag av l&aring;ne- og pantsettelsesforholdet, uavhengig av bestemmelsene i gjeldsbrevloven 17. februar 1939 nr 1 andre kapittel. Med forbruker menes en fysisk person n&aring;r avtalens form&aring;l ikke hovedsaklig er knyttet til denne personens n&aelig;ringsvirksomhet, jf. finansavtaleloven &sect; 2 f&oslash;rste ledd annet punkt.</td>
-            </tr>
-            <tr>
-                <td colspan="25" contenteditable="false" style="height:2.3cm; vertical-align:top">Andre bestemmelser som ikke skal tinglyses</td>
-                <td colspan="75" style="height:1.5cm; vertical-align:top">&nbsp;</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table>
-        <tbody>
-            <tr contenteditable="false">
-                <td class="row-header" colspan="100">7. Erkl&aelig;ring om sivilstand mv. for pantsetteren/pantsetterne</td>
-            </tr>
-            <tr class="no-border" contenteditable="false">
-                <td colspan="100"><strong>1. Er pantsetteren/pantsetterne gift eller registrert(e) partner(e)?</strong></td>
-            </tr>
-            <tr class="no-border" contenteditable="false" data-toggle="buttons">
-                <td colspan="10" style="text-align:center"><label class="btn" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" /></label> Ja</td>
-                <td colspan="10" style="text-align:center"><label class="btn" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" /></label> Nei</td>
-                <td colspan="80">Hvis ja, m&aring; ogs&aring; sp&oslash;rsm&aring;l 2 besvares.</td>
-            </tr>
-            <tr class="no-border" contenteditable="false">
-                <td colspan="100"><strong>2. Er pantsetterne gift eller registrerte partnere med hverandre og begge underskriver som pantsettere?</strong></td>
-            </tr>
-            <tr class="no-border" contenteditable="false" data-toggle="buttons">
-                <td colspan="10" style="text-align:center"><label class="btn" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" /></label> Ja</td>
-                <td colspan="10" style="text-align:center"><label class="btn" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" /></label> Nei</td>
-                <td colspan="80">Hvis nei, m&aring; ogs&aring; sp&oslash;rsm&aring;l 3 besvares.</td>
-            </tr>
-            <tr class="no-border" contenteditable="false">
-                <td colspan="100"><strong>3. Gjelder pantsettelsen eiendom som pantsetteren/pantsetterne og dennes (deres) ektefelle(r) bruker som felles bolig?</strong></td>
-            </tr>
-            <tr class="no-border" contenteditable="false" data-toggle="buttons">
-                <td colspan="10" style="border-bottom:solid 1px #000000; text-align:center"><label class="btn" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" /></label> Ja</td>
-                <td colspan="10" style="border-bottom:solid 1px #000000; text-align:center"><label class="btn" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" /></label> Nei</td>
-                <td colspan="80" style="border-bottom:solid 1px #000000">Hvis ja, m&aring; ektefellen(e)/registrert(e) partner(e) samtykke i pantsettelsen.</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table>
-        <tbody>
-            <tr contenteditable="false">
-                <td class="row-header" colspan="100">Underskrifter og bekreftelser</td>
-            </tr>
-            <tr contenteditable="false">
-                <td colspan="100">Jeg/vi gir herved panthaver slik panterett som spesifisert ovenfor</td>
-            </tr>
-            <tr>
-                <td colspan="100" data-label="Sted, dato">&nbsp;</td>
-            </tr>
-            <tr class="foreach-list">
-                <td colspan="65" data-label="Pantsetter(ne)s Underskrift(er)" style="height:2.4cm">&nbsp;</td>
-                <td colspan="35" data-label="Gjenta med blokkbokstaver" style="height:2.4cm; text-transform:uppercase">
-                    <ul vitec-foreach="selger in Model.selgere">
-                        <li>[[*selger.navn]]</li>
-                    </ul>
-                </td>
-            </tr>
-            <tr contenteditable="false">
-                <td class="row-header" colspan="100">Ektefellesamtykke (fylles ut dersom &quot;ja&quot; i pkt. 7.3)</td>
-            </tr>
-            <tr contenteditable="false">
-                <td colspan="100">Som pantsetter(ne)s ektefelle/registrert partner, samtykker jeg i pantsettelsen.</td>
-            </tr>
-            <tr class="foreach-list">
-                <td colspan="65" data-label="Ektefelle(r)/reg. partner(e)s underskrift" style="vertical-align: top; height: 2.4cm;">&nbsp;</td>
-                <td colspan="35" data-label="Gjenta med blokkbokstaver" style="vertical-align: top; height: 2.4cm;">
-                    <ul vitec-foreach="selger in Model.selgere">
-                        <li style="text-transform: uppercase;" vitec-if="selger.ergift">[[*selger.selgersektefelle.navnutenfullmektig]]</li>
-                    </ul>
-                </td>
-            </tr>
-        </tbody>
-        <tbody vitec-if="Model.grunneier.navn == &quot;Mangler data&quot; &amp;&amp; Model.hjemmelshaver.navn == &quot;Mangler data&quot;">
-            <tr contenteditable="false">
-                <td class="row-header" colspan="100">Vitneunderskrifter</td>
-            </tr>
-            <tr class="no-border" contenteditable="false">
-                <td colspan="100" style="vertical-align:top">Jeg/vi bekrefter at pantsetter(ne) er over 18 &aring;r og har underskrevet eller vedkjent seg underskriften i mitt/v&aring;rt n&aelig;rv&aelig;r. Jeg/vi er myndig(e) og bosatt i Norge.</td>
-            </tr>
-            <tr>
-                <td colspan="65" data-label="1. vitnes underskrift">&nbsp;</td>
-                <td colspan="35" data-label="Gjenta med blokkbokstaver">&nbsp;</td>
-            </tr>
-            <tr>
-                <td colspan="100" data-label="Adresse">&nbsp;</td>
-            </tr>
-            <tr>
-                <td colspan="65" data-label="2. vitnes underskrift">&nbsp;</td>
-                <td colspan="35" data-label="Gjenta med blokkbokstaver">&nbsp;</td>
-            </tr>
-            <tr>
-                <td colspan="100" data-label="Adresse">&nbsp;</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table vitec-if="Model.grunneier.navn != &quot;Mangler data&quot; || Model.hjemmelshaver.navn != &quot;Mangler data&quot;">
-        <tbody>
-            <tr contenteditable="false">
-                <td class="row-header" colspan="100">8. Erkl&aelig;ring om sivilstand mv. for hjemmelshaver(ne)</td>
-            </tr>
-            <tr class="no-border" contenteditable="false">
-                <td colspan="100"><strong>1. Er hjemmelshaver(ne) gift eller registrert(e) partner(e)?</strong></td>
-            </tr>
-            <tr class="no-border" contenteditable="false" data-toggle="buttons">
-                <td colspan="10" style="text-align:center"><label class="btn" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" /></label></td>
-                <td colspan="10" style="text-align:center"><label class="btn" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" /></label></td>
-                <td colspan="80">Hvis ja, m&aring; ogs&aring; sp&oslash;rsm&aring;l 2 besvares.</td>
-            </tr>
-            <tr class="no-border" contenteditable="false">
-                <td colspan="100"><strong>2. Er hjemmelshaverne gift eller registrerte partnere med hverandre og begge underskriver som hjemmelshavere?</strong></td>
-            </tr>
-            <tr class="no-border" contenteditable="false" data-toggle="buttons">
-                <td colspan="10" style="text-align:center"><label class="btn" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl005" type="radio" /></label></td>
-                <td colspan="10" style="text-align:center"><label class="btn" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl005" type="radio" /></label></td>
-                <td colspan="80">Hvis nei, m&aring; ogs&aring; sp&oslash;rsm&aring;l 3 besvares.</td>
-            </tr>
-            <tr class="no-border" contenteditable="false">
-                <td colspan="100"><strong>3. Gjelder pantsettelsen eiendom som hjemmelshavern(e) og dennes (deres) ektefelle(r) bruker som felles bolig?</strong></td>
-            </tr>
-            <tr class="no-border" contenteditable="false" data-toggle="buttons">
-                <td colspan="10" style="border-bottom:solid 1px #000000; text-align:center"><label class="btn" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl006" type="radio" /></label></td>
-                <td colspan="10" style="border-bottom:solid 1px #000000; text-align:center"><label class="btn" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl006" type="radio" /></label></td>
-                <td colspan="80" style="border-bottom:solid 1px #000000">Hvis ja, m&aring; ektefellen(e)/registrert(e) partner(e) samtykke i pantsettelsen.</td>
-            </tr>
-            <tr contenteditable="false">
-                <td class="row-header" colspan="100">Underskrifter og bekreftelser - hjemmelshaver(ne)</td>
-            </tr>
-            <tr contenteditable="false">
-                <td colspan="100">Jeg/vi gir herved panthaver slik panterett som spesifisert ovenfor</td>
-            </tr>
-            <tr>
-                <td colspan="100" data-label="Sted, dato">&nbsp;</td>
-            </tr>
-            <tr class="foreach-list">
-                <td colspan="20" data-label="Fødselsnr./Org.nr." style="height:2cm">
-                    <div vitec-if="Model.grunneiere.Count &gt; 0">
-                        <ul vitec-foreach="grunneier in Model.grunneiere">
-                            <li style="text-transform: uppercase;">[[*grunneier.idnummer]]</li>
-                        </ul>
-                    </div>
-
-                    <div vitec-if="Model.hjemmelshavere.Count &gt; 0">
-                        <ul vitec-foreach="hjemmelshaver in Model.hjemmelshavere">
-                            <li style="text-transform: uppercase;">[[*hjemmelshaver.idnummer]]</li>
-                        </ul>
-                    </div>
-
-                    <div vitec-if="Model.grunneiere.Count &gt; 0 || Model.hjemmelshavere.Count &gt; 0">
-                        <ul>
-                            <li>&nbsp;</li>
-                        </ul>
-                    </div>
-                </td>
-                <td colspan="40" data-label="Hjemmelshaver(ne)s Underskrift(er)" style="height:2cm">&nbsp;</td>
-                <td colspan="40" data-label="Gjenta med blokkbokstaver" style="height:2cm; text-transform:uppercase; vertical-align:top">
-                    <div vitec-if="Model.grunneiere.Count &gt; 0">
-                        <ul vitec-foreach="grunneier in Model.grunneiere">
-                            <li style="text-transform: uppercase;">[[*grunneier.navn]]</li>
-                        </ul>
-                    </div>
-
-                    <div vitec-if="Model.hjemmelshavere.Count &gt; 0">
-                        <ul vitec-foreach="hjemmelshaver in Model.hjemmelshavere">
-                            <li style="text-transform: uppercase;">[[*hjemmelshaver.navn]]</li>
-                        </ul>
-                    </div>
-
-                    <div vitec-if="Model.grunneiere.Count &gt; 0 || Model.hjemmelshavere.Count &gt; 0">
-                        <ul>
-                            <li>&nbsp;</li>
-                        </ul>
-                    </div>
-                </td>
-            </tr>
-            <tr contenteditable="false">
-                <td class="row-header" colspan="100">Ektefellesamtykke (fylles ut dersom &quot;ja&quot; i pkt. 8.3)</td>
-            </tr>
-            <tr contenteditable="false">
-                <td colspan="100">Som hjemmelshaver(ne)s ektefelle/registrert partner, samtykker jeg i pantsettelsen.</td>
-            </tr>
-            <tr>
-                <td colspan="100" data-label="Sted, dato">&nbsp;</td>
-            </tr>
-            <tr>
-                <td colspan="65" data-label="Ektefelle(r)/reg. partner(e)s underskrift" style="vertical-align:top">&nbsp;</td>
-                <td colspan="35" data-label="Gjenta med blokkbokstaver" style="vertical-align:top">&nbsp;</td>
-            </tr>
-            <tr contenteditable="false">
-                <td class="row-header" colspan="100">Vitneunderskrifter</td>
-            </tr>
-            <tr class="no-border" contenteditable="false">
-                <td colspan="100" style="vertical-align:top">Jeg/vi bekrefter at hjemmelshaver(ne) er over 18 &aring;r og har underskrevet eller vedkjent seg underskriften i mitt/v&aring;rt n&aelig;rv&aelig;r. Jeg/vi er myndig(e) og bosatt i Norge.</td>
-            </tr>
-            <tr>
-                <td colspan="65" data-label="1. vitnes underskrift">&nbsp;</td>
-                <td colspan="35" data-label="Gjenta med blokkbokstaver">&nbsp;</td>
-            </tr>
-            <tr>
-                <td colspan="100" data-label="Adresse">&nbsp;</td>
-            </tr>
-            <tr>
-                <td colspan="65" data-label="2. vitnes underskrift">&nbsp;</td>
-                <td colspan="35" data-label="Gjenta med blokkbokstaver">&nbsp;</td>
-            </tr>
-            <tr>
-                <td colspan="100" data-label="Adresse">&nbsp;</td>
-            </tr>
-        </tbody>
-    </table>
+<div id="vitecTemplate">
+    <style type="text/css">
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap');
+
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #vitecTemplate * {
+            font-variant-ligatures: none;
+        }
+
+        #vitecTemplate ol {
+            margin: 0;
+            padding: 0;
+            font-family: 'Open sans', sans-serif;
+            font-size: 8pt;
+            line-height: 10pt;
+        }
+
+            #vitecTemplate ol > li {
+                margin: 0;
+                padding: 0;
+                font-family: 'Open sans', sans-serif;
+                font-size: 8pt;
+                line-height: 10pt;
+            }
+
+        #vitecTemplate p {
+            font-family: 'Open sans', sans-serif;
+            font-size: 8pt;
+            line-height: 10pt;
+        }
+
+        #vitecTemplate strong {
+            font-family: 'Open sans', sans-serif;
+            font-size: 8pt;
+            line-height: 10pt;
+            font-weight: 700;
+        }
+
+        #vitecTemplate > table {
+            table-layout: fixed;
+            width: 100%;
+            page-break-inside: avoid;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Open sans', sans-serif;
+            font-size: 8pt;
+            line-height: 10pt;
+        }
+
+        #vitecTemplate table:not(:last-child) {
+            margin-bottom: .3cm;
+        }
+
+        #vitecTemplate tr th,
+        #vitecTemplate tr td {
+            vertical-align: middle;
+            border: solid 1px #000;
+            font-family: 'Open sans', sans-serif;
+            font-size: 8pt;
+            line-height: 10pt;
+        }
+
+        #vitecTemplate td p,
+        #vitecTemplate td.no-border p {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        #vitecTemplate td.border-right {
+            border-right: solid 1px #959595;
+        }
+
+        #vitecTemplate tr.no-border td {
+            border: none;
+        }
+
+            #vitecTemplate tr.no-border td:first-child {
+                border-left: solid 1px #000;
+            }
+
+            #vitecTemplate tr.no-border td:last-child {
+                border-right: solid 1px #000;
+            }
+
+        #vitecTemplate tr.border-bottom td {
+            border: none;
+            border-bottom: solid 1px #000;
+        }
+
+            #vitecTemplate tr.border-bottom td:first-child {
+                border-left: solid 1px #000;
+            }
+
+
+            #vitecTemplate tr.border-bottom td:last-child {
+                border-right: solid 1px #000;
+            }
+
+        #vitecTemplate td.no-border {
+            border: none;
+        }
+
+        #vitecTemplate td.row-header {
+            font-size: 9pt;
+            font-weight: bold;
+            background-color: #f2f2f2;
+            height: .35cm;
+        }
+
+        #vitecTemplate td[data-label]:before {
+            content: attr(data-label);
+            text-align: left;
+            font-size: 7.5pt;
+            line-height: 8pt;
+            display: block;
+            position: absolute;
+            top: 1px;
+        }
+
+
+        #vitecTemplate td[data-choice]:after {
+            content: attr(data-choice);
+            text-align: center;
+            font-size: 7.5pt;
+            line-height: 8pt;
+            display: block;
+            position: absolute;
+            bottom: 1px;
+            left: 0;
+            right: 0;
+        }
+
+        #vitecTemplate td[data-label] {
+            padding: 16px 2px 4px 2px;
+            position: relative;
+        }
+
+        #vitecTemplate td[data-choice] {
+            padding: 4px 2px 16px 2px;
+            position: relative;
+        }
+        /* tabellceller med BÅDE label og valg-tekst */
+        #vitecTemplate td[data-label][data-choice] {
+            padding: 16px 2px 16px 2px;
+            position: relative;
+        }
+
+        /* Malredigering: Hindre placeholder-plugin fra å sprenge tabell-celler (matrikkel-rad)*/
+        .cke_widget_inline {
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        #vitecTemplate [contenteditable="false"] * {
+            user-select: none;
+        }
+
+        #vitecTemplate .foreach-list td {
+            min-height: 34px;
+            vertical-align: top;
+        }
+
+        #vitecTemplate .foreach-list ul {
+            list-style: none;
+            margin: 0 0 0 2px;
+            padding: 0;
+            min-height: 13px;
+            /* min-height when empty forech-loop */
+        }
+
+            #vitecTemplate .foreach-list ul li {
+                padding: 0;
+                margin: 0;
+                min-height: 14px;
+                line-height: normal;
+            }
+    </style>
+    <style type="text/css">
+        /* Klikkbare sjekkbokser og radioknapper */
+        label.btn {
+            display: inline;
+            text-transform: none;
+            white-space: normal;
+            padding: 0;
+            vertical-align: baseline;
+            outline: none;
+            font-size: inherit;
+        }
+
+            label.btn:active,
+            label.btn.active {
+                box-shadow: none;
+                outline: none;
+            }
+
+        .svg-toggle { /* nullstiller bootstrap button-styling */
+            display: inline-block !important;
+            width: 14px;
+            height: 14px;
+            margin: 0 5px;
+            vertical-align: bottom;
+            padding: 0;
+            border: none;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none !important;
+            cursor: pointer;
+            white-space: normal;
+            text-align: left;
+            background-repeat: no-repeat;
+            background-size: 14px 14px;
+            background-position: center center;
+        }
+
+            .svg-toggle.large {
+                width: 20px;
+                height: 20px;
+                background-size: 20px 20px;
+            }
+
+            .svg-toggle.checkbox {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+            }
+
+                .svg-toggle.checkbox.active,
+                .btn.active > .svg-toggle.checkbox {
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+                    box-shadow: none !important;
+                }
+
+            .svg-toggle.radio {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
+            }
+
+                .svg-toggle.radio.active,
+                .btn.active > .svg-toggle.radio {
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
+                    box-shadow: none !important;
+                }
+
+        /* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
+        #vitecTemplate [data-toggle="buttons"] input {
+            display: none;
+        }
+    </style>
+    <table>
+        <tbody>
+            <tr contenteditable="false">
+                <td class="no-border" colspan="30"><strong style="font-size:16pt; font-weight:bold">Pantedokument </strong></td>
+                <td class="no-border" colspan="70"><span style="font-size:12pt">Panterett i <span vitec-if="Model.eiendom.eieform != &quot;Andel&quot;">fast eiendom</span><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">andel i borettslag</span></span></td>
+            </tr>
+            <tr vitec-if="Model.eiendom.eieform != &quot;Andel&quot;">
+                <td class="no-border" colspan="52" style="font-size:10pt; text-align:right; vertical-align:middle"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox large svg-toggle"></span></label></td>
+                <td class="no-border" colspan="48" contenteditable="false" style="padding-top:6px">Pantsettelsen gjelder refinansiering av l&aring;n, jf. forskrift om gebyr for tinglysing MV. &sect; 1 andre ledd</td>
+            </tr>
+            <tr vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">
+                <td class="no-border" colspan="100">&nbsp;</td>
+            </tr>
+            <tr contenteditable="false">
+                <td class="no-border" colspan="100">&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="border-right" colspan="50" data-label="Innsenders navn (rekvirent):">[[skjema.innsender.navn]]</td>
+                <td colspan="50" contenteditable="false" data-label="Plass for tinglysningsstempel" rowspan="4" style="text-align:center">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="50" data-label="Adresse:">[[skjema.innsender.adresse]]</td>
+            </tr>
+            <tr>
+                <td colspan="10" data-label="Postnummer:">[[skjema.innsender.postnr]]</td>
+                <td colspan="40" data-label="Poststed:">[[skjema.innsender.poststed]]</td>
+            </tr>
+            <tr>
+                <td colspan="30" data-label="Fødselsnummer/Organisasjonsnummer">[[skjema.innsender.orgnr]]</td>
+                <td colspan="20" data-label="Ref.nr.">[[skjema.referansenr]]</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <tbody>
+            <tr contenteditable="false">
+                <td class="no-border" colspan="100" style="vertical-align:bottom">Opplysningene i feltene 1-5 registreres i grunnboken</td>
+            </tr>
+            <tr contenteditable="false">
+                <td class="row-header" colspan="100">1. Pantsetter(e)</td>
+            </tr>
+            <tr class="foreach-list">
+                <td colspan="65" data-label="Navn">
+                    <ul vitec-foreach="selger in Model.selgere">
+                        <li>[[*selger.navnutenfullmektigogkontaktperson]]</li>
+                    </ul>
+                </td>
+                <td colspan="35" data-label="Fødselsnummer/Organisasjonsnummer">
+                    <ul vitec-foreach="selger in Model.selgere">
+                        <li>[[*selger.idnummer]]</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr contenteditable="false">
+                <td colspan="100">Angivelse av pantekravets st&oslash;rrelse</td>
+            </tr>
+            <tr>
+                <td colspan="25" data-label="Beløp"><span vitec-if="Model.kontrakt.kjopesum == &quot;0,00&quot;">kr $.UD([[eiendom.pris]])</span><span vitec-if="Model.kontrakt.kjopesum != &quot;0,00&quot;">kr $.UD([[kontrakt.kjopesum]])</span></td>
+                <td colspan="15" contenteditable="false" data-label="Valuta">NOK</td>
+                <td colspan="60" data-label="Beløp med bokstaver"><span vitec-if="Model.kontrakt.kjopesum == &quot;0,00&quot;">[[eiendom.prisibokstaver]]</span><span vitec-if="Model.kontrakt.kjopesum != &quot;0,00&quot;">[[kontrakt.kjopesumibokstaver]]</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <tbody>
+            <tr contenteditable="false">
+                <td class="row-header" colspan="100">2. Panthaver</td>
+            </tr>
+            <tr>
+                <td colspan="65" data-label="Navn">[[skjema.pantsetter.navn]]</td>
+                <td colspan="35" data-label="Fødselsnummer/Organisasjonsnummer.">[[skjema.pantsetter.orgnr]]</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <tbody>
+            <tr contenteditable="false">
+                <td class="row-header" colspan="100">3. Pantobjekt</td>
+            </tr>
+            <tr class="foreach-list" vitec-if="Model.eiendom.eieform != &quot;Andel&quot;">
+                <td colspan="15" data-label="Kommunenr.">
+                    <ul vitec-foreach="matrikkel in Model.matrikler">
+                        <li>[[eiendom.kommunenr]]</li>
+                    </ul>
+                </td>
+                <td colspan="35" data-label="Kommunens navn">
+                    <ul vitec-foreach="matrikkel in Model.matrikler">
+                        <li>[[eiendom.kommunenavn]]</li>
+                    </ul>
+                </td>
+                <td colspan="10" data-label="Gnr.">
+                    <ul vitec-foreach="matrikkel in Model.matrikler">
+                        <li>[[*matrikkel.gnr]]</li>
+                    </ul>
+                </td>
+                <td colspan="10" data-label="Bnr.">
+                    <ul vitec-foreach="matrikkel in Model.matrikler">
+                        <li>[[*matrikkel.bnr]]</li>
+                    </ul>
+                </td>
+                <td colspan="10" data-label="Festenr.">
+                    <ul vitec-foreach="matrikkel in Model.matrikler">
+                        <li>[[*matrikkel.fnr]]</li>
+                    </ul>
+                </td>
+                <td colspan="10" data-label="Seksjonsnr.">
+                    <ul vitec-foreach="matrikkel in Model.matrikler">
+                        <li>[[*matrikkel.snr]]</li>
+                    </ul>
+                </td>
+                <td colspan="10" data-label="Ideell andel">
+                    <ul vitec-foreach="matrikkel in Model.matrikler">
+                        <li>[[*matrikkel.andel]]</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">
+                <td colspan="40" data-label="Borettslagets navn">[[brl.navn]]</td>
+                <td colspan="30" data-label="Organisasjonsnr.">[[brl.orgnr]]</td>
+                <td colspan="15" data-label="Andelsnr.">[[eiendom.andelsnr]]</td>
+                <td colspan="15" data-label="Ideell Andel">[[brl.andel]]</td>
+            </tr>
+            <tr vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">
+                <td colspan="40" style="height:35px">&nbsp;</td>
+                <td colspan="30" style="height:35px">&nbsp;</td>
+                <td colspan="15" style="height:35px">&nbsp;</td>
+                <td colspan="15" style="height:35px">&nbsp;</td>
+            </tr>
+            <tr vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">
+                <td colspan="40" style="height:35px">&nbsp;</td>
+                <td colspan="30" style="height:35px">&nbsp;</td>
+                <td colspan="15" style="height:35px">&nbsp;</td>
+                <td colspan="15" style="height:35px">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <tbody>
+            <tr contenteditable="false">
+                <td class="row-header" colspan="100">4. Avtalt prioritet</td>
+            </tr>
+            <tr>
+                <td colspan="100" style="border-bottom:0; height:1cm; vertical-align:top">&nbsp;</td>
+            </tr>
+            <tr contenteditable="false">
+                <td colspan="100" style="border-top:0; vertical-align:bottom">Panteretten har opptrinnsrett</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <tbody>
+            <tr contenteditable="false">
+                <td class="row-header" colspan="100">5. Forbud mot visse rettslige disposisjoner</td>
+            </tr>
+            <tr>
+                <td colspan="100" style="height:1cm; vertical-align:top">Pantsetter erkl&aelig;rer at eiendommen ikke kan overskj&oslash;tes, pantsettes, utleies eller beheftes p&aring; noen m&aring;te uten etter skriftlig samtykke fra [[skjema.pantsetter.navn]], org.nr [[skjema.pantsetter.orgnr]].</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <tbody>
+            <tr contenteditable="false">
+                <td class="row-header" colspan="100">6. Supplerende tekst (tinglyses ikke)</td>
+            </tr>
+            <tr>
+                <td colspan="25" contenteditable="false" style="vertical-align:top">Forsikring ev. bestemmelser om pantsetters plikt til forsikring av pantet</td>
+                <td colspan="75" data-label="Gjeldsansvar" style="vertical-align:top">Dette pantedokumentet skal sikre den til enhver tid utbetalte del av kj&oslash;pesummen samt meglers krav p&aring; vederlag og dekning av utlegg.</td>
+            </tr>
+            <tr>
+                <td colspan="25" contenteditable="false" style="height:1.5cm; vertical-align:top">Mislighold/s&aelig;rlige bestemmelser om ekstraordin&aelig;rt forfall</td>
+                <td colspan="75" data-label="Panthaver kan kreve pantekravet innfridd i henhold til pantelovens § 1-9." style="height:1.5cm; vertical-align:top">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="25" contenteditable="false" style="vertical-align:top">Innsigelser ved overdragelse av pantedokumenter</td>
+                <td colspan="75" style="vertical-align:top">Dersom pantsetter er forbruker, og panthaver overdrar eller pantsetter dette pantedokumentet, kan pantsetteren gj&oslash;re gjeldende overfor erververen de samme innsigelser og motkrav som pantsetteren kunne gjort gjeldende overfor panthaveren p&aring; grunnlag av l&aring;ne- og pantsettelsesforholdet, uavhengig av bestemmelsene i gjeldsbrevloven 17. februar 1939 nr 1 andre kapittel. Med forbruker menes en fysisk person n&aring;r avtalens form&aring;l ikke hovedsaklig er knyttet til denne personens n&aelig;ringsvirksomhet, jf. finansavtaleloven &sect; 2 f&oslash;rste ledd annet punkt.</td>
+            </tr>
+            <tr>
+                <td colspan="25" contenteditable="false" style="height:2.3cm; vertical-align:top">Andre bestemmelser som ikke skal tinglyses</td>
+                <td colspan="75" style="height:1.5cm; vertical-align:top">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <tbody>
+            <tr contenteditable="false">
+                <td class="row-header" colspan="100">7. Erkl&aelig;ring om sivilstand mv. for pantsetteren/pantsetterne</td>
+            </tr>
+            <tr class="no-border" contenteditable="false">
+                <td colspan="100"><strong>1. Er pantsetteren/pantsetterne gift eller registrert(e) partner(e)?</strong></td>
+            </tr>
+            <tr class="no-border" contenteditable="false" data-toggle="buttons">
+                <td colspan="10" style="text-align:center"><label class="btn" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" /></label> Ja</td>
+                <td colspan="10" style="text-align:center"><label class="btn" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" /></label> Nei</td>
+                <td colspan="80">Hvis ja, m&aring; ogs&aring; sp&oslash;rsm&aring;l 2 besvares.</td>
+            </tr>
+            <tr class="no-border" contenteditable="false">
+                <td colspan="100"><strong>2. Er pantsetterne gift eller registrerte partnere med hverandre og begge underskriver som pantsettere?</strong></td>
+            </tr>
+            <tr class="no-border" contenteditable="false" data-toggle="buttons">
+                <td colspan="10" style="text-align:center"><label class="btn" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" /></label> Ja</td>
+                <td colspan="10" style="text-align:center"><label class="btn" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl002" type="radio" /></label> Nei</td>
+                <td colspan="80">Hvis nei, m&aring; ogs&aring; sp&oslash;rsm&aring;l 3 besvares.</td>
+            </tr>
+            <tr class="no-border" contenteditable="false">
+                <td colspan="100"><strong>3. Gjelder pantsettelsen eiendom som pantsetteren/pantsetterne og dennes (deres) ektefelle(r) bruker som felles bolig?</strong></td>
+            </tr>
+            <tr class="no-border" contenteditable="false" data-toggle="buttons">
+                <td colspan="10" style="border-bottom:solid 1px #000000; text-align:center"><label class="btn" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" /></label> Ja</td>
+                <td colspan="10" style="border-bottom:solid 1px #000000; text-align:center"><label class="btn" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl003" type="radio" /></label> Nei</td>
+                <td colspan="80" style="border-bottom:solid 1px #000000">Hvis ja, m&aring; ektefellen(e)/registrert(e) partner(e) samtykke i pantsettelsen.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <tbody>
+            <tr contenteditable="false">
+                <td class="row-header" colspan="100">Underskrifter og bekreftelser</td>
+            </tr>
+            <tr contenteditable="false">
+                <td colspan="100">Jeg/vi gir herved panthaver slik panterett som spesifisert ovenfor</td>
+            </tr>
+            <tr>
+                <td colspan="100" data-label="Sted, dato">&nbsp;</td>
+            </tr>
+            <tr class="foreach-list">
+                <td colspan="65" data-label="Pantsetter(ne)s Underskrift(er)" style="height:2.4cm">&nbsp;</td>
+                <td colspan="35" data-label="Gjenta med blokkbokstaver" style="height:2.4cm; text-transform:uppercase">
+                    <ul vitec-foreach="selger in Model.selgere">
+                        <li>[[*selger.navn]]</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr contenteditable="false">
+                <td class="row-header" colspan="100">Ektefellesamtykke (fylles ut dersom &quot;ja&quot; i pkt. 7.3)</td>
+            </tr>
+            <tr contenteditable="false">
+                <td colspan="100">Som pantsetter(ne)s ektefelle/registrert partner, samtykker jeg i pantsettelsen.</td>
+            </tr>
+            <tr class="foreach-list">
+                <td colspan="65" data-label="Ektefelle(r)/reg. partner(e)s underskrift" style="vertical-align: top; height: 2.4cm;">&nbsp;</td>
+                <td colspan="35" data-label="Gjenta med blokkbokstaver" style="vertical-align: top; height: 2.4cm;">
+                    <ul vitec-foreach="selger in Model.selgere">
+                        <li style="text-transform: uppercase;" vitec-if="selger.ergift">[[*selger.selgersektefelle.navnutenfullmektig]]</li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+        <tbody vitec-if="Model.grunneier.navn == &quot;Mangler data&quot; &amp;&amp; Model.hjemmelshaver.navn == &quot;Mangler data&quot;">
+            <tr contenteditable="false">
+                <td class="row-header" colspan="100">Vitneunderskrifter</td>
+            </tr>
+            <tr class="no-border" contenteditable="false">
+                <td colspan="100" style="vertical-align:top">Jeg/vi bekrefter at pantsetter(ne) er over 18 &aring;r og har underskrevet eller vedkjent seg underskriften i mitt/v&aring;rt n&aelig;rv&aelig;r. Jeg/vi er myndig(e) og bosatt i Norge.</td>
+            </tr>
+            <tr>
+                <td colspan="65" data-label="1. vitnes underskrift">&nbsp;</td>
+                <td colspan="35" data-label="Gjenta med blokkbokstaver">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="100" data-label="Adresse">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="65" data-label="2. vitnes underskrift">&nbsp;</td>
+                <td colspan="35" data-label="Gjenta med blokkbokstaver">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="100" data-label="Adresse">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table vitec-if="Model.grunneier.navn != &quot;Mangler data&quot; || Model.hjemmelshaver.navn != &quot;Mangler data&quot;">
+        <tbody>
+            <tr contenteditable="false">
+                <td class="row-header" colspan="100">8. Erkl&aelig;ring om sivilstand mv. for hjemmelshaver(ne)</td>
+            </tr>
+            <tr class="no-border" contenteditable="false">
+                <td colspan="100"><strong>1. Er hjemmelshaver(ne) gift eller registrert(e) partner(e)?</strong></td>
+            </tr>
+            <tr class="no-border" contenteditable="false" data-toggle="buttons">
+                <td colspan="10" style="text-align:center"><label class="btn" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" /></label></td>
+                <td colspan="10" style="text-align:center"><label class="btn" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl004" type="radio" /></label></td>
+                <td colspan="80">Hvis ja, m&aring; ogs&aring; sp&oslash;rsm&aring;l 2 besvares.</td>
+            </tr>
+            <tr class="no-border" contenteditable="false">
+                <td colspan="100"><strong>2. Er hjemmelshaverne gift eller registrerte partnere med hverandre og begge underskriver som hjemmelshavere?</strong></td>
+            </tr>
+            <tr class="no-border" contenteditable="false" data-toggle="buttons">
+                <td colspan="10" style="text-align:center"><label class="btn" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl005" type="radio" /></label></td>
+                <td colspan="10" style="text-align:center"><label class="btn" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl005" type="radio" /></label></td>
+                <td colspan="80">Hvis nei, m&aring; ogs&aring; sp&oslash;rsm&aring;l 3 besvares.</td>
+            </tr>
+            <tr class="no-border" contenteditable="false">
+                <td colspan="100"><strong>3. Gjelder pantsettelsen eiendom som hjemmelshavern(e) og dennes (deres) ektefelle(r) bruker som felles bolig?</strong></td>
+            </tr>
+            <tr class="no-border" contenteditable="false" data-toggle="buttons">
+                <td colspan="10" style="border-bottom:solid 1px #000000; text-align:center"><label class="btn" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl006" type="radio" /></label></td>
+                <td colspan="10" style="border-bottom:solid 1px #000000; text-align:center"><label class="btn" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl006" type="radio" /></label></td>
+                <td colspan="80" style="border-bottom:solid 1px #000000">Hvis ja, m&aring; ektefellen(e)/registrert(e) partner(e) samtykke i pantsettelsen.</td>
+            </tr>
+            <tr contenteditable="false">
+                <td class="row-header" colspan="100">Underskrifter og bekreftelser - hjemmelshaver(ne)</td>
+            </tr>
+            <tr contenteditable="false">
+                <td colspan="100">Jeg/vi gir herved panthaver slik panterett som spesifisert ovenfor</td>
+            </tr>
+            <tr>
+                <td colspan="100" data-label="Sted, dato">&nbsp;</td>
+            </tr>
+            <tr class="foreach-list">
+                <td colspan="20" data-label="Fødselsnr./Org.nr." style="height:2cm">
+                    <div vitec-if="Model.grunneiere.Count &gt; 0">
+                        <ul vitec-foreach="grunneier in Model.grunneiere">
+                            <li style="text-transform: uppercase;">[[*grunneier.idnummer]]</li>
+                        </ul>
+                    </div>
+
+                    <div vitec-if="Model.hjemmelshavere.Count &gt; 0">
+                        <ul vitec-foreach="hjemmelshaver in Model.hjemmelshavere">
+                            <li style="text-transform: uppercase;">[[*hjemmelshaver.idnummer]]</li>
+                        </ul>
+                    </div>
+
+                    <div vitec-if="Model.grunneiere.Count &gt; 0 || Model.hjemmelshavere.Count &gt; 0">
+                        <ul>
+                            <li>&nbsp;</li>
+                        </ul>
+                    </div>
+                </td>
+                <td colspan="40" data-label="Hjemmelshaver(ne)s Underskrift(er)" style="height:2cm">&nbsp;</td>
+                <td colspan="40" data-label="Gjenta med blokkbokstaver" style="height:2cm; text-transform:uppercase; vertical-align:top">
+                    <div vitec-if="Model.grunneiere.Count &gt; 0">
+                        <ul vitec-foreach="grunneier in Model.grunneiere">
+                            <li style="text-transform: uppercase;">[[*grunneier.navn]]</li>
+                        </ul>
+                    </div>
+
+                    <div vitec-if="Model.hjemmelshavere.Count &gt; 0">
+                        <ul vitec-foreach="hjemmelshaver in Model.hjemmelshavere">
+                            <li style="text-transform: uppercase;">[[*hjemmelshaver.navn]]</li>
+                        </ul>
+                    </div>
+
+                    <div vitec-if="Model.grunneiere.Count &gt; 0 || Model.hjemmelshavere.Count &gt; 0">
+                        <ul>
+                            <li>&nbsp;</li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            <tr contenteditable="false">
+                <td class="row-header" colspan="100">Ektefellesamtykke (fylles ut dersom &quot;ja&quot; i pkt. 8.3)</td>
+            </tr>
+            <tr contenteditable="false">
+                <td colspan="100">Som hjemmelshaver(ne)s ektefelle/registrert partner, samtykker jeg i pantsettelsen.</td>
+            </tr>
+            <tr>
+                <td colspan="100" data-label="Sted, dato">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="65" data-label="Ektefelle(r)/reg. partner(e)s underskrift" style="vertical-align:top">&nbsp;</td>
+                <td colspan="35" data-label="Gjenta med blokkbokstaver" style="vertical-align:top">&nbsp;</td>
+            </tr>
+            <tr contenteditable="false">
+                <td class="row-header" colspan="100">Vitneunderskrifter</td>
+            </tr>
+            <tr class="no-border" contenteditable="false">
+                <td colspan="100" style="vertical-align:top">Jeg/vi bekrefter at hjemmelshaver(ne) er over 18 &aring;r og har underskrevet eller vedkjent seg underskriften i mitt/v&aring;rt n&aelig;rv&aelig;r. Jeg/vi er myndig(e) og bosatt i Norge.</td>
+            </tr>
+            <tr>
+                <td colspan="65" data-label="1. vitnes underskrift">&nbsp;</td>
+                <td colspan="35" data-label="Gjenta med blokkbokstaver">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="100" data-label="Adresse">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="65" data-label="2. vitnes underskrift">&nbsp;</td>
+                <td colspan="35" data-label="Gjenta med blokkbokstaver">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="100" data-label="Adresse">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
 </div>

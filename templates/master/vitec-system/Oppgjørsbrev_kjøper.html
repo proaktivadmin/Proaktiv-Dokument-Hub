@@ -1,31 +1,31 @@
-<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
-<style type="text/css">#vitecTemplate table {
-                border-collapse: collapse;
-                width: 100%;
-                table-layout: fixed;
-            }
-</style>
-<table>
-	<tbody>
-		<tr>
-			<td colspan="100">
-			<div vitec-template="resource: Mottaker">&nbsp;</div>
-
-			<p><strong><span vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot;">Oppgj&oslash;r ved kj&oslash;p </span><span vitec-if="Model.oppdrag.hovedtype == &quot;Tvangssalg&quot;">Tvangssalg </span>av [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
-
-			<p>Vi viser til kj&oslash;p av ovennevnte eiendom og oversender vedlagte oppgj&oslash;rsoppstilling.&nbsp;Oppgj&oslash;rsoppstillingen er passordbelagt og du f&aring;r passordet oversendt p&aring; SMS.</p>
-
-			<p>Eventuelle renter som er godskrevet i oppgj&oslash;ret, og som fremg&aring;r av oppstillingen, er oppgavepliktige p&aring; skattemeldingen. Dersom noe skulle v&aelig;re uklart eller ytterligere opplysninger &oslash;nskes omkring oppgj&oslash;ret, vennligst kontakt oss snarest.</p>
-
-			<p vitec-if="Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;">Tinglyst <span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;"> hjemmelsoverf&oslash;ring</span><span vitec-if="Model.eiendom.eieform != &quot;Andel&quot;"> skj&oslash;te</span><span vitec-if="Model.oppdrag.hovedtype == &quot;Tvangssalg&quot;">, samt kopi av grunnboksutskrift som bekrefter at eiendommen er fri for heftelser,</span>&nbsp;vil bli sendt pr. post.</p>
-
-			<p>Vi takker for en hyggelig handel og &oslash;nsker <span vitec-if="Model.kjopere.Count == 1">deg</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> lykke til med den nye eiendommen.</p>
-
-			<p>Velkommen tilbake ved en senere anledning.</p>
-
-			<div vitec-template="resource: Avsender">&nbsp;</div>
-			</td>
-		</tr>
-	</tbody>
-</table>
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate table {
+                border-collapse: collapse;
+                width: 100%;
+                table-layout: fixed;
+            }
+</style>
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<div vitec-template="resource: Mottaker">&nbsp;</div>
+
+			<p><strong><span vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot;">Oppgj&oslash;r ved kj&oslash;p </span><span vitec-if="Model.oppdrag.hovedtype == &quot;Tvangssalg&quot;">Tvangssalg </span>av [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+			<p>Vi viser til kj&oslash;p av ovennevnte eiendom og oversender vedlagte oppgj&oslash;rsoppstilling.&nbsp;Oppgj&oslash;rsoppstillingen er passordbelagt og du f&aring;r passordet oversendt p&aring; SMS.</p>
+
+			<p>Eventuelle renter som er godskrevet i oppgj&oslash;ret, og som fremg&aring;r av oppstillingen, er oppgavepliktige p&aring; skattemeldingen. Dersom noe skulle v&aelig;re uklart eller ytterligere opplysninger &oslash;nskes omkring oppgj&oslash;ret, vennligst kontakt oss snarest.</p>
+
+			<p vitec-if="Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;">Tinglyst <span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;"> hjemmelsoverf&oslash;ring</span><span vitec-if="Model.eiendom.eieform != &quot;Andel&quot;"> skj&oslash;te</span><span vitec-if="Model.oppdrag.hovedtype == &quot;Tvangssalg&quot;">, samt kopi av grunnboksutskrift som bekrefter at eiendommen er fri for heftelser,</span>&nbsp;vil bli sendt pr. post.</p>
+
+			<p>Vi takker for en hyggelig handel og &oslash;nsker <span vitec-if="Model.kjopere.Count == 1">deg</span> <span vitec-if="Model.kjopere.Count &gt; 1">dere</span> lykke til med den nye eiendommen.</p>
+
+			<p>Velkommen tilbake ved en senere anledning.</p>
+
+			<div vitec-template="resource: Avsender">&nbsp;</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
 </div>

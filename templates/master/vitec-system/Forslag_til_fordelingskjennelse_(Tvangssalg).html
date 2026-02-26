@@ -1,664 +1,664 @@
-<div id="vitecTemplate">
-    <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
-    <style type="text/css">
-        #vitecTemplate table {
-            border-collapse: collapse;
-            width: 100%;
-            table-layout: fixed;
-        }
-
-        #vitecTemplate th td {
-            padding: 0;
-        }
-
-        #vitecTemplate .liste:last-child .separator {
-            display: none;
-        }
-
-        #vitecTemplate .nummerert-liste:before {
-            font-weight: 700;
-            counter-increment: main-counter;
-            content: counter(main-counter) ". ";
-        }
-
-        #vitecTemplate {
-            counter-reset: main-counter;
-        }
-
-            #vitecTemplate table:empty {
-                display: none;
-            }
-
-            #vitecTemplate table tr.border-bottom td {
-                border-bottom: solid 1px black;
-            }
-
-            #vitecTemplate table tr.list td {
-                vertical-align: middle;
-                padding-top: 10px;
-            }
-
-            #vitecTemplate .text-right {
-                text-align: right;
-            }
-
-            #vitecTemplate table td.borders {
-                width: 100%;
-                table-layout: fixed;
-                border-bottom: solid 1px #ccc;
-                border-top: solid 1px #ccc;
-            }
-
-            /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
-
-            #vitecTemplate span.insert:empty {
-                font-size: inherit !important;
-                line-height: inherit !important;
-                display: inline-block;
-                background-color: lightpink;
-                min-width: 2em !important;
-                height: .7em !important;
-                text-align: center;
-            }
-
-                #vitecTemplate span.insert:empty:before {
-                    content: attr(data-label);
-                }
-
-                #vitecTemplate span.insert:empty:hover {
-                    background-color: #fff;
-                    cursor: pointer;
-                }
-
-            #vitecTemplate .insert-table {
-                display: inline-table;
-            }
-
-                #vitecTemplate .insert-table > span,
-                #vitecTemplate .insert-table > span.insert {
-                    display: table-cell;
-                }
-    </style>
-    <table>
-        <tbody>
-            <tr>
-                <td colspan="100">
-                    <p><strong>Utkast til kjennelse om fordeling av kj&oslash;pesummen etter stadfestet bud p&aring; [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune - Tvangssalg ved medhjelper</strong></p>
-
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td colspan="25"><strong>Tingrettens saksnr.:</strong></td>
-                                <td colspan="75">[[tvangssalgrefnr]]</td>
-                            </tr>
-                            <tr>
-                                <td colspan="25"><strong>Saks&oslash;kte:</strong></td>
-                                <td colspan="75"><span vitec-foreach="saksokte in Model.saksokteliste"> <span class="liste">[[*saksokte.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span></td>
-                            </tr>
-                            <tr>
-                                <td colspan="25"><strong>Saks&oslash;ker:</strong></td>
-                                <td colspan="75"><span vitec-foreach="saksoker in Model.saksokere"> <span class="liste">[[*saksoker.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <p>Oppgj&oslash;rsdagen er if&oslash;lge tvangsfullbyrdelsesloven &sect; 11-27 den [[kontrakt.oppgjor.dato]].</p>
-
-                    <p>Det foresl&aring;s f&oslash;lgende fordeling av kj&oslash;pesummen p&aring; <strong>kr $.UD([[kontrakt.kjopesum]])</strong>:</p>
-
-                    <p style="margin-top:25px"><strong>I. FORLODDS</strong></p>
-
-                    <table style="margin-top:20px">
-                        <tbody>
-                            <tr class="border-bottom">
-                                <td colspan="4">
-                                    <div class="nummerert-liste">&nbsp;</div>
-                                </td>
-                                <td colspan="96"><strong>Godtgj&oslash;relse til medhjelper</strong> fastsettes i samsvar med forskrift av 4. desember 1992 om tvangssalg ved medhjelper p&aring; f&oslash;lgende m&aring;te:</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <table style="page-break-inside:avoid">
-                        <tbody vitec-foreach="vederlag in Model.selgervederlag.alleposter">
-                            <tr>
-                                <td colspan="4">&nbsp;</td>
-                                <td colspan="76">[[*vederlag.beskrivelse]]</td>
-                                <td colspan="8">kr</td>
-                                <td class="text-right" colspan="12">$.UD([[*vederlag.belop]])</td>
-                            </tr>
-                        </tbody>
-                        <tbody>
-                            <tr>
-                                <td colspan="4">&nbsp;</td>
-                                <td class="borders" colspan="76"><strong>Til sammen</strong></td>
-                                <td class="borders" colspan="8"><strong>kr</strong></td>
-                                <td class="borders text-right" colspan="12"><strong>[[oppdrag.selgervederlagsum]]</strong></td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <table style="margin-top:20px; page-break-inside:avoid">
-                        <tbody>
-                            <tr class="border-bottom">
-                                <td colspan="4">
-                                    <div class="nummerert-liste">&nbsp;</div>
-                                </td>
-                                <td colspan="96"><strong>Kostnader med kj&oslash;pers tiltredelse av eiendommen</strong> som kj&oslash;per ikke skal b&aelig;re selv, jf. tvangsfullbyrdelsesloven &sect; 11-36 andre ledd andre punktum, er oppf&oslash;rt med:</td>
-                            </tr>
-                            <tr class="list">
-                                <td colspan="4">&nbsp;</td>
-                                <td colspan="76"><span class="insert-table"> <span class="insert" data-label="Spesifisering av utgifter, f.eks. eierskiftegebyr"></span></span></td>
-                                <td colspan="8">kr</td>
-                                <td class="text-right" colspan="12"><span class="insert-table"> <span class="insert" data-label="Beløp"></span></span></td>
-                            </tr>
-                        </tbody>
-                        <tbody>
-                            <tr>
-                                <td colspan="4">&nbsp;</td>
-                                <td class="borders" colspan="76"><strong>Til sammen</strong></td>
-                                <td class="borders" colspan="8"><strong>kr</strong></td>
-                                <td class="borders text-right" colspan="12"><strong><span class="insert-table"> <span class="insert" data-label="Beløp"></span></span></strong></td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <table style="margin-top:20px">
-                        <tbody>
-                            <tr class="border-bottom">
-                                <td colspan="4">
-                                    <div class="nummerert-liste">&nbsp;</div>
-                                </td>
-                                <td colspan="96"><strong>Panthavers/medhjelpers utlegg og andre utgifter</strong> - Utgifter som kreves dekket av medhjelper etter tvangsfullbyrdelsesloven &sect; 11-36 andre ledd fjerde punktum, jf. &sect; 11-15 andre ledd andre punktum:</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <table style="page-break-inside:avoid">
-                        <tbody vitec-foreach="utlegg in Model.selgerutlegg.alleposter">
-                            <tr>
-                                <td colspan="4">&nbsp;</td>
-                                <td colspan="76">[[*utlegg.beskrivelse]]</td>
-                                <td colspan="8">kr</td>
-                                <td class="text-right" colspan="12">$.UD([[*utlegg.belop]])</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <table style="page-break-inside:avoid">
-                        <tbody vitec-foreach="utgift in Model.selgerutgifter.alleposter">
-                            <tr>
-                                <td colspan="4">&nbsp;</td>
-                                <td colspan="76">[[*utgift.beskrivelse]]</td>
-                                <td colspan="8">kr</td>
-                                <td class="text-right" colspan="12">$.UD([[*utgift.belop]])</td>
-                            </tr>
-                        </tbody>
-                        <tbody>
-                            <tr>
-                                <td colspan="4">&nbsp;</td>
-                                <td class="borders" colspan="76"><strong>Til sammen</strong></td>
-                                <td class="borders" colspan="8"><strong>kr</strong></td>
-                                <td class="borders text-right" colspan="12"><strong>$.UD([[oppdrag.selgerutleggogutgiftersum]])</strong></td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <div style="page-break-inside:avoid">
-                        <p style="margin-top:25px"><strong>II. ETTER PRIORITET</strong></p>
-
-                        <table style="margin-top:20px" vitec-foreach="pant in Model.oppdrag.pantforinnfrielse.Where(x =&gt; x.ertypelegalpant == true)">
-                            <tbody>
-                                <tr class="border-bottom">
-                                    <td colspan="4">
-                                        <div class="nummerert-liste">&nbsp;</div>
-                                    </td>
-                                    <td colspan="96"><strong>Legalpant</strong><span vitec-if="Model.eiendom.eieform == &quot;Selveier&quot;"> for kommunale skatter og avgifter - [[*pant.navn]]:</span><span vitec-if="Model.eiendom.eieform != &quot;Selveier&quot;"> meldt av <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">[[sameie.navn]] </span><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">[[brl.navn]] </span><span vitec-if="Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;">[[aksjeselskap.navn]] </span>p&aring; andel av fellesutgifter. Grunnlaget for kravet er <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">eierseksjonsloven &sect; 31, 1. ledd (2G).</span><span vitec-if="Model.eiendom.eieform != &quot;Sameie&quot;">burettslagslova &sect; 5-20, 1. ledd (2G) / burettslagslova &sect;&sect; 5-20, jfr. 1-4, 2. ledd.</span> Kravet er meldt p&aring; f&oslash;lgende m&aring;te:</span></td>
-                                </tr>
-                            </tbody>
-                            <tbody vitec-foreach="laan in pant.laan">
-                                <tr class="list">
-                                    <td colspan="4">&nbsp;</td>
-                                    <td colspan="76">Hovedstol (ref. [[*laan.nr]])</td>
-                                    <td colspan="8">kr</td>
-                                    <td class="text-right" colspan="12">$.UD([[*laan.hovedstol]])</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">&nbsp;</td>
-                                    <td colspan="76">Renter <span class="insert-table"> <span class="insert" data-label="Prosent"></span></span>% fra <span class="insert-table"> <span class="insert" data-label="Dato"></span></span> til [[*laan.restsaldodato]]</td>
-                                    <td colspan="8">kr</td>
-                                    <td class="text-right" colspan="12">$.UD([[*laan.renter]])</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">&nbsp;</td>
-                                    <td colspan="76">Omkostninger</td>
-                                    <td colspan="8">kr</td>
-                                    <td class="text-right" colspan="12">$.UD([[*laan.omkostninger]])</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">&nbsp;</td>
-                                    <td class="borders" colspan="76"><strong>Til sammen</strong></td>
-                                    <td class="borders" colspan="8"><strong>kr</strong></td>
-                                    <td class="borders text-right" colspan="12"><strong>$.UD([[*laan.restsaldo]])</strong></td>
-                                </tr>
-                            </tbody>
-                            <tbody>
-                                <tr>
-                                    <td colspan="100">
-                                        <p style="padding-left:1.5em">
-                                            Kravet gis dekning foran alle andre heftelser i eiendommen, jf. Pantelovens &sect; 6-1(1),<br />
-                                            burettslagslova &sect; 5-20, eierseksjonsloven &sect; 25 jf. panteloven &sect; 6-1 (3).
-                                        </p>
-
-                                        <p style="padding-left:1.5em">Dersom eiendommen overtas av kj&oslash;per f&oslash;r oppgj&oslash;rsdagen, faller kravet p&aring; fellesutgifter bort fra dette tidspunkt. Eventuelt for mye avsatt utbetales den best prioriterte av de panthavere som ikke har oppn&aring;dd full dekning &ndash; eller saks&oslash;kte hvis alle rettighetshaverne har oppn&aring;dd full dekning.</p>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <table style="margin-top:20px; page-break-inside:avoid" vitec-foreach="pant in Model.oppdrag.pantforinnfrielse.Where(x =&gt; x.ertypelegalpant == false).Take(1)">
-                        <tbody>
-                            <tr class="border-bottom">
-                                <td colspan="4">
-                                    <div class="nummerert-liste">&nbsp;</div>
-                                </td>
-                                <td colspan="96"><strong>Legalpant</strong><span vitec-if="Model.eiendom.eieform == &quot;Selveier&quot;"> for kommunale skatter og avgifter</span><span vitec-if="Model.eiendom.eieform != &quot;Selveier&quot;"> meldt av <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">[[sameie.navn]] </span><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">[[brl.navn]] </span><span vitec-if="Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;">[[aksjeselskap.navn]] </span>p&aring; andel av fellesutgifter. Grunnlaget for kravet er <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">eierseksjonsloven &sect; 31, 1. ledd (2G).</span><span vitec-if="Model.eiendom.eieform != &quot;Sameie&quot;">burettslagslova &sect; 5-20, 1. ledd (2G) / burettslagslova &sect;&sect; 5-20, jfr. 1-4, 2. ledd.</span></span></td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">&nbsp;</td>
-                                <td colspan="96"><em>Ingen krav</em></td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <div style="page-break-inside:avoid">
-                        <table style="margin-top:20px">
-                            <tbody>
-                                <tr class="border-bottom">
-                                    <td colspan="4">
-                                        <div class="nummerert-liste">&nbsp;</div>
-                                    </td>
-                                    <td colspan="96"><strong>Pantesikret pengekrav</strong> - til saks&oslash;ker</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <table style="margin-top:20px" vitec-foreach="pant in Model.oppdrag.saksokerspant">
-                            <tbody>
-                                <tr>
-                                    <td colspan="4">&nbsp;</td>
-                                    <td colspan="96"><em>Krav, fremsatt av <strong>[[*pant.navn]]</strong> i henhold til pantedokument, p&aring;lydende <span style="white-space:nowrap">kr $.UD([[*pant.belop]])</span> tinglyst [[*pant.tinglystdato]]:</em></td>
-                                </tr>
-                            </tbody>
-                            <tbody vitec-foreach="laan in pant.laan">
-                                <tr class="list">
-                                    <td colspan="4">&nbsp;</td>
-                                    <td colspan="76">Hovedstol (ref./l&aring;n [[*laan.nr]])</td>
-                                    <td colspan="8">kr</td>
-                                    <td class="text-right" colspan="12">$.UD([[*laan.hovedstol]])</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">&nbsp;</td>
-                                    <td colspan="76">Renter <span class="insert-table"> <span class="insert" data-label="Prosent"></span></span>% fra <span class="insert-table"> <span class="insert" data-label="Dato"></span></span> til [[*laan.restsaldodato]]</td>
-                                    <td colspan="8">kr</td>
-                                    <td class="text-right" colspan="12">$.UD([[*laan.renter]])</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">&nbsp;</td>
-                                    <td colspan="76">
-                                        Omkostninger, jf. nedenfor<br />
-                                        <small>
-                                            Omkostninger etter tvangsfullbyrdelsesloven &sect; 11-14 andre ledd, eventuelt<br />
-                                            tvangsfullbyrdelsesloven &sect; 11-15 f&oslash;rste ledd som kan kreves dekket av saks&oslash;ker selv
-                                        </small>
-                                    </td>
-                                    <td colspan="8">kr</td>
-                                    <td class="text-right" colspan="12">$.UD([[*laan.omkostninger]])</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">&nbsp;</td>
-                                    <td class="borders" colspan="76"><strong>Til sammen</strong></td>
-                                    <td class="borders" colspan="8"><strong>kr</strong></td>
-                                    <td class="borders text-right" colspan="12"><strong>$.UD([[*laan.restsaldo]])</strong></td>
-                                </tr>
-                            </tbody>
-                            <tbody>
-                                <tr>
-                                    <td colspan="100">
-                                        <p style="padding-left:1.7em">Saks&oslash;keren har krevet dekket sine omkostninger ved tvangssalget. Disse er oppgitt til kr <span class="insert-table"> <span class="insert" data-label="Beløp"></span></span> inkludert rettsgebyret.</p>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div style="page-break-inside:avoid">
-                        <table style="margin-top:20px; page-break-inside:avoid">
-                            <tbody>
-                                <tr class="border-bottom">
-                                    <td colspan="4">
-                                        <div class="nummerert-liste">&nbsp;</div>
-                                    </td>
-                                    <td colspan="96"><strong>Pantesikret pengekrav</strong> - fra panthavere som ikke er saks&oslash;ker:</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <table style="argin-top:15px" vitec-foreach="pant in Model.oppdrag.pantforinnfrielse.Where(x =&gt; x.ertypefrivilligpant == true &amp;&amp; Model.saksoker.firmanavn != x.navn)">
-                            <tbody>
-                                <tr>
-                                    <td colspan="4">&nbsp;</td>
-                                    <td colspan="96"><em>Krav, fremsatt av <strong>[[*pant.navn]]</strong> i henhold til pantedokument, p&aring;lydende <span style="white-space:nowrap">kr $.UD([[*pant.belop]])</span> tinglyst [[*pant.tinglystdato]]:</em></td>
-                                </tr>
-                            </tbody>
-                            <tbody vitec-foreach="laan in pant.laan">
-                                <tr class="list">
-                                    <td colspan="4">&nbsp;</td>
-                                    <td colspan="76">Hovedstol (ref./l&aring;n [[*laan.nr]])</td>
-                                    <td colspan="8">kr</td>
-                                    <td class="text-right" colspan="12">$.UD([[*laan.hovedstol]])</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">&nbsp;</td>
-                                    <td colspan="76">Renter <span class="insert-table"> <span class="insert" data-label="Prosent"></span></span>% fra <span class="insert-table"> <span class="insert" data-label="Dato"></span></span> til [[*laan.restsaldodato]]</td>
-                                    <td colspan="8">kr</td>
-                                    <td class="text-right" colspan="12">$.UD([[*laan.renter]])</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">&nbsp;</td>
-                                    <td colspan="76">Omkostninger</td>
-                                    <td colspan="8">kr</td>
-                                    <td class="text-right" colspan="12">$.UD([[*laan.omkostninger]])</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">&nbsp;</td>
-                                    <td class="borders" colspan="76"><strong>Til sammen</strong></td>
-                                    <td class="borders" colspan="8"><strong>kr</strong></td>
-                                    <td class="borders text-right" colspan="12"><strong>$.UD([[*laan.restsaldo]])</strong></td>
-                                </tr>
-                            </tbody>
-                            <tbody>
-                                <tr>
-                                    <td colspan="100">
-                                        <p style="padding-left:1.7em">N&aring;r det kan avgj&oslash;res hvordan den avsatte delen av kj&oslash;pesummen skal fordeles, avsier retten p&aring; begj&aelig;ring fordelingskjennelse om fordelingen av denne delen, jf. tvangsfullbyrdelsesloven &sect; 11-36 tredje ledd.</p>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div style="page-break-inside:avoid">
-                        <table style="margin-top:20px">
-                            <tbody>
-                                <tr class="border-bottom">
-                                    <td colspan="4">
-                                        <div class="nummerert-liste">&nbsp;</div>
-                                    </td>
-                                    <td colspan="96"><strong>Krav i f&oslash;lge utleggsforretninger:</strong></td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <table vitec-foreach="pant in Model.oppdrag.pantforinnfrielse.Where(x =&gt; x.ertypeutleggsforretning == true &amp;&amp; Model.saksoker.firmanavn != x.navn)">
-                            <tbody>
-                                <tr>
-                                    <td colspan="4" style="padding-top:15px">&nbsp;</td>
-                                    <td colspan="96" style="padding-top:15px"><em>Krav, fremsatt av <strong>[[*pant.navn]]</strong> i henhold til pantedokument, p&aring;lydende <span style="white-space:nowrap">kr $.UD([[*pant.belop]])</span> tinglyst [[*pant.tinglystdato]]:</em></td>
-                                </tr>
-                            </tbody>
-                            <tbody vitec-foreach="laan in pant.laan">
-                                <tr class="list">
-                                    <td colspan="4">&nbsp;</td>
-                                    <td colspan="76">Hovedstol (ref. [[*laan.nr]])</td>
-                                    <td colspan="8">kr</td>
-                                    <td class="text-right" colspan="12">$.UD([[*laan.hovedstol]])</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">&nbsp;</td>
-                                    <td colspan="76">Renter <span class="insert-table"> <span class="insert" data-label="Prosent"></span></span>% fra <span class="insert-table"> <span class="insert" data-label="Dato"></span></span> til [[*laan.restsaldodato]]</td>
-                                    <td colspan="8">kr</td>
-                                    <td class="text-right" colspan="12">$.UD([[*laan.renter]])</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">&nbsp;</td>
-                                    <td colspan="76">Omkostninger</td>
-                                    <td colspan="8">kr</td>
-                                    <td class="text-right" colspan="12">$.UD([[*laan.omkostninger]])</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">&nbsp;</td>
-                                    <td class="borders" colspan="76"><strong>Til sammen</strong></td>
-                                    <td class="borders" colspan="8"><strong>kr</strong></td>
-                                    <td class="borders text-right" colspan="12"><strong>$.UD([[*laan.restsaldo]])</strong></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="100">&nbsp;</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- Følgende avsnitt skal flettes dersom ikke finnes noen utleggsforretninger -->
-
-                    <div vitec-if="Model.oppdrag.pantforinnfrielse.Where(x =&gt; x.ertypeutleggsforretning == true &amp;&amp; Model.saksoker.firmanavn != x.navn).Count() == 0">
-                        <table style="page-break-inside:avoid" vitec-foreach="pant in Model.oppdrag.pantforinnfrielse.Where(x =&gt; x.ertypeutleggsforretning == false).Take(1)">
-                            <tbody>
-                                <tr>
-                                    <td colspan="4">&nbsp;</td>
-                                    <td colspan="96"><em>Ingen krav</em></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <table style="margin-top:20px; page-break-inside:avoid">
-                        <tbody>
-                            <tr class="border-bottom">
-                                <td colspan="4">
-                                    <div class="nummerert-liste">&nbsp;</div>
-                                </td>
-                                <td colspan="96"><strong>Betinget krav etter tvangsfullbyrdelsesloven &sect; 11-36, 3. ledd:</strong></td>
-                            </tr>
-                            <tr class="list">
-                                <td colspan="4">&nbsp;</td>
-                                <td colspan="76">Avsettes til sikring av <span class="insert-table"> <span class="insert" data-label="Beskrivelse"></span></span></td>
-                                <td colspan="8">kr</td>
-                                <td class="text-right" colspan="12"><span class="insert-table"> <span class="insert" data-label="Beløp"></span></span></td>
-                            </tr>
-                        </tbody>
-                        <tbody>
-                            <tr>
-                                <td colspan="4">&nbsp;</td>
-                                <td class="borders" colspan="76"><strong>Til sammen</strong></td>
-                                <td class="borders" colspan="8"><strong>kr</strong></td>
-                                <td class="borders text-right" colspan="12"><strong><span class="insert-table"> <span class="insert" data-label="Beløp"></span></span></strong></td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <p style="padding-left:1.5em">Det er mottatt krav fra flere panthavere. Disse er ikke tatt med i denne kjennelse da de &aring;penbart ikke vil kunne oppn&aring; dekning av kj&oslash;pesummen.</p>
-
-                    <table style="margin-top:20px; page-break-inside:avoid">
-                        <tbody>
-                            <tr>
-                                <td colspan="100" style="text-align:center"><strong>S L U T N I N G</strong></td>
-                            </tr>
-                            <tr>
-                                <td colspan="100">&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td colspan="100">Kj&oslash;pesummen p&aring; kr $.UD([[kontrakt.kjopesum]]) blir etter dette &aring; fordele p&aring; f&oslash;lgende m&aring;te:</td>
-                            </tr>
-                            <tr>
-                                <td colspan="100">
-                                    <p><strong>I. FORLODDS</strong></p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">&nbsp;</td>
-                                <td colspan="76">Rettsgebyret</td>
-                                <td colspan="8">kr</td>
-                                <td class="text-right" colspan="12">1 199</td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">&nbsp;</td>
-                                <td colspan="76">Godtgj&oslash;relse til medhjelper</td>
-                                <td colspan="8">kr</td>
-                                <td class="text-right" colspan="12"><span class="insert-table"> <span class="insert" data-label="Beløp"></span></span></td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">&nbsp;</td>
-                                <td colspan="76">Kostnader med kj&oslash;pers tiltredelse av eiendommen</td>
-                                <td colspan="8">kr</td>
-                                <td class="text-right" colspan="12"><span class="insert-table"> <span class="insert" data-label="Beløp"></span></span></td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">&nbsp;</td>
-                                <td colspan="76">Panthavers/medhjelpers utlegg og andre utgifter</td>
-                                <td colspan="8">kr</td>
-                                <td class="text-right" colspan="12">$.UD([[oppdrag.selgerutleggogutgiftersum]])</td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">&nbsp;</td>
-                                <td class="borders" colspan="76"><strong>Til sammen</strong></td>
-                                <td class="borders" colspan="8"><strong>kr</strong></td>
-                                <td class="borders text-right" colspan="12"><strong><span class="insert-table"> <span class="insert" data-label="Beløp"></span></span></strong></td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <div style="margin-top:20px; page-break-inside:avoid">
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td colspan="100">
-                                        <p><strong>I. ETTER PRIORITET</strong></p>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <table vitec-foreach="pant in Model.oppdrag.pantforinnfrielse.Where(x =&gt; x.ertypelegalpant == true).Take(1)">
-                            <tbody vitec-foreach="laan in pant.laan">
-                                <tr>
-                                    <td colspan="4" style="padding-top:20px">&nbsp;</td>
-                                    <td colspan="76" style="padding-top:20px">Legalpant <span vitec-if="Model.eiendom.eieform == &quot;Selveier&quot;"> for kommunale skatter og avgifter - [[*pant.navn]]:</span><span vitec-if="Model.eiendom.eieform != &quot;Selveier&quot;"> meldt av <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">[[sameie.navn]] </span><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">[[brl.navn]] </span><span vitec-if="Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;">[[aksjeselskap.navn]] </span>p&aring; andel av fellesutgifter</span></td>
-                                    <td colspan="8" style="padding-top:20px">kr</td>
-                                    <td class="text-right" colspan="12" style="padding-top:20px">$.UD([[*laan.restsaldo]])</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <table style="page-break-inside:avoid" vitec-foreach="pant in Model.oppdrag.pantforinnfrielse.Where(x =&gt; x.ertypelegalpant == false).Take(1)">
-                        <tbody>
-                            <tr>
-                                <td colspan="4" style="padding-top:20px">&nbsp;</td>
-                                <td colspan="76" style="padding-top:20px">Legalpant <span vitec-if="Model.eiendom.eieform == &quot;Selveier&quot;"> for kommunale skatter og avgifter</span><span vitec-if="Model.eiendom.eieform != &quot;Selveier&quot;"> meldt av <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">[[sameie.navn]] </span><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">[[brl.navn]] </span><span vitec-if="Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;">[[aksjeselskap.navn]] </span>p&aring; andel av fellesutgifter</span></td>
-                                <td colspan="8" style="padding-top:20px">kr</td>
-                                <td class="text-right" colspan="12" style="padding-top:20px">0</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <table style="page-break-inside:avoid" vitec-foreach="pant in Model.oppdrag.saksokerspant">
-                        <tbody vitec-foreach="laan in pant.laan">
-                            <tr>
-                                <td colspan="4">&nbsp;</td>
-                                <td colspan="76">Pantesikret pengekrav til saks&oslash;ker [[*pant.navn]] (ref. [[*laan.nr]])</td>
-                                <td colspan="8">kr</td>
-                                <td class="text-right" colspan="12">$.UD([[*laan.restsaldo]])</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <!-- Følgende avsnitt skal flette alle frivillige pant, men ikke saksøkers eventuelle pant -->
-
-                    <table style="page-break-inside:avoid" vitec-foreach="pant in Model.oppdrag.pantforinnfrielse.Where(x =&gt; x.ertypefrivilligpant == true &amp;&amp; Model.saksoker.firmanavn != x.navn)">
-                        <tbody vitec-foreach="laan in pant.laan">
-                            <tr>
-                                <td colspan="4">&nbsp;</td>
-                                <td colspan="76">Pantesikret pengekrav til panthaver [[*pant.navn]] (ref. [[*laan.nr]])</td>
-                                <td colspan="8">kr</td>
-                                <td class="text-right" colspan="12">$.UD([[*laan.restsaldo]])</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <!-- Følgende avsnitt skal flette utleggsforretnigner, men ikke saksøkers eventuelle utleggsforretning -->
-
-                    <table style="page-break-inside:avoid" vitec-foreach="pant in Model.oppdrag.pantforinnfrielse.Where(x =&gt; x.ertypeutleggsforretning == true &amp;&amp; Model.saksoker.firmanavn != x.navn)">
-                        <tbody vitec-foreach="laan in pant.laan">
-                            <tr>
-                                <td colspan="4">&nbsp;</td>
-                                <td colspan="76">Krav i f&oslash;lge utleggsforretning til [[*pant.navn]] (ref. [[*laan.nr]])</td>
-                                <td colspan="8">kr</td>
-                                <td class="text-right" colspan="12">$.UD([[*laan.restsaldo]])</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <!-- Følgende avsnitt skal flettes dersom det ikke finnes noen utleggsforretninger -->
-
-                    <div vitec-if="Model.oppdrag.pantforinnfrielse.Where(x =&gt; x.ertypeutleggsforretning == true &amp;&amp; Model.saksoker.firmanavn != x.navn).Count() == 0">
-                        <table style="page-break-inside:avoid" vitec-foreach="pant in Model.oppdrag.pantforinnfrielse.Where(x =&gt; x.ertypeutleggsforretning == false).Take(1)">
-                            <tbody>
-                                <tr>
-                                    <td colspan="4">&nbsp;</td>
-                                    <td colspan="76">Krav i f&oslash;lge utleggsforretning</td>
-                                    <td colspan="8">kr</td>
-                                    <td class="text-right" colspan="12">0</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <table style="page-break-inside:avoid">
-                        <tbody>
-                            <tr>
-                                <td colspan="4">&nbsp;</td>
-                                <td colspan="76">Betinget krav etter tvangsfullbyrdelsesloven &sect; 11-36, 3. ledd</td>
-                                <td colspan="8">kr</td>
-                                <td class="text-right" colspan="12"><span class="insert-table"> <span class="insert" data-label="Beløp"></span></span></td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">&nbsp;</td>
-                                <td class="borders" colspan="76"><strong>Sum</strong></td>
-                                <td class="borders" colspan="8"><strong>kr</strong></td>
-                                <td class="borders text-right" colspan="12"><strong><span class="insert-table"> <span class="insert" data-label="Beløp"></span></span></strong></td>
-                            </tr>
-                            <tr>
-                                <td colspan="100" style="padding:1em 0 3em 0">Som stemmer med kj&oslash;pesummen.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td colspan="24" style="border-bottom:solid 1px black; text-align:center">[[avsender.meglerkontor.poststed]]</td>
-                                <td colspan="8">&nbsp;</td>
-                                <td colspan="24" style="border-bottom:solid 1px black; text-align:center">[[dagensdato]]</td>
-                                <td colspan="44">&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td colspan="24" style="text-align:center"><small>Sted</small></td>
-                                <td colspan="8">&nbsp;</td>
-                                <td colspan="24" style="text-align:center"><small>Dato</small></td>
-                                <td colspan="44">&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td colspan="100" style="padding-top:1em">
-                                    <p>[[meglerkontor.navn]]</p>
-
-                                    <p>
-                                        <br />
-                                        [[avsender.navn]]<br />
-                                        [[avsender.tittel]]
-                                    </p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<div id="vitecTemplate">
+    <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+    <style type="text/css">
+        #vitecTemplate table {
+            border-collapse: collapse;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        #vitecTemplate th td {
+            padding: 0;
+        }
+
+        #vitecTemplate .liste:last-child .separator {
+            display: none;
+        }
+
+        #vitecTemplate .nummerert-liste:before {
+            font-weight: 700;
+            counter-increment: main-counter;
+            content: counter(main-counter) ". ";
+        }
+
+        #vitecTemplate {
+            counter-reset: main-counter;
+        }
+
+            #vitecTemplate table:empty {
+                display: none;
+            }
+
+            #vitecTemplate table tr.border-bottom td {
+                border-bottom: solid 1px black;
+            }
+
+            #vitecTemplate table tr.list td {
+                vertical-align: middle;
+                padding-top: 10px;
+            }
+
+            #vitecTemplate .text-right {
+                text-align: right;
+            }
+
+            #vitecTemplate table td.borders {
+                width: 100%;
+                table-layout: fixed;
+                border-bottom: solid 1px #ccc;
+                border-top: solid 1px #ccc;
+            }
+
+            /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+            #vitecTemplate span.insert:empty {
+                font-size: inherit !important;
+                line-height: inherit !important;
+                display: inline-block;
+                background-color: lightpink;
+                min-width: 2em !important;
+                height: .7em !important;
+                text-align: center;
+            }
+
+                #vitecTemplate span.insert:empty:before {
+                    content: attr(data-label);
+                }
+
+                #vitecTemplate span.insert:empty:hover {
+                    background-color: #fff;
+                    cursor: pointer;
+                }
+
+            #vitecTemplate .insert-table {
+                display: inline-table;
+            }
+
+                #vitecTemplate .insert-table > span,
+                #vitecTemplate .insert-table > span.insert {
+                    display: table-cell;
+                }
+    </style>
+    <table>
+        <tbody>
+            <tr>
+                <td colspan="100">
+                    <p><strong>Utkast til kjennelse om fordeling av kj&oslash;pesummen etter stadfestet bud p&aring; [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune - Tvangssalg ved medhjelper</strong></p>
+
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td colspan="25"><strong>Tingrettens saksnr.:</strong></td>
+                                <td colspan="75">[[tvangssalgrefnr]]</td>
+                            </tr>
+                            <tr>
+                                <td colspan="25"><strong>Saks&oslash;kte:</strong></td>
+                                <td colspan="75"><span vitec-foreach="saksokte in Model.saksokteliste"> <span class="liste">[[*saksokte.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="25"><strong>Saks&oslash;ker:</strong></td>
+                                <td colspan="75"><span vitec-foreach="saksoker in Model.saksokere"> <span class="liste">[[*saksoker.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>Oppgj&oslash;rsdagen er if&oslash;lge tvangsfullbyrdelsesloven &sect; 11-27 den [[kontrakt.oppgjor.dato]].</p>
+
+                    <p>Det foresl&aring;s f&oslash;lgende fordeling av kj&oslash;pesummen p&aring; <strong>kr $.UD([[kontrakt.kjopesum]])</strong>:</p>
+
+                    <p style="margin-top:25px"><strong>I. FORLODDS</strong></p>
+
+                    <table style="margin-top:20px">
+                        <tbody>
+                            <tr class="border-bottom">
+                                <td colspan="4">
+                                    <div class="nummerert-liste">&nbsp;</div>
+                                </td>
+                                <td colspan="96"><strong>Godtgj&oslash;relse til medhjelper</strong> fastsettes i samsvar med forskrift av 4. desember 1992 om tvangssalg ved medhjelper p&aring; f&oslash;lgende m&aring;te:</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table style="page-break-inside:avoid">
+                        <tbody vitec-foreach="vederlag in Model.selgervederlag.alleposter">
+                            <tr>
+                                <td colspan="4">&nbsp;</td>
+                                <td colspan="76">[[*vederlag.beskrivelse]]</td>
+                                <td colspan="8">kr</td>
+                                <td class="text-right" colspan="12">$.UD([[*vederlag.belop]])</td>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr>
+                                <td colspan="4">&nbsp;</td>
+                                <td class="borders" colspan="76"><strong>Til sammen</strong></td>
+                                <td class="borders" colspan="8"><strong>kr</strong></td>
+                                <td class="borders text-right" colspan="12"><strong>[[oppdrag.selgervederlagsum]]</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table style="margin-top:20px; page-break-inside:avoid">
+                        <tbody>
+                            <tr class="border-bottom">
+                                <td colspan="4">
+                                    <div class="nummerert-liste">&nbsp;</div>
+                                </td>
+                                <td colspan="96"><strong>Kostnader med kj&oslash;pers tiltredelse av eiendommen</strong> som kj&oslash;per ikke skal b&aelig;re selv, jf. tvangsfullbyrdelsesloven &sect; 11-36 andre ledd andre punktum, er oppf&oslash;rt med:</td>
+                            </tr>
+                            <tr class="list">
+                                <td colspan="4">&nbsp;</td>
+                                <td colspan="76"><span class="insert-table"> <span class="insert" data-label="Spesifisering av utgifter, f.eks. eierskiftegebyr"></span></span></td>
+                                <td colspan="8">kr</td>
+                                <td class="text-right" colspan="12"><span class="insert-table"> <span class="insert" data-label="Beløp"></span></span></td>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr>
+                                <td colspan="4">&nbsp;</td>
+                                <td class="borders" colspan="76"><strong>Til sammen</strong></td>
+                                <td class="borders" colspan="8"><strong>kr</strong></td>
+                                <td class="borders text-right" colspan="12"><strong><span class="insert-table"> <span class="insert" data-label="Beløp"></span></span></strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table style="margin-top:20px">
+                        <tbody>
+                            <tr class="border-bottom">
+                                <td colspan="4">
+                                    <div class="nummerert-liste">&nbsp;</div>
+                                </td>
+                                <td colspan="96"><strong>Panthavers/medhjelpers utlegg og andre utgifter</strong> - Utgifter som kreves dekket av medhjelper etter tvangsfullbyrdelsesloven &sect; 11-36 andre ledd fjerde punktum, jf. &sect; 11-15 andre ledd andre punktum:</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table style="page-break-inside:avoid">
+                        <tbody vitec-foreach="utlegg in Model.selgerutlegg.alleposter">
+                            <tr>
+                                <td colspan="4">&nbsp;</td>
+                                <td colspan="76">[[*utlegg.beskrivelse]]</td>
+                                <td colspan="8">kr</td>
+                                <td class="text-right" colspan="12">$.UD([[*utlegg.belop]])</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table style="page-break-inside:avoid">
+                        <tbody vitec-foreach="utgift in Model.selgerutgifter.alleposter">
+                            <tr>
+                                <td colspan="4">&nbsp;</td>
+                                <td colspan="76">[[*utgift.beskrivelse]]</td>
+                                <td colspan="8">kr</td>
+                                <td class="text-right" colspan="12">$.UD([[*utgift.belop]])</td>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr>
+                                <td colspan="4">&nbsp;</td>
+                                <td class="borders" colspan="76"><strong>Til sammen</strong></td>
+                                <td class="borders" colspan="8"><strong>kr</strong></td>
+                                <td class="borders text-right" colspan="12"><strong>$.UD([[oppdrag.selgerutleggogutgiftersum]])</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="page-break-inside:avoid">
+                        <p style="margin-top:25px"><strong>II. ETTER PRIORITET</strong></p>
+
+                        <table style="margin-top:20px" vitec-foreach="pant in Model.oppdrag.pantforinnfrielse.Where(x =&gt; x.ertypelegalpant == true)">
+                            <tbody>
+                                <tr class="border-bottom">
+                                    <td colspan="4">
+                                        <div class="nummerert-liste">&nbsp;</div>
+                                    </td>
+                                    <td colspan="96"><strong>Legalpant</strong><span vitec-if="Model.eiendom.eieform == &quot;Selveier&quot;"> for kommunale skatter og avgifter - [[*pant.navn]]:</span><span vitec-if="Model.eiendom.eieform != &quot;Selveier&quot;"> meldt av <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">[[sameie.navn]] </span><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">[[brl.navn]] </span><span vitec-if="Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;">[[aksjeselskap.navn]] </span>p&aring; andel av fellesutgifter. Grunnlaget for kravet er <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">eierseksjonsloven &sect; 31, 1. ledd (2G).</span><span vitec-if="Model.eiendom.eieform != &quot;Sameie&quot;">burettslagslova &sect; 5-20, 1. ledd (2G) / burettslagslova &sect;&sect; 5-20, jfr. 1-4, 2. ledd.</span> Kravet er meldt p&aring; f&oslash;lgende m&aring;te:</span></td>
+                                </tr>
+                            </tbody>
+                            <tbody vitec-foreach="laan in pant.laan">
+                                <tr class="list">
+                                    <td colspan="4">&nbsp;</td>
+                                    <td colspan="76">Hovedstol (ref. [[*laan.nr]])</td>
+                                    <td colspan="8">kr</td>
+                                    <td class="text-right" colspan="12">$.UD([[*laan.hovedstol]])</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">&nbsp;</td>
+                                    <td colspan="76">Renter <span class="insert-table"> <span class="insert" data-label="Prosent"></span></span>% fra <span class="insert-table"> <span class="insert" data-label="Dato"></span></span> til [[*laan.restsaldodato]]</td>
+                                    <td colspan="8">kr</td>
+                                    <td class="text-right" colspan="12">$.UD([[*laan.renter]])</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">&nbsp;</td>
+                                    <td colspan="76">Omkostninger</td>
+                                    <td colspan="8">kr</td>
+                                    <td class="text-right" colspan="12">$.UD([[*laan.omkostninger]])</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">&nbsp;</td>
+                                    <td class="borders" colspan="76"><strong>Til sammen</strong></td>
+                                    <td class="borders" colspan="8"><strong>kr</strong></td>
+                                    <td class="borders text-right" colspan="12"><strong>$.UD([[*laan.restsaldo]])</strong></td>
+                                </tr>
+                            </tbody>
+                            <tbody>
+                                <tr>
+                                    <td colspan="100">
+                                        <p style="padding-left:1.5em">
+                                            Kravet gis dekning foran alle andre heftelser i eiendommen, jf. Pantelovens &sect; 6-1(1),<br />
+                                            burettslagslova &sect; 5-20, eierseksjonsloven &sect; 25 jf. panteloven &sect; 6-1 (3).
+                                        </p>
+
+                                        <p style="padding-left:1.5em">Dersom eiendommen overtas av kj&oslash;per f&oslash;r oppgj&oslash;rsdagen, faller kravet p&aring; fellesutgifter bort fra dette tidspunkt. Eventuelt for mye avsatt utbetales den best prioriterte av de panthavere som ikke har oppn&aring;dd full dekning &ndash; eller saks&oslash;kte hvis alle rettighetshaverne har oppn&aring;dd full dekning.</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <table style="margin-top:20px; page-break-inside:avoid" vitec-foreach="pant in Model.oppdrag.pantforinnfrielse.Where(x =&gt; x.ertypelegalpant == false).Take(1)">
+                        <tbody>
+                            <tr class="border-bottom">
+                                <td colspan="4">
+                                    <div class="nummerert-liste">&nbsp;</div>
+                                </td>
+                                <td colspan="96"><strong>Legalpant</strong><span vitec-if="Model.eiendom.eieform == &quot;Selveier&quot;"> for kommunale skatter og avgifter</span><span vitec-if="Model.eiendom.eieform != &quot;Selveier&quot;"> meldt av <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">[[sameie.navn]] </span><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">[[brl.navn]] </span><span vitec-if="Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;">[[aksjeselskap.navn]] </span>p&aring; andel av fellesutgifter. Grunnlaget for kravet er <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">eierseksjonsloven &sect; 31, 1. ledd (2G).</span><span vitec-if="Model.eiendom.eieform != &quot;Sameie&quot;">burettslagslova &sect; 5-20, 1. ledd (2G) / burettslagslova &sect;&sect; 5-20, jfr. 1-4, 2. ledd.</span></span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">&nbsp;</td>
+                                <td colspan="96"><em>Ingen krav</em></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="page-break-inside:avoid">
+                        <table style="margin-top:20px">
+                            <tbody>
+                                <tr class="border-bottom">
+                                    <td colspan="4">
+                                        <div class="nummerert-liste">&nbsp;</div>
+                                    </td>
+                                    <td colspan="96"><strong>Pantesikret pengekrav</strong> - til saks&oslash;ker</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table style="margin-top:20px" vitec-foreach="pant in Model.oppdrag.saksokerspant">
+                            <tbody>
+                                <tr>
+                                    <td colspan="4">&nbsp;</td>
+                                    <td colspan="96"><em>Krav, fremsatt av <strong>[[*pant.navn]]</strong> i henhold til pantedokument, p&aring;lydende <span style="white-space:nowrap">kr $.UD([[*pant.belop]])</span> tinglyst [[*pant.tinglystdato]]:</em></td>
+                                </tr>
+                            </tbody>
+                            <tbody vitec-foreach="laan in pant.laan">
+                                <tr class="list">
+                                    <td colspan="4">&nbsp;</td>
+                                    <td colspan="76">Hovedstol (ref./l&aring;n [[*laan.nr]])</td>
+                                    <td colspan="8">kr</td>
+                                    <td class="text-right" colspan="12">$.UD([[*laan.hovedstol]])</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">&nbsp;</td>
+                                    <td colspan="76">Renter <span class="insert-table"> <span class="insert" data-label="Prosent"></span></span>% fra <span class="insert-table"> <span class="insert" data-label="Dato"></span></span> til [[*laan.restsaldodato]]</td>
+                                    <td colspan="8">kr</td>
+                                    <td class="text-right" colspan="12">$.UD([[*laan.renter]])</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">&nbsp;</td>
+                                    <td colspan="76">
+                                        Omkostninger, jf. nedenfor<br />
+                                        <small>
+                                            Omkostninger etter tvangsfullbyrdelsesloven &sect; 11-14 andre ledd, eventuelt<br />
+                                            tvangsfullbyrdelsesloven &sect; 11-15 f&oslash;rste ledd som kan kreves dekket av saks&oslash;ker selv
+                                        </small>
+                                    </td>
+                                    <td colspan="8">kr</td>
+                                    <td class="text-right" colspan="12">$.UD([[*laan.omkostninger]])</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">&nbsp;</td>
+                                    <td class="borders" colspan="76"><strong>Til sammen</strong></td>
+                                    <td class="borders" colspan="8"><strong>kr</strong></td>
+                                    <td class="borders text-right" colspan="12"><strong>$.UD([[*laan.restsaldo]])</strong></td>
+                                </tr>
+                            </tbody>
+                            <tbody>
+                                <tr>
+                                    <td colspan="100">
+                                        <p style="padding-left:1.7em">Saks&oslash;keren har krevet dekket sine omkostninger ved tvangssalget. Disse er oppgitt til kr <span class="insert-table"> <span class="insert" data-label="Beløp"></span></span> inkludert rettsgebyret.</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div style="page-break-inside:avoid">
+                        <table style="margin-top:20px; page-break-inside:avoid">
+                            <tbody>
+                                <tr class="border-bottom">
+                                    <td colspan="4">
+                                        <div class="nummerert-liste">&nbsp;</div>
+                                    </td>
+                                    <td colspan="96"><strong>Pantesikret pengekrav</strong> - fra panthavere som ikke er saks&oslash;ker:</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table style="argin-top:15px" vitec-foreach="pant in Model.oppdrag.pantforinnfrielse.Where(x =&gt; x.ertypefrivilligpant == true &amp;&amp; Model.saksoker.firmanavn != x.navn)">
+                            <tbody>
+                                <tr>
+                                    <td colspan="4">&nbsp;</td>
+                                    <td colspan="96"><em>Krav, fremsatt av <strong>[[*pant.navn]]</strong> i henhold til pantedokument, p&aring;lydende <span style="white-space:nowrap">kr $.UD([[*pant.belop]])</span> tinglyst [[*pant.tinglystdato]]:</em></td>
+                                </tr>
+                            </tbody>
+                            <tbody vitec-foreach="laan in pant.laan">
+                                <tr class="list">
+                                    <td colspan="4">&nbsp;</td>
+                                    <td colspan="76">Hovedstol (ref./l&aring;n [[*laan.nr]])</td>
+                                    <td colspan="8">kr</td>
+                                    <td class="text-right" colspan="12">$.UD([[*laan.hovedstol]])</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">&nbsp;</td>
+                                    <td colspan="76">Renter <span class="insert-table"> <span class="insert" data-label="Prosent"></span></span>% fra <span class="insert-table"> <span class="insert" data-label="Dato"></span></span> til [[*laan.restsaldodato]]</td>
+                                    <td colspan="8">kr</td>
+                                    <td class="text-right" colspan="12">$.UD([[*laan.renter]])</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">&nbsp;</td>
+                                    <td colspan="76">Omkostninger</td>
+                                    <td colspan="8">kr</td>
+                                    <td class="text-right" colspan="12">$.UD([[*laan.omkostninger]])</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">&nbsp;</td>
+                                    <td class="borders" colspan="76"><strong>Til sammen</strong></td>
+                                    <td class="borders" colspan="8"><strong>kr</strong></td>
+                                    <td class="borders text-right" colspan="12"><strong>$.UD([[*laan.restsaldo]])</strong></td>
+                                </tr>
+                            </tbody>
+                            <tbody>
+                                <tr>
+                                    <td colspan="100">
+                                        <p style="padding-left:1.7em">N&aring;r det kan avgj&oslash;res hvordan den avsatte delen av kj&oslash;pesummen skal fordeles, avsier retten p&aring; begj&aelig;ring fordelingskjennelse om fordelingen av denne delen, jf. tvangsfullbyrdelsesloven &sect; 11-36 tredje ledd.</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div style="page-break-inside:avoid">
+                        <table style="margin-top:20px">
+                            <tbody>
+                                <tr class="border-bottom">
+                                    <td colspan="4">
+                                        <div class="nummerert-liste">&nbsp;</div>
+                                    </td>
+                                    <td colspan="96"><strong>Krav i f&oslash;lge utleggsforretninger:</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table vitec-foreach="pant in Model.oppdrag.pantforinnfrielse.Where(x =&gt; x.ertypeutleggsforretning == true &amp;&amp; Model.saksoker.firmanavn != x.navn)">
+                            <tbody>
+                                <tr>
+                                    <td colspan="4" style="padding-top:15px">&nbsp;</td>
+                                    <td colspan="96" style="padding-top:15px"><em>Krav, fremsatt av <strong>[[*pant.navn]]</strong> i henhold til pantedokument, p&aring;lydende <span style="white-space:nowrap">kr $.UD([[*pant.belop]])</span> tinglyst [[*pant.tinglystdato]]:</em></td>
+                                </tr>
+                            </tbody>
+                            <tbody vitec-foreach="laan in pant.laan">
+                                <tr class="list">
+                                    <td colspan="4">&nbsp;</td>
+                                    <td colspan="76">Hovedstol (ref. [[*laan.nr]])</td>
+                                    <td colspan="8">kr</td>
+                                    <td class="text-right" colspan="12">$.UD([[*laan.hovedstol]])</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">&nbsp;</td>
+                                    <td colspan="76">Renter <span class="insert-table"> <span class="insert" data-label="Prosent"></span></span>% fra <span class="insert-table"> <span class="insert" data-label="Dato"></span></span> til [[*laan.restsaldodato]]</td>
+                                    <td colspan="8">kr</td>
+                                    <td class="text-right" colspan="12">$.UD([[*laan.renter]])</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">&nbsp;</td>
+                                    <td colspan="76">Omkostninger</td>
+                                    <td colspan="8">kr</td>
+                                    <td class="text-right" colspan="12">$.UD([[*laan.omkostninger]])</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">&nbsp;</td>
+                                    <td class="borders" colspan="76"><strong>Til sammen</strong></td>
+                                    <td class="borders" colspan="8"><strong>kr</strong></td>
+                                    <td class="borders text-right" colspan="12"><strong>$.UD([[*laan.restsaldo]])</strong></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="100">&nbsp;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Følgende avsnitt skal flettes dersom ikke finnes noen utleggsforretninger -->
+
+                    <div vitec-if="Model.oppdrag.pantforinnfrielse.Where(x =&gt; x.ertypeutleggsforretning == true &amp;&amp; Model.saksoker.firmanavn != x.navn).Count() == 0">
+                        <table style="page-break-inside:avoid" vitec-foreach="pant in Model.oppdrag.pantforinnfrielse.Where(x =&gt; x.ertypeutleggsforretning == false).Take(1)">
+                            <tbody>
+                                <tr>
+                                    <td colspan="4">&nbsp;</td>
+                                    <td colspan="96"><em>Ingen krav</em></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <table style="margin-top:20px; page-break-inside:avoid">
+                        <tbody>
+                            <tr class="border-bottom">
+                                <td colspan="4">
+                                    <div class="nummerert-liste">&nbsp;</div>
+                                </td>
+                                <td colspan="96"><strong>Betinget krav etter tvangsfullbyrdelsesloven &sect; 11-36, 3. ledd:</strong></td>
+                            </tr>
+                            <tr class="list">
+                                <td colspan="4">&nbsp;</td>
+                                <td colspan="76">Avsettes til sikring av <span class="insert-table"> <span class="insert" data-label="Beskrivelse"></span></span></td>
+                                <td colspan="8">kr</td>
+                                <td class="text-right" colspan="12"><span class="insert-table"> <span class="insert" data-label="Beløp"></span></span></td>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr>
+                                <td colspan="4">&nbsp;</td>
+                                <td class="borders" colspan="76"><strong>Til sammen</strong></td>
+                                <td class="borders" colspan="8"><strong>kr</strong></td>
+                                <td class="borders text-right" colspan="12"><strong><span class="insert-table"> <span class="insert" data-label="Beløp"></span></span></strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p style="padding-left:1.5em">Det er mottatt krav fra flere panthavere. Disse er ikke tatt med i denne kjennelse da de &aring;penbart ikke vil kunne oppn&aring; dekning av kj&oslash;pesummen.</p>
+
+                    <table style="margin-top:20px; page-break-inside:avoid">
+                        <tbody>
+                            <tr>
+                                <td colspan="100" style="text-align:center"><strong>S L U T N I N G</strong></td>
+                            </tr>
+                            <tr>
+                                <td colspan="100">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td colspan="100">Kj&oslash;pesummen p&aring; kr $.UD([[kontrakt.kjopesum]]) blir etter dette &aring; fordele p&aring; f&oslash;lgende m&aring;te:</td>
+                            </tr>
+                            <tr>
+                                <td colspan="100">
+                                    <p><strong>I. FORLODDS</strong></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">&nbsp;</td>
+                                <td colspan="76">Rettsgebyret</td>
+                                <td colspan="8">kr</td>
+                                <td class="text-right" colspan="12">1 199</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">&nbsp;</td>
+                                <td colspan="76">Godtgj&oslash;relse til medhjelper</td>
+                                <td colspan="8">kr</td>
+                                <td class="text-right" colspan="12"><span class="insert-table"> <span class="insert" data-label="Beløp"></span></span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">&nbsp;</td>
+                                <td colspan="76">Kostnader med kj&oslash;pers tiltredelse av eiendommen</td>
+                                <td colspan="8">kr</td>
+                                <td class="text-right" colspan="12"><span class="insert-table"> <span class="insert" data-label="Beløp"></span></span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">&nbsp;</td>
+                                <td colspan="76">Panthavers/medhjelpers utlegg og andre utgifter</td>
+                                <td colspan="8">kr</td>
+                                <td class="text-right" colspan="12">$.UD([[oppdrag.selgerutleggogutgiftersum]])</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">&nbsp;</td>
+                                <td class="borders" colspan="76"><strong>Til sammen</strong></td>
+                                <td class="borders" colspan="8"><strong>kr</strong></td>
+                                <td class="borders text-right" colspan="12"><strong><span class="insert-table"> <span class="insert" data-label="Beløp"></span></span></strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="margin-top:20px; page-break-inside:avoid">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td colspan="100">
+                                        <p><strong>I. ETTER PRIORITET</strong></p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table vitec-foreach="pant in Model.oppdrag.pantforinnfrielse.Where(x =&gt; x.ertypelegalpant == true).Take(1)">
+                            <tbody vitec-foreach="laan in pant.laan">
+                                <tr>
+                                    <td colspan="4" style="padding-top:20px">&nbsp;</td>
+                                    <td colspan="76" style="padding-top:20px">Legalpant <span vitec-if="Model.eiendom.eieform == &quot;Selveier&quot;"> for kommunale skatter og avgifter - [[*pant.navn]]:</span><span vitec-if="Model.eiendom.eieform != &quot;Selveier&quot;"> meldt av <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">[[sameie.navn]] </span><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">[[brl.navn]] </span><span vitec-if="Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;">[[aksjeselskap.navn]] </span>p&aring; andel av fellesutgifter</span></td>
+                                    <td colspan="8" style="padding-top:20px">kr</td>
+                                    <td class="text-right" colspan="12" style="padding-top:20px">$.UD([[*laan.restsaldo]])</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <table style="page-break-inside:avoid" vitec-foreach="pant in Model.oppdrag.pantforinnfrielse.Where(x =&gt; x.ertypelegalpant == false).Take(1)">
+                        <tbody>
+                            <tr>
+                                <td colspan="4" style="padding-top:20px">&nbsp;</td>
+                                <td colspan="76" style="padding-top:20px">Legalpant <span vitec-if="Model.eiendom.eieform == &quot;Selveier&quot;"> for kommunale skatter og avgifter</span><span vitec-if="Model.eiendom.eieform != &quot;Selveier&quot;"> meldt av <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">[[sameie.navn]] </span><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">[[brl.navn]] </span><span vitec-if="Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;">[[aksjeselskap.navn]] </span>p&aring; andel av fellesutgifter</span></td>
+                                <td colspan="8" style="padding-top:20px">kr</td>
+                                <td class="text-right" colspan="12" style="padding-top:20px">0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table style="page-break-inside:avoid" vitec-foreach="pant in Model.oppdrag.saksokerspant">
+                        <tbody vitec-foreach="laan in pant.laan">
+                            <tr>
+                                <td colspan="4">&nbsp;</td>
+                                <td colspan="76">Pantesikret pengekrav til saks&oslash;ker [[*pant.navn]] (ref. [[*laan.nr]])</td>
+                                <td colspan="8">kr</td>
+                                <td class="text-right" colspan="12">$.UD([[*laan.restsaldo]])</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- Følgende avsnitt skal flette alle frivillige pant, men ikke saksøkers eventuelle pant -->
+
+                    <table style="page-break-inside:avoid" vitec-foreach="pant in Model.oppdrag.pantforinnfrielse.Where(x =&gt; x.ertypefrivilligpant == true &amp;&amp; Model.saksoker.firmanavn != x.navn)">
+                        <tbody vitec-foreach="laan in pant.laan">
+                            <tr>
+                                <td colspan="4">&nbsp;</td>
+                                <td colspan="76">Pantesikret pengekrav til panthaver [[*pant.navn]] (ref. [[*laan.nr]])</td>
+                                <td colspan="8">kr</td>
+                                <td class="text-right" colspan="12">$.UD([[*laan.restsaldo]])</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- Følgende avsnitt skal flette utleggsforretnigner, men ikke saksøkers eventuelle utleggsforretning -->
+
+                    <table style="page-break-inside:avoid" vitec-foreach="pant in Model.oppdrag.pantforinnfrielse.Where(x =&gt; x.ertypeutleggsforretning == true &amp;&amp; Model.saksoker.firmanavn != x.navn)">
+                        <tbody vitec-foreach="laan in pant.laan">
+                            <tr>
+                                <td colspan="4">&nbsp;</td>
+                                <td colspan="76">Krav i f&oslash;lge utleggsforretning til [[*pant.navn]] (ref. [[*laan.nr]])</td>
+                                <td colspan="8">kr</td>
+                                <td class="text-right" colspan="12">$.UD([[*laan.restsaldo]])</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- Følgende avsnitt skal flettes dersom det ikke finnes noen utleggsforretninger -->
+
+                    <div vitec-if="Model.oppdrag.pantforinnfrielse.Where(x =&gt; x.ertypeutleggsforretning == true &amp;&amp; Model.saksoker.firmanavn != x.navn).Count() == 0">
+                        <table style="page-break-inside:avoid" vitec-foreach="pant in Model.oppdrag.pantforinnfrielse.Where(x =&gt; x.ertypeutleggsforretning == false).Take(1)">
+                            <tbody>
+                                <tr>
+                                    <td colspan="4">&nbsp;</td>
+                                    <td colspan="76">Krav i f&oslash;lge utleggsforretning</td>
+                                    <td colspan="8">kr</td>
+                                    <td class="text-right" colspan="12">0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <table style="page-break-inside:avoid">
+                        <tbody>
+                            <tr>
+                                <td colspan="4">&nbsp;</td>
+                                <td colspan="76">Betinget krav etter tvangsfullbyrdelsesloven &sect; 11-36, 3. ledd</td>
+                                <td colspan="8">kr</td>
+                                <td class="text-right" colspan="12"><span class="insert-table"> <span class="insert" data-label="Beløp"></span></span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">&nbsp;</td>
+                                <td class="borders" colspan="76"><strong>Sum</strong></td>
+                                <td class="borders" colspan="8"><strong>kr</strong></td>
+                                <td class="borders text-right" colspan="12"><strong><span class="insert-table"> <span class="insert" data-label="Beløp"></span></span></strong></td>
+                            </tr>
+                            <tr>
+                                <td colspan="100" style="padding:1em 0 3em 0">Som stemmer med kj&oslash;pesummen.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td colspan="24" style="border-bottom:solid 1px black; text-align:center">[[avsender.meglerkontor.poststed]]</td>
+                                <td colspan="8">&nbsp;</td>
+                                <td colspan="24" style="border-bottom:solid 1px black; text-align:center">[[dagensdato]]</td>
+                                <td colspan="44">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td colspan="24" style="text-align:center"><small>Sted</small></td>
+                                <td colspan="8">&nbsp;</td>
+                                <td colspan="24" style="text-align:center"><small>Dato</small></td>
+                                <td colspan="44">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td colspan="100" style="padding-top:1em">
+                                    <p>[[meglerkontor.navn]]</p>
+
+                                    <p>
+                                        <br />
+                                        [[avsender.navn]]<br />
+                                        [[avsender.tittel]]
+                                    </p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>

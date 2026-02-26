@@ -1,127 +1,127 @@
-<!-- Aktiverer visuell hjelp med en html-kommentar: --><!--VITEC-VISUAL-HELP-ENABLED--><!-- "Visuelle hint" / rosa sett-inn-felt:  -->
-<style type="text/css">
-    .vitec-data-missing {
-        display: inline-table;
-    }
-
-        .vitec-data-missing > span {
-            display: table-cell;
-        }
-
-            .vitec-data-missing > span:empty {
-                font-size: inherit !important;
-                line-height: inherit !important;
-                display: inline-block;
-                background-color: lightpink;
-                min-width: 2em !important;
-                height: inherit !important;
-                text-align: center;
-            }
-
-                .vitec-data-missing > span:empty:before {
-                    content: attr(data-label);
-                }
-
-                .vitec-data-missing > span:empty:hover {
-                    background-color: #fff;
-                    cursor: pointer;
-                }
-</style>
-<div id="vitecTemplate">
-    <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
-    <style type="text/css">
-        #vitecTemplate table {
-            border-collapse: collapse;
-            width: 100%;
-            table-layout: fixed;
-        }
-
-        #vitecTemplate .liste:last-child .separator {
-            display: none;
-        }
-
-        /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
-
-        #vitecTemplate span.insert:empty {
-            font-size: inherit !important;
-            line-height: inherit !important;
-            display: inline-block;
-            background-color: lightpink;
-            min-width: 2em !important;
-            height: .7em !important;
-            text-align: center;
-        }
-
-            #vitecTemplate span.insert:empty:before {
-                content: attr(data-label);
-            }
-
-            #vitecTemplate span.insert:empty:hover {
-                background-color: #fff;
-                cursor: pointer;
-            }
-
-        #vitecTemplate .insert-table {
-            display: inline-table;
-        }
-
-            #vitecTemplate .insert-table > span,
-            #vitecTemplate .insert-table > span.insert {
-                display: table-cell;
-            }
-    </style>
-    <table>
-        <tbody>
-            <tr>
-                <td colspan="100">
-                    <div vitec-template="resource: Mottaker">&nbsp;</div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="100">
-                    <p><strong>UNDERRETTING ETTER TVANGSFULLBYRDELSESLOVEN &sect; 11-20, 2. LEDD</strong></p>
-
-                    <p><strong>Heving av tvangssalg p&aring; [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
-
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td colspan="25"><strong>Tingrettens saksnr.:</strong></td>
-                                <td colspan="75">[[tvangssalgrefnr]]</td>
-                            </tr>
-                            <tr>
-                                <td colspan="25"><strong>Saks&oslash;kte:</strong></td>
-                                <td colspan="75"><span vitec-foreach="saksokte  in Model.saksokteliste"> <span class="liste">[[*saksokte.navnutenfullmektigogkontaktperson]]<span class="separator">, </span> </span> </span></td>
-                            </tr>
-                            <tr>
-                                <td colspan="25"><strong>Saks&oslash;ker<span vitec-if="Model.saksokere.Count &gt; 1">e</span>:</strong></td>
-                                <td colspan="75"><span vitec-foreach="saksoker  in Model.saksokere"> <span class="liste">[[*saksoker.navnutenfullmektigogkontaktperson]]<span class="separator">, </span> </span> </span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <p>Medhjelper sender n&aelig;rv&aelig;rende brev likelydende til [[selger.navn]] og til saks&oslash;ker [[saksoker.navn]].</p>
-
-                    <p>Medhjelper har v&aelig;rt i kontakt med saks&oslash;kte og eiendommen ble taksert den [[eiendom.takstdato]] med verditakst stor kr $.UD([[eiendom.verditakst]]) for hele boligen. Taksten f&oslash;lger vedlagt.</p>
-
-                    <div vitec-foreach="pant in Model.oppdrag.pantforinnfrielse.Take(1)" vitec-if="Model.oppdrag.pantforinnfrielse.Any()">
-                        <p>P&aring; [[*pant.prioritet]]. prioritet har [[*pant.navn]] tinglyst pant med utest&aring;ende kr $.UD([[*pant.restbelop]]) pr. <span vitec-foreach="laan in pant.laan">[[*laan.restsaldodato]]</span>. [[*pant.navn]] har ikke samtykket til at saks&oslash;ktes ideelle andel kan selges med p&aring;hefte av helpantet, slik at hele l&aring;net m&aring; innfris ved salg.</p>
-                    </div>
-
-                    <p>Hensyntatt rettsgebyret, medhjelperkostnadene og eventuelt fellesutgifter/kommunale avgifter/husleierestanse, m&aring; et bud derfor v&aelig;re p&aring; over kr <span class="insert-table"> <span class="insert" data-label="Beløp"></span> </span> for at saks&oslash;ker skal oppn&aring; dekning og budet kunne stadfestes.</p>
-
-                    <p>I forhold til takstverdiene er det urealistisk &aring; forvente at vi kan oppn&aring; et slikt bud, da medhjelper erfaringsmessig sjelden oppn&aring;r mer enn ca. en tredjedel av verditakst ved salg av ideelle halvparter. Dette vil tilsi ca. kr <span class="insert-table"> <span class="insert" data-label="Beløp"></span> </span>.</p>
-
-                    <p>Tvangssalg lar seg derfor ikke gjennomf&oslash;re under henvisning til bestemmelsen i tvangsl. &sect; 11-20, 1. ledd. Saken m&aring; s&aring;ledes etter medhjelpers vurdering bli &aring; heve, jfr. tvangsl. &sect; 11-20, 2. ledd.</p>
-
-                    <p>Innsigelser mot at saken heves, m&aring; fremsettes direkte for domstolen innen 2 uker fra avsendelse av denne underretningen.</p>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="100">
-                    <div vitec-template="resource: Avsender">&nbsp;</div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<!-- Aktiverer visuell hjelp med en html-kommentar: --><!--VITEC-VISUAL-HELP-ENABLED--><!-- "Visuelle hint" / rosa sett-inn-felt:  -->
+<style type="text/css">
+    .vitec-data-missing {
+        display: inline-table;
+    }
+
+        .vitec-data-missing > span {
+            display: table-cell;
+        }
+
+            .vitec-data-missing > span:empty {
+                font-size: inherit !important;
+                line-height: inherit !important;
+                display: inline-block;
+                background-color: lightpink;
+                min-width: 2em !important;
+                height: inherit !important;
+                text-align: center;
+            }
+
+                .vitec-data-missing > span:empty:before {
+                    content: attr(data-label);
+                }
+
+                .vitec-data-missing > span:empty:hover {
+                    background-color: #fff;
+                    cursor: pointer;
+                }
+</style>
+<div id="vitecTemplate">
+    <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+    <style type="text/css">
+        #vitecTemplate table {
+            border-collapse: collapse;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        #vitecTemplate .liste:last-child .separator {
+            display: none;
+        }
+
+        /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+        #vitecTemplate span.insert:empty {
+            font-size: inherit !important;
+            line-height: inherit !important;
+            display: inline-block;
+            background-color: lightpink;
+            min-width: 2em !important;
+            height: .7em !important;
+            text-align: center;
+        }
+
+            #vitecTemplate span.insert:empty:before {
+                content: attr(data-label);
+            }
+
+            #vitecTemplate span.insert:empty:hover {
+                background-color: #fff;
+                cursor: pointer;
+            }
+
+        #vitecTemplate .insert-table {
+            display: inline-table;
+        }
+
+            #vitecTemplate .insert-table > span,
+            #vitecTemplate .insert-table > span.insert {
+                display: table-cell;
+            }
+    </style>
+    <table>
+        <tbody>
+            <tr>
+                <td colspan="100">
+                    <div vitec-template="resource: Mottaker">&nbsp;</div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="100">
+                    <p><strong>UNDERRETTING ETTER TVANGSFULLBYRDELSESLOVEN &sect; 11-20, 2. LEDD</strong></p>
+
+                    <p><strong>Heving av tvangssalg p&aring; [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td colspan="25"><strong>Tingrettens saksnr.:</strong></td>
+                                <td colspan="75">[[tvangssalgrefnr]]</td>
+                            </tr>
+                            <tr>
+                                <td colspan="25"><strong>Saks&oslash;kte:</strong></td>
+                                <td colspan="75"><span vitec-foreach="saksokte  in Model.saksokteliste"> <span class="liste">[[*saksokte.navnutenfullmektigogkontaktperson]]<span class="separator">, </span> </span> </span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="25"><strong>Saks&oslash;ker<span vitec-if="Model.saksokere.Count &gt; 1">e</span>:</strong></td>
+                                <td colspan="75"><span vitec-foreach="saksoker  in Model.saksokere"> <span class="liste">[[*saksoker.navnutenfullmektigogkontaktperson]]<span class="separator">, </span> </span> </span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>Medhjelper sender n&aelig;rv&aelig;rende brev likelydende til [[selger.navn]] og til saks&oslash;ker [[saksoker.navn]].</p>
+
+                    <p>Medhjelper har v&aelig;rt i kontakt med saks&oslash;kte og eiendommen ble taksert den [[eiendom.takstdato]] med verditakst stor kr $.UD([[eiendom.verditakst]]) for hele boligen. Taksten f&oslash;lger vedlagt.</p>
+
+                    <div vitec-foreach="pant in Model.oppdrag.pantforinnfrielse.Take(1)" vitec-if="Model.oppdrag.pantforinnfrielse.Any()">
+                        <p>P&aring; [[*pant.prioritet]]. prioritet har [[*pant.navn]] tinglyst pant med utest&aring;ende kr $.UD([[*pant.restbelop]]) pr. <span vitec-foreach="laan in pant.laan">[[*laan.restsaldodato]]</span>. [[*pant.navn]] har ikke samtykket til at saks&oslash;ktes ideelle andel kan selges med p&aring;hefte av helpantet, slik at hele l&aring;net m&aring; innfris ved salg.</p>
+                    </div>
+
+                    <p>Hensyntatt rettsgebyret, medhjelperkostnadene og eventuelt fellesutgifter/kommunale avgifter/husleierestanse, m&aring; et bud derfor v&aelig;re p&aring; over kr <span class="insert-table"> <span class="insert" data-label="Beløp"></span> </span> for at saks&oslash;ker skal oppn&aring; dekning og budet kunne stadfestes.</p>
+
+                    <p>I forhold til takstverdiene er det urealistisk &aring; forvente at vi kan oppn&aring; et slikt bud, da medhjelper erfaringsmessig sjelden oppn&aring;r mer enn ca. en tredjedel av verditakst ved salg av ideelle halvparter. Dette vil tilsi ca. kr <span class="insert-table"> <span class="insert" data-label="Beløp"></span> </span>.</p>
+
+                    <p>Tvangssalg lar seg derfor ikke gjennomf&oslash;re under henvisning til bestemmelsen i tvangsl. &sect; 11-20, 1. ledd. Saken m&aring; s&aring;ledes etter medhjelpers vurdering bli &aring; heve, jfr. tvangsl. &sect; 11-20, 2. ledd.</p>
+
+                    <p>Innsigelser mot at saken heves, m&aring; fremsettes direkte for domstolen innen 2 uker fra avsendelse av denne underretningen.</p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="100">
+                    <div vitec-template="resource: Avsender">&nbsp;</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>

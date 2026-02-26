@@ -1,249 +1,249 @@
-<div id="vitecTemplate">
-    <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
-    <style type="text/css">
-        #vitecTemplate table {
-            width: 100%;
-            table-layout: fixed;
-            border-collapse: collapse;
-        }
-
-            #vitecTemplate table th {
-                text-align: left;
-                font-weight: normal;
-                display: table-cell;
-                padding: 0 0 0 0;
-            }
-
-            #vitecTemplate table td,
-            #vitecTemplate table div {
-                padding: 3px 0;
-                margin: 0;
-            }
-
-            #vitecTemplate table p {
-                padding: 3px 0;
-                margin-top: 0;
-            }
-
-        #vitecTemplate article {
-            margin-left: 1.5em;
-        }
-
-        #vitecTemplate .avoid-page-break {
-            page-break-inside: avoid;
-        }
-
-        #vitecTemplate table tr.no-border td {
-            border: none;
-            height: auto;
-        }
-
-        #vitecTemplate .info-table {
-            border-collapse: collapse;
-            width: 100%;
-            table-layout: fixed;
-        }
-
-            #vitecTemplate .info-table tr:not(:first-child) td {
-                border-top: solid 1px lightgray;
-            }
-
-            #vitecTemplate .info-table td {
-                vertical-align: top;
-            }
-
-            #vitecTemplate .info-table .text-right {
-                text-align: right;
-            }
-
-            #vitecTemplate .info-table tr.sumlinje td {
-                border-top: solid 1px #000;
-                border-bottom: solid 1px #000;
-                font-weight: bold;
-                padding: 3px 0;
-                margin: 0;
-            }
-
-            #vitecTemplate .info-table tr.delsumlinje td {
-                border-top: solid 1px #000;
-                border-bottom: solid 1px #000;
-            }
-    </style>
-    <table>
-        <tbody>
-            <tr>
-                <td colspan="100">
-                    <div vitec-template="resource: Mottaker">&nbsp;</div>
-
-                    <p><strong>Tilbud p&aring; salg av [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
-
-                    <p>Jeg viser til hyggelig samtale/befaring, og vil med dette gi <span vitec-if="Model.selgere.Count == 1">deg</span> <span vitec-if="Model.selgere.Count &gt; 1">dere</span> et tilbud som jeg h&aring;per <span vitec-if="Model.selgere.Count == 1">du</span> <span vitec-if="Model.selgere.Count &gt; 1">dere</span> synes er interessant.</p>
-
-                    <p vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">Jeg kan tilby mine tjenester for en provisjon p&aring; <strong>[[oppdrag.provisjonprosent]] %</strong> inkl. mva. av kj&oslash;pesummen<span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot; || Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;"> og eventuell fellesgjeld</span>. Basert p&aring; en prisantydning p&aring; eiendommen tilsvarende kr $.UD([[eiendom.pris]]) <span vitec-if="Model.eiendom.eieform != &quot;Selveier&quot; &amp;&amp; Model.eiendom.fellesgjeld != &quot;0&quot;">&nbsp;og en fellesgjeld p&aring; kr $.UD([[eiendom.fellesgjeld]])</span> vil provisjonen da bel&oslash;pe seg til <strong>kr $.UD([[oppdrag.provisjonberegnet]])</strong> inkl. mva.</p>
-
-                    <p vitec-if="Model.oppdrag.vederlagtypefastpris == true">Jeg kan tilby mine tjenester for en fast provisjon p&aring; <strong>[[oppdrag.fastpris]]</strong> inkl. mva.</p>
-
-                    <div class="avoid-page-break">
-                        <p>I tillegg til&nbsp;provisjon kommer f&oslash;lgende faste vederlag:</p>
-
-                        <table class="info-table">
-                            <tbody vitec-foreach="vederlag in Model.selgervederlag.alleposter">
-                                <tr>
-                                    <td colspan="82">[[*vederlag.beskrivelse]]</td>
-                                    <td colspan="3">kr</td>
-                                    <td colspan="15" style="text-align:right">$.UD([[*vederlag.belop]])</td>
-                                </tr>
-                            </tbody>
-                            <tbody>
-                                <tr class="delsumlinje">
-                                    <td colspan="82">Sum faste vederlag</td>
-                                    <td colspan="3">kr</td>
-                                    <td colspan="15" style="text-align:right">$.UD([[oppdrag.selgervederlagsum]])</td>
-                                </tr>
-                                <tr class="sumlinje">
-                                    <td colspan="82">Sum provisjon og faste vederlag</td>
-                                    <td colspan="3">kr</td>
-                                    <td colspan="15" style="text-align:right"><span vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">$.UD([[oppdrag.selgervederlagmedprovsum]])</span><span vitec-if="Model.oppdrag.vederlagtypefastpris == true">$.UD([[oppdrag.selgervederlagogfastprissum]])</span></td>
-                                </tr>
-                                <tr class="no-border">
-                                    <td>&nbsp;</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <p>Som alternativ til provisjon kan jeg ogs&aring; utf&oslash;re arbeidet etter timer, med en timepris stor <strong>kr $.UD([[oppdrag.timeprisinklmva]]) pr. time</strong> inkl. mva.</p>
-
-                    <p>I tr&aring;d med eiendomsmeglingsforskriftens &sect; 7-1 f&oslash;rste ledd, bokstav b, gir jeg nedenfor et anslag over antatt tidsbruk for oppdraget. Jeg p&aring;peker at anslaget over tidsbruk er basert p&aring; tidligere erfaring over hvor lang tid de forskjellige faser i meglingen tar og at det endelige tidsforbruk derfor vil kunne avvike betydelig.</p>
-
-                    <p>Anslagene nedenfor er derfor ikke bindende for meg som megler og ingen &oslash;vre grense for det eventuelle antall timer oppdragsgiver vil kunne bli fakturert for. Dersom estimerte tidsforbruk forventes &aring; bli vesentlig overskredet, vil du bli varslet om dette.</p>
-
-                    <div class="avoid-page-break">
-                        <table class="info-table">
-                            <tbody>
-                                <tr>
-                                    <td colspan="82">Befaring, informasjonsinnhenting, prospekt- og annonsearbeid, salgsforberedelse</td>
-                                    <td colspan="3">&nbsp;</td>
-                                    <td colspan="15" style="text-align:right">[[timer.budsjett.salg]]</td>
-                                </tr>
-                                <tr vitec-if="Model.oppdrag.hovedtype != &quot;Oppgj\xF8rsoppdrag&quot;">
-                                    <td colspan="82">Forberedelse til og gjennomf&oslash;ring av visninger</td>
-                                    <td colspan="3">&nbsp;</td>
-                                    <td colspan="15" style="text-align:right">[[timer.budsjett.visning]]</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="82">Interessentoppf&oslash;lging <span vitec-if="Model.oppdrag.hovedtype != &quot;Oppgj\xF8rsoppdrag&quot;">og budrunde</span></td>
-                                    <td colspan="3">&nbsp;</td>
-                                    <td colspan="15" style="text-align:right">[[timer.budsjett.bud]]</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="82">Kontraktsarbeid og kontraktsm&oslash;te</td>
-                                    <td colspan="3">&nbsp;</td>
-                                    <td colspan="15" style="text-align:right">[[timer.budsjett.kontrakt]]</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="82">Oppgj&oslash;rsarbeid</td>
-                                    <td colspan="3">&nbsp;</td>
-                                    <td colspan="15" style="text-align:right">[[timer.budsjett.oppgjor]]</td>
-                                </tr>
-                                <tr class="delsumlinje">
-                                    <td colspan="82">Totalt antall timer</td>
-                                    <td colspan="3">&nbsp;</td>
-                                    <td colspan="15" style="text-align:right"><span vitec-if="Model.oppdrag.hovedtype != &quot;Oppgj\xF8rsoppdrag&quot;">[[oppdrag.timebudsjettantall]]</span> <span vitec-if="Model.oppdrag.hovedtype == &quot;Oppgj\xF8rsoppdrag&quot;">$.CALCHOURS([[oppdrag.timebudsjettantall]]-[[timer.budsjett.visning]])</span></td>
-                                </tr>
-                                <tr class="sumlinje">
-                                    <td colspan="82">Sum timebasert vederlag</td>
-                                    <td colspan="3">kr</td>
-                                    <td colspan="15" style="text-align:right">$.UD([[oppdrag.timevederlagberegnet]])</td>
-                                </tr>
-                                <tr class="no-border">
-                                    <td>&nbsp;</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="avoid-page-break">
-                        <p>Uansett om du velger provisjon eller timebasert vederlag kommer disse utleggene <span vitec-if="Model.selgerutgifter.poster.Count &gt; 0">og utgiftene </span>i tillegg:</p>
-
-                        <table class="info-table">
-                            <tbody vitec-foreach="utlegg in Model.selgerutlegg.alleposter">
-                                <tr>
-                                    <td colspan="82">[[*utlegg.beskrivelse]]</td>
-                                    <td colspan="3">kr</td>
-                                    <td colspan="15" style="text-align:right">$.UD([[*utlegg.belop]])</td>
-                                </tr>
-                            </tbody>
-                            <tbody>
-                                <tr class="sumlinje">
-                                    <td colspan="82">Sum utlegg</td>
-                                    <td colspan="3">kr</td>
-                                    <td colspan="15" style="text-align:right">$.UD([[oppdrag.selgerutleggsum]])</td>
-                                </tr>
-                                <tr class="no-border">
-                                    <td>&nbsp;</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <table class="info-table" vitec-if="Model.selgerutgifter.poster.Count &gt; 0">
-                            <tbody vitec-foreach="utgift in Model.selgerutgifter.alleposter">
-                                <tr>
-                                    <td colspan="82">[[*utgift.beskrivelse]]</td>
-                                    <td colspan="3">kr</td>
-                                    <td colspan="15" style="text-align:right">$.UD([[*utgift.belop]])</td>
-                                </tr>
-                            </tbody>
-                            <tbody>
-                                <tr class="sumlinje">
-                                    <td colspan="82">Sum andre utgifter</td>
-                                    <td colspan="3">kr</td>
-                                    <td colspan="15" style="text-align:right">$.UD([[oppdrag.selgerutgiftersum]])</td>
-                                </tr>
-                                <tr class="no-border">
-                                    <td>&nbsp;</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="avoid-page-break">
-                        <p><strong><u>Samlet kostnadsoverslag - <span vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">Provisjonsbasert tilbud</span><span vitec-if="Model.oppdrag.vederlagtypefastpris == true">Fastprisbasert tilbud</span>:</u></strong></p>
-
-                        <table class="info-table">
-                            <tbody>
-                                <tr>
-                                    <td colspan="82">Sum <span vitec-if="Model.oppdrag.vederlagtypefastpris == true">fast</span> provisjon og faste vederlag</td>
-                                    <td colspan="3">kr</td>
-                                    <td colspan="15" style="text-align:right"><span vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">$.UD([[oppdrag.selgervederlagmedprovsum]])</span><span vitec-if="Model.oppdrag.vederlagtypefastpris == true">$.UD([[oppdrag.selgervederlagogfastprissum]])</span></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="82">Utlegg</td>
-                                    <td colspan="3">kr</td>
-                                    <td colspan="15" style="text-align:right">$.UD([[oppdrag.selgerutleggsum]])</td>
-                                </tr>
-                                <tr vitec-if="Model.selgerutgifter.poster.Count &gt; 0">
-                                    <td colspan="82">Andre utgifter</td>
-                                    <td colspan="3">kr</td>
-                                    <td colspan="15" style="text-align:right">$.UD([[oppdrag.selgerutgiftersum]])</td>
-                                </tr>
-                                <tr class="sumlinje">
-                                    <td colspan="82">Totale kostnader</td>
-                                    <td colspan="3">kr</td>
-                                    <td colspan="15" style="text-align:right"><span vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">$.UD([[oppdrag.selgersamletsum]])</span><span vitec-if="Model.oppdrag.vederlagtypefastpris == true">$.UD([[oppdrag.selgersamletfastprissum]])</span></td>
-                                </tr>
-                                <tr class="no-border">
-                                    <td>&nbsp;</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <p>Jeg h&aring;per tilbudet er s&aring; interessant at <span vitec-if="Model.selgere.Count == 1">du</span> <span vitec-if="Model.selgere.Count &gt; 1">dere</span> &oslash;nsker &aring; g&aring; videre med oss, og ser frem til et godt samarbeid.</p>
-
-                    <div vitec-template="resource: Avsender">&nbsp;</div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<div id="vitecTemplate">
+    <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+    <style type="text/css">
+        #vitecTemplate table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+            #vitecTemplate table th {
+                text-align: left;
+                font-weight: normal;
+                display: table-cell;
+                padding: 0 0 0 0;
+            }
+
+            #vitecTemplate table td,
+            #vitecTemplate table div {
+                padding: 3px 0;
+                margin: 0;
+            }
+
+            #vitecTemplate table p {
+                padding: 3px 0;
+                margin-top: 0;
+            }
+
+        #vitecTemplate article {
+            margin-left: 1.5em;
+        }
+
+        #vitecTemplate .avoid-page-break {
+            page-break-inside: avoid;
+        }
+
+        #vitecTemplate table tr.no-border td {
+            border: none;
+            height: auto;
+        }
+
+        #vitecTemplate .info-table {
+            border-collapse: collapse;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+            #vitecTemplate .info-table tr:not(:first-child) td {
+                border-top: solid 1px lightgray;
+            }
+
+            #vitecTemplate .info-table td {
+                vertical-align: top;
+            }
+
+            #vitecTemplate .info-table .text-right {
+                text-align: right;
+            }
+
+            #vitecTemplate .info-table tr.sumlinje td {
+                border-top: solid 1px #000;
+                border-bottom: solid 1px #000;
+                font-weight: bold;
+                padding: 3px 0;
+                margin: 0;
+            }
+
+            #vitecTemplate .info-table tr.delsumlinje td {
+                border-top: solid 1px #000;
+                border-bottom: solid 1px #000;
+            }
+    </style>
+    <table>
+        <tbody>
+            <tr>
+                <td colspan="100">
+                    <div vitec-template="resource: Mottaker">&nbsp;</div>
+
+                    <p><strong>Tilbud p&aring; salg av [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+                    <p>Jeg viser til hyggelig samtale/befaring, og vil med dette gi <span vitec-if="Model.selgere.Count == 1">deg</span> <span vitec-if="Model.selgere.Count &gt; 1">dere</span> et tilbud som jeg h&aring;per <span vitec-if="Model.selgere.Count == 1">du</span> <span vitec-if="Model.selgere.Count &gt; 1">dere</span> synes er interessant.</p>
+
+                    <p vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">Jeg kan tilby mine tjenester for en provisjon p&aring; <strong>[[oppdrag.provisjonprosent]] %</strong> inkl. mva. av kj&oslash;pesummen<span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot; || Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;"> og eventuell fellesgjeld</span>. Basert p&aring; en prisantydning p&aring; eiendommen tilsvarende kr $.UD([[eiendom.pris]]) <span vitec-if="Model.eiendom.eieform != &quot;Selveier&quot; &amp;&amp; Model.eiendom.fellesgjeld != &quot;0&quot;">&nbsp;og en fellesgjeld p&aring; kr $.UD([[eiendom.fellesgjeld]])</span> vil provisjonen da bel&oslash;pe seg til <strong>kr $.UD([[oppdrag.provisjonberegnet]])</strong> inkl. mva.</p>
+
+                    <p vitec-if="Model.oppdrag.vederlagtypefastpris == true">Jeg kan tilby mine tjenester for en fast provisjon p&aring; <strong>[[oppdrag.fastpris]]</strong> inkl. mva.</p>
+
+                    <div class="avoid-page-break">
+                        <p>I tillegg til&nbsp;provisjon kommer f&oslash;lgende faste vederlag:</p>
+
+                        <table class="info-table">
+                            <tbody vitec-foreach="vederlag in Model.selgervederlag.alleposter">
+                                <tr>
+                                    <td colspan="82">[[*vederlag.beskrivelse]]</td>
+                                    <td colspan="3">kr</td>
+                                    <td colspan="15" style="text-align:right">$.UD([[*vederlag.belop]])</td>
+                                </tr>
+                            </tbody>
+                            <tbody>
+                                <tr class="delsumlinje">
+                                    <td colspan="82">Sum faste vederlag</td>
+                                    <td colspan="3">kr</td>
+                                    <td colspan="15" style="text-align:right">$.UD([[oppdrag.selgervederlagsum]])</td>
+                                </tr>
+                                <tr class="sumlinje">
+                                    <td colspan="82">Sum provisjon og faste vederlag</td>
+                                    <td colspan="3">kr</td>
+                                    <td colspan="15" style="text-align:right"><span vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">$.UD([[oppdrag.selgervederlagmedprovsum]])</span><span vitec-if="Model.oppdrag.vederlagtypefastpris == true">$.UD([[oppdrag.selgervederlagogfastprissum]])</span></td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>&nbsp;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p>Som alternativ til provisjon kan jeg ogs&aring; utf&oslash;re arbeidet etter timer, med en timepris stor <strong>kr $.UD([[oppdrag.timeprisinklmva]]) pr. time</strong> inkl. mva.</p>
+
+                    <p>I tr&aring;d med eiendomsmeglingsforskriftens &sect; 7-1 f&oslash;rste ledd, bokstav b, gir jeg nedenfor et anslag over antatt tidsbruk for oppdraget. Jeg p&aring;peker at anslaget over tidsbruk er basert p&aring; tidligere erfaring over hvor lang tid de forskjellige faser i meglingen tar og at det endelige tidsforbruk derfor vil kunne avvike betydelig.</p>
+
+                    <p>Anslagene nedenfor er derfor ikke bindende for meg som megler og ingen &oslash;vre grense for det eventuelle antall timer oppdragsgiver vil kunne bli fakturert for. Dersom estimerte tidsforbruk forventes &aring; bli vesentlig overskredet, vil du bli varslet om dette.</p>
+
+                    <div class="avoid-page-break">
+                        <table class="info-table">
+                            <tbody>
+                                <tr>
+                                    <td colspan="82">Befaring, informasjonsinnhenting, prospekt- og annonsearbeid, salgsforberedelse</td>
+                                    <td colspan="3">&nbsp;</td>
+                                    <td colspan="15" style="text-align:right">[[timer.budsjett.salg]]</td>
+                                </tr>
+                                <tr vitec-if="Model.oppdrag.hovedtype != &quot;Oppgj\xF8rsoppdrag&quot;">
+                                    <td colspan="82">Forberedelse til og gjennomf&oslash;ring av visninger</td>
+                                    <td colspan="3">&nbsp;</td>
+                                    <td colspan="15" style="text-align:right">[[timer.budsjett.visning]]</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="82">Interessentoppf&oslash;lging <span vitec-if="Model.oppdrag.hovedtype != &quot;Oppgj\xF8rsoppdrag&quot;">og budrunde</span></td>
+                                    <td colspan="3">&nbsp;</td>
+                                    <td colspan="15" style="text-align:right">[[timer.budsjett.bud]]</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="82">Kontraktsarbeid og kontraktsm&oslash;te</td>
+                                    <td colspan="3">&nbsp;</td>
+                                    <td colspan="15" style="text-align:right">[[timer.budsjett.kontrakt]]</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="82">Oppgj&oslash;rsarbeid</td>
+                                    <td colspan="3">&nbsp;</td>
+                                    <td colspan="15" style="text-align:right">[[timer.budsjett.oppgjor]]</td>
+                                </tr>
+                                <tr class="delsumlinje">
+                                    <td colspan="82">Totalt antall timer</td>
+                                    <td colspan="3">&nbsp;</td>
+                                    <td colspan="15" style="text-align:right"><span vitec-if="Model.oppdrag.hovedtype != &quot;Oppgj\xF8rsoppdrag&quot;">[[oppdrag.timebudsjettantall]]</span> <span vitec-if="Model.oppdrag.hovedtype == &quot;Oppgj\xF8rsoppdrag&quot;">$.CALCHOURS([[oppdrag.timebudsjettantall]]-[[timer.budsjett.visning]])</span></td>
+                                </tr>
+                                <tr class="sumlinje">
+                                    <td colspan="82">Sum timebasert vederlag</td>
+                                    <td colspan="3">kr</td>
+                                    <td colspan="15" style="text-align:right">$.UD([[oppdrag.timevederlagberegnet]])</td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>&nbsp;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="avoid-page-break">
+                        <p>Uansett om du velger provisjon eller timebasert vederlag kommer disse utleggene <span vitec-if="Model.selgerutgifter.poster.Count &gt; 0">og utgiftene </span>i tillegg:</p>
+
+                        <table class="info-table">
+                            <tbody vitec-foreach="utlegg in Model.selgerutlegg.alleposter">
+                                <tr>
+                                    <td colspan="82">[[*utlegg.beskrivelse]]</td>
+                                    <td colspan="3">kr</td>
+                                    <td colspan="15" style="text-align:right">$.UD([[*utlegg.belop]])</td>
+                                </tr>
+                            </tbody>
+                            <tbody>
+                                <tr class="sumlinje">
+                                    <td colspan="82">Sum utlegg</td>
+                                    <td colspan="3">kr</td>
+                                    <td colspan="15" style="text-align:right">$.UD([[oppdrag.selgerutleggsum]])</td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>&nbsp;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="info-table" vitec-if="Model.selgerutgifter.poster.Count &gt; 0">
+                            <tbody vitec-foreach="utgift in Model.selgerutgifter.alleposter">
+                                <tr>
+                                    <td colspan="82">[[*utgift.beskrivelse]]</td>
+                                    <td colspan="3">kr</td>
+                                    <td colspan="15" style="text-align:right">$.UD([[*utgift.belop]])</td>
+                                </tr>
+                            </tbody>
+                            <tbody>
+                                <tr class="sumlinje">
+                                    <td colspan="82">Sum andre utgifter</td>
+                                    <td colspan="3">kr</td>
+                                    <td colspan="15" style="text-align:right">$.UD([[oppdrag.selgerutgiftersum]])</td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>&nbsp;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="avoid-page-break">
+                        <p><strong><u>Samlet kostnadsoverslag - <span vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">Provisjonsbasert tilbud</span><span vitec-if="Model.oppdrag.vederlagtypefastpris == true">Fastprisbasert tilbud</span>:</u></strong></p>
+
+                        <table class="info-table">
+                            <tbody>
+                                <tr>
+                                    <td colspan="82">Sum <span vitec-if="Model.oppdrag.vederlagtypefastpris == true">fast</span> provisjon og faste vederlag</td>
+                                    <td colspan="3">kr</td>
+                                    <td colspan="15" style="text-align:right"><span vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">$.UD([[oppdrag.selgervederlagmedprovsum]])</span><span vitec-if="Model.oppdrag.vederlagtypefastpris == true">$.UD([[oppdrag.selgervederlagogfastprissum]])</span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="82">Utlegg</td>
+                                    <td colspan="3">kr</td>
+                                    <td colspan="15" style="text-align:right">$.UD([[oppdrag.selgerutleggsum]])</td>
+                                </tr>
+                                <tr vitec-if="Model.selgerutgifter.poster.Count &gt; 0">
+                                    <td colspan="82">Andre utgifter</td>
+                                    <td colspan="3">kr</td>
+                                    <td colspan="15" style="text-align:right">$.UD([[oppdrag.selgerutgiftersum]])</td>
+                                </tr>
+                                <tr class="sumlinje">
+                                    <td colspan="82">Totale kostnader</td>
+                                    <td colspan="3">kr</td>
+                                    <td colspan="15" style="text-align:right"><span vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">$.UD([[oppdrag.selgersamletsum]])</span><span vitec-if="Model.oppdrag.vederlagtypefastpris == true">$.UD([[oppdrag.selgersamletfastprissum]])</span></td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>&nbsp;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p>Jeg h&aring;per tilbudet er s&aring; interessant at <span vitec-if="Model.selgere.Count == 1">du</span> <span vitec-if="Model.selgere.Count &gt; 1">dere</span> &oslash;nsker &aring; g&aring; videre med oss, og ser frem til et godt samarbeid.</p>
+
+                    <div vitec-template="resource: Avsender">&nbsp;</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>

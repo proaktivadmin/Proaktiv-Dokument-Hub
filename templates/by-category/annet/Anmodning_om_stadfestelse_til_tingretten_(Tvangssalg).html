@@ -1,104 +1,104 @@
-<div id="vitecTemplate">
-	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
-	<style type="text/css">
-		#vitecTemplate table {
-			border-collapse: collapse;
-			width: 100%;
-			table-layout: fixed;
-		}
-
-		#vitecTemplate strong {
-			font-size: unset;
-		}
-
-		#vitecTemplate .liste:last-child .separator {
-			display: none;
-		}
-
-		/* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
-
-		#vitecTemplate span.insert:empty {
-			font-size: inherit !important;
-			line-height: inherit !important;
-			display: inline-block;
-			background-color: lightpink;
-			min-width: 2em !important;
-			height: .7em !important;
-			text-align: center;
-		}
-
-			#vitecTemplate span.insert:empty:before {
-				content: attr(data-label);
-			}
-
-			#vitecTemplate span.insert:empty:hover {
-				background-color: #fff;
-				cursor: pointer;
-			}
-
-		#vitecTemplate .insert-table {
-			display: inline-table;
-		}
-
-			#vitecTemplate .insert-table > span,
-			#vitecTemplate .insert-table > span.insert {
-				display: table-cell;
-			}
-	</style>
-	<table>
-		<tbody>
-			<tr>
-				<td colspan="100">
-					<div vitec-template="resource: Mottaker">&nbsp;</div>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="100">
-					<p><strong>Anmodning om stadfestelse av bud i forbindelse med tvangssalg av [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
-
-					<table>
-						<tbody>
-							<tr>
-								<td colspan="25"><strong>Tingrettens saksnr.:</strong></td>
-								<td colspan="75">[[tvangssalgrefnr]]</td>
-							</tr>
-							<tr>
-								<td colspan="25"><strong>Saks&oslash;kte:</strong></td>
-								<td colspan="75"><span vitec-foreach="saksokte  in Model.saksokteliste"> <span class="liste">[[*saksokte.navnutenfullmektigogkontaktperson]]<span class="separator">, </span> </span> </span></td>
-							</tr>
-							<tr>
-								<td colspan="25"><strong>Saks&oslash;ker<span vitec-if="Model.saksokere.Count &gt; 1">e</span>:</strong></td>
-								<td colspan="75"><span vitec-foreach="saksoker  in Model.saksokere"> <span class="liste">[[*saksoker.navnutenfullmektigogkontaktperson]]<span class="separator">, </span> </span> </span></td>
-							</tr>
-						</tbody>
-					</table>
-
-					<p>Etter at vi har gjennomf&oslash;rt vanlige salgsprosedyrer i forbindelse med tvangssalget av ovennevnte eiendom sendes vedlagt kopi av bud stort <strong><span style="white-space:nowrap">kr $.UD([[hoyestebud.belop]])</span></strong> + omkostninger som er gitt av [[hoyestebud.budgiver.navn]]. Budet er gyldig til [[hoyestebud.akseptfrist.dato]] kl. [[hoyestebud.akseptfrist.klokkeslett]].</p>
-
-					<p>Vedlagt f&oslash;lger kopi av:</p>
-
-					<ul>
-						<li>Melding fra saks&oslash;ker, datert [[tvangssalg.begjaringomstadfestelse.dato]], hvor budet begj&aelig;res stadfestet</li>
-						<li>Brev til partene og kjente rettighetshavere med lovbestemte opplysninger om at budet er begj&aelig;rt stadfestet</li>
-						<li>Adresseliste over hvem som har mottatt budet</li>
-						<li>Melding om at innsigelse mot stadfestelsen av budet m&aring; v&aelig;re dere i hende innen 14 dager fra d.d.</li>
-						<li>Salgsoppgaven som ble benyttet under salget</li>
-						<li>Utkast til fordelingskjennelse (som ogs&aring; er sendt til parter og rettighetshavere)</li>
-						<li>Utkast til stadfestelseskjennelse</li>
-						<li>Budjournal</li>
-					</ul>
-
-					<p>Eiendommen har blitt markedsf&oslash;rt med prisantydning kr $.UD([[eiendom.pris]]) som er i samsvar med takstvurderingen over eiendommen utf&oslash;rt av takstmann datert [[eiendom.takstdato]]. Taksten l&aring; som vedlegg til salgsoppgaven.</p>
-
-					<p>Eiendommen har blitt markedsf&oslash;rt p&aring; ordin&aelig;r m&aring;te i v&aring;rt salgsapparat, samt med annonser i <span class="insert-table"> <span class="insert" data-label="Avis"></span> </span> og p&aring; internett (www.finn.no). Markedsf&oslash;ringen har p&aring;g&aring;tt fra [[oppdrag.tilsalgsdato]]. Det har v&aelig;rt gjennomf&oslash;rt fellesvisninger og individuelle visninger for de interesserte kj&oslash;perne, totalt [[oppdrag.antallvisninger]] visninger. Til sammen har vi registrert [[oppdrag.antallinteressenter]] interesserte, og av disse har [[oppdrag.antallbudgivere]] gitt bud.</p>
-
-					<p>Ingen av de potensielle kj&oslash;perne vi har hatt kontakt med &oslash;nsker &aring; gi h&oslash;yere bud enn det som n&aring; foreligger. Vi tror heller ikke nye salgsfremst&oslash;t vil gi h&oslash;yere pris, og anbefaler derfor at budet p&aring; <span style="white-space:nowrap">kr $.UD([[akseptertbud.belop]])</span> blir stadfestet.</p>
-
-					<p>Utkast til kjennelser blir ogs&aring; sendt elektronisk til saksbehandler i tingretten.</p>
-
-					<div vitec-template="resource: Avsender">&nbsp;</div>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+<div id="vitecTemplate">
+	<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+	<style type="text/css">
+		#vitecTemplate table {
+			border-collapse: collapse;
+			width: 100%;
+			table-layout: fixed;
+		}
+
+		#vitecTemplate strong {
+			font-size: unset;
+		}
+
+		#vitecTemplate .liste:last-child .separator {
+			display: none;
+		}
+
+		/* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+		#vitecTemplate span.insert:empty {
+			font-size: inherit !important;
+			line-height: inherit !important;
+			display: inline-block;
+			background-color: lightpink;
+			min-width: 2em !important;
+			height: .7em !important;
+			text-align: center;
+		}
+
+			#vitecTemplate span.insert:empty:before {
+				content: attr(data-label);
+			}
+
+			#vitecTemplate span.insert:empty:hover {
+				background-color: #fff;
+				cursor: pointer;
+			}
+
+		#vitecTemplate .insert-table {
+			display: inline-table;
+		}
+
+			#vitecTemplate .insert-table > span,
+			#vitecTemplate .insert-table > span.insert {
+				display: table-cell;
+			}
+	</style>
+	<table>
+		<tbody>
+			<tr>
+				<td colspan="100">
+					<div vitec-template="resource: Mottaker">&nbsp;</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="100">
+					<p><strong>Anmodning om stadfestelse av bud i forbindelse med tvangssalg av [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+					<table>
+						<tbody>
+							<tr>
+								<td colspan="25"><strong>Tingrettens saksnr.:</strong></td>
+								<td colspan="75">[[tvangssalgrefnr]]</td>
+							</tr>
+							<tr>
+								<td colspan="25"><strong>Saks&oslash;kte:</strong></td>
+								<td colspan="75"><span vitec-foreach="saksokte  in Model.saksokteliste"> <span class="liste">[[*saksokte.navnutenfullmektigogkontaktperson]]<span class="separator">, </span> </span> </span></td>
+							</tr>
+							<tr>
+								<td colspan="25"><strong>Saks&oslash;ker<span vitec-if="Model.saksokere.Count &gt; 1">e</span>:</strong></td>
+								<td colspan="75"><span vitec-foreach="saksoker  in Model.saksokere"> <span class="liste">[[*saksoker.navnutenfullmektigogkontaktperson]]<span class="separator">, </span> </span> </span></td>
+							</tr>
+						</tbody>
+					</table>
+
+					<p>Etter at vi har gjennomf&oslash;rt vanlige salgsprosedyrer i forbindelse med tvangssalget av ovennevnte eiendom sendes vedlagt kopi av bud stort <strong><span style="white-space:nowrap">kr $.UD([[hoyestebud.belop]])</span></strong> + omkostninger som er gitt av [[hoyestebud.budgiver.navn]]. Budet er gyldig til [[hoyestebud.akseptfrist.dato]] kl. [[hoyestebud.akseptfrist.klokkeslett]].</p>
+
+					<p>Vedlagt f&oslash;lger kopi av:</p>
+
+					<ul>
+						<li>Melding fra saks&oslash;ker, datert [[tvangssalg.begjaringomstadfestelse.dato]], hvor budet begj&aelig;res stadfestet</li>
+						<li>Brev til partene og kjente rettighetshavere med lovbestemte opplysninger om at budet er begj&aelig;rt stadfestet</li>
+						<li>Adresseliste over hvem som har mottatt budet</li>
+						<li>Melding om at innsigelse mot stadfestelsen av budet m&aring; v&aelig;re dere i hende innen 14 dager fra d.d.</li>
+						<li>Salgsoppgaven som ble benyttet under salget</li>
+						<li>Utkast til fordelingskjennelse (som ogs&aring; er sendt til parter og rettighetshavere)</li>
+						<li>Utkast til stadfestelseskjennelse</li>
+						<li>Budjournal</li>
+					</ul>
+
+					<p>Eiendommen har blitt markedsf&oslash;rt med prisantydning kr $.UD([[eiendom.pris]]) som er i samsvar med takstvurderingen over eiendommen utf&oslash;rt av takstmann datert [[eiendom.takstdato]]. Taksten l&aring; som vedlegg til salgsoppgaven.</p>
+
+					<p>Eiendommen har blitt markedsf&oslash;rt p&aring; ordin&aelig;r m&aring;te i v&aring;rt salgsapparat, samt med annonser i <span class="insert-table"> <span class="insert" data-label="Avis"></span> </span> og p&aring; internett (www.finn.no). Markedsf&oslash;ringen har p&aring;g&aring;tt fra [[oppdrag.tilsalgsdato]]. Det har v&aelig;rt gjennomf&oslash;rt fellesvisninger og individuelle visninger for de interesserte kj&oslash;perne, totalt [[oppdrag.antallvisninger]] visninger. Til sammen har vi registrert [[oppdrag.antallinteressenter]] interesserte, og av disse har [[oppdrag.antallbudgivere]] gitt bud.</p>
+
+					<p>Ingen av de potensielle kj&oslash;perne vi har hatt kontakt med &oslash;nsker &aring; gi h&oslash;yere bud enn det som n&aring; foreligger. Vi tror heller ikke nye salgsfremst&oslash;t vil gi h&oslash;yere pris, og anbefaler derfor at budet p&aring; <span style="white-space:nowrap">kr $.UD([[akseptertbud.belop]])</span> blir stadfestet.</p>
+
+					<p>Utkast til kjennelser blir ogs&aring; sendt elektronisk til saksbehandler i tingretten.</p>
+
+					<div vitec-template="resource: Avsender">&nbsp;</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </div>
