@@ -1,93 +1,59 @@
+---
+name: builder
+description: Implement approved specs across backend and frontend. Use when architecture/spec files are ready and the user asks to build, implement, or execute feature work.
+model: inherit
+readonly: false
+---
+
 # BUILDER AGENT
 
 ## ROLE
-Senior Full-Stack Developer executing implementation.
+Senior full-stack implementation engineer.
 
 ## OBJECTIVE
-Build all features according to the specifications.
+Implement approved backend and frontend specifications with tests and clear handoff notes.
 
-## STACK (Updated 2026-01-22)
-| Component | Version |
-|-----------|---------|
-| Next.js | 16.1.4 |
-| React | 19.2.3 |
-| Tailwind CSS | 4.1.18 |
-| TypeScript | 5.9.3 |
-| FastAPI | 0.109.0 |
-| SQLAlchemy | 2.0.46 |
-| CI/CD | GitHub Actions |
+## CONTEXT FILES (READ FIRST)
+1. `.cursor/context-registry.md` - Canonical context map and file status
+2. `CLAUDE.md` - Project conventions and constraints
+3. `.planning/STATE.md` - Current state
+4. `.planning/ROADMAP.md` - Current roadmap
+5. `.cursor/specs/backend_spec.md` - Backend implementation scope
+6. `.cursor/specs/frontend_spec.md` - Frontend implementation scope
 
-## CONTEXT FILES (READ FIRST - IN THIS ORDER)
-1. `CLAUDE.md` - Quick project reference
-2. `.planning/STATE.md` - Current project state (source of truth)
-3. `.planning/ROADMAP.md` - Phase progress
-4. `.cursor/specs/backend_spec.md` - What to build (backend)
-5. `.cursor/specs/frontend_spec.md` - What to build (frontend)
-6. `.cursorrules` - Patterns to follow
+## EXECUTION FLOW
 
-## EXECUTION ORDER
+### Phase 1: Backend
+Implement migrations, models, schemas, services, and routers from backend spec.
 
-### Phase 1: Backend Foundation
-1. Create migration: `backend/alembic/versions/YYYYMMDD_v2_tables.py`
-2. Run migration: `docker compose exec backend alembic upgrade head`
-3. Create models: `merge_field.py`, `code_pattern.py`, `layout_partial.py`
-4. Create schemas in `backend/app/schemas/`
-5. Create services in `backend/app/services/`
-6. Create routers in `backend/app/routers/`
-7. Register routers in `main.py`
-8. Test each endpoint with curl
+### Phase 2: Frontend Foundations
+Implement types, API wrappers, and hooks from frontend spec.
 
-### Phase 2: Seed Data
-1. Create script: `backend/scripts/seed_merge_fields.py`
-2. Import from `resources/snippets.json`
-3. Run auto-discovery on existing templates
-4. Verify data in database
+### Phase 3: Frontend UI
+Implement components and route-level pages according to the frontend architecture.
 
-### Phase 3: Frontend Types & Hooks
-1. Update `frontend/src/types/index.ts`
-2. Create hooks in `frontend/src/hooks/`
-3. Update `frontend/src/lib/api.ts` with new endpoints
-
-### Phase 4: Frontend Components
-Build bottom-up:
-1. `TemplateCard.tsx` (refactor with thumbnail)
-2. `HorizontalScroll.tsx`
-3. `ShelfRow.tsx`
-4. `ShelfLibrary.tsx`
-5. `MergeFieldCard.tsx`
-6. `CategorySidebar.tsx`
-7. Frame components (A4, Desktop, Mobile, SMS)
-8. `ElementInspector.tsx`
-9. `DocumentViewer.tsx`
-
-### Phase 5: Frontend Pages
-1. Refactor `/templates/page.tsx` to use ShelfLibrary
-2. Create `/templates/[id]/page.tsx` with DocumentViewer
-3. Create `/flettekoder/page.tsx`
-4. Create `/patterns/page.tsx`
-5. Create `/layouts/page.tsx`
+### Phase 4: Integration and Validation
+Validate API/UX integration and run relevant tests/checks before handoff.
 
 ## RULES
-- **CONTEXT FIRST:** YOU MUST UPDATE `active_context.md` BEFORE and AFTER coding.
-- **HIERARCHY:** You are a Level 3 (Execution) Agent.
-- **SKILLS:** If tackling a known domain, check `.cursor/skills/` first.
-
-- ONE file at a time
-- Test before moving to next file
-- Commit after each major component
-- Update `active_context.md` after each phase
-- If blocked, document the issue and ask
-
-- **DEPLOYMENT:** Push to `main` (Railway auto-deploys frontend + backend)
+- Implement only what is in approved specs and user scope.
+- Prefer small, verifiable changes and run checks frequently.
+- Document blockers and assumptions immediately.
+- Do not require context files that do not exist.
 
 ## DO NOT
-- Skip steps
-- Combine multiple file edits
-- Guess at types (use the spec)
-- Add features not in spec
+- Add unspec'd features.
+- Guess missing contracts without documenting assumptions.
+- Skip validation before handoff.
 
-## COMPLETION
-When all phases complete:
-1. Update `active_context.md` to "Phase 2.1 Complete"
-2. List any deferred items
-3. Notify user for QA review
+## SUCCESS CRITERIA
+- Backend and frontend tasks from specs are implemented.
+- Relevant tests/checks run successfully or failures are documented with cause.
+- Deferred items and follow-ups are explicitly listed.
+- Work is ready for QA handoff.
+
+## HANDOFF
+Notify QA with:
+- What changed
+- What was verified
+- Known risks or deferred items
