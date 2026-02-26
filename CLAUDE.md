@@ -22,6 +22,19 @@ A document template management system for Norwegian real estate brokers, integra
 
 ---
 
+## Instruction Precedence
+
+When instructions conflict, follow this order:
+
+1. **Rules** - `.cursor/rules/*.mdc` (auto-applied, highest priority)
+2. **Skills** - `.agents/skills/*/SKILL.md` (domain-specific guidance)
+3. **Agent prompts** - `.cursor/agents/*.md` (workflow-specific execution)
+4. **General context** - `CLAUDE.md`, plans, and command wrappers
+
+Always consult `.cursor/context-registry.md` for current canonical context files.
+
+---
+
 ## Core Concepts
 
 ### Document-First Paradigm
@@ -182,6 +195,8 @@ skins/                    # Vitec portal skin packages
 - UUID for all primary keys
 - JSONB for array/object fields
 - Pydantic for all data validation
+- Backend implementation skill: `.agents/skills/fastapi-patterns/SKILL.md`
+- Migration safety skill: `.agents/skills/sqlalchemy-migration-safety/SKILL.md`
 
 ### Frontend
 
@@ -472,7 +487,18 @@ Railway's internal networking causes Alembic migrations to fail silently during 
 
 ## Agent Pipeline
 
-Execute in order:
+Default orchestrated flow:
+
+1. **Orchestrator** → routes request and enforces stage gates
+2. **Systems Architect + Frontend Architect** → specs
+3. **Spec Verifier** → go/no-go for implementation
+4. **Backend Builder + Frontend Builder** → implementation
+5. **Backend Verifier + Frontend Verifier** → pre-QA checks
+6. **QA Master** → final verification
+
+Use `/implement` for orchestrated flow, or run steps manually when needed.
+
+Legacy sequential flow (still supported):
 
 1. **Systems Architect** → `.cursor/specs/backend_spec.md`
 2. **Frontend Architect** → `.cursor/specs/frontend_spec.md`
@@ -487,6 +513,17 @@ Use `/architect`, `/frontend-architect`, `/builder` commands.
 3. **QA** → Test with dry-run
 
 Use `/entra-architect`, `/entra-builder`, `/entra-qa` commands.
+
+### Subagent Authoring Checklist
+
+Before adding or editing any file in `.cursor/agents/`:
+
+- Keep one focused responsibility per agent.
+- Add frontmatter with `name` and a clear `description` trigger ("Use when ...").
+- Keep prompts concise and outcome-oriented.
+- Define explicit success criteria and handoff expectations.
+- Reference `.cursor/context-registry.md` instead of duplicating long context lists.
+- Prefer verifier gates for go/no-go decisions before QA.
 
 ---
 
@@ -525,11 +562,19 @@ Use `/entra-architect`, `/entra-builder`, `/entra-qa` commands.
 | `/notification`       | Maintain/update notification system |
 | `/review-builds`      | Run QA review of builder pipeline   |
 | `/sync-templates`     | Sync templates after Vitec newsletter/hotfix |
+| `/monthly-update`     | Full monthly Vitec release sync (scrape → diff → rebuild → KB) |
 | `/signature-qa`       | Run signature QA testing stages     |
+| `/verify-gates`       | Run spec/backend/frontend/QA verification gates |
+| `/markdown-convert`   | Convert source files to Markdown for analysis |
+| `/commit-safe`        | Create scoped commits with explicit path list |
+| `/deploy-gates`       | Run go/no-go deployment gate checklist |
+| `/token-audit`        | Generate efficiency audit report from git snapshot |
 
 ---
 
 ## Testing
+
+Testing and verifier guidance skill: `.agents/skills/test-quality-gates/SKILL.md`
 
 ### Run Tests Locally
 

@@ -1,0 +1,26 @@
+---
+description: Command entrypoint and gate policy for consistent execution
+alwaysApply: true
+---
+
+# Command Entrypoint Policy
+
+## Default Command Routing
+
+- Feature implementation: start with `/implement`.
+- Template request work: use `/process-template-requests`.
+- Debugging failed builds/deployments: use `/debugger`.
+
+## Mandatory Gates
+
+- Before release readiness recommendations: run `/verify-gates`.
+- After implementation/debug sessions: run `/token-audit`.
+
+## Commit/Deploy Hygiene
+
+- Use `/commit-safe` for scoped commits.
+- Use `/deploy-gates` before any deploy recommendation.
+
+## Goal
+
+Maximize useful output per monthly token budget by reducing rework and enforcing consistent flow.

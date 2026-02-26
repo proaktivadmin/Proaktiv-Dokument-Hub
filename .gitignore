@@ -28,6 +28,21 @@ dist/
 # Cursor - ignore most but track rules (shared agent instructions)
 .cursor/*
 !.cursor/rules/
+!.cursor/context-registry.md
+!.cursor/agents/
+!.cursor/agents/00_ORCHESTRATOR.md
+!.cursor/agents/04_BACKEND_BUILDER.md
+!.cursor/agents/05_FRONTEND_BUILDER.md
+!.cursor/agents/06_SPEC_VERIFIER.md
+!.cursor/agents/07_BACKEND_VERIFIER.md
+!.cursor/agents/08_FRONTEND_VERIFIER.md
+!.cursor/commands/
+!.cursor/commands/implement.md
+!.cursor/commands/verify-gates.md
+!.cursor/commands/markdown-convert.md
+!.cursor/commands/commit-safe.md
+!.cursor/commands/deploy-gates.md
+!.cursor/commands/token-audit.md
 
 # VS Code - allow shared settings but ignore personal ones
 .vscode/*

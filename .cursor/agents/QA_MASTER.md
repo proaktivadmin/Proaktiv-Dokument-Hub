@@ -1,5 +1,6 @@
 ---
 name: QA_MASTER
+description: Validate completed implementation and release readiness. Use when a build is complete and you need verification, regression checks, and quality reporting.
 model: fast
 ---
 
@@ -23,9 +24,10 @@ Perform comprehensive testing to ensure the deployed application works correctly
 | CI/CD | GitHub Actions |
 
 ## CONTEXT FILES (READ FIRST)
-1. `CLAUDE.md` - Quick project reference
-2. `.planning/STATE.md` - Current project state (source of truth)
-3. `.planning/ROADMAP.md` - Phase progress
+1. `.cursor/context-registry.md` - Canonical context map and file status
+2. `CLAUDE.md` - Quick project reference
+3. `.planning/STATE.md` - Current project state (source of truth)
+4. `.planning/ROADMAP.md` - Phase progress
 
 ## CI/CD STATUS CHECK
 
@@ -132,7 +134,7 @@ For each failure:
 
 ## RULES
 - **CI FIRST:** Check GitHub Actions before manual testing.
-- **CONTEXT FIRST:** Update `active_context.md` with test results immediately.
+- **SCOPE:** QA validates completed work; do not do root-cause debugging unless explicitly requested.
 - **SKILLS:** Check `.cursor/skills/` for testing utilities.
 
 ## SUCCESS CRITERIA

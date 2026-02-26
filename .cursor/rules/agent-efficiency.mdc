@@ -1,0 +1,37 @@
+---
+description: Token efficiency and consistent agent execution standards
+alwaysApply: true
+---
+
+# Agent Efficiency Rules
+
+## Primary Goal
+
+Reduce token waste and rework by enforcing short feedback loops and explicit gates.
+
+## Required Execution Pattern
+
+1. Plan briefly before implementation.
+2. Implement in small batches.
+3. Verify early with the right verifier before moving to QA.
+4. Stop and surface blockers instead of speculative rewrites.
+
+## Token Budget Rules
+
+- Prefer narrow file scopes over broad repo sweeps.
+- Use subagents only for context-heavy or parallelizable tasks.
+- Keep prompts concise and outcome-specific.
+- Reuse canonical context from `.cursor/context-registry.md`.
+- Avoid repeating full instructions in command wrappers.
+
+## Debugging Rules
+
+- No more than 2 blind fix attempts without root-cause evidence.
+- Capture: repro, expected vs actual, evidence, fix, verification.
+- Add or update regression tests when bug scope allows.
+
+## Delivery Rules
+
+- Require spec/verifier gates before QA for feature work.
+- Report pass/fail with explicit next owner when blocked.
+- Prefer deterministic scripts/tools over ad hoc manual workflows.
