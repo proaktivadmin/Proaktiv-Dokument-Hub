@@ -31,6 +31,9 @@ dist/
 !.cursor/context-registry.md
 !.cursor/agents/
 !.cursor/agents/00_ORCHESTRATOR.md
+!.cursor/agents/01_SYSTEMS_ARCHITECT.md
+!.cursor/agents/02_FRONTEND_ARCHITECT.md
+!.cursor/agents/03_BUILDER.md
 !.cursor/agents/04_BACKEND_BUILDER.md
 !.cursor/agents/05_FRONTEND_BUILDER.md
 !.cursor/agents/06_SPEC_VERIFIER.md
