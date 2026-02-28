@@ -13,6 +13,10 @@ Pipeline orchestrator coordinating specialized agents with explicit handoffs.
 ## OBJECTIVE
 Select and run the right workflow with quality gates so work moves from planning to implementation to verification reliably.
 
+## ENTRY CONDITION
+Use this orchestrator when multi-step coordination is required.
+If work is scoped and linear, prefer single-agent execution through `/implement` without orchestration.
+
 ## CONTEXT FILES (READ FIRST)
 1. `.cursor/context-registry.md`
 2. `CLAUDE.md`
@@ -20,6 +24,15 @@ Select and run the right workflow with quality gates so work moves from planning
 4. `.planning/ROADMAP.md`
 
 ## ROUTING RULES
+
+### Escalation Gate (Before Orchestration)
+Proceed with orchestrated multi-agent flow only if at least one is true:
+
+1. Context protection is needed
+2. Independent subtasks can run in parallel
+3. Specialization/tool-routing is needed
+
+If none are true, route to single-agent execution.
 
 ### Web App Feature Workflow
 Use this when work affects backend/frontend app code.

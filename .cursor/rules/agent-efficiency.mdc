@@ -19,7 +19,11 @@ Reduce token waste and rework by enforcing short feedback loops and explicit gat
 ## Token Budget Rules
 
 - Prefer narrow file scopes over broad repo sweeps.
-- Use subagents only for context-heavy or parallelizable tasks.
+- Default to single-agent execution unless escalation triggers are met.
+- Use subagents only for:
+  - context protection (high irrelevant context volume),
+  - true parallelizable subtasks,
+  - specialization/tool-routing needs.
 - Keep prompts concise and outcome-specific.
 - Reuse canonical context from `.cursor/context-registry.md`.
 - Avoid repeating full instructions in command wrappers.
@@ -35,3 +39,4 @@ Reduce token waste and rework by enforcing short feedback loops and explicit gat
 - Require spec/verifier gates before QA for feature work.
 - Report pass/fail with explicit next owner when blocked.
 - Prefer deterministic scripts/tools over ad hoc manual workflows.
+- For multi-agent runs, report escalation reason and lane used (`single`/`multi`).

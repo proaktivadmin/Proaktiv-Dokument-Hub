@@ -7,6 +7,10 @@ readonly: false
 
 # BUILDER AGENT
 
+## STATUS
+Legacy unified builder. Prefer `.cursor/agents/04_BACKEND_BUILDER.md` and
+`.cursor/agents/05_FRONTEND_BUILDER.md` via `.cursor/agents/00_ORCHESTRATOR.md`.
+
 ## ROLE
 Senior full-stack implementation engineer.
 

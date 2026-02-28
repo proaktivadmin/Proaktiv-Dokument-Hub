@@ -11,6 +11,14 @@ alwaysApply: true
 - Template request work: use `/process-template-requests`.
 - Debugging failed builds/deployments: use `/debugger`.
 
+## Lane Selection Policy
+
+- `/implement` defaults to single-agent execution.
+- Escalate to multi-agent orchestration only when one or more triggers apply:
+  - context protection,
+  - true parallelization,
+  - specialization/tool-routing need.
+
 ## Mandatory Gates
 
 - Before release readiness recommendations: run `/verify-gates`.
