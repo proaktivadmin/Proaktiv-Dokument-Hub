@@ -5,8 +5,8 @@ description: Build production-ready Vitec Next HTML templates. Handles three ope
 
 # Vitec Template Builder
 
-Build production-ready Vitec Next HTML templates with merge fields, conditional logic, party
-loops, and the full template shell.
+Build production-ready Vitec Next HTML templates with merge fields,
+conditional logic, party loops, and the full template shell.
 
 ## When to Use
 
@@ -17,7 +17,15 @@ loops, and the full template shell.
 - User asks about merge field syntax, conditional patterns, or template structure
 - User asks to reconcile a Vitec update with customized templates
 
-## STEP 1: Intake Questionnaire (Read NOTHING else first)
+## Workflow at a Glance
+
+| Scenario | Path |
+|----------|------|
+| Mode A, T1, or T2 | Handle directly from this skill file, then run local validation |
+| Mode B/C with T3-T5 | Intake -> analysis subagents -> builder subagent -> validators |
+| Subagents unavailable | Use the fallback direct pipeline in `AGENT-2B-PIPELINE-DESIGN.md` |
+
+## Step 1: Intake Questionnaire (read nothing else first)
 
 Before loading any reference files, ask the user these three questions:
 
@@ -60,15 +68,16 @@ STAGES TO EXECUTE: [S0-S10 with skips noted]
 
 **Wait for user confirmation before proceeding.**
 
-## STEP 2: Launch Analysis Subagents (T3+ Mode B/C)
+## Step 2: Launch Analysis Subagents (T3+ Mode B/C)
 
-For T3+ conversions, launch three parallel analysis subagents using the Task tool.
+Only after the user confirms the spec sheet, launch three parallel analysis
+subagents for T3+ conversions using the Subagent tool.
 Each agent reads only what it needs and writes its output to `scripts/_analysis/{template_name}/`.
 
 **Prompt templates:** `.planning/phases/11-template-suite/SUBAGENT-PROMPTS.md`
-**Output format specs:** `scripts/_analysis/FORMAT_structure.md`, `FORMAT_fields.md`, `FORMAT_logic.md`
+**Output format specs:** `scripts/_analysis/FORMAT_structure.md`, `scripts/_analysis/FORMAT_fields.md`, `scripts/_analysis/FORMAT_logic.md`
 
-### Launch 3 subagents in parallel (single message, 3 Task calls):
+### Launch 3 subagents in parallel (single message, 3 Subagent calls)
 
 | # | Subagent | Model | Reads | Writes |
 |---|----------|-------|-------|--------|
@@ -86,13 +95,14 @@ Fill in the `{placeholders}` in each prompt template with the actual file paths 
 
 ### For T1/T2 or Mode A:
 
-Skip subagents. The template is simple enough for direct handling:
+Skip analysis subagents:
 - T1/T2: Read the source and build directly using patterns from this skill file
-- Mode A: Read the existing template from the database, apply the requested change
+- Mode A: Read the existing template from the database and apply the requested change
 
-## STEP 3: Launch Builder Subagent (T3+ Mode B/C)
+## Step 3: Launch Builder Subagent (T3+ Mode B/C)
 
-Launch a single Builder subagent using the Task tool (default model, NOT fast).
+Launch a single Builder subagent using the Subagent tool
+(default model, NOT fast).
 
 The builder reads the 3 analysis outputs + this SKILL.md + source document (for verbatim text).
 See the Builder prompt template in `SUBAGENT-PROMPTS.md`.
@@ -117,10 +127,11 @@ Launch 2 validation subagents in parallel:
 
 Build directly, then run `scripts/tools/validate_vitec_template.py` yourself. No subagents needed.
 
-## STEP 3 (legacy): Direct Pipeline Execution
+## Fallback Path: Direct Pipeline Execution
 
-For cases where subagents are not available or for simple tasks, follow `AGENT-2B-PIPELINE-DESIGN.md`
-stages S1-S10 directly. This is the fallback path.
+If subagents are unavailable, or if the task is simple enough to avoid them,
+follow `AGENT-2B-PIPELINE-DESIGN.md` stages S1-S10 directly. This is the
+fallback path.
 
 ---
 
