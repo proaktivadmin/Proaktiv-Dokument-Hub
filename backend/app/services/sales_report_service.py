@@ -11,7 +11,6 @@ from __future__ import annotations
 import io
 import logging
 from datetime import datetime
-from typing import Any
 
 from app.config import settings
 from app.services.vitec_hub_service import VitecHubService
@@ -166,7 +165,7 @@ class SalesReportService:
     ) -> bytes:
         """Generate Excel workbook bytes."""
         import openpyxl
-        from openpyxl.styles import Alignment, Font
+        from openpyxl.styles import Font
 
         wb = openpyxl.Workbook()
         ws = wb.active
