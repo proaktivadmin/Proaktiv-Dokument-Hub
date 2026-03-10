@@ -62,10 +62,10 @@ def validate(html: str, tier: int = 4) -> list[tuple[str, bool, str]]:
           has_h1_css,
           "Add #vitecTemplate h1 { text-align: center; font-size: 14pt; } to <style>")
 
-    has_h2_css = bool(re.search(r"margin:\s*30px\s+0\s+0\s+-20px", html))
+    has_h2_css = bool(re.search(r"#vitecTemplate\s+h2\s*\{[^}]*margin:[^}]*-20px", html, re.DOTALL))
     check("A", "H2 CSS styling with negative margin (-20px)",
           has_h2_css,
-          "Add #vitecTemplate h2 { font-size: 11pt; margin: 30px 0 0 -20px; } to <style>")
+          "Add #vitecTemplate h2 { font-size: 11pt; margin: 12px 0 4px -20px; } (or 30px 0 0 -20px) to <style>")
 
     has_article_padding = bool(re.search(r"article\s*\{[^}]*padding-left:\s*20px", html))
     check("A", "Article padding-left: 20px (production standard)",

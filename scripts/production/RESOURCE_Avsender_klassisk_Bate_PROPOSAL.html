@@ -1,0 +1,50 @@
+<!-- PROPOSAL: Resource template "Avsender klassisk Bate" -->
+<style type="text/css">
+  #AvsenderKlassisk td {
+    padding-left: 0;
+    vertical-align: top;
+  }
+  #AvsenderKlassisk .small {
+    font-size: 8pt;
+  }
+</style>
+
+<table id="AvsenderKlassisk" style="page-break-inside:avoid; width:100%" vitec-if="Model.dokumentoutput == &quot;pdf&quot;">
+  <tbody>
+    <tr>
+      <td>
+        <br />
+        <strong>Med vennlig hilsen</strong>
+      </td>
+    </tr>
+    <tr>
+      <td>[[avsender.meglerkontor.navn]]</td>
+    </tr>
+    <tr>
+      <td style="height:1.1cm">&nbsp;</td>
+    </tr>
+    <tr>
+      <td>[[avsender.navn]]</td>
+    </tr>
+    <tr>
+      <td class="small">[[avsender.tittel]]</td>
+    </tr>
+    <tr>
+      <td class="small">Telefon: [[avsender.mobiltlf]]</td>
+    </tr>
+    <tr>
+      <td class="small">E-post: [[avsender.epost]]</td>
+    </tr>
+  </tbody>
+</table>
+
+<div style="font-family:calibri,sans-serif; font-size:11pt" vitec-if="Model.dokumentoutput == &quot;email&quot;">
+  <br />
+  <br />
+  <span>Med vennlig hilsen</span><br />
+  <span>[[avsender.navn]]</span><br />
+  <span>[[avsender.tittel]]</span><br />
+  <span>[[avsender.meglerkontor.navn]]</span><br />
+  <span>Mobil: [[avsender.mobiltlf]], e-post: [[avsender.epost]]</span><br />
+  <span>Bes&oslash;ksadresse: [[avsender.meglerkontor.besoksadresse]], [[avsender.meglerkontor.postnr]] [[avsender.meglerkontor.poststed]]</span>
+</div>

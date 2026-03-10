@@ -1,0 +1,79 @@
+<!-- PROPOSAL: Resource template "Mottaker klassisk Bate" -->
+<style type="text/css">
+  #MottakerKlassisk td {
+    padding-left: 0;
+    vertical-align: top;
+  }
+  #MottakerKlassisk .small {
+    font-size: 8pt;
+  }
+  #MottakerKlassisk .right {
+    text-align: right;
+  }
+</style>
+
+<table id="MottakerKlassisk" style="table-layout:fixed; width:100%" vitec-if="Model.dokumentoutput == &quot;pdf&quot;">
+  <tbody>
+    <tr>
+      <td colspan="100" style="height:0.8cm">&nbsp;</td>
+    </tr>
+    <tr>
+      <td colspan="58">
+        <div><strong>[[mottaker.navn]]</strong></div>
+        <div>&nbsp;</div>
+        <div>[[mottaker.adresse]]</div>
+        <div>[[mottaker.postnr]] [[mottaker.poststed]]</div>
+      </td>
+      <td colspan="42" class="right">
+        <div><strong>[[avsender.meglerkontor.navn]]</strong></div>
+        <div><strong>ORG.NR.: [[avsender.meglerkontor.orgnr]]</strong></div>
+        <div class="small">&nbsp;</div>
+        <div class="small">Adresse: [[avsender.meglerkontor.besoksadresse]]</div>
+        <div class="small">Postadr.: [[avsender.meglerkontor.adresse]]</div>
+        <div class="small">[[avsender.meglerkontor.postnr]] [[avsender.meglerkontor.poststed]], Norge</div>
+        <div class="small">__________________</div>
+        <div class="small">T: [[avsender.meglerkontor.tlf]]</div>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="100" style="height:0.5cm">&nbsp;</td>
+    </tr>
+    <tr>
+      <td colspan="25">
+        <div>V&aring;r referanse:</div>
+        <div>[[oppdrag.nr]]</div>
+      </td>
+      <td colspan="25">
+        <div>V&aring;r saksbehandler:</div>
+        <div>[[avsender.navn]]</div>
+      </td>
+      <td colspan="25">
+        <div>Telefon:</div>
+        <div>[[avsender.mobiltlf]]</div>
+      </td>
+      <td colspan="25">
+        <div>V&aring;r dato:</div>
+        <div>[[dagensdato]]</div>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="100" style="height:0.8cm">&nbsp;</td>
+    </tr>
+  </tbody>
+</table>
+
+<table style="table-layout:fixed; width:100%" vitec-if="Model.dokumentoutput == &quot;email&quot;">
+  <tbody>
+    <tr>
+      <td>
+        <div><strong>[[mottaker.navn]]</strong></div>
+        <div>[[mottaker.adresse]]</div>
+        <div>[[mottaker.postnr]] [[mottaker.poststed]]</div>
+        <div style="margin-top:8px">V&aring;r referanse: [[oppdrag.nr]]</div>
+        <div>V&aring;r saksbehandler: [[avsender.navn]]</div>
+        <div>Telefon: [[avsender.mobiltlf]]</div>
+        <div>V&aring;r dato: [[dagensdato]]</div>
+      </td>
+    </tr>
+  </tbody>
+</table>

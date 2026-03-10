@@ -1,0 +1,145 @@
+<div id="vitecTemplate">
+<style type="text/css">
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap');
+
+#vitecTemplate {
+    counter-reset: section;
+    font-family: 'Open Sans', 'Segoe UI', Arial, sans-serif;
+    font-size: 11px;
+    line-height: 1.5;
+    color: #272630;
+}
+
+#vitecTemplate .avoid-page-break { page-break-inside: avoid; }
+#vitecTemplate article { padding-left: 20px; }
+#vitecTemplate h1 { text-align: left; font-size: 14pt; margin: 0; padding: 0; }
+#vitecTemplate h2 { font-size: 11pt; margin: 24px 0 0 -20px; padding: 0; }
+#vitecTemplate p { margin: 0 0 12px 0; }
+#vitecTemplate ol { margin: 0 0 12px 0; padding-left: 20px; }
+#vitecTemplate li { margin-bottom: 6px; }
+
+#vitecTemplate .letter-wrap {
+    max-width: 100%;
+    background: #FDFCFA;
+    padding: 40px 50px;
+}
+
+#vitecTemplate .letter-meta-top {
+    text-align: right;
+    font-size: 9px;
+    color: #888;
+    letter-spacing: 1px;
+    margin-bottom: 30px;
+}
+
+#vitecTemplate .letter-h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 28px;
+    color: #272630;
+    font-weight: 400;
+    margin-bottom: 8px;
+}
+
+#vitecTemplate .letter-h1 em { font-style: italic; color: #BCAB8A; }
+
+#vitecTemplate .property-line {
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: #888;
+    padding: 0 0 0 18px;
+    border-left: 2px solid #BCAB8A;
+    margin-bottom: 28px;
+}
+
+#vitecTemplate .salutation {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 14px;
+    color: #272630;
+    margin-bottom: 20px;
+}
+
+#vitecTemplate .detail-box {
+    background: #272630;
+    color: #FDFCFA;
+    padding: 16px 20px;
+    margin: 20px 0;
+    border-left: 4px solid #BCAB8A;
+}
+
+#vitecTemplate .detail-box table { width: 100%; }
+#vitecTemplate .detail-box td { padding: 4px 0; }
+#vitecTemplate .detail-box .k { color: rgba(255,255,255,0.7); width: 45%; }
+#vitecTemplate .detail-box .v { font-weight: 600; text-align: right; width: 55%; }
+
+#vitecTemplate .signature-block {
+    margin-top: 36px;
+    padding-top: 20px;
+    border-top: 1px solid #e8e2d8;
+    font-size: 10px;
+    color: #666;
+}
+
+span.insert:empty {
+    font-size: inherit !important;
+    display: inline-block;
+    background-color: lightpink;
+    min-width: 2em !important;
+    height: .7em !important;
+}
+span.insert:empty:before { content: attr(data-label); }
+#vitecTemplate [data-toggle="buttons"] input { display: none; }
+</style>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="100" class="letter-wrap">
+        <div class="letter-meta-top" vitec-if="Model.dokumentoutput == &quot;pdf&quot;">
+          [[avdeling.sted]] &middot; [[kontrakt.dato]]
+        </div>
+
+        <h1 class="letter-h1">Takk for <em>salget</em></h1>
+        <div class="property-line">
+          [[eiendom.gatenavnognr]] &middot; [[komplettmatrikkel]] &middot; [[eiendom.kommunenavn]] kommune
+        </div>
+
+        <div vitec-template="resource: Mottaker">&nbsp;</div>
+
+        <p class="salutation">
+          Kj&aelig;re <span vitec-if="Model.selgere.Count == 1">[[selger1.fornavn]]</span><span vitec-if="Model.selgere.Count &gt; 1">[[selger1.fornavn]] og [[selger2.fornavn]]</span>,
+        </p>
+
+        <p>
+          Vi gratulerer <span vitec-if="Model.selgere.Count == 1">deg</span><span vitec-if="Model.selgere.Count &gt; 1">dere</span> med salget. Det er n&aring; inng&aring;tt bindende avtale mellom <span vitec-if="Model.selgere.Count == 1">deg</span><span vitec-if="Model.selgere.Count &gt; 1">dere</span> og kj&oslash;per.
+          <span vitec-if="Model.eiendom.eieform != &quot;Selveier&quot;"> Forutsetningen er at <span vitec-if="Model.oppdrag.erdetforkjopsfrist == true">forkj&oslash;psretten ikke benyttes og at </span><span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">aksjelaget </span><span vitec-if="Model.eiendom.eieform== &quot;Andel&quot;">borettslaget </span><span vitec-if="Model.eiendom.eieform== &quot;Sameie&quot;">sameiet </span>godkjenner kj&oslash;per som ny eier.</span>
+        </p>
+
+        <div class="detail-box avoid-page-break">
+          <table>
+            <tbody>
+              <tr><td class="k">Kj&oslash;pesum</td><td class="v">kr&nbsp;$.UD([[kontrakt.kjopesum]])</td></tr>
+              <tr><td class="k">Overtakelse</td><td class="v">[[kontrakt.overtagelse.dato]] kl. [[kontrakt.overtagelse.klokkeslett]]</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Kontraktsm&oslash;tet avholdes p&aring; v&aring;rt kontor den <strong>[[kontrakt.dato]] kl. [[kontrakt.klokkeslett]]</strong>. Skulle tidspunktet ikke passe, ta kontakt s&aring; vi kan avtale annen tid. Vi forutsetter at <span vitec-if="Model.selgere.Count == 1">du</span><span vitec-if="Model.selgere.Count &gt; 1">dere</span> gjennomg&aring;r vedlagte kj&oslash;pekontrakt f&oslash;r m&oslash;tet.
+        </p>
+
+        <p>
+          Til kontraktsm&oslash;tet ber vi <span vitec-if="Model.selgere.Count == 1">deg</span><span vitec-if="Model.selgere.Count &gt; 1">dere</span> medbringe utfylt oppgj&oslash;rsskjema, pro&amp;contra-skjema og relevante kvitteringer. Er det noe <span vitec-if="Model.selgere.Count == 1">du</span><span vitec-if="Model.selgere.Count &gt; 1">dere</span> &oslash;nsker &aring; dr&oslash;fte f&oslash;r m&oslash;tet, st&aring;r vi til tjeneste.
+        </p>
+
+        <p>Vi ser frem til fortsatt samarbeid frem mot overtakelse.</p>
+
+        <div class="signature-block">
+          <p><strong>[[operativmegler.navn]]</strong></p>
+          <p>[[megler1.tlf]] &middot; [[megler1.epost]]</p>
+        </div>
+
+        <div vitec-template="resource: Avsender">&nbsp;</div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>

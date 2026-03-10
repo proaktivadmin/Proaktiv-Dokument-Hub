@@ -1,0 +1,152 @@
+<div id="vitecTemplate">
+<style type="text/css">
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap');
+
+#vitecTemplate {
+    font-family: 'Open Sans', 'Segoe UI', Arial, sans-serif;
+    font-size: 11px;
+    line-height: 1.5;
+    color: #272630;
+}
+
+#vitecTemplate .avoid-page-break { page-break-inside: avoid; }
+#vitecTemplate p { margin: 0 0 12px 0; }
+
+#vitecTemplate .letter-wrap {
+    max-width: 100%;
+    background: #FDFCFA;
+    padding: 40px 50px;
+}
+
+#vitecTemplate .letter-meta-top {
+    text-align: right;
+    font-size: 9px;
+    color: #888;
+    letter-spacing: 1px;
+    margin-bottom: 30px;
+}
+
+#vitecTemplate .letter-h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 28px;
+    color: #272630;
+    font-weight: 400;
+    margin-bottom: 8px;
+}
+
+#vitecTemplate .letter-h1 em { font-style: italic; color: #BCAB8A; }
+
+#vitecTemplate .property-line {
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: #888;
+    padding: 0 0 0 18px;
+    border-left: 2px solid #BCAB8A;
+    margin-bottom: 28px;
+}
+
+#vitecTemplate .salutation {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 14px;
+    color: #272630;
+    margin-bottom: 20px;
+}
+
+#vitecTemplate .detail-box {
+    background: #272630;
+    color: #FDFCFA;
+    padding: 16px 20px;
+    margin: 20px 0;
+    border-left: 4px solid #BCAB8A;
+}
+
+#vitecTemplate .detail-box table { width: 100%; }
+#vitecTemplate .detail-box td { padding: 4px 0; }
+#vitecTemplate .detail-box .k { color: rgba(255,255,255,0.7); width: 45%; }
+#vitecTemplate .detail-box .v { font-weight: 600; text-align: right; width: 55%; }
+
+#vitecTemplate .signature-block {
+    margin-top: 36px;
+    padding-top: 20px;
+    border-top: 1px solid #e8e2d8;
+    font-size: 10px;
+    color: #666;
+}
+
+span.insert:empty {
+    font-size: inherit !important;
+    display: inline-block;
+    background-color: lightpink;
+    min-width: 2em !important;
+    height: .7em !important;
+}
+span.insert:empty:before { content: attr(data-label); }
+#vitecTemplate [data-toggle="buttons"] input { display: none; }
+</style>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="100" class="letter-wrap">
+        <div class="letter-meta-top" vitec-if="Model.dokumentoutput == &quot;pdf&quot;">
+          [[avdeling.sted]] &middot; [[kontrakt.dato]]
+        </div>
+
+        <h1 class="letter-h1">Takk for <em>kj&oslash;pet</em></h1>
+        <div class="property-line">
+          [[eiendom.gatenavnognr]] &middot; [[komplettmatrikkelutvidet]] &middot; [[eiendom.kommunenavn]] kommune
+        </div>
+
+        <div vitec-template="resource: Mottaker">&nbsp;</div>
+
+        <p class="salutation">
+          Kj&aelig;re <span vitec-if="Model.kjopere.Count == 1">[[kjoper1.fornavn]]</span><span vitec-if="Model.kjopere.Count &gt; 1">[[kjoper1.fornavn]] og [[kjoper2.fornavn]]</span>,
+        </p>
+
+        <p>
+          Vi viser til <span vitec-if="Model.kjopere.Count == 1">ditt</span><span vitec-if="Model.kjopere.Count &gt; 1">deres</span> uforbeholdne kj&oslash;petilbud p&aring; ovennevnte eiendom stort kr&nbsp;$.UD([[kontrakt.kjopesum]]) + omkostninger, med overtakelse den [[kontrakt.overtagelse.dato]] kl. [[kontrakt.overtagelse.klokkeslett]].
+        </p>
+
+        <p>
+          Vi gratulerer <span vitec-if="Model.kjopere.Count == 1">deg</span><span vitec-if="Model.kjopere.Count &gt; 1">dere</span> med at budet er akseptert av selger. <span vitec-if="Model.eiendom.eieform== &quot;Sameie&quot;">S&oslash;knad om styrets godkjenning vil bli oversendt forretningsf&oslash;rer. </span><span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot; || Model.eiendom.eieform== &quot;Andel&quot;)">Etter lov om borettslag er det 20 dagers frist for avklaring av forkj&oslash;psrett for borettslagets medlemmer. Vi vil underette <span vitec-if="Model.kjopere.Count == 1">deg</span><span vitec-if="Model.kjopere.Count &gt; 1">dere</span> straks dette er avklart. S&oslash;knad om styrets godkjenning vil bli oversendt forretningsf&oslash;rer.</span> For &oslash;vrig er tilbud og aksept gitt uten forbehold.
+        </p>
+
+        <div class="detail-box avoid-page-break">
+          <table>
+            <tbody>
+              <tr><td class="k">Kj&oslash;pesum</td><td class="v">kr&nbsp;$.UD([[kontrakt.kjopesum]]) + omkostninger</td></tr>
+              <tr><td class="k">Overtakelse</td><td class="v">[[kontrakt.overtagelse.dato]] kl. [[kontrakt.overtagelse.klokkeslett]]</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Vedlagt f&oslash;lger kj&oslash;pekontrakten for gjennomlesing. Ta kontakt dersom det er noe som er uklart eller <span vitec-if="Model.kjopere.Count == 1">du</span><span vitec-if="Model.kjopere.Count &gt; 1">dere</span> har sp&oslash;rsm&aring;l til den. Om kort tid vil vi sende ut kj&oslash;pekontrakten for elektronisk signering med BankID.
+        </p>
+
+        <p>
+          Ved 2 kj&oslash;pere eller flere legger vi til grunn lik eierbr&oslash;k, om ikke annet blir opplyst/avtalt.
+        </p>
+
+        <p>
+          Vi gj&oslash;r oppmerksom p&aring; at vi forbeholder oss retten til &aring; benytte salgsinformasjon tilknyttet eiendommen i markedsf&oslash;ring av kontoret. Ta kontakt dersom <span vitec-if="Model.kjopere.Count == 1">du</span><span vitec-if="Model.kjopere.Count &gt; 1">dere</span> &oslash;nsker &aring; reservere <span vitec-if="Model.kjopere.Count == 1">deg</span><span vitec-if="Model.kjopere.Count &gt; 1">dere</span> mot dette.
+        </p>
+
+        <p>
+          Boligkj&oslash;perforsikring er en forsikring megler anbefaler. Det er en rettshjelpsforsikring som gir trygghet og profesjonell juridisk hjelp dersom det oppdages uventede feil eller mangler ved boligen de neste fem &aring;rene. Les mer om Boligkj&oslash;perforsikring i vedlagte materiell eller kontakt megler. Forsikringen m&aring; bestilles gjennom megler senest ved kontraktsunderskrift.
+        </p>
+
+        <p>
+          Er det noe <span vitec-if="Model.kjopere.Count == 1">du</span><span vitec-if="Model.kjopere.Count &gt; 1">dere</span> &oslash;nsker &aring; dr&oslash;fte med oss, st&aring;r vi med glede til tjeneste. Vi ser frem til et fortsatt godt samarbeid i denne kj&oslash;psprosessen.
+        </p>
+
+        <div class="signature-block">
+          <p><strong>[[operativmegler.navn]]</strong></p>
+          <p>[[megler1.tlf]] &middot; [[megler1.epost]]</p>
+        </div>
+
+        <div vitec-template="resource: Avsender">Vedlegg: budjournal, tilbeh&oslash;rsliste, informasjon boligkj&oslash;perforsikring</div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>

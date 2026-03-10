@@ -1,0 +1,790 @@
+<div id="vitecTemplate">
+<style type="text/css">
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap');
+
+/* ===== REQUIRED VITEC SHELL CSS ===== */
+#vitecTemplate {
+    counter-reset: section;
+    font-family: 'Open Sans', 'Segoe UI', Arial, sans-serif;
+    font-size: 11px;
+    line-height: 1.4;
+    color: #272630;
+}
+
+#vitecTemplate article.item:not(article.item article.item) {
+    counter-increment: section;
+    counter-reset: subsection;
+}
+
+#vitecTemplate article.item article.item {
+    counter-increment: subsection;
+}
+
+#vitecTemplate article.item:not(article.item article.item) h2::before {
+    content: counter(section) ". ";
+}
+
+#vitecTemplate article.item article.item h3::before {
+    content: counter(section) "." counter(subsection) ". ";
+}
+
+#vitecTemplate .avoid-page-break {
+    page-break-inside: avoid;
+}
+
+#vitecTemplate article {
+    padding-left: 20px;
+}
+
+#vitecTemplate article article {
+    padding-left: 0;
+}
+
+#vitecTemplate h1 {
+    text-align: left;
+    font-size: 14pt;
+    margin: 0;
+    padding: 0;
+}
+
+#vitecTemplate h2 {
+    font-size: 11pt;
+    margin: 30px 0 0 -20px;
+    padding: 0;
+}
+
+#vitecTemplate h3 {
+    font-size: 10pt;
+    margin: 20px 0 0 0;
+    padding: 0;
+}
+
+#vitecTemplate table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+#vitecTemplate table .borders {
+    width: 100%;
+    table-layout: fixed;
+    border-bottom: solid 1px black;
+    border-top: solid 1px black;
+}
+
+#vitecTemplate .roles-table tbody:last-child tr:last-child td {
+    display: none;
+}
+
+/* Sum rows must always be visible regardless of tbody position */
+#vitecTemplate .roles-table tr.c-sum td {
+    display: table-cell !important;
+}
+
+#vitecTemplate a.bookmark {
+    color: #000;
+    font-style: italic;
+    text-decoration: none;
+}
+
+#vitecTemplate .liste:last-child .separator {
+    display: none;
+}
+
+/* ===== INSERT FIELD CSS (unscoped) ===== */
+span.insert:empty {
+    font-size: inherit !important;
+    line-height: inherit !important;
+    display: inline-block;
+    background-color: lightpink;
+    min-width: 2em !important;
+    height: .7em !important;
+    text-align: center;
+}
+
+span.insert:empty:before {
+    content: attr(data-label);
+}
+
+span.insert:empty:hover {
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.insert-table {
+    display: inline-table;
+}
+
+.insert-table > span,
+.insert-table > span.insert {
+    display: table-cell;
+}
+
+/* ===== BOUTIQUE HOTEL -- LAYOUT ===== */
+
+#vitecTemplate .page-layout {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+/* Left column: cream gradient -- full spec values */
+#vitecTemplate .col-left {
+    width: 50%;
+    background: #F0EDE6;
+    padding: 60px 45px;
+    vertical-align: top;
+    border-right: 1px solid rgba(188, 171, 138, 0.2);
+}
+
+/* Right column: compact padding -- agreed exception for single-page fit */
+#vitecTemplate .col-right {
+    width: 50%;
+    background: #FDFCFA;
+    padding: 28px 32px;
+    vertical-align: top;
+}
+
+/* Inner push-to-bottom table for left column */
+#vitecTemplate .col-left-inner {
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+/* ===== LEFT COLUMN: LOGO ===== */
+#vitecTemplate .office-logo {
+    max-width: 120px;
+    max-height: 38px;
+    width: auto;
+    height: auto;
+    display: block;
+    margin-bottom: 60px;
+}
+
+/* ===== LEFT COLUMN: H1 TITLE ===== */
+#vitecTemplate .boutique-h1 {
+    font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    font-size: 36px;
+    color: #272630;
+    line-height: 1.2;
+    font-weight: 400;
+    margin: 0 0 20px 0;
+    padding: 0;
+}
+
+#vitecTemplate .boutique-h1 em {
+    font-style: italic;
+    color: #BCAB8A;
+}
+
+/* ===== LEFT COLUMN: PROPERTY LINE ===== */
+#vitecTemplate .property-line {
+    font-family: 'Open Sans', 'Segoe UI', Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: #888;
+    padding: 0 0 0 20px;
+    border-left: 2px solid #BCAB8A;
+    line-height: normal;
+    margin-bottom: 40px;
+}
+
+/* ===== LEFT COLUMN: FILOSOFI ===== */
+#vitecTemplate .klamme-img {
+    width: 42px;
+    height: auto;
+    display: block;
+    margin-bottom: 8px;
+    opacity: 0.9;
+}
+
+#vitecTemplate .quote-text {
+    font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 18px;
+    line-height: 1.7;
+    color: #3a3a3a;
+    margin-bottom: 20px;
+    font-weight: 400;
+}
+
+#vitecTemplate .quote-attribution {
+    font-family: 'Open Sans', 'Segoe UI', Arial, sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #BCAB8A;
+}
+
+/* ===== LEFT COLUMN: BROKER CARD ===== */
+#vitecTemplate .broker-divider {
+    border-top: 1px solid rgba(188, 171, 138, 0.3);
+    margin: 0 0 14px 0;
+}
+
+#vitecTemplate .broker-photo {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: block;
+    margin-bottom: 15px;
+    object-fit: cover;
+}
+
+#vitecTemplate .broker-name {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 18px;
+    color: #272630;
+    font-weight: 400;
+    margin-bottom: 4px;
+}
+
+#vitecTemplate .broker-title-text {
+    font-family: 'Open Sans', 'Segoe UI', Arial, sans-serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #BCAB8A;
+    margin-bottom: 12px;
+}
+
+#vitecTemplate .broker-contact {
+    font-family: 'Open Sans', 'Segoe UI', Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    color: #666;
+    line-height: 1.6;
+}
+
+/* ===== RIGHT COLUMN: PRICE HEADER ===== */
+#vitecTemplate .price-header {
+    text-align: right;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e8e2d8;
+}
+
+#vitecTemplate .price-label {
+    font-family: 'Open Sans', 'Segoe UI', Arial, sans-serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 2px;
+    font-weight: 400;
+}
+
+#vitecTemplate .price-value {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 20px;
+    color: #272630;
+    font-weight: 400;
+}
+
+#vitecTemplate .price-note {
+    font-family: 'Open Sans', 'Segoe UI', Arial, sans-serif;
+    font-size: 10px;
+    color: #999;
+    margin-top: 1px;
+    font-weight: 300;
+}
+
+/* ===== RIGHT COLUMN: SECTIONS ===== */
+/* v03: section spacing - more breathing room */
+#vitecTemplate .section {
+    margin-bottom: 18px;
+}
+
+#vitecTemplate .section-hdr {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    margin-bottom: 8px;
+}
+
+#vitecTemplate .section-hdr td {
+    padding: 0;
+    vertical-align: middle;
+}
+
+/* Primary section numbers (01, 02) */
+#vitecTemplate .section-number {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 20px;
+    color: #BCAB8A;
+    font-weight: 400;
+    width: 34px;
+}
+
+/* Section title (all sections -- spec: 9px, 3px letter-spacing, weight 400) */
+#vitecTemplate .section-hdr td h2 {
+    font-family: 'Open Sans', 'Segoe UI', Arial, sans-serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #272630;
+    padding-left: 8px;
+    font-weight: 400;
+    margin: 0;
+}
+
+/* Cost rows -- primary */
+#vitecTemplate .roles-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+#vitecTemplate .roles-table td.c-label {
+    font-family: 'Open Sans', 'Segoe UI', Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    color: #555;
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    width: 66%;
+}
+
+#vitecTemplate .roles-table td.c-value {
+    font-family: 'Open Sans', 'Segoe UI', Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: #272630;
+    text-align: right;
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    width: 34%;
+}
+
+#vitecTemplate .roles-table tr.c-sum td {
+    border-top: 2px solid #272630;
+    border-bottom: none;
+    font-weight: 600;
+    padding-top: 6px;
+    padding-bottom: 3px;
+}
+
+
+/* ===== TOTAL BOX (spec: centered, padding 25px, marginTop 30px) ===== */
+/* v03: sum-box spacing */
+#vitecTemplate .sum-box {
+    background: #272630;
+    padding: 25px;
+    margin-top: 36px;
+    text-align: center;
+}
+
+#vitecTemplate .sum-box-label {
+    font-family: 'Open Sans', 'Segoe UI', Arial, sans-serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 400;
+    margin-bottom: 8px;
+    display: block;
+}
+
+#vitecTemplate .sum-box-value {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 24px;
+    color: #FDFCFA;
+    font-weight: 400;
+    display: block;
+}
+
+/* Section title without number (Andre utgifter) */
+#vitecTemplate .section-title-no-num {
+    font-family: 'Open Sans', 'Segoe UI', Arial, sans-serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #272630;
+    padding-left: 0;
+    font-weight: 400;
+    margin: 0;
+}
+
+/* Simple total line at bottom of right column */
+/* v02: summary styling - bold, underline, navy */
+#vitecTemplate .total-info {
+    font-family: 'Open Sans', 'Segoe UI', Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-decoration: underline;
+    color: #272630;
+    text-align: right;
+    margin-top: 12px;
+}
+
+/* Empty collection notice */
+#vitecTemplate .empty-notice {
+    font-size: 11px;
+    color: #888;
+    font-style: italic;
+    margin: 4px 0 0 0;
+}
+
+/* ===== PHILOSOPHY CORNER FRAME ===== */
+/* Fokuselement per brand: upper-right and lower-left (Klamme Bronze) */
+#vitecTemplate .quote-frame {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+#vitecTemplate .qf-tr {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    vertical-align: top;
+    text-align: right;
+}
+
+#vitecTemplate .qf-bl {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    vertical-align: bottom;
+    text-align: left;
+}
+
+/* Top-right: CSS L-bracket (no base64 - Vitec PDF safe) */
+#vitecTemplate .qf-tr {
+    border-top: 1.5px solid #BCAB8A;
+    border-right: 1.5px solid #BCAB8A;
+}
+
+/* Bottom-left: CSS L-bracket (Vitec PDF engine may choke on transform) */
+#vitecTemplate .qf-bl {
+    border-bottom: 1.5px solid #BCAB8A;
+    border-left: 1.5px solid #BCAB8A;
+}
+
+
+#vitecTemplate .qf-edge {
+    width: 28px;
+    padding: 0;
+}
+
+#vitecTemplate .qf-content {
+    padding: 8px 16px 8px 14px;
+    vertical-align: middle;
+}
+
+</style>
+<style type="text/css">
+/* Klikkbare sjekkbokser og radioknapper */
+label.btn {
+  display: inline;
+  text-transform: none;
+  white-space: normal;
+  padding: 0;
+  vertical-align: baseline;
+  outline: none;
+  font-size: inherit;
+}
+label.btn:active,
+label.btn.active {
+  box-shadow: none;
+  outline: none;
+}
+.svg-toggle {
+  display: inline-block !important;
+  width: 16px;
+  height: 16px;
+  margin: 0 5px;
+  vertical-align: bottom;
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none !important;
+  cursor: pointer;
+  white-space: normal;
+  text-align: left;
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+  background-position: center center;
+}
+.svg-toggle.checkbox {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+}
+.svg-toggle.checkbox.active,
+.btn.active > .svg-toggle.checkbox {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+  box-shadow: none !important;
+}
+#vitecTemplate [data-toggle="buttons"] input {
+  display: none;
+}
+</style>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="100" style="padding: 0;">
+
+        <!-- ================================================================ -->
+        <!-- BOUTIQUE HOTEL -- TWO-COLUMN LAYOUT                               -->
+        <!-- ================================================================ -->
+        <table class="page-layout">
+          <tbody>
+            <tr>
+
+              <!-- =========================================================== -->
+              <!-- LEFT COLUMN                                                  -->
+              <!-- =========================================================== -->
+              <td class="col-left">
+                <table class="col-left-inner">
+                  <tbody>
+
+                    <!-- ═══════════════════════════════════════════════ -->
+                    <!-- ZONE 1 -- TOP: Logo + Title + Address            -->
+                    <!-- ═══════════════════════════════════════════════ -->
+                    <tr>
+                      <td style="vertical-align: top; padding: 0;">
+
+                        <!-- Logo -->
+                        <svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 283.46 64.54" style="width:120px; height:auto; display:block; margin-bottom:30px;"><path fill="#1d1d1d" stroke-width="0" d="m283.46,2.54v-1.2h-12.13v1.2c4.33.53,4.6,1.37,3.53,4.57-1.66,5.19-5.35,14.86-8.13,21.76h-.11c-3.31-8.45-7.27-18.87-8.66-22.77-.85-2.35-.69-3.13,3.1-3.56v-1.2h-13.58v1.2c3.21.32,4.06,1.15,5.61,5.16,2.94,7.38,7.43,19.19,11.01,28.97h1.87c4.06-11.06,9.57-24.37,11.06-28.01,2.03-4.86,2.78-5.7,6.41-6.12m-57.57,33.54h14.54v-1.13c-4.33-.32-4.76-1.06-4.76-5.6V8.07c0-4.54.43-5.21,4.76-5.53v-1.2h-14.54v1.2c4.33.32,4.76.99,4.76,5.53v21.27c0,4.54-.43,5.28-4.76,5.6v1.13Zm-8.26-26.3l1.21-.16c-.27-3.15-.53-7.22-.53-9.62h-1.18c-.8,1.02-1.28,1.34-2.73,1.34h-21.22c-1.5,0-2.14-.11-2.94-1.34h-1.12c-.11,2.89-.37,6.41-.64,9.78h1.21c.59-2.41,1.57-3.96,2.21-4.86.75-1.18,1.76-1.66,6.2-1.66h3.05v26.14c0,4.33-.43,4.81-5.24,5.13v1.55h15.72v-1.55c-5.03-.32-5.45-.86-5.45-5.13V3.26h3.53c3.9,0,4.81.37,5.72,1.6.69.91,1.62,2.3,2.21,4.92m-43.66,26.3h8.66v-1.13c-2.51-.32-3.63-1.33-6.36-4.27-2.89-3.26-8.39-9.68-12.35-14.75,3.42-3.42,6.95-7,9.14-9.09,3.37-3.05,4.76-3.93,8.66-4.31v-1.2h-12.99v1.2h1.18c2.41.27,2.46,1.37.96,3.24-2.3,2.83-5.67,6.36-8.71,9.35-1.55,1.39-2.62,2.19-3.8,2.46v-9.3c0-4.7.48-5.43,4.54-5.75v-1.2h-14.11v1.2c4.17.32,4.65.99,4.65,5.75v20.85c0,4.65-.48,5.49-4.49,5.82v1.13h14.27v-1.13c-4.38-.32-4.86-1.17-4.86-5.82v-10.05c.91-.16,1.6.05,2.83,1.55,4.6,5.61,8.98,11.06,12.78,15.45m-45.8,0h13.52v-1.13c-3.47-.37-4.17-1.27-5.88-5.92-3.42-9.25-7-19.3-10.32-28.49l-1.87.53-11.06,27.96c-1.82,4.65-2.57,5.44-5.99,5.92v1.13h11.71v-1.13c-4.01-.43-4.44-1.38-3.37-4.64.75-2.19,1.5-4.38,2.3-6.63h11.22c1.12,3.05,2.14,5.83,2.78,7.8.75,2.14.32,3.45-3.05,3.88v.72Zm-.53-14.81h-9.57c1.55-4.33,3.21-8.82,4.87-13.26h.16l4.54,13.26Zm-24.55-2.99c0-10.69-8.18-17.75-17.32-17.75h-.05c-11.38,0-18.12,8.93-18.12,18.49,0,10.32,7.64,17.85,17.53,17.85s17.96-7.06,17.96-18.6m-5.99,1.5c0,10.16-5.08,15.13-10.85,15.13-7.43,0-12.67-7.43-12.67-17.27s5.24-15.13,11.01-15.13h.05c6.9,0,12.45,6.04,12.45,17.27m-38.68-9.7c0-6.9-6.7-8.74-12.17-8.74-1.55,0-3.23-.05-4.53,0h0s-9.46,0-9.46,0v1.2c4.12.37,4.54.94,4.54,5.43v21.33c0,4.54-.48,5.33-4.76,5.65v1.13h14.38v-1.13c-4.22-.32-4.7-1.11-4.7-5.65V4.52c.28-1.6,1.28-1.78,3.54-1.78,5.42,0,8.06,3.55,8.06,7.96s-2.07,8.15-7.73,8.15h-3.87v1.44c1.93-.05,3.02-.05,4.95,1.92,1.49,1.52,19.19,28.13,26.14,38.11l2.2,3.47.34.74h10.24l-.22-1.87v-.04c-.08,0-.17,0-.25,0-.92-.13-1.75-.28-2.55-.52-2.43-.99-4.87-3.31-7.07-6.41-1.05-1.49-25.03-36.5-25.03-36.5.1-.06.22-.1.34-.15,5.19-2.11,7.59-4.36,7.59-8.97m-32.07,1.04c0-3.47-1.39-5.99-3.53-7.59-2.14-1.6-5.19-2.19-9.03-2.19H.32v1.2c3.9.27,4.33.88,4.33,5.59v21.22c0,4.44-.43,5.23-4.65,5.6v1.13h14.81l-.03-1.13c-4.7-.37-5.16-1.06-5.16-5.55v-8.23s3.91,1.34,6.25.96c5.2-.51,10.48-4.01,10.48-11.01m-5.61.21c0,6.9-4.22,8.66-7.43,8.66-1.6,0-3.05-.32-3.69-.64V6.09c0-1.39.16-2.03.53-2.41.37-.32,1.39-.59,2.78-.59,4.22,0,7.8,2.35,7.8,8.23"/></svg>
+
+                        <!-- H1 title -->
+                        <h1 class="boutique-h1">Tilbud p&aring;<br><em>megleroppdrag</em></h1>
+
+                        <!-- Property address -->
+                        <div class="property-line">
+                          [[eiendom.gatenavnognr]]<br />
+                          [[eiendom.postnr]] [[eiendom.poststed]]
+                        </div>
+
+                      </td>
+                    </tr>
+
+                    <!-- ═══════════════════════════════════════════════ -->
+                    <!-- FIXED SPACER 1 -- pushes philosophy toward middle -->
+                    <!-- Calibrated for full spec left-col content height -->
+                    <!-- ═══════════════════════════════════════════════ -->
+                    <tr>
+                      <td height="60" style="padding: 0;">&nbsp;</td>
+                    </tr>
+
+                    <!-- ═══════════════════════════════════════════════ -->
+                    <!-- ZONE 2 -- MIDDLE: Philosophy with corner frame   -->
+                    <!-- ═══════════════════════════════════════════════ -->
+                    <tr>
+                      <td style="vertical-align: top; padding: 0;">
+
+                        <!-- Fokuselement: upper-right + lower-left (Klamme Bronze per brand) -->
+                        <table class="quote-frame">
+                          <tbody>
+                            <!-- Top row: TR corner bracket -->
+                            <tr>
+                              <td style="padding: 0; height: 28px;"></td>
+                              <td style="padding: 0; height: 28px;"></td>
+                              <td class="qf-tr"></td>
+                            </tr>
+                            <!-- Content row: quote + attribution -->
+                            <tr>
+                              <td class="qf-edge"></td>
+                              <td class="qf-content">
+                                <div class="quote-text">Det du skal selge, er mer enn en eiendom. For oss er det en annens fremtid &ndash; en kaffekopp ved kj&oslash;kkenbordet, trygge omgivelser og en del av nabolagets sjel.</div>
+                                <div class="quote-attribution">&mdash;&nbsp;Tid som skaper verdi</div>
+                              </td>
+                              <td class="qf-edge"></td>
+                            </tr>
+                            <!-- Bottom row: BL corner bracket -->
+                            <tr>
+                              <td class="qf-bl"></td>
+                              <td style="padding: 0; height: 28px;"></td>
+                              <td class="qf-edge"></td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                      </td>
+                    </tr>
+
+                    <!-- ═══════════════════════════════════════════════ -->
+                    <!-- FIXED SPACER 2 -- anchors broker near bottom     -->
+                    <!-- Calibrated for full spec left-col content height -->
+                    <!-- ═══════════════════════════════════════════════ -->
+                    <tr>
+                      <td height="40" style="padding: 0;">&nbsp;</td>
+                    </tr>
+
+                    <!-- ═══════════════════════════════════════════════ -->
+                    <!-- ZONE 3 -- BOTTOM: Broker card (fixed anchor)     -->
+                    <!-- ═══════════════════════════════════════════════ -->
+                    <tr>
+                      <td style="vertical-align: top; padding: 0;">
+
+                        <div class="broker-divider"></div>
+                        <img src="[[megler1.hovedbilde]]" alt="[[megler1.navn]]" class="broker-photo" />
+                        <div class="broker-name">[[megler1.navn]]</div>
+                        <div class="broker-title-text">[[megler1.tittel]]</div>
+                        <div class="broker-contact">
+                          [[megler1.tlf]]<br />
+                          [[megler1.epost]]
+                        </div>
+
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+
+              <!-- =========================================================== -->
+              <!-- RIGHT COLUMN                                                 -->
+              <!-- =========================================================== -->
+              <td class="col-right">
+
+                <!-- Price header -->
+                <div class="price-header avoid-page-break">
+                  <div class="price-label">Forventet salgspris</div>
+                  <div class="price-value">kr&nbsp;$.UD([[eiendom.pris]])</div>
+                  <div class="price-note" vitec-if="Model.eiendom.eieform != &quot;Selveier&quot; &amp;&amp; Model.eiendom.fellesgjeld != &quot;0&quot;">
+                    + fellesgjeld kr&nbsp;$.UD([[eiendom.fellesgjeld]])
+                  </div>
+                </div>
+
+                <!-- ============================================ -->
+                <!-- 01 VEDERLAG (primary)                        -->
+                <!-- ============================================ -->
+                <div class="section avoid-page-break">
+                  <table class="section-hdr">
+                    <tbody>
+                      <tr>
+                        <td class="section-number" style="width:38px;">01</td>
+                        <td><h2>Vederlag</h2></td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <table class="roles-table">
+                    <tbody>
+                      <tr vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">
+                        <td class="c-label">Provisjon [[oppdrag.provisjonprosent]]&nbsp;% av salgssum</td>
+                        <td class="c-value">kr&nbsp;$.UD([[oppdrag.provisjonberegnet]])</td>
+                      </tr>
+                      <tr vitec-if="Model.oppdrag.vederlagtypefastpris == true">
+                        <td class="c-label">Provisjon av salgssum (fastpris)</td>
+                        <td class="c-value">kr&nbsp;$.UD([[oppdrag.fastpris]])</td>
+                      </tr>
+                    </tbody>
+                    <tbody vitec-foreach="vederlag in Model.selgervederlag.alleposter">
+                      <tr>
+                        <td class="c-label">[[*vederlag.beskrivelse]]</td>
+                        <td class="c-value">kr&nbsp;$.UD([[*vederlag.belop]])</td>
+                      </tr>
+                    </tbody>
+                    <tbody vitec-if="Model.selgervederlag.alleposter.Count == 0">
+                      <tr><td class="c-label">[Mangler vederlagsposter]</td><td class="c-value"></td></tr>
+                    </tbody>
+                    <tbody>
+                      <tr class="c-sum">
+                        <td class="c-label">Sum vederlag</td>
+                        <td class="c-value">kr&nbsp;$.UD([[oppdrag.selgervederlagsum]])</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- ============================================ -->
+                <!-- 02 UTLEGG (primary)                          -->
+                <!-- ============================================ -->
+                <div class="section avoid-page-break">
+                  <table class="section-hdr">
+                    <tbody>
+                      <tr>
+                        <td class="section-number" style="width:38px;">02</td>
+                        <td><h2>Utlegg</h2></td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <div vitec-if="Model.selgerutlegg.alleposter.Count &gt; 0">
+                    <table class="roles-table">
+                      <tbody vitec-foreach="utlegg in Model.selgerutlegg.alleposter">
+                        <tr>
+                          <td class="c-label">[[*utlegg.beskrivelse]]</td>
+                          <td class="c-value">kr&nbsp;$.UD([[*utlegg.belop]])</td>
+                        </tr>
+                      </tbody>
+                      <tbody>
+                        <tr class="c-sum">
+                          <td class="c-label">Sum utlegg</td>
+                          <td class="c-value">kr&nbsp;$.UD([[oppdrag.selgerutleggsum]])</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div vitec-if="Model.selgerutlegg.alleposter.Count == 0">
+                    <p class="empty-notice">[Ingen utlegg registrert]</p>
+                  </div>
+                </div>
+
+                <!-- ============================================ -->
+                <!-- DARK BOX: Sum vederlag og utlegg (above 03)   -->
+                <!-- ============================================ -->
+                <div class="sum-box avoid-page-break">
+                  <span class="sum-box-label">Sum vederlag og utlegg</span>
+                  <span class="sum-box-value">
+                    <span vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">kr&nbsp;$.UD([[oppdrag.selgervederlagmedprovsum]])</span>
+                    <span vitec-if="Model.oppdrag.vederlagtypefastpris == true">kr&nbsp;$.UD([[oppdrag.selgervederlagogfastprissum]])</span>
+                  </span>
+                </div>
+
+                <!-- ============================================ -->
+                <!-- 03 ANDRE UTGIFTER                            -->
+                <!-- ============================================ -->
+                <div class="section avoid-page-break" vitec-if="Model.selgerutgifter.alleposter.Count &gt; 0">
+                  <table class="section-hdr">
+                    <tbody>
+                      <tr>
+                        <td class="section-number" style="width:38px;">03</td>
+                        <td><h2>Andre utgifter (eksterne parter)</h2></td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <table class="roles-table">
+                    <tbody vitec-foreach="utgift in Model.selgerutgifter.alleposter">
+                      <tr>
+                        <td class="c-label">[[*utgift.beskrivelse]]</td>
+                        <td class="c-value">kr&nbsp;$.UD([[*utgift.belop]])</td>
+                      </tr>
+                    </tbody>
+                    <tbody vitec-if="Model.selgerutgifter.alleposter.Count == 0">
+                      <tr><td class="c-label">[Ingen andre utgifter]</td><td class="c-value"></td></tr>
+                    </tbody>
+                    <tbody>
+                      <tr class="c-sum">
+                        <td class="c-label">Sum andre utgifter</td>
+                        <td class="c-value">kr&nbsp;$.UD([[oppdrag.selgerutgiftersum]])</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div vitec-if="Model.selgerutgifter.alleposter.Count == 0">
+                  <!-- 03 skjult n&aring;r ingen andre utgifter -->
+                </div>
+
+                <!-- ============================================ -->
+                <!-- SIMPLE TOTAL LINE (bottom of right column)   -->
+                <!-- ============================================ -->
+                <div class="total-info" vitec-if="Model.selgerutgifter.alleposter.Count &gt; 0">
+                  Totalt kostnadsoverslag inkl. eksterne:&nbsp;
+                  <span vitec-if="Model.oppdrag.vederlagtypeprovisjon == true">kr&nbsp;$.UD([[oppdrag.selgersamletsum]])</span>
+                  <span vitec-if="Model.oppdrag.vederlagtypefastpris == true">kr&nbsp;$.UD([[oppdrag.selgersamletfastprissum]])</span>
+                </div>
+
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>
