@@ -4,18 +4,21 @@ import { useState } from "react";
 import { Header } from "@/components/layout/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Download, BarChart3, Loader2, AlertCircle } from "lucide-react";
 import { downloadSalesReport } from "@/lib/api/reports";
 
 export default function ReportsPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [includeVat, setIncludeVat] = useState(false);
 
   const handleDownload = async () => {
     setLoading(true);
     setError(null);
     try {
-      const blob = await downloadSalesReport({ department_id: 1120 });
+      const blob = await downloadSalesReport({ department_id: 1120, include_vat: includeVat });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -55,7 +58,22 @@ export default function ReportsPage() {
               </div>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
+            <div className="flex items-center space-x-2 rounded-lg border border-[#E5E5E5] p-4">
+              <Checkbox
+                id="include-vat"
+                checked={includeVat}
+                onCheckedChange={(checked) => setIncludeVat(checked === true)}
+              />
+              <div className="space-y-0.5">
+                <Label htmlFor="include-vat" className="text-base font-medium cursor-pointer">
+                  Inkluder mva i beløp
+                </Label>
+                <p className="text-sm text-[#272630]/60">
+                  Summene vises exkl. mva som standard
+                </p>
+              </div>
+            </div>
             <Button
               onClick={handleDownload}
               disabled={loading}

@@ -9,6 +9,7 @@ import { apiClient } from "./config";
 export interface SalesReportParams {
   year?: number;
   department_id?: number;
+  include_vat?: boolean;
 }
 
 /**
@@ -19,6 +20,7 @@ export async function downloadSalesReport(params?: SalesReportParams): Promise<B
   const searchParams = new URLSearchParams();
   if (params?.year) searchParams.set("year", String(params.year));
   if (params?.department_id) searchParams.set("department_id", String(params.department_id));
+  if (params?.include_vat) searchParams.set("include_vat", "true");
 
   const url = `/reports/sales-report${searchParams.toString() ? `?${searchParams}` : ""}`;
   try {
