@@ -1,207 +1,277 @@
 ---
 name: vitec-template-builder
-description: Build production-ready Vitec Next HTML templates from Word-exported source documents. Converts legacy merge fields, adds vitec-if conditionals, vitec-foreach loops, CSS counters, and the full template shell. Use when asked to convert, build, or produce a Vitec template, process a Word document for Vitec Next, or work with flettekoder, vitec-if, or template HTML.
+description: Build production-ready Vitec Next HTML contract templates with flettekoder (merge fields), vitec-if conditionals, and vitec-foreach loops. Use when creating, converting, or editing Vitec document templates, kjøpekontrakter, or any template that uses [[field]] syntax, vitec-if, vitec-foreach, or the vitecTemplate shell. Also applies when converting Word .htm exports to Vitec-compliant HTML.
 ---
 
 # Vitec Template Builder
 
-Build production-ready Vitec Next HTML templates from Word-exported `.htm` source files.
+## Template Shell (always required)
 
-This is NOT a simple conversion — it is domain-specific template engineering that maps legacy merge fields, builds conditional logic, constructs party loops, and wraps content in the Vitec template shell.
-
-## When to Use
-
-- User provides a Word document (.htm, .docx, .rtf) to convert into a Vitec Next template
-- User asks to build, produce, or create a Vitec template
-- User asks to add flettekoder, vitec-if, or vitec-foreach to a template
-- User asks to fix, refine, or improve an existing Vitec template
-- User asks about merge field syntax, conditional patterns, or template structure
-
-## Read First (Required)
-
-Before starting any template work, read these files **in this order**:
-
-1. `.planning/phases/11-template-suite/PRODUCTION-TEMPLATE-PIPELINE.md` — **Primary reference.** Contains the complete pipeline (6 steps), field mapping table, conditional pattern library, party loop patterns, source clue recognition, and quality checklist.
-2. `.planning/vitec-html-ruleset.md` — Sections 1 (Shell), 6 (Tables), 10 (Conditionals), 12 (Validation Checklist)
-3. `.cursor/Alle-flettekoder-25.9.md` — Complete merge field reference (6,494 lines). Search when you encounter an unmapped field.
-
-For the full agent task specification: `.planning/phases/11-template-suite/AGENT-2B-TEMPLATE-BUILDER.md`
-
-## Quick Reference
-
-### Source Format
-
-**Always use "Web Page, Filtered (*.htm)"** exported from Word. This preserves tables, headings, Wingdings checkboxes, and red text markers that other formats lose.
-
-If a `.docx` is provided, recommend re-saving as filtered `.htm` for best results. If that's not possible, use `mammoth` but expect to lose checkbox and color markers.
-
-### Template Shell
-
-Every template must have this outer structure:
+Every template must be wrapped in this exact shell:
 
 ```html
 <div class="proaktiv-theme" id="vitecTemplate">
 <span vitec-template="resource:Vitec Stilark">&nbsp;</span>
 <style type="text/css">
-  /* CSS counters — see PRODUCTION-TEMPLATE-PIPELINE.md Section 3 */
+#vitecTemplate { counter-reset: section; }
+#vitecTemplate article.item:not(article.item article.item) {
+  counter-increment: section;
+  counter-reset: subsection;
+}
+#vitecTemplate article.item article.item { counter-increment: subsection; }
+#vitecTemplate article.item:not(article.item article.item) > h2::before {
+  content: counter(section) ". ";
+}
+#vitecTemplate article.item article.item > h3::before {
+  content: counter(section) "." counter(subsection) ". ";
+}
+#vitecTemplate article { padding-left: 20px; }
+#vitecTemplate article article { padding-left: 0; }
+#vitecTemplate .avoid-page-break { page-break-inside: avoid; }
+#vitecTemplate .roles-table { width: 100%; table-layout: fixed; border-collapse: collapse; }
+#vitecTemplate .roles-table th { text-align: left; padding: 4px 6px; border-bottom: 1px solid #000; }
+#vitecTemplate .roles-table td { padding: 4px 6px; vertical-align: top; }
+#vitecTemplate .roles-table tbody:last-child tr:last-child td { display: none; }
+#vitecTemplate .costs-table { width: 100%; table-layout: fixed; border-collapse: collapse; }
+#vitecTemplate .costs-table td { padding: 2px 6px; vertical-align: top; }
+#vitecTemplate .costs-table tr.sum-row td { border-top: 1px solid #000; font-weight: bold; }
+#vitecTemplate .insert { border-bottom: 1px dotted #999; min-width: 80px; display: inline-block; }
 </style>
-<!-- Template content here -->
+
+<!-- template content here -->
+
 </div>
 ```
 
-### Merge Field Syntax
+The `<span vitec-template="resource:Vitec Stilark">&nbsp;</span>` must appear immediately after the opening `<div>` — it loads Proaktiv's brand stylesheet.
 
-| Syntax | Usage |
-|--------|-------|
-| `[[field.path]]` | Standard merge field |
-| `[[*field.path]]` | Required field (inside vitec-foreach only) |
-| `$.UD([[field]])` | Number formatting (thousand separators) |
+---
 
-Legacy `#field.context¤` must be mapped to modern `[[field.path]]` using the mapping table in PRODUCTION-TEMPLATE-PIPELINE.md Section 4.
+## Merge Fields (Flettekoder)
 
-### Conditional Logic
+| Pattern | Use |
+|---------|-----|
+| `[[field.name]]` | Standard merge field |
+| `[[*item.field]]` | Loop variable (inside `vitec-foreach`) |
+| `$.UD([[field]])` | Format number with thousand separators |
 
-```html
-<span vitec-if="Model.eiendom.grunntype == &quot;Bolig&quot;">Boligen</span>
+**Rules:**
+- No spaces inside brackets: `[[field.name]]` not `[[ field.name ]]`
+- Loop variables always prefixed with `*`: `[[*selger.navn]]`
+
+**Common fields:**
+```
+[[oppdrag.nr]]                    [[kontrakt.formidling.nr]]
+[[kontrakt.kjopesum]]             [[kontrakt.kjopesumibokstaver]]
+[[kontrakt.klientkonto]]          [[kontrakt.kid]]
+[[kontrakt.totaleomkostninger]]   [[kontrakt.kjopesumogomkostn]]
+[[kontrakt.overtagelse.dato]]     [[dagensdato]]
+[[eiendom.kommunenavn]]           [[eiendom.leilighetsnr]]
+[[eiendom.fellesutgifter]]        [[komplettmatrikkel]]
+[[meglerkontor.navn]]
+[[oppgjor.kontornavn]]            [[oppgjor.besoksadresse]]
+[[oppgjor.besokspostnr]]          [[oppgjor.besokspoststed]]
+[[oppgjor.kontortlf]]             [[oppgjor.kontorepost]]
 ```
 
-Escaping rules:
-- `"` → `&quot;`
+---
+
+## Conditional Logic (vitec-if)
+
+`vitec-if` is an HTML attribute — always on the element that should show/hide.
+
+**Escaping rules (mandatory):**
+- String quotes → `&quot;`
 - `>` → `&gt;`
-- `<` → `&lt;`
 - `&&` → `&amp;&amp;`
+- `||` → `&amp;&amp;` (use `||` in logic, escape as `&#124;&#124;` if needed)
 
-Full pattern library in PRODUCTION-TEMPLATE-PIPELINE.md Section 5.
+**Patterns:**
+```html
+<!-- Show/hide element -->
+<p vitec-if="Model.eiendom.heftelserogrettigheter != &quot;&quot;">
+  [[eiendom.heftelserogrettigheter]]
+</p>
 
-### Party Loops
+<!-- Checkbox pattern (checked/unchecked) -->
+<span vitec-if="Model.eiendom.grunntype == &quot;Bolig&quot;">&#9745;</span>
+<span vitec-if="Model.eiendom.grunntype != &quot;Bolig&quot;">&#9744;</span>
+
+<!-- Count guard -->
+<table vitec-if="Model.selgere.Count &gt; 0">...</table>
+
+<!-- Boolean flag -->
+<p vitec-if="Model.oppdrag.prosjekt.erutbyggersforbeholdbyggelaan == true">...</p>
+
+<!-- Compound condition -->
+<span vitec-if="(selger.tlf != &quot;&quot; &amp;&amp; selger.emailadresse != &quot;&quot;)"> / </span>
+```
+
+**Conditional date sections:**
+```html
+<div vitec-if="Model.kontrakt.overtagelse.dato != &quot;Mangler data&quot;">
+  <p>Overtas den <strong>[[kontrakt.overtagelse.dato]]</strong></p>
+</div>
+<div vitec-if="Model.kontrakt.overtagelse.dato == &quot;Mangler data&quot;">
+  <p>Forventet ferdigstillelse: <span class="insert">&nbsp;</span></p>
+</div>
+```
+
+---
+
+## Loops (vitec-foreach)
+
+`vitec-foreach` goes on `<tbody>` — always guard the parent `<table>` with a count check.
 
 ```html
+<!-- Parties table (selgere / kjøpere) -->
 <table class="roles-table" vitec-if="Model.selgere.Count &gt; 0">
+<thead>
+<tr>
+  <th colspan="34"><strong>Navn</strong></th>
+  <th colspan="48"><strong>Adresse</strong></th>
+  <th colspan="18"><strong>[[selger.ledetekst_fdato_orgnr]]</strong></th>
+</tr>
+</thead>
 <tbody vitec-foreach="selger in Model.selgere">
-  <tr><td>[[*selger.navnutenfullmektigogkontaktperson]]</td></tr>
+<tr>
+  <td colspan="34">[[*selger.navnutenfullmektigogkontaktperson]]</td>
+  <td colspan="48">[[*selger.gatenavnognr]], [[*selger.postnr]] [[*selger.poststed]]</td>
+  <td colspan="18">[[*selger.fdato_orgnr]]</td>
+</tr>
+<tr>
+  <td colspan="100">
+    <span vitec-if="selger.tlf != &quot;&quot;">Mob: [[*selger.tlf]]</span>
+    <span vitec-if="(selger.tlf != &quot;&quot; &amp;&amp; selger.emailadresse != &quot;&quot;)"> / </span>
+    <span vitec-if="selger.emailadresse != &quot;&quot;">E-post: [[*selger.emailadresse]]</span>
+  </td>
+</tr>
+<tr><td colspan="100">&nbsp;</td></tr>
 </tbody>
 </table>
 ```
 
-Every `vitec-foreach` needs a collection guard on its parent.
+Available loop collections: `Model.selgere`, `Model.kjopere`, `Model.hjemmelshavere`, `Model.kjoperskostnader.poster`
 
-### Source Clue Recognition
+---
 
-| Source Pattern | Meaning | Action |
-|---------------|---------|--------|
-| `#field.context¤` | Legacy merge field | Map to `[[modern.field]]` |
-| Wingdings + `q` | Empty checkbox | → `&#9744;` or auto-check pattern |
-| `color:red` text | Conditional alternative | → `vitec-if` branch |
-| "Alt 1:" / "Alt 2:" | Explicit alternatives | → `vitec-if` div blocks |
-| "Boligen/fritidsboligen" | Property type switch | → `grunntype` condition |
-| "1 A" / "1 B" headers | Ownership form switch | → `eieform` condition |
-| `…………` or underlines | Fill-in blank | → `<span class="insert">&nbsp;</span>` |
+## Table Structure
 
-## Workflow
+**100-unit colspan system** — all column widths add up to 100:
 
-### Building a New Template
-
-```
-Task Progress:
-- [ ] Step 1: Read source .htm file, produce source analysis
-- [ ] Step 2: Map all legacy merge fields to modern syntax
-- [ ] Step 3: Identify and build vitec-if conditional branches
-- [ ] Step 4: Build vitec-foreach party loops
-- [ ] Step 5: Wrap in template shell with CSS counters
-- [ ] Step 6: Run 39-point validation (target: 39/39 PASS)
-- [ ] Step 7: Generate preview, verify content against original
+```html
+<table style="width:100%; table-layout:fixed;">
+<tbody>
+<tr>
+  <td colspan="50">Left half</td>
+  <td colspan="50">Right half</td>
+</tr>
+</tbody>
+</table>
 ```
 
-**Step 1: Source Analysis**
-Read the `.htm` file. Document: section count, legacy fields found, checkboxes, red text markers, alternative sections, tables, signature blocks.
+Common splits: `34/48/18` (3-col party table), `60/10/25/5` (costs), `50/50` (two-col), `40/20/40` (signature).
 
-**Step 2: Field Mapping**
-Look up each legacy field in PRODUCTION-TEMPLATE-PIPELINE.md Section 4. For unmapped fields, search `.cursor/Alle-flettekoder-25.9.md`.
+**Rules:**
+- Never use `display:flex` or `display:grid`
+- Always wrap `<tr>` in `<tbody>`, `<thead>`, or `<tfoot>`
+- No orphan `<tr>` directly inside `<table>`
 
-**Step 3: Conditionals**
-Match source patterns to the conditional pattern library (Section 5). Build `vitec-if` with proper HTML entity escaping.
+---
 
-**Step 4: Party Loops**
-Replace flat party listings with `vitec-foreach` using the roles-table pattern (Section 6). Add collection guards.
+## Section Structure
 
-**Step 5: Template Shell**
-Wrap in `#vitecTemplate` div, add Stilark reference, add CSS counter style block, convert sections to `<article class="item">`.
+Contract sections use `<article class="item">` — CSS counters auto-number them:
 
-**Step 6: Validate**
-Run `scripts/validate_template.py` (update `TEMPLATE` path). Fix failures until 39/39.
+```html
+<article class="item">
+<h2>SECTION TITLE</h2>
+<p>Content...</p>
+</article>
 
-**Step 7: Preview & Verify**
-Run `scripts/build_preview.py` to generate visual preview. Compare against original PDF section by section.
+<!-- Subsection inside section -->
+<article class="item">
+<article class="item">
+<h3>Subsection</h3>
+</article>
+</article>
 
-### Refining an Existing Template
-
-1. Read the template HTML
-2. Identify issues (missing fields, broken conditions, incorrect escaping)
-3. Apply fixes referencing the pattern library
-4. Re-validate
-
-### Reusing the Pilot for Kjøpekontrakt Variants
-
-For templates sharing ~85% structure with the pilot:
-1. Start from `scripts/build_production_template.py`
-2. Diff source against pilot source to identify differences
-3. Modify only differing sections
-4. Re-validate
-
-## Database Access
-
-Query production templates for reference:
-
-```sql
--- MCP tool: user-postgres, tool: query
-SELECT title, content FROM templates tmpl
-JOIN template_tags tt ON tmpl.id = tt.template_id
-JOIN tags t ON tt.tag_id = t.id
-WHERE t.name = 'Vitec Next'
-AND title LIKE '%search_term%'
-ORDER BY LENGTH(content) DESC LIMIT 1
+<!-- Avoid page break on last section (signatures) -->
+<article class="item avoid-page-break">
+<h2>SIGNATUR</h2>
 ```
 
-## Utility Scripts
+---
 
-| Script | Purpose | Usage |
-|--------|---------|-------|
-| `scripts/validate_template.py` | 39-point validation | `python scripts/validate_template.py` |
-| `scripts/build_preview.py` | Visual preview with Stilark CSS | `python scripts/build_preview.py` |
-| `scripts/build_production_template.py` | Pilot template builder (reference) | `python scripts/build_production_template.py` |
+## User Fill-in Placeholders
 
-## Output Files
+For blanks the broker fills in manually:
 
-| File | Location |
-|------|----------|
-| Build script | `scripts/build_[template_name].py` |
-| Production HTML | `scripts/converted_html/[name]_PRODUCTION.html` |
-| Preview HTML | `scripts/converted_html/[name]_PREVIEW.html` |
+```html
+<span class="insert">&nbsp;</span>
+```
 
-## Quality Checklist (Quick)
+---
 
-- [ ] `<div class="proaktiv-theme" id="vitecTemplate">` wrapper
-- [ ] `<span vitec-template="resource:Vitec Stilark">&nbsp;</span>`
-- [ ] CSS counter style block
-- [ ] All `<article class="item">` with `<h2>` headings
-- [ ] No legacy `#field¤` syntax remaining
-- [ ] All `vitec-if` use `&quot;` for quotes
-- [ ] All `vitec-foreach` have collection guards
-- [ ] `roles-table` on party tables
-- [ ] `costs-table` on financial tables
-- [ ] Signature block with signing lines
-- [ ] `span.insert` for user fill-in fields
-- [ ] Norwegian characters (æ, ø, å) preserved
+## Forbidden Patterns
+
+| Forbidden | Use instead |
+|-----------|-------------|
+| `display:flex` / `display:grid` | Table layout |
+| `<font>` tags | Inherited styles from Stilark |
+| `<center>` tags | `style="text-align:center;"` on `<p>` |
+| Inline `font-family` | Inherited from Stilark |
+| Inline `font-size` | Inherited from Stilark |
+| `#field.context¤` (legacy) | `[[field.name]]` |
+| `<script>` / `onclick` | Never in templates |
+| `<link rel="stylesheet">` | Stilark span handles this |
+
+---
+
+## Word .htm Conversion Workflow
+
+When converting a Word-exported `.htm` file:
+
+1. **Extract** body content between `<body>` tags
+2. **Remove** Word classes: all `class="Mso*"` attributes, `lang` attributes
+3. **Strip** non-structural inline styles — keep only: `text-align`, `vertical-align`, `border*`, `padding`, `width`, `page-break*`
+4. **Unwrap** all `<span>` elements (Word uses spans for formatting)
+5. **Unwrap** `<a name="...">` anchors (Word bookmarks)
+6. **Unwrap** `<div class="WordSection*">` wrappers
+7. **Remove** empty `<p>` and `&nbsp;`-only paragraphs
+8. **Map** legacy `#field.context¤` → `[[field.name]]`
+9. **Wrap** in vitecTemplate shell
+10. **Validate** with `scripts/validate_template.py`
+
+**Run validation after any template build:**
+```bash
+python scripts/validate_template.py
+```
+
+---
+
+## Validation Checklist
+
+Before saving a template, verify:
+
+- [ ] `id="vitecTemplate"` and `class="proaktiv-theme"` on wrapper div
+- [ ] Stilark span present with `&nbsp;` content
+- [ ] No `display:flex` / `display:grid`
+- [ ] No orphan `<tr>` outside `tbody`/`thead`
+- [ ] Colspan values sum to 100
 - [ ] No inline `font-family` or `font-size`
-- [ ] UTF-8 encoding, no Windows-1252 artifacts
-- [ ] Validation: 39/39 PASS
+- [ ] All merge fields use `[[field]]` — no legacy `#field¤`
+- [ ] No spaces inside `[[ ]]`
+- [ ] All `vitec-if` strings use `&quot;`, `>` uses `&gt;`
+- [ ] Each `vitec-foreach` has a `.Count &gt; 0` guard on parent
+- [ ] `vitec-foreach` on `<tbody>`, not `<table>` or `<tr>`
+- [ ] No `<font>`, `<center>`, `<script>` tags
+- [ ] `<article>` open/close tags balanced
+- [ ] Norwegian characters (ø, æ, å) as literal UTF-8, not escaped
 
-## Rules
+## Additional Resources
 
-- Legal text must be **verbatim** from source — never paraphrase
-- All merge fields use `[[field.path]]` — no legacy `#field¤`
-- All `vitec-if` use HTML entity escaping
-- All `vitec-foreach` have collection guards
-- UTF-8 only
-- Norwegian characters preserved, never transliterated
-- If a field mapping is unclear, **ask** — don't guess
+- Build scripts: `scripts/build_production_template.py`, `scripts/build_kjopekontrakt_prosjekt_leilighet.py`
+- Validation script: `scripts/validate_template.py`
+- Preview generator: `scripts/build_preview.py`
+- Output directory: `scripts/converted_html/`
