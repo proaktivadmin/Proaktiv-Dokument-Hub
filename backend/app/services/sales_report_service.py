@@ -19,13 +19,33 @@ logger = logging.getLogger(__name__)
 
 # Hovedbokskonti for vederlag (remuneration) - from HOVEDBOKSKONTI UI
 VEDERLAG_ACCOUNTS = {
-    "3000", "3001", "3002", "3003", "3006", "3009", "3010", "3013", "3015", "3019",
-    "3111", "3112", "3113", "3115", "3220", "3221",
+    "3000",
+    "3001",
+    "3002",
+    "3003",
+    "3006",
+    "3009",
+    "3010",
+    "3013",
+    "3015",
+    "3019",
+    "3111",
+    "3112",
+    "3113",
+    "3115",
+    "3220",
+    "3221",
 }
 
 # Hovedbokskonti for andre inntekter (other income)
 ANDRE_INNTEKTER_ACCOUNTS = {
-    "3005", "3018", "3020", "3030", "3031", "3050", "8050",
+    "3005",
+    "3018",
+    "3020",
+    "3030",
+    "3031",
+    "3050",
+    "8050",
 }
 
 REVENUE_ACCOUNTS = VEDERLAG_ACCOUNTS | ANDRE_INNTEKTER_ACCOUNTS
@@ -196,7 +216,9 @@ class SalesReportService:
 
         # Total row
         total_revenue = sum(broker_revenue.get(b, 0) for b in brokers_with_sales)
-        ws.append(["", "Sum", sum(broker_transaction_count.get(b, 0) for b in brokers_with_sales), round(total_revenue, 2)])
+        ws.append(
+            ["", "Sum", sum(broker_transaction_count.get(b, 0) for b in brokers_with_sales), round(total_revenue, 2)]
+        )
         ws.cell(row=row + 1, column=2).font = Font(bold=True)
         ws.cell(row=row + 1, column=4).font = Font(bold=True)
 
