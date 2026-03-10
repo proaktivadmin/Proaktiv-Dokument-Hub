@@ -1,0 +1,141 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate {
+            font-size: 9pt;
+            line-height: 1.45;
+            max-width: 760px;
+        }
+
+        #vitecTemplate table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+            #vitecTemplate table td {
+                font-size: 9pt;
+                padding: 0;
+                margin: 0;
+                vertical-align: top;
+            }
+
+        #vitecTemplate p {
+            margin: 0;
+            padding: 2px 0;
+        }
+
+        #vitecTemplate ul {
+            margin: 4px 0 0 18px;
+            padding: 0;
+        }
+
+        #vitecTemplate li {
+            margin: 2px 0;
+            padding-left: 2px;
+        }
+
+        #vitecTemplate .avoid-page-break {
+            page-break-inside: avoid;
+        }
+
+        #vitecTemplate .section {
+            margin-top: 14px;
+        }
+
+        #vitecTemplate .intro-section {
+            margin-top: 0;
+        }
+
+        #vitecTemplate .contact-block {
+            margin-top: 4px;
+        }
+
+        #vitecTemplate .closing {
+            margin-top: 10px;
+        }
+
+        #vitecTemplate .greeting-pair:last-child .separator,
+        #vitecTemplate .greeting-list:last-child .separator {
+            display: none;
+        }
+
+        #vitecTemplate h1 {
+            text-align: left;
+            font-size: 13pt;
+            margin: 0 0 8px 0;
+            padding: 0;
+            line-height: 1.2;
+        }
+
+        #vitecTemplate h2 {
+            font-size: 10.5pt;
+            margin: 0 0 4px 0;
+            padding: 0;
+            line-height: 1.25;
+        }</style>
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">
+				<div class="avoid-page-break intro-section">
+					<h1>Informasjon frem mot overtakelse og oppgj&oslash;r</h1>
+
+					<p>Hei<span vitec-if="Model.selgere.Count == 0">,</span><span vitec-if="Model.selgere.Count == 1"> [[selger.fornavn]],</span><span vitec-if="Model.selgere.Count == 2"><span vitec-foreach="selger in Model.selgere"><span class="greeting-pair">[[*selger.fornavn]]<span class="separator"> og </span></span></span>,</span><span vitec-if="Model.selgere.Count &gt; 2"><span vitec-foreach="selger in Model.selgere"><span class="greeting-list">[[*selger.fornavn]]<span class="separator">, </span></span></span>,</span></p>
+
+					<p>Frem til overtakelse er det mye som skal skje, s&aring; her kommer en oppsummering om neste steg i prosessen.</p>
+				</div>
+
+				<div class="avoid-page-break section">
+					<h2>Oppgaver som m&aring; utf&oslash;res f&oslash;r overtakelsen</h2>
+
+					<p><strong>Overf&oslash;ring av pant:</strong><br />
+					Dersom du skal overf&oslash;re eksisterende l&aring;n med pant i boligen din til ny eiendom, m&aring; det v&aelig;re ordnet n&oslash;dvendig sikkerhet for en slik overf&oslash;ring i god tid. Forsinkelser i oppgj&oslash;ret som f&oslash;lge av dette er selgers ansvar.</p>
+
+					<p><strong>Forsikring:</strong><br />
+					Selger kan si opp sin forsikring pr. overtakelsesdato. Det er selgers ansvar &aring; holde eiendommen forsikret helt frem til overtakelsen er gjennomf&oslash;rt.</p>
+				</div>
+
+				<div class="avoid-page-break section">
+					<h2>Gjennomf&oslash;ring av overtakelsen</h2>
+
+					<p>Det er avtalt at selger og kj&oslash;per skal m&oslash;tes p&aring; eiendommen:<br />
+					<strong>Dato: [[kontrakt.overtagelse.dato]] kl. [[kontrakt.overtagelse.klokkeslett]]</strong></p>
+
+					<p>P&aring; overtakelsen skal eiendommen gjennomg&aring;s sammen med kj&oslash;per. Overtakelsesprotokoll m&aring; fylles ut &ndash; denne blir tilsendt deg p&aring; SMS p&aring; morgenen overtakelsesdagen.</p>
+
+					<ul>
+						<li>Boligen skal v&aelig;re ryddet og rengjort.</li>
+						<li>Str&oslash;mm&aring;ler skal leses av og noteres i protokollen.</li>
+						<li>N&oslash;kler overleveres KUN hvis du har mottatt bekreftelse fra oss om at oppgj&oslash;ret er innbetalt.</li>
+					</ul>
+				</div>
+
+				<div class="avoid-page-break section">
+					<h2>Tinglysing og oppgj&oslash;r</h2>
+
+					<p>Oppgj&oslash;ret gjennomf&oslash;res av v&aring;r oppgj&oslash;rsavdeling. Adressen dit er:</p>
+
+					<p class="contact-block">
+					<strong>[[oppgjor.kontornavn]]</strong><br />
+					[[oppgjor.postadresse]], [[oppgjor.postnr]] [[oppgjor.poststed]]</p>
+
+					<p class="contact-block">Kontaktinfo: Tlf [[oppgjor.kontortlf]] | E-post: [[oppgjor.kontorepost]]</p>
+
+					<p>N&aring;r hjemmelen er overf&oslash;rt til ny eier og oppgj&oslash;ret er foretatt vil det bli sendt ut en oppgj&oslash;rsoppstilling som viser hvordan salgssummen er disponert.</p>
+
+					<p><strong>Markedsf&oslash;ring:</strong><br />
+					Vi gj&oslash;r oppmerksom p&aring; at din eiendom kan bli benyttet i markedsf&oslash;ring av meglerforetaket (solgt-plakater o.l.). Partene holdes selvsagt anonyme. Gi oss beskjed hvis dette ikke er &oslash;nskelig.</p>
+				</div>
+
+				<div class="avoid-page-break closing">
+					<p>Takk for at du valgte Proaktiv! Vi h&aring;per du er forn&oslash;yd med jobben vi har gjort.</p>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="100">
+				<div vitec-template="resource: Avsender">&nbsp;</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>

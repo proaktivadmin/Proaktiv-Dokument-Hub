@@ -52,6 +52,7 @@ from app.routers import (
     merge_fields,
     notifications,
     offices,
+    reports,
     sanitizer,
     signatures,
     storage,
@@ -154,6 +155,7 @@ app.include_router(checklists.router, prefix="/api", tags=["Checklists"])
 app.include_router(territories.router, prefix="/api", tags=["Territories"])
 app.include_router(web_crawl.router, prefix="/api", tags=["Web Crawl"])
 app.include_router(vitec.router, prefix="/api", tags=["Vitec"])
+app.include_router(reports.router, prefix="/api", tags=["Reports"])
 app.include_router(sync.router, prefix="/api", tags=["Sync"])
 app.include_router(entra_sync.router, prefix="/api", tags=["Entra Sync"])
 
