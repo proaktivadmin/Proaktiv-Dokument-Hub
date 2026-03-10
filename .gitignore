@@ -28,6 +28,7 @@ dist/
 # Cursor - ignore most but track rules (shared agent instructions)
 .cursor/*
 !.cursor/rules/
+!.cursor/poweroffice-reference.md
 
 # VS Code - allow shared settings but ignore personal ones
 .vscode/*

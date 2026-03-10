@@ -12,7 +12,8 @@ Read this file first, then pull in the docs that match the task:
 2. For frontend work, read `.planning/codebase/DESIGN-SYSTEM.md` before editing UI.
 3. For database work, read `.cursor/rules/database-migrations.mdc` before creating or applying migrations.
 4. For Vitec template or merge-field work, read `.cursor/vitec-reference.md` and the relevant docs in `docs/`.
-5. If business logic seems unclear or missing, inspect `_legacy_v1` before inventing new behavior.
+5. For PowerOffice/POGO, regnskap, EHF-faktura, or bank-integrasjon: read `docs/poweroffice-research.md` and `.cursor/poweroffice-reference.md`.
+6. If business logic seems unclear or missing, inspect `_legacy_v1` before inventing new behavior.
 
 ## Core repo rules
 
@@ -76,7 +77,7 @@ Do not merge DB changes without handling the manual Railway migration path.
 ## Key directories
 
 - `.planning/` - plans, roadmap, state, and phase docs
-- `.cursor/` - agent prompts, specs, commands, rules, and Vitec reference
+- `.cursor/` - agent prompts, specs, commands, rules, Vitec reference, PowerOffice reference
 - `backend/app/services/` - business logic
 - `backend/app/routers/` - FastAPI endpoints
 - `backend/app/schemas/` - Pydantic schemas
