@@ -1,6 +1,6 @@
 /**
  * Auth API Client
- * 
+ *
  * Handles authentication with the backend.
  * Uses relative URLs (/api/*) so Vercel rewrites them to Railway,
  * making session cookies first-party (same origin).
@@ -8,11 +8,8 @@
 
 import axios from "axios";
 
-// Create axios instance with credentials enabled
-// Using relative URLs so Vercel's rewrite handles routing to Railway
-// This makes cookies first-party, avoiding third-party cookie blocking
 const authClient = axios.create({
-  withCredentials: true, // Required for cookies
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
@@ -20,12 +17,14 @@ const authClient = axios.create({
 
 export interface AuthStatus {
   authenticated: boolean;
+  email?: string;
   expires_at?: string;
 }
 
 export interface AuthCheckResponse {
   authenticated: boolean;
   auth_required: boolean;
+  email?: string;
 }
 
 export interface LoginResponse {
@@ -36,10 +35,11 @@ export interface LoginResponse {
 
 export const authApi = {
   /**
-   * Log in with password
+   * Log in with email + password
    */
-  async login(password: string): Promise<LoginResponse> {
+  async login(email: string, password: string): Promise<LoginResponse> {
     const { data } = await authClient.post<LoginResponse>("/api/auth/login", {
+      email,
       password,
     });
     return data;
@@ -53,7 +53,7 @@ export const authApi = {
   },
 
   /**
-   * Get authentication status
+   * Get authentication status (includes email of the logged-in user)
    */
   async getStatus(): Promise<AuthStatus> {
     const { data } = await authClient.get<AuthStatus>("/api/auth/status");
@@ -61,8 +61,7 @@ export const authApi = {
   },
 
   /**
-   * Quick auth check - returns true if authenticated
-   * Returns false if not authenticated (doesn't throw)
+   * Quick auth check — returns true if authenticated (doesn't throw)
    */
   async check(): Promise<AuthCheckResponse> {
     try {

@@ -28,6 +28,7 @@ export function Header({ onUploadSuccess }: HeaderProps) {
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [newTemplateDialogOpen, setNewTemplateDialogOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -38,6 +39,15 @@ export function Header({ onUploadSuccess }: HeaderProps) {
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Fetch current user
+  useEffect(() => {
+    authApi.getStatus().then((status) => {
+      if (status.authenticated && status.email) {
+        setUserEmail(status.email);
+      }
+    }).catch(() => {});
   }, []);
 
   const handleUploadSuccess = () => {
@@ -245,15 +255,33 @@ export function Header({ onUploadSuccess }: HeaderProps) {
               {/* Notification Dropdown */}
               <NotificationDropdown className="ml-2" />
 
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleLogout}
-                className="ml-2 text-[#272630]/70 hover:text-[#272630] hover:bg-white/40"
-                title="Logg ut"
-              >
-                <LogOut className="h-4 w-4" />
-              </Button>
+              {/* User + Logout */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="ml-2 flex items-center gap-2 px-3 py-1.5 rounded-md text-sm text-[#272630]/70 hover:text-[#272630] hover:bg-white/40 transition-colors">
+                    <div className="h-6 w-6 rounded-full bg-[#272630]/10 flex items-center justify-center text-xs font-semibold text-[#272630] uppercase">
+                      {userEmail ? userEmail[0] : "?"}
+                    </div>
+                    {userEmail && (
+                      <span className="hidden lg:inline text-xs font-medium">
+                        {userEmail.split("@")[0]}
+                      </span>
+                    )}
+                    <ChevronDown className="h-3 w-3" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-52 bg-white">
+                  {userEmail && (
+                    <div className="px-3 py-2 text-xs text-slate-500 border-b border-slate-100">
+                      {userEmail}
+                    </div>
+                  )}
+                  <DropdownMenuItem onClick={handleLogout} className="text-red-600 focus:text-red-600 mt-1">
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Logg ut
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </nav>
           </div>
         </div>

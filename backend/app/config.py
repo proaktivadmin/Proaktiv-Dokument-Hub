@@ -82,8 +82,13 @@ class Settings(BaseSettings):
     WEBDAV_USERNAME: str = ""
     WEBDAV_PASSWORD: str = ""
 
-    # Simple Password Auth
-    APP_PASSWORD_HASH: str = ""  # bcrypt hash of the app password
+    # Multi-user Auth
+    # JSON array of {"email": "...", "password_hash": "..."} objects.
+    # When set, APP_PASSWORD_HASH is ignored.
+    # Example: [{"email":"froyland@proaktiv.no","password_hash":"$2b$12$..."}]
+    APP_USERS_JSON: str = ""
+    # Legacy single-user auth (kept for backward compat; ignored when APP_USERS_JSON is set)
+    APP_PASSWORD_HASH: str = ""
     AUTH_SESSION_EXPIRE_DAYS: int = 7
     AUTH_INACTIVITY_TIMEOUT_MINUTES: int = 30
 
