@@ -1,0 +1,216 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate {
+            font-size: 9pt;
+        }
+
+        #vitecTemplate {
+            counter-reset: section;
+        }
+
+            #vitecTemplate .item:not(.item .item) {
+                counter-increment: section;
+                counter-reset: subsection;
+            }
+
+                #vitecTemplate .item:not(.item .item) h2::before {
+                    content: counter(section) ". ";
+                    display: inline-block;
+                    width: 26px;
+                }
+
+            #vitecTemplate .item .item:not(.item .item .item) {
+                counter-increment: subsection;
+            }
+
+                #vitecTemplate .item .item:not(.item .item .item) h3::before {
+                    content: counter(section) "." counter(subsection) ". ";
+                }
+
+        #vitecTemplate table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+            #vitecTemplate table td {
+                font-size: 9pt;
+                padding: 3px 0;
+                margin: 0;
+            }
+
+            #vitecTemplate table p {
+                font-size: 9pt;
+                padding: 3px 0;
+                margin: 0;
+            }
+
+        #vitecTemplate .avoid-page-break {
+            page-break-inside: avoid;
+        }
+
+        #vitecTemplate h1 {
+            text-align: center;
+            font-size: 14pt;
+            margin: 0 0 6px 0;
+            padding: 0;
+        }
+
+        #vitecTemplate h2 {
+            font-size: 11pt;
+            margin: 30px 0 0 -26px;
+            padding: 0;
+        }
+
+        #vitecTemplate .separator-line {
+            border-bottom: 1px solid #000;
+            padding-bottom: 6px;
+            margin-bottom: 12px;
+        }
+
+        #vitecTemplate .sign-line {
+            display: inline-block;
+            width: 60%;
+            border-top: solid 1px #000;
+            margin-top: 1.5cm;
+            padding-top: 3px;
+        }
+
+        span.insert:empty {
+            font-size: inherit !important;
+            line-height: inherit !important;
+            display: inline-block;
+            background-color: lightpink;
+            min-width: 2em !important;
+            height: .7em !important;
+            text-align: center;
+        }
+
+            span.insert:empty:before {
+                content: attr(data-label);
+            }
+
+            span.insert:empty:hover {
+                background-color: #fff;
+                cursor: pointer;
+            }
+
+        .insert-table {
+            display: inline-table;
+        }
+
+            .insert-table > span,
+            .insert-table > span.insert {
+                display: table-cell;
+            }
+</style>
+<style type="text/css">label.btn {
+            display: inline;
+            text-transform: none;
+            white-space: normal;
+            padding: 0;
+            vertical-align: baseline;
+            outline: none;
+            font-size: inherit;
+        }
+
+            label.btn:active,
+            label.btn.active {
+                box-shadow: none;
+                outline: none;
+            }
+
+        .svg-toggle {
+            display: inline-block !important;
+            width: 16px;
+            height: 16px;
+            margin: 0 5px;
+            vertical-align: bottom;
+            padding: 0;
+            border: none;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none !important;
+            cursor: pointer;
+            white-space: normal;
+            text-align: left;
+            background-repeat: no-repeat;
+            background-size: 16px 16px;
+            background-position: center center;
+        }
+
+            .svg-toggle.checkbox {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+            }
+
+                .svg-toggle.checkbox.active,
+                .btn.active > .svg-toggle.checkbox {
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+                    box-shadow: none !important;
+                }
+</style>
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100" style="text-align:right">
+				<small>
+					Oppdragsnr.:&nbsp;<strong>[[oppdrag.nr]]</strong>
+				</small>
+			</td>
+		</tr>
+		<tr><td colspan="100">&nbsp;</td></tr>
+		<tr>
+			<td colspan="100">
+				<div class="avoid-page-break">
+				<h1>Forlengelse av oppdrag [[eiendom.adresse]]</h1>
+
+				<p>Det er straks g&aring;tt 6 mnd. siden vi fikk i oppdrag &aring; selge din eiendom, og oppdraget vil snart utl&oslash;pe. Oppdragets gyldighet utl&oslash;per den [[oppdrag.utlopsdato]].</p>
+
+				<p>Dersom du &oslash;nsker &aring; forlenge oppdraget p&aring; samme vilk&aring;r, bes dette gjort ved &aring; returnere dette brev i signert stand <strong>innen 10 dager</strong>. Bekreftelse kan ogs&aring; gis elektronisk via e-post til avsender.</p>
+
+				<p>Forlengelsen av oppdraget medf&oslash;rer for &oslash;vrig ikke omkostninger. Vi m&aring; imidlertid ta forbehold om at det kan p&aring;l&oslash;pe ekstra omkostninger dersom det er n&oslash;dvendig &aring; innhente oppdaterte opplysninger om eiendommen, fornye salgsoppgave eller digitale annonser.</p>
+
+				<p>Oppdraget vil etter forlengelsen v&aelig;re regulert av eiendomsmeglerlovens bestemmelser pr. dags dato.</p>
+
+				<p>Ta kontakt hvis du har sp&oslash;rsm&aring;l eller &oslash;nsker en prat.</p>
+				</div>
+
+				<div class="avoid-page-break" style="margin-top:12px; line-height:1.6">
+				<p>Vennlig hilsen<br />
+				<strong>[[meglerkontor.navn]]</strong></p>
+
+				<p>[[operativmegler.navn]]<br />
+				[[operativmegler.tittel]]<br />
+				[[operativmegler.tlf]] | [[operativmegler.epost]]</p>
+				</div>
+
+				<div class="avoid-page-break">
+				<table style="margin-top:24px">
+					<tbody>
+						<tr>
+							<td colspan="100" class="separator-line">
+								<p>Fyll ut og returner til v&aring;rt kontor</p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<p style="margin-top:12px">[[meglerkontor.adresse]]<br />
+				[[meglerkontor.postnr]] [[meglerkontor.poststed]]</p>
+				</div>
+
+				<div class="avoid-page-break" style="margin-top:16px" data-toggle="buttons">
+				<p><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> Vi &oslash;nsker &aring; forlenge oppdraget p&aring; samme vilk&aring;r for 6 nye m&aring;neder.</p>
+
+				<p style="margin-top:8px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label> Vi &oslash;nsker ikke &aring; forlenge oppdraget og im&oslash;teser faktura for tilbaketrekking.</p>
+				</div>
+
+				<div class="avoid-page-break" style="margin-top:24px">
+				<p>Sted/dato: <span class="insert-table"><span class="insert" data-label="sted/dato"></span></span></p>
+
+				<p style="margin-top:1.5cm; border-top:solid 1px #000; width:60%; padding-top:3px">[[selger.navn]]</p>
+				</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>

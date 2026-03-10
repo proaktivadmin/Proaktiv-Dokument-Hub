@@ -10,7 +10,7 @@ A document template management system for Norwegian real estate brokers, integra
 
 | Aspect         | Details                                                |
 | -------------- | ------------------------------------------------------ |
-| **Phase**      | 3.9.4 (Signature Page Self-Service Enhancements)       |
+| **Phase**      | 11 (HTML Template Management & Publishing Suite)       |
 | **Stack**      | Next.js 16 + React 19 + FastAPI + PostgreSQL (Railway) |
 | **UI**         | Shadcn/UI + Tailwind CSS 4 + Custom Design Tokens      |
 | **Hosting**    | Vercel (Frontend) + Railway (Backend + PostgreSQL)     |
@@ -19,6 +19,19 @@ A document template management system for Norwegian real estate brokers, integra
 | **CI/CD**      | GitHub Actions (lint, typecheck, test, build)          |
 | **Monitoring** | Sentry (frontend + backend)                            |
 | **Status**     | ✅ Production Live                                     |
+
+---
+
+## Instruction Precedence
+
+When instructions conflict, follow this order:
+
+1. **Rules** - `.cursor/rules/*.mdc` (auto-applied, highest priority)
+2. **Skills** - `.agents/skills/*/SKILL.md` (domain-specific guidance)
+3. **Agent prompts** - `.cursor/agents/*.md` (workflow-specific execution)
+4. **General context** - `CLAUDE.md`, plans, and command wrappers
+
+Always consult `.cursor/context-registry.md` for current canonical context files.
 
 ---
 
@@ -59,6 +72,22 @@ A document template management system for Norwegian real estate brokers, integra
 - Layout partials for headers/footers/signatures
 - WebDAV storage for network file access
 - Vitec export + import workflow docs in `docs/`
+
+### Template Source of Truth (IMPORTANT)
+
+When building or editing Vitec HTML templates, the authoritative references are:
+
+1. **Working reference templates** — `scripts/reference_templates/`, `scripts/golden standard/`
+2. **Master template library** — `templates/master/` (249 official templates, scraped 2026-02-23)
+3. **Vitec Stilark** — `docs/vitec-stilark.md` (default style system)
+4. **Builder knowledge base** — `.agents/skills/vitec-template-builder/` (LESSONS.md, PATTERNS.md, SKILL.md)
+
+**Do NOT** use `.planning/vitec-html-ruleset-FULL.md` as the primary authority — it was
+generated from the old database of 133 Proaktiv-customized templates. Where it conflicts
+with the above references (e.g., `proaktiv-theme` class), the official templates win.
+
+When Vitec sends a newsletter or hotfix notification about template changes, run `/sync-templates`
+to fetch, diff, and reconcile. See `.cursor/commands/sync-templates.md`.
 
 ### Authentication (V2.9)
 
@@ -101,10 +130,15 @@ backend/
 ├── app/
 │   ├── models/      # SQLAlchemy models
 │   ├── services/    # Business logic (async)
-│   │   ├── sanitizer_service.py   # Vitec Stilark compliance
-│   │   ├── webdav_service.py      # WebDAV client
-│   │   ├── inventory_service.py   # Template sync stats
-│   │   └── image_service.py       # Avatar resizing/cropping
+│   │   ├── sanitizer_service.py          # Vitec Stilark compliance
+│   │   ├── webdav_service.py             # WebDAV client
+│   │   ├── inventory_service.py          # Template sync stats
+│   │   ├── image_service.py              # Avatar resizing/cropping
+│   │   ├── word_conversion_service.py    # DOCX/RTF → HTML conversion
+│   │   ├── template_comparison_service.py # AI-powered template diff
+│   │   ├── template_dedup_service.py     # Duplicate detection
+│   │   ├── template_workflow_service.py  # Publish workflow states
+│   │   └── template_analysis_ai_service.py # AI analysis engine
 │   ├── routers/     # FastAPI endpoints
 │   └── schemas/     # Pydantic models
 
@@ -114,11 +148,15 @@ frontend/
 │   │   ├── assets/  # Mediefiler page (logos, global assets)
 │   │   ├── storage/ # WebDAV browser page
 │   │   ├── portal/  # Portal skins preview page
+│   │   ├── notifications/ # Dedicated notification history page
+│   │   ├── templates/[id]/edit/ # Full template editor page
+│   │   ├── templates/dedup/ # Deduplication dashboard
 │   │   └── signature/[id]/ # Public signature copy page
 │   ├── components/  # React components
 │   │   ├── assets/  # Asset gallery, LogoLibrary
 │   │   ├── storage/ # Storage browser components
 │   │   ├── portal/  # Portal mockup components
+│   │   ├── editor/  # CKEditorSandbox, MergeField*, TemplateComparison, Dedup
 │   │   └── notifications/ # NotificationDropdown, NotificationItem
 │   ├── hooks/       # Custom hooks
 │   │   └── use-notifications.ts # Notification polling hook
@@ -157,6 +195,8 @@ skins/                    # Vitec portal skin packages
 - UUID for all primary keys
 - JSONB for array/object fields
 - Pydantic for all data validation
+- Backend implementation skill: `.agents/skills/fastapi-patterns/SKILL.md`
+- Migration safety skill: `.agents/skills/sqlalchemy-migration-safety/SKILL.md`
 
 ### Frontend
 
@@ -205,6 +245,27 @@ Railway's internal networking causes Alembic migrations to fail silently during 
 **Symptoms of failed migration:** `UndefinedColumnError`, `MissingGreenlet`, 500 errors on previously working endpoints.
 
 ---
+
+**V4.0 Phase 11 Foundation + Infrastructure Fixes (2026-02-22):**
+
+- ✅ **Phase 11 Template Suite foundation** — 6-agent architecture planned and partially implemented
+- ✅ Backend: `WordConversionService` (DOCX/RTF→HTML via mammoth+striprtf), `TemplateComparisonService`, `TemplateDedupService`, `TemplateWorkflowService`, `TemplateAnalysisAIService`
+- ✅ Backend: New schemas (`template_comparison`, `template_dedup`, `template_workflow`, `word_conversion`)
+- ✅ Backend: Migration `20260221_0001_template_publishing.py` (publishing fields on templates)
+- ✅ Frontend: `/templates/[id]/edit` page, `/templates/dedup` dashboard
+- ✅ Frontend: `CKEditorSandbox`, `DeduplicationDashboard`, `MergeFieldAutocomplete`, `MergeFieldHighlighter`, `MergeFieldPanel`, `TemplateComparison`, `WordConversionDialog`
+- ✅ Frontend: Extended `lib/api.ts` with template workflow, comparison, dedup, and conversion endpoints
+- ✅ Documentation: `vitec-html-ruleset.md` (4,087 lines), `docs/Alle-flettekoder-25.9.md` (6,493 lines), `docs/vitec-stilark.md`
+- ✅ **Notifications page** at `/notifications` — filterable, date-grouped, expandable metadata, mark-read/delete
+- ✅ **Vitec picture proxy** re-enabled — `GET /api/vitec/employees/{id}/picture` and `/departments/{id}/picture`
+- ✅ **Picture sync integration** — Sync buttons now also fetch pictures from Vitec Hub
+- ✅ **CSP fix** — Added `cdn.jsdelivr.net` + `cdn.ckeditor.com` to `script-src` (fixed Monaco Editor loading)
+- ✅ **CKEditor CDN fix** — Updated `4.25.1` → `4.25.1-lts` (old URL 404'd)
+- ✅ **"Normaliser til Vitec" UX** — No longer auto-saves; shows persistent unsaved-changes banner
+- ✅ **Office banner fallback** — `onError` handler falls back to colored background
+- ⚠️ **Migration pending**: `20260221_0001_template_publishing.py` needs manual apply to Railway
+- Plans: `.planning/phases/11-template-suite/PLAN.md` + `AGENT-1` through `AGENT-6`
+- Library reset script: `backend/scripts/library_reset.py`
 
 **V3.7 Territory Seeding & Dashboard Fixes (Completed 2026-01-28):**
 
@@ -426,7 +487,18 @@ Railway's internal networking causes Alembic migrations to fail silently during 
 
 ## Agent Pipeline
 
-Execute in order:
+Default orchestrated flow:
+
+1. **Orchestrator** → routes request and enforces stage gates
+2. **Systems Architect + Frontend Architect** → specs
+3. **Spec Verifier** → go/no-go for implementation
+4. **Backend Builder + Frontend Builder** → implementation
+5. **Backend Verifier + Frontend Verifier** → pre-QA checks
+6. **QA Master** → final verification
+
+Use `/implement` for orchestrated flow, or run steps manually when needed.
+
+Legacy sequential flow (still supported):
 
 1. **Systems Architect** → `.cursor/specs/backend_spec.md`
 2. **Frontend Architect** → `.cursor/specs/frontend_spec.md`
@@ -441,6 +513,17 @@ Use `/architect`, `/frontend-architect`, `/builder` commands.
 3. **QA** → Test with dry-run
 
 Use `/entra-architect`, `/entra-builder`, `/entra-qa` commands.
+
+### Subagent Authoring Checklist
+
+Before adding or editing any file in `.cursor/agents/`:
+
+- Keep one focused responsibility per agent.
+- Add frontmatter with `name` and a clear `description` trigger ("Use when ...").
+- Keep prompts concise and outcome-oriented.
+- Define explicit success criteria and handoff expectations.
+- Reference `.cursor/context-registry.md` instead of duplicating long context lists.
+- Prefer verifier gates for go/no-go decisions before QA.
 
 ---
 
@@ -477,11 +560,21 @@ Use `/entra-architect`, `/entra-builder`, `/entra-qa` commands.
 | `/entra-qa`           | Test Entra ID sync                  |
 | `/entra-sync`         | Run Entra ID sync (usage docs)      |
 | `/notification`       | Maintain/update notification system |
+| `/review-builds`      | Run QA review of builder pipeline   |
+| `/sync-templates`     | Sync templates after Vitec newsletter/hotfix |
+| `/monthly-update`     | Full monthly Vitec release sync (scrape → diff → rebuild → KB) |
 | `/signature-qa`       | Run signature QA testing stages     |
+| `/verify-gates`       | Run spec/backend/frontend/QA verification gates |
+| `/markdown-convert`   | Convert source files to Markdown for analysis |
+| `/commit-safe`        | Create scoped commits with explicit path list |
+| `/deploy-gates`       | Run go/no-go deployment gate checklist |
+| `/token-audit`        | Generate efficiency audit report from git snapshot |
 
 ---
 
 ## Testing
+
+Testing and verifier guidance skill: `.agents/skills/test-quality-gates/SKILL.md`
 
 ### Run Tests Locally
 

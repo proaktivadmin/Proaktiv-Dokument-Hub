@@ -1,0 +1,134 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate table {
+                                border-collapse: collapse;
+                                width: 100%;
+                                table-layout: fixed;
+                            }
+                    
+                            #vitecTemplate table td[data-label]:before {
+                                content: attr(data-label);
+                                text-align: left;
+                                color: #333;
+                                font-size: 7pt;
+                                line-height: 8pt;
+                                display: block;
+                                position: absolute;
+                                top: 1px;
+                            }
+                    
+                            #vitecTemplate table td[data-choice]:after {
+                                content: attr(data-choice);
+                                text-align: center;
+                                font-size: 7pt;
+                                font-weight: normal;
+                                line-height: 8pt;
+                                color: #333;
+                                display: block;
+                                position: absolute;
+                                bottom: 1px;
+                                left: 0;
+                                right: 0;
+                    
+                            }
+                    
+                            #vitecTemplate table td[data-choice] {
+                                padding: 4px 2px 16px 2px;
+                                position: relative;
+                            }
+                    
+                            #vitecTemplate .seller:last-child .separator {
+                                display: none;
+                            }
+                    
+                            #vitecTemplate .buyer:last-child .separator {
+                                display: none;
+                            }
+                    
+                            /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+                    
+                            span.insert:empty {
+                                font-size: inherit !important;
+                                line-height: inherit !important;
+                                display: inline-block;
+                                background-color: lightpink;
+                                min-width: 2em !important;
+                                height: .7em !important;
+                                text-align: center;
+                            }
+                    
+                            span.insert:empty:before {
+                                content: attr(data-label);
+                            }
+                    
+                            span.insert:empty:hover {
+                                background-color: #fff;
+                                cursor: pointer;
+                            }
+                    
+                            .insert-table {
+                                display: inline-table;
+                            }
+                    
+                            .insert-table>span,
+                            .insert-table>span.insert {
+                                display: table-cell;
+                            }
+    
+                            #vitecTemplate .sign-field {
+                                display: inline-block;
+                                width: 100%;
+                                margin-top: 1cm;
+                                margin-right: 10px;
+                                border-top: solid 1px #000;
+                                vertical-align: top;
+                            }
+</style>
+<table>
+	<tbody>
+		<tr class="no-border">
+			<td colspan="100">
+			<div vitec-template="resource: Mottaker">&nbsp;</div>
+
+			<h3>Erkl&aelig;ring</h3>
+
+			<p><strong>[[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+			<p>Undertegnede bekrefter at dokument tinglyst p&aring; ovennevnte eiendom, den <span class="insert-table"> <span class="insert" data-label="tinglyst dato"></span> </span></p>
+			med dokumentnr. <span class="insert-table"> <span class="insert" data-label="dokumentnr."></span></span>, kan slettes.
+
+			<table>
+				<tbody>
+					<tr>
+						<td colspan="48" style="border-bottom:solid 1px #000000"><br />
+						<br />
+						&nbsp;</td>
+						<td colspan="2">&nbsp;</td>
+						<td colspan="48" style="border-bottom:solid 1px #000000"><br />
+						&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="48">Sted / dato</td>
+						<td colspan="2">&nbsp;</td>
+						<td colspan="48">Sted / dato</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div style="page-break-inside:avoid">
+			<table>
+				<tbody>
+					<tr class="no-border">
+						<td colspan="48" style="vertical-align:top"><span class="sign-field">Signatur</span></td>
+						<td colspan="2">&nbsp;</td>
+						<td colspan="48" style="vertical-align:top"><span class="sign-field">Signatur</span></td>
+					</tr>
+				</tbody>
+			</table>
+			</div>
+
+			<div vitec-template="resource: Avsender">&nbsp;</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>

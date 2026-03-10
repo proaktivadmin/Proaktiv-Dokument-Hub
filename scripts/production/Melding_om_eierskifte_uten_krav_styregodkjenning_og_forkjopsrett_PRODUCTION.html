@@ -1,0 +1,118 @@
+<div id="vitecTemplate">
+<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">
+#vitecTemplate .avoid-page-break { page-break-inside: avoid; }
+#vitecTemplate h1 {
+    font-size: 14pt;
+    margin: 0 0 12px 0;
+    padding: 0;
+}
+#vitecTemplate h2 {
+    font-size: 11pt;
+    margin: 30px 0 0 -20px;
+    padding: 0;
+}
+#vitecTemplate p { margin: 0 0 10px 0; }
+#vitecTemplate table { width: 100%; table-layout: fixed; }
+span.insert:empty {
+    font-size: inherit !important;
+    line-height: inherit !important;
+    display: inline-block;
+    background-color: lightpink;
+    min-width: 2em !important;
+    height: .7em !important;
+    text-align: center;
+}
+span.insert:empty:before { content: attr(data-label); }
+span.insert:empty:hover { background-color: #fff; cursor: pointer; }
+.insert-table { display: inline-table; }
+.insert-table > span,
+.insert-table > span.insert { display: table-cell; }
+</style>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="100">
+        <div vitec-template="resource: Mottaker">&nbsp;</div>
+        <p>&nbsp;</p>
+        <h1>Melding om eierskifte</h1>
+
+        <table>
+          <tbody>
+            <tr>
+              <td colspan="20"><strong>Adresse:</strong></td>
+              <td colspan="80">[[eiendom.adresse]], [[eiendom.postnr]] [[eiendom.poststed]]</td>
+            </tr>
+            <tr>
+              <td colspan="20"><strong>Matrikkel:</strong></td>
+              <td colspan="80">[[komplettmatrikkel]]</td>
+            </tr>
+            <tr>
+              <td colspan="20"><strong>Leilighetsnr:</strong></td>
+              <td colspan="80">[[eiendom.leilighetsnr]]</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>Vi viser til tidligere korrespondanse vedr. salg av ovennevnte leilighet, og vi orienterer om at selger(e):</p>
+
+        <div vitec-if="Model.selgere.Count &gt; 0">
+          <table>
+            <tbody vitec-foreach="selger in Model.selgere">
+              <tr>
+                <td colspan="100">[[*selger.navnutenfullmektigogkontaktperson]]</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div vitec-if="Model.selgere.Count == 0">
+          <p>[Mangler selgerinformasjon]</p>
+        </div>
+
+        <p>har [[kontrakt.dato]] akseptert kj&oslash;petilbud p&aring; kr. $.UD([[kontrakt.kjopesum]]),- fra kj&oslash;per(e):</p>
+
+        <div vitec-if="Model.kjopere.Count &gt; 0">
+          <table>
+            <tbody vitec-foreach="kjoper in Model.kjopere">
+              <tr>
+                <td colspan="100">[[*kjoper.navnutenfullmektigogkontaktperson]]</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div vitec-if="Model.kjopere.Count == 0">
+          <p>[Mangler kj&oslash;perinformasjon]</p>
+        </div>
+
+        <p>Kj&oslash;pers n&aring;v&aelig;rende adresse/tlf:</p>
+        <div vitec-if="Model.kjopere.Count &gt; 0">
+          <table>
+            <tbody vitec-foreach="kjoper in Model.kjopere">
+              <tr>
+                <td colspan="100">[[*kjoper.gatenavnognr]], [[*kjoper.postnr]] [[*kjoper.poststed]]</td>
+              </tr>
+              <tr>
+                <td colspan="100"><span vitec-if="kjoper.tlf != &quot;Mangler data&quot;">Tlf. [[*kjoper.tlf]]</span><span vitec-if="(kjoper.tlf != &quot;Mangler data&quot; &amp;&amp; kjoper.emailadresse != &quot;&quot;)"> / </span><span vitec-if="kjoper.emailadresse != &quot;&quot;">E-post: [[*kjoper.emailadresse]]</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div vitec-if="Model.kjopere.Count == 0">
+          <p>[Mangler kj&oslash;pers kontaktinformasjon]</p>
+        </div>
+
+        <p>Overtagelsesdato er satt til [[kontrakt.overtagelse.dato]].</p>
+        <p>Kontaktperson hos forretningsf&oslash;rer: <span class="insert-table"><span class="insert" data-label="navn"></span></span></p>
+
+        <p>I forbindelse med oppgj&oslash;r vil vi ta kontakt med foresp&oslash;rsel om evt. restanser til sameiet/borettslaget.</p>
+
+        <p>Ta kontakt dersom noe er uklart.</p>
+
+        <div style="margin-top:18px;">
+          <div vitec-template="resource: Avsender">&nbsp;</div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>

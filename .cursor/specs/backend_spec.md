@@ -1117,9 +1117,9 @@ The current `.cursorrules` file includes all necessary backend patterns:
 - Async service methods
 - Template content/settings flow
 
-### `.cursor/active_context.md` - Update Phase Info
+### `.planning/STATE.md` - Update Phase Info
 
-Update the phase to reflect V2.9 completion and V3.0 planning:
+Update state tracking to reflect current phase and milestone status:
 
 ```markdown
 ## PROJECT STATUS

@@ -1,0 +1,1076 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span> <span vitec-template="resource:Boligkjøperforsikring">&nbsp;</span>
+<style type="text/css">#vitecTemplate h1 {
+            counter-reset: item;
+        }
+
+        #vitecTemplate .item {
+            counter-increment: item;
+        }
+
+            #vitecTemplate .item > .item {
+                counter-reset: item;
+            }
+
+            #vitecTemplate .item ~ .item {
+                counter-reset: none;
+            }
+
+            #vitecTemplate .item h2:before,
+            #vitecTemplate .item h3:before {
+                content: counters(item, ".") ". ";
+            }
+
+        #vitecTemplate .avoid-page-break {
+            page-break-inside: avoid;
+        }
+
+        #vitecTemplate article {
+            padding-left: 20px;
+        }
+
+            #vitecTemplate article article {
+                padding-left: 0;
+            }
+
+        #vitecTemplate h1 {
+            text-align: center;
+            font-size: 14pt;
+            margin: 0;
+            padding: 0;
+        }
+
+        #vitecTemplate h2 {
+            font-size: 11pt;
+            margin: 30px 0 0 -20px;
+            padding: 0;
+            counter-reset: sub-counter;
+        }
+
+        #vitecTemplate h3 {
+            font-size: 10pt;
+            margin: 20px 0 0 0;
+            padding: 0;
+        }
+
+        #vitecTemplate table {
+            width: 100%;
+            table-layout: fixed;
+        }
+
+            #vitecTemplate table .borders {
+                width: 100%;
+                table-layout: fixed;
+                border-bottom: solid 1px black;
+                border-top: solid 1px black;
+            }
+
+        #vitecTemplate ul {
+            list-style-type: disc;
+            margin-left: 0;
+        }
+
+            #vitecTemplate ul li {
+                list-style-position: outside;
+                line-height: 20px;
+                margin-left: 0;
+            }
+
+        span.insert:empty {
+            font-size: inherit !important;
+            line-height: inherit !important;
+            display: inline-block;
+            background-color: lightpink;
+            min-width: 2em !important;
+            height: .7em !important;
+            text-align: center;
+        }
+
+            span.insert:empty:before {
+                content: attr(data-label);
+            }
+
+            span.insert:empty:hover {
+                background-color: #fff;
+                cursor: pointer;
+            }
+
+        .insert-table {
+            display: inline-table;
+        }
+
+            .insert-table > span,
+            .insert-table > span.insert {
+                display: table-cell;
+            }
+
+        #vitecTemplate .roles-table tbody:last-child tr:last-child td {
+            display: none;
+        }
+
+        #vitecTemplate a.bookmark {
+            color: #000;
+            font-style: italic;
+            text-decoration: none;
+        }
+
+        #vitecTemplate .liste:last-child .separator {
+            display: none;
+        }
+</style>
+<style type="text/css">/* Klikkbare sjekkbokser og radioknapper */
+        label.btn {
+            display: inline;
+            text-transform: none;
+            white-space: normal;
+            padding: 0;
+            vertical-align: baseline;
+            outline: none;
+            font-size: inherit;
+        }
+
+            label.btn:active,
+            label.btn.active {
+                box-shadow: none;
+                outline: none;
+            }
+
+        .svg-toggle { /* nullstiller bootstrap button-styling */
+            display: inline-block !important;
+            width: 16px;
+            height: 16px;
+            margin: 0 5px;
+            vertical-align: bottom;
+            padding: 0;
+            border: none;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none !important;
+            cursor: pointer;
+            white-space: normal;
+            text-align: left;
+            background-repeat: no-repeat;
+            background-size: 16px 16px;
+            background-position: center center;
+        }
+
+
+            .svg-toggle.checkbox {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+            }
+
+                .svg-toggle.checkbox.active,
+                .btn.active > .svg-toggle.checkbox {
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+                    box-shadow: none !important;
+                }
+
+            .svg-toggle.radio {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
+            }
+
+                .svg-toggle.radio.active,
+                .btn.active > .svg-toggle.radio {
+                    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
+                    box-shadow: none !important;
+                }
+
+        /* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
+        #vitecTemplate [data-toggle="buttons"] input {
+            display: none;
+        }
+</style>
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100" style="text-align:right">Meglerselskap: [[meglerkontor.navn]]<br />
+			&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="100" style="text-align:right"><small>Meglerforetakets org.nr: <strong>[[meglerkontor.orgnr]]</strong><br />
+			Oppdragsnr.:&nbsp;<strong>[[oppdrag.nr]]</strong><br />
+			Omsetningsnr.:&nbsp;<strong>[[kontrakt.formidling.nr]]</strong> </small></td>
+		</tr>
+		<tr>
+			<td colspan="100">&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="100">
+			<h1>Kj&oslash;pekontrakt</h1>
+
+			<p>For salg av bolig og fritidsbolig til forbrukerkj&oslash;per.</p>
+
+			<p>Kontraktens bestemmelser utfylles av lov <span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">av 13. mai 1988 nr. 27 om kj&oslash;p, lov</span> 3. juli 1992 nr. 93 om avhending av fast eiendom (Avhendingslova) og annen bakgrunnsrett.</p>
+
+			<div vitec-if="Model.oppdrag.hovedtype == &quot;Oppgj\xF8rsoppdrag&quot;">
+			<p><em><u>F&oslash;lgende, s&aelig;rskilte ansvarsbegrensning gjelder:</u></em><br />
+			Avtalen om kj&oslash;p er inng&aring;tt mellom partene direkte, og megler skal kun bist&aring; med &aring; utarbeide kontrakt basert p&aring; partenes avtale, foreta tinglysing og gjennomf&oslash;re oppgj&oslash;r i tr&aring;d med partenes avtale. Siden meglers oppdrag er begrenset og mottatt&nbsp;etter at bindende avtale er inng&aring;tt, er partene klar over at megler ikke har befart eiendommen og derved ikke hatt samme mulighet til &aring; foreta unders&oslash;kelser mv. som ved et vanlig salgsoppdrag. Det er ikke utferdiget salgsoppgave og innhenting av informasjon&nbsp;er gjort etter budaksept. De unders&oslash;kelsene som megler har foretatt gjelder kun de forhold som har direkte betydning for en forsvarlig gjennomf&oslash;ring av det &oslash;konomiske oppgj&oslash;ret mellom partene.</p>
+
+			<p>Megler har ikke vurdert eiendommens verdi, og b&aring;de kj&oslash;per og kj&oslash;pers l&aring;ngivere oppfordres til selv &aring; unders&oslash;ke hvorvidt den avtalte kj&oslash;pesummen reflekterer eiendommens verdi. Megler har ikke noe erstatningsrettslig ansvar overfor kj&oslash;per eller kj&oslash;pers l&aring;ngivere for eventuelt &oslash;konomisk tap som f&oslash;lge av eventuelt avvik mellom den avtalte kj&oslash;pesummen og eiendommens reelle verdi.</p>
+
+			<p>Det er selger som har gitt kj&oslash;per informasjon om eiendommen. <span style="color:red"> Selger har opplyst megler at salget f&oslash;lger avhendingslovens normalregler, dvs. eiendommen&nbsp;er ikke solgt &quot;as is&quot;, at verken kj&oslash;per eller selger har tatt forbehold og at kj&oslash;pesummen er tilstrekkelig til &aring; dekke eventuelle restanser som er sikret med legal pant samt til &aring; innfri pengeheftelsene.</span></p>
+			</div>
+
+			<article class="item">
+			<h2 style="margin-bottom:1em">Partene</h2>
+
+			<table class="roles-table" vitec-if="Model.selgere.Count &gt; 0">
+				<thead>
+					<tr>
+						<th colspan="34"><strong>Navn</strong></th>
+						<th colspan="48"><strong>Adresse/Kontaktinfo</strong></th>
+						<th colspan="18"><strong>[[selger.ledetekst_fdato_orgnr]]</strong></th>
+					</tr>
+				</thead>
+				<tbody vitec-foreach="selger in Model.selgere">
+					<tr>
+						<td colspan="34" rowspan="2">[[*selger.navnutenfullmektigogkontaktperson]]</td>
+						<td colspan="48">[[*selger.gatenavnognr]], [[*selger.postnr]] [[*selger.poststed]]</td>
+						<td colspan="18">[[*selger.fdato_orgnr]]</td>
+					</tr>
+					<tr>
+						<td colspan="63"><span vitec-if="selger.tlf != &quot;&quot;">Tlf: [[*selger.tlf]]</span> <span vitec-if="(selger.tlf != &quot;&quot; &amp;&amp; selger.emailadresse != &quot;&quot;)"> / </span> <span vitec-if="selger.emailadresse != &quot;&quot;">E-post: [[*selger.emailadresse]]</span></td>
+					</tr>
+					<tr>
+						<td colspan="100">&nbsp;</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p style="margin-top:0">heretter kalt Selger, og</p>
+
+			<table class="roles-table" vitec-if="Model.kjopere.Count &gt; 0">
+				<thead>
+					<tr>
+						<th colspan="34"><strong>Navn</strong></th>
+						<th colspan="48"><strong>Adresse/Kontaktinfo</strong></th>
+						<th colspan="18"><strong>[[kjoper.ledetekst_fdato_orgnr]]</strong></th>
+					</tr>
+				</thead>
+				<tbody vitec-foreach="kjoper in Model.kjopere">
+					<tr>
+						<td colspan="34" rowspan="2">[[*kjoper.navnutenfullmektigogkontaktperson]]</td>
+						<td colspan="48">[[*kjoper.gatenavnognr]],&nbsp;[[*kjoper.postnr]]&nbsp;[[*kjoper.poststed]]</td>
+						<td colspan="18">[[*kjoper.fdato_orgnr]]</td>
+					</tr>
+					<tr>
+						<td colspan="63"><span vitec-if="kjoper.tlf != &quot;&quot;">Tlf: [[*kjoper.tlf]]</span> <span vitec-if="(kjoper.tlf != &quot;&quot; &amp;&amp; kjoper.emailadresse != &quot;&quot;)"> / </span> <span vitec-if="kjoper.emailadresse != &quot;&quot;">E-post: [[*kjoper.emailadresse]]</span></td>
+					</tr>
+					<tr>
+						<td colspan="100">&nbsp;</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p style="margin-top:0">heretter kalt Kj&oslash;per.</p>
+
+			<p>&nbsp;</p>
+
+			<p>Elektronisk tinglysing &ndash; informasjon til kj&oslash;pers bank:<br />
+			Dette oppgj&oslash;ret skal tinglyses elektronisk - kj&oslash;pers BankID-signerte pantedokument m&aring; sendes til f&oslash;lgende organisasjonsnummer via Altinn:</p>
+
+			<p>- [[oppgjor.orgnr]] ([[oppgjor.kontornavn]])</p>
+
+			<p>Dersom bank eller kj&oslash;per ikke har mulighet til BankID-signering av pantedokumentet m&aring; megler kontaktes s&aring; snart som mulig for &aring; avklare tinglysingsmetode (papir / elektronisk).<br />
+			&nbsp;</p>
+			</article>
+
+			<article class="item">
+			<h2>Salgsobjekt og tilbeh&oslash;r</h2>
+
+			<p>Selger overdrar herved til kj&oslash;per eiendommen <span vitec-if="(Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">[[komplettmatrikkelutvidet]] p&aring; [[eiendom.tomtetype]]</span> <span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)"> aksjenr. [[aksjeselskap.aksjenr]] <span vitec-if="Model.aksjeselskap.partoblnr != &quot;0&quot;">og partialobligasjon nr. [[aksjeselskap.partoblnr]] </span><span vitec-if="Model.aksjeselskap.oblbelop != &quot;0,00&quot;">p&aring;lydende <span style="white-space:nowrap">kr $.UD([[aksjeselskap.oblbelop]])</span></span> i [[aksjeselskap.navn]], org.nr. [[aksjeselskap.orgnr]] </span> i [[eiendom.kommunenavn]] kommune med tilliggende rettigheter og forpliktelser, slik den har tilh&oslash;rt selger.</p>
+
+			<p>Adresse: [[eiendom.gatenavnognr]], [[eiendom.postnr]] [[eiendom.poststed]]</p>
+
+			<p vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Eier av aksjen(e) er <span vitec-foreach="selger in Model.selgere"><span class="liste">[[*selger.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span></p>
+
+			<p vitec-if="(Model.eiendom.eieform != &quot;Aksje&quot; &amp;&amp; Model.eiendom.eieform != &quot;Obligasjonsleilighet&quot;)">Hjemmelshaver til <span vitec-if="(Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Selveier&quot;)">eiendommen </span> <span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">andelen </span> er <span vitec-if="Model.hjemmelshaver.navn == &quot;Mangler data&quot;"><span vitec-foreach="selger in Model.selgere"><span class="liste">[[*selger.navnutenfullmektigogkontaktperson]]<span class="separator">, </span></span></span></span><span vitec-if="Model.hjemmelshaver.navn != &quot;Mangler data&quot;"><span vitec-foreach="hjemmelshaver in Model.hjemmelshavere"><span class="liste">[[*hjemmelshaver.navn]] ([[*hjemmelshaver.ledetekst_fdato_orgnr]] [[*hjemmelshaver.fdato_orgnr]])</span></span></span></p>
+
+			<p vitec-if="Model.eiendom.tomtetype == &quot;festetomt&quot;">Bortfester er <span vitec-if="Model.grunneier.navn != &quot;Mangler data&quot;"><span vitec-foreach="grunneier in Model.grunneiere"><span class="liste">[[*grunneier.navn]] ([[*grunneier.ledetekst_fdato_orgnr]] [[*grunneier.fdato_orgnr]])<span class="separator">, </span></span></span></span><span vitec-if="Model.grunneier.navn == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="Grunneiers navn og fødselsdato"></span></span></span></p>
+
+			<p>Tilbeh&oslash;r som fremkommer i vedlagte tilbeh&oslash;rsliste skal f&oslash;lge eiendommen s&aring; fremt det var synlig ved kj&oslash;pers besiktigelse av eiendommen og ikke annet er avtalt mellom partene.</p>
+			</article>
+
+			<article class="item">
+			<h2>Kj&oslash;pesum og omkostninger</h2>
+
+			<p>Eiendommen overdras for en kj&oslash;pesum stor <strong>kr $.UD([[kontrakt.kjopesum]])</strong> - [[kontrakt.kjopesumibokstaver]].</p>
+
+			<p vitec-if="Model.eiendom.fellesgjeld != &quot;0,00&quot;">I tillegg til kj&oslash;pesummen overtar kj&oslash;per andel fellesgjeld stor kr $.UD([[eiendom.fellesgjeld]]) iflg. opplysninger fra forretningsf&oslash;rer<span vitec-if="Model.oppdrag.hovedtype != &quot;Oppgj\xF8rsoppdrag&quot;">, jf. salgsoppgave</span>.</p>
+
+			<p vitec-if="Model.eiendom.fellesgjeld != &quot;0,00&quot;">Fellesgjelden betjenes gjennom betaling av <span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">andelens </span><span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">seksjonens </span> <span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">aksjen(e)s </span>forholdsmessige del av <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">sameiets </span> <span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;"> borettslagets </span> <span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">aksjelagets </span>felleskostnader.</p>
+
+			<p vitec-if="Model.oppdrag.erdetforkjopsfrist == true">Behandlingsgebyret for forkj&oslash;psrett vil kun p&aring;l&oslash;pe dersom forskj&oslash;psrett <em style="font-style:italic">ikke</em> benyttes. Dersom forkj&oslash;psrett benyttes vil bel&oslash;pet bli refundert kj&oslash;per.</p>
+
+			<div class="avoid-page-break">
+			<p>Overdragelsen gj&oslash;res opp p&aring; f&oslash;lgende m&aring;te:</p>
+
+			<table>
+				<tbody>
+					<tr>
+						<td colspan="75">Til meglers konto 2 virkedager f&oslash;r overtakelse, [[kontrakt.overtagelse.dato]]:</td>
+						<td colspan="5">kr</td>
+						<td colspan="20" style="text-align:right">$.UD([[kontrakt.kjopesum]])</td>
+					</tr>
+				</tbody>
+				<tbody vitec-foreach="kostnad in GetPosteringerUtenBoligkjoperforsikring()">
+					<tr>
+						<td colspan="75">[[*kostnad.beskrivelse]]:</td>
+						<td colspan="5">kr</td>
+						<td colspan="20" style="text-align:right">$.UD([[*kostnad.belop]])</td>
+					</tr>
+				</tbody>
+				<tbody>
+					<tr>
+						<td class="borders" colspan="75"><strong>Sum kj&oslash;pesum og omkostninger</strong></td>
+						<td class="borders" colspan="5"><strong>kr</strong></td>
+						<td class="borders" colspan="20" style="text-align:right"><strong>$.CALC(UD:[[kontrakt.kjopesumogomkostn]]-@GetPosteringsVerdiForBoligkjoperforsikring())</strong></td>
+					</tr>
+				</tbody>
+			</table>
+			</div>
+
+			<div vitec-if="Model.kjoper.erfirma == false">
+			<div class="avoid-page-break">
+			<table>
+				<tbody>
+					<tr>
+						<td colspan="100">&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="75">Boligkj&oslash;perforsikring:</td>
+						<td colspan="5">kr</td>
+						<td colspan="20" style="text-align:right"><span class="insert-table"> <span vitec-if="@GetPosteringsVerdiForBoligkjoperforsikring()!=&quot;0&quot;">$.UD(@GetPosteringsVerdiForBoligkjoperforsikring())</span> <strong vitec-if="@GetPosteringsVerdiForBoligkjoperforsikring()==&quot;0&quot;"><span class="insert-table"> <span class="insert" data-label="beløp"></span></span></strong> </span></td>
+					</tr>
+					<tr>
+						<td class="borders" colspan="75"><strong>Sum kj&oslash;pesum og omkostninger med boligkj&oslash;perforsikring</strong></td>
+						<td class="borders" colspan="5"><strong>kr</strong></td>
+						<td class="borders" colspan="20" style="text-align:right"><span vitec-if="@GetPosteringsVerdiForBoligkjoperforsikring()!=&quot;0&quot;">$.UD([[kontrakt.kjopesumogomkostn]])</span> <strong vitec-if="@GetPosteringsVerdiForBoligkjoperforsikring()==&quot;0&quot;"><span class="insert-table"> <span class="insert" data-label="beløp"></span></span></strong></td>
+					</tr>
+				</tbody>
+			</table>
+			</div>
+
+			<p data-toggle="buttons"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" /></label> <span vitec-if="Model.kjopere.Count == 1">Jeg </span> <span vitec-if="Model.kjopere.Count &gt; 1">Vi </span>&oslash;nsker boligkj&oslash;perforsikring &nbsp;&nbsp;&nbsp; <label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" /></label> <span vitec-if="Model.kjopere.Count == 1">Jeg </span> <span vitec-if="Model.kjopere.Count &gt; 1">Vi </span>&oslash;nsker ikke boligkj&oslash;perforsikring</p>
+
+			<div class="avoid-page-break">
+			<p>Dersom kj&oslash;per skal etablere ytterligere pant <span vitec-if="(Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">p&aring; eiendommen</span> <span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">i aksjene </span>p&aring;l&oslash;per <span>kr 545</span> <span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)"> kr <span class="insert-table"> <span class="insert" data-label="beløp"></span> </span> </span> pr. <span vitec-if="(Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Andel&quot;)"> panterett. </span> <span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)"> l&aring;n. </span>Det tas forbehold om endringer i <span vitec-if="(Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">offentlige </span>avgifter/gebyrer.</p>
+			</div>
+			</div>
+			</article>
+
+			<article class="item">
+			<h2>Oppgj&oslash;r</h2>
+
+			<article class="item">
+			<div class="avoid-page-break">
+			<h3>Ytelse mot ytelse</h3>
+
+			<p>Eiendommen er formidlet gjennom <strong>[[meglerkontor.navn]]</strong>, heretter kalt Megler, og oppgj&oslash;ret vil bli foretatt av</p>
+
+			<p><strong>[[oppgjor.kontornavn]]</strong><br />
+			[[oppgjor.postadresse]]<br />
+			[[oppgjor.postnr]] [[oppgjor.poststed]]<br />
+			Tlf: [[oppgjor.kontortlf]]. E-post: [[oppgjor.kontorepost]]</p>
+
+			<p>og gjennomf&oslash;res i henhold til denne kontrakt inng&aring;tt mellom kj&oslash;per og selger.</p>
+			</div>
+
+			<p>Partene gir oppgj&oslash;rsavdelingen ugjenkallelig fullmakt til &aring; foreta endelig oppgj&oslash;r etter denne kontrakt og alle innbetalinger, dokumenter og henvendelser ang&aring;ende oppgj&oslash;ret skal rettes hit.</p>
+
+			<p>Ved overtakelse g&aring;r som hovedregel eiendomsretten og r&aring;digheten til eiendommen over fra selger til kj&oslash;per, og samtidig g&aring;r eiendomsretten og r&aring;digheten til kj&oslash;pesummen over fra kj&oslash;per til selger.</p>
+
+			<p>Se likevel avsnitt <a class="bookmark" href="#tinglysing-notifisering-og-sikkerhet"> <span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Andel&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">Tinglysing og Sikkerhet</span> <span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Notifisering og Sikkerhet</span> og flg. </a> om oppgj&oslash;r og avtalt sikkerhet for partenes rettslige posisjoner frem til det er oppn&aring;dd rettsvern.</p>
+			</article>
+
+			<article class="item">
+			<div class="avoid-page-break">
+			<h3>Konto og betalingstidspunkt, og forsinkelsesrenter ved forsinket betaling</h3>
+
+			<p>Hele kj&oslash;pesummen med tillegg av omkostninger skal v&aelig;re kreditert meglers klientkonto nummer <strong>[[kontrakt.klientkontoogkid]]</strong> og skriftlig melding fra kj&oslash;pers bank m&aring; foreligge innen 2 virkedager f&oslash;r overtakelse, se avsnitt <a class="bookmark" href="#overtakelse">Overtakelse</a>.</p>
+			</div>
+
+			<p>Kj&oslash;pesum regnes ikke som betalt av kj&oslash;per f&oslash;r kj&oslash;pers panterett er mottatt av oppgj&oslash;r i korrekt utfylt, undertegnet og bevitnet stand. Valuteringsdato legges til grunn for all renteberegning mellom partene.</p>
+
+			<p>Ved forsinket betaling av hele eller deler av kj&oslash;pesummen og omkostninger, kan selger kreve lovens forsinkelsesrente av den til enhver tid ubetalte del av kj&oslash;pesummen fra avtalt tidspunkt for overtakelse og frem til full innbetaling faktisk finner sted. Denne bestemmelse gir ikke kj&oslash;per rett til &aring; forlenge betalingsfristen utover&nbsp;de frister som er avtalt.</p>
+			</article>
+
+			<article class="item">
+			<h3>Betalingsforsinkelse fra kj&oslash;per som utgj&oslash;r vesentlig mislighold</h3>
+
+			<p>Ved forsinkelse med innbetaling av kj&oslash;pesummen og omkostningene som utgj&oslash;r vesentlig mislighold, kan selger heve kj&oslash;pet, jf. <span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)"> kj&oslash;pslovens &sect; 54 jf. &sect; 51 og </span> avhendingslova &sect; 5-3 jf. &sect; 5-1.</p>
+			</article>
+
+			<article class="item">
+			<div class="avoid-page-break">
+			<h3>Forsinket overlevering fra selger</h3>
+
+			<p>Selger vedtar utkastelse uten s&oslash;ksm&aring;l og dom etter tvangsfullbyrdelsesloven &sect; 4-18, &sect; 13-2 annet ledd, bokstav e jf. &sect; 13-11, hvis fraflytting ikke har funnet sted ved avtalt overtakelsestidspunkt. Dette gjelder s&aring; fremt ikke annen skriftlig avtale er gjort mellom partene.</p>
+			</div>
+			</article>
+
+			<article class="item">
+			<div class="avoid-page-break">
+			<h3>Kj&oslash;pers &oslash;vrige forpliktelser forbundet med dokumentasjon og oppgj&oslash;r</h3>
+
+			<p>Kj&oslash;per er forpliktet til &aring; signere og fremskaffe n&oslash;dvendige dokumenter i forbindelse med gjennomf&oslash;ring av handelen, for eksempel &aring; signere p&aring; s&oslash;knad om konsesjon/egenerkl&aelig;ring om konsesjonsfrihet og &aring; signere n&oslash;dvendige l&aring;nedokumenter og pantedokumenter for finansiering av kj&oslash;pet. Blir overtakelse forsinket som f&oslash;lge av manglende medvirkning fra kj&oslash;per knyttet til slike forhold, vil det v&aelig;re et mislighold som kan utl&oslash;se krav fra selger som beskrevet i avsnitt <a class="bookmark" href="#konsekvenser-av-mislighold-reklamasjon">Konsekvenser av mislighold - Reklamasjon</a>.</p>
+			</div>
+			</article>
+
+			<article class="item">
+			<div class="avoid-page-break">
+			<h3>Driftsutgifter og driftsinntekter p&aring; eiendommen, og renter p&aring; klientkonto</h3>
+
+			<p>Fordeling av eiendommens driftsutgifter og eventuelle inntekter per overtakelsesdato fastsettes av kj&oslash;per og selger, eventuelt med meglers bistand. Den som eier innest&aring;ende p&aring; klientkonto godskrives ogs&aring; rentene. Omkostninger som er innbetalt i henhold til denne kontrakt tilh&oslash;rer kj&oslash;per. Selger og kj&oslash;per godskrives likevel ikke renter n&aring;r disse for hver av partene utgj&oslash;r mindre enn et halvt rettsgebyr, jf. eiendomsmeglingsforskriften &sect; 3-10 tredje ledd.</p>
+			</div>
+			</article>
+			</article>
+
+			<article class="item"><a id="tinglysing-notifisering-og-sikkerhet"></a>
+
+			<h2><span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Andel&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">Tinglysing </span> <span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Notifisering </span>og sikkerhet</h2>
+
+			<article class="item">
+			<div class="avoid-page-break">
+			<h3>Forutsetninger for oppgj&oslash;r og frigivelse av kj&oslash;pesummen</h3>
+
+			<p vitec-if="Model.oppdrag.harblancoskjote == true">Selger utsteder blanco skj&oslash;te samtidig med denne kontrakts underskrift. Skj&oslash;tet skal oppbevares hos megler til overtagelsen er gjennomf&oslash;rt. Kj&oslash;per vil f&aring; skj&oslash;te samt generalfullmakt etter fullf&oslash;rt overtagelse. Se egen generalfullmakt samt n&aelig;rv&aelig;rende kontrakts &sect; 11.</p>
+
+			<p>For &aring; sikre trygg gjennomf&oslash;ring av handelen etter eiendomsmeglingsloven &sect; 3-2 og &sect; 6-9, har partene avtalt f&oslash;lgende betingelser for frigivelse av kj&oslash;pesummen:</p>
+			</div>
+
+			<div vitec-if="Model.oppdrag.harblancoskjote == false">
+			<div vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Andel&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">
+			<ol class="avoid-page-break">
+				<li>Panterettsdokument med ur&aring;dighetserkl&aelig;ring er tinglyst</li>
+				<li>Kj&oslash;per har innbetalt hele kj&oslash;pesummen inklusive omkostninger</li>
+				<li>Kj&oslash;per har overtatt bruken av eiendommen</li>
+				<li>Kj&oslash;pers <span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;"> hjemmelsoverf&oslash;ring</span> <span vitec-if="Model.eiendom.eieform != &quot;Andel&quot;"> skj&oslash;te </span> p&aring; eiendommen &ndash; uten andre heftelser enn det partene har avtalt &ndash; er tinglyst</li>
+				<li>Kj&oslash;pers eventuelle l&aring;ngivere har f&aring;tt tinglyst panterett i eiendommen med forutsatt prioritet</li>
+				<li>Heftelser som ikke skal f&oslash;lge med ved handelen er slettet</li>
+			</ol>
+			</div>
+
+			<div vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">
+			<ol class="avoid-page-break">
+				<li>Panterett med ur&aring;dighetserkl&aelig;ring er notert i aksjeeierboken</li>
+				<li>Kj&oslash;per har innbetalt hele kj&oslash;pesummen inklusive omkostninger</li>
+				<li>Kj&oslash;pers erverv av aksjen er meldt til selskapet, jf. asl. &sect; 4-12</li>
+				<li>Aksjeselskapet har avklart eventuell forkj&oslash;psrett og godkjent ervervet</li>
+				<li>Kj&oslash;per har overtatt bruken av boligen</li>
+				<li>Heftelser som ikke skal f&oslash;lge med ved handelen er slettet</li>
+				<li>Kj&oslash;pers erverv er innf&oslash;rt i aksjeeierboken, jf. asl. &sect; 4-7, og selskapet har gitt kj&oslash;per melding om dette, jf. asl. &sect; 4-10</li>
+				<li>Kj&oslash;pers eventuelle l&aring;ngivere har f&aring;tt panterett innf&oslash;rt i aksjeeierboken med forutsatt prioritet</li>
+			</ol>
+			</div>
+
+			<div vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Andel&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">
+			<p>Forutsetningene nr. 5 og 6 er ikke til hinder for at megler kan iverksette oppgj&oslash;r basert p&aring; restgjeldsoppgave og tilstrekkelig slettebekreftelse fra selgers kreditor(er) med panterett i eiendommen. Gjelder ikke dersom det er tinglyst privat pant.</p>
+
+			<p>Kreditorer kan ikke s&oslash;ke dekning i kj&oslash;pesummen p&aring; meglers klientkonto f&oslash;r forutsetningene 1 til 6 for frigivelse av kj&oslash;pesummen i henhold til denne kontrakt er oppfylt, jf. eiendomsmeglingsloven &sect; 3-2 og dekningsloven &sect; 2-2.</p>
+			</div>
+
+			<div vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">
+			<p>Forutsetningene nr. 6, 7 og 8 er ikke til hinder for at megler kan iverksette oppgj&oslash;r basert p&aring; restgjeldsoppgave og tilstrekkelig slettebekreftelse fra selgers kreditor(er) med panterett i aksjen(e).</p>
+
+			<p>Kreditorer kan ikke s&oslash;ke dekning i kj&oslash;pesummen p&aring; meglers klientkonto f&oslash;r betingelsene 1 til 8 for frigivelse av kj&oslash;pesummen i henhold til denne kontrakt er oppfylt, jf. eiendomsmeglingsloven &sect; 3-2 og dekningsloven &sect; 2-2.</p>
+			</div>
+			</div>
+
+			<div vitec-if="Model.oppdrag.harblancoskjote == true">
+			<ol class="avoid-page-break">
+				<li>Pantedokument med ur&aring;dighetserkl&aelig;ring er tinglyst.</li>
+				<li>Kj&oslash;per har innbetalt hele kj&oslash;pesummen inklusive omkostninger.</li>
+				<li>Kj&oslash;per har overtatt bruken av eiendommen.</li>
+				<li>Kj&oslash;pers eventuelle l&aring;ngivere har f&aring;tt tinglyst panterett i eiendommen med forutsatt prioritet og</li>
+				<li>Heftelser som ikke skal f&oslash;lge med ved handelen er slettet.</li>
+			</ol>
+
+			<p>Forutsetningene nr. 4 og 5 er ikke til hinder for at megler kan iverksette oppgj&oslash;r basert p&aring; restgjeldsoppgave og tilstrekkelig slettebekreftelse fra selgers kreditor(er) med panterett i eiendommen. Gjelder ikke ved tinglyst privat pant.</p>
+			</div>
+
+			<p>Meglers vederlag og utlegg forfaller til betaling n&aring;r handelen er kommet i stand. Selger samtykker i at meglerforetaket trekker dette i fra oppgj&oslash;ret.</p>
+
+			<p>F&oslash;r oppgj&oslash;r til selger kan finne sted, forplikter selger seg til &aring; returnere overtakelsesprotokollen i utfylt stand til oppgj&oslash;r. Oppgj&oslash;ret foretas ihht. forutsetningene <span vitec-if="(Model.eiendom.eieform == &quot;Obligasjon&quot; || Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Andel&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">1 til 6</span> <span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">1 til 8</span> for frigivelse av kj&oslash;pesummen.</p>
+
+			<p>Har selger tillatt kj&oslash;per &aring; overta eiendommen selv om deler av kj&oslash;pesummen/omkostningene ikke er innbetalt, kan den f&oslash;rste delen av oppgj&oslash;ret likevel gjennomf&oslash;res uten hinder av forutsetning nummer 2 ovenfor. Resterende del av oppgj&oslash;ret vil i s&aring; fall finne sted n&aring;r resten av kj&oslash;pesummen/omkostningene er innbetalt.</p>
+
+			<p vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Selger gir ved underskrift av denne kontrakt ugjenkallelig fullmakt til megler/-forretningsf&oslash;rer, p&aring; selgers vegne, &aring; transportere aksjen (med eventuell tilh&oslash;rende partialobligasjon) til kj&oslash;per i heftelsesfri stand (eventuelt med de unntak som fremg&aring;r over) n&aring;r fullt oppgj&oslash;r fra kj&oslash;per etter bestemmelsene i denne kj&oslash;pekontrakt er innbetalt til meglers klientkonto.</p>
+
+			<p vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Eiendomsmeglingsforetaket skal vederlagsfritt kvittere gjeldsbrevet til avlysing og bes&oslash;rge dette slettet n&aring;r oppgj&oslash;ret mellom partene er avsluttet, ny eier er notert i aksjeeierboken, kj&oslash;pers eventuelle heftelser er notert og alle &oslash;vrige formaliteter vedr&oslash;rende oppgj&oslash;ret er ordnet.</p>
+
+			<p>Selger er innforst&aring;tt med at oppgj&oslash;r forbeholder seg en rimelig ekspedisjonstid, regnet fra dato for <span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Andel&quot;  || Model.eiendom.eieform == &quot;Sameie&quot;)">konferering av </span> <span vitec-if="(Model.eiendom.eieform== &quot;Selveier&quot; || Model.eiendom.eieform== &quot;Sameie&quot;)">skj&oslash;te, </span> <span vitec-if="Model.eiendom.eieform== &quot;Andel&quot;">hjemmelsoverf&oslash;ring, </span> <span vitec-if="Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;"> bekreftet notifikasjon fra forretningsf&oslash;rer, </span> for utbetaling av oppgj&oslash;r &ndash; normalt 14 virkedager. Megler er ikke ansvarlig for forsinkelse med oppgj&oslash;ret som skyldes lang ekspedisjonstid hos <span vitec-if="(Model.eiendom.eieform != &quot;Aksje&quot; || Model.eiendom.eieform != &quot;Obligasjonsleilighet&quot;)">tinglysingsmyndighetene</span> <span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">forretningsf&oslash;rer</span>.</p>
+			</article>
+
+			<article class="item" vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">
+			<h3>Deponering og tinglysning av skj&oslash;te og andre dokumenter for tinglysning.</h3>
+
+			<p>All tinglysning av dokumenter p&aring; eiendommen skal foretas av megler. Selger utsteder skj&oslash;te til kj&oslash;per samtidig med denne kontrakts underskrift. Skj&oslash;tet oppbevares av megler, som bes&oslash;rger tinglysing s&aring; snart overtakelse er gjennomf&oslash;rt.</p>
+
+			<p>Dokumenter som skal tinglyses m&aring; snarest overleveres megler i undertegnet og tinglysingsklar stand.</p>
+			</article>
+
+			<article class="item" vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">
+			<h3>Deponering og tinglysing av hjemmelsdokument og andre dokumenter for tinglysing</h3>
+
+			<p>All tinglysing av dokumenter p&aring; eiendommen skal foretas av megler. Selger utsteder hjemmelsdokument til kj&oslash;per samtidig med denne kontrakts underskrift. Hjemmelsdokumentet oppbevares hos megler, som bes&oslash;rger tinglysing s&aring; snart overtakelse er gjennomf&oslash;rt.</p>
+
+			<p>Dokumenter som skal tinglyses m&aring; snarest overleveres megler i undertegnet og tinglysingsklar stand.</p>
+			</article>
+
+			<article class="item" vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjon&quot;)">
+			<h3>Erkl&aelig;ring om pantsettelse og ur&aring;dighet</h3>
+
+			<p>Selger utsteder etter kontraktsinng&aring;else en erkl&aelig;ring om pantsettelse til eiendomsmeglingsforetaket minst p&aring;lydende kj&oslash;pesummen. Erkl&aelig;ringen skal inneholde en ur&aring;dighetserkl&aelig;ring som forhindrer transport av aksjen samt pantsettelse mv., uten etter samtykke fra eiendomsmeglingsforetaket. S&aring; snart kontrakten er undertegnet skal eiendomsmegleren tilskrive forretningsf&oslash;rer og be dem notere melding om pant med ur&aring;dighetssperre i aksjeeierboken.</p>
+			</article>
+
+			<article class="item" vitec-if="(Model.eiendom.eieform != &quot;Aksje&quot; || Model.eiendom.eieform != &quot;Obligasjon&quot;)">
+			<div class="avoid-page-break">
+			<h3>Tinglysing av panterett med ur&aring;dighet (sikringsobligasjon)</h3>
+
+			<p>Selger har utstedt et pantedokument (sikringsobligasjon) til megler. Pantedokumentet inneholder en ur&aring;dighetserkl&aelig;ring som hindrer at det kan tinglyses nye, frivillige heftelser p&aring; eiendommen uten meglers samtykke. Pantedokumentet tinglyses av megler for selgers regning. Eiendomsmeglingsforetaket st&aring;r som panthaver. Pantedokumentet tinglyses som en heftelse p&aring; eiendommen, og tjener som sikkerhet for partenes rettigheter og plikter etter kj&oslash;pekontrakten.</p>
+			</div>
+
+			<p vitec-if="Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot;">Megler skal vederlagsfritt bes&oslash;rge pantedokumentet slettet n&aring;r oppgj&oslash;r mellom partene er avsluttet og skj&oslash;te er tinglyst i avtalt stand.</p>
+
+			<p vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">Megler skal vederlagsfritt bes&oslash;rge pantedokumentet slettet n&aring;r oppgj&oslash;r mellom partene er avsluttet og hjemmelsdokument er tinglyst i avtalt stand.</p>
+			</article>
+
+			<article class="item" vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">
+			<h3>Melding og innf&oslash;ring i aksjeeierboken</h3>
+
+			<p>N&aring;r kj&oslash;pesummen er innbetalt og melding er sendt til selskapet, plikter aksjeselskapet &aring; innf&oslash;re den nye eieren i aksjeeierboken, jf. asl. &sect; 4-7, samt tiltransportere eventuell tilh&oslash;rende partialobligasjon, under forutsetning av at aksjeselskapet godkjenner ervervet og at eventuell vedtektsfestet forkj&oslash;psrett er avklart. Eiendomsmeglingsforetaket skal p&aring; vegne av kj&oslash;per gi melding om innf&oslash;ringen i aksjeeierboken til aksjeselskapet.</p>
+
+			<p>N&aring;r ny aksjeeier er innf&oslash;rt i aksjeeierboken, skal aksjeselskapet gi aksjeeieren melding om dette, jf. aksjeloven &sect; 4-10 f&oslash;rste ledd. Dersom aksjen skal pantsettes, skal melding om dette innf&oslash;res i aksjeeierboken. N&aring;r panthaver ber om det, skal aksjeselskapet utstede erkl&aelig;ring om at panteretten er innf&oslash;rt.</p>
+			</article>
+
+			<article class="item">
+			<h3>Selgers forbehold om kj&oslash;pers oppfyllelse</h3>
+
+			<p>Selger tar forbehold om &aring; heve kj&oslash;pet selv om overtakelse og overlevering av <span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">aksjen </span> <span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">skj&oslash;tet </span> <span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">hjemmelsdokument </span> har funnet sted, jf. <span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">kj&oslash;pslovens &sect; 54 fjerde ledd, </span> avhendingslova &sect; 5-3 fjerde ledd og tinglysingsloven &sect; 21 tredje ledd.</p>
+
+			<p>Blir avtalen hevet som f&oslash;lge av manglende oppfyllelse fra kj&oslash;per etter overtakelse, vedtar kj&oslash;per tvangsfravikelse i tr&aring;d med tvangsfullbyrdelsesloven &sect; 13-2.</p>
+			</article>
+			</article>
+
+			<article class="item">
+			<h2>Heftelser</h2>
+
+			<p vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Kj&oslash;per er forelagt utskrift av grunnboken for aksjeselskapets eiendom datert <span class="insert-table"> <span class="insert" data-label="dato"></span> </span> og har gjort seg kjent med denne. Videre er kj&oslash;per gjort kjent med heftelser som er notert p&aring; aksjen(e) hos forretningsf&oslash;rer. Selger garanterer at eiendomen vil bli levert fri for &oslash;vrige pengeheftelser med unntak av de heftelsene kj&oslash;per eventuelt skal overta, jfr. avsnitt&nbsp; <a class="bookmark" href="#tinglysing-notifisering-og-sikkerhet"> <span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Andel&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">Tinglysing og Sikkerhet</span> <span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Notifisering og Sikkerhet</span> og flg. </a></p>
+
+			<p vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Pengeheftelser som ikke skal f&oslash;lge med aksjen(e) skal slettes for selgers regning. Megler gis fullmakt til &aring; innhente restgjeldsoppgave og slettebekreftelse fra panthavere til de panteretter som skal slettes i forbindelse med oppgj&oslash;ret.</p>
+
+			<p vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Selger bekrefter at det ikke eksisterer pengeheftelser av noen art, herunder utlegg, utover det som aksjeeierboken viser, eventuelt med unntak av vedtektsfestet panterett til boligaksjeselskapet p&aring; kr <span class="insert-table"> <span class="insert" data-label="beløp"></span> </span>. Selger forplikter seg til umiddelbart &aring; underrette megler dersom utleggsforretninger blir avholdt f&oslash;r aksjen(e) er transportert. Videre forplikter selger seg til &aring; betale alle avgifter mv. som vedr&oslash;rer aksjen(e) og som er forfalt eller forfaller f&oslash;r overtakelsen.</p>
+
+			<p vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Selger gir herved megler ugjenkallelig fullmakt til &aring; innfri pengeheftelser som fremg&aring;r av aksjeeierboken/oppgj&oslash;rsskjema og som det ikke er avtalt at kj&oslash;per skal overta. Kj&oslash;per er innforst&aring;tt med at det vil ta noe tid f&oslash;r selgers pant er slettet, selv om det er innfridd ved oppgj&oslash;r.</p>
+
+			<p vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Kj&oslash;per er kjent med at i tillegg til kj&oslash;pesummen overtas en andel av aksjeselskapets fellesgjeld, jf. avsnitt <a class="bookmark" href="#kjopesum-og-omkostninger">Kj&oslash;pesum og Omkostninger</a>.</p>
+
+			<p vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Hjemmelshaver til eiendommen er [[aksjeselskap.navn]]. Kommunen har lovbestemt legalpanterett (ikke tinglyst) i aksjeselskapets eiendom som sikkerhet for skyldige kommunale avgifter og eventuell eiendomsskatt. Denne panteretten f&oslash;lger eiendommen.</p>
+
+			<p vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Selger garanterer at aksjebrevene vil bli levert fri for pengeheftelser, med unntak av selskapets eventuelle panterett for ubetalte felleskostnader. Panteretten f&oslash;lger boligen og kan derved ikke slettes. Slik panterett har selskapet etablert p&aring; alle boligene i selskapet. Selger gir herved megler ugjenkallelig fullmakt til &aring; innfri de l&aring;n som forretningsf&oslash;rer har notert. Kj&oslash;per er inneforst&aring;tt med at sletting og/eller frigivelse av aksjebrev inneb&aelig;rer en viss behandlingstid, avhengig av panthaver.</p>
+
+			<p vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Selger gir herved oppgj&oslash;r ugjenkallelig fullmakt til &aring; underskrive p&aring; transport av aksjebrevene p&aring; sine vegne. Likeledes gir kj&oslash;per oppgj&oslash;r ugjenkallelig fullmakt til &aring; underskrive p&aring; pantsettelseserkl&aelig;ringen p&aring; sine vegne.</p>
+
+			<p vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">Kj&oslash;per har f&aring;tt seg forelagt utskrift av grunnboken for eiendommen datert <span class="insert-table"> <span class="insert" data-label="dato"></span> </span> og har gjort seg kjent med denne. Selger garanterer at boligen vil bli levert fri for &oslash;vrige pengeheftelser med unntak av de heftelsene kj&oslash;per eventuelt skal overta, jf. avsnitt&nbsp; <a class="bookmark" href="#tinglysing-notifisering-og-sikkerhet"> <span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Andel&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">Tinglysing og Sikkerhet</span> <span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Notifisering og Sikkerhet</span> og flg.</a> Pengeheftelser som ikke overtas av kj&oslash;per, skal slettes for selgers regning. Megler gis fullmakt til &aring; innhente restgjeldsoppgave og slettebekreftelse fra panthavere til de panteretter som skal slettes i forbindelse med oppgj&oslash;ret. Kj&oslash;per er innforst&aring;tt med at det vil ta noe tid f&oslash;r selgers pant er slettet, selv om det er innfridd ved oppgj&oslash;r.</p>
+
+			<p vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">Kj&oslash;per har f&aring;tt seg forelagt utskrift av grunnboken for andelen datert <span class="insert-table"> <span class="insert" data-label="dato"></span> </span> og for borettslagets eiendom datert <span class="insert-table"> <span class="insert" data-label="dato"></span>, </span> og har gjort seg kjent med disse. Selger garanterer at boligen vil bli levert fri for &oslash;vrige pengeheftelser med unntak av de heftelsene kj&oslash;per eventuelt skal overta, jf. avsnitt&nbsp; <a class="bookmark" href="#tinglysing-notifisering-og-sikkerhet"> <span vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Andel&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">Tinglysing og Sikkerhet</span> <span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Notifisering og Sikkerhet</span> og flg.</a></p>
+
+			<p vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">Pantesikkerheten for borettslagets l&aring;n og borettshavernes opprinnelig innskudd er tinglyst p&aring; borettslagets eiendom. Disse panteretter og de tinglyste servituttene f&oslash;lger eiendommen ved handelen. Vedtektsfestet, lovbestemt eller annen avtalt panterett til borettslaget f&oslash;lger ogs&aring; andelen ved salg. Pengeheftelser som ikke overtas av kj&oslash;per, skal slettes for selgers regning. Megler gis fullmakt til &aring; innhente restgjeldsoppgave og slettebekreftelse fra panthavere til de panteretter som skal slettes i forbindelse med oppgj&oslash;ret. Kj&oslash;per er innforst&aring;tt med at det vil ta noe tid f&oslash;r selgers pant er slettet, selv om det er innfridd ved oppgj&oslash;r.</p>
+
+			<p vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Andel&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">Selger bekrefter at det ikke eksisterer pengeheftelser av noen art, herunder utlegg, utover det som grunnboksutskriften viser. Selger forplikter seg til umiddelbart &aring; underrette megler dersom utleggsforretninger blir avholdt f&oslash;r <span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">hjemmelsdokumentet er tinglyst</span> <span vitec-if="Model.eiendom.eieform != &quot;Andel&quot;">skj&oslash;tet er tinglyst</span>. Videre forplikter selger seg til &aring; betale alle avgifter mv. som vedr&oslash;rer eiendommen og som er forfalt eller forfaller f&oslash;r overtakelsen.</p>
+
+			<p vitec-if="Model.eiendom.heftelserogrettigheter != &quot;Mangler data&quot;">[[eiendom.heftelserogrettigheter]]</p>
+
+			<p>Det gj&oslash;res oppmerksom p&aring; at kj&oslash;pers pantedokument vil f&aring; prioritet etter overnevnte tinglyste rettigheter/servitutter. Kj&oslash;per aksepterer &aring; overta disse slik de fremg&aring;r av de tinglyste dokumenter.</p>
+
+			<p vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Andel&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">Selger gir herved megler ugjenkallelig fullmakt til &aring; innfri pengeheftelser som fremg&aring;r av grunnboksutskrift/oppgj&oslash;rsskjema og som det ikke er avtalt at kj&oslash;per skal overta.</p>
+
+			<p vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">Kj&oslash;per er kjent med at i tillegg til kj&oslash;pesummen overtas en andel av borettslagets fellesgjeld, jf. avsnitt <a class="bookmark" href="#kjopesum-og-omkostninger">Kj&oslash;pesum og Omkostninger</a>.</p>
+			</article>
+
+			<div vitec-if="Model.kjoper.erfirma == false">
+			<article class="item">
+			<div class="avoid-page-break">
+			<h2>Selgers mangelansvar og kj&oslash;pers unders&oslash;kelsesplikt</h2>
+
+			<p>Selgers mangelsansvar reguleres av bestemmelsene i avhendingsloven kapittel 3. Dette inneb&aelig;rer i hovedtrekk at:</p>
+			</div>
+
+			<div vitec-if="(Model.eiendom.eieform != &quot;Andel&quot; &amp;&amp; Model.eiendom.eieform != &quot;Aksje&quot; &amp;&amp; Model.eiendom.eieform != &quot;Obligasjonsleilighet&quot;)">
+			<p>Eiendommen har en mangel dersom den ikke samsvarer med kravene til kvalitet, utrustning og annet som f&oslash;lger av avtalen, jf. avhendingsloven &sect; 3-1.</p>
+
+			<p>Forbehold om eiendommens tilstand som er spesifisert nok til &aring; kunne innvirke p&aring; kj&oslash;perens vurdering, anses som en del av avtalen, jf. avhendingsloven &sect; 3-9 (2) andre setning.</p>
+
+			<p>I den grad det ikke er avtalt noe s&aelig;rskilt, gjelder bestemmelsene i avhendingsloven &sect;&sect; 3-2 til 3-6. Som eksempler nevnes:</p>
+
+			<ul>
+				<li style="page-break-inside: avoid;">Eiendommen har en mangel dersom den ikke svarer til det kj&oslash;peren kunne forvente ut fra blant annet eiendommens type, alder og synlige tilstand, jf. avhendingsloven &sect; 3-2 (1).</li>
+				<li style="page-break-inside: avoid;">Eiendommen har en mangel dersom den ikke passer til et s&aelig;rlig form&aring;l som selgeren var eller m&aring;tte v&aelig;re kjent med da avtalen ble inng&aring;tt. Dette gjelder likevel ikke n&aring;r forholdene viser at kj&oslash;peren for s&aring; vidt ikke bygde p&aring; selgerens sakkunnskap eller vurdering, eller ikke hadde rimelig grunn til &aring; gj&oslash;re det., jf. avhendingsloven &sect; 3-2 (2).</li>
+				<li style="page-break-inside: avoid;">Eiendommen har en mangel dersom den ikke er i samsvar med offentligrettslige krav som er stilt i lov eller i medhold av lov, og som gjaldt for eiendommen da avtalen ble inng&aring;tt. Dette gjelder likevel ikke dersom forholdene viser at kj&oslash;peren for s&aring; vidt ikke bygde p&aring; selgerens sakkunnskap og vurdering, eller ikke hadde rimelig grunn til &aring; gj&oslash;re det, jf. avhendingsloven &sect; 3-2 (3).</li>
+				<li style="page-break-inside: avoid;">Dersom eiendommens tomt har et mindre areal enn kj&oslash;peren har regnet med, utgj&oslash;r dette likevel ikke en mangel med mindre arealet er vesentlig mindre enn det som er opplyst av selgeren eller selgers medhjelpere, eller disse har opptr&aring;dt s&aelig;rlig klanderverdig, jf. avhendingsloven &sect; 3-3 (1).</li>
+				<li style="page-break-inside: avoid;">Eiendommen har en mangel dersom bygninger p&aring; eiendommen har mindre areal enn det som er opplyst av selgeren eller selgers medhjelpere, dersom avviket er st&oslash;rre enn to prosent og utgj&oslash;r minst &eacute;n kvadratmeter. Det er likevel ikke en mangel dersom selger godtgj&oslash;r at kj&oslash;peren ikke la vekt p&aring; opplysningen, jf. avhendingsloven &sect; 3-3 (2).</li>
+			</ul>
+
+			<p>Eiendommen har ogs&aring; en mangel dersom kj&oslash;per ikke har f&aring;tt opplysninger om forhold ved eiendommen som selger kjente eller m&aring;tte kjenne til, og som kj&oslash;per hadde grunn til &aring; regne med &aring; f&aring;. Dette gjelder likevel bare dersom man kan g&aring; ut fra at det har virket inn p&aring; avtalen at opplysningene ikke ble gitt, jf. avhendingsloven &sect; 3-7.</p>
+
+			<p>Det samme gjelder dersom selger har gitt uriktige opplysninger om eiendommen. Det samme gjelder dersom eiendommen ikke er i samsvar med opplysninger som er gitt i annonse, salgsprospekt eller ved annen markedsf&oslash;ring p&aring; vegne av selgeren. Dette gjelder likevel bare dersom man kan g&aring; ut fra at opplysningene har virket inn p&aring; avtalen, og ikke er blitt rettet i tide p&aring; en tydelig m&aring;te, jf. avhendingsloven &sect; 3-8.</p>
+
+			<p>Kj&oslash;per kan ikke gj&oslash;re gjeldende som en mangel noe kj&oslash;peren kjente eller m&aring;tte kjenne til da avtalen ble inng&aring;tt, jf. avhendingsloven &sect; 3-10 (1) f&oslash;rste setning. Kj&oslash;per regnes for &aring; kjenne til omstendigheter som g&aring;r tydelig fram av tilstandsrapport som er utarbeidet i henhold til kravene i forskrift til avhendingsloven, eller av andre salgsdokumenter som kj&oslash;peren er gitt mulighet til &aring; sette seg inn i, jf. avhendingsloven &sect; 3-10 (1) andre setning.</p>
+
+			<p>Dersom kj&oslash;peren f&oslash;r avtalen ble inng&aring;tt har unders&oslash;kt eiendommen, eller uten rimelig grunn unnlatt &aring; f&oslash;lge en oppfordring om unders&oslash;kelse, kan kj&oslash;peren ikke gj&oslash;re gjeldende som en mangel noe han burde blitt kjent med ved unders&oslash;kelsen, jf. avhendingsloven &sect; 3-10 (2). Kj&oslash;per er oppfordret til &aring; unders&oslash;ke eiendommen f&oslash;r avtaleinng&aring;else.</p>
+
+			<p>Bestemmelsene i avhendingsloven &sect; 3-10 (1) og (2) innskrenker ikke selgers opplysningsplikt etter &sect; 3-7.</p>
+			</div>
+
+			<div vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">
+			<p>Boligen som andelen gir borett til har en mangel dersom den ikke samsvarer med kravene til kvalitet, utrustning og annet som f&oslash;lger av avtalen, jf. avhendingsloven &sect; 3-1.</p>
+
+			<p>Forbehold om boligens tilstand som er spesifisert nok til &aring; kunne innvirke p&aring; kj&oslash;perens vurdering, anses som en del av avtalen, jf. avhendingsloven &sect; 3-9 (2) andre setning.</p>
+
+			<p>I den grad det ikke er avtalt noe s&aelig;rskilt, gjelder bestemmelsene i avhendingsloven &sect;&sect; 3-2 til 3-6. Som eksempler nevnes:</p>
+
+			<ul>
+				<li style="page-break-inside: avoid;">Boligen har en mangel dersom den ikke svarer til det kj&oslash;peren kunne forvente ut fra blant annet eiendommens type, alder og synlige tilstand, jf. avhendingsloven &sect; 3-2 (1).</li>
+				<li style="page-break-inside: avoid;">Boligen har en mangel dersom den ikke passer til et s&aelig;rlig form&aring;l som selgeren var eller m&aring;tte v&aelig;re kjent med da avtalen ble inng&aring;tt. Dette gjelder likevel ikke n&aring;r forholdene viser at kj&oslash;peren for s&aring; vidt ikke bygde p&aring; selgerens sakkunnskap eller vurdering, eller ikke hadde rimelig grunn til &aring; gj&oslash;re det., jf. avhendingsloven &sect; 3-2 (2).</li>
+				<li style="page-break-inside: avoid;">Boligen har en mangel dersom den ikke er i samsvar med offentligrettslige krav som er stilt i lov eller i medhold av lov, og som gjaldt for eiendommen da avtalen ble inng&aring;tt. Dette gjelder likevel ikke dersom forholdene viser at kj&oslash;peren for s&aring; vidt ikke bygde p&aring; selgerens sakkunnskap og vurdering, eller ikke hadde rimelig grunn til &aring; gj&oslash;re det, jf. avhendingsloven &sect; 3-2 (3).</li>
+				<li style="page-break-inside: avoid;">Dersom borettslagets eiendom har et mindre areal enn kj&oslash;peren har regnet med, utgj&oslash;r dette likevel ikke en mangel med mindre arealet er vesentlig mindre enn det som er opplyst av selgeren eller selgers medhjelpere, eller disse har opptr&aring;dt s&aelig;rlig klanderverdig, jf. avhendingsloven &sect; 3-3 (1).</li>
+				<li style="page-break-inside: avoid;">Boligen har en mangel dersom den har mindre areal enn det som er opplyst av selgeren eller selgers medhjelpere, og dersom avviket er st&oslash;rre enn to prosent og utgj&oslash;r minst &eacute;n kvadratmeter. Det er likevel ikke en mangel dersom selger godtgj&oslash;r at kj&oslash;peren ikke la vekt p&aring; opplysningen, jf. avhendingsloven &sect; 3-3 (2).</li>
+			</ul>
+
+			<p>Boligen eller andelen har ogs&aring; en mangel dersom kj&oslash;per ikke har f&aring;tt opplysninger om forhold ved boligen eller andelen som selger kjente eller m&aring;tte kjenne til, og som kj&oslash;per hadde grunn til &aring; regne med &aring; f&aring;. Dette gjelder likevel bare dersom man kan g&aring; ut fra at det har virket inn p&aring; avtalen at opplysningene ikke ble gitt, jf. avhendingsloven &sect; 3-7.</p>
+
+			<p>Det samme gjelder dersom selger har gitt uriktige opplysninger om boligen eller andelen. Det samme gjelder dersom boligen eller andelen ikke er i samsvar med opplysninger som er gitt i annonse, salgsprospekt eller ved annen markedsf&oslash;ring p&aring; vegne av selgeren. Dette gjelder likevel bare dersom man kan g&aring; ut fra at opplysningene har virket inn p&aring; avtalen, og ikke er blitt rettet i tide p&aring; en tydelig m&aring;te, jf. avhendingsloven &sect; 3-8.</p>
+
+			<p>Kj&oslash;per kan ikke gj&oslash;re gjeldende som en mangel noe kj&oslash;peren kjente eller m&aring;tte kjenne til da avtalen ble inng&aring;tt, jf. avhendingsloven &sect; 3-10 (1) f&oslash;rste setning. Kj&oslash;per regnes for &aring; kjenne til omstendigheter som g&aring;r tydelig fram av tilstandsrapport som er utarbeidet i henhold til kravene i forskrift til avhendingsloven, eller av andre salgsdokumenter som kj&oslash;peren er gitt mulighet til &aring; sette seg inn i, jf. avhendingsloven &sect; 3-10 (1) andre setning.</p>
+
+			<p>Dersom kj&oslash;peren f&oslash;r avtalen ble inng&aring;tt har unders&oslash;kt eiendommen, eller uten rimelig grunn unnlatt &aring; f&oslash;lge en oppfordring om unders&oslash;kelse, kan kj&oslash;peren ikke gj&oslash;re gjeldende som en mangel noe han burde blitt kjent med ved unders&oslash;kelsen, jf. avhendingsloven &sect; 3-10 (2). Kj&oslash;per er oppfordret til &aring; unders&oslash;ke eiendommen f&oslash;r avtaleinng&aring;else.</p>
+
+			<p>Bestemmelsene i avhendingsloven &sect; 3-10 (1) og (2) innskrenker ikke selgers opplysningsplikt etter &sect; 3-7.</p>
+			</div>
+
+			<div vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">
+			<p>Boligen som aksjen(e) gir borett til har en mangel dersom den ikke samsvarer med kravene til kvalitet, utrustning og annet som f&oslash;lger av avtalen, jf. avhendingsloven &sect; 3-1.</p>
+
+			<p>Forbehold om boligens tilstand som er spesifisert nok til &aring; kunne innvirke p&aring; kj&oslash;perens vurdering, anses som en del av avtalen, jf. avhendingsloven &sect; 3-9 (2) andre setning.</p>
+
+			<p>I den grad det ikke er avtalt noe s&aelig;rskilt, gjelder bestemmelsene i avhendingsloven &sect;&sect; 3-2 til 3-6. Som eksempler nevnes:</p>
+
+			<ul>
+				<li style="page-break-inside: avoid;">Boligen har en mangel dersom den ikke svarer til det kj&oslash;peren kunne forvente ut fra blant annet eiendommens type, alder og synlige tilstand, jf. avhendingsloven &sect; 3-2 (1).</li>
+				<li style="page-break-inside: avoid;">Boligen har en mangel dersom den ikke passer til et s&aelig;rlig form&aring;l som selgeren var eller m&aring;tte v&aelig;re kjent med da avtalen ble inng&aring;tt. Dette gjelder likevel ikke n&aring;r forholdene viser at kj&oslash;peren for s&aring; vidt ikke bygde p&aring; selgerens sakkunnskap eller vurdering, eller ikke hadde rimelig grunn til &aring; gj&oslash;re det, jf. avhendingsloven &sect; 3-2 (2).</li>
+				<li style="page-break-inside: avoid;">Boligen har en mangel dersom den ikke er i samsvar med offentligrettslige krav som er stilt i lov eller i medhold av lov, og som gjaldt for eiendommen da avtalen ble inng&aring;tt. Dette gjelder likevel ikke dersom forholdene viser at kj&oslash;peren for s&aring; vidt ikke bygde p&aring; selgerens sakkunnskap og vurdering, eller ikke hadde rimelig grunn til &aring; gj&oslash;re det, jf. avhendingsloven &sect; 3-2 (3).</li>
+				<li style="page-break-inside: avoid;">Dersom aksjeselskapets tomt har et mindre areal enn kj&oslash;peren har regnet med, utgj&oslash;r dette likevel ikke en mangel med mindre arealet er vesentlig mindre enn det som er opplyst av selgeren eller selgers medhjelpere, eller disse har opptr&aring;dt s&aelig;rlig klanderverdig, jf. avhendingsloven &sect; 3-3 (1).</li>
+				<li style="page-break-inside: avoid;">Boligen har en mangel dersom den har mindre areal enn det som er opplyst av selgeren eller selgers medhjelpere, og dersom avviket er st&oslash;rre enn to prosent og utgj&oslash;r minst &eacute;n kvadratmeter. Det er likevel ikke en mangel dersom selger godtgj&oslash;r at kj&oslash;peren ikke la vekt p&aring; opplysningen, jf. avhendingsloven &sect; 3-3 (2).</li>
+			</ul>
+
+			<p>Boligen eller aksjen(e) har ogs&aring; en mangel dersom kj&oslash;per ikke har f&aring;tt opplysninger om forhold ved boligen eller aksjen(e) som selger kjente eller m&aring;tte kjenne til, og som kj&oslash;per hadde grunn til &aring; regne med &aring; f&aring;. Dette gjelder likevel bare dersom man kan g&aring; ut fra at det har virket inn p&aring; avtalen at opplysningene ikke ble gitt, jf. avhendingsloven &sect; 3-7.</p>
+
+			<p>Det samme gjelder dersom selger har gitt uriktige opplysninger om boligen eller aksjen(e). Det samme gjelder dersom boligen eller aksjen(e) ikke er i samsvar med opplysninger som er gitt i annonse, salgsprospekt eller ved annen markedsf&oslash;ring p&aring; vegne av selgeren. Dette gjelder likevel bare dersom man kan g&aring; ut fra at opplysningene har virket inn p&aring; avtalen, og ikke er blitt rettet i tide p&aring; en tydelig m&aring;te, jf. avhendingsloven &sect; 3-8.</p>
+
+			<p>Kj&oslash;per kan ikke gj&oslash;re gjeldende som en mangel noe kj&oslash;peren kjente eller m&aring;tte kjenne til da avtalen ble inng&aring;tt, jf. avhendingsloven &sect; 3-10 (1) f&oslash;rste setning. Kj&oslash;per regnes for &aring; kjenne til omstendigheter som g&aring;r tydelig fram av tilstandsrapport som er utarbeidet i henhold til kravene i forskrift til avhendingsloven, eller av andre salgsdokumenter som kj&oslash;peren er gitt mulighet til &aring; sette seg inn i, jf. avhendingsloven &sect; 3-10 (1) andre setning.</p>
+
+			<p>Dersom kj&oslash;peren f&oslash;r avtalen ble inng&aring;tt har unders&oslash;kt eiendommen, eller uten rimelig grunn unnlatt &aring; f&oslash;lge en oppfordring om unders&oslash;kelse, kan kj&oslash;peren ikke gj&oslash;re gjeldende som en mangel noe han burde blitt kjent med ved unders&oslash;kelsen, jf. avhendingsloven &sect; 3-10 (2). Kj&oslash;per er oppfordret til &aring; unders&oslash;ke eiendommen f&oslash;r avtaleinng&aring;else.</p>
+
+			<p>Bestemmelsene i avhendingsloven &sect; 3-10 (1) og (2) innskrenker ikke selgers opplysningsplikt etter &sect; 3-7.</p>
+			</div>
+			</article>
+			</div>
+
+			<div vitec-if="Model.kjoper.erfirma == true">
+			<article class="item">
+			<div class="avoid-page-break">
+			<h2>Forbehold om eiendommens tilstand, selgers mangelansvar og kj&oslash;pers unders&oslash;kelsesplikt</h2>
+
+			<p><span vitec-if="(Model.eiendom.eieform == &quot;Andel&quot; || Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Boligen</span> <span vitec-if="(Model.eiendom.eieform != &quot;Andel&quot; &amp;&amp; Model.eiendom.eieform != &quot;Aksje&quot; &amp;&amp; Model.eiendom.eieform != &quot;Obligasjonsleilighet&quot;)">Eiendommen</span> selges i den stand den var ved kj&oslash;pers besiktigelse, jf. avhendingslova &sect; 3-9. Det inneb&aelig;rer at avhendingslovens regler om n&aring;r eiendommen har mangel, fravikes til ugunst for kj&oslash;per.</p>
+			</div>
+
+			<div vitec-if="(Model.eiendom.eieform != &quot;Andel&quot; &amp;&amp; Model.eiendom.eieform != &quot;Aksje&quot; &amp;&amp; Model.eiendom.eieform != &quot;Obligasjonsleilighet&quot;)">
+			<p>Eiendommen har likevel mangel i f&oslash;lgende tilfeller:</p>
+
+			<ul>
+				<li style="page-break-inside: avoid;">N&aring;r selger ikke oppfyller sine konkrete forpliktelser under denne kontrakt.</li>
+				<li style="page-break-inside: avoid;">N&aring;r kj&oslash;per ikke har f&aring;tt opplysninger om forhold ved eiendommen som selger kjente eller m&aring;tte kjenne til, og som kj&oslash;per hadde grunn til &aring; regne med &aring; f&aring;. Dette gjelder likevel bare dersom man kan g&aring; ut fra at det har virket inn p&aring; avtalen at opplysningene ikke ble gitt, jf. avhendingslova &sect; 3-7.</li>
+				<li style="page-break-inside: avoid;">N&aring;r selger har gitt uriktige opplysninger om eiendommen. Det samme gjelder dersom eiendommen ikke er i samsvar med opplysninger som er gitt i annonse, salgsprospekt eller ved annen markedsf&oslash;ring p&aring; vegne av selgeren. Dette gjelder likevel bare dersom man kan g&aring; ut fra at opplysningene har virket inn p&aring; avtalen, og ikke er blitt rettet i tide p&aring; en tydelig m&aring;te, jf. avhendingslova &sect; 3-8.</li>
+				<li style="page-break-inside: avoid;">N&aring;r eiendommen er i vesentlig d&aring;rligere stand enn kj&oslash;per hadde grunn til &aring; regne med ut fra kj&oslash;pesummen og forholdene ellers, jf. avhendingslova &sect; 3-9 annet punktum.</li>
+				<li style="page-break-inside: avoid;">N&aring;r eiendommens tomt har et mindre areal enn kj&oslash;peren regnet med, utgj&oslash;r det likevel ikke en mangel med mindre arealet er vesentlig mindre enn det som er opplyst av selgeren eller selgers medhjelpere, eller disse har opptr&aring;dt s&aelig;rlig klanderverdig, jf. avhendingsloven &sect; 3-3 (1).</li>
+			</ul>
+
+			<p>Avhendingsloven &sect; 3-3 (2) fravikes og hvorvidt en innend&oslash;rs arealsvikt karakteriseres som en mangel vurderes etter avhendingsloven &sect; 3-8.</p>
+
+			<p>Kj&oslash;per er oppfordret til &aring; unders&oslash;ke eiendommen f&oslash;r avtaleinng&aring;else.&nbsp;</p>
+
+			<p>Kj&oslash;peren kan ikke gj&oslash;re gjeldende som en mangel noe han ble kjent med eller burde blitt kjent med ved besiktigelsen. Det samme gjelder andre forhold kj&oslash;per kjente eller m&aring;tte kjenne til da avtalen ble inng&aring;tt, jf., avhendingsloven &sect; 3-10 (1) f&oslash;rste setning. Kj&oslash;per skal regnes for &aring; kjenne til omstendigheter som g&aring;r tydelig fram av en tilstandsrapport eller andre salgsdokumenter som kj&oslash;peren er gitt mulighet til &aring; sette seg inn i, jf. avhendingsloven &sect; 3-10 (1) andre setning.</p>
+
+			<p>Bestemmelsene i avhendingsloven &sect; 3-10 innskrenker ikke selgers opplysningsplikt etter &sect; 3-7.</p>
+			</div>
+
+			<div vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">
+			<p>Boligen med tilbeh&oslash;r selges i den stand den var ved kj&oslash;pers besiktigelse, jf. avhendingsloven &sect; 3-9.</p>
+
+			<p>Boligen eller andelen har likevel en mangel i f&oslash;lgende tilfeller:</p>
+
+			<ul>
+				<li style="page-break-inside: avoid;">N&aring;r selger ikke oppfyller sine konkrete forpliktelser under denne kontrakt.</li>
+				<li style="page-break-inside: avoid;">N&aring;r kj&oslash;per ikke har f&aring;tt opplysninger om forhold ved boligen eller andelen som selger kjente eller m&aring;tte kjenne til, og som kj&oslash;per hadde grunn til &aring; regne med &aring; f&aring;. Dette gjelder likevel bare dersom man kan g&aring; ut fra at det har virket inn p&aring; avtalen at opplysningene ikke ble gitt, jf. avhendingsloven &sect; 3-7.</li>
+				<li style="page-break-inside: avoid;">N&aring;r selger har gitt uriktige opplysninger om boligen eller andelen. Det samme gjelder dersom boligen ikke er i samsvar med opplysninger som er gitt i annonse, salgsprospekt eller ved annen markedsf&oslash;ring p&aring; vegne av selgeren. Dette gjelder likevel bare dersom man kan g&aring; ut fra at opplysningene har virket inn p&aring; avtalen, og ikke er blitt rettet i tide p&aring; en tydelig m&aring;te, jf. avhendingsloven &sect; 3-8.</li>
+				<li style="page-break-inside: avoid;">N&aring;r boligen er i vesentlig d&aring;rligere stand enn kj&oslash;per hadde grunn til &aring; regne med ut fra kj&oslash;pesummen og forholdene ellers, jf. avhendingsloven &sect; 3-9 annet punktum.</li>
+				<li style="page-break-inside: avoid;">N&aring;r eiendommens tomt har et mindre areal enn kj&oslash;peren regnet med, utgj&oslash;r det likevel ikke en mangel med mindre arealet er vesentlig mindre enn det som er opplyst av selgeren eller selgers medhjelpere, eller disse har opptr&aring;dt s&aelig;rlig klanderverdig, jf. avhendingsloven &sect; 3-3 (1).</li>
+			</ul>
+
+			<p>Avhendingsloven &sect; 3-3 (2) fravikes og hvorvidt en innend&oslash;rs arealsvikt karakteriseres som en mangel vurderes etter avhendingsloven &sect; 3-8.</p>
+
+			<p>Kj&oslash;per er oppfordret til &aring; unders&oslash;ke boligen f&oslash;r avtaleinng&aring;else.</p>
+
+			<p>Kj&oslash;peren kan ikke gj&oslash;re gjeldende som en mangel noe han ble kjent med eller burde blitt kjent med ved besiktigelsen. Det samme gjelder andre forhold kj&oslash;per kjente eller m&aring;tte kjenne til da avtalen ble inng&aring;tt, jf., avhendingsloven &sect; 3-10 (1) f&oslash;rste setning. Kj&oslash;per skal regnes for &aring; kjenne til omstendigheter som g&aring;r tydelig fram av en tilstandsrapport eller andre salgsdokumenter som kj&oslash;peren er gitt mulighet til &aring; sette seg inn i, jf. avhendingsloven &sect; 3-10 (1) andre setning.</p>
+
+			<p>Bestemmelsene i avhendingsloven &sect; 3-10 innskrenker ikke selgers opplysningsplikt etter &sect; 3-7.</p>
+			</div>
+
+			<div vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">
+			<p>Boligen med tilbeh&oslash;r selges i den stand den var ved kj&oslash;pers besiktigelse, jf. avhendingsloven &sect; 3-9.</p>
+
+			<p>Boligen eller aksjen(e) har likevel en mangel i f&oslash;lgende tilfeller:</p>
+
+			<ul>
+				<li style="page-break-inside: avoid;">N&aring;r selger ikke oppfyller sine konkrete forpliktelser under denne kontrakt.</li>
+				<li style="page-break-inside: avoid;">N&aring;r kj&oslash;per ikke har f&aring;tt opplysninger om forhold ved boligen eller aksjen(e) som selger kjente eller m&aring;tte kjenne til, og som kj&oslash;per hadde grunn til &aring; regne med &aring; f&aring;. Dette gjelder likevel bare dersom man kan g&aring; ut fra at det har virket inn p&aring; avtalen at opplysningene ikke ble gitt, jf. avhendingsloven &sect; 3-7.</li>
+				<li style="page-break-inside: avoid;">N&aring;r selger har gitt uriktige opplysninger om boligen eller aksjen(e). Det samme gjelder dersom boligen eller aksjen(e) ikke er i samsvar med opplysninger som er gitt i annonse, salgsprospekt eller ved annen markedsf&oslash;ring p&aring; vegne av selgeren. Dette gjelder likevel bare dersom man kan g&aring; ut fra at opplysningene har virket inn p&aring; avtalen, og ikke er blitt rettet i tide p&aring; en tydelig m&aring;te, jf. avhendingsloven &sect; 3-8.</li>
+				<li style="page-break-inside: avoid;">N&aring;r boligen er i vesentlig d&aring;rligere stand enn kj&oslash;per hadde grunn til &aring; regne med ut fra kj&oslash;pesummen og forholdene ellers, jf. avhendingsloven &sect; 3-9 annet punktum.</li>
+				<li style="page-break-inside: avoid;">N&aring;r aksjeselskapets tomt har et mindre areal enn kj&oslash;peren regnet med, utgj&oslash;r det likevel ikke en mangel med mindre arealet er vesentlig mindre enn det som er opplyst av selgeren eller selgers medhjelpere, eller disse har opptr&aring;dt s&aelig;rlig klanderverdig, jf. avhendingsloven &sect; 3-3 (1).</li>
+			</ul>
+
+			<p>Avhendingsloven &sect; 3-3 (2) fravikes og hvorvidt en innend&oslash;rs arealsvikt karakteriseres som en mangel vurderes etter avhendingsloven &sect; 3-8.</p>
+
+			<p>Kj&oslash;per er oppfordret til &aring; unders&oslash;ke boligen f&oslash;r avtaleinng&aring;else.</p>
+
+			<p>Kj&oslash;peren kan ikke gj&oslash;re gjeldende som en mangel noe han ble kjent med eller burde blitt kjent med ved besiktigelsen. Det samme gjelder andre forhold kj&oslash;per kjente eller m&aring;tte kjenne til da avtalen ble inng&aring;tt, jf., avhendingsloven &sect; 3-10 (1) f&oslash;rste setning. Kj&oslash;per skal regnes for &aring; kjenne til omstendigheter som g&aring;r tydelig fram av en tilstandsrapport eller andre salgsdokumenter som kj&oslash;peren er gitt mulighet til &aring; sette seg inn i, jf. avhendingsloven &sect; 3-10 (1) andre setning.</p>
+
+			<p>Bestemmelsene i avhendingsloven &sect; 3-10 innskrenker ikke selgers opplysningsplikt etter &sect; 3-7.</p>
+			</div>
+			</article>
+			</div>
+
+			<article class="item"><a id="overtakelse"></a>
+
+			<div class="avoid-page-break">
+			<h2>Overtakelse</h2>
+
+			<p>Eiendommen overtas av kj&oslash;per den <strong>[[kontrakt.overtagelse.dato]] kl. [[kontrakt.overtagelse.klokkeslett]]</strong> med alle rettigheter og forpliktelser slik den har tilh&oslash;rt selger, forutsatt at kj&oslash;per har oppfylt sine forpliktelser.</p>
+			</div>
+
+			<p>F&oslash;r overtakelse kan finne sted m&aring; hele kj&oslash;pesummen v&aelig;re innbetalt. Kj&oslash;per svarer fra overtakelsen for alle eiendommens utgifter og oppeb&aelig;rer eventuelle inntekter. <span vitec-if="Model.eiendom.boligtype != &quot;Tomt&quot;">Selger skal overlevere eiendommen til kj&oslash;per i ryddig og rengjort stand, uten leieforhold av noen art.</span> <span vitec-if="Model.eiendom.boligtype == &quot;Tomt&quot;">Selger skal overlevere eiendommen til kj&oslash;per i ryddig stand.</span></p>
+
+			<p>Risikoen for eiendommen g&aring;r over p&aring; kj&oslash;per n&aring;r han har overtatt <em>bruken</em> av eiendommen. Overtar kj&oslash;per ikke til fastsatt tid, og &aring;rsaken ligger hos vedkommende, har kj&oslash;per risikoen fra det tidspunktet han kunne ha f&aring;tt overta bruken.</p>
+
+			<p>N&aring;r risikoen for eiendommen er g&aring;tt over p&aring; kj&oslash;per, faller ikke kj&oslash;pers plikt til &aring; betale kj&oslash;pesummen bort ved at eiendommen blir &oslash;delagt eller skadet som f&oslash;lge av en hendelse som selger ikke svarer for.</p>
+			</article>
+
+			<article class="item"><a id="konsekvenser-av-mislighold-reklamasjon"></a>
+
+			<h2>Konsekvenser av mislighold - Reklamasjon</h2>
+
+			<div vitec-if="(Model.eiendom.eieform != &quot;Andel&quot; &amp;&amp; Model.eiendom.eieform != &quot;Aksje&quot; &amp;&amp; Model.eiendom.eieform != &quot;Obligasjonsleilighet&quot;)">
+			<p>Dersom selgeren ikke overleverer eiendommen til avtalt tid, eller eiendommen har en mangel, kan kj&oslash;peren p&aring; de vilk&aring;r som f&oslash;lger av avhendingsloven kreve oppfyllelse, retting, prisavslag, erstatning, avvise eiendommen, heve kontrakten og/eller holde tilbake en forholdsmessig del av kj&oslash;pesummen, jf. avhendingsloven kapittel 4.</p>
+
+			<p>Dersom kj&oslash;peren ikke betaler kj&oslash;pesummen eller ikke oppfyller andre plikter etter avtalen, kan selgeren p&aring; de vilk&aring;r som f&oslash;lger av avhendingsloven kapittel 5 kreve oppfyllelse, heving, erstatning, renter og/eller nekte &aring; overlevere skj&oslash;te eller overlate bruken av eiendommen til kj&oslash;peren.</p>
+
+			<p>Dersom en av partene mener at det foreligger en mangel eller forsinkelse ved den annen parts oppfyllelse av plikter etter avtalen, m&aring; han gi motparten melding om at avtalebruddet gj&oslash;res gjeldende og hvilket avtalebrudd det gjelder, innen rimelig tid etter at han oppdaget eller burde ha oppdaget misligholdet, jf. avhendingsloven &sect;&sect; 4-19 og 5-7.</p>
+
+			<div vitec-if="Model.kjoper.erfirma == false">
+			<p>Kj&oslash;peren m&aring; selv dekke tap og kostnader ved mangler opp til et bel&oslash;p p&aring; kr 10 000, om ikke annet er sagt i loven, jf. avhendingsloven &sect; 3-1 (4). Dette gjelder likevel ikke for avtaler der en bygning er solgt som ny, jf. avhendingsloven &sect; 3-1 (4) andre setning. Partene er innforst&aring;tt med at bel&oslash;pet ikke har betydning for sp&oslash;rsm&aring;let om det foreligger en mangel, men at kr 10 000 er kj&oslash;pers egenrisiko/egenandel som kommer til fradrag i utm&aring;lingen av prisavslag eller erstatning dersom selger er ansvarlig for mangler.</p>
+
+			<p>At en mangel medf&oslash;rer et tap eller en kostnad som er lavere enn kj&oslash;pers egenrisiko/egenandel inneb&aelig;rer imidlertid ingen unntak fra plikten til &aring; reklamere innen rimelig tid.</p>
+			</div>
+
+			<p>Reklamasjon vedr&oslash;rende eventuelle mangler skal rettes direkte til selger, eventuelt til det forsikringsselskapet hvor selger har tegnet boligselgerforsikring.</p>
+			</div>
+
+			<div vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">
+			<p>Dersom selgeren ikke overleverer boligen til avtalt tid, eller boligen har en mangel, kan kj&oslash;peren p&aring; de vilk&aring;r som f&oslash;lger av avhendingsloven kreve oppfyllelse, retting, prisavslag, erstatning, avvise boligen, heve kontrakten og/eller holde tilbake en forholdsmessig del av kj&oslash;pesummen, jf. avhendingsloven kapittel 4.</p>
+
+			<p>Dersom kj&oslash;peren ikke betaler kj&oslash;pesummen eller ikke oppfyller andre plikter etter avtalen, kan selgeren p&aring; de vilk&aring;r som f&oslash;lger av avhendingsloven kapittel 5 kreve oppfyllelse, heving, erstatning, renter og/eller nekte &aring; overlevere skj&oslash;te eller overlate bruken av boligen til kj&oslash;peren.</p>
+
+			<p>Dersom en av partene mener at det foreligger en mangel eller forsinkelse ved den annen parts oppfyllelse av plikter etter avtalen, m&aring; han gi motparten melding om at avtalebruddet gj&oslash;res gjeldende og hvilket avtalebrudd det gjelder, innen rimelig tid etter at han oppdaget eller burde ha oppdaget misligholdet, jf. avhendingsloven &sect;&sect; 4-19 og 5-7.</p>
+
+			<div vitec-if="Model.kjoper.erfirma == false">
+			<p>Kj&oslash;peren m&aring; selv dekke tap og kostnader ved mangler opp til et bel&oslash;p p&aring; kr 10 000, om ikke annet er sagt i loven, jf. avhendingsloven &sect; 3-1 (4). Dette gjelder likevel ikke for avtaler der en bygning er solgt som ny, jf. avhendingsloven &sect; 3-1 (4) andre setning. Partene er innforst&aring;tt med at bel&oslash;pet ikke har betydning for sp&oslash;rsm&aring;let om det foreligger en mangel, men at kr 10 000 er kj&oslash;pers egenrisiko/egenandel som kommer til fradrag i utm&aring;lingen av prisavslag eller erstatning dersom selger er ansvarlig for mangler.</p>
+
+			<p>At en mangel medf&oslash;rer et tap eller en kostnad som er lavere enn kj&oslash;pers egenrisiko/ egenandel inneb&aelig;rer imidlertid ingen unntak fra plikten til &aring; reklamere innen rimelig tid.</p>
+			</div>
+
+			<p>Reklamasjon vedr&oslash;rende eventuelle mangler skal rettes direkte til selger, eventuelt til det forsikringsselskapet hvor selger har tegnet boligselgerforsikring.</p>
+			</div>
+
+			<div vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">
+			<p>Dersom selgeren ikke overleverer boligen eller aksjen(e) til avtalt tid, eller boligen eller aksjen(e) har en mangel, kan kj&oslash;peren p&aring; de vilk&aring;r som f&oslash;lger av kj&oslash;psloven eller de relevante deler av avhendingsloven kreve oppfyllelse, retting, prisavslag, erstatning, avvise eiendommen, heve kontrakten og/eller holde tilbake en forholdsmessig del av kj&oslash;pesummen.</p>
+
+			<p>Dersom kj&oslash;peren ikke betaler kj&oslash;pesummen eller ikke oppfyller andre plikter etter avtalen, kan selgeren p&aring; de vilk&aring;r som f&oslash;lger av kj&oslash;psloven eller de relevante deler av avhendingsloven kreve oppfyllelse, heving, erstatning, renter og/eller nekte &aring; overlate bruken av eiendommen til kj&oslash;peren.</p>
+
+			<p>Dersom en av partene mener at det foreligger en mangel eller forsinkelse ved den annen parts oppfyllelse av plikter etter avtalen, m&aring; han gi motparten melding om at avtalebruddet gj&oslash;res gjeldende og hvilket avtalebrudd det gjelder, innen rimelig tid etter at han oppdaget eller burde ha oppdaget misligholdet, jf. kj&oslash;psloven &sect;&sect; 32, og avhendingsloven &sect; 4-19 (1).</p>
+
+			<div vitec-if="Model.kjoper.erfirma == false">
+			<p>Kj&oslash;peren m&aring; selv dekke tap og kostnader ved mangler opp til et bel&oslash;p p&aring; kr 10 000, om ikke annet er sagt i loven, jf. avhendingsloven &sect; 3-1 (4). Dette gjelder likevel ikke for avtaler der en bygning er solgt som ny, jf. avhendingsloven &sect; 3-1 (4) andre setning. Partene er innforst&aring;tt med at bel&oslash;pet ikke har betydning for sp&oslash;rsm&aring;let om det foreligger en mangel, men at kr 10 000 er kj&oslash;pers egenrisiko/egenandel som kommer til fradrag i utm&aring;lingen av prisavslag eller erstatning dersom selger er ansvarlig for mangler.</p>
+
+			<p>At en mangel medf&oslash;rer et tap eller en kostnad som er lavere enn kj&oslash;pers egenrisiko/ egenandel inneb&aelig;rer imidlertid ingen unntak fra plikten til &aring; reklamere innen rimelig tid.</p>
+			</div>
+
+			<p>Reklamasjon over mangler ved boligen kan skje senest 5 &aring;r etter at kj&oslash;peren har overtatt bruken, jf. avhendingsloven &sect; 4-19 (2). Partene er kjent med at dette utvider den absolutte reklamasjonsfristen fra 2 til 5 &aring;r, i forhold til hva som f&oslash;lger av kj&oslash;pslovens bestemmelser.</p>
+
+			<p>Reklamasjon vedr&oslash;rende eventuelle mangler skal rettes direkte til selger, eventuelt til det forsikringsselskapet hvor selger har tegnet boligselgerforsikring.</p>
+			</div>
+			</article>
+
+			<article class="item">
+			<div class="avoid-page-break">
+			<h2>Forsikring</h2>
+
+			<p vitec-if="Model.eiendom.eieform == &quot;Selveier&quot;">Selger er forpliktet til &aring; holde eiendommen fullverdiforsikret frem til og med overtakelsesdagen. Kj&oslash;per b&oslash;r ved overtagelsen tegne egen forsikring.</p>
+
+			<p vitec-if="(Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)">Eiendommen er fullverdiforsikret i [[forsikring.selskap]] gjennom <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">sameiet </span> <span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">borettslaget </span>med polisenummer [[forsikring.polisenr]]. Kj&oslash;per trer inn i denne forsikringen fra overtakelsesdagen. <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">Ved mindre sameier uten forretningsf&oslash;rer, m&aring; kj&oslash;per selv avklare med &oslash;vrige seksjonseiere at bygningen er forsikret.</span> Kj&oslash;per m&aring; selv tegne innboforsikring.&nbsp;</p>
+
+			<p vitec-if="Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;">Boligen er forsikret via aksjeselskapets fellespolise. Innboforsikring m&aring; tegnes av kj&oslash;per.</p>
+			</div>
+
+			<p>Dersom eiendommen f&oslash;r overtakelse blir utsatt for skade ved brann eller andre forhold som dekkes av forsikringen, har kj&oslash;per rett til &aring; tre inn i forsikringsavtalen.</p>
+
+			<p>Kj&oslash;per m&aring; selv tegne innbo- og l&oslash;s&oslash;reforsikring.</p>
+
+			<p vitec-if="Model.oppdrag.hovedtype == &quot;Oppgj\xF8rsoppdrag&quot;">Selger har <span vitec-if="Model.oppdrag.boligselgerforsikringbestilt == false">ikke </span>tegnet boligselgerforsikring.</p>
+			</article>
+
+			<article class="item" vitec-if="Model.eiendom.eieform != &quot;Selveier&quot;">
+			<div class="avoid-page-break">
+			<h2><span vitec-if="Model.oppdrag.erdetforkjopsfrist == true">Forkj&oslash;psrett/godkjenning</span><span vitec-if="Model.oppdrag.erdetforkjopsfrist == false">Godkjennelse</span></h2>
+
+			<p vitec-if="Model.oppdrag.erdetforkjopsfrist == true">Det er en forutsetning for handelen at&nbsp;lovbestemt eller vedtektbestemt forkj&oslash;psrett ikke blir benyttet. Dersom forkj&oslash;psretten blir benyttet, skal megler straks s&oslash;rge for at innbetalt bel&oslash;p samt opptjente renter p&aring; klientkonto blir tilbakebetalt kj&oslash;per, og derved annulleres denne kontrakt for kj&oslash;pers del. Den forkj&oslash;psberettigede trer inn i denne kontrakt p&aring; samme vilk&aring;r.</p>
+
+			<p class="avoid-page-break">Kj&oslash;per gj&oslash;res oppmerksom p&aring; at boligen ikke kan tas i bruk f&oslash;r styrets godkjenning foreligger. Kj&oslash;per b&aelig;rer risikoen for &aring; bli godkjent som ny <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">eier i sameiet.</span><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">andelseier i borettslaget.</span><span vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">eier i aksjelaget.</span> Dersom kj&oslash;per ikke blir godkjent m&aring; kj&oslash;per gj&oslash;re opp boligen i henhold til denne kontrakt, for s&aring; &aring; videreselge boligen for sin regning og risiko.</p>
+			</div>
+
+			<p vitec-if="Model.oppdrag.erdetforkjopsfrist == true &amp;&amp; (Model.eiendom.eieform == &quot;Sameie&quot; || Model.eiendom.eieform == &quot;Andel&quot;)"><span class="avoid-page-break">Overtakelse/oppgj&oslash;r m&aring; uavhengig av dette gjennomf&oslash;res i henhold til denne kontrakt. Dersom forkj&oslash;psretten blir benyttet gir partene oppgj&oslash;r fullmakt til &aring; endre kj&oslash;pers navn p&aring; <span vitec-if="Model.eiendom.eieform == &quot;Sameie&quot;">skj&oslash;tet.</span><span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">hjemmelsoverf&oslash;ringen.</span></span></p>
+
+			<p vitec-if="Model.oppdrag.erdetforkjopsfrist == true &amp;&amp; (Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)"><span class="avoid-page-break">Overtakelse/oppgj&oslash;r m&aring; uavhengig av dette gjennomf&oslash;res i henhold til denne kontrakt.</span></p>
+			</article>
+
+			<article class="avoid-page-break item" vitec-if="((Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Sameie&quot;) &amp;&amp; Model.eiendom.tomtetype == &quot;festetomt&quot;)">
+			<h2>Festekontrakt</h2>
+
+			<p>Kj&oslash;per er forelagt festekontrakt og godtar festekontraktens bestemmelser som bindende for seg. Bortfester har pant for forfalt festeavgift. Handelen er betinget av at bortfester godkjenner transport av festekontrakten.</p>
+			</article>
+
+			<article class="item">
+			<div class="avoid-page-break">
+			<h2>Diverse - Andre avtaler mellom partene</h2>
+
+			<div vitec-if="Model.oppdrag.harblancoskjote == true">
+			<p>Partene er kjent med den risiko det er &aring; ikke overskj&oslash;te eiendommen ved overtagelse:</p>
+
+			<p>Selger blir st&aring;ende som hjemmelshaver og vil s&aring;ledes overfor kommunen v&aelig;re ansvarlig for blant annet kommunale avgifter, selv om disse skal dekkes av kj&oslash;per. Eierforholdet vil ogs&aring; fremkomme p&aring; ligningen, og selger m&aring; godtgj&oslash;re at eiendommen er solgt og overlevert.</p>
+
+			<p>Selger fremst&aring;r som hjemmelshaver og mislighold fra selger kan f&oslash;re til utleggsforretninger og, i ytterste konsekvens, tvangssalg. Det er videre hjemmelshaver som vil motta evt. nabovarsler etc., uten sikkerhet for at de blir videreformidlet til kj&oslash;per.</p>
+			</div>
+
+			<p vitec-if="Model.oppdrag.hovedtype == &quot;Oppgj\xF8rsoppdrag&quot;">Selger har <span vitec-if="Model.oppdrag.boligselgerforsikringbestilt == false">ikke </span>tegnet boligselgerforsikring.</p>
+			</div>
+			</article>
+
+			<p>Videre er kj&oslash;per gjort kjent med sin unders&oslash;kelsesplikt i henhold til Avhendingslovens &sect; 3.10, og er innforst&aring;tt med at selger har utarbeidet egenerkl&aelig;ringsskjema i forbindelse med boligselgerforsikring.Kj&oslash;per erkl&aelig;rer herved &aring; v&aelig;re kjent med denne.</p>
+
+			<div vitec-if="Model.kjoper.erfirma == false">
+			<p>Kj&oslash;per bekrefter at megler p&aring; generelt grunnlag har anbefalt at det tegnes boligkj&oslash;perforsikring. Det er en rettshjelpsforsikring som gir trygghet og profesjonell juridisk hjelp dersom det oppdages skjulte feil eller mangler ved boligen de neste fem &aring;rene, eller at boligen ikke i rett tid blir stilt disponibel for kj&oslash;per.</p>
+
+			<table>
+				<tbody>
+					<tr>
+						<td colspan="5" style="vertical-align:top"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td colspan="95">Ja, kj&oslash;per &oslash;nsker &aring; tegne boligkj&oslash;perforsikring og bekrefter &aring; ha lest og forst&aring;tt forsikringsvilk&aring;rene.</td>
+					</tr>
+					<tr>
+						<td colspan="5" style="vertical-align:top"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td colspan="95">Nei, kj&oslash;per &oslash;nsker ikke &aring; tegne boligkj&oslash;perforsikring.</td>
+					</tr>
+					<tr>
+						<td colspan="5">&nbsp;</td>
+						<td colspan="95">Hvis ja;</td>
+					</tr>
+					<tr>
+						<td colspan="5" style="vertical-align:top"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+						<td colspan="95">Jeg/vi samtykker til at all kommunikasjon vedr&oslash;rende boligkj&oslash;perforsikring kan foreg&aring; elektronisk til den e-post-adressen som er oppgitt i denne avtalen.</td>
+					</tr>
+				</tbody>
+			</table>
+			</div>
+
+			<p vitec-if="Model.oppdrag.erdodsbo == true">Kj&oslash;per er gjort kjent med at Eiendommen er d&oslash;dsbo og at selger er arvinger. Kj&oslash;per er dermed innforst&aring;tt med at selger har begrenset kunnskap om Eiendommen.</p>
+
+			<article class="item">
+			<div class="avoid-page-break">
+			<h2>Bilag</h2>
+
+			<p>Kj&oslash;per er forelagt f&oslash;lgende dokumentasjon:</p>
+
+			<ol>
+				<li vitec-if="Model.oppdrag.hovedtype != &quot;Oppgj\xF8rsoppdrag&quot;">Salgsoppgave</li>
+				<li>Grunnboksutskrift for eiendommen datert <span class="insert-table"> <span class="insert" data-label="dato"></span> </span></li>
+				<li vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">Grunnboksutskrift for andelen datert <span class="insert-table"> <span class="insert" data-label="dato"></span> </span></li>
+				<li vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">Utskrift av aksjeeierboken datert <span class="insert-table"> <span class="insert" data-label="dato"></span> </span></li>
+				<li vitec-if="Model.oppdrag.hovedtype != &quot;Oppgj\xF8rsoppdrag&quot;">Boligsalgsrapport datert [[eiendom.takstdato]]</li>
+				<li>Reguleringsplan med reguleringsbestemmelser</li>
+				<li vitec-if="Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Andel&quot;">Opplysninger fra kommunen datert <span class="insert-table"> <span class="insert" data-label="dato"></span> </span></li>
+				<li vitec-if="Model.oppdrag.hovedtype != &quot;Oppgj\xF8rsoppdrag&quot; &amp;&amp; Model.eiendom.eieform == &quot;Selveier&quot;">M&aring;lebrev/arealbekreftelse</li>
+				<li vitec-if="Model.eiendom.eieform == &quot;Selveier&quot; &amp;&amp; Model.eiendom.boligtype != &quot;Tomt&quot;">Ferdigattest/midlertidig brukstillatelse</li>
+				<li vitec-if="Model.eiendom.tomtetype == &quot;festetomt&quot;">Festekontrakt</li>
+				<li vitec-if="Model.eiendom.eieform != &quot;Selveier&quot; &amp;&amp; Model.eiendom.boligtype != &quot;Tomt&quot;">Svarbrev fra forretningsf&oslash;rer datert <span class="insert-table"> <span class="insert" data-label="dato"></span> </span></li>
+				<li vitec-if="Model.eiendom.eieform != &quot;Selveier&quot; &amp;&amp; Model.eiendom.boligtype != &quot;Tomt&quot;">Regnskap, budsjett og referat fra siste generalforsamling</li>
+				<li vitec-if="Model.eiendom.eieform != &quot;Selveier&quot; &amp;&amp; Model.eiendom.boligtype != &quot;Tomt&quot;">Vedtekter og husordensregler</li>
+				<li vitec-if="Model.oppdrag.boligselgerforsikringbestilt == true">Forsikringsbevis med vilk&aring;r for selgers boligselgerforsikring</li>
+				<li vitec-if="Model.oppdrag.boligselgerforsikringbestilt == true">Selgers egenerkl&aelig;ring i forbindelse med boligselgerforsikring</li>
+				<li vitec-if="Model.oppdrag.hovedtype != &quot;Oppgj\xF8rsoppdrag&quot;">Budjournal</li>
+				<li vitec-if="Model.eiendom.boligtype != &quot;Tomt&quot;">Liste over l&oslash;s&oslash;re og tilbeh&oslash;r</li>
+				<li vitec-if="Model.eiendom.boligtype != &quot;Tomt&quot;">Energiattest</li>
+			</ol>
+			</div>
+			</article>
+
+			<p>Denne kontrakt er utferdiget i 3 - tre - likelydende eksemplar, hvorav partene f&aring;r hvert sitt eksemplar og ett eksemplar arkiveres hos eiendomsmegler.</p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="100">
+			<table class="avoid-page-break">
+				<tbody>
+					<tr>
+						<td colspan="100" style="vertical-align:top">
+						<p>[[meglerkontor.poststed]], den [[kontrakt.dato]]<br />
+						&nbsp;</p>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="48" style="vertical-align:top"><strong>Selger</strong></td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="48"><strong>Kj&oslash;per</strong></td>
+					</tr>
+					<tr>
+						<td colspan="48" style="vertical-align:top">
+						<table vitec-if="Model.selgere.Count &gt; 0">
+							<tbody vitec-foreach="selger in Model.selgere">
+								<tr>
+									<td style="border-bottom:solid 1px #000000; height:40px">&nbsp;</td>
+								</tr>
+								<tr>
+									<td style="vertical-align:bottom">[[*selger.navn]]</td>
+								</tr>
+							</tbody>
+						</table>
+						</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="48" style="vertical-align:top">
+						<div vitec-if="Model.kjopere.Count &gt; 0">
+						<div vitec-foreach="kjoper in Model.kjopere">
+						<table>
+							<tbody>
+								<tr>
+									<td style="border-bottom:solid 1px #000000; height:40px">&nbsp;</td>
+								</tr>
+								<tr>
+									<td>[[*kjoper.navn]]</td>
+								</tr>
+							</tbody>
+						</table>
+						</div>
+						</div>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="48" style="vertical-align:top">
+						<table>
+							<tbody>
+								<tr>
+									<td style="border-bottom:solid 1px #000000; height:40px">&nbsp;</td>
+								</tr>
+								<tr>
+									<td style="vertical-align:bottom">Som ektefelle samtykker jeg til denne kontrakten</td>
+								</tr>
+							</tbody>
+						</table>
+						</td>
+						<td colspan="52">&nbsp;</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<div style="page-break-after:always"><span style="display:none">&nbsp;</span></div>
+
+<p style="text-align:center"><strong>INSTRUKS OM OPPGJ&Oslash;R FOR: [[eiendom.gatenavnognr]]</strong></p>
+
+<p style="text-align:center">Vedlegg til kj&oslash;pekontrakt</p>
+
+<p>Oppgj&oslash;ret mellom partene foretas av<br />
+[[oppgjor.kontornavn]]<br />
+Orgnr: [[oppgjor.orgnr]]<br />
+Tlf:&nbsp;[[oppgjor.kontortlf]]&nbsp;E-post: [[oppgjor.kontorepost]]</p>
+
+<p>Det er kj&oslash;pers ansvar at samtlige pantedokumenter som skal tinglyses, skal v&aelig;re megler / meglers oppgj&oslash;rsavdeling i hende, i feilfri stand, overtakelsesdagen. Forsinkelser kan bli etterskuddsbelastet med gjeldende forsinkelsesrente dersom oppgj&oslash;ret forsinkes av sen anmodning av innest&aring;elseserkl&aelig;ring eller feil i pantedokumentene som skal tinglyses.</p>
+
+<p>Innbetalinger skal skje til meglers klientkonto [[kontrakt.klientkonto]] og benytt [[kontrakt.kid]]. Kj&oslash;per m&aring; s&oslash;rge for at kj&oslash;pesummen og omkostninger er kreditert p&aring; meglers klientkonto klientkonto innen dato for overtakelse jfr. kj&oslash;pekontraktens &sect; 7.</p>
+
+<div vitec-if="Model.oppdrag.harblancoskjote == false">
+<p>Partene har avtalt f&oslash;lgende betingelser for frigivelse av kj&oslash;pesummen:</p>
+
+<div vitec-if="(Model.eiendom.eieform == &quot;Selveier&quot; || Model.eiendom.eieform == &quot;Andel&quot; || Model.eiendom.eieform == &quot;Sameie&quot;)">
+<ol class="avoid-page-break">
+	<li>Panterettsdokument med ur&aring;dighetserkl&aelig;ring er tinglyst</li>
+	<li>Kj&oslash;per har innbetalt hele kj&oslash;pesummen inklusive omkostninger</li>
+	<li>Kj&oslash;per har overtatt bruken av eiendommen</li>
+	<li>Kj&oslash;pers <span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;"> hjemmelsoverf&oslash;ring</span> <span vitec-if="Model.eiendom.eieform != &quot;Andel&quot;"> skj&oslash;te </span> p&aring; eiendommen &ndash; uten andre heftelser enn det partene har avtalt &ndash; er tinglyst</li>
+	<li>Kj&oslash;pers eventuelle l&aring;ngivere har f&aring;tt tinglyst panterett i eiendommen med forutsatt prioritet</li>
+	<li>Heftelser som ikke skal f&oslash;lge med ved handelen er slettet</li>
+</ol>
+</div>
+
+<div vitec-if="(Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Obligasjonsleilighet&quot;)">
+<ol class="avoid-page-break">
+	<li>Panterett med ur&aring;dighetserkl&aelig;ring er notert i aksjeeierboken</li>
+	<li>Kj&oslash;per har innbetalt hele kj&oslash;pesummen inklusive omkostninger</li>
+	<li>Kj&oslash;pers erverv av aksjen er meldt til selskapet, jf. asl. &sect; 4-12</li>
+	<li>Aksjeselskapet har avklart eventuell forkj&oslash;psrett og godkjent ervervet</li>
+	<li>Kj&oslash;per har overtatt bruken av boligen</li>
+	<li>Heftelser som ikke skal f&oslash;lge med ved handelen er slettet</li>
+	<li>Kj&oslash;pers erverv er innf&oslash;rt i aksjeeierboken, jf. asl. &sect; 4-7, og selskapet har gitt kj&oslash;per melding om dette, jf. asl. &sect; 4-10</li>
+	<li>Kj&oslash;pers eventuelle l&aring;ngivere har f&aring;tt panterett innf&oslash;rt i aksjeeierboken med forutsatt prioritet</li>
+</ol>
+</div>
+
+<p>Forutsetningene nr. 5 og 6 er ikke til hinder for at megler kan iverksette oppgj&oslash;r basert p&aring; restgjeldsoppgave og tilstrekkelig slettebekreftelse fra selgers kreditor(er) med panterett i eiendommen. Gjelder ikke dersom det er tinglyst privat pant.</p>
+</div>
+
+<div vitec-if="Model.oppdrag.harblancoskjote == true">
+<p>Selger utsteder blanco skj&oslash;te samtidig med denne kontrakts underskrift. Skj&oslash;tet skal oppbevares hos megler til overtagelsen er gjennomf&oslash;rt. Kj&oslash;per vil f&aring; skj&oslash;te samt generalfullmakt etter fullf&oslash;rt overtagelse. Se egen generalfullmakt samt n&aelig;rv&aelig;rende kontrakts &sect; 11.</p>
+
+<p>&nbsp;</p>
+
+<p>Partene har avtalt f&oslash;lgende betingelser for frigivelse av kj&oslash;pesummen:</p>
+
+<ol class="avoid-page-break">
+	<li>Pantedokument med ur&aring;dighetserkl&aelig;ring er tinglyst.</li>
+	<li>Kj&oslash;per har innbetalt hele kj&oslash;pesummen inklusive omkostninger.</li>
+	<li>Kj&oslash;per har overtatt bruken av eiendommen.</li>
+	<li>Kj&oslash;pers eventuelle l&aring;ngivere har f&aring;tt tinglyst panterett i eiendommen med forutsatt prioritet og</li>
+	<li>Heftelser som ikke skal f&oslash;lge med ved handelen er slettet.</li>
+</ol>
+
+<p>Forutsetningene nr. 4 og 5 er ikke til hinder for at megler kan iverksette oppgj&oslash;r basert p&aring; restgjeldsoppgave og tilstrekkelig slettebekreftelse fra selgers kreditor(er) med panterett i eiendommen. Gjelder ikke ved tinglyst privat pant.</p>
+</div>
+
+<p>Selger gj&oslash;res oppmerksom p&aring; at det kan ta inntil 2 uker fra skj&oslash;te er sendt Statens Kartverk, til dokumentene er mottatt megler eller oppgj&oslash;rsavdelingen i tinglyst stand, og oppgj&oslash;r kan foretas.</p>
+
+<p>I salg etter avhendingsloven godtgj&oslash;res selger rente av kj&oslash;pesummen etter overtagelse. Kj&oslash;per godtgj&oslash;res rente av for tidlige innbetalinger, samt av dokumentavgift og andre omkostninger frem til betalingstidspunktet av disse. Det utbetales ikke renter dersom bel&oslash;pet ikke overskrider 1/2 rettsgebyr.</p>
+
+<p>Fordeling av eiendommens driftsutgifter og eventuelle inntekter settes opp av megler pr. overtagelsesdato, <u>dersom</u> dette er avtalt. Megler avregner ikke pro &amp; contra bel&oslash;p under 1/2 rettsgebyr.</p>
+
+<p>Utlevert og gjennomg&aring;tt med kontraktspartene for oppdragsnummer: [[oppdrag.nr]]</p>
+</div>

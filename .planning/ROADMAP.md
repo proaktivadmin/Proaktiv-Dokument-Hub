@@ -190,6 +190,66 @@ Plans:
 - 9 micro-interactions added
 - Full documentation in `.planning/codebase/DESIGN-SYSTEM.md`
 
+### V3.8-3.9.4: Signature Portal & Notifications ✅ COMPLETE
+**Completed**: 2026-01-24 to 2026-02-02
+See STATE.md session summaries for details.
+
+### Phase 11: HTML Template Management & Publishing Suite 🔧 IN PROGRESS
+**Goal**: Full template lifecycle — import Word/RTF docs, convert to production HTML, validate, QA test, and publish to Vitec Next
+**Depends on**: Phase 4 (stack upgrade)
+**Status**: 9 production templates delivered, subagent pipeline operational, 14 in backlog
+**Plans**: `.planning/phases/11-template-suite/`
+
+**Subagent Pipeline Architecture (V4.1):**
+
+3-phase orchestrator with 6 specialized subagents:
+
+| Phase | Subagents | Model | Purpose |
+|-------|-----------|-------|---------|
+| 1. Analysis | Structure Analyzer, Field Mapper, Logic Mapper | fast (parallel) | Map document structure, merge fields, vitec-if conditions |
+| 2. Construction | Builder | default | Assemble production HTML from analysis outputs |
+| 3. Validation | Static Validator, Content Verifier | fast (parallel) | Run 46-54 automated checks + source comparison |
+
+**Key documentation:**
+- Builder skill: `.agents/skills/vitec-template-builder/SKILL.md`
+- Orchestrator: `.planning/phases/11-template-suite/AGENT-2B-TEMPLATE-BUILDER.md`
+- Subagent prompts: `.planning/phases/11-template-suite/SUBAGENT-PROMPTS.md`
+- Pipeline reference: `.planning/phases/11-template-suite/PRODUCTION-TEMPLATE-PIPELINE.md`
+- Vitec HTML ruleset: `.planning/vitec-html-ruleset/` (15 modular files)
+
+**Production templates delivered (9):**
+- Kjopekontrakt prosjekt (leilighet, enebolig, profesjonell)
+- Generalfullmakt
+- Leieavtale naeringsbygg / naeringslokaler
+- Meglerstandard eiendom
+- Forlengelse av oppdrag (standard + epost)
+
+**File structure:**
+- `scripts/production/` — QA-ready HTML (grab for testing)
+- `scripts/handoffs/` — build summaries
+- `scripts/tools/` — validator, preview, batch scripts
+- `scripts/sources/` — original Word exports
+- `scripts/_analysis/` — subagent outputs + format templates
+
+**Remaining work:**
+- Manual QA of 9 production templates via Testfletting
+- Convert 14 remaining source documents from backlog
+- Apply migration `20260221_0001_template_publishing.py` to Railway
+- Vitec Next template library inventory refresh (247 templates scraped, content pending)
+- Integration of CKEditor sandbox, comparison service, dedup workflow in web UI
+
+### V4.0: Infrastructure & UX Fixes ✅ COMPLETE
+**Goal**: Fix Monaco/CKEditor loading, add notifications page, restore Vitec pictures
+**Completed**: 2026-02-22
+
+**What was delivered:**
+- CSP fix: Added CDN domains to `script-src` for Monaco + CKEditor
+- Notifications page: `/notifications` with filters, date grouping, metadata display
+- Vitec picture proxy: Re-enabled employee/office picture endpoints
+- Picture sync integration: Sync buttons now also fetch pictures
+- Editor UX: "Normaliser til Vitec" no longer auto-saves, shows explicit save banner
+- CKEditor CDN: Fixed 404 on version 4.25.1 → 4.25.1-lts
+
 ---
 
 ## Progress
@@ -207,7 +267,11 @@ Phases execute in numeric order, with V3.x versions as incremental feature relea
 | 6. Entra ID Sync | 8/8 | Ready for Testing | 2026-01-22 |
 | 7. Office Enhancements | 0/8 | Not started | - |
 | V3.6 Design System | Complete | Complete | 2026-01-23 |
+| V3.8-3.9.4 Signatures | Complete | Complete | 2026-02-02 |
+| 11. Template Suite | 9 templates + pipeline | In Progress | - |
+| V4.0 Infra & UX | Complete | Complete | 2026-02-22 |
+| V4.1 Template Sprint | Complete | Complete | 2026-02-22 |
 
 ---
 *Roadmap created: 2026-01-20*
-*Last updated: 2026-01-23 (V3.6 Design System completed)*
+*Last updated: 2026-02-22 (V4.1 template builder sprint + subagent pipeline)*

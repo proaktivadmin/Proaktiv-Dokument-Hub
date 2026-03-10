@@ -1,0 +1,1970 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate > table {
+			counter-reset: main-counter;
+			position: relative;
+		}
+
+		#vitecTemplate article {
+			padding-left: 20px;
+		}
+
+			#vitecTemplate article article {
+				padding-left: 0;
+			}
+
+				#vitecTemplate article article article {
+					padding-left: 0;
+				}
+
+		#vitecTemplate h1 {
+			text-align: center;
+			font-size: 14pt;
+			margin: 0;
+			padding: 0;
+		}
+
+		#vitecTemplate h2 {
+			font-size: 11pt;
+			margin: 30px 0 0 -20px;
+			padding: 0;
+			counter-reset: sub-counter;
+		}
+
+		#vitecTemplate h3 {
+			line-height: 16px;
+			font-size: 10pt;
+			margin: 20px 0 20px 0;
+			padding: 0;
+			font-weight: 400;
+			counter-reset: sub-sub-counter;
+		}
+
+		#vitecTemplate h4 {
+			line-height: 16px;
+			font-size: 10pt;
+			margin: 20px 0 20px 0;
+			padding: 0;
+			font-weight: 400;
+		}
+
+		#vitecTemplate h2:before {
+			counter-increment: main-counter;
+			content: counter(main-counter) ". ";
+		}
+
+		#vitecTemplate h3:before {
+			counter-increment: sub-counter;
+			content: counter(main-counter) "." counter(sub-counter) ". ";
+			font-weight: 700;
+		}
+
+		#vitecTemplate h4:before {
+			counter-increment: sub-sub-counter;
+			content: counter(main-counter) "." counter(sub-counter) ". " counter(sub-sub-counter) ". ";
+			font-weight: 700;
+		}
+
+		#vitecTemplate table {
+			width: 100%;
+			table-layout: fixed;
+		}
+
+			#vitecTemplate table .borders {
+				border-collapse: collapse;
+			}
+
+				#vitecTemplate table .borders th,
+				#vitecTemplate table .borders td {
+					border: solid 1px #000;
+				}
+
+
+			#vitecTemplate table.numbered {
+				border-collapse: collapse;
+				counter-reset: row-num;
+			}
+
+			#vitecTemplate table.numbered {
+				border-collapse: collapse;
+				counter-reset: row-num;
+			}
+
+				#vitecTemplate table.numbered tbody tr {
+					counter-increment: row-num;
+				}
+
+
+				#vitecTemplate table.numbered th,
+				#vitecTemplate table.numbered td {
+					border: solid 1px #000;
+				}
+
+				#vitecTemplate table.numbered tr td:first-child {
+					text-align: center;
+				}
+
+					#vitecTemplate table.numbered tr td:first-child:before {
+						content: counter(main-counter) "." counter(row-num);
+						font-weight: bold;
+					}
+
+		#vitecTemplate .kjoperspant:last-child .separator {
+			display: none;
+		}
+
+		#vitecTemplate ul {
+			list-style-type: disc;
+			margin-left: 0;
+		}
+
+		#vitecTemplate ol {
+			counter-reset: item;
+			list-style-type: none !important;
+		}
+
+			#vitecTemplate ol > li {
+				margin: 0 0 .2em 0;
+				padding: 0 0 0 3em;
+				counter-increment: item;
+			}
+
+				#vitecTemplate ol > li:before {
+					display: inline-block;
+					width: 2em;
+					margin-left: -2em;
+					font-weight: bold;
+				}
+
+			#vitecTemplate ol.lower-alpha > li:before {
+				content: counter(item, lower-alpha) "." !important;
+			}
+
+			#vitecTemplate ol.lower-roman > li:before {
+				content: counter(item, lower-roman) "." !important;
+			}
+
+			#vitecTemplate ol.decimal > li:before {
+				content: counter(item, decimal) "." !important;
+			}
+
+		#vitecTemplate ul > li {
+			list-style-position: outside;
+			line-height: 20px;
+			margin-left: 0;
+			counter-increment: item;
+		}
+
+		#vitecTemplate td[data-label]:before {
+			content: attr(data-label);
+			text-align: left;
+			color: #333;
+			font-size: 7pt;
+			line-height: 8pt;
+			text-transform: uppercase;
+			display: block;
+			position: absolute;
+			top: 1px;
+		}
+
+		#vitecTemplate td[data-label] {
+			padding: 14px 2px 2px 2px;
+			position: relative;
+		}
+
+		#vitecTemplate .bordered-table th {
+			vertical-align: bottom;
+			/*border: solid 1px #000;*/
+			font-size: 9pt;
+		}
+
+		#vitecTemplate .bordered-table td {
+			vertical-align: top;
+			border: solid 1px #000;
+			font-size: 9pt;
+		}
+
+			#vitecTemplate .bordered-table td div {
+				font-size: 9pt;
+			}
+
+		#vitecTemplate .kjopers-pant:last-child .separator {
+			display: none;
+		}
+
+		/* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+		#vitecTemplate span.insert:empty {
+			font-size: inherit !important;
+			line-height: inherit !important;
+			display: inline-block;
+			background-color: lightpink;
+			min-width: 2em !important;
+			height: .7em !important;
+			text-align: center;
+		}
+
+			#vitecTemplate span.insert:empty:before {
+				content: attr(data-label);
+			}
+
+			#vitecTemplate span.insert:empty:hover {
+				background-color: #fff;
+				cursor: pointer;
+			}
+
+		#vitecTemplate .insert-table {
+			display: inline-table;
+		}
+
+			#vitecTemplate .insert-table > span,
+			#vitecTemplate .insert-table > span.insert {
+				display: table-cell;
+			}
+
+		.insert-checkbox {
+			display: inline-table;
+			vertical-align: bottom;
+			margin: 0 2px;
+		}
+
+			.insert-checkbox > span {
+				line-height: 1.1;
+				border: solid 1px #000;
+				height: 1.1em;
+				width: 1.1em;
+				max-width: 1.1em;
+				overflow: hidden;
+				display: table-cell;
+				text-align: center;
+				white-space: nowrap;
+			}
+
+		#vitecTemplate .roles-table tbody:last-child tr:last-child td {
+			display: none;
+		}
+
+		#vitecTemplate a.bookmark {
+			color: #000;
+			font-style: italic;
+			text-decoration: none;
+		}
+
+		#vitecTemplate .matrikkel:last-child .separator {
+			display: none;
+		}
+
+		/* HJELP TIL UTFYLLING */
+
+		.screen-help {
+			/* bootstrap button */
+			position: absolute;
+			width: 300px;
+			white-space: unset;
+			/* pga. evt forklaring i data-help */
+			text-align: left;
+			font-family: Regular, sans-serif;
+		}
+
+			.screen-help.extra-wide {
+				width: 400px;
+			}
+
+			.screen-help.left-aligned {
+				left: -1cm;
+				margin-left: -305px;
+			}
+
+			.screen-help.right-aligned {
+				right: -1.2cm;
+				margin-right: -305px;
+			}
+
+			.screen-help.left-aligned.extra-wide {
+				margin-left: -405px;
+			}
+
+			.screen-help.right-aligned.extra-wide {
+				margin-right: -405px;
+			}
+
+			.screen-help:before {
+				font-family: 'Font Awesome 5 Pro';
+				font-weight: 400;
+				content: "\f14a";
+				margin-right: 4px;
+			}
+
+		.screen-help-info {
+			pointer-events: none;
+		}
+
+			.screen-help-info:before {
+				font-family: 'Font Awesome 5 Pro';
+				font-weight: 700;
+				content: "\f05a";
+				margin-right: 4px;
+			}
+
+		.screen-help:after {
+			content: attr(data-help);
+			display: block;
+			background-color: white;
+			color: black;
+			font-size: 11.5px;
+			line-height: 13px;
+			padding: 2px;
+		}
+
+		.screen-help.collapsed {
+			background-image: linear-gradient(to bottom, #f0ad4e 0, #eb9316 100%);
+			border-color: #e38d13;
+		}
+
+			.screen-help.collapsed:hover {
+				background-image: linear-gradient(to bottom, #ec971f 0, #eb9316 100%);
+				background-color: #ec971f;
+				border-color: #d58512;
+			}
+
+			.screen-help.collapsed:before {
+				content: "\f0c8";
+			}
+
+		/* important pga cleanslate */
+
+		.collapse,
+		.collapse.collapse-span,
+		.collapse.collapse-list-item {
+			display: none !important;
+		}
+
+			.collapse.in {
+				display: block !important;
+			}
+
+			.collapse.collapse-span.in {
+				display: inline !important;
+			}
+
+			.collapse.collapse-tbody.in {
+				display: table-row-group !important;
+			}
+
+			.collapse.collapse-list-item.in {
+				display: list-item !important;
+			}
+
+		.collapsing {
+			color: red;
+		}
+
+		#vitecTemplate .witness-table td {
+			height: 30px;
+			vertical-align: middle;
+			padding: 2px;
+			border: solid 1px #000;
+		}
+
+			#vitecTemplate .witness-table td.header-cell {
+				background-color: rgb(231, 230, 230);
+				text-align: center;
+			}
+
+		@("@")media print {
+			.screen-help {
+				display: none;
+			}
+		}
+</style>
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100" style="text-align:right"><small>Meglerforetakets org.nr: <strong>[[meglerkontor.orgnr]]</strong><br />
+			Oppdragsnr.: <strong>[[oppdrag.nr]]</strong><br />
+			Omsetningsnr.: <strong>[[kontrakt.formidling.nr]]</strong> </small></td>
+		</tr>
+		<tr>
+			<td colspan="100">&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="100">
+			<h1>KJ&Oslash;PEKONTRAKT<span class="btn btn-info btn-sm right-aligned screen-help screen-help-info" contenteditable="false" data-help="oransje bokser inneholder alternative tekster til kontrakten som du legger til ved klikke på boksen. Du kan fjerne teksten igjen ved å klikke på boksen en gang til. Turkise bokser inneholder hjelpetekster til brukeren. Ingen av hjelpeboksene vil bli tatt med ved utskrift.">INFORMASJON OM HJELPEBOKSER</span><br />
+			ved salg av aksjer i [[aksjeselskap.navn ]]</h1>
+
+			<p style="text-align:center"><em>Meglerstandard mars 2020&nbsp;om salg av aksjeselskap <u>med</u> oppgj&oslash;rsansvarlig.</em></p>
+
+			<p><span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Hvis partene har tatt de forbehold som følger av bud og budaksept må denne teksten legges til." data-target="#hjelp1" data-toggle="collapse">Ekstra setning til innledningen</span>Utkast A [[dagensdato]] av [[meglerkontor.navn]] ved [[avsender.navn]]. [[meglerkontor.navn]] har ikke unders&oslash;kt skatte-, avgifts- eller regnskapsmessige forhold. Dette anbefales vurdert av partenes r&aring;dgivere eller revisor. Avtalen inng&aring;s ved at den undertegnes av selger og kj&oslash;per. <span aria-expanded="false" class="collapse collapse-span" id="hjelp1" style="height:0px"> Partene har tatt de forbehold som f&oslash;lger av bud og budaksept, og er ikke bundet f&oslash;r disse forbeholdene er l&oslash;ftet. </span></p>
+
+			<article>
+			<h2 style="margin-bottom:1em">PARTENE OG EIENDOMMEN</h2>
+
+			<table class="roles-table" vitec-if="Model.selgere.Count &gt; 0">
+				<thead>
+					<tr>
+						<th colspan="34"><strong>Selger</strong></th>
+						<th colspan="48"><strong>Adresse/Kontaktinfo</strong></th>
+						<th colspan="18"><strong>[[selger.ledetekst_fdato_orgnr]]</strong></th>
+					</tr>
+				</thead>
+				<tbody vitec-foreach="selger in Model.selgere">
+					<tr>
+						<td colspan="34" rowspan="2">[[*selger.firmanavn]]</td>
+						<td colspan="48">[[*selger.gatenavnognr]], [[*selger.postnr]] [[*selger.poststed]]</td>
+						<td colspan="18">[[*selger.fdato_orgnr]]</td>
+					</tr>
+					<tr>
+						<td colspan="63"><span vitec-if="selger.tlf != &quot;&quot;">Tlf: [[*selger.tlf]]</span> <span vitec-if="(selger.tlf != &quot;&quot; &amp;&amp; selger.emailadresse != &quot;&quot;)"> / </span> <span vitec-if="selger.emailadresse != &quot;&quot;">E-post: [[*selger.emailadresse]]</span></td>
+					</tr>
+					<tr>
+						<td colspan="100">&nbsp;</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<table class="roles-table" vitec-if="Model.kjopere.Count &gt; 0">
+				<thead>
+					<tr>
+						<th colspan="34"><strong>Kj&oslash;per</strong></th>
+						<th colspan="48"><strong>Adresse/Kontaktinfo</strong></th>
+						<th colspan="18"><strong>[[kjoper.ledetekst_fdato_orgnr]]</strong></th>
+					</tr>
+				</thead>
+				<tbody vitec-foreach="kjoper in Model.kjopere">
+					<tr>
+						<td colspan="34" rowspan="2">[[*kjoper.firmanavn]]</td>
+						<td colspan="48">[[*kjoper.gatenavnognr]], [[*kjoper.postnr]]&nbsp;[[*kjoper.poststed]]</td>
+						<td colspan="18">[[*kjoper.fdato_orgnr]]</td>
+					</tr>
+					<tr>
+						<td colspan="63"><span vitec-if="kjoper.tlf != &quot;&quot;">Tlf: [[*kjoper.tlf]]</span> <span vitec-if="(kjoper.tlf != &quot;&quot; &amp;&amp; kjoper.emailadresse != &quot;&quot;)"> / </span> <span vitec-if="kjoper.emailadresse != &quot;&quot;">E-post: [[*kjoper.emailadresse]]</span></td>
+					</tr>
+					<tr>
+						<td colspan="100">&nbsp;</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<article>
+			<h3>Selger eier 100% av aksjene (<strong>Aksjene</strong>) i [[aksjeselskap.navn ]], org.nr. [[aksjeselskap.orgnr]](<strong>Selskapet</strong>).</h3>
+			</article>
+
+			<article>
+			<h3><span class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Hvis Selskapet har datterselskaper må denne teksten legges til." data-target="#hjelp2" data-toggle="collapse">Ekstra avsnitt til punkt 1.2</span>Selger og kj&oslash;per er enige om at Aksjene skal overdras fra Selger til Kj&oslash;per p&aring; de vilk&aring;r som f&oslash;lger av denne avtalen.</h3>
+
+			<p class="collapse" id="hjelp2"><span class="btn btn-info btn-sm right-aligned screen-help screen-help-info" contenteditable="false" data-help="Når dette avsnittet er lagt til bør Selskapet erstattes med Konsernet der det er nødvendig eller hensiktsmessig i avtalen.">Vedr. ekstra avsnitt i pkt. 1.2 (datterselskaper)</span>Selskapet eier samtlige aksjer i [[eiendom.gatenavnognr]], org.nr. <span class="insert-table"> <span class="insert" data-label="Orgnr."></span></span>, og <span class="insert-table"> <span class="insert" data-label="Selskap"></span></span>, org.nr. <span class="insert-table"> <span class="insert" data-label="Orgnr."></span></span>, som i fellesskap med Selskapet omtales som <strong>Konsernet</strong>.</p>
+			</article>
+
+			<article>
+			<h3><span class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Hvis et annet selskap har grunnbokshjemmelen til Eiendommen, og dette er eid av Selskapet, må denne teksten legges til." data-target="#hjelp3" data-toggle="collapse">Ekstra avsnitt til punkt 1.3</span>Selskapet eier [[komplettmatrikkelutvidet]] med p&aring;st&aring;ende bygninger og anlegg i [[eiendom.kommunenavn]] kommune (<strong>Eiendommen</strong>).</h3>
+
+			<p class="collapse" id="hjelp3">Selskapet eier ogs&aring; samtlige aksjer i [[hjemmelshaver.navn]] AS, org.nr. [[hjemmelshaver.fdato_orgnr]], (<strong>Hjemmelsselskapet</strong>), som er registrert i grunnboken som hjemmelshaver til Eiendommen.</p>
+			</article>
+			</article>
+
+			<article>
+			<h2>KJ&Oslash;PESUMMEN</h2>
+
+			<article>
+			<div style="page-break-inside:avoid">
+			<h3><strong>Eiendomsverdien og beregning av Kj&oslash;pesummen</strong></h3>
+
+			<p>Kj&oslash;pesummen for Aksjene (<strong>Kj&oslash;pesummen</strong>) er:</p>
+			</div>
+
+			<ol class="lower-alpha">
+				<li>NOK $.UD([[kontrakt.kjopesum]]), som utgj&oslash;r omforent, fast verdi av eiendommen (<strong>Eiendomsverdien</strong>),<br />
+				<br />
+				med tillegg av:<span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Hvis det er inngått avtale om leiefritak eller rabattert husleie i en periode, skal inntekten ifølge NRS(V) Inntektsføring punkt 7.4 'fordeles over hele leieperioden slik at det også resultatføres inntekter i den periode det etter avtalen ikke er belastet leie.' Har Selskapet inngått leieavtaler med leiefritak, kan man her tilføye denne setningen for å unngå at Kjøper må betale for fordringer på leie som ikke vil bli betalt til Selskapet." data-target="#hjelp4" data-toggle="collapse">Bisetning til punkt 2.1.c</span><br />
+				&nbsp;</li>
+				<li>bankinnskudd i Selskapets balanse, og</li>
+				<li>fordringer i Selskapets balanse som i) en skyldner skal gj&oslash;re opp ved eller etter Overtakelse, herunder fordringer som har forfalt, men ikke blitt betalt f&oslash;r Overtakelse, eller som ii) er forskuddsbetalte kostnader til varer eller tjenester som leveres etter Overtakelse, <span aria-expanded="false" class="collapse collapse-span" id="hjelp4" style="height:0px"> unntatt fordringer som er resultatf&oslash;rt leieinntekt for en periode det etter en leieavtale ikke skal betales leie eller skal betales redusert leie, </span> og</li>
+				<li><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Andre eiendeler som det skal betales for, herunder eventuelle utløste justeringsrettigheter for mva., må angis i dette punktet.">Punkt 2.1.d: Hjelp til utfylling</span><span class="insert-table"> <span class="insert" data-label="Prosent"></span></span>% av fremf&oslash;rbart underskudd (inkludert underskudd frem til og med dagen for Overtakelse),<br />
+				<br />
+				og med fradrag for:<span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Hvis selskapet har gevinst på G/T-konto: Beløp i %." data-target="#hjelp5a" data-toggle="collapse">Nytt punkt 2.1.e - ALTERNATIV A</span></li>
+				<li aria-expanded="false" class="collapse-list-item collapse" id="hjelp5a" style="height: 0px;"><span class="insert-table"> <span class="insert" data-label="Prosent"></span></span>% av gevinst p&aring; G/T-konto, og</li>
+				<li aria-expanded="false" class="collapse-list-item collapse" id="hjelp5b" style="height: 0px;">NOK <span class="insert-table"> <span class="insert" data-label="Beløp"></span></span>, som utgj&oslash;r et omforent, fast fradrag for utsatt skatt som best&aring;r av gevinst p&aring; G/T-konto, og</li>
+				<li><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Ved signering overtar Kjøper risikoen for skjulte mangler ved eiendommen (se punkt 6.4), etterfølgende «brudd» av garantier som bare gis per signering (f.eks. punkt 7.1(n) og (o)), garantibrudd som Kjøper er kjent med (se punkt 8.2), og skader som inntrer etter Avtalt Overtakelse der forsinkelsen skyldes forhold på Kjøpers side, jf. punkt 9.1(a)(ii). Bestemmelsen her klargjør at slike forhold som Kjøper overtar risikoen for ved signering, ikke skal redusere kjøpesummen.">Punkt 2.1.e: Informasjon</span>all gjeld i Selskapets balanse unntatt i) utsatt skatt, ii) utgifter til fremtidig vedlikehold og andre tiltak p&aring; Eiendommen etter Overtakelse og iii) avsetninger for forhold som Kj&oslash;per etter denne avtalen overtar risikoen for ved signering av den<span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Hvis selskapet har gevinst på G/T-konto: Fast beløp." data-target="#hjelp5b" data-toggle="collapse">Nytt punkt 2.1.e - ALTERNATIV B</span>, og</li>
+				<li><span class="insert-table"> <span class="insert" data-label="Prosent"></span></span>% av differansen mellom i) NOK <span class="insert-table"> <span class="insert" data-label="Beløp"></span></span>, som svarer til Eiendomsverdien etter fradrag for omforent verdi av tomten, og ii) Eiendommens skattemessige avskrivningsgrunnlag per Overtakelse (inkludert beregnede avskrivninger frem til og med dagen for Overtakelse). <span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Hvis man er enige om beløpet, benytt denne teksten istedenfor. (Fjern da den første teksten i punktet og endre fargen på denne teksten fra rød til sort.)" data-target="#hjelp6" data-toggle="collapse">Alternativ tekst til punkt 2.1 - siste bokstav</span> <span aria-expanded="false" class="collapse collapse-span" id="hjelp6" style="height:0px"><span style="color:red"> <em>Alternativt:</em> NOK <span class="insert-table"> <span class="insert" data-label="Beløp"></span></span>, som utgj&oslash;r et omforent, fast vederlag som kompensasjon for differansen mellom Eiendomsverdien (fratrukket omforent tomteverdi) og Eiendommens skattemessige avskrivningsgrunnlag.</span></span></li>
+			</ol>
+			</article>
+
+			<article>
+			<h3><strong>Estimert Balanse og Estimert Kj&oslash;pesum samt innfrielse av eventuelle l&aring;n</strong></h3>
+
+			<article>
+			<h4>Kj&oslash;pesummen som Kj&oslash;per skal betale ved Overtakelse (<strong>Estimert Kj&oslash;pesum</strong>), skal fastsettes basert p&aring; en balanse for Selskapet slik denne forventes &aring; v&aelig;re per Overtakelse (<strong>Estimert Balanse</strong>). Estimert Balanse skal f&oslash;res i samsvar med god regnskapsskikk, konsekvent anvendt og for &oslash;vrig som f&oslash;lger:</h4>
+
+			<ol class="lower-alpha">
+				<li>Forventet resultat etter skatt frem til og med dagen for Overtakelse skal innarbeides.</li>
+				<li>Selskapets gjeld skal inkludere alle inntekter/kostnader, herunder eventuell over- eller underkurs og kostnader ved innl&oslash;sning av swapavtaler, som ved Overtakelse oppst&aring;r ved innfrielse av Selskapets l&aring;n.&nbsp;</li>
+				<li>Betalbar skatt og utsatt skattefordel skal reflektere i) de kostnadene eller inntektene som oppst&aring;r ved innfrielse av Selskapets l&aring;n, og ii) Selskapets skattemessige avskrivninger og f&oslash;ringer fra G/T-konto mv. i salgs&aring;ret, slik at disse postene fordeles etter eiertid i salgs&aring;ret fordelt p&aring; antall dager der dagen for Overtakelse er tilordnet Selger.&nbsp;</li>
+				<li>Utsatt skattefordel og utsatt skatt skal ikke f&oslash;res som ett nettobel&oslash;p, men som to bruttoposter under eiendeler og gjeld.&nbsp;</li>
+			</ol>
+			</article>
+
+			<article>
+			<h4>I <u>vedlegg 3</u> f&oslash;lger en Estimert Balanse som er utarbeidet av Selskapets regnskapsf&oslash;rer, og en beregning av Estimert Kj&oslash;pesum, som er estimert til NOK <span class="insert-table"> <span class="insert" data-label="Beløp"></span></span>.</h4>
+			</article>
+
+			<article>
+			<h4><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Dette punktet strykes eller endres hvis Selskapet ikke har lån som skal innfris. Se oransje hjelpeboks. Har Selger inngått swap-avtaler i tilknytning til Lånene, bør Selger undersøke om det er praktisk mulig å innhente restgjeldsoppgaver fem dager før Overtakelse.">Punkt 2.2.3: Informasjon</span><span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Hvis Selskapets eneste lån som skal innfris, er gitt fra Selger og Selger kan fiksere dette lånet per Avtalt Overtakelse, kan man erstatte punkt 2.2.3 og 2.2.4 med denne teksten. (Fjern da den første teksten i punkt 2.2.3 og endre fargen på denne teksten fra rød til sort, samt fjern punkt 2.2.4.) Dessuten bør «Lånene» erstattes med «Selgerlånet» der det passer i Oppgjørsavtalen." data-target="#hjelp7" data-toggle="collapse">Alternativ tekst til punkt 2.2.3 og 2.2.4</span>Senest <span style="color:red">fem dager </span> f&oslash;r Avtalt Overtakelse skal Selger fremlegge restgjeldsoppgaver fra Selskapets l&aring;ngiver(e) som viser den eksakte st&oslash;rrelsen p&aring; Selskapets l&aring;n (i sum L&aring;nene) per Over&not;takelse, herunder l&aring;n fra Selger (<strong>Selgerl&aring;net</strong>), og hvor l&aring;ngiver(ne) bekrefter sletting av eksisterende pant ved innfrielse av L&aring;nene som angitt i restgjeldsoppgavene. Samtidig skal Selger fremlegge en oppdatert beregning av Estimert Kj&oslash;pesum der L&aring;nene er innf&oslash;rt med riktige bel&oslash;p, men der det ikke er gjort endringer i de &oslash;vrige postene, herunder betalbar skatt og utsatt skattefordel. Hvis Overtakelse av en eller annen grunn gjennomf&oslash;res p&aring; et annet tidspunkt enn Avtalt Overtakelse, skal Selger uten ugrunnet opphold innhente og sende til Kj&oslash;per nye restgjeldsoppgaver og en ny beregning av Estimert Kj&oslash;pesum per dagen for Overtakelse.<span aria-expanded="false" class="collapse collapse-span" id="hjelp7" style="height:0px"><span style="color:red"><em> Alternativt:</em> Ved Overtakelse skal Kj&oslash;per betale Estimert Kj&oslash;pesum. Dessuten skal Kj&oslash;per p&aring; vegne av Selskapet samtidig innfri Selskapets gjeld til Selger (<strong>Selgerl&aring;net</strong>) som utgj&oslash;r NOK <span class="insert-table"> <span class="insert" data-label="Beløp"></span></span> inklusive opptjente renter per Avtalt Overtakelse. Hvis Overtakelse av en eller annen grunn gjennomf&oslash;res p&aring; et annet tidspunkt enn Avtalt Overtakelse, skal Selger uten ugrunnet opp&not;hold sende til Kj&oslash;per en ny restgjeldsoppgave for Selgerl&aring;net per dagen for Overtakelse. Samtidig skal Selger fremlegge en oppdatert beregning av Estimert Kj&oslash;pesum der Selgerl&aring;net er innf&oslash;rt med riktig bel&oslash;p, men der det ikke er gjort endringer i de &oslash;vrige postene, herunder betalbar skatt og utsatt skattefordel.</span></span><br />
+			<span aria-expanded="false" class="collapse collapse-span" id="hjelp10-2" style="height:0px"><span style="color:red">Alternativt: Senest &eacute;n bankdag etter at alle betingelsene for gjennomf&oslash;ring av denne avtalen er oppfylt eller frafalt, skal Selger fremlegge restgjeldsoppgaver fra Selskapets l&aring;ngiver(e) som viser den eksakte st&oslash;rrelsen p&aring; Selskapets l&aring;n fra andre enn Selger (i sum L&aring;nene) per Overtakelse. Samtidig skal Selger fremlegge en oppdatert beregning av Estimert Kj&oslash;pesum der L&aring;nene og alle de &oslash;vrige postene er innf&oslash;rt med oppdaterte bel&oslash;p.</span></span></h4>
+			</article>
+
+			<article>
+			<h4>Ved Overtakelse skal Kj&oslash;per betale Estimert Kj&oslash;pesum <span style="color:red">og innfri L&aring;nene med de bel&oslash;p som fremg&aring;r av restgjeldsoppgaven</span>.</h4>
+			</article>
+
+			<article>
+			<h4>Selger og Selskapet bekrefter herved at ethvert krav mellom Selskapet og Selger eller andre selskap i samme konsern som Selger, er gjort opp med endelig virkning etter at et eventuelt Selgerl&aring;n er innfridd, og at eventuelle krav som er uteglemt i Revidert Balanse, er ettergitt i sin helhet med virkning fra Overtakelse.</h4>
+			</article>
+			</article>
+
+			<article>
+			<h3><strong>Revidert Balanse og revidert Kj&oslash;pesum</strong></h3>
+
+			<article>
+			<h4>Senest 45 dager etter Overtakelse skal Selger sende til Kj&oslash;per:</h4>
+
+			<ol class="lower-alpha">
+				<li><span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Dersom punktet beholdes: Alternativ tekst om selskapets regnskapsfører. (Fjern da den første teksten i punktet og endre fargen på denne teksten fra rød til sort.)" data-target="#hjelp8a" data-toggle="collapse">Ny tekst til punkt 2.3.1.b - ALTERNATIV A</span>En oppdatert balanse per Overtakelse (<strong>Revidert Balanse</strong>) som skal utarbeides etter de samme prinsippene som Estimert Balanse, jf. punkt 2.2, og som er godkjent og signert av de som var Selskapets styremedlemmer umiddelbart f&oslash;r Overtakelse,</li>
+				<li><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Punktet kan strykes hvis Selskapet ikke har revisor eller det av andre grunner ikke er ønskelig at en revisor gjennomfører kontrollen. Alternativt kan man skrive om teksten - se to alternativ i hjelpebokser på venstre side.">Punkt 2.3.1.b: Informasjon</span>En bekreftelse fra en revisor som Selger engasjerer, om at revisor har foretatt en forenklet revisorkontroll av Revidert Balanse.<span aria-expanded="false" class="collapse collapse-span" id="hjelp8a" style="height:0px"><span style="color:red"> <em>Alternativt:</em> En bekreftelse fra <span class="insert-table"> <span class="insert" data-label="Navn på selskapets regnskapsfører"></span></span> om at han har foretatt en forenklet kontroll av Revidert Balanse.</span></span><span aria-expanded="false" class="collapse collapse-span" id="hjelp8b" style="height:0px"><span style="color:red"> <em>Alternativt:</em> En bekreftelse fra revisor om at Revidert Balanse er utarbeidet og revidert etter reglene for &aring;rsregnskap</span></span>, og</li>
+				<li><span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Dersom punktet beholdes: Alternativ tekst hvis det er ønskelig at revisor gjør en grundigere kontroll av Revidert Balanse. (Fjern da den første teksten i punktet og endre fargen på denne teksten fra rød til sort.)" data-target="#hjelp8b" data-toggle="collapse">Ny tekst til punkt 2.3.1.b - ALTERNATIV B</span>En beregning av Kj&oslash;pesummen (<strong>Revidert Kj&oslash;pesum</strong>) p&aring; grunnlag av Revidert Balanse.</li>
+			</ol>
+			</article>
+
+			<article>
+			<h4>Ved utarbeidelsen av Revidert Balanse skal det ses bort fra disposisjoner som Selskapet har foretatt p&aring; dagen for Overtakelse etter at Kj&oslash;per har overtatt Aksjene. Ved beregningen av Revidert Kj&oslash;pesum skal det ikke gj&oslash;res tillegg for forsikringssum eller krav p&aring; forsikringssum for skade p&aring; Eiendommen som Kj&oslash;per selv blir kjent med etter signering av denne avtalen</h4>
+			</article>
+
+			<article>
+			<h4>Kj&oslash;per kan senest en m&aring;ned etter at Kj&oslash;per har mottatt Revidert Balanse og beregningen av Revidert Kj&oslash;pesum (i fellesskap <strong>Kj&oslash;pesumsberegningen</strong>), skriftlig meddele Selger at han har innsigelser til Kj&oslash;pesumsberegningen. Hvis Kj&oslash;per ikke gj&oslash;r innsigelse gjeldende innen fristen, blir Kj&oslash;pesumsberegningen utarbeidet av Selger endelig og bindende for partene.&nbsp;</h4>
+			</article>
+
+			<article>
+			<h4><span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="En alternativ og mer utførlig regulering om voldgiftsbehandling av tvister om kjøpesumsberegningen. (Fjern da den første teksten i punktet og endre fargen på denne teksten fra rød til sort.)" data-target="#hjelp9" data-toggle="collapse">Alternativ tekst til punkt 2.3.4</span><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="En fordel med denne reguleringen er at alle tvister mellom partene vil behandles av samme domstol. En alternativ og mer utførlig regulering om voldgiftsbehandling av tvister om kjøpesumsberegningen kan erstatte eksisterende tekst - se hjelpeboks på venstre side.">Punkt 2.3.4: Informasjon</span>Hvis Kj&oslash;per fremmer innsigelse mot Kj&oslash;pesumsberegningen innen fristen og partene ikke innen ytterligere 14 dager blir enige, kan hver av partene kreve at tvisten avgj&oslash;res etter punkt 13. <span aria-expanded="false" class="collapse collapse-span" id="hjelp9" style="height:0px"><span style="color:red"><em>Alternativt:</em> Hvis Kj&oslash;per fremmer innsigelse mot Kj&oslash;pesumsberegningen innen fristen og partene ikke innen ytterligere 14 dager blir enige, kan hver av partene kreve at &eacute;n voldgiftsdommer avgj&oslash;r hvorvidt innsigelsen skal tas til f&oslash;lge. Gjelder tvisten et bel&oslash;p som overstiger NOK 5 millioner, kan hver av partene kreve at tre voldgiftsdommere avgj&oslash;r hvorvidt innsigelsen skal tas til f&oslash;lge.&nbsp; Hvis partene ikke kommer til enighet om oppnevning av voldgiftsdommer(e), kan hver av partene kreve at sorenskriveren i Oslo tingrett foretar oppnevningen. I den grad dommeren eller dommerne i sin avgj&oslash;relse av om innsigelsen skal tas til f&oslash;lge, m&aring; ta standpunkt til rettslige sp&oslash;rsm&aring;l, skal avgj&oslash;relsen anses som en voldgiftsavgj&oslash;relse som voldgiftslovens regler vil gjelde for. Dommeren eller dommerne skal gj&oslash;res oppmerksom p&aring; dette og den endelige og bindende virkning avgj&oslash;relsen vil f&aring; for partene.</span></span></h4>
+			</article>
+
+			<article>
+			<h4>Hvis Revidert Kj&oslash;pesum avviker fra Estimert Kj&oslash;pesum skal i) en eventuell positiv differanse betales av Kj&oslash;per til en konto oppgitt av Selger, og ii) en eventuell negativ differanse betales av Selger til konto oppgitt av Kj&oslash;per. Differansen skal betales innen 14 dager etter at Kj&oslash;pesumsberegningen er endelig fastsatt, med tillegg for <span class="insert-table"> <span class="insert" data-label="Prosent"></span></span>% rente p.a. fra Overtakelse til betaling skjer, likevel slik at det etter forfall l&oslash;per forsinkelsesrente i henhold til forsinkelsesrenteloven.</h4>
+			</article>
+
+			<article>
+			<h4>At Kj&oslash;pesumsberegningen er endelig og bindende, begrenser ikke Kj&oslash;pers rett til &aring; gj&oslash;re krav gjeldende som f&oslash;lge av brudd p&aring; andre bestemmelser i denne avtalen. Det medf&oslash;rer imidlertid at Selger og Kj&oslash;per ikke p&aring; annet rettsgrunnlag utenfor denne avtalen kan kreve endringer i Kj&oslash;pesumsberegningen (f.eks. som f&oslash;lge av en skjult eiendel eller gjeld eller uriktig bel&oslash;psfesting av en balansepost).</h4>
+			</article>
+			</article>
+			</article>
+
+			<article>
+			<h2><span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="1. tekst som benyttes dersom gjennomføringen av aksjesalget er betinget av forhold utenfor partenes kontroll og det er usikkert når betingelsene vil oppfylles. Fjern da det første avsnittet i punktet og endre fargen på den innsatte teksten fra rød til sort." data-target="#hjelp10" data-toggle="collapse">1: Alternativ tekst til punkt 3.1</span>OVERTAKELSE, OPPGJ&Oslash;R OG FORSINKELSE<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Pass på at Avtalt Overtakelse er en bankdag. Ellers kan det oppstå uklarhet om når rettidig betaling skal skje.">Punkt 3.1: Informasjon</span></h2>
+
+			<article>
+			<h3><strong>Avtalt overtakelse</strong></h3>
+
+			<p><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Hvis gjennomføringen av aksjesalget er betinget av forhold utenfor partenes kontroll og det er usikkert når betingelsene vil oppfylles, benytt alternativ tekst i pkt. 3.1, nytt punkt 4.4 og alternativ tekst i punkt 2.2.3. For å få disse tekstene på plass, trykk på de tre oransje boksene på motsatt side (1-3).">Punkt 3.1: Informasjon om alternativ tekst og ekstra punkt</span>Aksjene skal overtas av Kj&oslash;per den [[kontrakt.overtagelse.dato]] (<strong>Avtalt Overtakelse</strong>).<span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="2. tekst som benyttes dersom gjennomføringen av aksjesalget er betinget av forhold utenfor partenes kontroll og det er usikkert når betingelsene vil oppfylles. Fjern da det første avsnittet i pkt.2.2.3 og endre fargen på den innsatte teksten fra rød til sort." data-target="#hjelp10-2" data-toggle="collapse">2: Alternativ tekst til punkt 2.2.3</span></p>
+
+			<p><span aria-expanded="false" class="collapse collapse-span" id="hjelp10" style="height:0px"><span style="color:red"><em>Alternativt:</em> Overtakelse skal skje <span class="insert-table"> <span class="insert" data-label="Antall"></span></span> bankdager etter at alle betingelsene i punkt 4.1 og 4.2 er oppfylt eller frafalt (<strong>Avtalt overtakelse</strong>).</span></span></p>
+			</article>
+
+			<article>
+			<h3><strong>Faktisk overtakelse. Oppgj&oslash;r</strong></h3>
+
+			<article>
+			<h4><span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="3. tekst som benyttes dersom gjennomføringen av aksjesalget er betinget av forhold utenfor partenes kontroll og det er usikkert når betingelsene vil oppfylles. Det føyes til et nytt punkt 4.4 (Frist for gjennomføring av avtalen)." data-target="#hjelp10-3" data-toggle="collapse">3: Nytt punkt 4.4 </span>Aksjene blir f&oslash;rst overtatt av Kj&oslash;per idet Estimert Kj&oslash;pesum og eventuelt bel&oslash;p tilsvarende Selgerl&aring;net er disponibel p&aring; oppgj&oslash;rskonto og vilk&aring;rene for utbetaling i punkt 3 i oppgj&oslash;rsavtalen i <u>vedlegg 7</u> er oppfylt eller frafalt (<strong>Overtakelse</strong>).</h4>
+			</article>
+
+			<article>
+			<h4>Selger, Kj&oslash;per og Selskapet p&aring;tar seg herved &aring; oppfylle sine respektive plikter etter oppgj&oslash;rsavtalen.<span class="collapse collapse-span" id="hjelp11" style="height:0px"> Kj&oslash;per skal senest &eacute;n m&aring;ned etter Overtakelse endre Selskapets foretaksnavn til et nytt navn som ikke inneholder navnet &laquo;<span class="insert-table"> <span class="insert" data-label="Navn"></span></span>&raquo;, og som ikke kan forveksles med dette navnet. Verken Kj&oslash;per eller Selskapet kan etter Overtakelse benytte benevnelsen &laquo;<span class="insert-table"> <span class="insert" data-label="Navn"></span></span>&raquo; i markedsf&oslash;ring eller p&aring; annen m&aring;te.</span></h4>
+			</article>
+			</article>
+
+			<article>
+			<h3><span class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Hvis Selger ønsker at Selskapet endrer foretaksnavn, f.eks. fordi Selskapets foretaksnavn inngår i Selgers navn, kan man tilføye denne bisetningen." data-target="#hjelp11" data-toggle="collapse">Bisetning til punkt 3.2.2</span><strong>Forsinkelse</strong><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Dette punktet er inntatt av pedagogiske grunner og for å fordele Selskapets over- og underskudd ved forsinket overtakelse. Denne fordelingen er i samsvar med det som ellers ville fulgt av bakgrunnsretten. Om punktet strykes, vil det således ikke få betydning for den retten til erstatning og forsinkelsesrente som partene har etter standarden for øvrig sett i sammenheng med bakgrunnsretten.">Punkt 3.3: Informasjon</span></h3>
+
+			<article>
+			<h4>Hvis Overtakelse skjer p&aring; en senere dag enn Avtalt Overtakelse,</h4>
+
+			<ol class="lower-alpha">
+				<li>og forsinkelsen skyldes forhold p&aring; Kj&oslash;pers side, kan Selger kreve oppfyllelse, heving og erstatning, herunder forsinkelsesrente, etter punkt 6.1 til 6.3;</li>
+				<li>og forsinkelsen skyldes forhold p&aring; Selgers side, kan Kj&oslash;per kreve oppfyllelse, heving og erstatning samt holde kj&oslash;pesummen tilbake etter punkt 6.1 til 6.3 og punkt 8.1;</li>
+				<li><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Teksten i rødt må strykes hvis Selskapets lån fra andre enn Selger ikke skal innfris.">Punkt 3.3.1.c: Informasjon</span><span style="color:red">skal Selger sende til Kj&oslash;per nye restgjeldsoppgaver og en ny beregning av Estimert Kj&oslash;pesum, jf. punkt 2.2.3</span></li>
+				<li>skal Revidert Balanse beregnes per Overtakelse;</li>
+				<li>gjelder Selgers forpliktelser etter punkt 5 frem til Overtakelse, og en del av Selgers garantier i punkt 7.1 avgis kl. 12.00 p&aring; Overtakelse; og</li>
+				<li>gjelder punkt 9.1(a) for skader p&aring; Eiendommen og dens tilbeh&oslash;r.</li>
+			</ol>
+			</article>
+
+			<article>
+			<h4>En part som krever erstatning for forsinkelse, kan skriftlig kreve at Selskapets resultat i perioden fra Avtalt Overtakelse til Overtakelse beregnes av Selskapet og bekreftes av Selskapets revisor, slik at eventuelt over- eller underskudd fra perioden kan tas i betraktning ved beregningen av erstatningen.<span class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="At en vesentlig leietaker slås konkurs eller blir insolvent, kan utgjøre en bristende forutsetning for Kjøper og medføre at Kjøpers bank trekker sitt tilsagn om finansieringen av kjøpet. I så fall kan man tilføye dette bokstavpunktet." data-target="#hjelp12" data-toggle="collapse">Ny bokstav i punkt 4.1</span></h4>
+			</article>
+			</article>
+			</article>
+
+			<article>
+			<h2>BETINGELSER FOR GJENNOMF&Oslash;RING AV AVTALEN<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Punktet kan strykes hvis det ikke er avtalt at særskilte betingelser må være oppfylt før avtalen skal gjennomføres.">Punkt 4: Informasjon</span></h2>
+
+			<article>
+			<div style="page-break-inside:avoid">
+			<h3><strong><span class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Hvis avtalen inngås med styreforbehold hos Kjøper kan man tilføye dette bokstavpunktet." data-target="#hjelp13" data-toggle="collapse">Ny bokstav i punkt 4.1</span>Kj&oslash;pers betingelser</strong></h3>
+
+			<p>Kj&oslash;pers forpliktelse for &aring; gjennomf&oslash;re denne avtalen er betinget av at f&oslash;lgende vilk&aring;r er oppfylt eller frafalt av kj&oslash;per:<span class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Hvis Kjøper skal utføre en due diligence etter signering av avtalen, og gjennomføring av denne avtalen er betinget av at det ikke gjøres negative funn, kan man tilføye dette bokstavpunktet." data-target="#hjelp14" data-toggle="collapse">Ny bokstav i punkt 4.1</span></p>
+
+			<ol class="lower-alpha">
+				<li>Eiendommen eller dets tilbeh&oslash;r har ikke blitt skadet etter signering av denne avtalen med den f&oslash;lge at kostnadene til gjenoppf&oslash;ring/reparasjon og leietap som f&oslash;lge av skaden utgj&oslash;r mer enn <span style="color:red">10</span> % av Eiendomsverdien. I vurderingen av om denne bel&oslash;psgrensen er n&aring;dd, skal det ses bort fra kostnader i tilknytning til skader som Selger ikke hefter for etter punkt 9.1(a)(ii).<span class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Hvis Selskapet har inngått en avtale med en kontrollskiftebestemmelse, og samtykke til videreføring av avtalen på uendrede vilkår skal være en betingelse for gjennomføring av avtalen, kan man tilføye dette bokstavpunktet." data-target="#hjelp15" data-toggle="collapse">Ny bokstav i punkt 4.1</span></li>
+				<li class="collapse-list-item collapse" id="hjelp12" style="height: 0px;">En vesentlig leietaker er ikke tatt under konkursbehandling og har ikke begj&aelig;rt oppbud, innledet gjeldsforhandling av noe slag, innstilt sine betalinger eller erkjent &aring; v&aelig;re ute av stand til &aring; dekke sine forpliktelser etter hvert som de forfaller. Med vesentlig leietaker her menes en eller flere leietakere som har inng&aring;tt avtale(r) om leie av Eiendommen mot en samlet &aring;rlig leie som utgj&oslash;r mer enn <span style="color:red">10</span> % av den samlede avtalte, &aring;rlige leien fra Eiendommen.</li>
+				<li class="collapse-list-item collapse" id="hjelp13" style="height: 0px;">Kj&oslash;pers styre har godkjent at Kj&oslash;per erverver Aksjene p&aring; de vilk&aring;r som f&oslash;lger av denne avtalen (herunder Eiendomsverdien). Hvis Kj&oslash;per ikke innen <span class="insert-table"> <span class="insert" data-label="Dato"></span></span> kl. 12.00 sender skriftlig melding til Selger om at slik godkjenning ikke er gitt, blir Kj&oslash;per bundet av avtalen.</li>
+				<li class="collapse-list-item collapse" id="hjelp14" style="height: 0px;">Kj&oslash;per har i sin tekniske, finansielle og juridiske due diligence ikke avdekket forhold som han mener avviker fra den informasjon som Selger har gitt om Selskapet eller Eiendommen. Hvis Kj&oslash;per avdekker slike forhold og &oslash;nsker &aring; trekke seg fra avtalen, m&aring; Kj&oslash;per sende skriftlig melding om dette til Selger innen <span class="insert-table"> <span class="insert" data-label="Dato"></span></span> kl. 12.00. Kj&oslash;per blir ellers bundet av avtalen.</li>
+				<li class="collapse-list-item collapse" id="hjelp15" style="height: 0px;"><span style="color:red">Kreditor under L&aring;nene</span> har bekreftet skriftlig at han ikke vil heve, si opp eller kreve endringer i l&aring;neavtale datert <span class="insert-table"> <span class="insert" data-label="Dato"></span></span> <span style="color:red">eller avtale datert <span class="insert-table"> <span class="insert" data-label="Dato"></span></span> om <span class="insert-table"> <span class="insert" data-label="Beskrivelse"></span></span></span> som f&oslash;lge av Kj&oslash;pers erverv av Aksjene.</li>
+				<li class="collapse-list-item collapse" id="hjelp16" style="height: 0px;"><span class="insert-table"> <span class="insert" data-label="Kontraktspart"></span></span> har bekreftet skriftlig at han ikke vil ut&oslash;ve l&oslash;sningsrett til <span style="color:red">Eiendommen/Aksjene</span> som f&oslash;lge av Kj&oslash;pers erverv av Aksjene.&raquo;</li>
+			</ol>
+			</div>
+			</article>
+
+			<article style="page-break-inside: avoid">
+			<h3><strong>Selgers betingelser</strong></h3>
+
+			<p>Selgers forpliktelse til &aring; gjennomf&oslash;re denne avtalen er betinget av at f&oslash;lgende vilk&aring;r er oppfylt eller frafalt av Selger:<span class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Merk at et salg av samtlige aksjer i et selskap som eier en eiendom som er påheftet en forkjøpsrett eller annen løsningsrett, vil utløse løsningsretten til eiendommen, med mindre noe annet følger av stiftelsesgrunnlaget for løsningsretten, jf. lov om løysingsrettar 1994/64 § 11 og § 3. Hvis aksjesalget utløser en løsningsrett:, kan man tilføye dette bokstavpunktet." data-target="#hjelp16" data-toggle="collapse">Ny bokstav i punkt 4.1</span></p>
+
+			<ol class="lower-alpha">
+				<li>Eiendommen eller dets tilbeh&oslash;r har ikke blitt skadet etter signering av denne avtalen med den f&oslash;lge at det tapet Selger selv m&aring; dekke etter punkt 9.1(a), overstiger <span style="color:red">10</span> % av Eiendomsverdien. Selger kan ikke gj&oslash;re denne betingelsen gjeldende hvis Kj&oslash;per p&aring;tar seg ikke &aring; kreve en erstatning som overstiger <span style="color:red">10</span> % av Eiendomsverdien som f&oslash;lge av skaden.</li>
+				<li class="collapse-list-item collapse" id="hjelp18" style="height: 0px;">Selgers styre har godkjent at Kj&oslash;per erverver Aksjene p&aring; de vilk&aring;r som f&oslash;lger av denne avtalen (herunder Eiendomsverdien). Hvis Selger ikke innen <span class="insert-table"> <span class="insert" data-label="Dato"></span></span> kl. 12.00 sender skriftlig melding til Kj&oslash;per om at slik godkjenning ikke er gitt, blir Selger bundet av avtalen.</li>
+			</ol>
+			</article>
+
+			<article class="collapse" id="hjelp19" style="height: 0px;">
+			<h3><strong>Oppfyllelse av betingelsene</strong></h3>
+
+			<p><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="I feltet for beskrivelse inntas henvisninger til forbehold om styregodkjennelse, tilfredsstillende due diligence og annet som Selger eller Kjøper skal stå fritt til å gjøre gjeldende som grunn til å trekke seg fra avtalen.">Punkt 4.3: Informasjon</span>Selger og Kj&oslash;per skal gj&oslash;re det som med rimelighet kan forventes av dem for at betingelsene for gjennomf&oslash;ring av avtalen oppfylles uten ugrunnet opphold<span style="color:red">, likevel slik at Kj&oslash;per og Selger st&aring;r helt fritt til &aring; gj&oslash;re gjeldende forbeholdene i punkt <span class="insert-table"> <span class="insert" data-label="Beskrivelse"></span></span></span>.</p>
+			</article>
+
+			<article style="page-break-inside:avoid">
+			<h3><strong><span class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Hvis avtalen inngås med styreforbehold hos Selger, kan man tilføye dette bokstavpunktet." data-target="#hjelp18" data-toggle="collapse">Nytt punkt 4.2.b</span>Betydningen av at avtalen bortfaller</strong></h3>
+
+			<p>Hvis avtalen bortfaller som f&oslash;lge av at Selgers eller Kj&oslash;pers betingelser ikke blir oppfylt eller frafalt, kan ingen av partene rette krav om kostnadsdekning eller annet mot den annen part. Hvis avtalen bortfaller som f&oslash;lge av at en part bryter sine plikter etter avtalen, kan den annen part likevel gj&oslash;re gjeldende erstatningskrav som f&oslash;lge av avtalebruddet.<span class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Hvis gjennomføring av avtalen er betinget av forhold som Selger eller Kjøper skal bestrebe seg på å bringe i orden, bør man tilføye dette punktet." data-target="#hjelp19" data-toggle="collapse">Nytt punkt 4.3</span></p>
+			</article>
+
+			<article aria-expanded="false" class="collapse-span collapse" id="hjelp10-3" style="height: 0px;">
+			<h3><strong>Frist for gjennomf&oslash;ring av avtalen</strong></h3>
+
+			<p>Hvis betingelsene for gjennomf&oslash;ring av denne avtalen ikke er oppfylt eller frafalt innen <span class="insert-table"> <span class="insert" data-label="Dato"></span></span>, kan b&aring;de Selger og Kj&oslash;per ved skriftlig melding til den annen part si opp denne avtalen. Hvis en betingelse ikke er oppfylt som f&oslash;lge av en parts brudd p&aring; avtalen, kan den misligholdende part ikke si opp avtalen.</p>
+			</article>
+
+			<article>
+			<h2>SELGERS PLIKTER F&Oslash;R OVERTAKELSE</h2>
+
+			<p>Frem til Overtakelse skal Selger s&oslash;rge for:</p>
+
+			<ol class="lower-alpha">
+				<li>At det ikke besluttes utdeling p&aring; Aksjene eller andre helt eller delvis vederlagsfrie overf&oslash;ringer til aksjeeiere eller andre utover det som fremg&aring;r av Estimert Balanse.</li>
+				<li>At Selskapets virksomhet drives p&aring; sedvanlig m&aring;te, herunder at Eiendommen vedlikeholdes p&aring; en forsvarlig m&aring;te og i et omfang som ikke er mindre enn f&oslash;r signering av denne avtalen.</li>
+				<li>At Selskapet ikke inng&aring;r nye avtaler av vesentlig betydning for Selskapet, og at ingen av Selskapets vesentlige avtaler heves, endres eller sies opp uten Kj&oslash;pers skriftlige samtykke.</li>
+				<li>Ikke &aring; tilskynde eller foreta noe som ville utgj&oslash;re brudd p&aring; Selgers garantier i punkt 7.</li>
+				<li>&Aring; holde Eiendommen fullverdiforsikret.</li>
+				<li><span class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Hvis Selger skal besørge visse arbeider utført før Overtakelse kan man tilføye dette bokstavpunktet." data-target="#hjelp20" data-toggle="collapse">Ny bokstav i punkt 5</span>At Selskapet senest ved Overtakelse trer ut av en eventuell konsernkontoordning og fellesregistrering i Merverdiavgiftsregisteret.</li>
+				<li class="collapse-list-item collapse" id="hjelp20" style="height: 0px;">At de arbeidene som er omtalt i vedlegg <span class="insert-table"> <span class="insert" data-label="Nummer"></span></span>, blir ferdigstilt f&oslash;r Overtakelse for Selskapets regning p&aring; en fagmessig m&aring;te og i samsvar med offentligrettslige krav.</li>
+			</ol>
+			</article>
+
+			<article>
+			<h2>PARTENES BEF&Oslash;YELSER VED AVTALEBRUDD</h2>
+
+			<article>
+			<h3>B&aring;de Selger og Kj&oslash;per kan fastholde kj&oslash;pet og kreve at avtalen gjennomf&oslash;res, med mindre den annen part rettmessig hever avtalen eller gj&oslash;r gjeldende at en betingelse for gjennom-f&oslash;ring av avtalen i punkt 4 ikke er oppfylt. Kj&oslash;per kan ikke kreve retting etter kj&oslash;psloven &sect; 34, men Selger har rett til &aring; utf&oslash;re retting etter kj&oslash;psloven &sect; 36.&nbsp;</h3>
+			</article>
+
+			<article>
+			<h3>Bryter Selger denne avtalen, har Kj&oslash;per rett til erstatning p&aring; de vilk&aring;r som f&oslash;lger av punkt 8 og rett til &aring; holde kj&oslash;pesummen tilbake etter kj&oslash;psloven &sect; 42, men Kj&oslash;per har ikke rett til prisavslag etter kj&oslash;psloven &sect; 38. <span class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help=" Hvis det er ønskelig at Kjøper skal fratas retten til å heve avtalen også etter Overtakelse, kan man benytte denne teksten istedenfor. (Fjern da den første teksten i punktet og endre fargen på denne teksten fra rød til sort.)" data-target="#hjelp17" data-toggle="collapse">Alternativ tekst til punkt 6.3</span>Bryter Kj&oslash;per denne avtalen, kan Selger kreve erstatning etter alminnelige regler, herunder kj&oslash;psloven &sect; 57 og forsinkelsesrenteloven.</h3>
+			</article>
+
+			<article>
+			<h3><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Denne bestemmelsen betyr at Selger må tilbakebetale hele kjøpesummen for Aksjene til Kjøper hvis det i reklamasjonsperioden i punkt 8.3 inntrer et brudd på garantiene eller andre forpliktelser som anses som et vesentlig brudd av Selgers forpliktelser etter denne avtalen. Kjøper kan i et slikt tilfelle kreve tilbakebetaling av hele kjøpesummen selv om det er avtalt i punkt 8.4.1(c) at Selgers maksimale ansvar for brudd på de alminnelige garantier er begrenset til X % av Eiendomsverdien.">Punkt 6.3: Informasjon</span>B&aring;de Selger og Kj&oslash;per kan heve denne avtalen f&oslash;r Overtakelse hvis det inntrer omstendigheter, herunder forsinkelse, som utgj&oslash;r vesentlig brudd av den annen parts forpliktelser etter denne avtalen. Etter Overtakelse kan Kj&oslash;per heve s&aring; fremt Kj&oslash;per har rett til det etter kj&oslash;pslovens regler.<span class="collapse collapse-span" id="hjelp17" style="height:0px"><span style="color:red"> <em>Alternativt:</em> Etter Overtakelse kan ingen av partene heve denne avtalen.</span></span><span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Hvis Selger gir Kjøper en selgerkreditt og Selger etter Overtakelse skal kunne heve avtalen om Kjøper misligholder selgerkreditten, kan man tilføye denne bisetningen. Videre bør denne pantsettelsen reguleres i oppgjørsavtalen med vedlegg." data-target="#hjelp21" data-toggle="collapse">Bisetning til punkt 6.3</span><span aria-expanded="false" class="collapse collapse-span" id="hjelp21" style="height:0px"> Selger tar forbehold om at Selgers hevingsrett st&aring;r ved lag i de tilfeller som er regulert i kj&oslash;psloven &sect; 54 (4). Som sikkerhet for Selgers krav mot Kj&oslash;per som springer ut av denne avtalen, skal Kj&oslash;per ved Overtakelse pantsette Aksjene p&aring; f&oslash;rste prioritet til fordel for Selger. Denne panteretten skal slettes idet Kj&oslash;per har gjort opp Revidert Kj&oslash;pesum.</span></h3>
+
+			<article>
+			<h3>Kj&oslash;per fraskriver seg herved s&aring; langt gjeldende rett tillater det, enhver rett til &aring; gj&oslash;re krav gjeldende mot Selger som f&oslash;lge av at salgsobjektet ikke er som det skal v&aelig;re, i medhold av kj&oslash;psloven &sect; 19 (1) bokstav a, b og c, avhendingsloven &sect; 3-7, &sect; 3-8 og &sect; 3-9, andre regler om ansvar for uriktige og manglende opplysninger og ethvert annet lovfestet eller ulovfestet grunnlag utenfor denne avtalen.</h3>
+			</article>
+			</article>
+			</article>
+
+			<article>
+			<h2>SELGERS GARANTIER<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Er Selger et selskap, er det bakgrunnsretten som avgjør hvilke fysiske personer som skal regnes som «Selger» i garantikapittelet. Bakgrunnsretten gir en viss veiledning, men svarer ikke på alle spørsmål, herunder i hvilken utstrekning Selger hefter for styremedlemmer og eventuelle ansatte i Selskapet. Denne usikkerheten kan avhjelpes ved å angi hvem Selger skal identifiseres med. Dette kan gjøres ved å erstatte «Selger» med «Nøkkelpersonene» i punkt 7.1 og 7.2, og ved å innta ny definisjon i punkt 7.2 (se oransje boks på venstre side)">Punkt 7: Informasjon</span></h2>
+
+			<article>
+			<h3>Selger garanterer det f&oslash;lgende overfor Kj&oslash;per ved signering av denne avtalen og ved Overtakelse, med mindre noe annet fremg&aring;r av garantiene nedenfor:</h3>
+
+			<ol class="lower-alpha">
+				<li>Selger har opplyst Kj&oslash;per om de omstendighetene vedr&oslash;rende Selskapet og Eiendommen som Selger kjenner til ved signering av denne avtalen, og som Kj&oslash;per har grunn til &aring; regne med &aring; f&aring;. &laquo;Grunn til &aring; regne med &aring; f&aring;&raquo; skal forst&aring;s p&aring; samme m&aring;te som i kj&oslash;psloven &sect; 19 (1) bokstav b.</li>
+				<li><span class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Ifølge denne garantien hefter Selger for uriktige opplysninger selv om han verken skjønte eller burde skjønt at opplysningene var uriktige. Skal Selger unngå et slikt strengt, objektivt ansvar for uriktige opplysninger som er gitt av en eller annen person som Selger hefter for, kan garantien her endres til denne teksten istedenfor. (Fjern da den første teksten i punktet og endre fargen på denne teksten fra rød til sort.)" data-target="#hjelp22" data-toggle="collapse">Alternativ tekst til punkt 7.1.b</span>De opplysninger vedr&oslash;rende omstendigheter ved Selskapet og Eiendommen som Kj&oslash;per har mottatt fra Selgers side f&oslash;r signering av denne avtalen, er riktige. Denne garantien omfatter ikke opplysninger i dokumenter utarbeidet av andre enn Selger eller selskap i samme konsern som Selger, med mindre Selger kjenner til at opplysningene er uriktige ved signering av denne avtalen. <span aria-expanded="false" class="collapse collapse-span" id="hjelp22" style="height:0px"><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help=" Ifølge denne garantien hefter Selger bare for tap som Kjøper lider som følge av uriktige opplysninger fra Selgers side hvis Selger kjenner til at opplysningene var uriktige, eller mangler en rimelig grunn til å være uvitende om det. Skal Kjøper ha rett til erstatning for forhold som Selger har en rimelig unnskyldning for å være uvitende om, må Kjøper be om en særskilt garanti om forholdet.">Punkt 7.1.b: Informasjon om alternativ tekst</span><span style="color:red"><em>Alternativt:</em> De opplysninger vedr&oslash;rende omstendigheter ved Eiendommen som Kj&oslash;per har mottatt fra Selgers side f&oslash;r signering av denne avtalen, er riktige s&aring; langt Selger kjenner til.</span></span></li>
+				<li>Selger eier Aksjene, Aksjene overdras fri for heftelser av enhver art, det knytter seg ikke l&oslash;sningsrett til Aksjene, Selskapet har ikke en ubetinget eller betinget plikt til &aring; utstede ytterligere aksjer, og ingen rettigheter knyttet til Aksjene (herunder utbytte, fortrinnsrett ved kapitalforh&oslash;yelse mv.) er skilt fra Aksjene.</li>
+				<li>Selskapet er lovlig stiftet og registrert i Foretaksregisteret, og alle forhold (herunder de sist fastsatte vedtekter) som skal registreres i Foretaksregisteret, er registrert der.</li>
+				<li>Selskapets siste &aring;rsregnskap er avgitt i samsvar med regnskapslovens regler, Selskapet har ikke avgitt garantier for tredjemanns forpliktelser, og Selskapet har ikke forpliktelser som Selskapet burde balansef&oslash;rt i samsvar med god regnskapsskikk, utover det som fremg&aring;r av Revidert Balanse.</li>
+				<li><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Hvis Kjøper skal betale for andre eiendeler enn Eiendommen, fremførbart underskudd, fordringer (se reguleringen i punkt 9.1(b)) eller bankinnskudd, bør Kjøper vurdere å kreve en særskilt garanti om Selskapets rett til slike eiendeler. Det samme gjelder hvis det av andre grunner er viktig for Kjøper at Selskapet eier eller har rett til å bruke slike eiendeler.">Punkt 7.1.f: Informasjon</span>St&oslash;rrelsen p&aring; Selskapets eventuelle fremf&oslash;rbare underskudd og Eiendommens skattemessige avskrivningsgrunnlag blir korrekt beregnet ved fastsettelsen av Revidert Kj&oslash;pesum.</li>
+				<li>Selskapet har innsendt p&aring;krevde, korrekte og fullstendige opplysninger til skatte- og avgiftsmyndighetene, og det foreligger ikke og vil ikke oppst&aring; skatte- eller avgiftskrav for Selskapet knyttet til tiden forut for Overtakelse som ikke fullt ut er dekket av avsetninger i Revidert Balanse.</li>
+				<li><span class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Har ikke Selskapet har justerings-/tilbakeføringsforpliktelser eller -rettigheter for merverdiavgift, stryker man denne garantien og legger til denne teksten istedenfor. (Fjern da den første teksten i punktet og endre fargen på denne teksten fra rød til sort.)" data-target="#hjelp23" data-toggle="collapse">Alternativ tekst til punkt 7.1.h</span>Selskapet har utarbeidet en oppdatert justeringsoppstilling som er fullstendig og korrekt, og Selskapet besitter den dokumentasjon som etter gjeldende merverdiavgiftsregelverk er p&aring;krevd for anskaffelse/fremstilling og bruk av kapitalvarer. <span class="collapse collapse-span" id="hjelp23" style="height:0px"><span style="color:red"><em>Alternativt:</em> Selskapet har ikke justerings-/tilbakef&oslash;ringsforpliktelser eller -rettigheter for merverdiavgift.</span></span></li>
+				<li>Selskapets virksomhet best&aring;r utelukkende i &aring; eie fast eiendom, og Selskapet har ikke ansatte eller pensjonsforpliktelser.</li>
+				<li><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Se oransje boks vedr. nytt punkt 7.3">Punkt 7.1.j: Informasjon</span>Selskapet eier Eiendommen <span style="color:red">og er hjemmelshaver til denne</span>.</li>
+				<li>Det eksisterer ikke andre heftelser p&aring; Eiendommen (herunder l&oslash;sningsretter) enn de som er angitt i <u>vedlegg 4</u>, og alle eventuelle panteheftelser (utover lovbestemt pant for uforfalt gjeld) p&aring; Eiendommen og Selskapets &oslash;vrige eiendeler vil slettes uten ugrunnet opphold etter Overtakelse.</li>
+				<li>Selskapet er ikke part i en tvist for en domstol eller et forvaltningsorgan og har heller ikke mottatt skriftlig varsel om at en part vil ta eller vurderer &aring; ta skritt for &aring; innlede en slik tvist mot Selskapet. Denne garantien gjentas ved Avtalt Overtakelse og ikke Overtakelse om forsinkelsen skyldes forhold p&aring; Kj&oslash;pers side.</li>
+				<li>Selskapet bryter ikke leieavtalene med tilh&oslash;rende tilleggsavtaler angitt i <u>vedlegg 5</u>. Denne garantien gjelder ikke et vedlikeholdsetterslep eller andre tekniske forhold ved Eiendommen.</li>
+				<li>Ved signering av denne avtalen er Eiendommen leiet ut i henhold til leieavtalene med tilh&oslash;rende tilleggsavtaler angitt i <u>vedlegg 5</u>, og disse avtalene er gyldige og gjengir alt som er avtalt med leietakerne. Ved signering av denne avtalen kjenner Selger ikke til at en leietaker bryter en leieavtale.<span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Legg til denne definisjonen ved ersattning av «Selger» med «Nøkkelpersonene». Hvis denne personkretsen har begrenset kjennskap til Eiendommen, f.eks. fordi en ekstern part forestår drift og forvaltning, kan det vurderes å utvide personkretsen ved å tilføye: «samt [navn på personene som selger skal hefte for]»" data-target="#hjelp24" data-toggle="collapse">Bisetning til punkt 7.2 - ved erstatning av &laquo;Selger&raquo; med &laquo;N&oslash;kkelpersonene&raquo;</span></li>
+				<li>Ved signering av denne avtalen foreligger det ikke skriftlige p&aring;legg mv. fra offentlige myndigheter som gjelder Eiendommen, og som ikke er betalt eller oppfylt p&aring; annen m&aring;te.</li>
+			</ol>
+			</article>
+
+			<article>
+			<h3>Med forhold som <strong>Selger kjenner til</strong> i punkt 7.1, menes b&aring;de de forhold som Selger faktisk kjenner til ved signering av denne avtalen, og de forhold som Selger ikke har en rimelig grunn til &aring; v&aelig;re uvitende om p&aring; dette tidspunktet. Selger hefter ikke for manglende opplysninger fra andre enn Selger selv.<span aria-expanded="false" class="collapse collapse-span" id="hjelp24" style="height:0px"> Med <strong>N&oslash;kkelpersonene </strong>menes i) medlemmene av styret og eventuell daglig leder i Selger eller Selskapet og ii) ansatte i Selskapet, Selger eller selskap i samme konsern som Selger som har v&aelig;rt involvert i forberedelsene til inng&aring;elsen av denne avtalen.</span><span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Har et hjemmelsselskap grunnbokshjemmelen, kan man her tilføye et nytt punkt 7.3. Samtidig stryker man det følgende i punkt 7.2 bokstav (j): «og er hjemmelshaver til denne»." data-target="#hjelp25" data-toggle="collapse">Nytt punkt 7.3</span></h3>
+			</article>
+
+			<article>
+			<h3 aria-expanded="false" class="collapse collapse-span" id="hjelp25" style="height:0px">Garantiene i bokstav (a), (b), (c), (d), (e), (g) og (l) gjelder tilsvarende for Hjemmelsselskapet og aksjene i Hjemmelsselskapet. I tillegg opplyses at Hjemmelsselskapets balanse per Overtakelse ikke vil inneholde andre eiendeler eller gjeld enn ca. NOK <span class="insert-table"> <span class="insert" data-label="Beløp"></span></span> p&aring; Hjemmelsselskapets konto i norsk bank.</h3>
+			</article>
+			</article>
+
+			<article>
+			<h2>RETT TIL ERSTATNING OG BEGRENSNINGER I SELGERS ANSVAR</h2>
+
+			<article>
+			<h3><strong>Kj&oslash;pers rett til erstatning</strong></h3>
+
+			<article>
+			<h4>Bryter Selger denne avtalen, herunder ved forsinkelse, har Kj&oslash;per bare rett til erstatning for det tapet Kj&oslash;per lider som f&oslash;lge av avtalebruddet. Retten til erstatning omfatter imidlertid bare tap som en med rimelighet kunne ha forutsett som en mulig f&oslash;lge av avtalebruddet.</h4>
+			</article>
+
+			<article>
+			<h4>Kj&oslash;pers tap skal beregnes netto etter fradrag for i) skatte- og avgiftsbesparelser som Kj&oslash;per eller Selskapet kan nyttiggj&oslash;re seg, og ii) det Selskapet har rett til &aring; kreve erstattet fra tredjemann, herunder et forsikringsselskap. Hvis et tap er betinget, kan Selger f&oslash;rst holdes ansvarlig for tapet hvis og n&aring;r tapet m&aring; dekkes av Selskapet. Kj&oslash;per kan overholde fristene i punkt 8.3 ved &aring; gi skriftlig melding om det betingede tapet f&oslash;r utl&oslash;pet av disse fristene.</h4>
+			</article>
+			</article>
+
+			<article>
+			<h3><strong>Kj&oslash;pers kunnskap</strong></h3>
+
+			<p><span class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Hvis Kjøper skal utføre en due diligence etter signering av avtalen, jf. note 23, tilføyer man denne bisetningen." data-target="#hjelp26" data-toggle="collapse">Bisetning til punkt 8.2</span>Kj&oslash;per kan ikke gj&oslash;re gjeldende som brudd p&aring; punkt 7 noe som han selv faktisk kjente til ved signeringen av denne avtalen, eller noe som rimelig klart og tydelig fremg&aring;r av de skriftlige opplysningene som Kj&oslash;per har mottatt fra Selgers side f&oslash;r signering av denne avtalen<span aria-expanded="false" class="collapse collapse-span" id="hjelp26" style="height:0px"> eller noe som Kj&oslash;per ble kjent med i forbindelse med gjennomf&oslash;ringen av Kj&oslash;pers due diligence av Selskapet og Eiendommen, jf. punkt 4.1 [&hellip;]</span>. Denne begrensningen i Selgers ansvar gjelder ikke ved brudd p&aring; punkt 7(g) og (h) (om skatt og avgift) eller punkt 7 (c) eller (j) (om eierskap til Aksjene og Eiendommen), i fellesskap de <strong>Fundamentale Garantiene</strong>. Selger fraskriver seg retten til &aring; gj&oslash;re gjeldende kj&oslash;psloven &sect; 20.</p>
+			</article>
+
+			<article>
+			<h3><strong>Reklamasjon</strong></h3>
+
+			<article>
+			<h4><strong>Reklamasjon ved forsinkelse</strong></h4>
+
+			<p>En part taper sitt krav p&aring; erstatning som f&oslash;lge av forsinkelse som skyldes forhold p&aring; den annen parts side, hvis parten ikke innen &eacute;n m&aring;ned etter Overtakelse gir den annen part skriftlig melding om at avtalebruddet vil bli gjort gjeldende og hva avtalebruddet best&aring;r i (<strong>Reklamasjon</strong>).</p>
+			</article>
+
+			<article>
+			<h4><strong>Reklamasjon ved andre brudd p&aring; avtalen</strong></h4>
+
+			<ol class="lower-alpha">
+				<li>Kj&oslash;per taper retten til &aring; gj&oslash;re brudd p&aring; de Fundamentale Garantiene gjeldende hvis Kj&oslash;per ikke sender en Reklamasjon til Selger innen 5 &aring;r etter Overtakelse. For andre brudd p&aring; denne avtalen m&aring; Kj&oslash;per sende en Reklamasjon til Selger senest 18 m&aring;neder etter Overtakelse. Hvis Kj&oslash;per selv oppdager et avtalebrudd innen utl&oslash;pet av en av disse fristene, men senere enn &eacute;n m&aring;ned f&oslash;r utl&oslash;pet av den, utvides fristen med &eacute;n m&aring;ned regnet fra fristens utl&oslash;p.</li>
+				<li><span class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Om det er ønskelig at Kjøpers oversittelse av reklamasjonsfristen her skal medføre at Kjøper taper sitt krav, benytt denne teksten istedenfor. (Fjern da den første teksten i punktet og endre fargen på denne teksten fra rød til sort.)" data-target="#hjelp27" data-toggle="collapse">Alternativ tekst til punkt 8.3.2.b</span>Dessuten skal Kj&oslash;per sende en Reklamasjon til Selger senest &eacute;n m&aring;ned etter at Kj&oslash;per selv oppdaget avtalebruddet. Fors&oslash;mmer Kj&oslash;per &aring; sende en Reklamasjon innen denne fristen, vil Kj&oslash;per bare tape sitt krav mot Selger hvis og i den utstrekning fors&oslash;mmelsen i) har &oslash;kt Kj&oslash;pers tap, eller ii) har medf&oslash;rt at Selger eller Selskapet har mistet retten til &aring; kreve erstatning fra tredjemann, herunder et forsikringsselskap. <span class="collapse collapse-span" id="hjelp27" style="height:0px"><span style="color:red"><em>Alternativt:</em> Fors&oslash;mmer Kj&oslash;per &aring; sende en Reklamasjon innen denne fristen, vil Kj&oslash;per tape sitt krav mot Selger.</span></span></li>
+			</ol>
+			</article>
+			</article>
+
+			<article>
+			<h3><strong>Bel&oslash;psmessige ansvarsbegrensninger</strong></h3>
+
+			<article>
+			<h4>Selgers ansvar for brudd p&aring; punkt 7 er underlagt f&oslash;lgende begrensninger:</h4>
+
+			<ol class="lower-alpha">
+				<li><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="I praksis er dette beløpet gjerne 0,1 % av Eiendomsverdien, dog ikke lavere enn NOK 50.000 eller høyere enn NOK 1 million.">Punkt 8.4.1.a: Informasjon</span>Kj&oslash;per kan ikke gj&oslash;re gjeldende enkeltst&aring;ende brudd som medf&oslash;rer tap p&aring; mindre enn NOK <span class="insert-table"><span class="insert" data-label="Beløp"></span></span>, og det skal ses bort fra slike brudd ved beregningen av Kj&oslash;pers tap, herunder ved vurderingen av om bel&oslash;psgrensen i bokstav (b) nedenfor er n&aring;dd.</li>
+				<li><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Beløpsterskelen her settes ofte til 1 % av Eiendomsverdien, men er sjelden lavere enn NOK 500.000 eller høyere enn NOK 3 millioner.">Punkt 8.4.1.b: Informasjon</span>Kj&oslash;per kan ikke gj&oslash;re krav gjeldende med mindre Kj&oslash;pers samlede tap overstiger NOK <span class="insert-table"><span class="insert" data-label="Beløp"></span></span>, men hvis Kj&oslash;pers samlede tap overstiger denne bel&oslash;psgrensen, har Kj&oslash;per rett til erstatning fra f&oslash;rste krone.</li>
+				<li><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Sett riktig verdi.">Punkt 8.4.1.c: Informasjon</span>Selgers samlede ansvar er begrenset oppad til <span style="color:red">10 % av Eiendomsverdien</span>.</li>
+			</ol>
+			</article>
+
+			<article>
+			<h4>Ansvarsbegrensningen i punkt 8.4.1(c) gjelder ikke ved brudd p&aring; de Fundamentale Garantiene. Ansvarsbegrensningene i punkt 8.4.1(a) og (b) gjelder heller ikke ved brudd p&aring; punkt 7 (c) eller (j) (om eierskap til Aksjene og Eiendommen).</h4>
+
+			<article>
+			<h4><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Det må særskilt vurderes om denne ansvarsbegrensning passer i den enkelte transaksjon.">Punkt 8.4.3: Informasjon</span>Selgers samlede ansvar for brudd p&aring; denne avtalen (herunder de Fundamentale Garantiene og punkt 5 eller 7) er begrenset til det h&oslash;yeste av Revidert Kj&oslash;pesum og <span style="color:red">20</span> % av Eiendomsverdien. Se likevel punkt 9.2.</h4>
+			</article>
+
+			<article>
+			<h3><strong>Ansvar ved forsett eller grov uaktsomhet</strong></h3>
+
+			<p>Begrensningene i Selgers ansvar i punkt 8.3 og 8.4 gjelder ikke hvis avtalebruddet er forvoldt ved forsett eller grov uaktsomhet hos medlemmer av Selgers styre eller daglig leder eller en annen person hos Selger som har v&aelig;rt den hovedansvarlige for gjennomf&oslash;ringen av salget av Aksjene til Kj&oslash;per.</p>
+			</article>
+
+			<article>
+			<h3><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Punktet strykes dersom det kun er én selger">Punkt 8.6: Informasjon</span><strong>Ansvaret til de respektive selgere</strong></h3>
+
+			<p><span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Dersom aksjeeierene hefter solidarisk, benytt denne teksten istedenfor. (Fjern da den første teksten i punktet og endre fargen på denne teksten fra rød til sort.)" data-target="#hjelp38" data-toggle="collapse">Alternativ tekst til punkt 8.6</span>De aksjeeiere som utgj&oslash;r Selger, hefter proratarisk og ikke solidarisk for Kj&oslash;pers krav mot Selger som f&oslash;lge av brudd p&aring; denne avtalen. Den enkelte aksjeeiers ansvar er begrenset oppad til en andel av kravet lik aksjeeierens eierandel i Selskapet. <span aria-expanded="false" class="collapse collapse-span" id="hjelp38" style="height:0px"><span style="color:red"><em>Alternativt:</em> De aksjeeiere som utgj&oslash;r Selger, hefter solidarisk for Kj&oslash;pers krav mot Selger som f&oslash;lge av brudd p&aring; denne avtalen.</span></span></p>
+			</article>
+			</article>
+
+			<article>
+			<h2>SKADESL&Oslash;SHOLDELSE FRA SELGER</h2>
+
+			<article>
+			<h3>Selger skal holde Kj&oslash;per skadesl&oslash;s for tap som springer ut av:</h3>
+
+			<ol class="lower-alpha">
+				<li><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Selger hefter bare for skader som inntreffer etter signering av avtalen. Det kan derfor være fornuftig for Kjøper å undersøke Eiendommen rett før signering.">Punkt 9.1.a: Informasjon</span>At Eiendommen eller dens tilbeh&oslash;r blir skadet i perioden mellom signering av denne avtalen og kl. 12.00 ved Overtakelse. Denne skadesl&oslash;sholdelsen gjelder:
+
+				<ol class="lower-roman">
+					<li style="padding: 0">Ikke hvis tapet er lavere enn bel&oslash;psterskelen i punkt 8.4.1(a), eller hvis i) kostnadene til gjenoppf&oslash;ring/reparasjon og leietap som f&oslash;lge av skaden er fullt dekket av en forsikring eller dekkes av Selger eller Selger stiller betryggende sikkerhet for disse kostnadene og leietapet, og ii) alle leietakerne til Eiendommen er forpliktet til &aring; videref&oslash;re eller gjenoppta sitt leieforhold p&aring; uendrede vilk&aring;r etter gjenoppf&oslash;ring/reparasjon.</li>
+					<li style="padding: 0">Ikke skader som inntreffer i perioden fra kl. 12.00 ved Avtalt Overtakelse frem til kl. 12.00 ved Overtakelse hvis det skyldes forhold p&aring; Kj&oslash;pers side at Overtakelse gjennomf&oslash;res senere enn Avtalt Overtakelse, med mindre skaden skyldes uaktsomhet p&aring; Selgers side. For slike skader som skyldes uaktsomhet, gjelder ikke unntaket i dette punkt 9.1(a)(ii).</li>
+					<li style="padding: 0">Bare hvis Kj&oslash;per senest &eacute;n m&aring;ned etter Overtakelse gir Selger skriftlig melding om at han krever erstatning for skaden.</li>
+				</ol>
+				</li>
+				<li>At de fordringene som det er gjort tillegg for i beregningen av Revidert Kj&oslash;pesum, og som ikke omfatter rett til leie for perioden etter Overtakelse, ikke blir betalt. <span class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Dette punktet kan tilføyes hvis Selskapet etter stiftelsen har deltatt i en fisjon" data-target="#hjelp28" data-toggle="collapse">Ny bokstav i punkt 9.1</span>Selskapet skal ta rettslige skritt som er n&oslash;dvendige og rimelige, for &aring; inndrive slike fordringer, med mindre Selskapets forhold til Selskapets kontraktspart gir Selskapet saklig grunn til &aring; unnlate det. Selskapet kan ikke ettergi hele eller deler av slike fordringer uten samtykke fra Selger, som ikke kan nekte slikt samtykke hvis Selskapet har saklig grunn til &aring; ettergi fordringen. <span class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Dette punktet kan tilføyes hvis Selskapet har inngått i en fellesregistrering i Merverdiavgiftsregisteret" data-target="#hjelp29" data-toggle="collapse">Ny bokstav i punkt 9.1</span>Kj&oslash;per taper retten til &aring; gj&oslash;re denne skadesl&oslash;sholdelsen gjeldende hvis han ikke gir Selger skriftlig melding om det senest 18 m&aring;neder etter Overtakelse.</li>
+				<li class="collapse-list-item collapse" id="hjelp28" style="height: 0px;">Ansvar etter aksjeloven &sect; 14-11 som f&oslash;lge av eventuelle fisjoner som Selskapet har deltatt i. Kj&oslash;per taper retten til &aring; gj&oslash;re denne skadesl&oslash;sholdelsen gjeldende hvis han ikke gir Selger skriftlig melding om det senest 5 &aring;r etter Overtakelse.</li>
+				<li class="collapse-list-item collapse" id="hjelp29" style="height: 0px;">Solidaransvar som f&oslash;lge av at Selskapet har inng&aring;tt i en fellesregistrering i Merverdiavgiftsregisteret. Kj&oslash;per taper retten til &aring; gj&oslash;re denne skadesl&oslash;sholdelsen gjeldende hvis han ikke gir Selger skriftlig melding om det senest 5 &aring;r etter Overtakelse.</li>
+				<li><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Her kan man tilføye funn i Kjøpers due diligence eller annet som Selger skal holde Kjøper skadesløs for.">Punkt 9.1 - siste bokstav: Informasjon</span><span style="color:red">Tekst om due diligence.</span></li>
+			</ol>
+			</article>
+
+			<article>
+			<h3>Punkt 8.1 gjelder tilsvarende. Begrensningene i Selgers ansvar etter punkt 8.2, 8.3 og 8.4 gjelder ikke for skadesl&oslash;sholdelsene i dette punkt 9.</h3>
+			</article>
+			</article>
+
+			<article style="page-break-inside: avoid">
+			<h2><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Punktet strykes hvis selger ikke skal stille sikkerhet">Punkt 10: Informasjon</span>SIKKERHET</h2>
+
+			<p>Som sikkerhet for Kj&oslash;pers krav overfor Selger under denne avtalen skal NOK <span class="insert-table"><span class="insert" data-label="Beløp"></span></span> av Kj&oslash;pesummen holdes tilbake p&aring; en for begge parter sperret konto i navnet til Selger frem til og med dagen ett &aring;r etter Overtakelse. Rettmessige krav som Kj&oslash;per har overfor Selger, skal gj&oslash;res opp ved utbetalinger fra kontoen. Dersom det ikke er fremmet rettmessige krav overfor Selger i perioden frem til og med dagen ett &aring;r etter Overtakelse, skal innest&aring;ende bel&oslash;p p&aring; kontoen inklusive renter utbetales til Selger. Ved uenighet om hva som utgj&oslash;r rettmessige krav, skal tvisten avgj&oslash;res etter punkt 13. Alle kostnader til banken i tilknytning til denne sikkerheten skal fordeles med en halvpart p&aring; hver av Selger og Kj&oslash;per.</p>
+			</article>
+
+			<article style="page-break-inside:avoid">
+			<h2>FRASKRIVELSE AV RETTEN TIL &Aring; GJ&Oslash;RE KRAV GJELDENDE MOT ANDRE ENN PARTENE</h2>
+
+			<article>
+			<h3>Kj&oslash;per og Selskapet p&aring; den ene side og Selger p&aring; den annen side fraskriver seg herved overfor den andre parten enhver rett til &aring; gj&oslash;re krav gjeldende mot n&aelig;rst&aring;ende av den andre parten som f&oslash;lge av den n&aelig;rst&aring;endes disposisjoner, handlinger eller unnlatelser til skade for Selskapet frem til og med Overtakelse eller i forbindelse med inng&aring;elsen eller gjennomf&oslash;ringen av denne avtalen.</h3>
+			</article>
+
+			<article>
+			<h3>B&aring;de Kj&oslash;per og Selger (hver for seg <strong>Skadesl&oslash;sholderen</strong>) skal holde den annen part og hans n&aelig;rst&aring;ende (i fellesskap de <strong>Beskyttede Parter</strong>) skadesl&oslash;s for det tilfelle n&aelig;rst&aring;ende av Skadesl&oslash;sholderen gj&oslash;r krav gjeldende mot de Beskyttede Parter som f&oslash;lge av de Beskyttede Parters disposisjoner, handlinger eller unnlatelser til skade for Selskapet frem til og med Overtakelse eller i forbindelse med inng&aring;elsen eller gjennomf&oslash;ringen av denne avtalen.</h3>
+			</article>
+
+			<article>
+			<h3>Ansvarsfraskrivelsen og skadesl&oslash;sholdelsen i dette punkt 11 gjelder ikke i den grad kravet mot en person springer ut av hans forsettlige skadeforvoldelse eller en avtale med ham som inng&aring;s i tilknytning til denne avtalen.</h3>
+			</article>
+
+			<article>
+			<h3>Med <strong>n&aelig;rst&aring;ende </strong>menes i) selskap i samme konsern (som definert i aksjeloven &sect; 1-3) som en part, ii) en parts aksjeeiere (direkte og indirekte), iii) n&aring;v&aelig;rende eller tidligere styremedlemmer eller ansatte hos en part eller selskap i samme konsern som parten, og iv) meglere, r&aring;dgivere eller andre representanter for en part.</h3>
+			</article>
+			</article>
+
+			<article style="page-break-inside:avoid">
+			<h2>MEDDELELSER</h2>
+
+			<article>
+			<h3>Enhver meddelelse i forbindelse med denne avtalen skal skje per brev eller e-post til f&oslash;lgende adresser:</h3>
+
+			<p>For selger: <span class="insert-table"> <span class="insert" data-label="Adresse"></span></span></p>
+
+			<p>For kj&oslash;per: <span class="insert-table"> <span class="insert" data-label="Adresse"></span></span></p>
+			</article>
+
+			<article>
+			<h3>Frem til og med Overtakelse skal alle meddelelser sendes med kopi til:&nbsp;</h3>
+
+			<p>[[operativmegler.navn]]:&nbsp;[[operativmegler.epost]]</p>
+			</article>
+			</article>
+
+			<article style="page-break-inside:avoid">
+			<h2>LOVVALG OG TVISTEL&Oslash;SNING</h2>
+
+			<article>
+			<h3>Denne avtalen er underlagt norsk rett. Norske lovvalgsregler skal ikke kunne lede til valg av et annet lands rett.</h3>
+			</article>
+
+			<article>
+			<h3><span class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Hvis det er ønskelig med voldgift, kan man legge til disse bisetningene." data-target="#hjelp30" data-toggle="collapse">Bisetninger til punkt 13.2</span>Enhver tvist som m&aring;tte oppst&aring; med tilknytning til denne avtale, avgj&oslash;res ved ordin&aelig;r rettergang med <span class="insert-table"> <span class="insert" data-label="Beskrivelse"></span></span> som eksklusivt verneting. <span class="collapse collapse-span" id="hjelp30" style="height:0px"> Enhver tvist som m&aring;tte oppst&aring; med tilknytning til denne avtale, skal avgj&oslash;res ved voldgift i henhold til lov om voldgift av 14. mai 2004. Voldgiftsretten skal best&aring; av tre medlemmer hvorav partene skal oppnevne hver sin voldgiftsdommer. Disse skal oppnevne den tredje voldgiftsdommer som skal v&aelig;re voldgiftsrettens leder. Voldgiftsrettens leder skal v&aelig;re norsk jurist. I mangel av enighet om den tredje voldgiftsdommer skal vedkommende oppnevnes av sorenskriveren i Oslo tingrett.<br />
+			Voldgiftsforhandlingene skal holdes i <span class="insert-table"> <span class="insert" data-label="Sted"></span></span>, og voldgiftsspr&aring;ket skal v&aelig;re norsk.<br />
+			Voldgiftssaken skal anses innledet n&aring;r den ene parten sender sin begj&aelig;ring til den annen part om at tvisten skal avgj&oslash;res ved voldgift. Voldgiftsbehandlingen og voldgiftsrettens avgj&oslash;relse skal v&aelig;re underlagt taushetsplikt, og straks voldgiftssak er innledet, er partene forpliktet til &aring; inng&aring; separat avtale som bekrefter dette.<br />
+			Kretsen av kompetente domstoler i henhold til alminnelige regler for midlertidig sikring begrenses ikke av det som er bestemt her. </span> Kretsen av kompetente domstoler i henhold til de alminnelige regler for midlertidig sikring begrenses ikke av det som er bestemt her.</h3>
+			</article>
+			</article>
+
+			<article style="page-break-inside: avoid">
+			<h2>VEDLEGG</h2>
+
+			<p>Vedlagt f&oslash;lger:</p>
+
+			<ol class="decimal">
+				<li>Firmaattester for Selger, Kj&oslash;per og Selskapet</li>
+				<li>Vedtekter og pantattest for selskapet</li>
+				<li>Estimert balanse og estimert kj&oslash;pesumsberegning</li>
+				<li>Grunnboksutskrifter</li>
+				<li>Leiekontrakter med vedlegg</li>
+				<li>Prospekt med vedlegg</li>
+				<li>Oppgj&oslash;rsavtale</li>
+				<li><span style="color:red">Datarom p&aring; minnepinne</span></li>
+			</ol>
+			</article>
+
+			<article style="page-break-inside:avoid">
+			<h2>UNDERSKRIFT</h2>
+
+			<p>Denne avtalen er i dag underskrevet i tre eksemplarer, hvorav partene og [[meglerkontor.navn]]&nbsp;beholder ett hver.</p>
+			</article>
+			</article>
+			</article>
+			</article>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="100" style="padding-left:20px">
+			<table style="page-break-inside:avoid">
+				<tbody>
+					<tr>
+						<td colspan="100" style="vertical-align:top">
+						<p>[[meglerkontor.poststed]], den [[kontrakt.dato]]<br />
+						&nbsp;</p>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="48" style="vertical-align:top"><strong>for [[selger.firmanavn]]</strong></td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="48"><strong>for [[kjoper.firmanavn]]</strong></td>
+					</tr>
+					<tr>
+						<td colspan="48" style="vertical-align:top">
+						<table>
+							<tbody>
+								<tr>
+									<td style="border-bottom:solid 1px #000000; height:40px">&nbsp;</td>
+								</tr>
+								<tr>
+									<td style="vertical-align:bottom"><span vitec-if="Model.selger.hovedkontakt.navn == Model.selger.firmanavn"><span class="insert-table"> <span class="insert" data-label="Selgers representant"></span></span></span><span vitec-if="Model.selger.hovedkontakt.navn != Model.selger.firmanavn">[[selger.hovedkontakt.navn]]</span></td>
+								</tr>
+							</tbody>
+						</table>
+						</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="48" style="vertical-align:top">
+						<table>
+							<tbody>
+								<tr>
+									<td style="border-bottom:solid 1px #000000; height:40px">&nbsp;</td>
+								</tr>
+								<tr>
+									<td><span class="insert-table"><span vitec-if="Model.kjoper.hovedkontakt.navn == Model.kjoper.firmanavn"><span class="insert-table"> <span class="insert" data-label="Kjøpers representant"></span></span></span><span vitec-if="Model.kjoper.hovedkontakt.navn != Model.kjoper.firmanavn">[[kjoper.hovedkontakt.navn]]</span></span></td>
+								</tr>
+							</tbody>
+						</table>
+						</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="100">Vi er kjent med og aksepterer v&aring;re forpliktelser i henhold til denne avtalen:</td>
+					</tr>
+					<tr>
+						<td colspan="48" style="vertical-align:top">
+						<table>
+							<tbody>
+								<tr>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td><strong>for [[aksjeselskap.navn ]]</strong></td>
+								</tr>
+								<tr>
+									<td style="border-bottom:solid 1px #000000; height:40px">&nbsp;</td>
+								</tr>
+								<tr>
+									<td style="vertical-align:bottom"><span class="insert-table"> <span class="insert" data-label="Selskapets representant"></span></span></td>
+								</tr>
+							</tbody>
+						</table>
+						</td>
+						<td colspan="52">&nbsp;</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<div style="page-break-after:always"><span style="display:none">&nbsp;</span></div>
+
+			<h1>VEDLEGG 7</h1>
+
+			<h1>&nbsp;</h1>
+
+			<h1>Oppgj&oslash;rsavtale med oppgj&oslash;rsansvarlig</h1>
+
+			<article>
+			<h2 style="margin-bottom:1em">OPPGJ&Oslash;RSANSVARLIG OG OPPGJ&Oslash;RSKONTOEN</h2>
+
+			<article>
+			<h3>[[selger.firmanavn]], org.nr. [[selger.fdato_orgnr]], (<strong>Selger</strong>) og [[kjoper.firmanavn]], org.nr. [[kjoper.fdato_orgnr]], (<strong>Kj&oslash;per</strong>) har i dag inng&aring;tt avtale (<strong>Avtalen</strong>) om salg av aksjene i [[aksjeselskap.navn ]], org.nr. [[aksjeselskap.orgnr]].</h3>
+			</article>
+
+			<article>
+			<h3>Ord med stor forbokstav i denne avtalen (<strong>Oppgj&oslash;rsavtalen</strong>) skal bety det samme som i Avtalen.</h3>
+			</article>
+
+			<article>
+			<h3>Selger og Kj&oslash;per har for Selgers regning engasjert [[meglerkontor.navn]], org.nr. [[meglerkontor.orgnr]], (<strong>Oppgj&oslash;rsansvarlig</strong>) til &aring; bist&aring; med gjennomf&oslash;ring av oppgj&oslash;ret som beskrevet nedenfor. Oppgj&oslash;rsansvarlig skal ikke bist&aring; med etteroppgj&oslash;ret som skal finne sted etter punkt 2.3 i Avtalen.</h3>
+			</article>
+
+			<article>
+			<h3>Avtalt Overtakelse er [[kontrakt.overtagelse.dato]].</h3>
+			</article>
+
+			<article>
+			<h3><span class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Det må avklares om Lånene skal innfris ved at Kjøper betaler lånebeløpet til Oppgjørsansvarlig som deretter innfrir Lånene, eller ved at Kjøper overfører lånebeløpet direkte til Långiveren. I sistnevnte fall stryker man «Lånene» som står i rødt i parentesen og tilføye denne teksten.(Endre da fargen på denne tekstene fra rød til sort.)" data-target="#hjelp30-1" data-toggle="collapse">Alternativ tekst til punkt 1.5</span>Estimert Kj&oslash;pesum, (Selgerl&aring;net <span style="color:red"> og L&aring;nene)</span>, samt eventuelt gebyr for tinglysing av pant til Kj&oslash;pers l&aring;ngiver skal betales til kontonr. [[kontrakt.klientkonto]] (<strong>Oppgj&oslash;rskontoen</strong>) som er etablert i navnet til Oppgj&oslash;rsansvarlig.<span class="collapse collapse-span" id="hjelp30-1" style="height:0px"><span style="color:red"><em>Alternativt:</em> Kj&oslash;per skal selv innfri L&aring;nene.</span></span></h3>
+
+			<article>
+			<h3>Eventuelle renter p&aring; Oppgj&oslash;rskontoen opptjent fra og med dagen for Overtakelse skal utbetales til Selger, mens eventuelle renter opptjent f&oslash;r Overtakelse skal utbetales til Kj&oslash;per. Renter under halvparten av rettsgebyret utbetales ikke.</h3>
+			</article>
+			</article>
+
+			<article>
+			<h2><strong>HANDLINGER F&Oslash;R OVERTAKELSE</strong></h2>
+
+			<p>F&oslash;r overtakelse skal partene oppfylle forpliktelsene i dette punkt 2:</p>
+
+			<table class="numbered">
+				<thead>
+					<tr>
+						<th colspan="5">&nbsp;</th>
+						<th colspan="60">Handling</th>
+						<th colspan="20">Ansvarlig</th>
+						<th colspan="15">Frist</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan="5">&nbsp;</td>
+						<td colspan="60">Utstede og sende til tinglysing et sikringsdokument p&aring; Eiendommen p&aring;lydende NOK <span class="insert-table"> <span class="insert" data-label="Beløp"></span></span> til fordel for Oppgj&oslash;rsansvarlig. Sikringsdokumentet skal tjene som sikkerhet for ethvert krav som tilkommer Kj&oslash;per eller Kj&oslash;pers l&aring;ngiver i tilknytning til Avtalen (herunder l&aring;n til Kj&oslash;per fra Kj&oslash;pers l&aring;ngiver) og forby Selskapet &aring; avhende, pantsette eller p&aring; annen m&aring;te r&aring;de over Eiendommen uten samtykke fra Oppgj&oslash;rsansvarlig. Sikringsdokumentet er effektivt s&aring; langt gjeldende rett tillater det.</td>
+						<td colspan="20">Selger/ Selskapet</td>
+						<td colspan="15">Straks etter signering av Avtalen</td>
+					</tr>
+					<tr>
+						<td colspan="5">&nbsp;</td>
+						<td colspan="60"><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Punkt 2.3 til og med punkt 2.6 kan strykes dersom det ikke skal etableres pant til fordel for Kjøpers bank forut for Overtakelse. Panterett for Kjøpers oppkjøpsfinansiering kan bare etableres hvis aksjeloven § 8-10 følges. Merk at aksjeloven § 8-10 vil endres i 2020. Etter at lovendringen har trådt i kraft, må Selskapet følge særskilte saksbehandlingsregler for å pantsette Eiendommen til sikkerhet for Kjøpers oppkjøpsfinansiering.">Punkt 2.3-2.6: Informasjon</span>Levere til Kj&oslash;per og Oppgj&oslash;rsansvarlig kopi av aksjeeierboken som angitt i Bilag 1 med de der angitte heftelser til fordel for Oppgj&oslash;rsansvarlig.</td>
+						<td colspan="20">Selger/ Selskapet</td>
+						<td colspan="15">Straks etter signering av Avtalen</td>
+					</tr>
+					<tr>
+						<td colspan="5">&nbsp;</td>
+						<td colspan="60">Levere til Oppgj&oslash;rsansvarlig en original fullmakt som angitt i Bilag 2 der Selskapet gir Kj&oslash;per rett til &aring; pantsette Eiendommen til Kj&oslash;pers l&aring;ngiver,<span vitec-if="Model.oppdrag.kjoperspant.Count &gt; 0"><span vitec-foreach="pant in Model.oppdrag.kjoperspant"><span class="kjoperspant">[[*pant.navn]] (org.nr. [[*pant.panthaverorgnr]])<span class="separator">,</span></span></span></span><span vitec-if="Model.oppdrag.kjoperspant.Count == 0"><span class="insert-table"><span class="insert" data-label="Kjøpers bank"></span></span>, org.nr. <span class="insert-table"><span class="insert" data-label="Orgnr. kjøpers bank"></span></span></span>, (<strong>L&aring;ngiveren</strong>). Oppgj&oslash;rsansvarlig skal ikke utlevere fullmakten til Kj&oslash;per f&oslash;r oppgj&oslash;ret er gjennomf&oslash;rt. Kj&oslash;per skal s&oslash;rge for at panteretten til L&aring;ngiveren bare kan gj&oslash;res gjeldende s&aring; langt gjeldende rett tillater det,&nbsp;og at L&aring;ngiveren er kjent med at pante&not;dokumentet ikke kan sikre Kj&oslash;pers finansiering av Kj&oslash;pe&not;summen f&oslash;r en melding som nevnt i aksjeloven &sect; 8-10 (8) er sendt til Foretaksregisteret.</td>
+						<td colspan="20">Selger/ Selskapet</td>
+						<td colspan="15">Senest <span style="color:red">10</span> virkedager f&oslash;r Avtalt Overtakelse<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Fristene her må tilpasses den tid man har til rådighet mellom avtalesignering og overtakelse, og ta hensyn til tiden det tar å få pantedokumentene konferert.">Punkt 2.3: Informasjon om frist</span></td>
+					</tr>
+					<tr>
+						<td colspan="5">&nbsp;</td>
+						<td colspan="60">Levere til Oppgj&oslash;rsansvarlig korrekt signerte og bekreftede pantedokumenter over Eiendommen utstedt til L&aring;ngiveren og en erkl&aelig;ring der L&aring;ngiveren p&aring;tar seg &aring; avlyse pante-dokumentene hvis Overtakelse, uavhengig av &aring;rsak, ikke finner sted.</td>
+						<td colspan="20">Kj&oslash;per</td>
+						<td colspan="15">Senest <span style="color:red">10</span> virkedager f&oslash;r Avtalt Overtakelse</td>
+					</tr>
+					<tr>
+						<td colspan="5">&nbsp;</td>
+						<td colspan="60">Innhente eventuelle samtykker som er n&oslash;dvendige for &aring; tinglyse pantedokumentene til L&aring;ngiveren.</td>
+						<td colspan="20">Selger/ Selskapet</td>
+						<td colspan="15">Senest <span style="color:#ff0000">8&nbsp;</span>virkedager f&oslash;r Avtalt Overtakelse</td>
+					</tr>
+					<tr>
+						<td colspan="5">
+						<style type="text/css">span[aria-expanded="false"][data-target="\23hjelp31"] + span .is-aria-expanded-hjelp31-hjelp32:before {
+													content: "punkt 2.9";
+												}
+
+												span[aria-expanded="true"][data-target="\23hjelp31"] + span .is-aria-expanded-hjelp31-hjelp32:before {
+													content: "punkt 2.10";
+												}
+
+												span[aria-expanded="false"][data-target="\23hjelp31"] + span + span .is-aria-expanded-hjelp31-hjelp33:before {
+													content: "2.10 og 2.11";
+												}
+
+												span[aria-expanded="true"][data-target="\23hjelp31"] + span + span .is-aria-expanded-hjelp31-hjelp33:before {
+													content: "2.11 og 2.12";
+												}
+						</style>
+						<!-- Justert: position --><span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Her må det avklares om Selskapet har stilt pant eller garantier til andre enn kreditorene under Lånene. Har Selskapet gjort det, kan man her tilføye et nytt punkt 2.7." data-target="#hjelp31" data-toggle="collapse" style="left:-2.2cm; margin-top:45px">Nytt punkt 2.7</span> <span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Hvis erverv av aksjer i Selskapet ikke er betinget av samtykke, benytt denne teksten istedenfor. (Fjern da den første teksten i punktet og endre fargen på denne teksten fra rød til sort.)" data-target="#hjelp32" data-toggle="collapse" style="left:-2.2cm; margin-top:125px"> Alternativ tekst til <span class="is-aria-expanded-hjelp31-hjelp32"></span> </span> <span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Utover å tinglyse en panterett til Kjøpers långiver og innhente restgjeldsoppgaver (jf. punkt 2.6 og 2.7) har det sittende styret i Selskapet ingen plikt til å inngå avtaler om refinansiering av Selskapets gjeld ved Overtakelse eller yte annen bistand til Kjøpers finansiering. Interessene til Kjøpers långiver kan ivaretas ved at Kjøper påtar seg overfor långiveren å endre styret ved Overtakelse og sørge for at Selskapet samtidig tiltrer de nødvendige låneavtaler mv. Hvis det sittende styret i Selskapet skal medvirke til Kjøpers finansiering, bør det forsikre seg om at Selskapet overholder kravene i aksjeloven (herunder § 8-10 og kravet til armlengdes vederlag mv.) og ikke gi Kjøper en blanco-fullmakt til å inngå avtaler på Selskapets vegne. Er det ønskelig med en slik bestemmelse, kan man tilføye følgende disse to punktene i oppgjørsavtalen:" data-target="#hjelp33" data-toggle="collapse" style="left:-2.2cm; margin-top:215px"> Ekstra punkt <span class="is-aria-expanded-hjelp31-hjelp33"></span> </span></td>
+						<td colspan="60">Forutsatt at punkt 2.3 til og med punkt 2.5 er oppfylt, sende pantedokumentene til fordel for L&aring;ngiveren til tinglysing.</td>
+						<td colspan="20">Oppgj&oslash;rsansvarlig</td>
+						<td colspan="15">Senest <span style="color:#ff0000">7</span> virkedager f&oslash;r Avtalt Overtakelse</td>
+					</tr>
+				</tbody>
+				<tbody aria-expanded="false" class="collapse-tbody collapse" id="hjelp31" style="height: 0px;">
+					<tr>
+						<td colspan="5">&nbsp;</td>
+						<td colspan="60"><span style="color:red">Levere til Kj&oslash;per en bekreftelse om at <span class="insert-table"> <span class="insert" data-label="Navn panthaver"></span></span>s panterett over Eiendommen vil slettes etter at <span class="insert-table"> <span class="insert" data-label="Navn panthaver"></span></span> har mottatt NOK <span class="insert-table"> <span class="insert" data-label="Beløp"></span></span> av Estimert Kj&oslash;pesum ved Overtakelse, og om at Selskapet med virkning fra Overtakelse er fritatt for enhver forpliktelse under garantiavtalen datert <span class="insert-table"> <span class="insert" data-label="Dato"></span></span> som Selskapet har gitt til <span class="insert-table"> <span class="insert" data-label="Navn panthaver"></span></span>.</span></td>
+						<td colspan="20">Selger /<br />
+						Oppgj&oslash;rsansvarlig</td>
+						<td colspan="15"><span style="color:#ff0000">5</span> virkedager f&oslash;r Avtalt Overtakelse</td>
+					</tr>
+				</tbody>
+				<tbody>
+					<tr>
+						<td colspan="5">&nbsp;</td>
+						<td colspan="60">Innhente bekreftelser (<strong>Restgjeldsoppgaven</strong>) fra kreditorene under L&aring;nene som angir eksakt st&oslash;rrelse p&aring; L&aring;nene per Avtalt Overtakelse, og hvor kreditorene bekrefter at alle deres panteretter over Eiendommen, [Aksjene] og &oslash;vrige eiendeler som tilh&oslash;rer Selskapet, &nbsp;vil slettes ved mottak av de bel&oslash;p som fremg&aring;r av Restgjeldsoppgaven.</td>
+						<td colspan="20">Selger /<br />
+						Oppgj&oslash;rsansvarlig</td>
+						<td colspan="15"><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Har Selger inngått swap-avtaler i tilknytning til Lånene, bør Selger undersøke om det er praktisk mulig å innhente restgjeldsoppgaver fem dager før Overtakelse.">Punkt 2.7 (2.8 hvis nytt punkt f&oslash;yes til): Informasjon om frist</span><span style="color:#ff0000">5</span> virkedager f&oslash;r Avtalt Overtakelse.</td>
+					</tr>
+				</tbody>
+				<tbody>
+					<tr>
+						<td colspan="5">&nbsp;</td>
+						<td colspan="60">Levere til Kj&oslash;per og Oppgj&oslash;rsansvarlig en oppdatert estimert kj&oslash;pesumsberegning som angitt i punkt 2.2.3 i Avtalen, der L&aring;nene og Estimert Kj&oslash;pesum er justert for bel&oslash;pene i Restgjeldsoppgaven.</td>
+						<td colspan="20">Selger</td>
+						<td colspan="15"><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Teksten her forutsetter at kjøpesumsberegningen skal oppdateres før Overtakelse basert på restgjeldsoppgaver som vil bli innhentet senere.">Punkt 2.8 (2.9 hvis nytt punkt f&oslash;yes til): Informasjon om handling</span> <span style="color:#ff0000">5&nbsp;</span>virkedager f&oslash;r Avtalt Overtakelse</td>
+					</tr>
+					<tr>
+						<td colspan="5">&nbsp;</td>
+						<td colspan="60">Levere til Kj&oslash;per og Oppgj&oslash;rsansvarlig kopi av styreprotokoll som angitt i Bilag 3. <span aria-expanded="false" class="collapse collapse-span" id="hjelp32" style="height:0px"><span style="color:red"><em>Alternativt:</em> Levere til Kj&oslash;per en erkl&aelig;ring fra hver av styremedlemmene i Selskapet om at de ikke har utest&aring;ende krav mot Selskapet utover det som fremg&aring;r av Estimert Balanse.</span></span></td>
+						<td colspan="20">Selger / Selskapet</td>
+						<td colspan="15"><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="For selskaper som er stiftet etter 1. januar 1999, er erverv av aksjer i et selskap betinget av samtykke fra selskapet med mindre det er fastsatt i vedtektene at samtykke ikke kreves (jf. aksjeloven § 4-15 (2)). For selskaper som er stiftet før 1. januar 1999, er erverv av aksjer i et selskap betinget av samtykke fra selskapet bare for så vidt selskapets vedtekter inneholder bestemmelser om at overdragelse eller annet eierskifte er betinget av samtykke fra selskapet (jf. aksjeloven § 21-2 nr. 25).">Punkt 2.9 (2.10 hvis nytt punkt f&oslash;yes til): Informasjon om handling</span> Senest kl. 09.00 ved Overtakelse</td>
+					</tr>
+				</tbody>
+				<tbody aria-expanded="false" class="collapse-tbody collapse" id="hjelp33" style="height: 0px;">
+					<tr>
+						<td colspan="5">&nbsp;</td>
+						<td colspan="60">Levere til Selger:
+						<ol class="lower-roman">
+							<li>utkast til styre- og generalforsamlingsprotokoll samt kreditt-vurdering, redegj&oslash;relse og erkl&aelig;ring utarbeidet i samsvar med saks&not;behandlingsreglene i aksjeloven &sect; 8-10, der Selskapet stiller Eiendommen som sikkerhet for Kj&oslash;pers finansiering av Kj&oslash;pesummen, og</li>
+							<li>de avtaler og dokumenter som L&aring;ngiveren ber om at Selskapet inng&aring;r for &aring; finansiere Kj&oslash;pesummen og/eller L&aring;nene per Overtakelse.</li>
+						</ol>
+
+						<p>Kj&oslash;per skal godtgj&oslash;re at inng&aring;elsen av disse avtaler eller dokumenter ikke strider mot gjeldende rett.</p>
+						</td>
+						<td colspan="20">Kj&oslash;per</td>
+						<td colspan="15">8 dager f&oslash;r Avtalt overtakelse</td>
+					</tr>
+					<tr>
+						<td colspan="5">&nbsp;</td>
+						<td colspan="60">Forutsatt at Kj&oslash;per har oppfylt sine plikter etter punkt 2.10, levere til Kj&oslash;per:
+						<ol class="lower-roman">
+							<li>dokumentasjon som viser at Selskapet har pantsatt Eiendommen i samsvar med saksbehandlingsreglene i aksjeloven &sect; 8-10, og at rede&not;gj&oslash;relsen og erkl&aelig;ringen for sikkerhetsstillelsen er sendt til Foretaksregisteret, og</li>
+							<li>de avtalene og dokumentene som Selger har mottatt fra Kj&oslash;per, signert av kompetent person hos Selskapet.</li>
+						</ol>
+						</td>
+						<td colspan="20">Selger / Selskapet</td>
+						<td colspan="15">5 dager f&oslash;r Avtalt overtakelse</td>
+					</tr>
+				</tbody>
+			</table>
+			</article>
+
+			<article>
+			<h2><strong>HANDLINGER VED OVERTAKELSE</strong></h2>
+
+			<p>Forutsatt at betingelsene i punkt 4 i Avtalen er oppfylt eller frafalt, partene har oppfylt sine forpliktelser etter Oppgj&oslash;rsavtalen punkt 2 og sikringsdokumentet og eventuelle pantedokumenter til L&aring;ngiveren er tinglyst (konferert), jf. punkt 2.6, skal partene gjennomf&oslash;re oppgj&oslash;ret i samsvar med bestemmelsene nedenfor ved Overtakelse:</p>
+			</article>
+
+			<table class="numbered">
+				<thead>
+					<tr>
+						<th colspan="5">&nbsp;</th>
+						<th colspan="60">Handling</th>
+						<th colspan="20">Ansvarlig</th>
+						<th colspan="15">Frist</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan="5">&nbsp;</td>
+						<td colspan="60">Levere til Oppgj&oslash;rsansvarlig en melding som angitt i 0 om at Aksjene er overtatt av Kj&oslash;per<span style="color:red">, og at Aksjene er pantsatt p&aring; f&oslash;rste prioritet til L&aring;ngiveren</span>.</td>
+						<td colspan="20">Selger og Kj&oslash;per</td>
+						<td colspan="15">Senest kl. 09.00 ved Overtakelse</td>
+					</tr>
+					<tr>
+					</tr>
+					<tr>
+						<td colspan="5">&nbsp;</td>
+						<td colspan="60">Levere til Oppgj&oslash;rsansvarlig Selskapets originale aksjeeierbok som angitt i Bilag 4, der Kj&oslash;per er innf&oslash;rt som eier av Aksjene.</td>
+						<td colspan="20">Selger / Selskapet</td>
+						<td colspan="15">Senest kl. 09.00 ved Overtakelse</td>
+					</tr>
+					<tr>
+						<td colspan="5">&nbsp;</td>
+						<td colspan="60">S&oslash;rge for at Estimert Kj&oslash;pesum<span style="color:red">, Selgerl&aring;net og L&aring;nene</span> er disponibelt p&aring; Oppgj&oslash;rskontoen.</td>
+						<td colspan="20">Kj&oslash;per</td>
+						<td colspan="15">Senest kl. 11.00 ved Overtakelse</td>
+					</tr>
+				</tbody>
+			</table>
+			</article>
+
+			<article>
+			<h2><strong>PLIKTENE TIL OPPGJ&Oslash;RSANSVARLIG VED OVERTAKELSE</strong></h2>
+
+			<p>Straks vilk&aring;rene til Oppgj&oslash;rsavtalen punkt 3 er oppfylt eller frafalt, skal Oppgj&oslash;rsansvarlig:</p>
+
+			<ol class="lower-roman">
+				<li>utlevere den originale aksjeeierboken (jfr. Oppgj&oslash;rsavtalen punk 3-2) til Kj&oslash;per,</li>
+				<li>utbetale avtalt honorar og utlegg til Oppgj&oslash;rsansvarlig,</li>
+				<li>innfri L&aring;nene med de bel&oslash;p som fremg&aring;r av Restgjeldsoppgaven, og</li>
+				<li>utbetale <span style="color:red">Selgerl&aring;net og</span> det som gjenst&aring;r av Estimert Kj&oslash;pesum inklusive opptjente renter p&aring; Oppgj&oslash;rskontoen til Selgers konto med nr. [[selger.hovedkontonummer]].</li>
+			</ol>
+			</article>
+
+			<article>
+			<h2><strong>OVERF&Oslash;RING AV DISPOSISJONSRETT TIL KONTI MV.</strong></h2>
+
+			<p>Forutsatt at Kj&oslash;per har oppfylt sin plikt etter punkt 3.3, skal Selger ved Overtakelse levere til Kj&oslash;per en bekreftelse som viser at de personer som hadde fullmakt til &aring; disponere over Selskapets bankkonti f&oslash;r Overtakelse, ikke lenger har fullmakt til &aring; disponere over disse kontiene.</p>
+			</article>
+
+			<article>
+			<h2><strong>DELVIS OPPGJ&Oslash;R DER SELGER HAR FORS&Oslash;MT SINE PLIKTER</strong><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Om ønskelig kan dette punktet strykes.">Punkt 6: Informasjon</span></h2>
+
+			<article>
+			<h3>Hvis i) det foreligger en pengeheftelse over Aksjene, Eiendommen eller &oslash;vrige av Selskapets eiendeler som if&oslash;lge denne Oppgj&oslash;rsavtalen skal slettes, og som ikke omfattes av Restgjeldsoppgaven, ii) Estimert Kj&oslash;pesum med god margin gir betryggende sikkerhet for full innfrielse av forpliktelsen sikret ved heftelsen og iii) alle de &oslash;vrige betingelsene i punkt 4 i Avtalen og punkt 2 og 3 i Oppgj&oslash;rsavtalen er oppfylt eller frafalt ved Overtakelse, skal Oppgj&oslash;rsansvarlig foreta handlingene i punkt 4 i Oppgj&oslash;rsavtalen, men holde tilbake et bel&oslash;p p&aring; Oppgj&oslash;rskontoen som med god margin gir betryggende sikkerhet for full innfrielse av forpliktelsen sikret ved heftelsen. Det overskytende bel&oslash;p p&aring; Oppgj&oslash;rskontoen skal straks utbetales til Selgers konto. Det bel&oslash;p som holdes tilbake (inklusive rentene p&aring; Oppgj&oslash;rskontoen), skal utbetales n&aring;r heftelsen er slettet eller en bank skriftlig har bekreftet at heftelsen vil slettes.</h3>
+			</article>
+
+			<article>
+			<h3>For det tilfelle at i) betingelsene i punkt 4 i Avtalen er oppfylt eller frafalt, ii) Estimert Kj&oslash;pesum er disponibelt p&aring; Oppgj&oslash;rskontoen og iii) Kj&oslash;per har oppfylt alle sine andre plikter etter Oppgj&oslash;rsavtalen, men iv) ett eller flere av de &oslash;vrige vilk&aring;rene i Oppgj&oslash;rsavtalen punkt 2 og 3 ikke er oppfylt eller frafalt ved Overtakelse, har Kj&oslash;per rett, men ikke plikt til skriftlig &aring; kreve at Overtakelse likevel gjennomf&oslash;res. I et slikt tilfelle skal Oppgj&oslash;rsansvarlig:</h3>
+
+			<ol class="lower-roman">
+				<li>i den utstrekning det er mulig, straks foreta handlingene i Oppgj&oslash;rsavtalen punkt 4(i) til (iii),</li>
+				<li>holde tilbake p&aring; Oppgj&oslash;rskontoen det bel&oslash;p som ellers ville blitt utbetalt etter Oppgj&oslash;rsavtalen punkt 4(iv),</li>
+				<li>straks vilk&aring;rene i Oppgj&oslash;rsavtalen punkt 2 og 3 er oppfylt eller frafalt,
+				<ol class="decimal">
+					<li style="padding: 0">om L&aring;nene ikke allerede er innfridd, innfri L&aring;nene med de bel&oslash;p som fremg&aring;r av en ny restgjeldsoppgave som er innhentet av Oppgj&oslash;rsansvarlig eller Selger,</li>
+					<li style="padding: 0">[utbetale Selgerl&aring;net til Selger, og]&nbsp;</li>
+					<li style="padding: 0">utbetale det som gjenst&aring;r av Estimert Kj&oslash;pesum inklusive opptjente renter p&aring; Oppgj&oslash;rskontoen til Selgers konto.</li>
+				</ol>
+				</li>
+			</ol>
+			</article>
+			</article>
+
+			<article>
+			<h2><strong>OPPGJ&Oslash;RET GJENNOMF&Oslash;RES IKKE SOM AVTALT</strong></h2>
+
+			<p>Hvis ett eller flere av vilk&aring;rene i Oppgj&oslash;rsavtalen punkt 2 eller 3 ikke er oppfylt eller frafalt ved Overtakelse, skal oppgj&oslash;ret, <span style="color:red">bortsett fra i de tilfelle som er omtalt i punkt 6,</span> likevel gjennomf&oslash;res hvis og n&aring;r samtlige vilk&aring;r er oppfylt eller frafalt innen 30 dager etter i) Overtakelse eller ii) utsatt Overtakelse iht. skriftlig endringsavtale mellom partene. Hvis ett eller flere av vilk&aring;rene fremdeles ikke er oppfylt eller frafalt innen utl&oslash;pet av den nevnte fristen p&aring; 30 dager, skal Oppgj&oslash;rsansvarlig levere den originale fullmakten nevnt i punkt 2.3 til Selger og tilbakebetale eventuelt mottatt l&aring;nebel&oslash;p til L&aring;ngiveren inklusive opptjente renter p&aring; Oppgj&oslash;rskontoen s&aring; fremt L&aring;ngiveren bekrefter at pantedokumentene tinglyst til fordel for L&aring;ngiveren vil slettes. Det overskytende bel&oslash;p p&aring; Oppgj&oslash;rskontoen som ikke skal overf&oslash;res til L&aring;ngiveren, skal samtidig tilbakebetales til Kj&oslash;per. <span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Hvis aksjene er pantsatt til megleren, se Aksjeeierbok i bilag 1 og 4, erstatter man teksten i rødt med denne. (Fjern da den første teksten i punktene og endre fargen på disse tekstene fra rød til sort.)" data-target=".hjelp34" data-toggle="collapse">Alternativ tekst til punkt 7 og 9</span>Dessuten skal Oppgj&oslash;rsansvarlig av eget tiltak levere aksjeeierboken tilbake til Selskapet og s&oslash;rge for sletting av sikringsdokumentet og <span style="color:red">ur&aring;dighetserkl&aelig;ringen i aksjeeierboken</span><span aria-expanded="false" class="collapse collapse-span hjelp34" style="height:0px"><span style="color:red"><em> Alternativt:</em> ur&aring;dighetserkl&aelig;ringen og panteretten til Oppgj&oslash;rsansvarlig i aksjeeierboken</span></span>.</p>
+			</article>
+
+			<article>
+			<h2><strong>ENDRING AV STYRET MV. ETTER OVERTAKELSE</strong></h2>
+
+			<p>Kj&oslash;per skal umiddelbart etter Overtakelse avholde ekstraordin&aelig;r generalforsamling i Selskapet hvor Kj&oslash;per vedtar ansvarsfrihet for styret og velger nytt styre, og melde styreendringen til Foretaksregisteret. Utkast til protokoll for endring av styret og annet er inntatt i Bilag 5.</p>
+			</article>
+
+			<article>
+			<h2><strong>SLETTING AV SIKRINGSDOKUMENT OG UR&Aring;DIGHETSERKL&AElig;RING</strong></h2>
+
+			<p>Straks oppgj&oslash;ret er gjennomf&oslash;rt og nytt styre i Selskapet er registrert i Foretaksregisteret, skal Oppgj&oslash;rsansvarlig sende sikringsdokumentet til sletting og be Selskapet slette <span style="color:red">ur&aring;dighetserkl&aelig;ringen i aksjeeierboken</span><span aria-expanded="false" class="collapse collapse-span hjelp34" style="height:0px"><span style="color:red"><em> Alternativt:</em> ur&aring;dighetserkl&aelig;ringen og panteretten til Oppgj&oslash;rsansvarlig i aksjeeierboken</span></span> med mindre Kj&oslash;per gir instruks om noe annet.</p>
+			</article>
+
+			<p style="text-align:center">***</p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="100" style="padding-left:20px">
+			<table style="page-break-inside:avoid">
+				<tbody>
+					<tr>
+						<td colspan="100" style="vertical-align:top">
+						<p>[[meglerkontor.poststed]], den [[kontrakt.dato]]<br />
+						&nbsp;</p>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="48" style="vertical-align:top"><strong>for [[selger.firmanavn]]</strong></td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="48"><strong>for [[kjoper.firmanavn]]</strong></td>
+					</tr>
+					<tr>
+						<td colspan="48" style="vertical-align:top">
+						<table>
+							<tbody>
+								<tr>
+									<td style="border-bottom:solid 1px #000000; height:40px">&nbsp;</td>
+								</tr>
+								<tr>
+									<td style="vertical-align:bottom"><span vitec-if="Model.selger.hovedkontakt.navn == Model.selger.firmanavn"><span class="insert-table"> <span class="insert" data-label="Selgers representant"></span></span></span><span vitec-if="Model.selger.hovedkontakt.navn != Model.selger.firmanavn">[[selger.hovedkontakt.navn]]</span></td>
+								</tr>
+							</tbody>
+						</table>
+						</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="48" style="vertical-align:top">
+						<table>
+							<tbody>
+								<tr>
+									<td style="border-bottom:solid 1px #000000; height:40px">&nbsp;</td>
+								</tr>
+								<tr>
+									<td><span class="insert-table"><span vitec-if="Model.kjoper.hovedkontakt.navn == Model.kjoper.firmanavn"><span class="insert-table"> <span class="insert" data-label="Kjøpers representant"></span></span></span><span vitec-if="Model.kjoper.hovedkontakt.navn != Model.kjoper.firmanavn">[[kjoper.hovedkontakt.navn]]</span></span></td>
+								</tr>
+							</tbody>
+						</table>
+						</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="100">Vi er kjent med og aksepterer v&aring;re forpliktelser i henhold til denne avtalen:</td>
+					</tr>
+					<tr>
+						<td colspan="48" style="vertical-align:top">
+						<table>
+							<tbody>
+								<tr>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td><strong>for [[aksjeselskap.navn ]]</strong></td>
+								</tr>
+								<tr>
+									<td style="border-bottom:solid 1px #000000; height:40px">&nbsp;</td>
+								</tr>
+								<tr>
+									<td style="vertical-align:bottom"><span class="insert-table"> <span class="insert" data-label="Selskapets representant"></span></span></td>
+								</tr>
+							</tbody>
+						</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><strong><u>Bilag:</u></strong></p>
+
+<ol class="decimal">
+	<li>Aksjeeierbok for Selskapet ved signering av Avtalen</li>
+	<li>Fullmakt til &aring; pantsette Eiendommen fra Selskapet til Kj&oslash;per</li>
+	<li>Styreprotokoll for Selskapet</li>
+	<li>Melding om erverv av aksjene i Selskapet</li>
+	<li>Aksjeeierbok for Selskapet ved Overtakelse</li>
+	<li>Generalforsamlingsprotokoll for endring av styret mv.</li>
+</ol>
+
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<div style="page-break-after:always"><span style="display:none">&nbsp;</span></div>
+
+			<p style="text-align:right"><strong>Bilag 1</strong></p>
+
+			<h1>&nbsp;</h1>
+
+			<h1 style="text-align:center">AKSJEEIERBOK</h1>
+
+			<p style="text-align:center"><strong>FOR</strong></p>
+
+			<p style="text-align:center"><strong><span style="text-transform:uppercase">[[aksjeselskap.navn]]</span></strong></p>
+
+			<p style="text-align:center"><strong>ORG.NR. [[aksjeselskap.orgnr]]</strong></p>
+
+			<table class="bordered-table">
+				<thead>
+					<tr>
+						<th colspan="80">Aksjeeiere i alfabetisk rekkef&oslash;lge. Foretaksnavn og adresse.</th>
+						<th colspan="20">Org.nr.</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan="80">[[selger.firmanavn]]<br />
+						[[selger.hovedgatenavnognr]],<br />
+						[[selger.hovedpostnr]] [[selger.hovedpoststed]]<br />
+						[[selger.hovedepost]]</td>
+						<td colspan="20">[[selger.idnummer]]</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<table class="bordered-table">
+				<thead>
+					<tr>
+						<th colspan="20">Aksjenr.</th>
+						<th colspan="20">Antall aksjer</th>
+						<th colspan="40">Heftelser/merknader</th>
+						<th colspan="20">Innf&oslash;rt dato</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan="20"><sup>1)</sup>&nbsp;[[aksjeselskap.aksjenr]]</td>
+						<td colspan="20"><span class="insert-table"> <span class="insert" data-label="Antall aksjer"></span></span></td>
+						<td colspan="40"><span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Hvis sikkerhetsforskriftene i meglerens ansvarsforsikring krever det, kan denne teksten legges til." data-target="#hjelp35" data-toggle="collapse">Ekstra tekst under Heftelser/merknader</span><sup>1)</sup> Aksjene er solgt til [[kjoper.firmanavn]], org.nr. [[kjoper.fdato_orgnr]] iht. aksjekj&oslash;psavtale datert [[kontrakt.dato]]. Avtalt overtakelse er [[kontrakt.overtagelse.dato]]. <span aria-expanded="false" class="collapse collapse-span" id="hjelp35" style="height:0px"> Dessuten er aksjene pantsatt til [[meglerkontor.navn]], org.nr. [[meglerkontor.orgnr]], til sikkerhet for ethvert krav som tilkommer [[kjoper.firmanavn]] eller <span vitec-if="Model.oppdrag.kjoperspant.Count &gt; 0"><span vitec-foreach="pant in Model.oppdrag.kjoperspant"><span class="kjoperspant">[[*pant.navn]]<span class="separator">,</span></span></span></span><span vitec-if="Model.oppdrag.kjoperspant.Count == 0"><span class="insert-table"><span class="insert" data-label="Kjøpers bank"></span></span></span>, i tilknytning til denne aksjekj&oslash;psavtalen (herunder l&aring;n til [[kjoper.firmanavn]] fra <span vitec-if="Model.oppdrag.kjoperspant.Count &gt; 0"><span vitec-foreach="pant in Model.oppdrag.kjoperspant"><span class="kjoperspant">[[*pant.navn]]<span class="separator">,</span></span></span></span><span vitec-if="Model.oppdrag.kjoperspant.Count == 0"><span class="insert-table"><span class="insert" data-label="Kjøpers bank"></span></span></span>).</span> Eieren av aksjene kan ikke avhende eller pantsette aksjene eller rettigheter til aksjene uten samtykke fra [[meglerkontor.navn]], org.nr. [[meglerkontor.orgnr]]. Denne heftelsen er ikke til hinder for at aksjene pantsettes p&aring; f&oslash;rste prioritet til <span vitec-if="Model.oppdrag.kjoperspant.Count &gt; 0"><span vitec-foreach="pant in Model.oppdrag.kjoperspant"><span class="kjoperspant">[[*pant.navn]]<span class="separator">,</span></span></span></span><span vitec-if="Model.oppdrag.kjoperspant.Count == 0"><span class="insert-table"><span class="insert" data-label="Kjøpers bank"></span></span></span>.</td>
+						<td colspan="20"><sup>1)</sup> [[kontrakt.dato]]<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Eventuelle eksisterende heftelser over aksjene må angis på foranstående prioritet her.">Informasjon om Heftelser/merknader</span></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<table style="margin-top:1cm; page-break-inside:avoid">
+				<tbody>
+					<tr>
+						<td colspan="100" style="vertical-align:top">
+						<p><br />
+						[[meglerkontor.poststed]], den [[kontrakt.overtagelse.dato]]<br />
+						&nbsp;</p>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="48" style="text-align:center; vertical-align:top">
+						<table>
+							<tbody>
+								<tr>
+									<td style="text-align:center">&nbsp;</td>
+								</tr>
+								<tr>
+									<td style="text-align:left"><strong>for [[aksjeselskap.navn]]</strong></td>
+								</tr>
+								<tr>
+									<td style="border-bottom:1px solid #000000; height:40px; text-align:left">&nbsp;</td>
+								</tr>
+								<tr>
+									<td style="text-align:left; vertical-align:bottom"><span class="insert-table"> <span class="insert" data-label="Selskapets representant"></span></span></td>
+								</tr>
+							</tbody>
+						</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<div style="page-break-after:always"><span style="display:none">&nbsp;</span></div>
+
+			<p style="text-align:right"><strong>Bilag 2</strong></p>
+
+			<h1>&nbsp;</h1>
+
+			<h1>FULLMAKT TIL PANTSETTELSE</h1>
+
+			<p>[[aksjeselskap.navn ]], org.nr. [[aksjeselskap.orgnr]], gir herved [[kjoper.firmanavn]], org.nr. [[kjoper.fdato_orgnr]], representert ved <span vitec-if="Model.kjoper.hovedkontakt.navn == Model.kjoper.firmanavn"><span class="insert-table"> <span class="insert" data-label="Kjøpers representant"></span></span></span><span vitec-if="Model.kjoper.hovedkontakt.navn != Model.kjoper.firmanavn">[[kjoper.hovedkontakt.navn]]</span>, personnummer <span class="insert-table"> <span class="insert" data-label="Personnummer"></span></span>, fullmakt til alene &aring; pantsette og utstede en ur&aring;dighetserkl&aelig;ring over v&aring;r eiendom med [[komplettmatrikkel]] i [[eiendom.kommunenavn]] kommune til fordel for <span vitec-if="Model.oppdrag.kjoperspant.Count &gt; 0"><span vitec-foreach="pant in Model.oppdrag.kjoperspant"><span class="kjoperspant">[[*pant.navn]] (org.nr. [[*pant.panthaverorgnr]])<span class="separator">,</span></span></span></span><span vitec-if="Model.oppdrag.kjoperspant.Count == 0"><span class="insert-table"><span class="insert" data-label="Kjøpers bank"></span></span>, org.nr. <span class="insert-table"><span class="insert" data-label="Orgnr. kjøpers bank"></span></span></span>.</p>
+
+			<p>Denne fullmakten kan bare benyttes i original og gjelder ikke etter <span class="insert-table"> <span class="insert" data-label="Angi romslig frist"></span></span>.</p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="100">
+			<table style="page-break-inside:avoid">
+				<tbody>
+					<tr>
+						<td colspan="100" style="vertical-align:top">
+						<p>[[meglerkontor.poststed]], den [[kontrakt.dato]]<br />
+						&nbsp;</p>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="48" style="text-align:center; vertical-align:top"><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Bare signaturberettigede hos hjemmelshaver kan signere.">Informasjon om Selgers signatur</span>
+						<table>
+							<tbody>
+								<tr>
+									<td style="text-align:center">&nbsp;</td>
+								</tr>
+								<tr>
+									<td style="text-align:left"><strong>for [[selger.firmanavn]]</strong></td>
+								</tr>
+								<tr>
+									<td style="border-bottom:1px solid #000000; height:40px; text-align:left">&nbsp;</td>
+								</tr>
+								<tr>
+									<td style="text-align:left; vertical-align:bottom"><span vitec-if="Model.selger.hovedkontakt.navn == Model.selger.firmanavn"><span class="insert-table"> <span class="insert" data-label="Selgers representant"></span></span></span><span vitec-if="Model.selger.hovedkontakt.navn != Model.selger.firmanavn">[[selger.hovedkontakt.navn]]</span></td>
+								</tr>
+							</tbody>
+						</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<table style="table-layout:fixed; width:48%">
+	<tbody>
+		<tr>
+			<td colspan="100" style="border-bottom:solid 1px #000000"><br />
+			&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="100">Sted / dato</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>Jeg/vi bevitner herved at <span vitec-if="Model.selger.hovedkontakt.navn == Model.selger.firmanavn"><span class="insert-table"> <span class="insert" data-label="Selgers representant"></span></span></span><span vitec-if="Model.selger.hovedkontakt.navn != Model.selger.firmanavn">[[selger.hovedkontakt.navn]]</span> er over 18 &aring;r og har underskrevet eller vedkjent seg sin(e) underskrifter i mitt/varing;rt n&aelig;rv&aelig;r. Jeg/vi er myndig(e) og bosatt i Norge.</p>
+
+<table class="borders witness-table">
+	<tbody>
+		<tr>
+			<td colspan="41" data-label="Navn">&nbsp;</td>
+			<td class="header-cell" colspan="8">1. vitne<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Kartverket krever at hjemmelshavers signatur bevitnes av to myndige vitner bosatt i Norge, eller én advokat, eiendomsmegler, jurist med tillatelse til å være fagansvarlig og ansvarlig megler, eller megler som har tillatelse til å være ansvarlig megler. En eiendomsmeglerfullmektig kan også vitne alene. Det samme gjelder statsautorisert eller registrert revisor.">Informasjon om bevitnelse</span></td>
+			<td colspan="2" style="border-style:none; border-width:0px">&nbsp;</td>
+			<td colspan="41" data-label="Navn">&nbsp;</td>
+			<td class="header-cell" colspan="8">2. vitne</td>
+		</tr>
+		<tr>
+			<td colspan="49" data-label="Fødselsnummer">&nbsp;</td>
+			<td colspan="2" style="border-style:none; border-width:0px">&nbsp;</td>
+			<td colspan="49" data-label="Fødselsnummer">&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="49" data-label="Adresse">&nbsp;</td>
+			<td colspan="2" style="border-style:none; border-width:0px">&nbsp;</td>
+			<td colspan="49" data-label="Adresse">&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="49" data-label="Telefon">&nbsp;</td>
+			<td colspan="2" style="border-style:none; border-width:0px">&nbsp;</td>
+			<td colspan="49" data-label="Telefon">&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="49" data-label="Sted/dato">&nbsp;</td>
+			<td colspan="2" style="border-style:none; border-width:0px">&nbsp;</td>
+			<td colspan="49" data-label="Sted/dato">&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="49" data-label="Signatur">&nbsp;</td>
+			<td colspan="2" style="border-style:none; border-width:0px">&nbsp;</td>
+			<td colspan="49" data-label="Signatur">&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<div style="page-break-after:always"><span style="display:none">&nbsp;</span></div>
+
+			<p style="text-align:right"><strong>Bilag 3</strong></p>
+
+			<h1>&nbsp;</h1>
+
+			<h1>PROTOKOLL<br />
+			FOR STYREM&Oslash;TE<br />
+			I <span style="text-transform:uppercase">[[aksjeselskap.navn ]]</span></h1>
+
+			<p><span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Dersom det er avholdt telefonstyremøte, benytt denne teksten istedenfor. (Fjern da den første teksten i punktet og endre fargen på denne teksten fra rød til sort.)" data-target="#hjelp36" data-toggle="collapse">Alternativ tekst til f&oslash;rste avsnitt</span>Den <span class="insert-table"> <span class="insert" data-label="Dato"></span></span> ble det avholdt styrem&oslash;te i [[aksjeselskap.navn ]], org.nr. [[aksjeselskap.orgnr]], i selskapets lokaler. <span aria-expanded="false" class="collapse collapse-span" id="hjelp36" style="height:0px"><span style="color:red"> <em>Alternativt:</em> Styrelederen fant det betryggende &aring; avholde telefonstyrem&oslash;te den <span class="insert-table"> <span class="insert" data-label="Dato"></span></span></span>.</span></p>
+
+			<p>F&oslash;lgende personer deltok: <span class="insert-table"> <span class="insert" data-label="Navn styremedlemmer"></span></span>. Styret var dermed fulltallig og beslutningsdyktig. Det fremkom ingen innsigelser mot behandlingsm&aring;ten, innkallingen eller dagsordenen.</p>
+
+			<p>Styret behandlet sp&oslash;rsm&aring;let om selskapet skulle samtykke til at [[kjoper.firmanavn]], org.nr. [[kjoper.fdato_orgnr]], (<strong>Kj&oslash;per</strong>) erverver alle aksjene i selskapet.</p>
+
+			<p>Styret ga sitt samtykke til aksjeervervet og til at Kj&oslash;per innf&oslash;res i selskapets aksjeeierbok som eier av samtlige aksjer i selskapet hvis og n&aring;r Kj&oslash;per har overtatt aksjene iht. kj&oslash;pekontrakten med selger hvor ogs&aring; selskapet er part. Styret godkjente inng&aring;elsen av denne kj&oslash;pekontrakt og tilh&oslash;rende oppgj&oslash;rsavtale og bekreftet at [Selskapets repr.] har fullmakt til &aring; inng&aring; og signere disse avtalene p&aring; vegne av selskapet samt oppdatere og signere aksjeeierboken for selskapet.</p>
+
+			<p><span style="color:red">Videre godkjente styret at selskapets eiendom blir pantsatt med ur&aring;dighet til fordel for Kj&oslash;pers l&aring;ngiver p&aring; de vilk&aring;r som f&oslash;lger av oppgj&oslash;rsavtalen. Styret noterte at denne panteretten er t.o.m. frem til Kj&oslash;pers overtakelse av aksjene. Videre merket styret seg at Kj&oslash;per if&oslash;lge oppgj&oslash;rsavtalen skal s&oslash;rge for at panteretten bare kan gj&oslash;res gjeldende s&aring; langt gjeldende rett tillater det, og at Kj&oslash;pers l&aring;ngiver er kjent med at panteretten ikke kan sikre Kj&oslash;pers finansiering av kj&oslash;pesummen for aksjene f&oslash;r en melding som nevnt i aksjeloven &sect; 8-10 (8) er sendt til Foretaksregisteret.</span></p>
+
+			<p>Styrets medlemmer p&aring;tok seg &aring; stille sine styreverv til disposisjon og fratre fra det tidspunkt generalforsamlingen i selskapet m&aring;tte beslutte det.</p>
+
+			<p>Styrets medlemmer erkl&aelig;rte at de har ingen utest&aring;ende krav mot selskapet utover det som fremg&aring;r av estimert balanse, som er laget iht. kj&oslash;pekontrakten med Kj&oslash;per.</p>
+
+			<p>Alle vedtak var enstemmige. Andre saker forel&aring; ikke til behandling.</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<table style="table-layout:fixed; width:48%">
+				<tbody>
+					<tr>
+						<td colspan="100" style="border-bottom:solid 1px #000000"><br />
+						&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="100">Sted / dato</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<table style="table-layout:fixed; width:100%">
+				<tbody>
+					<tr>
+						<td colspan="48" style="border-bottom:solid 1px #000000"><br />
+						&nbsp;</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="48" style="border-bottom:solid 1px #000000">&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="48">Styremedlem</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="48">Styremedlem</td>
+					</tr>
+					<tr>
+						<td colspan="48" style="border-bottom:solid 1px #000000"><br />
+						&nbsp;</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="48" style="border-bottom:solid 1px #000000">&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="48">Styremedlem</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="48">Styremedlem</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<div style="page-break-after:always"><span style="display:none">&nbsp;</span></div>
+
+			<p style="text-align:right"><strong>Bilag 4</strong></p>
+
+			<p>&nbsp;</p>
+
+			<p>Til styret i [[aksjeselskap.navn ]], org.nr.&nbsp;[[aksjeselskap.orgnr]]</p>
+
+			<h1>&nbsp;</h1>
+
+			<h1>MELDING OM AKSJEERVERV <span style="color:red">OG PANTSETTELSE</span></h1>
+
+			<p>Vi gir herved melding om at [[kjoper.firmanavn]], org.nr. [[kjoper.fdato_orgnr]], iht. kj&oslash;pekontrakt datert [[kontrakt.dato]] har ervervet alle aksjene i [[aksjeselskap.navn ]].</p>
+
+			<p><span style="color:Red">Det gis samtidig melding om at disse aksjene er pantsatt p&aring; f&oslash;rste prioritet til <span vitec-if="Model.oppdrag.kjoperspant.Count &gt; 0"><span vitec-foreach="pant in Model.oppdrag.kjoperspant"><span class="kjoperspant">[[*pant.navn]] (org.nr. [[*pant.panthaverorgnr]])<span class="separator">,</span></span></span></span><span vitec-if="Model.oppdrag.kjoperspant.Count == 0"><span class="insert-table"><span class="insert" data-label="Kjøpers bank"></span></span>, org.nr. <span class="insert-table"><span class="insert" data-label="Orgnr. kjøpers bank"></span></span></span></span></p>
+
+			<p>Vi krever at [[kjoper.firmanavn]] straks innf&oslash;res i aksjeeierboken til [[aksjeselskap.navn ]] som eier av alle aksjene<span style="color:Red">, og at <span vitec-if="Model.oppdrag.kjoperspant.Count &gt; 0"><span vitec-foreach="pant in Model.oppdrag.kjoperspant"><span class="kjoperspant">[[*pant.navn]]<span class="separator">,</span></span></span></span><span vitec-if="Model.oppdrag.kjoperspant.Count == 0"><span class="insert-table"><span class="insert" data-label="Kjøpers bank"></span></span></span> innf&oslash;res som panthaver</span>.</p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="100">
+			<table style="page-break-inside:avoid; vertical-align:middle">
+				<tbody>
+					<tr>
+						<td colspan="100" style="vertical-align:top">
+						<p>[[meglerkontor.poststed]], den [[kontrakt.dato]]<br />
+						&nbsp;</p>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="48" style="vertical-align:top"><strong>for [[kjoper.firmanavn]]</strong></td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="48"><strong>&nbsp;</strong></td>
+					</tr>
+					<tr>
+						<td colspan="48" style="vertical-align:top">
+						<table>
+							<tbody>
+								<tr>
+									<td style="border-bottom:solid 1px #000000; height:40px">&nbsp;</td>
+								</tr>
+								<tr>
+									<td style="vertical-align:bottom"><span vitec-if="Model.kjoper.hovedkontakt.navn == Model.kjoper.firmanavn"><span class="insert-table"> <span class="insert" data-label="Kjøpers representant"></span></span></span><span vitec-if="Model.kjoper.hovedkontakt.navn != Model.kjoper.firmanavn">[[kjoper.hovedkontakt.navn]]</span></td>
+								</tr>
+							</tbody>
+						</table>
+						</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="100"><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Bakgrunnen for dette punktet er at Kjøper skal godtgjøre sitt erverv, jf. aksjeloven § 4-2 (1), og dette gjøres her ved at Selger bekrefter at eierskiftet har skjedd.">Informasjon om ervervet</span>Vi bekrefter herved at [[kjoper.firmanavn]] har ervervet alle aksjene i [[aksjeselskap.navn ]] iht. kj&oslash;pekontrakt datert [[kontrakt.dato]]].</td>
+					</tr>
+					<tr>
+						<td colspan="100" style="vertical-align:top">
+						<p style="text-align:center">[[meglerkontor.poststed]], den [[kontrakt.dato]]<br />
+						&nbsp;</p>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="48" style="vertical-align:top">
+						<table>
+							<tbody>
+								<tr>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td><strong>for [[selger.firmanavn]]</strong></td>
+								</tr>
+								<tr>
+									<td style="border-bottom:solid 1px #000000; height:40px">&nbsp;</td>
+								</tr>
+								<tr>
+									<td style="vertical-align:bottom"><span vitec-if="Model.selger.hovedkontakt.navn == Model.selger.firmanavn"><span class="insert-table"> <span class="insert" data-label="Selgers representant"></span></span></span><span vitec-if="Model.selger.hovedkontakt.navn != Model.selger.firmanavn">[[selger.hovedkontakt.navn]]</span></td>
+								</tr>
+							</tbody>
+						</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<div style="page-break-after:always"><span style="display:none">&nbsp;</span></div>
+
+			<p style="text-align:right"><strong>Bilag 5</strong></p>
+
+			<h1>&nbsp;</h1>
+
+			<h1>AKSJEEIERBOK</h1>
+
+			<p style="text-align:center"><strong>FOR</strong></p>
+
+			<p style="text-align:center"><strong><span style="text-transform:uppercase">[[aksjeselskap.navn]]</span></strong></p>
+
+			<p style="text-align:center"><strong>ORG.NR. [[aksjeselskap.orgnr]]</strong></p>
+
+			<table class="borders">
+				<thead>
+					<tr>
+						<th colspan="25">Aksjeeiere i alfabetisk rekkef&oslash;lge. Foretaksnavn og adresse.</th>
+						<th colspan="15">Org.nr.</th>
+						<th colspan="10">Aksjenr.</th>
+						<th colspan="10">Antall aksjer</th>
+						<th colspan="30">Heftelser/merknader</th>
+						<th colspan="10">Innf&oslash;rt dato</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan="25">[[kjoper.firmanavn]]<br />
+						[[kjoper.hovedgatenavnognr]], [[kjoper.hovedpostnr]] [[kjoper.hovedpoststed]]<br />
+						[[kjoper.hovedepost]]</td>
+						<td colspan="15">[[kjoper.fdato_orgnr]]</td>
+						<td colspan="10"><sup>1)</sup> [[aksjeselskap.aksjenr]]</td>
+						<td colspan="10"><span class="insert-table"> <span class="insert" data-label="Antall aksjer"></span></span></td>
+						<td colspan="30"><span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Hvis aksjene er pantsatt til megleren, se oransje hjelpeboks i bilag 1 (Aksjeeierbok), kan denne teksten legges til." data-target="#hjelp37" data-toggle="collapse">Ekstra tekst under Heftelser/merknader</span><sup>1)</sup> Aksjene er pantsatt p&aring; f&oslash;rste prioritet til <span vitec-if="Model.oppdrag.kjoperspant.Count &gt; 0"><span vitec-foreach="pant in Model.oppdrag.kjoperspant"><span class="kjoperspant">[[*pant.navn]] (org.nr. [[*pant.panthaverorgnr]])<span class="separator">,</span></span></span></span><span vitec-if="Model.oppdrag.kjoperspant.Count == 0"><span class="insert-table"><span class="insert" data-label="Kjøpers bank"></span></span>, org.nr. <span class="insert-table"><span class="insert" data-label="Orgnr. kjøpers bank"></span></span></span>, med adresse <span class="insert-table"> <span class="insert" data-label="Adresse kjøpers bank"></span></span>.<span aria-expanded="false" class="collapse collapse-span" id="hjelp37" style="height:0px"> Dessuten er aksjene pantsatt p&aring; andre prioritet til [[meglerkontor.navn]], org.nr. [[meglerkontor.orgnr]], til sikkerhet for ethvert krav som tilkommer [[kjoper.firmanavn]] eller <span vitec-if="Model.oppdrag.kjoperspant.Count &gt; 0"><span vitec-foreach="pant in Model.oppdrag.kjoperspant"><span class="kjoperspant">[[*pant.navn]]<span class="separator">,</span></span></span></span><span vitec-if="Model.oppdrag.kjoperspant.Count == 0"><span class="insert-table"><span class="insert" data-label="Kjøpers bank"></span></span></span> i tilknytning til aksjekj&oslash;psavtale datert [[kontrakt.dato]] (herunder l&aring;n til [[kjoper.firmanavn]] fra <span vitec-if="Model.oppdrag.kjoperspant.Count &gt; 0"><span vitec-foreach="pant in Model.oppdrag.kjoperspant"><span class="kjoperspant">[[*pant.navn]]<span class="separator">,</span></span></span></span><span vitec-if="Model.oppdrag.kjoperspant.Count == 0"><span class="insert-table"><span class="insert" data-label="Kjøpers bank"></span></span></span>.</span><br />
+						<br />
+						<sup>2)</sup> Eieren av aksjene kan ikke avhende eller pantsette aksjene eller rettigheter til aksjene uten samtykke fra [[meglerkontor.navn]], org.nr. [[meglerkontor.orgnr]].</td>
+						<td colspan="10"><sup>1)</sup> [[kontrakt.overtagelse.dato]]<br />
+						<sup>2)</sup> [[kontrakt.dato]]</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="100">
+			<table style="page-break-inside:avoid">
+				<tbody>
+					<tr>
+						<td colspan="100" style="vertical-align:top">
+						<p><br />
+						[[meglerkontor.poststed]], den [[kontrakt.overtagelse.dato]]<br />
+						&nbsp;</p>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="48" style="text-align:center; vertical-align:top">
+						<table>
+							<tbody>
+								<tr>
+									<td style="text-align:center">&nbsp;</td>
+								</tr>
+								<tr>
+									<td style="text-align:left"><strong>for [[aksjeselskap.navn ]]</strong></td>
+								</tr>
+								<tr>
+									<td style="border-bottom:1px solid #000000; height:40px; text-align:left">&nbsp;</td>
+								</tr>
+								<tr>
+									<td style="text-align:left; vertical-align:bottom"><span class="insert-table"> <span class="insert" data-label="Selskapets representant"></span></span></td>
+								</tr>
+							</tbody>
+						</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<div style="page-break-after:always"><span style="display:none">&nbsp;</span></div>
+
+			<p style="text-align:right"><strong>Bilag 6</strong></p>
+
+			<h1>&nbsp;</h1>
+
+			<h1>PROTOKOLL<br />
+			FOR EKSTRAORDIN&AElig;R GENERALFORSAMLING<br />
+			I <span style="text-transform:uppercase">[[aksjeselskap.navn ]]</span></h1>
+
+			<p>Den <span class="insert-table"> <span class="insert" data-label="Dato"></span></span> ble det avholdt ekstraordin&aelig;r generalforsamling i [[aksjeselskap.navn ]], org.nr.&nbsp;[[aksjeselskap.orgnr]]<span style="color:red">, i selskapets lokaler</span>.</p>
+
+			<p><span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Det er her lagt opp til at generalforsamlingen avholdes som et møte etter aksjelovens alminnelige regler (se dog punkt 2 i protokollen). Etter de forenklede reglene i aksjeloven § 5-7 kan generalforsamlingen avholdes ”på en egnet måte” uten fysisk møte, f.eks. ved sirkulasjon av utkast til protokoll eller som et telefonmøte. Hvis generalforsamlingen skal avholdes etter reglene i § 5-7, strykes sak 1 og 2 nedenfor og erstattes med denne denne teksten. (Fjern da punkt 1 og 2 og endre fargen på denne teksten fra rød til sort.)" data-target="#hjelp39" data-toggle="collapse">Alternativ tekst til andre avsnitt</span>Selskapets aksjeeier, [[kjoper.firmanavn]], org.nr. [[kjoper.fdato_orgnr]]<span style="color:red">, som tidligere samme dag hadde ervervet samtlige aksjer i selskapet,</span> var representert ved <span vitec-if="Model.kjoper.hovedkontakt.navn == Model.kjoper.firmanavn"><span class="insert-table"> <span class="insert" data-label="Kjøpers representant"></span></span></span><span vitec-if="Model.kjoper.hovedkontakt.navn != Model.kjoper.firmanavn">[[kjoper.hovedkontakt.navn]]</span><span style="color:red"> som fremviste skriftlig og datert fullmakt</span>.</p>
+
+			<p><span aria-expanded="false" class="collapse collapse-span" id="hjelp39" style="height:0px"><span style="color:red"> <em>Alternativt:</em> Sakene nedenfor ble behandlet etter aksjeloven &sect; 5-7 uten forutg&aring;ende styrebeslutning om innkalling, jf. aksjeloven &sect; 5-6 (3). Generalforsamlingen utpekte <span vitec-if="Model.kjoper.hovedkontakt.navn == Model.kjoper.firmanavn"><span class="insert-table"> <span class="insert" data-label="Kjøpers representant"></span></span></span><span vitec-if="Model.kjoper.hovedkontakt.navn != Model.kjoper.firmanavn">[[kjoper.hovedkontakt.navn]]</span> til &aring; signere protokollen. Styrets medlemmer, daglig leder og revisor var gitt mulighet til &aring; uttale seg om sakene, men ingen av disse hadde noen kommentarer eller innvendinger.</span></span></p>
+
+			<p>Til behandling forel&aring; f&oslash;lgende:</p>
+
+			<ol class="decimal">
+				<li><strong>Valg av m&oslash;teleder og person til &aring; undertegne protokollen sammen med m&oslash;telederen</strong><br />
+				<span vitec-if="Model.kjoper.hovedkontakt.navn == Model.kjoper.firmanavn"><span class="insert-table"> <span class="insert" data-label="Kjøpers representant"></span></span></span><span vitec-if="Model.kjoper.hovedkontakt.navn != Model.kjoper.firmanavn">[[kjoper.hovedkontakt.navn]]</span> ble valgt til m&oslash;teleder. <span class="insert-table"> <span class="insert" data-label="Medundertegner"></span></span> ble valgt til &aring; undertegne protokollen sammen med m&oslash;telederen.<br />
+				&nbsp;</li>
+				<li><strong>Godkjennelse av innkallingen og dagsordenen</strong><br />
+				<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Det er ikke nødvendig å fravike § 5-4 hvis saksbehandlingsreglene i § 5-7 følges siden § 5-4 bare gjelder generalforsamlinger som avholdes som møte.">Punkt 2: Informasjon</span>Innkallingen og dagsordenen ble godkjent. Selskapets eneste aksjeeier samtykket i at generalforsamlingen ble holdt uten vedtak fra styret, jf. aksjeloven &sect; 5-6 (3), og at verken styrets leder, daglig leder eller en stedfortreder for dem var til stede, jf. aksjeloven &sect; 5-4 (1) tredje setning.<br />
+				&nbsp;</li>
+				<li><strong>Beslutning om ansvarsfrihet</strong><br />
+				Generalforsamlingen vedtok &aring; frita alle n&aring;v&aelig;rende og tidligere styremedlemmer for ethvert ansvar i tilknytning til deres verv som styremedlemmer i selskapet. Ansvarsfriheten gjelder i s&aring; vid utstrekning som gjeldende rett tillater det.<br />
+				&nbsp;</li>
+				<li><strong>Endring av styret</strong><br />
+				Generalforsamlingen traff f&oslash;lgende vedtak:<br />
+				<em><span style="color:red">Styremedlemmene</span> skal fratre som styremedlemmer i selskapet med umiddelbar virkning. <span class="insert-table"> <span class="insert" data-label="Navn"></span></span> (styreleder), <span class="insert-table"> <span class="insert" data-label="Navn"></span></span> og <span class="insert-table"> <span class="insert" data-label="Navn"></span></span> skal heretter utgj&oslash;re selskapets styre</em>.<br />
+				&nbsp;</li>
+				<li><strong>Endring av revisor</strong><br />
+				Generalforsamlingen traff f&oslash;lgende vedtak:<br />
+				<em><span class="insert-table"> <span class="insert" data-label="Navn revisor"></span></span> skal fratre som revisor med umiddelbar virkning. <span class="insert-table"> <span class="insert" data-label="Navn ny revisor"></span></span>, org.nr. <span class="insert-table"> <span class="insert" data-label="Org.nr. ny revisor"></span></span>, er heretter selskapets revisor.</em><br />
+				&nbsp;</li>
+				<li><strong>Endring av vedtektene</strong><br />
+				Generalforsamlingen vedtok at selskapets vedtekter heretter skal lyde:</li>
+			</ol>
+
+			<p style="text-align:center"><em>&sect; 1<br />
+			Foretaksnavn </em></p>
+
+			<p>Selskapets foretaksnavn er [[aksjeselskap.navn ]].</p>
+
+			<p style="text-align:center"><em>&sect; 2<br />
+			Selskapets virksomhet </em></p>
+
+			<p style="text-align:center">Selskapets virksomhet er <span style="color:red">&aring; investere i fast eiendom eller selskaper som eier fast eiendom, og alt som dermed st&aring;r i forbindelse</span>.<br />
+			<br />
+			<em>&sect; 3<br />
+			Aksjekapitalen </em></p>
+
+			<p>Aksjekapitalen er NOK <span class="insert-table"> <span class="insert" data-label="Beløp"></span></span> fordelt p&aring; <span class="insert-table"> <span class="insert" data-label="Antall aksjer"></span></span> aksjer hver p&aring;lydende NOK <span class="insert-table"> <span class="insert" data-label="Beløp"></span></span>.</p>
+
+			<p style="text-align:center"><em>&sect; 4</em><br />
+			<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Det må særskilt vurderes om erverv av aksjer skal være betinget av samtykke og/eller forkjøpsrett. Har selskapet bare én aksjeeier, er det som regel ingen grunn til at aksjelovens bestemmelser om styresamtykke og forkjøpsrett skal gjelde.">&sect; 4: Informasjon</span><em>Samtykke til aksjeerverv. Forkj&oslash;psrett</em></p>
+
+			<p>Erverv av aksjer er ikke betinget av samtykke fra selskapet. Aksjeeierne har ikke forkj&oslash;psrett iht. aksjeloven.</p>
+
+			<p style="text-align:center"><em>&sect; 5</em><br />
+			<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Det er ikke nødvendig med en signaturbestemmelse i vedtektene. I mangel av en slik vedtektsbestemmelse avgjør styret hvem som signerer for selskapet, jf. aksjeloven § 6-31.">&sect; 5: Informasjon</span><em>Signatur</em></p>
+
+			<p>Selskapets foretaksnavn tegnes av styreleder alene eller to styremedlemmer i fellesskap.</p>
+
+			<p style="text-align:center">* * *</p>
+
+			<p>Flere saker forel&aring; ikke til behandling, og generalforsamlingen ble hevet.</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<table style="table-layout:fixed; width:48%">
+				<tbody>
+					<tr>
+						<td colspan="100" style="border-bottom:solid 1px #000000"><br />
+						&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="100">Sted / dato</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<table style="table-layout:fixed; width:100%">
+				<tbody>
+					<tr>
+						<td colspan="48" style="border-bottom:solid 1px #000000"><span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Hvis saksbehandlingsreglene i § 5-7 følges, skal protokollen signeres av styrets leder på signeringstidspunktet eller den som generalforsamlingen utpeker, jf. § 5-7a (3).">Signatur: Informasjon om kj&oslash;pers representant</span><br />
+						&nbsp;</td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="48" style="border-bottom:solid 1px #000000">&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="48"><span vitec-if="Model.kjoper.hovedkontakt.navn == Model.kjoper.firmanavn"><span class="insert-table"> <span class="insert" data-label="Kjøpers representant"></span></span></span><span vitec-if="Model.kjoper.hovedkontakt.navn != Model.kjoper.firmanavn">[[kjoper.hovedkontakt.navn]]</span></td>
+						<td colspan="4">&nbsp;</td>
+						<td colspan="48"><span class="insert-table"> <span class="insert" data-label="Medundertegner"></span></span></td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<div style="page-break-after:always"><span style="display:none">&nbsp;</span></div>
+
+			<p style="text-align:center"><strong>FULLMAKT OG SAMTYKKE</strong></p>
+
+			<p>[[kjoper.firmanavn]], org.nr. [[kjoper.fdato_orgnr]], gir herved <span vitec-if="Model.kjoper.hovedkontakt.navn == Model.kjoper.firmanavn"><span class="insert-table"> <span class="insert" data-label="Kjøpers representant"></span></span></span><span vitec-if="Model.kjoper.hovedkontakt.navn != Model.kjoper.firmanavn">[[kjoper.hovedkontakt.navn]]</span> fullmakt til p&aring; v&aring;re vegne &aring; m&oslash;te og stemme for v&aring;re aksjer i [[aksjeselskap.navn ]] ved den neste ekstraordin&aelig;re generalforsamlingen i selskapet som skal behandle endring av styret, revisor og vedtekter.</p>
+
+			<p>Undertegnede samtykker herved til:</p>
+
+			<ol class="lower-alpha">
+				<li>at generalforsamlingen blir avholdt uten forutg&aring;ende styrebeslutning om innkalling, jf. aksjeloven &sect; 5-6 (3)</li>
+				<li>at verken styrets leder, daglig leder eller en stedfortreder for dem er til stede p&aring; generalforsamlingen, jf. aksjeloven &sect; 5-4 (1) tredje setning; og</li>
+				<li>at sakene p&aring; generalforsamlingen blir behandlet etter aksjeloven &sect; 5-7 uten &aring; f&oslash;lge kravene i aksjeloven &sect; 5-8 til &sect; 5-16.</li>
+			</ol>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="100">
+			<table style="table-layout:fixed; width:48%">
+				<tbody>
+					<tr>
+						<td colspan="100" style="border-bottom:solid 1px #000000; text-align:center"><br />
+						&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="100">Sted / dato</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td style="text-align:center">&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="48" style="vertical-align:top"><strong>for [[kjoper.firmanavn]]</strong></td>
+			<td colspan="4">&nbsp;</td>
+			<td colspan="48"><strong>&nbsp;</strong></td>
+		</tr>
+		<tr>
+			<td colspan="48" style="vertical-align:top">
+			<table>
+				<tbody>
+					<tr>
+						<td style="border-bottom:solid 1px #000000; height:40px">&nbsp;</td>
+					</tr>
+					<tr>
+						<td style="vertical-align:bottom"><span vitec-if="Model.kjoper.hovedkontakt.navn == Model.kjoper.firmanavn"><span class="insert-table"> <span class="insert" data-label="Kjøpers representant"></span></span></span><span vitec-if="Model.kjoper.hovedkontakt.navn != Model.kjoper.firmanavn">[[kjoper.hovedkontakt.navn]]</span></td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+</div>

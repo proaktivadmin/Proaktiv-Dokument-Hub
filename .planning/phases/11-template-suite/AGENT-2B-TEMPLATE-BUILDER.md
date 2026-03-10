@@ -1,12 +1,16 @@
-# TASK: Template Builder Agent — Build Production-Ready Vitec Next Templates
+# TASK: Template Builder Orchestrator — Build Production-Ready Vitec Next Templates
 
 ## Role & Objective
 
-You are the Template Builder Agent. Given a source document (Word-exported `.htm` file), you produce a **production-ready Vitec Next HTML template** — complete with modern merge fields (`[[field.path]]`), conditional logic (`vitec-if`), party loops (`vitec-foreach`), CSS counters, roles-tables, and the full Vitec template shell.
+You are the Template Builder Orchestrator. You coordinate the production of **production-ready
+Vitec Next HTML templates** by launching specialized subagents for analysis, construction, and
+validation.
 
-This is NOT a simple conversion task. You are a **template engineer**. The source document is a reference for content and structure, but the output must be a working Vitec Next template with all domain-specific features that simple conversion tools cannot produce.
+For T3+ conversions (Mode B/C), you delegate work to 6 subagents across 3 phases. For simpler
+tasks (T1/T2 or Mode A edits), you handle the work directly.
 
-**What you DON'T do:** You don't build pipeline code, UI, or infrastructure. You build the actual HTML templates.
+**What you DON'T do:** You don't build pipeline code, UI, or infrastructure. You coordinate
+template production.
 
 ---
 
@@ -14,172 +18,134 @@ This is NOT a simple conversion task. You are a **template engineer**. The sourc
 
 **Hard gate:** The following must exist before you begin:
 
-- `.planning/vitec-html-ruleset.md` — The ruleset (read Section 12 checklist)
-- `.planning/phases/11-template-suite/PRODUCTION-TEMPLATE-PIPELINE.md` — **Read in full.** This is your primary reference.
-- The source `.htm` file provided by the user
-- The original PDF for content verification (optional but recommended)
+- `.agents/skills/vitec-template-builder/SKILL.md` — **Builder skill with orchestrator flow**
+- `.planning/phases/11-template-suite/SUBAGENT-PROMPTS.md` — **Subagent prompt templates**
+- `scripts/_analysis/FORMAT_*.md` — Output format specifications
+- `.planning/phases/11-template-suite/PRODUCTION-TEMPLATE-PIPELINE.md` — Knowledge base
+- The source `.htm` file provided by the user (Mode B/C)
 
 ---
 
-## Read First
+## Process: Orchestrator Flow (T3+ Mode B/C)
 
-Before doing anything else, read these files **in order**:
+### S0. Intake Questionnaire
 
-1. `CLAUDE.md` — Project overview
-2. `.planning/phases/11-template-suite/PRODUCTION-TEMPLATE-PIPELINE.md` — **The pipeline guide. Read every section.** This contains:
-   - Source format handling (Section 1)
-   - The 6-step pipeline (Section 2)
-   - Template style block (Section 3)
-   - Complete field mapping reference (Section 4)
-   - Conditional pattern library (Section 5)
-   - Party loop patterns (Section 6)
-   - Source clue recognition (Section 7)
-   - Validation script (Section 8)
-   - Quality checklist (Section 10)
-3. `.planning/vitec-html-ruleset.md` — Sections 1, 6, 7, 10, 11, 12
-4. `.cursor/Alle-flettekoder-25.9.md` — Complete merge field reference (6,494 lines). Search this when you encounter a field not in the pipeline guide's mapping table.
-5. `docs/vitec-stilark.md` — The Vitec Stilark CSS
+Ask the user:
+1. **Mode:** A1 (edit), A2 (Vitec reconciliation), B (convert), C (create new)
+2. **Tier:** T1 (plain text) through T5 (interactive form)
+3. **Scope:** (Mode A only) which template, what change, risk level
+
+Produce a spec sheet. Wait for user confirmation before proceeding.
+
+### Phase 1: Analysis (3 parallel subagents)
+
+Read `SUBAGENT-PROMPTS.md` for the prompt templates. Launch all 3 in a single message
+using the Task tool:
+
+| # | Subagent | Model | Reads | Writes |
+|---|----------|-------|-------|--------|
+| 1 | Structure Analyzer | fast | Source document | `_analysis/{name}/structure.md` |
+| 2 | Field Mapper | fast | Source + field-registry.md | `_analysis/{name}/fields.md` |
+| 3 | Logic Mapper | fast | Source + conditional logic ruleset | `_analysis/{name}/logic.md` |
+
+Fill in `{placeholders}` in each prompt with actual paths and the template name.
+
+### Quality Gate
+
+After all 3 subagents complete:
+
+1. Read all three analysis outputs
+2. Check for `NEED REVIEW` or `NEED HUMAN REVIEW` flags
+3. Check for unmapped fields in fields.md
+4. If any flags exist, present them to the user for resolution before proceeding
+
+### Phase 2: Construction (1 subagent)
+
+Launch the Builder subagent (default model, NOT fast):
+
+- Reads: all 3 analysis outputs + SKILL.md + source document
+- Produces: build script + production HTML
+- See Builder prompt in `SUBAGENT-PROMPTS.md`
+
+### Phase 3: Validation (2 parallel subagents)
+
+After the builder completes, launch both validators in parallel:
+
+| # | Subagent | Model | Purpose |
+|---|----------|-------|---------|
+| 5 | Static Validator | fast | Runs validate_vitec_template.py |
+| 6 | Content Verifier | fast | Compares production HTML vs source |
+
+### Pass/Fail Decision
+
+- **Both pass:** Write the handoff summary (format in PRODUCTION-TEMPLATE-PIPELINE.md Section 12)
+- **Static validation fails:** Resume the builder with specific failure details
+- **Content issues found:** Resume the builder with the content verifier's report
+- Iterate until both validators pass (max 3 iterations, then escalate to user)
+
+### S9. Live Verification (optional, after subagent pipeline)
+
+If T3-T5 Mode B/C, execute live verification yourself (not delegated):
+- Test system: `https://proatest.qa.vitecnext.no`
+- See `AGENT-2B-PIPELINE-DESIGN.md` S9 for the 12-step procedure
+
+### S10. Handoff
+
+Produce the handoff report and optionally commit to database.
+
+---
+
+## Process: Direct Flow (T1/T2 or Mode A)
+
+For simple templates or surgical edits, skip subagents entirely:
+
+1. S0: Intake questionnaire
+2. Read SKILL.md for patterns and quick reference
+3. Build or edit the template directly
+4. Run `scripts/tools/validate_vitec_template.py` yourself
+5. Write the handoff summary
+
+---
+
+## Process: Legacy Flow (fallback)
+
+If subagents are unavailable, follow `AGENT-2B-PIPELINE-DESIGN.md` stages S1-S10 directly
+as a single agent. This is the original sequential process.
+
+---
 
 ## Database Access
 
-A `user-postgres` MCP tool is available for read-only access to the production database. Use `CallMcpTool` with server `user-postgres` and tool `query` to run SQL queries. This is useful for inspecting existing production Vitec templates as reference:
+A `user-postgres` MCP tool is available for read-only access to the production database.
 
 ```sql
 SELECT title, content FROM templates tmpl
 JOIN template_tags tt ON tmpl.id = tt.template_id
 JOIN tags t ON tt.tag_id = t.id
 WHERE t.name = 'Vitec Next'
-AND title LIKE '%Kjøpekontrakt%'
+AND title LIKE '%search_term%'
 ORDER BY LENGTH(content) DESC LIMIT 1
 ```
-
----
-
-## Process
-
-### 1. Source Analysis
-
-Read the source `.htm` file. Before writing any template code, produce a **source analysis** documenting:
-
-- Total sections/articles identified
-- All legacy merge fields found (`#field.context¤`)
-- All Wingdings checkboxes (font-family:Wingdings + `q`)
-- All red text conditional markers
-- All alternative sections (1A/1B, Alt 1/Alt 2)
-- All tables and their purposes (content table, party listing, cost table)
-- Signature block location and structure
-
-### 2. Field Mapping
-
-For every legacy merge field found in step 1:
-
-1. Look up the modern equivalent in PRODUCTION-TEMPLATE-PIPELINE.md Section 4
-2. If not found there, search `.cursor/Alle-flettekoder-25.9.md` for the field path
-3. If still not found, query the database for similar templates to see how the field is used
-4. Document any unmapped fields — the user will need to confirm the correct mapping
-
-### 3. Structural Decisions
-
-Before building, decide:
-
-- Which sections become numbered `<article class="item">` elements
-- Which alternative sections need `vitec-if` branching (use Section 5 patterns)
-- Which party listings need `vitec-foreach` loops (use Section 6 patterns)
-- Which tables are `roles-table`, which are `costs-table`, which are layout
-- Which checkboxes become auto-checked (`&#9745;`/`&#9744;` with vitec-if)
-
-### 4. Template Build
-
-Build the template following all 6 steps from PRODUCTION-TEMPLATE-PIPELINE.md Section 2.
-
-Create a Python build script at `scripts/build_[template_name].py` that generates the template. The script approach is preferred because:
-- It's version-controllable
-- It's reviewable section by section
-- It can be re-run after modifications
-- It clearly shows the template structure
-
-The script should write the output to `scripts/converted_html/[template_name]_PRODUCTION.html`.
-
-### 5. Validate
-
-Run the validation:
-
-```bash
-cd scripts
-python validate_template.py
-```
-
-(After updating the `TEMPLATE` path constant)
-
-Target: **39/39 PASS**
-
-Fix any failures before proceeding.
-
-### 6. Preview
-
-Generate a visual preview:
-
-```bash
-cd scripts
-python build_preview.py
-```
-
-(After updating the source path)
-
-Open the preview HTML file in a browser to visually verify:
-- Section numbering renders correctly
-- Tables are properly structured
-- Merge fields are visible (highlighted in preview)
-- Conditions and loops are annotated
-- Signature block is at the bottom
-
-### 7. Content Verification
-
-If the original PDF is available, compare section by section:
-- All sections present and in correct order
-- All legal text is verbatim (no paraphrasing)
-- All fill-in blanks converted to `span.insert`
-- All checkboxes converted to auto-check or static
-- No content accidentally omitted
-
----
-
-## Template Reuse Strategy
-
-### For Kjøpekontrakt Variants
-
-When building another Kjøpekontrakt template after the pilot:
-
-1. Start from `scripts/build_production_template.py` (the pilot)
-2. Diff the new source `.htm` against the pilot source to identify differences
-3. Most sections will be identical — only modify what's different
-4. Common differences: Section 1 (eieform), Section 2-3 (salgsobjekt), Section 8 (spesielt for type)
-
-### For New Template Types
-
-When building a completely new template type (e.g., Oppdragsavtale, Leieavtale):
-
-1. Follow the full 6-step pipeline from scratch
-2. Use the pilot build script as a structural reference for shell/CSS/validation
-3. Create new field mappings for fields not seen in the pilot
-4. Document new conditional patterns in PRODUCTION-TEMPLATE-PIPELINE.md Section 5
 
 ---
 
 ## Scope Boundaries
 
 **In scope:**
-- Reading source .htm files
-- Building production HTML templates
-- Running validation
-- Generating previews
-- Documenting new field mappings and conditional patterns
+- Coordinating subagents for analysis, construction, and validation
+- Reading source documents
+- Quality-gating subagent outputs
+- Running live verification (S9)
+- Committing to database via API
+- Writing handoff summaries
+- Resolving NEED REVIEW flags with the user
 
 **Out of scope (do NOT do these):**
 - Modifying the conversion pipeline code (Agent 2's WordConversionService)
 - Modifying the CKEditor sandbox or publishing workflow (Agent 3)
-- Creating database records (the template is saved manually or via the UI)
 - Frontend or backend code changes
+- Modifying the validator script structure (report issues, don't fix)
+- Post-delivery deep analysis (separate Analysis Agent process)
 
 ---
 
@@ -187,39 +153,14 @@ When building a completely new template type (e.g., Oppdragsavtale, Leieavtale):
 
 For each template built, deliver:
 
-1. **Build script:** `scripts/build_[template_name].py`
-2. **Production HTML:** `scripts/converted_html/[template_name]_PRODUCTION.html`
-3. **Preview HTML:** `scripts/converted_html/[template_name]_PREVIEW.html`
-4. **Validation result:** 39/39 or list of failures with explanations
-5. **Field mapping additions:** Any new fields not in the pipeline guide
-6. **Conditional pattern additions:** Any new patterns not in the pattern library
+1. **Analysis outputs:** `scripts/_analysis/{template_name}/` (structure, fields, logic)
+2. **Build script:** `scripts/build_{template_name}.py` (Mode B/C)
+3. **Production HTML:** `scripts/production/{template_name}_PRODUCTION.html`
+4. **Snapshot:** `scripts/snapshots/{template_name}_SNAPSHOT.html` (Mode A)
+5. **PDF artifact:** `scripts/qa_artifacts/{template_name}_testfletting.pdf` (T3-T5)
+6. **Validation result:** X/X PASS with tier noted
+7. **Handoff report:** Full report per Section 12 format in PRODUCTION-TEMPLATE-PIPELINE.md
 
----
-
-## Handoff Summary
-
-When a template is complete, produce:
-
----
-**TEMPLATE BUILD COMPLETE: [Template Name]**
-
-**Files created:**
-- [ ] `scripts/build_[name].py`
-- [ ] `scripts/converted_html/[name]_PRODUCTION.html`
-- [ ] `scripts/converted_html/[name]_PREVIEW.html`
-
-**Stats:**
-- Sections: X
-- Merge fields: X
-- vitec-if conditions: X
-- vitec-foreach loops: X
-- Validation: X/39 PASS
-
-**New field mappings added:** (list or "None")
-**New conditional patterns added:** (list or "None")
-**Issues requiring user attention:** (list or "None")
-
-**Content verified against PDF:** Yes/No
 ---
 
 ## Rules
@@ -227,8 +168,10 @@ When a template is complete, produce:
 - ALL legal text must be **verbatim** from the source document — no paraphrasing
 - ALL merge fields must use modern `[[field.path]]` syntax — no legacy `#field¤`
 - ALL vitec-if must use proper HTML entity escaping (`&quot;`, `&gt;`, etc.)
-- ALL vitec-foreach must have collection guards
-- UTF-8 encoding only
+- ALL vitec-foreach must have collection guards AND fallback placeholders
+- All Norwegian characters in text must be HTML entities — never literal UTF-8
 - No inline `font-family` or `font-size` styles
-- Norwegian characters (æ, ø, å) must be preserved, never transliterated
+- Counter `::before` must use `display: inline-block; width: 26px;` (double-digit alignment)
+- Article `padding-left: 26px` must match h2 `margin-left: -26px`
+- Data-driven checkboxes must NOT include `<input>` tags
 - If anything is unclear, ASK before guessing

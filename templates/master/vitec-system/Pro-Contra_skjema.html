@@ -1,0 +1,206 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate table {
+			border-collapse: collapse;
+			width: 100%;
+			table-layout: fixed;
+		}
+
+			#vitecTemplate table td {
+				border: solid 1px #000;
+				height: 35px;
+				vertical-align: middle;
+			}
+
+			#vitecTemplate table tr.no-border td {
+				border: none;
+				height: auto;
+			}
+
+			#vitecTemplate table td.overskrift1 {
+				background-color: rgb(224,224,224);
+				color: #000;
+				line-height: 25px;
+				height: 25px;
+				padding-left: 5px;
+				font-weight: bold;
+			}
+
+		#vitecTemplate .sign-field {
+			display: inline-block;
+			width: 45%;
+			margin-top: 1cm;
+			margin-right: 10px;
+			border-top: solid 1px #000;
+			vertical-align: top;
+		}
+</style>
+<style type="text/css">/* Klikkbare sjekkbokser og radioknapper */
+		label.btn {
+			display: inline;
+			text-transform: none;
+			white-space: normal;
+			padding: 0;
+			vertical-align: baseline;
+			outline: none;
+			font-size: inherit;
+		}
+
+			label.btn:active,
+			label.btn.active {
+				box-shadow: none;
+				outline: none;
+			}
+
+		.svg-toggle { /* nullstiller bootstrap button-styling */
+			display: inline-block !important;
+			width: 24px;
+			height: 24px;
+			margin: 0 5px;
+			vertical-align: bottom;
+			padding: 0;
+			border: none;
+			background: transparent;
+			border-radius: 0;
+			box-shadow: none !important;
+			cursor: pointer;
+			white-space: normal;
+			text-align: left;
+			background-repeat: no-repeat;
+			background-size: 24px 24px;
+			background-position: center center;
+		}
+
+			.svg-toggle.checkbox {
+				background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+			}
+
+				.svg-toggle.checkbox.active,
+				.btn.active > .svg-toggle.checkbox {
+					background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+					box-shadow: none !important;
+				}
+
+			.svg-toggle.radio {
+				background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
+			}
+
+				.svg-toggle.radio.active,
+				.btn.active > .svg-toggle.radio {
+					background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
+					box-shadow: none !important;
+				}
+
+		/* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
+		#vitecTemplate [data-toggle="buttons"] input {
+			display: none;
+		}
+</style>
+<table>
+	<tbody>
+		<tr class="no-border">
+			<td colspan="100" style="text-align:center"><strong style="font-size:12pt">OPPGJ&Oslash;RSSKJEMA PRO &amp; CONTRA</strong>
+			<p>(Fordeling av eiendommens utgifter og evt. inntekter)</p>
+			</td>
+		</tr>
+		<tr class="no-border">
+			<td colspan="20">Oppdragsnummer:</td>
+			<td colspan="80">[[oppdrag.nr]]</td>
+		</tr>
+		<tr class="no-border">
+			<td colspan="20">Selger:</td>
+			<td colspan="80">[[selger.navn]]</td>
+		</tr>
+		<tr class="no-border">
+			<td colspan="20">Kj&oslash;per:</td>
+			<td colspan="80">[[kjoper.navn]]</td>
+		</tr>
+		<tr class="no-border">
+			<td colspan="20">Megler:</td>
+			<td colspan="80">[[operativmegler.navn]]</td>
+		</tr>
+		<tr class="no-border">
+			<td colspan="20">Eiendom:</td>
+			<td colspan="80">[[eiendom.gatenavnognr]], [[eiendom.postnr]] [[eiendom.poststed]]</td>
+		</tr>
+		<tr class="no-border">
+			<td colspan="100">
+			<p>Dette skjema fylles kun ut hvis megler skal foreta oppgj&oslash;r av eiendommens driftsutgifter og inntekter.</p>
+			</td>
+		</tr>
+		<tr>
+			<td class="overskrift1" colspan="36" rowspan="2">Type utgift/inntekt</td>
+			<td class="overskrift1" colspan="20" rowspan="2">Bel&oslash;p</td>
+			<td class="overskrift1" colspan="24" style="text-align:center">Betalt av</td>
+			<td class="overskrift1" colspan="20" rowspan="2">Betalt t.o.m. dato</td>
+		</tr>
+		<tr>
+			<td class="overskrift1" colspan="12" style="text-align:center">Kj&oslash;per</td>
+			<td class="overskrift1" colspan="12" style="text-align:center">Selger</td>
+		</tr>
+		<tr>
+			<td colspan="36">Husleie/fellesutgifter:</td>
+			<td colspan="20">&nbsp;</td>
+			<td colspan="12" style="font-size:14pt; line-height:10pt; text-align:center">&nbsp;</td>
+			<td colspan="12" style="font-size:14pt; line-height:10pt; text-align:center">&nbsp;</td>
+			<td colspan="20">&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="36">Kommunale avgifter:</td>
+			<td colspan="20">&nbsp;</td>
+			<td colspan="12" style="font-size:14pt; line-height:10pt; text-align:center">&nbsp;</td>
+			<td colspan="12" style="font-size:14pt; line-height:10pt; text-align:center">&nbsp;</td>
+			<td colspan="20">&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="36">Husleieinntekt:</td>
+			<td colspan="20">&nbsp;</td>
+			<td colspan="12" style="font-size:14pt; line-height:10pt; text-align:center">&nbsp;</td>
+			<td colspan="12" style="font-size:14pt; line-height:10pt; text-align:center">&nbsp;</td>
+			<td colspan="20">&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="36">&Oslash;vrige utgifter/inntekter:</td>
+			<td colspan="20">&nbsp;</td>
+			<td colspan="12" style="font-size:14pt; font-weight:bold; line-height:10pt; text-align:center">&nbsp;</td>
+			<td colspan="12" style="font-size:14pt; font-weight:bold; line-height:10pt; text-align:center">&nbsp;</td>
+			<td colspan="20">&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+
+<table>
+	<tbody>
+		<tr class="no-border">
+			<td colspan="6" style="padding-top:15px"><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span></label></td>
+			<td colspan="94" style="padding-top:15px">Kvitteringer p&aring; selgers betalinger ligger vedlagt.</td>
+		</tr>
+		<tr class="no-border">
+			<td colspan="100">
+			<table style="width:45%">
+				<tbody>
+					<tr>
+						<td colspan="100" style="border-bottom:solid 1px #000000"><br />
+						&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="100">Sted / dato</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<table>
+				<tbody>
+					<tr>
+						<td colspan="100" style="vertical-align:top"><span vitec-foreach="selger in Model.selgere"> <span class="sign-field">[[*selger.navn]]</span> </span></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>&nbsp;</p>
+
+			<p><em>Dette skjema m&aring; utfylles av selger og returneres megler med kvitteringer til kontraktsm&oslash;tet</em></p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>

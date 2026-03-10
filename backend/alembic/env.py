@@ -161,6 +161,7 @@ def run_migrations_online() -> None:
             current_rev = connection.execute(text("SELECT version_num FROM alembic_version")).scalar()
         except Exception as exc:
             rev_error = exc.__class__.__name__
+            connection.rollback()
 
         # region agent log H2
         _debug_log(

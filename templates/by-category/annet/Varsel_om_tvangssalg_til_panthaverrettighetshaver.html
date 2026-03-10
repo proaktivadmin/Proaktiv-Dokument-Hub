@@ -1,0 +1,95 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate table {
+                border-collapse: collapse;
+                width: 100%;
+                table-layout: fixed;
+            }
+    
+            #vitecTemplate .saksokte:last-child .separator {
+                display: none;
+            }
+    
+            /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+    
+            #vitecTemplate span.insert:empty {
+                font-size: inherit !important;
+                line-height: inherit !important;
+                display: inline-block;
+                background-color: lightpink;
+                min-width: 2em !important;
+                height: .7em !important;
+                text-align: center;
+            }
+    
+            #vitecTemplate span.insert:empty:before {
+                content: attr(data-label);
+            }
+    
+            #vitecTemplate span.insert:empty:hover {
+                background-color: #fff;
+                cursor: pointer;
+            }
+    
+            #vitecTemplate .insert-table {
+                display: inline-table;
+            }
+    
+            #vitecTemplate .insert-table>span,
+            #vitecTemplate .insert-table>span.insert {
+                display: table-cell;
+            }
+</style>
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<div vitec-template="resource: Mottaker">&nbsp;</div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="100">
+			<p><strong>Varsel om tvangssalg av [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+			<table>
+				<tbody>
+					<tr>
+						<td colspan="25"><strong>Tingrettens saksnr.:</strong></td>
+						<td colspan="75">[[tvangssalgrefnr]]</td>
+					</tr>
+					<tr>
+						<td colspan="25"><strong>Saks&oslash;kte:</strong></td>
+						<td colspan="75"><span vitec-foreach="saksokte  in Model.saksokteliste"> <span class="saksokte">[[*saksokte.navn]]<span class="separator">, </span> </span> </span></td>
+					</tr>
+					<tr>
+						<td colspan="25"><strong>Saks&oslash;ker:</strong></td>
+						<td colspan="75">[[saksoker.navn]]</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>Vi underretter herved om at vi har blitt oppnevnt som medhjelper for [[selger.navn]] for &aring; gjennomf&oslash;re tvangssalg av ovennevnte eiendom i sak nr. [[tvangssalgrefnr]]. (Saksnummer m&aring; alltid oppgis ved eventuelle henvendelser til Tingretten.) Tvangssalget ble begj&aelig;rt av [[saksoker.navn]] den <span class="insert-table"><span class="insert" data-label="dato"></span></span>.</p>
+
+			<p>I utskrift av grunnboken fremg&aring;r det at dere har tinglyste rettigheter i eiendommen, eller kan ha pantekrav som legalpant. I samsvar med Tvangsfullbyrdelseslovens &sect; 11-16, 2.ledd, ber vi om &aring; f&aring; opplyst hvor stort pengekrav den enkelte panthaver har med grunnlag i den panteretten som er tinglyst i eiendommen eller som legalpant og eventuelt annen informasjon som dere har og som dere mener kan ha betydning for salget. Vi ber om spesifikasjon av p&aring;l&oslash;pte renter og kostnader som kreves dekket i forbindelse med oppgj&oslash;ret etter tvangssalget. Vi ber ogs&aring; om &aring; f&aring; opplysninger om eventuell kjennskap til andre rettigheter i eiendommen enn de som fremg&aring;r av utskrift av grunnboken som f&oslash;lger vedlagt.</p>
+
+			<p>For ordens skyld gj&oslash;r vi oppmerksom p&aring; at unnlatelse av &aring; gi opplysningene kan medf&oslash;re ansvar for &aring; dekke medhjelpers merarbeid som f&oslash;lge av unnlatelsen.</p>
+
+			<p>V&aring;rt arbeid med tvangssalget starter umiddelbart. Vi setter derfor pris p&aring; en rask tilbakemelding p&aring; denne foresp&oslash;rselen. Eventuelle sp&oslash;rsm&aring;l i sakens anledning kan rettes til undertegnede.</p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="100">
+			<div vitec-template="resource: Avsender">&nbsp;</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>&nbsp;</p>
+
+<p>Vedlegg</p>
+
+<ul>
+	<li>Kopi av grunnboksutskrift</li>
+	<li>Erkl&aelig;ring fra rettighetshavere - til utfylling</li>
+</ul>
+</div>

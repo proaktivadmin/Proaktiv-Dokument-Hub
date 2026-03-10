@@ -1,0 +1,85 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate table {
+                border-collapse: collapse;
+                width: 100%;
+                table-layout: fixed;
+            }
+    
+            #vitecTemplate .liste:last-child .separator {
+                display: none;
+            }
+    
+    /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+    
+            #vitecTemplate span.insert:empty {
+                font-size: inherit !important;
+                line-height: inherit !important;
+                display: inline-block;
+                background-color: lightpink;
+                min-width: 2em !important;
+                height: .7em !important;
+                text-align: center;
+            }
+    
+           #vitecTemplate span.insert:empty:before {
+                content: attr(data-label);
+            }
+    
+            #vitecTemplate span.insert:empty:hover {
+                background-color: #fff;
+                cursor: pointer;
+            }
+    
+            #vitecTemplate .insert-table {
+                display: inline-table;
+            }
+    
+            #vitecTemplate .insert-table>span,
+            #vitecTemplate .insert-table>span.insert {
+                display: table-cell;
+    
+            }
+</style>
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<div vitec-template="resource: Mottaker">&nbsp;</div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="100">
+			<p><strong><span style="font-size:10.0pt"><span style="font-family:&quot;Arial&quot;,sans-serif"><span style="color:black">Ang&aring;ende tvangssalg av </span></span></span> [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+			<table>
+				<tbody>
+					<tr>
+						<td colspan="25"><strong>Tingrettens saksnr.:</strong></td>
+						<td colspan="75">[[tvangssalgrefnr]]</td>
+					</tr>
+					<tr>
+						<td colspan="25"><strong>Saks&oslash;kte:</strong></td>
+						<td colspan="75"><span vitec-foreach="saksokte  in Model.saksokteliste"> <span class="liste">[[*saksokte.navn]]<span class="separator">, </span> </span> </span></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p><span style="font-family:Arial,sans-serif">Vi har ikke lykkes i &aring; f&aring; saks&oslash;kte med p&aring; samarbeid vedr&oslash;rende tvangssalg av boligen, herunder innsending av takstmann og fotograf. Saks&oslash;kte har ikke besvart mine telefonsamtaler og heller ikke m&oslash;tt til varslet befaring av eiendommen. Det er sendt purring p&aring; tilbakemelding fra saks&oslash;kte uten respons. (se vedlegg) </span></p>
+
+			<p><span style="font-family:Arial,sans-serif"></span></p>
+
+			<p><span style="font-family:Arial,sans-serif">Vi har derfor ingen mulighet til &aring; komme videre i salgsarbeidet og anbefaler at dere som saks&oslash;ker begj&aelig;rer eiendommen fraveket.</span></p>
+
+			<p><span style="font-family:Arial,sans-serif"></span></p>
+
+			<p><span style="font-family:Arial,sans-serif">Kontakt gjerne undertegnede ved sp&oslash;rsm&aring;l i sakens anledning.</span></p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="100">
+			<div vitec-template="resource: Avsender">&nbsp;</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>

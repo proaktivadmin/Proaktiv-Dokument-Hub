@@ -1,0 +1,78 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">/* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+        span.insert:empty {
+            font-size: inherit !important;
+            line-height: inherit !important;
+            display: inline-block;
+            background-color: lightpink;
+            min-width: 2em !important;
+            height: .7em !important;
+            text-align: center;
+        }
+
+        span.insert:empty:before {
+            content: attr(data-label);
+        }
+
+        span.insert:empty:hover {
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+        .insert-table {
+            display: inline-table;
+        }
+
+        .insert-table>span,
+        .insert-table>span.insert {
+            display: table-cell;
+        }
+
+        #vitecTemplate table {
+            width: 100%;
+            table-layout: fixed;
+        }
+</style>
+<table>
+	<tbody>
+		<tr>
+			<td>
+			<div vitec-template="resource: Mottaker">&nbsp;</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<p><strong>Vedr. eiendommen [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+			<p>Viser til inng&aring;tt oppdragsavtale og vi gj&oslash;r deg oppmerksom p&aring; at oppdraget utg&aring;r den&nbsp;[[oppdrag.utlopsdato]]</p>
+
+			<p>For at vi skal kunne arbeide videre med salg av din bolig trenger vi din bekreftelse p&aring; at oppdraget fornyes for 6 nye m&aring;neder p&aring; like vilk&aring;r.</p>
+
+			<p>Vennligst returner dette dokumentet i signert stand, s&aring; tar vi kontakt for &aring; dr&oslash;fte videre fremdrift i salgsarbeidet.</p>
+
+			<p><br />
+			&nbsp;</p>
+
+			<table vitec-if="Model.selgere.Count &gt; 0">
+				<tbody vitec-foreach="selger in Model.selgere">
+					<tr>
+						<td colspan="48">[[dagensdato]]</td>
+						<td colspan="37" rowspan="1">&nbsp;</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>Signatur: ________________________________________</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<div vitec-template="resource: Avsender">&nbsp;</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>&nbsp;</p>
+</div>

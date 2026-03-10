@@ -1,0 +1,95 @@
+<div id="vitecTemplate">
+<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">
+#vitecTemplate .avoid-page-break { page-break-inside: avoid; }
+#vitecTemplate h1 {
+    font-size: 14pt;
+    margin: 0 0 12px 0;
+    padding: 0;
+}
+#vitecTemplate h2 {
+    font-size: 11pt;
+    margin: 30px 0 0 -20px;
+    padding: 0;
+}
+#vitecTemplate p { margin: 0 0 10px 0; }
+#vitecTemplate table { width: 100%; table-layout: fixed; }
+span.insert:empty {
+    font-size: inherit !important;
+    line-height: inherit !important;
+    display: inline-block;
+    background-color: lightpink;
+    min-width: 2em !important;
+    height: .7em !important;
+    text-align: center;
+}
+span.insert:empty:before { content: attr(data-label); }
+span.insert:empty:hover { background-color: #fff; cursor: pointer; }
+.insert-table { display: inline-table; }
+.insert-table > span,
+.insert-table > span.insert { display: table-cell; }
+</style>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="100">
+        <div vitec-template="resource: Mottaker">&nbsp;</div>
+        <p>&nbsp;</p>
+        <h1>Parallellavklaring forkj&oslash;psrett i <span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">[[brl.navn]]</span><span vitec-if="Model.eiendom.eieform != &quot;Andel&quot;"><span class="insert-table"><span class="insert" data-label="borettslag"></span></span></span></h1>
+
+        <p>Vi har f&aring;tt for salg f&oslash;lgende eiendom:</p>
+
+        <table>
+          <tbody>
+            <tr>
+              <td colspan="25"><strong>Adresse:</strong></td>
+              <td colspan="75">[[eiendom.adresse]], [[eiendom.postnr]] [[eiendom.poststed]]</td>
+            </tr>
+            <tr>
+              <td colspan="25"><strong>Hjemmelshaver(e):</strong></td>
+              <td colspan="75">
+                <div vitec-if="Model.selgere.Count &gt; 0">
+                  <table>
+                    <tbody vitec-foreach="selger in Model.selgere">
+                      <tr>
+                        <td colspan="100">[[*selger.navnutenfullmektigogkontaktperson]]</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div vitec-if="Model.selgere.Count == 0">[Mangler hjemmelshaverinformasjon]</div>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="25"><strong>Eiendom:</strong></td>
+              <td colspan="75">[[komplettmatrikkel]]</td>
+            </tr>
+            <tr>
+              <td colspan="25"><strong>Prisantydning:</strong></td>
+              <td colspan="75">kr $.UD([[oppdrag.prisantydning]])</td>
+            </tr>
+            <tr>
+              <td colspan="25"><strong>Visning:</strong></td>
+              <td colspan="75"><span vitec-if="Model.eiendom.nestevisning.formaterttekst != &quot;Mangler data&quot;">[[eiendom.nestevisning.formaterttekst]]</span><span vitec-if="Model.eiendom.nestevisning.formaterttekst == &quot;Mangler data&quot;"><span class="insert-table"><span class="insert" data-label="visning"></span></span></span></td>
+            </tr>
+            <tr>
+              <td colspan="25"><strong>Arealer:</strong></td>
+              <td colspan="75"><span class="insert-table"><span class="insert" data-label="arealer"></span></span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>Eventuelle sp&oslash;rsm&aring;l bes rettet til [[ansvarligmegler.navn]].</p>
+
+        <p>Vi ber om at eiendommen snarest utlyses p&aring; forkj&oslash;psrett. Melding kan gis v&aring;rt kontor ved undertegnede straks fristen er utl&oslash;pt, slik at vi kan fortsette saksbehandlingen.</p>
+
+        <p>N&aelig;rv&aelig;rende brev er sendt kun via telefax eller e-post.</p>
+
+        <div style="margin-top:18px;">
+          <div vitec-template="resource: Avsender">&nbsp;</div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>

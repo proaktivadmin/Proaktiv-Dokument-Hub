@@ -1,0 +1,117 @@
+<div id="vitecTemplate"><span contenteditable="false" vitec-template="resource:Vitec Stilark"> </span>
+<style type="text/css">/* 1. RESET & FONTS: Clean, standard sans-serif system */
+    #vitecTemplate { 
+        font-family: 'Open Sans', Arial, sans-serif; 
+        font-size: 10pt; 
+        color: #000; 
+        line-height: 1.4; 
+    }
+
+    /* 2. HEADERS: Simple and high-contrast (removed gold and Playfair) */
+    #vitecTemplate h1 { 
+        font-size: 18pt; 
+        font-weight: bold; 
+        text-transform: none; 
+        border: none; 
+        margin: 0 0 10px 0; 
+        padding: 0; 
+    }
+    
+    #vitecTemplate h2 { 
+        font-size: 14pt; 
+        font-weight: bold; 
+        border-left: 5px solid #ccc; 
+        padding-left: 15px; 
+        margin-top: 25px; 
+        background-color: #f9f9f9; 
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+
+    /* 3. LAYOUT: Professional spacing and table logic */
+    #vitecTemplate table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    #vitecTemplate td { padding: 4px; vertical-align: top; }
+    
+    .info-label { font-weight: bold; width: 160px; }
+    
+    /* 4. SIGNATURES: Clean black lines for signing */
+    .sign-line { border-bottom: 1px solid #000; margin-top: 40px; margin-bottom: 5px; }
+    .table-header-row { text-align: left; border-bottom: 2px solid #000; padding-bottom: 5px; font-weight: bold; }
+</style>
+<!-- START DOCUMENT -->
+<h1>Tinglysing i eiendom</h1>
+
+<h1>Samtykke til transport av festerett</h1>
+<!-- Info Table -->
+
+<table>
+	<colgroup>
+		<col style="width: 30%;" />
+		<col style="width: 70%;" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td class="info-label">Adresse:</td>
+			<td>[[eiendom.adresse]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Oppdragsnr:</td>
+			<td>[[oppdrag.nr]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Hjemmel til feste:</td>
+			<td>[[selger.navn]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Matrikkel:</td>
+			<td>[[komplettmatrikkel]]</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>Med henvisning til festekontrakt tinglyst i ovennevnte eiendom, samtykkes herved i overdragelsen fra ovennevnte selger (fester) til f&oslash;lgende nye kj&oslash;per(e):</p>
+<!-- Buyers Table -->
+
+<table vitec-if="Model.kjopere.Count &gt; 0">
+	<colgroup>
+		<col style="width: 50%;" />
+		<col style="width: 50%;" />
+	</colgroup>
+	<thead>
+		<tr>
+			<th class="table-header-row">Navn</th>
+			<th class="table-header-row">F&oslash;dselsnr / Org.nr</th>
+		</tr>
+	</thead>
+	<tbody vitec-foreach="kjoper in Model.kjopere">
+		<tr>
+			<td style="padding-top:8px">[[*kjoper.navn]]</td>
+			<td style="padding-top:8px">[[*kjoper.idnummer]]</td>
+		</tr>
+	</tbody>
+</table>
+<br />
+<br />
+<!-- Signature Section -->
+<div style="page-break-inside:avoid">
+<p>[[meglerkontor.poststed]], den [[dagensdato]]</p>
+<!-- Owners Signature Loop -->
+
+<div vitec-if="Model.grunneiere.Count &gt; 0">
+<table style="width:100%">
+	<tbody vitec-foreach="grunneier in Model.grunneiere">
+		<tr>
+			<td>
+			<div class="sign-line">&nbsp;</div>
+			<span>Bortfester: <strong>[[*grunneier.navn]]</strong></span> <span> (Fnr/Org: [[*grunneier.idnummer]])</span></td>
+		</tr>
+	</tbody>
+</table>
+</div>
+<!-- Fallback if no owners registered -->
+
+<div vitec-if="Model.grunneiere.Count == 0">
+<div class="sign-line">&nbsp;</div>
+Bortfester (Signatur)</div>
+</div>
+</div>

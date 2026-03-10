@@ -1,0 +1,280 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        #vitecTemplate td[data-label]:before {
+            content: attr(data-label);
+            text-align: left;
+            color: #333;
+            font-size: 7pt;
+            line-height: 8pt;
+            text-transform: uppercase;
+            display: block;
+            position: absolute;
+            top: 1px;
+        }
+
+        #vitecTemplate td[data-label] {
+            padding: 14px 2px 2px 2px;
+            position: relative;
+        }
+
+        #vitecTemplate .bordered-table th {
+            vertical-align: bottom;
+            /*border: solid 1px #000;*/
+            font-size: 9pt;
+        }
+
+        #vitecTemplate .bordered-table td {
+            vertical-align: top;
+            border: solid 1px #000;
+            font-size: 9pt;
+        }
+
+            #vitecTemplate .bordered-table td div {
+                font-size: 9pt;
+            }
+
+        #vitecTemplate .kjopers-pant:last-child .separator {
+            display: none;
+        }
+
+        /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+        #vitecTemplate span.insert:empty {
+            font-size: inherit !important;
+            line-height: inherit !important;
+            display: inline-block;
+            background-color: lightpink;
+            min-width: 2em !important;
+            height: .7em !important;
+            text-align: center;
+        }
+
+            #vitecTemplate span.insert:empty:before {
+                content: attr(data-label);
+            }
+
+            #vitecTemplate span.insert:empty:hover {
+                background-color: #fff;
+                cursor: pointer;
+            }
+
+        #vitecTemplate .insert-table {
+            display: inline-table;
+        }
+
+            #vitecTemplate .insert-table > span,
+            #vitecTemplate .insert-table > span.insert {
+                display: table-cell;
+            }
+
+        .insert-checkbox {
+            display: inline-table;
+            vertical-align: bottom;
+            margin: 0 2px;
+        }
+
+            .insert-checkbox > span {
+                line-height: 1.1;
+                border: solid 1px #000;
+                height: 1.1em;
+                width: 1.1em;
+                max-width: 1.1em;
+                overflow: hidden;
+                display: table-cell;
+                text-align: center;
+                white-space: nowrap;
+            }
+
+        /* HJELP TIL UTFYLLING */
+
+        .screen-help {
+            /* bootstrap button */
+            position: absolute;
+            width: 300px;
+            white-space: unset;
+            /* pga. evt forklaring i data-help */
+            text-align: left;
+            font-family: Regular, sans-serif;
+        }
+
+            .screen-help.extra-wide {
+                width: 400px;
+            }
+
+            .screen-help.left-aligned {
+                left: -1cm;
+                margin-left: -305px;
+            }
+
+            .screen-help.right-aligned {
+                right: -1.2cm;
+                margin-right: -305px;
+            }
+
+            .screen-help.left-aligned.extra-wide {
+                margin-left: -405px;
+            }
+
+            .screen-help.right-aligned.extra-wide {
+                margin-right: -405px;
+            }
+
+            .screen-help:before {
+                font-family: 'Font Awesome 5 Pro';
+                font-weight: 400;
+                content: "\f14a";
+                margin-right: 4px;
+            }
+
+        .screen-help-info {
+            pointer-events: none;
+        }
+
+            .screen-help-info:before {
+                font-family: 'Font Awesome 5 Pro';
+                font-weight: 700;
+                content: "\f05a";
+                margin-right: 4px;
+            }
+
+        .screen-help:after {
+            content: attr(data-help);
+            display: block;
+            background-color: white;
+            color: black;
+            font-size: 11.5px;
+            line-height: 13px;
+            padding: 2px;
+        }
+
+        .screen-help.collapsed {
+            background-image: linear-gradient(to bottom, #f0ad4e 0, #eb9316 100%);
+            border-color: #e38d13;
+        }
+
+            .screen-help.collapsed:hover {
+                background-image: linear-gradient(to bottom, #ec971f 0, #eb9316 100%);
+                background-color: #ec971f;
+                border-color: #d58512;
+            }
+
+            .screen-help.collapsed:before {
+                content: "\f0c8";
+            }
+
+        /* important pga cleanslate */
+
+        .collapse,
+        .collapse.collapse-span,
+        .collapse.collapse-list-item {
+            display: none !important;
+        }
+
+            .collapse.in {
+                display: block !important;
+            }
+
+            .collapse.collapse-span.in {
+                display: inline !important;
+            }
+
+            .collapse.collapse-tbody.in {
+                display: table-row-group !important;
+            }
+
+            .collapse.collapse-list-item.in {
+                display: list-item !important;
+            }
+
+        .collapsing {
+            color: red;
+        }
+
+        @("@")media print {
+            .screen-help {
+                display: none;
+            }
+        }
+</style>
+<h1 style="text-align:center">AKSJEEIERBOK</h1>
+
+<p style="text-align:center"><strong>FOR</strong></p>
+
+<p style="text-align:center"><strong><span style="text-transform:uppercase">[[aksjeselskap.navn]]</span></strong></p>
+
+<p style="text-align:center"><strong>ORG.NR. [[aksjeselskap.orgnr]]</strong></p>
+
+<table class="bordered-table">
+	<thead>
+		<tr>
+			<th colspan="80">Aksjeeiere i alfabetisk rekkef&oslash;lge. Foretaksnavn og adresse.</th>
+			<th colspan="20">Org.nr.</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td colspan="80">[[selger.firmanavn]]<br />
+			[[selger.hovedgatenavnognr]],<br />
+			[[selger.hovedpostnr]] [[selger.hovedpoststed]]<br />
+			[[selger.hovedepost]]</td>
+			<td colspan="20">[[selger.idnummer]]</td>
+		</tr>
+	</tbody>
+</table>
+
+<table class="bordered-table">
+	<thead>
+		<tr>
+			<th colspan="20">Aksjenr.</th>
+			<th colspan="20">Antall aksjer</th>
+			<th colspan="40">Heftelser/merknader</th>
+			<th colspan="20">Innf&oslash;rt dato</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td colspan="20"><sup>1)</sup>&nbsp;[[aksjeselskap.aksjenr]]</td>
+			<td colspan="20"><span class="insert-table"> <span class="insert" data-label="Antall aksjer"></span></span></td>
+			<td colspan="40"><span aria-expanded="false" class="btn btn-success btn-xs collapsed extra-wide left-aligned screen-help" contenteditable="false" data-help="Hvis sikkerhetsforskriftene i meglerens ansvarsforsikring krever det, kan denne teksten legges til." data-target="#hjelp35" data-toggle="collapse">Ekstra tekst under Heftelser/merknader</span><sup>1)</sup> Aksjene er solgt til [[kjoper.firmanavn]], org.nr. [[kjoper.fdato_orgnr]] iht. aksjekj&oslash;psavtale datert [[kontrakt.dato]]. Avtalt overtakelse er [[kontrakt.overtagelse.dato]]. <span aria-expanded="false" class="collapse collapse-span" id="hjelp35" style="height:0px"> Dessuten er aksjene pantsatt til [[meglerkontor.navn]], org.nr. [[meglerkontor.orgnr]], til sikkerhet for ethvert krav som tilkommer [[kjoper.firmanavn]] eller <span vitec-if="Model.oppdrag.kjoperspant.Count &gt; 0"><span vitec-foreach="pant in Model.oppdrag.kjoperspant"><span class="kjoperspant">[[*pant.navn]]<span class="separator">,</span></span></span></span><span vitec-if="Model.oppdrag.kjoperspant.Count == 0"><span class="insert-table"><span class="insert" data-label="Kjøpers bank"></span></span></span>, i tilknytning til denne aksjekj&oslash;psavtalen (herunder l&aring;n til [[kjoper.firmanavn]] fra <span vitec-if="Model.oppdrag.kjoperspant.Count &gt; 0"><span vitec-foreach="pant in Model.oppdrag.kjoperspant"><span class="kjoperspant">[[*pant.navn]]<span class="separator">,</span></span></span></span><span vitec-if="Model.oppdrag.kjoperspant.Count == 0"><span class="insert-table"><span class="insert" data-label="Kjøpers bank"></span></span></span>).</span> Eieren av aksjene kan ikke avhende eller pantsette aksjene eller rettigheter til aksjene uten samtykke fra [[meglerkontor.navn]], org.nr. [[meglerkontor.orgnr]]. Denne heftelsen er ikke til hinder for at aksjene pantsettes p&aring; f&oslash;rste prioritet til <span vitec-if="Model.oppdrag.kjoperspant.Count &gt; 0"><span vitec-foreach="pant in Model.oppdrag.kjoperspant"><span class="kjoperspant">[[*pant.navn]]<span class="separator">,</span></span></span></span><span vitec-if="Model.oppdrag.kjoperspant.Count == 0"><span class="insert-table"><span class="insert" data-label="Kjøpers bank"></span></span></span>.</td>
+			<td colspan="20"><sup>1)</sup> [[kontrakt.dato]]<span class="btn btn-info btn-xs extra-wide right-aligned screen-help screen-help-info" contenteditable="false" data-help="Eventuelle eksisterende heftelser over aksjene må angis på foranstående prioritet her.">Informasjon om Heftelser/merknader</span></td>
+		</tr>
+	</tbody>
+</table>
+
+<table style="margin-top:1cm; page-break-inside:avoid">
+	<tbody>
+		<tr>
+			<td colspan="100" style="vertical-align:top">
+			<p><br />
+			[[meglerkontor.poststed]], den [[kontrakt.overtagelse.dato]]<br />
+			&nbsp;</p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="48" style="text-align:center; vertical-align:top">
+			<table>
+				<tbody>
+					<tr>
+						<td style="text-align:center">&nbsp;</td>
+					</tr>
+					<tr>
+						<td style="text-align:left"><strong>for [[aksjeselskap.navn]]</strong></td>
+					</tr>
+					<tr>
+						<td style="border-bottom:1px solid #000000; height:40px; text-align:left">&nbsp;</td>
+					</tr>
+					<tr>
+						<td style="text-align:left; vertical-align:bottom"><span class="insert-table"> <span class="insert" data-label="Selskapets representant"></span></span></td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>

@@ -1,0 +1,122 @@
+<div id="vitecTemplate"><span contenteditable="false" vitec-template="resource:Vitec Stilark"> </span>
+<style type="text/css">/* 1. RESET & FONTS: Clean, professional sans-serif system */
+    #vitecTemplate { 
+        font-family: 'Open Sans', Arial, sans-serif; 
+        font-size: 10pt; 
+        color: #000; 
+        line-height: 1.4; 
+    }
+
+    /* 2. HEADERS: Simple, bold, and high-contrast */
+    #vitecTemplate h1 { 
+        font-size: 18pt; 
+        font-weight: bold; 
+        text-transform: none; 
+        border: none; 
+        margin: 0 0 20px 0; 
+        padding: 0; 
+    }
+
+    /* 3. TABLE LOGIC: Reliable borders for document stability */
+    #vitecTemplate table { border-collapse: collapse; table-layout: fixed; width: 100%; margin-bottom: 15px; }
+    #vitecTemplate td, #vitecTemplate th { padding: 8px; vertical-align: top; border: 1px solid #000; }
+    
+    /* Header rows for data tables */
+    #vitecTemplate th { background-color: #f2f2f2; text-align: left; font-weight: bold; }
+
+    /* Info table (Top) uses lighter borders for better readability */
+    .info-table td { border: 1px solid #eeeeee; }
+    .info-label { font-weight: bold; width: 120px; border: 1px solid #eeeeee !important; }
+
+    /* Checkbox Logic (kept for compatibility) */
+    label.btn { display: inline-block !important; cursor: pointer; margin: 0 !important; padding: 0 !important; vertical-align: middle !important; line-height: 1 !important; }
+    #vitecTemplate input[type="checkbox"] { display: none !important; } 
+    .svg-toggle { display: inline-block !important; width: 14px !important; height: 14px !important; margin-right: 6px !important; vertical-align: middle !important; border: none !important; background-color: transparent !important; position: relative; top: -1px; }
+</style>
+<!-- CONTENT START -->
+<h1>Salgsmelding til forretningsf&oslash;rer</h1>
+
+<p><strong>Hei,</strong></p>
+
+<p>Vi viser til tidligere korrespondanse om salg av:</p>
+<!-- Property Info Table -->
+
+<table class="info-table">
+	<colgroup>
+		<col style="width: 120px;" />
+		<col style="width: auto;" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td class="info-label">Adresse:</td>
+			<td>[[eiendom.adresse]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Matrikkel:</td>
+			<td>[[komplettmatrikkel]]</td>
+		</tr>
+		<tr>
+			<td class="info-label">Arealer:</td>
+			<td>BRA [[eiendom.bruksareal]] / BRA-i [[eiendom.bruksareal_i]]</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><strong>Vi orienterer med dette om at:</strong></p>
+<!-- Seller Table -->
+
+<table>
+	<colgroup>
+		<col style="width: 50%;" />
+		<col style="width: 50%;" />
+	</colgroup>
+	<thead>
+		<tr>
+			<th>Selger(e)</th>
+			<th>Adresse i v&aring;rt system</th>
+		</tr>
+	</thead>
+	<tbody vitec-foreach="selger in Model.selgere">
+		<tr>
+			<td>[[*selger.navn]]</td>
+			<td>[[*selger.adresse]]<br />
+			[[*selger.postnr]] [[*selger.poststed]]</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>den <strong>[[akseptertbud.dato]]</strong> har akseptert kj&oslash;petilbud p&aring; kr. <strong>[[akseptertbud.belop]]</strong> fra:</p>
+<!-- Buyer Table -->
+
+<table>
+	<thead>
+		<tr>
+			<th>Kj&oslash;per(e)</th>
+			<th>E-post</th>
+			<th>Tlf</th>
+			<th>Fnr/Org</th>
+		</tr>
+	</thead>
+	<tbody vitec-foreach="kjoper in Model.kjopere">
+		<tr>
+			<td>[[*kjoper.navn]]</td>
+			<td>[[*kjoper.emailadresse]]</td>
+			<td>[[*kjoper.tlf]]</td>
+			<td>[[*kjoper.idnummer]]</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><strong>Kj&oslash;pers n&aring;v&aelig;rende adresse:</strong><br />
+[[kjoper.adresse]]</p>
+
+<p><strong>Overtakelsesdato: [[kontrakt.overtagelse.dato]]</strong></p>
+
+<p>Kj&oslash;per betaler felleskostnader fra f&oslash;rste forfallsdato etter denne dato. En ev. avregning gj&oslash;res opp partene i mellom.</p>
+
+<p><strong>Vi s&oslash;ker med dette om utlysning og avklaring av forkj&oslash;psrett.</strong></p>
+
+<p>For &aring; komme videre i saksbehandlingen ber vi om tilbakemelding p&aring; n&aring;r boligen blir utlyst og medlemmenes siste meldefrist.</p>
+
+<p>Svar rettes til: <strong>[[ansvarligmegler.epost]]</strong></p>
+</div>

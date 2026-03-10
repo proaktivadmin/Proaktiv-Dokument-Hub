@@ -1,0 +1,50 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate table {
+                    border-collapse: collapse;
+                    width: 100%;
+                    table-layout: fixed;
+                }
+</style>
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<div vitec-template="resource: Mottaker">&nbsp;</div>
+
+			<p><strong><span vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot;">Oppgj&oslash;r ved salg </span><span vitec-if="Model.oppdrag.hovedtype == &quot;Tvangssalg&quot;">Tvangssalg </span>av [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+			<table vitec-if="Model.oppdrag.hovedtype == &quot;Tvangssalg&quot;">
+				<tbody>
+					<tr>
+						<td colspan="25"><strong>Tingrettens saksnr.:</strong></td>
+						<td colspan="75">[[tvangssalgrefnr]]</td>
+					</tr>
+					<tr>
+						<td colspan="25"><strong>Saks&oslash;kte:</strong></td>
+						<td colspan="75"><span vitec-foreach="saksokte  in Model.saksokteliste"> <span class="saksokte">[[*saksokte.navn]]<span class="separator">, </span> </span> </span></td>
+					</tr>
+					<tr>
+						<td colspan="25"><strong>Saks&oslash;ker:</strong></td>
+						<td colspan="75">[[saksoker.navn]]</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>Vi viser til salg av ovennevnte eiendom og oversender vedlagte oppgj&oslash;rsoppstilling.&nbsp;Oppgj&oslash;rsoppstillingen er passordbelagt og du f&aring;r passordet oversendt p&aring; SMS</p>
+
+			<p vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot;">Eventuelle renter som er godskrevet i oppgj&oslash;ret, og som fremg&aring;r av oppstillingen, er oppgavepliktige p&aring; skattemeldingen. Dersom noe skulle v&aelig;re uklart eller ytterligere opplysninger &oslash;nskes omkring oppgj&oslash;ret, vennligst kontakt oss snarest.</p>
+
+			<p vitec-if="Model.oppdrag.hovedtype == &quot;Tvangssalg&quot;">Som det fremg&aring;r av oppgj&oslash;rsoppstillingen er fullstendig oppgj&oslash;r foretatt i henhold til fordelingskjennelse datert [[tvangssalg.fordelingskjennelse.dato]].</p>
+
+			<p vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot;">Vi takker for oppdraget og for at <span vitec-if="Model.selgere.Count == 1">du</span> <span vitec-if="Model.selgere.Count &gt; 1">dere</span> valgte [[meglerkontor.navn]] som <span vitec-if="Model.selgere.Count == 1">din</span> <span vitec-if="Model.selgere.Count &gt; 1">deres</span> megler.</p>
+
+			<p vitec-if="Model.oppdrag.hovedtype == &quot;Tvangssalg&quot;">Vi takker for oppdraget, og ser frem til &aring; kunne tilby v&aring;re tjenester ved en senere anledning.</p>
+
+			<p vitec-if="Model.oppdrag.hovedtype != &quot;Tvangssalg&quot;">Velkommen tilbake ved en senere anledning.</p>
+
+			<div vitec-template="resource: Avsender">&nbsp;</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>

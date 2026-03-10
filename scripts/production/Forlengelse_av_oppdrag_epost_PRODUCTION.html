@@ -1,0 +1,106 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate {
+            font-size: 9pt;
+        }
+
+        #vitecTemplate {
+            counter-reset: section;
+        }
+
+            #vitecTemplate .item:not(.item .item) {
+                counter-increment: section;
+                counter-reset: subsection;
+            }
+
+                #vitecTemplate .item:not(.item .item) h2::before {
+                    content: counter(section) ". ";
+                    display: inline-block;
+                    width: 26px;
+                }
+
+            #vitecTemplate .item .item:not(.item .item .item) {
+                counter-increment: subsection;
+            }
+
+                #vitecTemplate .item .item:not(.item .item .item) h3::before {
+                    content: counter(section) "." counter(subsection) ". ";
+                }
+
+        #vitecTemplate table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+            #vitecTemplate table td {
+                font-size: 9pt;
+                padding: 3px 0;
+                margin: 0;
+            }
+
+            #vitecTemplate table p {
+                font-size: 9pt;
+                padding: 3px 0;
+                margin: 0;
+            }
+
+        #vitecTemplate .avoid-page-break {
+            page-break-inside: avoid;
+        }
+
+        #vitecTemplate h1 {
+            text-align: center;
+            font-size: 14pt;
+            margin: 0 0 6px 0;
+            padding: 0;
+        }
+
+        #vitecTemplate h2 {
+            font-size: 11pt;
+            margin: 30px 0 0 -26px;
+            padding: 0;
+        }
+</style>
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100" style="text-align:right">
+				<small>
+					Oppdragsnr.:&nbsp;<strong>[[oppdrag.nr]]</strong>
+				</small>
+			</td>
+		</tr>
+		<tr><td colspan="100">&nbsp;</td></tr>
+		<tr>
+			<td colspan="100">
+				<h1>Forlengelse av oppdrag [[eiendom.adresse]]</h1>
+
+				<p>Hei [[selger.fornavn]],</p>
+
+				<p>Det er snart 6 mnd. siden vi fikk i oppdrag &aring; selge din eiendom, og oppdraget vil snart utl&oslash;pe. Oppdragets gyldighet utl&oslash;per den [[oppdrag.utlopsdato]].</p>
+
+				<p>Dersom du &oslash;nsker &aring; forlenge oppdraget p&aring; samme vilk&aring;r for 6 nye m&aring;neder, ber vi deg <strong>bekrefte dette ved &aring; svare p&aring; denne e-posten innen 10 dager</strong>.</p>
+
+				<p>Forlengelsen av oppdraget medf&oslash;rer for &oslash;vrig ikke omkostninger. Vi m&aring; imidlertid ta forbehold om at det kan p&aring;l&oslash;pe ekstra omkostninger dersom det er n&oslash;dvendig &aring; innhente oppdaterte opplysninger om eiendommen, fornye salgsoppgave eller digitale annonser.</p>
+
+				<p>Oppdraget vil etter forlengelsen v&aelig;re regulert av eiendomsmeglerlovens bestemmelser pr. dags dato.</p>
+
+				<p><strong>Svar gjerne med &eacute;n av f&oslash;lgende:</strong></p>
+				<ul>
+					<li>&laquo;Ja, vi &oslash;nsker &aring; forlenge oppdraget for 6 nye m&aring;neder.&raquo;</li>
+					<li>&laquo;Nei, vi &oslash;nsker ikke &aring; forlenge oppdraget.&raquo;</li>
+				</ul>
+
+				<p>Ta kontakt hvis du har sp&oslash;rsm&aring;l eller &oslash;nsker en prat.</p>
+
+				<p style="margin-top:12px; line-height:1.6">Vennlig hilsen<br />
+				<strong>[[avsender.meglerkontor.navn]]</strong><br />
+				<br />
+				[[avsender.navn]]<br />
+				[[avsender.tittel]]<br />
+				[[avsender.tlf]] | [[avsender.epost]]</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>

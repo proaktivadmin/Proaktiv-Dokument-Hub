@@ -1,0 +1,68 @@
+<div id="vitecTemplate">
+<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">
+#vitecTemplate .avoid-page-break { page-break-inside: avoid; }
+#vitecTemplate h1 {
+    text-align: left;
+    font-size: 14pt;
+    margin: 0 0 12px 0;
+    padding: 0;
+}
+#vitecTemplate h2 {
+    font-size: 11pt;
+    margin: 30px 0 0 -20px;
+    padding: 0;
+}
+#vitecTemplate p { margin: 0 0 10px 0; }
+#vitecTemplate table {
+    width: 100%;
+    table-layout: fixed;
+}
+span.insert:empty {
+    font-size: inherit !important;
+    line-height: inherit !important;
+    display: inline-block;
+    background-color: lightpink;
+    min-width: 2em !important;
+    height: .7em !important;
+    text-align: center;
+}
+span.insert:empty:before { content: attr(data-label); }
+span.insert:empty:hover {
+    background-color: #fff;
+    cursor: pointer;
+}
+.insert-table { display: inline-table; }
+.insert-table > span,
+.insert-table > span.insert { display: table-cell; }
+</style>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="100">
+        <div vitec-template="resource: Mottaker">&nbsp;</div>
+        <p>&nbsp;</p>
+        <h1>Innbetaling av forskudd i forbindelse med kj&oslash;p av [[eiendom.adresse]], [[komplettmatrikkel]]</h1>
+
+        <p>Vi viser til inng&aring;tt kj&oslash;pekontrakt i forbindelse med kj&oslash;p av ovennevnte eiendom.</p>
+
+        <p>Som det fremg&aring;r av kj&oslash;pekontraktens &sect; 4 skal kj&oslash;per innbetale forskudd ved kontraktsinng&aring;else, s&aring; fremt selger har stilt garanti etter bustadoppf&oslash;ringslovens &sect;12.</p>
+
+        <p>Selger har n&aring; stilt garantien, og kopi er vedlagt.</p>
+
+        <p>Vi ber derfor om at avtalt forskuddsbetaling skjer til meglers klientkonto <strong>[[kontrakt.klientkonto]]</strong> og skal merkes med <strong>[[kontrakt.kid]]</strong>.</p>
+
+        <p>Dersom dette brev overlapper deres innbetaling av forskuddet ber vi dem se bort i fra denne henvendelsen.</p>
+
+        <p>Ta gjerne kontakt med undertegnede dersom noe er uklart.</p>
+
+        <p>Dato: [[dagensdato]]</p>
+
+        <div style="margin-top:20px;">
+          <div vitec-template="resource: Avsender">&nbsp;</div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>

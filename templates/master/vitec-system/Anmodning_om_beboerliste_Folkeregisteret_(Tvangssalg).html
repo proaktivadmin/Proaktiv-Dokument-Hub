@@ -1,0 +1,81 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate table {
+                    border-collapse: collapse;
+                    width: 100%;
+                    table-layout: fixed;
+                }
+        
+                #vitecTemplate .saksokte:last-child .separator {
+                    display: none;
+                }
+        
+                /* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+        
+                #vitecTemplate span.insert:empty {
+                    font-size: inherit !important;
+                    line-height: inherit !important;
+                    display: inline-block;
+                    background-color: lightpink;
+                    min-width: 2em !important;
+                    height: .7em !important;
+                    text-align: center;
+                }
+        
+                #vitecTemplate span.insert:empty:before {
+                    content: attr(data-label);
+                }
+        
+                #vitecTemplate span.insert:empty:hover {
+                    background-color: #fff;
+                    cursor: pointer;
+                }
+        
+                #vitecTemplate .insert-table {
+                    display: inline-table;
+                }
+        
+                #vitecTemplate .insert-table>span,
+                #vitecTemplate .insert-table>span.insert {
+                    display: table-cell;
+        
+                }
+</style>
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">
+			<div vitec-template="resource: Mottaker">&nbsp;</div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="100">
+			<p><strong>Anmodning om beboerliste i forbindelse med tvangssalg av [[eiendom.gatenavnognr]] - [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune</strong></p>
+
+			<table>
+				<tbody>
+					<tr>
+						<td colspan="25"><strong>Tingrettens saksnr.:</strong></td>
+						<td colspan="75">[[tvangssalgrefnr]]</td>
+					</tr>
+					<tr>
+						<td colspan="25"><strong>Saks&oslash;kte:</strong></td>
+						<td colspan="75"><span vitec-foreach="saksokte  in Model.saksokteliste"> <span class="saksokte">[[*saksokte.navn]]<span class="separator">, </span> </span> </span></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>Undertegnede er oppnevnt av [[selger.navn]] som medhjelper for tvangssalg av ovennevnte eiendom.</p>
+
+			<p>I den forbindelse er vi pliktig til &aring; informere eier, ektefelle/samboer og myndige barn som bebor eiendommen. Videre skal eventuelle leieboer(e), dens ektefelle og myndige barn varsles iht. tvangsfullbyrdelsesloven paragraf 11-16.</p>
+
+			<p>Vi ber om &aring; f&aring; oversikt fra folkeregisteret over hvem av ovennevnte kategori som bebor eiendommen per dags dato.</p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="100">
+			<div vitec-template="resource: Avsender">&nbsp;</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>

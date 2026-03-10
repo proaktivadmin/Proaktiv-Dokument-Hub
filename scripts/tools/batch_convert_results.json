@@ -1,0 +1,1095 @@
+[
+  {
+    "filename": "E-takst oppdragsavtale.rtf",
+    "success": true,
+    "is_valid": true,
+    "html_length": 12435,
+    "warnings": [
+      "RTF converted from plain text (11808 chars)"
+    ],
+    "validation": [
+      {
+        "rule": "A1: vitecTemplate wrapper present",
+        "passed": true,
+        "detail": "<div id='vitecTemplate'> found"
+      },
+      {
+        "rule": "A1: proaktiv-theme class on wrapper",
+        "passed": true,
+        "detail": "class='proaktiv-theme' present"
+      },
+      {
+        "rule": "A2: Stilark resource reference present",
+        "passed": true,
+        "detail": "Stilark <span> found"
+      },
+      {
+        "rule": "A3: Stilark span contains &nbsp;",
+        "passed": true,
+        "detail": "Contains &nbsp;"
+      },
+      {
+        "rule": "B3: All <tr> inside <tbody>/<thead>/<tfoot>",
+        "passed": true,
+        "detail": "All rows properly wrapped"
+      },
+      {
+        "rule": "B6: No empty tables",
+        "passed": true,
+        "detail": "No empty tables found"
+      },
+      {
+        "rule": "C1: No font-family in inline styles",
+        "passed": true,
+        "detail": "Clean"
+      },
+      {
+        "rule": "C2: No font-size in inline styles",
+        "passed": true,
+        "detail": "Clean"
+      },
+      {
+        "rule": "D5: No spaces inside merge field brackets",
+        "passed": true,
+        "detail": "All merge fields properly formatted"
+      },
+      {
+        "rule": "I1: No <font> tags",
+        "passed": true,
+        "detail": "No <font> tags"
+      },
+      {
+        "rule": "I2: No <center> tags",
+        "passed": true,
+        "detail": "No <center> tags"
+      },
+      {
+        "rule": "K2: No JavaScript event handlers",
+        "passed": true,
+        "detail": "No event handlers found"
+      },
+      {
+        "rule": "K3: No external stylesheet links",
+        "passed": true,
+        "detail": "No external stylesheets"
+      },
+      {
+        "rule": "K1: HTML is well-formed",
+        "passed": true,
+        "detail": "HTML appears well-formed"
+      }
+    ],
+    "merge_fields": [],
+    "html_preview": "<div class=\"proaktiv-theme\" id=\"vitecTemplate\">\n<span vitec-template=\"resource:Vitec Stilark\"> </span>\n<p>BESTILLING AV VERDIVURDERING/E-TAKST</p>\n<p>1) Eiendommen</p>\n<p>Adresse: Boligkjøperveien 42A, 5165 Laksevåg i Oslo kommune.<br/>Gnr.: \t\t217<br/>Bnr.: \t\t116<br/>Snr.:\t\t21<br/>Fnr.:<br/>Borettslag:<br/>Andelsnr:</p>\n<p>2) Eier/oppdragsgiver</p>\n<p>Navn: \tLene Solbakken Nilssen<br/>Fnr: \t300681-35237<br/>Statsborgerskap:___________<br/>Adr: \tSkogtunet 7<br/>1369 Stabekk<br/>Mobil:\t41 10 77 07..."
+  },
+  {
+    "filename": "Kjøpekontrakt prosjekt (enebolig med delinnbetalinger).rtf",
+    "success": true,
+    "is_valid": true,
+    "html_length": 24041,
+    "warnings": [
+      "RTF converted from plain text (22899 chars)"
+    ],
+    "validation": [
+      {
+        "rule": "A1: vitecTemplate wrapper present",
+        "passed": true,
+        "detail": "<div id='vitecTemplate'> found"
+      },
+      {
+        "rule": "A1: proaktiv-theme class on wrapper",
+        "passed": true,
+        "detail": "class='proaktiv-theme' present"
+      },
+      {
+        "rule": "A2: Stilark resource reference present",
+        "passed": true,
+        "detail": "Stilark <span> found"
+      },
+      {
+        "rule": "A3: Stilark span contains &nbsp;",
+        "passed": true,
+        "detail": "Contains &nbsp;"
+      },
+      {
+        "rule": "B3: All <tr> inside <tbody>/<thead>/<tfoot>",
+        "passed": true,
+        "detail": "All rows properly wrapped"
+      },
+      {
+        "rule": "B6: No empty tables",
+        "passed": true,
+        "detail": "No empty tables found"
+      },
+      {
+        "rule": "C1: No font-family in inline styles",
+        "passed": true,
+        "detail": "Clean"
+      },
+      {
+        "rule": "C2: No font-size in inline styles",
+        "passed": true,
+        "detail": "Clean"
+      },
+      {
+        "rule": "D5: No spaces inside merge field brackets",
+        "passed": true,
+        "detail": "All merge fields properly formatted"
+      },
+      {
+        "rule": "I1: No <font> tags",
+        "passed": true,
+        "detail": "No <font> tags"
+      },
+      {
+        "rule": "I2: No <center> tags",
+        "passed": true,
+        "detail": "No <center> tags"
+      },
+      {
+        "rule": "K2: No JavaScript event handlers",
+        "passed": true,
+        "detail": "No event handlers found"
+      },
+      {
+        "rule": "K3: No external stylesheet links",
+        "passed": true,
+        "detail": "No external stylesheets"
+      },
+      {
+        "rule": "K1: HTML is well-formed",
+        "passed": true,
+        "detail": "HTML appears well-formed"
+      }
+    ],
+    "merge_fields": [],
+    "html_preview": "<div class=\"proaktiv-theme\" id=\"vitecTemplate\">\n<span vitec-template=\"resource:Vitec Stilark\"> </span>\n<p>Oppdragsnummer: #oppdragsnummer.oppdrag¤<br/>Omsetningsnummer: #omsetningsnummer.oppdrag¤</p>\n<p>KJØPEKONTRAKT<br/>om rett til bolig eller fritidsbolig under oppføring med tomt</p>\n<p>Kontraktens bestemmelser utfylles av bustadoppføringslova (bustadoppføringslova) av 13. juni nr. 43 1997 og annen bakgrunnsrett. Kontrakten gjelder avtale etter lovens § 1, første ledd b), avtale om bolig eller..."
+  },
+  {
+    "filename": "Kjøpekontrakt prosjekt Borettslag.rtf",
+    "success": true,
+    "is_valid": true,
+    "html_length": 24220,
+    "warnings": [
+      "RTF converted from plain text (23129 chars)"
+    ],
+    "validation": [
+      {
+        "rule": "A1: vitecTemplate wrapper present",
+        "passed": true,
+        "detail": "<div id='vitecTemplate'> found"
+      },
+      {
+        "rule": "A1: proaktiv-theme class on wrapper",
+        "passed": true,
+        "detail": "class='proaktiv-theme' present"
+      },
+      {
+        "rule": "A2: Stilark resource reference present",
+        "passed": true,
+        "detail": "Stilark <span> found"
+      },
+      {
+        "rule": "A3: Stilark span contains &nbsp;",
+        "passed": true,
+        "detail": "Contains &nbsp;"
+      },
+      {
+        "rule": "B3: All <tr> inside <tbody>/<thead>/<tfoot>",
+        "passed": true,
+        "detail": "All rows properly wrapped"
+      },
+      {
+        "rule": "B6: No empty tables",
+        "passed": true,
+        "detail": "No empty tables found"
+      },
+      {
+        "rule": "C1: No font-family in inline styles",
+        "passed": true,
+        "detail": "Clean"
+      },
+      {
+        "rule": "C2: No font-size in inline styles",
+        "passed": true,
+        "detail": "Clean"
+      },
+      {
+        "rule": "D5: No spaces inside merge field brackets",
+        "passed": true,
+        "detail": "All merge fields properly formatted"
+      },
+      {
+        "rule": "I1: No <font> tags",
+        "passed": true,
+        "detail": "No <font> tags"
+      },
+      {
+        "rule": "I2: No <center> tags",
+        "passed": true,
+        "detail": "No <center> tags"
+      },
+      {
+        "rule": "K2: No JavaScript event handlers",
+        "passed": true,
+        "detail": "No event handlers found"
+      },
+      {
+        "rule": "K3: No external stylesheet links",
+        "passed": true,
+        "detail": "No external stylesheets"
+      },
+      {
+        "rule": "K1: HTML is well-formed",
+        "passed": true,
+        "detail": "HTML appears well-formed"
+      }
+    ],
+    "merge_fields": [],
+    "html_preview": "<div class=\"proaktiv-theme\" id=\"vitecTemplate\">\n<span vitec-template=\"resource:Vitec Stilark\"> </span>\n<p>Oppdragsnummer: #oppdragsnummer.oppdrag¤<br/>Omsetningsnummer: #omsetningsnummer.oppdrag¤</p>\n<p>KJØPEKONTRAKT<br/>om rett til andel i borettslag med borett til bolig eller fritidsbolig, hvor boligen eller fritidsboligen er under oppføring</p>\n<p>Kontraktens bestemmelser utfylles av bustadoppføringslova (bustadoppføringslova) av 13. juni nr. 43 1997 og annen bakgrunnsrett. Kontrakten gjelder..."
+  },
+  {
+    "filename": "Kjøpekontrakt prosjekt profesjonell kjøper.rtf",
+    "success": true,
+    "is_valid": true,
+    "html_length": 23063,
+    "warnings": [
+      "RTF converted from plain text (21987 chars)"
+    ],
+    "validation": [
+      {
+        "rule": "A1: vitecTemplate wrapper present",
+        "passed": true,
+        "detail": "<div id='vitecTemplate'> found"
+      },
+      {
+        "rule": "A1: proaktiv-theme class on wrapper",
+        "passed": true,
+        "detail": "class='proaktiv-theme' present"
+      },
+      {
+        "rule": "A2: Stilark resource reference present",
+        "passed": true,
+        "detail": "Stilark <span> found"
+      },
+      {
+        "rule": "A3: Stilark span contains &nbsp;",
+        "passed": true,
+        "detail": "Contains &nbsp;"
+      },
+      {
+        "rule": "B3: All <tr> inside <tbody>/<thead>/<tfoot>",
+        "passed": true,
+        "detail": "All rows properly wrapped"
+      },
+      {
+        "rule": "B6: No empty tables",
+        "passed": true,
+        "detail": "No empty tables found"
+      },
+      {
+        "rule": "C1: No font-family in inline styles",
+        "passed": true,
+        "detail": "Clean"
+      },
+      {
+        "rule": "C2: No font-size in inline styles",
+        "passed": true,
+        "detail": "Clean"
+      },
+      {
+        "rule": "D5: No spaces inside merge field brackets",
+        "passed": true,
+        "detail": "All merge fields properly formatted"
+      },
+      {
+        "rule": "I1: No <font> tags",
+        "passed": true,
+        "detail": "No <font> tags"
+      },
+      {
+        "rule": "I2: No <center> tags",
+        "passed": true,
+        "detail": "No <center> tags"
+      },
+      {
+        "rule": "K2: No JavaScript event handlers",
+        "passed": true,
+        "detail": "No event handlers found"
+      },
+      {
+        "rule": "K3: No external stylesheet links",
+        "passed": true,
+        "detail": "No external stylesheets"
+      },
+      {
+        "rule": "K1: HTML is well-formed",
+        "passed": true,
+        "detail": "HTML appears well-formed"
+      }
+    ],
+    "merge_fields": [],
+    "html_preview": "<div class=\"proaktiv-theme\" id=\"vitecTemplate\">\n<span vitec-template=\"resource:Vitec Stilark\"> </span>\n<p>Oppdragsnummer: #oppdragsnummer.oppdrag¤<br/>Omsetningsnummer: #omsetningsnummer.oppdrag¤</p>\n<p>KJØPEKONTRAKT<br/>om rett til bolig eller fritidsbolig under oppføring med tomt</p>\n<p>Kontraktens bestemmelser utfylles av bustadoppføringslova (bustadoppføringslova) av 13. juni nr. 43 1997 og annen bakgrunnsrett. Kontrakten gjelder avtale etter lovens § 1, første ledd b), avtale om bolig eller..."
+  },
+  {
+    "filename": "Kjøpekontrakt prosjekt selveier.rtf",
+    "success": true,
+    "is_valid": true,
+    "html_length": 24079,
+    "warnings": [
+      "RTF converted from plain text (22956 chars)"
+    ],
+    "validation": [
+      {
+        "rule": "A1: vitecTemplate wrapper present",
+        "passed": true,
+        "detail": "<div id='vitecTemplate'> found"
+      },
+      {
+        "rule": "A1: proaktiv-theme class on wrapper",
+        "passed": true,
+        "detail": "class='proaktiv-theme' present"
+      },
+      {
+        "rule": "A2: Stilark resource reference present",
+        "passed": true,
+        "detail": "Stilark <span> found"
+      },
+      {
+        "rule": "A3: Stilark span contains &nbsp;",
+        "passed": true,
+        "detail": "Contains &nbsp;"
+      },
+      {
+        "rule": "B3: All <tr> inside <tbody>/<thead>/<tfoot>",
+        "passed": true,
+        "detail": "All rows properly wrapped"
+      },
+      {
+        "rule": "B6: No empty tables",
+        "passed": true,
+        "detail": "No empty tables found"
+      },
+      {
+        "rule": "C1: No font-family in inline styles",
+        "passed": true,
+        "detail": "Clean"
+      },
+      {
+        "rule": "C2: No font-size in inline styles",
+        "passed": true,
+        "detail": "Clean"
+      },
+      {
+        "rule": "D5: No spaces inside merge field brackets",
+        "passed": true,
+        "detail": "All merge fields properly formatted"
+      },
+      {
+        "rule": "I1: No <font> tags",
+        "passed": true,
+        "detail": "No <font> tags"
+      },
+      {
+        "rule": "I2: No <center> tags",
+        "passed": true,
+        "detail": "No <center> tags"
+      },
+      {
+        "rule": "K2: No JavaScript event handlers",
+        "passed": true,
+        "detail": "No event handlers found"
+      },
+      {
+        "rule": "K3: No external stylesheet links",
+        "passed": true,
+        "detail": "No external stylesheets"
+      },
+      {
+        "rule": "K1: HTML is well-formed",
+        "passed": true,
+        "detail": "HTML appears well-formed"
+      }
+    ],
+    "merge_fields": [],
+    "html_preview": "<div class=\"proaktiv-theme\" id=\"vitecTemplate\">\n<span vitec-template=\"resource:Vitec Stilark\"> </span>\n<p>Oppdragsnummer: #oppdragsnummer.oppdrag¤<br/>Omsetningsnummer: #omsetningsnummer.oppdrag¤</p>\n<p>KJØPEKONTRAKT<br/>om rett til bolig eller fritidsbolig under oppføring med tomt</p>\n<p>Kontraktens bestemmelser utfylles av bustadoppføringslova (bustadoppføringslova) av 13. juni nr. 43 1997 og annen bakgrunnsrett. Kontrakten gjelder avtale etter lovens § 1, første ledd b), avtale om bolig eller..."
+  },
+  {
+    "filename": "Meglerstandard for eiendom med og uten oppgjørsansvarlig.rtf",
+    "success": true,
+    "is_valid": true,
+    "html_length": 43790,
+    "warnings": [
+      "RTF converted from plain text (42261 chars)"
+    ],
+    "validation": [
+      {
+        "rule": "A1: vitecTemplate wrapper present",
+        "passed": true,
+        "detail": "<div id='vitecTemplate'> found"
+      },
+      {
+        "rule": "A1: proaktiv-theme class on wrapper",
+        "passed": true,
+        "detail": "class='proaktiv-theme' present"
+      },
+      {
+        "rule": "A2: Stilark resource reference present",
+        "passed": true,
+        "detail": "Stilark <span> found"
+      },
+      {
+        "rule": "A3: Stilark span contains &nbsp;",
+        "passed": true,
+        "detail": "Contains &nbsp;"
+      },
+      {
+        "rule": "B3: All <tr> inside <tbody>/<thead>/<tfoot>",
+        "passed": true,
+        "detail": "All rows properly wrapped"
+      },
+      {
+        "rule": "B6: No empty tables",
+        "passed": true,
+        "detail": "No empty tables found"
+      },
+      {
+        "rule": "C1: No font-family in inline styles",
+        "passed": true,
+        "detail": "Clean"
+      },
+      {
+        "rule": "C2: No font-size in inline styles",
+        "passed": true,
+        "detail": "Clean"
+      },
+      {
+        "rule": "D5: No spaces inside merge field brackets",
+        "passed": true,
+        "detail": "All merge fields properly formatted"
+      },
+      {
+        "rule": "I1: No <font> tags",
+        "passed": true,
+        "detail": "No <font> tags"
+      },
+      {
+        "rule": "I2: No <center> tags",
+        "passed": true,
+        "detail": "No <center> tags"
+      },
+      {
+        "rule": "K2: No JavaScript event handlers",
+        "passed": true,
+        "detail": "No event handlers found"
+      },
+      {
+        "rule": "K3: No external stylesheet links",
+        "passed": true,
+        "detail": "No external stylesheets"
+      },
+      {
+        "rule": "K1: HTML is well-formed",
+        "passed": true,
+        "detail": "HTML appears well-formed"
+      }
+    ],
+    "merge_fields": [],
+    "html_preview": "<div class=\"proaktiv-theme\" id=\"vitecTemplate\">\n<span vitec-template=\"resource:Vitec Stilark\"> </span>\n<p>Megler:|#navn.firma¤ Foretaksregisteret orgnr. #organisasjonsnummer.firma¤|<br/>Type oppdrag:|#type_oppdrag.oppdrag¤|<br/>Eierform:|#type_eierformbygninger.oppdrag¤ / #type_eierformtomt.oppdrag¤|<br/>Oppdragsnr:|#oppdragsnummer.oppdrag¤|<br/>Omsetningsnr:|#omsetningsnummer.oppdrag¤#include_rtfelementer_kontrakt¤<br/>|</p>\n<p>MEGLERSTANDARD MARS 2020 OM SALG AV EIENDOM MED OG UTEN OPPGJØRSANS..."
+  },
+  {
+    "filename": "Meglerstandard for salg av AS med oppgjørsansvarlig.rtf",
+    "success": true,
+    "is_valid": true,
+    "html_length": 46863,
+    "warnings": [
+      "RTF converted from plain text (45243 chars)"
+    ],
+    "validation": [
+      {
+        "rule": "A1: vitecTemplate wrapper present",
+        "passed": true,
+        "detail": "<div id='vitecTemplate'> found"
+      },
+      {
+        "rule": "A1: proaktiv-theme class on wrapper",
+        "passed": true,
+        "detail": "class='proaktiv-theme' present"
+      },
+      {
+        "rule": "A2: Stilark resource reference present",
+        "passed": true,
+        "detail": "Stilark <span> found"
+      },
+      {
+        "rule": "A3: Stilark span contains &nbsp;",
+        "passed": true,
+        "detail": "Contains &nbsp;"
+      },
+      {
+        "rule": "B3: All <tr> inside <tbody>/<thead>/<tfoot>",
+        "passed": true,
+        "detail": "All rows properly wrapped"
+      },
+      {
+        "rule": "B6: No empty tables",
+        "passed": true,
+        "detail": "No empty tables found"
+      },
+      {
+        "rule": "C1: No font-family in inline styles",
+        "passed": true,
+        "detail": "Clean"
+      },
+      {
+        "rule": "C2: No font-size in inline styles",
+        "passed": true,
+        "detail": "Clean"
+      },
+      {
+        "rule": "D5: No spaces inside merge field brackets",
+        "passed": true,
+        "detail": "All merge fields properly formatted"
+      },
+      {
+        "rule": "I1: No <font> tags",
+        "passed": true,
+        "detail": "No <font> tags"
+      },
+      {
+        "rule": "I2: No <center> tags",
+        "passed": true,
+        "detail": "No <center> tags"
+      },
+      {
+        "rule": "K2: No JavaScript event handlers",
+        "passed": true,
+        "detail": "No event handlers found"
+      },
+      {
+        "rule": "K3: No external stylesheet links",
+        "passed": true,
+        "detail": "No external stylesheets"
+      },
+      {
+        "rule": "K1: HTML is well-formed",
+        "passed": true,
+        "detail": "HTML appears well-formed"
+      }
+    ],
+    "merge_fields": [],
+    "html_preview": "<div class=\"proaktiv-theme\" id=\"vitecTemplate\">\n<span vitec-template=\"resource:Vitec Stilark\"> </span>\n<p>MEGLERSTANDARD MARS 2020 OM SALG AV AKSJESELSKAP MED OPPGJØRSANSVARLIG.<br/>Utkast A [dato] av [Megler] ved [forfatter]. [Megler] har ikke undersøkt skatte-, avgifts- eller regnskapsmessige forhold. Dette anbefales vurdert av partenes rådgivere eller revisor. Avtalen inngås ved at den undertegnes av selger og kjøper. [Alternativt: «Partene har tatt de forbehold som følger av bud og budaksept..."
+  },
+  {
+    "filename": "Meglerstandard for salg av AS uten oppgjørsansvarlig.rtf",
+    "success": true,
+    "is_valid": true,
+    "html_length": 40282,
+    "warnings": [
+      "RTF converted from plain text (38817 chars)"
+    ],
+    "validation": [
+      {
+        "rule": "A1: vitecTemplate wrapper present",
+        "passed": true,
+        "detail": "<div id='vitecTemplate'> found"
+      },
+      {
+        "rule": "A1: proaktiv-theme class on wrapper",
+        "passed": true,
+        "detail": "class='proaktiv-theme' present"
+      },
+      {
+        "rule": "A2: Stilark resource reference present",
+        "passed": true,
+        "detail": "Stilark <span> found"
+      },
+      {
+        "rule": "A3: Stilark span contains &nbsp;",
+        "passed": true,
+        "detail": "Contains &nbsp;"
+      },
+      {
+        "rule": "B3: All <tr> inside <tbody>/<thead>/<tfoot>",
+        "passed": true,
+        "detail": "All rows properly wrapped"
+      },
+      {
+        "rule": "B6: No empty tables",
+        "passed": true,
+        "detail": "No empty tables found"
+      },
+      {
+        "rule": "C1: No font-family in inline styles",
+        "passed": true,
+        "detail": "Clean"
+      },
+      {
+        "rule": "C2: No font-size in inline styles",
+        "passed": true,
+        "detail": "Clean"
+      },
+      {
+        "rule": "D5: No spaces inside merge field brackets",
+        "passed": true,
+        "detail": "All merge fields properly formatted"
+      },
+      {
+        "rule": "I1: No <font> tags",
+        "passed": true,
+        "detail": "No <font> tags"
+      },
+      {
+        "rule": "I2: No <center> tags",
+        "passed": true,
+        "detail": "No <center> tags"
+      },
+      {
+        "rule": "K2: No JavaScript event handlers",
+        "passed": true,
+        "detail": "No event handlers found"
+      },
+      {
+        "rule": "K3: No external stylesheet links",
+        "passed": true,
+        "detail": "No external stylesheets"
+      },
+      {
+        "rule": "K1: HTML is well-formed",
+        "passed": true,
+        "detail": "HTML appears well-formed"
+      }
+    ],
+    "merge_fields": [],
+    "html_preview": "<div class=\"proaktiv-theme\" id=\"vitecTemplate\">\n<span vitec-template=\"resource:Vitec Stilark\"> </span>\n<p>MEGLERSTANDARD MARS 2020 OM SALG AV AKSJESELSKAP UTEN OPPGJØRSANSVARLIG.<br/>Utkast A [dato] av [Megler] ved [forfatter]. [Megler] har ikke undersøkt skatte-, avgifts- eller regnskapsmessige forhold. Dette anbefales vurdert av partenes rådgivere eller revisor. Avtalen inngås ved at den undertegnes av selger og kjøper. [Alternativt: «Partene har tatt de forbehold som følger av bud og budaksep..."
+  },
+  {
+    "filename": "Oppdragsavtale prosjekt.rtf",
+    "success": true,
+    "is_valid": true,
+    "html_length": 28891,
+    "warnings": [
+      "RTF converted from plain text (27490 chars)"
+    ],
+    "validation": [
+      {
+        "rule": "A1: vitecTemplate wrapper present",
+        "passed": true,
+        "detail": "<div id='vitecTemplate'> found"
+      },
+      {
+        "rule": "A1: proaktiv-theme class on wrapper",
+        "passed": true,
+        "detail": "class='proaktiv-theme' present"
+      },
+      {
+        "rule": "A2: Stilark resource reference present",
+        "passed": true,
+        "detail": "Stilark <span> found"
+      },
+      {
+        "rule": "A3: Stilark span contains &nbsp;",
+        "passed": true,
+        "detail": "Contains &nbsp;"
+      },
+      {
+        "rule": "B3: All <tr> inside <tbody>/<thead>/<tfoot>",
+        "passed": true,
+        "detail": "All rows properly wrapped"
+      },
+      {
+        "rule": "B6: No empty tables",
+        "passed": true,
+        "detail": "No empty tables found"
+      },
+      {
+        "rule": "C1: No font-family in inline styles",
+        "passed": true,
+        "detail": "Clean"
+      },
+      {
+        "rule": "C2: No font-size in inline styles",
+        "passed": true,
+        "detail": "Clean"
+      },
+      {
+        "rule": "D5: No spaces inside merge field brackets",
+        "passed": true,
+        "detail": "All merge fields properly formatted"
+      },
+      {
+        "rule": "I1: No <font> tags",
+        "passed": true,
+        "detail": "No <font> tags"
+      },
+      {
+        "rule": "I2: No <center> tags",
+        "passed": true,
+        "detail": "No <center> tags"
+      },
+      {
+        "rule": "K2: No JavaScript event handlers",
+        "passed": true,
+        "detail": "No event handlers found"
+      },
+      {
+        "rule": "K3: No external stylesheet links",
+        "passed": true,
+        "detail": "No external stylesheets"
+      },
+      {
+        "rule": "K1: HTML is well-formed",
+        "passed": true,
+        "detail": "HTML appears well-formed"
+      }
+    ],
+    "merge_fields": [],
+    "html_preview": "<div class=\"proaktiv-theme\" id=\"vitecTemplate\">\n<span vitec-template=\"resource:Vitec Stilark\"> </span>\n<p>Oppdragsavtale om eiendomsmegling iht. lov om eiendomsmegling av 29. juni 2007 nr. 73<br/>|<br/>1.\tOppdragsnummer||<br/>Oppdragsnummer: #oppdragsnummer.oppdrag¤<br/>||<br/>|<br/>2.\tOppdragsgiver (Kunden)|<br/>Navn: #forsteeier¤<br/>|Navn: #nesteeier¤<br/>|<br/>Adresse:<br/>#flettblankeeiere¤#forsteeier¤#postadresse.kontakter¤<br/>|Adresse:<br/>#nesteeier¤#postadresse.kontakter¤<br/>|<br/>Pos..."
+  },
+  {
+    "filename": "Standard leieavtale for næringsbygg (Brukt - som det er) 8. utgave 2025.docx",
+    "success": true,
+    "is_valid": true,
+    "html_length": 232006,
+    "warnings": [
+      "mammoth: An unrecognised element was ignored: {urn:schemas-microsoft-com:office:office}lock",
+      "mammoth: An unrecognised element was ignored: office-word:anchorlock",
+      "Removed 15 empty paragraph(s)",
+      "Wrapped bare <tr> elements in <tbody>"
+    ],
+    "validation": [
+      {
+        "rule": "A1: vitecTemplate wrapper present",
+        "passed": true,
+        "detail": "<div id='vitecTemplate'> found"
+      },
+      {
+        "rule": "A1: proaktiv-theme class on wrapper",
+        "passed": true,
+        "detail": "class='proaktiv-theme' present"
+      },
+      {
+        "rule": "A2: Stilark resource reference present",
+        "passed": true,
+        "detail": "Stilark <span> found"
+      },
+      {
+        "rule": "A3: Stilark span contains &nbsp;",
+        "passed": true,
+        "detail": "Contains &nbsp;"
+      },
+      {
+        "rule": "B3: All <tr> inside <tbody>/<thead>/<tfoot>",
+        "passed": true,
+        "detail": "All rows properly wrapped"
+      },
+      {
+        "rule": "B6: No empty tables",
+        "passed": true,
+        "detail": "No empty tables found"
+      },
+      {
+        "rule": "C1: No font-family in inline styles",
+        "passed": true,
+        "detail": "Clean"
+      },
+      {
+        "rule": "C2: No font-size in inline styles",
+        "passed": true,
+        "detail": "Clean"
+      },
+      {
+        "rule": "D5: No spaces inside merge field brackets",
+        "passed": true,
+        "detail": "All merge fields properly formatted"
+      },
+      {
+        "rule": "I1: No <font> tags",
+        "passed": true,
+        "detail": "No <font> tags"
+      },
+      {
+        "rule": "I2: No <center> tags",
+        "passed": true,
+        "detail": "No <center> tags"
+      },
+      {
+        "rule": "K2: No JavaScript event handlers",
+        "passed": true,
+        "detail": "No event handlers found"
+      },
+      {
+        "rule": "K3: No external stylesheet links",
+        "passed": true,
+        "detail": "No external stylesheets"
+      },
+      {
+        "rule": "K1: HTML is well-formed",
+        "passed": true,
+        "detail": "HTML appears well-formed"
+      }
+    ],
+    "merge_fields": [],
+    "html_preview": "<div class=\"proaktiv-theme\" id=\"vitecTemplate\">\n<span vitec-template=\"resource:Vitec Stilark\"> </span>\n<p>STANDARD LEIEAVTALE FOR NÆRINGSBYGG (BRUKT/”SOM DET ER”)\t</p><p>8. utgave 06/25</p><p> [Tilleggstekster, alternative tekster, bilag og kommentarer er inntatt bakerst i avtalen]</p><h1>UTLEIER</h1><h2>Navn/Firma: […] (<strong>Utleier</strong>)</h2><h2>Fødsels- eller organisasjonsnummer: […]</h2><h1>LEIETAKER</h1><h2>Navn/Firma: […] (<strong>Leietaker</strong>)</h2><h2>Fødsels- eller organisas..."
+  },
+  {
+    "filename": "Standard leieavtale for næringsbygg (Nytt_rehabilitert) 6. utgave 2025.docx",
+    "success": true,
+    "is_valid": true,
+    "html_length": 250538,
+    "warnings": [
+      "mammoth: An unrecognised element was ignored: {urn:schemas-microsoft-com:office:office}lock",
+      "mammoth: An unrecognised element was ignored: office-word:anchorlock",
+      "Removed 15 empty paragraph(s)",
+      "Wrapped bare <tr> elements in <tbody>"
+    ],
+    "validation": [
+      {
+        "rule": "A1: vitecTemplate wrapper present",
+        "passed": true,
+        "detail": "<div id='vitecTemplate'> found"
+      },
+      {
+        "rule": "A1: proaktiv-theme class on wrapper",
+        "passed": true,
+        "detail": "class='proaktiv-theme' present"
+      },
+      {
+        "rule": "A2: Stilark resource reference present",
+        "passed": true,
+        "detail": "Stilark <span> found"
+      },
+      {
+        "rule": "A3: Stilark span contains &nbsp;",
+        "passed": true,
+        "detail": "Contains &nbsp;"
+      },
+      {
+        "rule": "B3: All <tr> inside <tbody>/<thead>/<tfoot>",
+        "passed": true,
+        "detail": "All rows properly wrapped"
+      },
+      {
+        "rule": "B6: No empty tables",
+        "passed": true,
+        "detail": "No empty tables found"
+      },
+      {
+        "rule": "C1: No font-family in inline styles",
+        "passed": true,
+        "detail": "Clean"
+      },
+      {
+        "rule": "C2: No font-size in inline styles",
+        "passed": true,
+        "detail": "Clean"
+      },
+      {
+        "rule": "D5: No spaces inside merge field brackets",
+        "passed": true,
+        "detail": "All merge fields properly formatted"
+      },
+      {
+        "rule": "I1: No <font> tags",
+        "passed": true,
+        "detail": "No <font> tags"
+      },
+      {
+        "rule": "I2: No <center> tags",
+        "passed": true,
+        "detail": "No <center> tags"
+      },
+      {
+        "rule": "K2: No JavaScript event handlers",
+        "passed": true,
+        "detail": "No event handlers found"
+      },
+      {
+        "rule": "K3: No external stylesheet links",
+        "passed": true,
+        "detail": "No external stylesheets"
+      },
+      {
+        "rule": "K1: HTML is well-formed",
+        "passed": true,
+        "detail": "HTML appears well-formed"
+      }
+    ],
+    "merge_fields": [],
+    "html_preview": "<div class=\"proaktiv-theme\" id=\"vitecTemplate\">\n<span vitec-template=\"resource:Vitec Stilark\"> </span>\n<p>STANDARD LEIEAVTALE FOR NÆRINGSBYGG (NYTT/REHABILITERT)</p><p>6. utgave 06/25</p><p> [Tilleggstekster, alternative tekster, bilag og kommentarer er inntatt bakerst i avtalen]</p><h1>UTLEIER</h1><h2>Navn/Firma: […] (<strong>Utleier</strong>)</h2><h2>Fødsels- eller organisasjonsnummer: […]</h2><h1>LEIETAKER</h1><h2>Navn/Firma: […] (<strong>Leietaker</strong>)</h2><h2>Fødsels- eller organisasjo..."
+  },
+  {
+    "filename": "Standard leieavtale for næringslokaler (Brukt - som de er) - 8. utgave 2025.docx",
+    "success": true,
+    "is_valid": true,
+    "html_length": 239704,
+    "warnings": [
+      "mammoth: An unrecognised element was ignored: {urn:schemas-microsoft-com:office:office}lock",
+      "mammoth: An unrecognised element was ignored: office-word:anchorlock",
+      "Removed 27 empty paragraph(s)",
+      "Wrapped bare <tr> elements in <tbody>"
+    ],
+    "validation": [
+      {
+        "rule": "A1: vitecTemplate wrapper present",
+        "passed": true,
+        "detail": "<div id='vitecTemplate'> found"
+      },
+      {
+        "rule": "A1: proaktiv-theme class on wrapper",
+        "passed": true,
+        "detail": "class='proaktiv-theme' present"
+      },
+      {
+        "rule": "A2: Stilark resource reference present",
+        "passed": true,
+        "detail": "Stilark <span> found"
+      },
+      {
+        "rule": "A3: Stilark span contains &nbsp;",
+        "passed": true,
+        "detail": "Contains &nbsp;"
+      },
+      {
+        "rule": "B3: All <tr> inside <tbody>/<thead>/<tfoot>",
+        "passed": true,
+        "detail": "All rows properly wrapped"
+      },
+      {
+        "rule": "B6: No empty tables",
+        "passed": true,
+        "detail": "No empty tables found"
+      },
+      {
+        "rule": "C1: No font-family in inline styles",
+        "passed": true,
+        "detail": "Clean"
+      },
+      {
+        "rule": "C2: No font-size in inline styles",
+        "passed": true,
+        "detail": "Clean"
+      },
+      {
+        "rule": "D5: No spaces inside merge field brackets",
+        "passed": true,
+        "detail": "All merge fields properly formatted"
+      },
+      {
+        "rule": "I1: No <font> tags",
+        "passed": true,
+        "detail": "No <font> tags"
+      },
+      {
+        "rule": "I2: No <center> tags",
+        "passed": true,
+        "detail": "No <center> tags"
+      },
+      {
+        "rule": "K2: No JavaScript event handlers",
+        "passed": true,
+        "detail": "No event handlers found"
+      },
+      {
+        "rule": "K3: No external stylesheet links",
+        "passed": true,
+        "detail": "No external stylesheets"
+      },
+      {
+        "rule": "K1: HTML is well-formed",
+        "passed": true,
+        "detail": "HTML appears well-formed"
+      }
+    ],
+    "merge_fields": [],
+    "html_preview": "<div class=\"proaktiv-theme\" id=\"vitecTemplate\">\n<span vitec-template=\"resource:Vitec Stilark\"> </span>\n<p>STANDARD LEIEAVTALE FOR NÆRINGSLOKALER (BRUKTE<a id=\"_Hlk88551076\"></a>/”SOM DE ER” LOKALER)\t</p><p>8. utgave 06/25</p><p>[Tilleggstekster, alternative tekster, bilag og kommentarer er inntatt bakerst i avtalen]\t\t</p><h1>UTLEIER</h1><h2>Navn/Firma: […] (<strong>Utleier</strong>)</h2><h2>Fødsels- eller organisasjonsnummer: […]</h2><h1>LEIETAKER</h1><h2>Navn/Firma: […] (<strong>Leietaker</stro..."
+  },
+  {
+    "filename": "Standard leieavtale for næringslokaler (Nye_Rehabiliterte) 8. utgave 2025(34890393.1).docx",
+    "success": true,
+    "is_valid": true,
+    "html_length": 237089,
+    "warnings": [
+      "mammoth: An unrecognised element was ignored: w:moveToRangeStart",
+      "mammoth: An unrecognised element was ignored: w:moveToRangeEnd",
+      "mammoth: An unrecognised element was ignored: {urn:schemas-microsoft-com:office:office}lock",
+      "mammoth: An unrecognised element was ignored: office-word:anchorlock",
+      "Removed 26 empty paragraph(s)",
+      "Wrapped bare <tr> elements in <tbody>"
+    ],
+    "validation": [
+      {
+        "rule": "A1: vitecTemplate wrapper present",
+        "passed": true,
+        "detail": "<div id='vitecTemplate'> found"
+      },
+      {
+        "rule": "A1: proaktiv-theme class on wrapper",
+        "passed": true,
+        "detail": "class='proaktiv-theme' present"
+      },
+      {
+        "rule": "A2: Stilark resource reference present",
+        "passed": true,
+        "detail": "Stilark <span> found"
+      },
+      {
+        "rule": "A3: Stilark span contains &nbsp;",
+        "passed": true,
+        "detail": "Contains &nbsp;"
+      },
+      {
+        "rule": "B3: All <tr> inside <tbody>/<thead>/<tfoot>",
+        "passed": true,
+        "detail": "All rows properly wrapped"
+      },
+      {
+        "rule": "B6: No empty tables",
+        "passed": true,
+        "detail": "No empty tables found"
+      },
+      {
+        "rule": "C1: No font-family in inline styles",
+        "passed": true,
+        "detail": "Clean"
+      },
+      {
+        "rule": "C2: No font-size in inline styles",
+        "passed": true,
+        "detail": "Clean"
+      },
+      {
+        "rule": "D5: No spaces inside merge field brackets",
+        "passed": true,
+        "detail": "All merge fields properly formatted"
+      },
+      {
+        "rule": "I1: No <font> tags",
+        "passed": true,
+        "detail": "No <font> tags"
+      },
+      {
+        "rule": "I2: No <center> tags",
+        "passed": true,
+        "detail": "No <center> tags"
+      },
+      {
+        "rule": "K2: No JavaScript event handlers",
+        "passed": true,
+        "detail": "No event handlers found"
+      },
+      {
+        "rule": "K3: No external stylesheet links",
+        "passed": true,
+        "detail": "No external stylesheets"
+      },
+      {
+        "rule": "K1: HTML is well-formed",
+        "passed": true,
+        "detail": "HTML appears well-formed"
+      }
+    ],
+    "merge_fields": [],
+    "html_preview": "<div class=\"proaktiv-theme\" id=\"vitecTemplate\">\n<span vitec-template=\"resource:Vitec Stilark\"> </span>\n<p>STANDARD LEIEAVTALE FOR NÆRINGSLOKALER (NYE/REHABILITERTE LOKALER LOKALER)\t</p><p>8. utgave 06/25</p><p>[Tilleggstekster, alternative tekster, bilag og kommentarer er inntatt bakerst i avtalen]</p><h1>UTLEIER</h1><h2>Navn/Firma: […] (<strong>Utleier</strong>)</h2><h2>Fødsels- eller organisasjonsnummer: […]</h2><h1>LEIETAKER</h1><h2>Navn/Firma: […] (<strong>Leietaker</strong>)</h2><h2>Fødsels..."
+  }
+]

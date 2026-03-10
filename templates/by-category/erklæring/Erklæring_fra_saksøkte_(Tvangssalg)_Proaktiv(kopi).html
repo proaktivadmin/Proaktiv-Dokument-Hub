@@ -1,0 +1,185 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate table {
+			width: 100%;
+			table-layout: fixed;
+			border-collapse: collapse;
+			box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+		}
+
+		/* Indikere "Sett inn tekst her..." med <span class="insert-table"><span data-label="Sett inn tekst her..." class="insert"></span></span> */
+
+		span.insert:empty {
+			font-size: inherit !important;
+			line-height: inherit !important;
+			display: inline-block;
+			background-color: lightpink;
+			min-width: 2em !important;
+			height: .7em !important;
+			text-align: center;
+		}
+
+			span.insert:empty:before {
+				content: attr(data-label);
+			}
+
+			span.insert:empty:hover {
+				background-color: #fff;
+				cursor: pointer;
+			}
+
+		.insert-table {
+			display: inline-table;
+		}
+
+			.insert-table > span,
+			.insert-table > span.insert {
+				display: table-cell;
+			}
+
+		#vitecTemplate table {
+			width: 100%;
+			table-layout: fixed;
+			border-collapse: collapse;
+			box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+		}
+
+		#vitecTemplate .sign-field {
+			display: inline-block;
+			width: 45%;
+			margin-top: 1cm;
+			margin-right: 10px;
+			border-top: solid 1px #000;
+			vertical-align: top;
+		}
+</style>
+<style type="text/css">/* Klikkbare sjekkbokser og radioknapper */
+		label.btn {
+			display: inline;
+			text-transform: none;
+			white-space: normal;
+			padding: 0;
+			vertical-align: baseline;
+			outline: none;
+			font-size: inherit;
+		}
+
+			label.btn:active,
+			label.btn.active {
+				box-shadow: none;
+				outline: none;
+			}
+
+		.svg-toggle { /* nullstiller bootstrap button-styling */
+			display: inline-block !important;
+			width: 22px;
+			height: 22px;
+			margin: 0 5px;
+			vertical-align: bottom;
+			padding: 0;
+			border: none;
+			background: transparent;
+			border-radius: 0;
+			box-shadow: none !important;
+			cursor: pointer;
+			white-space: normal;
+			text-align: left;
+			background-repeat: no-repeat;
+			background-size: 22px 22px;
+			background-position: center center;
+		}
+
+
+			.svg-toggle.checkbox {
+				background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+			}
+
+				.svg-toggle.checkbox.active,
+				.btn.active > .svg-toggle.checkbox {
+					background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:black;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:black;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+					box-shadow: none !important;
+				}
+
+			.svg-toggle.radio {
+				background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle></svg>");
+			}
+
+				.svg-toggle.radio.active,
+				.btn.active > .svg-toggle.radio {
+					background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle style='fill:black;' cx='257.1' cy='257.1' r='248'></circle><circle style='fill:white;' cx='257.1' cy='257.1' r='200'></circle><circle style='fill:black;' cx='257.1' cy='257.1' r='91.5'></circle></svg>");
+					box-shadow: none !important;
+				}
+
+		/* radioknapper skal ikke vises i PDF der bootstrap-styling ikke lastes inn */
+		#vitecTemplate [data-toggle="buttons"] input {
+			display: none;
+		}
+</style>
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100" data-toggle="buttons">
+			<p style="text-align:right">Oppdragsnr.: [[oppdrag.nr]]</p>
+
+			<p>&nbsp;</p>
+
+			<p style="text-align:center"><span style="font-size:14pt"> <strong>ERKL&AElig;RING FRA SAKS&Oslash;KTE</strong></span><br />
+			Ihht. Tvangsfullbyrdelsesloven &sect; 11-16, 2. ledd</p>
+
+			<p><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" /></label> <strong>Alternativ 1:</strong></p>
+
+			<p>Som eier av eiendommen [[eiendom.gatenavnognr]], [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune, erkl&aelig;rer jeg herved at jeg ikke er kjent med heftelser/rettigheter p&aring; denne eiendommen utover det som fremg&aring;r av realregisteret (grunnboken).</p>
+
+			<p>Undertegnede er kjent med at unnlatelse av &aring; gi opplysninger om de for undertegnede kjente heftelser kan medf&oslash;re et &oslash;konomisk ansvar for de tap rettighetshaver og kj&oslash;per lider p&aring; grunn av unnlatelsen.</p>
+
+			<p><label class="btn" contenteditable="false" data-toggle="button"><span class="checkbox svg-toggle"></span> <input name="rbl001" type="radio" /></label> <strong>Alternativ 2:</strong></p>
+
+			<p>Som eier av eiendommen [[eiendom.gatenavnognr]], [[komplettmatrikkelutvidet]] i [[eiendom.kommunenavn]] kommune, erkl&aelig;rer jeg at det i tillegg til de opplysninger som er nevnt i brev fra [[operativmegler.navn]] datert <span class="insert-table"><span class="insert" data-label="Dato"></span></span>, hviler f&oslash;lgende heftelser p&aring; eiendommen:</p>
+
+			<table>
+				<tbody>
+					<tr>
+						<td colspan="100" style="border-bottom:solid 1px black">&nbsp;</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>&nbsp;</p>
+
+			<p>Andre opplysninger av betydning for salgsarbeidet og som b&oslash;r fremkomme i salgsoppgaven:</p>
+
+			<table>
+				<tbody>
+					<tr>
+						<td colspan="100" style="border-bottom:solid 1px black">&nbsp;</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>Undertegnede er ikke kjent med at det foreligger ytterligere opplysninger som b&oslash;r gis i salgsoppgaven. Som eier av eiendommen gir jeg herved fullmakt til p&aring; mine vegne &aring; innhente opplysninger om eiendommens ligningsverdi.</p>
+
+			<table style="width:45%">
+				<tbody>
+					<tr>
+						<td colspan="100" style="border-bottom-color:#000000; border-bottom-style:solid; border-bottom-width:1px"><br />
+						&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="100">Sted / dato</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<table>
+				<tbody>
+					<tr>
+						<td colspan="100" style="vertical-align:top"><span vitec-foreach="saksokte in Model.saksokteliste"> <span class="sign-field">[[*saksokte.navn]]</span> </span></td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>
