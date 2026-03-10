@@ -21,6 +21,7 @@ router = APIRouter(prefix="/reports", tags=["Reports"])
 async def get_sales_report(
     year: int | None = Query(None, description="Report year (default: current year)"),
     department_id: int = Query(1120, description="Vitec department ID (Proaktiv Eiendomsmegling AS)"),
+    include_vat: bool = Query(False, description="Include VAT in revenue sums (default: exclude)"),
 ) -> Response:
     """
     Export sales report as Excel.
@@ -30,9 +31,19 @@ async def get_sales_report(
     """
     try:
         service = SalesReportService()
-        excel_bytes = await service.build_report(department_id=department_id, year=year)
+        excel_bytes = await service.build_report(
+            department_id=department_id, year=year, include_vat=include_vat
+        )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
+    except HTTPException as e:
+        if e.status_code == 403:
+            raise HTTPException(
+                status_code=503,
+                detail="Vitec Hub Accounting API er ikke tilgjengelig for denne installasjonen. "
+                "Kontakt Vitec for å be om tilgang til Accounting/Estates og Accounting/Transactions.",
+            ) from e
+        raise
 
     y = year or datetime.now().year
     filename = f"formidlingsrapport_{department_id}_{y}.xlsx"
