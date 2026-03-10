@@ -23,6 +23,10 @@
             padding: 2px 0;
         }
 
+        #vitecTemplate .section p + p {
+            margin-top: 6px;
+        }
+
         #vitecTemplate .avoid-page-break {
             page-break-inside: avoid;
         }
@@ -36,7 +40,11 @@
         }
 
         #vitecTemplate .closing {
-            margin-top: 10px;
+            margin-top: 14px;
+        }
+
+        #vitecTemplate .sender-resource {
+            padding-top: 10px;
         }
 
         #vitecTemplate .greeting-pair:last-child .separator,
@@ -107,7 +115,7 @@
 		</tr>
 		<tr>
 			<td colspan="100">
-				<div vitec-template="resource: Avsender">&nbsp;</div>
+				<div class="sender-resource" vitec-template="resource: Avsender">&nbsp;</div>
 			</td>
 		</tr>
 	</tbody>
