@@ -8,8 +8,7 @@ from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import JSONResponse
 
-from app.config import get_settings
-from app.routers.auth import verify_session_token
+from app.routers.auth import is_auth_enabled, verify_session_token
 
 # Routes that don't require authentication
 PUBLIC_ROUTES = [
@@ -50,20 +49,18 @@ class AuthMiddleware(BaseHTTPMiddleware):
     Middleware that checks for valid session token on protected routes.
 
     - Allows public routes without authentication
-    - If APP_PASSWORD_HASH is not set, allows all requests (auth disabled)
+    - If neither APP_USERS_JSON nor APP_PASSWORD_HASH is set, allows all requests (auth disabled)
     - Protected routes require a valid session cookie
     - Allows OPTIONS requests for CORS preflight
     """
 
     async def dispatch(self, request: Request, call_next):
-        settings = get_settings()
-
         # Always allow OPTIONS requests (CORS preflight)
         if request.method == "OPTIONS":
             return await call_next(request)
 
         # If auth is not configured, allow all requests
-        if not settings.APP_PASSWORD_HASH:
+        if not is_auth_enabled():
             return await call_next(request)
 
         # Check if this is a public route
