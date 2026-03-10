@@ -22,6 +22,16 @@ import {
   ChevronDown,
   RefreshCw,
 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import {
+  getISOWeek,
+  getISOWeekYear,
+  startOfISOWeek,
+  endOfISOWeek,
+  subWeeks,
+  format,
+} from "date-fns";
+import { nb } from "date-fns/locale";
 import {
   downloadSalesReport,
   fetchSalesReportData,
@@ -32,6 +42,40 @@ import {
 import { officesApi } from "@/lib/api/offices";
 import type { OfficeWithStats } from "@/types/v3";
 
+const MONTHS_NB = [
+  "Januar",
+  "Februar",
+  "Mars",
+  "April",
+  "Mai",
+  "Juni",
+  "Juli",
+  "August",
+  "September",
+  "Oktober",
+  "November",
+  "Desember",
+] as const;
+
+function getWeekRange(weeksAgo: number): { from: string; to: string } {
+  const now = new Date();
+  const weekStart = startOfISOWeek(subWeeks(now, weeksAgo));
+  const weekEnd = endOfISOWeek(subWeeks(now, weeksAgo));
+  return {
+    from: format(weekStart, "yyyy-MM-dd"),
+    to: format(weekEnd, "yyyy-MM-dd"),
+  };
+}
+
+function getMonthRange(year: number, monthIndex: number): { from: string; to: string } {
+  const start = new Date(year, monthIndex, 1);
+  const end = new Date(year, monthIndex + 1, 0);
+  return {
+    from: format(start, "yyyy-MM-dd"),
+    to: format(end, "yyyy-MM-dd"),
+  };
+}
+
 export default function ReportsPage() {
   const [loading, setLoading] = useState(false);
   const [downloadLoading, setDownloadLoading] = useState(false);
@@ -39,6 +83,8 @@ export default function ReportsPage() {
   const [includeVat, setIncludeVat] = useState(false);
   const [year, setYear] = useState<number>(new Date().getFullYear());
   const [departmentId, setDepartmentId] = useState<number>(1120);
+  const [fromDate, setFromDate] = useState<string | null>(null);
+  const [toDate, setToDate] = useState<string | null>(null);
   const [data, setData] = useState<SalesReportData | null>(null);
   const [offices, setOffices] = useState<OfficeWithStats[]>([]);
   const [expandedBrokers, setExpandedBrokers] = useState<Set<string>>(new Set());
@@ -47,7 +93,13 @@ export default function ReportsPage() {
   const loadOffices = useCallback(async () => {
     try {
       const res = await officesApi.list({ is_active: true });
-      setOffices(res.items.filter((o) => o.vitec_department_id != null));
+      setOffices(
+        res.items.filter(
+          (o) =>
+            o.vitec_department_id != null &&
+            !/oppgjør|aktiv oppgjør|pacta eiendom as\s*-\s*oppgjør/i.test(o.name)
+        )
+      );
     } catch {
       setOffices([]);
     }
@@ -60,6 +112,8 @@ export default function ReportsPage() {
       const reportData = await fetchSalesReportData({
         year,
         department_id: departmentId,
+        from_date: fromDate ?? undefined,
+        to_date: toDate ?? undefined,
         include_vat: includeVat,
       });
       setData(reportData);
@@ -71,7 +125,7 @@ export default function ReportsPage() {
     } finally {
       setLoading(false);
     }
-  }, [year, departmentId, includeVat]);
+  }, [year, departmentId, fromDate, toDate, includeVat]);
 
   const handleDownload = async () => {
     setDownloadLoading(true);
@@ -80,6 +134,8 @@ export default function ReportsPage() {
       const blob = await downloadSalesReport({
         year,
         department_id: departmentId,
+        from_date: fromDate ?? undefined,
+        to_date: toDate ?? undefined,
         include_vat: includeVat,
       });
       const url = URL.createObjectURL(blob);
@@ -147,7 +203,7 @@ export default function ReportsPage() {
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="space-y-2">
                 <Label>År</Label>
                 <Select
@@ -165,6 +221,24 @@ export default function ReportsPage() {
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Fra dato</Label>
+                <Input
+                  type="date"
+                  value={fromDate ?? ""}
+                  onChange={(e) => setFromDate(e.target.value || null)}
+                  placeholder="Hele året"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Til dato</Label>
+                <Input
+                  type="date"
+                  value={toDate ?? ""}
+                  onChange={(e) => setToDate(e.target.value || null)}
+                  placeholder="I dag"
+                />
               </div>
               <div className="space-y-2">
                 <Label>Avdeling</Label>
@@ -190,7 +264,97 @@ export default function ReportsPage() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex items-center space-x-2 pt-8">
+            </div>
+            <div className="flex flex-wrap items-center gap-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-[#272630]/60">Måned:</span>
+                <Select
+                  value={(() => {
+                    if (!fromDate || !toDate) return "all";
+                    const from = new Date(fromDate + "T12:00:00");
+                    const monthStart = new Date(year, from.getMonth(), 1);
+                    const monthEnd = new Date(year, from.getMonth() + 1, 0);
+                    if (
+                      format(monthStart, "yyyy-MM-dd") === fromDate &&
+                      format(monthEnd, "yyyy-MM-dd") === toDate
+                    ) {
+                      return `${year}-${String(from.getMonth() + 1).padStart(2, "0")}`;
+                    }
+                    return "all";
+                  })()}
+                  onValueChange={(v) => {
+                    if (v === "all") {
+                      setFromDate(null);
+                      setToDate(null);
+                    } else {
+                      const monthIndex = parseInt(v.split("-")[1], 10) - 1;
+                      const { from, to } = getMonthRange(year, monthIndex);
+                      setFromDate(from);
+                      setToDate(to);
+                    }
+                  }}
+                >
+                  <SelectTrigger className="w-[140px]">
+                    <SelectValue placeholder="Velg måned" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Hele året</SelectItem>
+                    {MONTHS_NB.map((name, i) => (
+                      <SelectItem
+                        key={name}
+                        value={`${year}-${String(i + 1).padStart(2, "0")}`}
+                      >
+                        {name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-[#272630]/60">Uke:</span>
+                <Select
+                  value={(() => {
+                    if (!fromDate || !toDate) return "none";
+                    for (let n = 1; n <= 7; n++) {
+                      const { from, to } = getWeekRange(n - 1);
+                      if (from === fromDate && to === toDate) return String(n);
+                    }
+                    return "none";
+                  })()}
+                  onValueChange={(v) => {
+                    if (v === "none") return;
+                    const weeksAgo = parseInt(v, 10) - 1;
+                    const { from, to } = getWeekRange(weeksAgo);
+                    setFromDate(from);
+                    setToDate(to);
+                  }}
+                >
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Velg uke" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">—</SelectItem>
+                    {[1, 2, 3, 4, 5, 6, 7].map((n) => {
+                      const { from, to } = getWeekRange(n - 1);
+                      const weekNum =
+                        n === 1
+                          ? getISOWeek(new Date())
+                          : getISOWeek(subWeeks(new Date(), n - 1));
+                      return (
+                        <SelectItem key={n} value={String(n)}>
+                          Uke {weekNum} ({format(new Date(from), "d. MMM", { locale: nb })} –{" "}
+                          {format(new Date(to), "d. MMM", { locale: nb })})
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="text-sm text-[#272630]/70 border-l border-[#E5E5E5] pl-4">
+                Nåværende uke: <strong>Uke {getISOWeek(new Date())}</strong> (
+                {getISOWeekYear(new Date())})
+              </div>
+              <div className="flex items-center space-x-2 ml-auto">
                 <Checkbox
                   id="include-vat"
                   checked={includeVat}
@@ -260,6 +424,8 @@ export default function ReportsPage() {
                       <th className="text-left py-3 font-semibold text-[#272630] w-8" />
                       <th className="text-left py-3 font-semibold text-[#272630]">Megler</th>
                       <th className="text-right py-3 font-semibold text-[#272630]">Antall salg</th>
+                      <th className="text-left py-3 font-semibold text-[#272630]">Eiendomstype</th>
+                      <th className="text-left py-3 font-semibold text-[#272630]">Oppdragstype</th>
                       <th className="text-right py-3 font-semibold text-[#272630]">{sumLabel} (kr)</th>
                     </tr>
                   </thead>
@@ -279,6 +445,8 @@ export default function ReportsPage() {
                       <td className="py-3" />
                       <td className="py-3">Sum</td>
                       <td className="py-3 text-right">{data.total_sales}</td>
+                      <td className="py-3" />
+                      <td className="py-3" />
                       <td className="py-3 text-right">
                         {data.total_revenue.toLocaleString("nb-NO")}
                       </td>
@@ -336,6 +504,8 @@ function BrokerRow({
         </td>
         <td className="py-2 font-medium">{broker.name}</td>
         <td className="py-2 text-right">{broker.sale_count}</td>
+        <td className="py-2" />
+        <td className="py-2" />
         <td className="py-2 text-right">{broker.total.toLocaleString("nb-NO")}</td>
       </tr>
       {expanded &&
@@ -344,7 +514,6 @@ function BrokerRow({
             key={`${broker.broker_id}-${prop.estate_id}`}
             brokerId={broker.broker_id}
             property={prop}
-            sumLabel={sumLabel}
             expanded={expandedProperties.has(`${broker.broker_id}-${prop.estate_id}`)}
             onToggle={() => onToggleProperty(`${broker.broker_id}-${prop.estate_id}`)}
           />
@@ -356,13 +525,11 @@ function BrokerRow({
 function PropertyRow({
   brokerId,
   property,
-  sumLabel,
   expanded,
   onToggle,
 }: {
   brokerId: string;
   property: SalesReportProperty;
-  sumLabel: string;
   expanded: boolean;
   onToggle: () => void;
 }) {
@@ -387,9 +554,11 @@ function PropertyRow({
         </td>
         <td className="py-1.5 italic text-[#272630]/80">{property.address}</td>
         <td className="py-1.5 text-right">—</td>
+        <td className="py-1.5 text-[#272630]/70">{property.property_type}</td>
+        <td className="py-1.5 text-[#272630]/70">{property.assignment_type}</td>
         <td className="py-1.5 text-right">{property.total.toLocaleString("nb-NO")}</td>
       </tr>
-      {expanded &&
+          {expanded &&
         property.transactions.map((txn, i) => (
           <tr
             key={`${brokerId}-${property.estate_id}-${i}`}
@@ -400,7 +569,10 @@ function PropertyRow({
               {txn.posting_date} · Konto {txn.account}
               {txn.description ? ` · ${txn.description}` : ""}
             </td>
-            <td className="py-1 text-right">—</td>
+            <td className="py-1" />
+            <td className="py-1" />
+            <td className="py-1" />
+            <td className="py-1" />
             <td className="py-1 text-right text-xs">{txn.amount.toLocaleString("nb-NO")}</td>
           </tr>
         ))}

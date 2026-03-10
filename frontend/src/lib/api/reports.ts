@@ -9,6 +9,8 @@ import { apiClient } from "./config";
 export interface SalesReportParams {
   year?: number;
   department_id?: number;
+  from_date?: string; // YYYY-MM-DD
+  to_date?: string; // YYYY-MM-DD
   include_vat?: boolean;
 }
 
@@ -22,6 +24,8 @@ export interface SalesReportTransaction {
 export interface SalesReportProperty {
   address: string;
   estate_id: string;
+  property_type: string;
+  assignment_type: string;
   total: number;
   transactions: SalesReportTransaction[];
 }
@@ -56,6 +60,8 @@ export async function fetchSalesReportData(
   const searchParams = new URLSearchParams();
   if (params?.year) searchParams.set("year", String(params.year));
   if (params?.department_id) searchParams.set("department_id", String(params.department_id));
+  if (params?.from_date) searchParams.set("from_date", params.from_date);
+  if (params?.to_date) searchParams.set("to_date", params.to_date);
   if (params?.include_vat) searchParams.set("include_vat", "true");
 
   const url = `/reports/sales-report/data${searchParams.toString() ? `?${searchParams}` : ""}`;
@@ -71,6 +77,8 @@ export async function downloadSalesReport(params?: SalesReportParams): Promise<B
   const searchParams = new URLSearchParams();
   if (params?.year) searchParams.set("year", String(params.year));
   if (params?.department_id) searchParams.set("department_id", String(params.department_id));
+  if (params?.from_date) searchParams.set("from_date", params.from_date);
+  if (params?.to_date) searchParams.set("to_date", params.to_date);
   if (params?.include_vat) searchParams.set("include_vat", "true");
 
   const url = `/reports/sales-report${searchParams.toString() ? `?${searchParams}` : ""}`;

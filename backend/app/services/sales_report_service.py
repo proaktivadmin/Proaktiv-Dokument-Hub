@@ -72,6 +72,56 @@ def _format_date_iso(iso_str: str | None) -> str:
         return str(iso_str)
 
 
+def _build_estate_address(est: dict) -> str:
+    """Build display address from estate object (Vitec may use address, streetAddress, etc.)."""
+    addr = str(est.get("address") or "").strip()
+    if addr:
+        return addr
+    street = str(est.get("streetAddress") or est.get("street_address") or "").strip()
+    postal = str(est.get("postalCode") or est.get("zipCode") or est.get("postal_code") or "").strip()
+    city = str(est.get("city") or est.get("visitCity") or "").strip()
+    parts = [p for p in [street, f"{postal} {city}".strip()] if p]
+    return ", ".join(parts) if parts else ""
+
+
+def _revenue_amount(amount: float, vat_amount: float, include_vat: bool) -> float:
+    """Revenue as positive number (API may return negative for credits)."""
+    total = float(amount) + (float(vat_amount) if include_vat else 0)
+    return abs(total)
+
+
+def _extract_display_value(obj: object) -> str:
+    """Extract display string from API value (string, or dict with name/key)."""
+    if obj is None:
+        return ""
+    if isinstance(obj, str):
+        return obj.strip()
+    if isinstance(obj, dict):
+        return (
+            str(obj.get("name") or obj.get("key") or obj.get("value") or obj.get("displayName") or "")
+            .strip()
+        )
+    return str(obj).strip()
+
+
+def _build_estate_metadata(est: dict) -> dict[str, str]:
+    """Extract property type and assignment type from estate (Vitec field names may vary)."""
+    prop_type = _extract_display_value(
+        est.get("propertyType")
+        or est.get("property_type")
+        or est.get("estateType")
+        or est.get("estate_type")
+        or est.get("boligtype")
+        or est.get("grunntype")
+    )
+    assign_type = _extract_display_value(
+        est.get("assignmentType")
+        or est.get("assignment_type")
+        or est.get("oppdragstype")
+    )
+    return {"property_type": prop_type or "—", "assignment_type": assign_type or "—"}
+
+
 class SalesReportService:
     """Build sales report from Vitec Hub Accounting API."""
 
@@ -83,13 +133,21 @@ class SalesReportService:
         *,
         department_id: int = DEFAULT_DEPARTMENT_ID,
         year: int | None = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
         include_vat: bool = False,
     ) -> bytes:
         """
         Build Excel sales report for brokers who sold properties this year.
         """
-        result = await self._fetch_report_data(department_id=department_id, year=year, include_vat=include_vat)
-        report_data, broker_map, brokers_with_sales, broker_estates, estate_address, _ = result
+        result = await self._fetch_report_data(
+            department_id=department_id,
+            year=year,
+            from_date=from_date,
+            to_date=to_date,
+            include_vat=include_vat,
+        )
+        report_data, broker_map, brokers_with_sales, broker_estates, estate_address, estate_metadata, _ = result
         y = report_data["year"]
         from_date = report_data["from_date"]
         to_date = report_data["to_date"]
@@ -103,6 +161,7 @@ class SalesReportService:
             brokers_with_sales=brokers_with_sales,
             broker_estates=broker_estates,
             estate_address=estate_address,
+            estate_metadata=estate_metadata,
             include_vat=include_vat,
         )
 
@@ -111,12 +170,20 @@ class SalesReportService:
         *,
         department_id: int = DEFAULT_DEPARTMENT_ID,
         year: int | None = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
         include_vat: bool = False,
     ) -> dict:
         """
         Fetch and return sales report data as structured dict for JSON API.
         """
-        result = await self._fetch_report_data(department_id=department_id, year=year, include_vat=include_vat)
+        result = await self._fetch_report_data(
+            department_id=department_id,
+            year=year,
+            from_date=from_date,
+            to_date=to_date,
+            include_vat=include_vat,
+        )
         return result[0]
 
     async def _fetch_report_data(
@@ -124,6 +191,8 @@ class SalesReportService:
         *,
         department_id: int = DEFAULT_DEPARTMENT_ID,
         year: int | None = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
         include_vat: bool = False,
     ) -> tuple:
         """Fetch report data and return (report_data_dict, broker_map, ...) for Excel or JSON."""
@@ -135,9 +204,15 @@ class SalesReportService:
             raise ValueError("VITEC_INSTALLATION_ID is not configured.")
 
         y = year or datetime.now().year
-        from_date = f"{y}-01-01T00:00:00"
-        to_date = datetime.now().strftime("%Y-%m-%dT23:59:59")
-        changed_after = f"{y}-01-01T00:00:00"
+        if from_date:
+            from_date = from_date if "T" in from_date else f"{from_date}T00:00:00"
+        else:
+            from_date = f"{y}-01-01T00:00:00"
+        if to_date:
+            to_date = to_date if "T" in to_date else f"{to_date}T23:59:59"
+        else:
+            to_date = datetime.now().strftime("%Y-%m-%dT23:59:59")
+        changed_after = from_date[:10] + "T00:00:00"
 
         # 1. Fetch employees
         employees = await self._hub.get_employees(installation_id)
@@ -156,12 +231,14 @@ class SalesReportService:
         )
 
         estate_address: dict[str, str] = {}
+        estate_metadata: dict[str, dict[str, str]] = {}
         brokers_with_sales: set[str] = set()
         for est in estates or []:
             eid = str(est.get("estateId") or "").strip()
-            addr = str(est.get("address") or "").strip() or "(ukjent adresse)"
+            addr = _build_estate_address(est)
             if eid:
-                estate_address[eid] = addr
+                estate_address[eid] = addr or "(ukjent adresse)"
+                estate_metadata[eid] = _build_estate_metadata(est)
             sold = est.get("sold")
             if not sold:
                 continue
@@ -226,12 +303,15 @@ class SalesReportService:
             properties: list[dict] = []
             for estate_id, txns in sorted(estates_data.items(), key=lambda x: estate_address.get(x[0], x[0])):
                 addr = estate_address.get(estate_id, estate_id)
+                meta = estate_metadata.get(estate_id, {"property_type": "—", "assignment_type": "—"})
                 prop_total = 0.0
                 txns_data: list[dict] = []
                 for txn in txns:
-                    amt = float(txn.get("amount") or 0)
-                    if include_vat:
-                        amt += float(txn.get("vatAmount") or 0)
+                    amt = _revenue_amount(
+                        float(txn.get("amount") or 0),
+                        float(txn.get("vatAmount") or 0),
+                        include_vat,
+                    )
                     prop_total += amt
                     total += amt
                     txns_data.append(
@@ -246,6 +326,8 @@ class SalesReportService:
                     {
                         "address": addr,
                         "estate_id": estate_id,
+                        "property_type": meta["property_type"],
+                        "assignment_type": meta["assignment_type"],
                         "total": round(prop_total, 2),
                         "transactions": txns_data,
                     }
@@ -260,10 +342,12 @@ class SalesReportService:
                 }
             )
 
+        # Exclude brokers with 0 sales (oppgjørsansvarlig from Aktiv Oppgjør / Pacta Oppgjør)
+        report_data["brokers"] = [b for b in report_data["brokers"] if b["sale_count"] > 0]
         report_data["total_sales"] = sum(b["sale_count"] for b in report_data["brokers"])
         report_data["total_revenue"] = round(sum(b["total"] for b in report_data["brokers"]), 2)
 
-        return report_data, broker_map, brokers_with_sales, broker_estates, estate_address, include_vat
+        return report_data, broker_map, brokers_with_sales, broker_estates, estate_address, estate_metadata, include_vat
 
     def _build_excel(
         self,
@@ -276,6 +360,7 @@ class SalesReportService:
         brokers_with_sales: set[str],
         broker_estates: dict[str, dict[str, list[dict]]],
         estate_address: dict[str, str],
+        estate_metadata: dict[str, dict[str, str]],
         include_vat: bool,
     ) -> bytes:
         """Generate Excel workbook with expandable broker/property/transaction detail."""
@@ -292,21 +377,22 @@ class SalesReportService:
 
         # Header
         ws.append(["Formidlingsrapport - Vederlag og andre inntekter"])
-        ws.merge_cells("A1:C1")
+        ws.merge_cells("A1:E1")
         ws["A1"].font = Font(bold=True, size=14)
         ws.append([f"Avdeling: {department_id}  |  År: {year}  |  Periode: {from_display} - {to_display}"])
-        ws.merge_cells("A2:C2")
+        ws.merge_cells("A2:E2")
         ws.append([])
 
-        # Column headers (no Bruker ID)
-        headers = ["Megler", "Antall salg", sum_label]
+        # Column headers: Megler, Antall salg, Eiendomstype, Oppdragstype, Sum
+        headers = ["Megler", "Antall salg", "Eiendomstype", "Oppdragstype", sum_label]
         ws.append(headers)
         header_row = ws.max_row
         for col in range(1, len(headers) + 1):
             ws.cell(row=header_row, column=col).font = Font(bold=True)
 
         # Data rows with expandable detail
-        brokers_sorted = sorted(brokers_with_sales)
+        # Only include brokers with at least one sale
+        brokers_sorted = [b for b in sorted(brokers_with_sales) if len(broker_estates.get(b, {})) > 0]
         row = header_row + 1
 
         for broker_id in brokers_sorted:
@@ -317,34 +403,38 @@ class SalesReportService:
             total = 0.0
             for estate_txns in estates.values():
                 for txn in estate_txns:
-                    amt = float(txn.get("amount") or 0)
-                    if include_vat:
-                        amt += float(txn.get("vatAmount") or 0)
-                    total += amt
+                    total += _revenue_amount(
+                        float(txn.get("amount") or 0),
+                        float(txn.get("vatAmount") or 0),
+                        include_vat,
+                    )
 
-            # Broker summary row (level 0)
-            ws.append([name, sale_count, round(total, 2)])
+            # Broker summary row (level 0) - no property/assignment type at broker level
+            ws.append([name, sale_count, "", "", round(total, 2)])
             broker_row = row
             row += 1
 
             # Property and transaction detail (grouped)
             for estate_id, txns in sorted(estates.items(), key=lambda x: estate_address.get(x[0], x[0])):
                 addr = estate_address.get(estate_id, estate_id)
+                meta = estate_metadata.get(estate_id, {"property_type": "—", "assignment_type": "—"})
                 # Property row (level 1)
-                ws.append([f"  {addr}", "", ""])
+                ws.append([f"  {addr}", "", meta["property_type"], meta["assignment_type"], ""])
                 ws.cell(row=row, column=1).font = Font(italic=True)
                 prop_row = row
                 row += 1
 
                 # Transaction rows (level 2)
                 for txn in txns:
-                    amt = float(txn.get("amount") or 0)
-                    if include_vat:
-                        amt += float(txn.get("vatAmount") or 0)
+                    amt = _revenue_amount(
+                        float(txn.get("amount") or 0),
+                        float(txn.get("vatAmount") or 0),
+                        include_vat,
+                    )
                     post_date = _format_date_iso(txn.get("postingDate"))
                     acc = txn.get("account") or ""
                     desc = (txn.get("description") or "")[:40]
-                    ws.append([f"    {post_date} | Konto {acc} | {desc}", "", round(amt, 2)])
+                    ws.append([f"    {post_date} | Konto {acc} | {desc}", "", "", "", round(amt, 2)])
                     row += 1
 
                 # Group property + its transactions
@@ -357,23 +447,24 @@ class SalesReportService:
         # Total row
         total_revenue = sum(
             sum(
-                float(t.get("amount") or 0) + (float(t.get("vatAmount") or 0) if include_vat else 0)
+                _revenue_amount(float(t.get("amount") or 0), float(t.get("vatAmount") or 0), include_vat)
                 for est_txns in broker_estates.get(b, {}).values()
                 for t in est_txns
             )
-            for b in brokers_with_sales
+            for b in brokers_sorted
         )
-        total_sales = sum(len(broker_estates.get(b, {})) for b in brokers_with_sales)
-        ws.append(["Sum", total_sales, round(total_revenue, 2)])
+        total_sales = sum(len(broker_estates.get(b, {})) for b in brokers_sorted)
+        ws.append(["Sum", total_sales, "", "", round(total_revenue, 2)])
         total_row = row
-        ws.cell(row=total_row, column=1).font = Font(bold=True)
-        ws.cell(row=total_row, column=2).font = Font(bold=True)
-        ws.cell(row=total_row, column=3).font = Font(bold=True)
+        for col in range(1, 6):
+            ws.cell(row=total_row, column=col).font = Font(bold=True)
 
         # Column widths
         ws.column_dimensions["A"].width = 45
         ws.column_dimensions["B"].width = 14
-        ws.column_dimensions["C"].width = 38
+        ws.column_dimensions["C"].width = 18
+        ws.column_dimensions["D"].width = 18
+        ws.column_dimensions["E"].width = 38
 
         buf = io.BytesIO()
         wb.save(buf)

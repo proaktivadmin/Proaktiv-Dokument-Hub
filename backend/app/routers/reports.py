@@ -21,6 +21,8 @@ router = APIRouter(prefix="/reports", tags=["Reports"])
 async def get_sales_report_data(
     year: int | None = Query(None, description="Report year (default: current year)"),
     department_id: int = Query(1120, description="Vitec department ID"),
+    from_date: str | None = Query(None, description="Start date (YYYY-MM-DD)"),
+    to_date: str | None = Query(None, description="End date (YYYY-MM-DD)"),
     include_vat: bool = Query(False, description="Include VAT in revenue sums"),
 ):
     """
@@ -28,7 +30,13 @@ async def get_sales_report_data(
     """
     try:
         service = SalesReportService()
-        data = await service.get_report_data(department_id=department_id, year=year, include_vat=include_vat)
+        data = await service.get_report_data(
+            department_id=department_id,
+            year=year,
+            from_date=from_date,
+            to_date=to_date,
+            include_vat=include_vat,
+        )
         return data
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
@@ -46,6 +54,8 @@ async def get_sales_report_data(
 async def get_sales_report(
     year: int | None = Query(None, description="Report year (default: current year)"),
     department_id: int = Query(1120, description="Vitec department ID (Proaktiv Eiendomsmegling AS)"),
+    from_date: str | None = Query(None, description="Start date (YYYY-MM-DD)"),
+    to_date: str | None = Query(None, description="End date (YYYY-MM-DD)"),
     include_vat: bool = Query(False, description="Include VAT in revenue sums (default: exclude)"),
 ) -> Response:
     """
@@ -56,7 +66,13 @@ async def get_sales_report(
     """
     try:
         service = SalesReportService()
-        excel_bytes = await service.build_report(department_id=department_id, year=year, include_vat=include_vat)
+        excel_bytes = await service.build_report(
+            department_id=department_id,
+            year=year,
+            from_date=from_date,
+            to_date=to_date,
+            include_vat=include_vat,
+        )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
     except HTTPException as e:
