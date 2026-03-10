@@ -1,6 +1,7 @@
 "use client";
 
-import { FileText, Download, Clock, AlertCircle, CheckCircle2, XCircle, RefreshCw, Building2, Users, ImageIcon, ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { FileText, Download, Clock, AlertCircle, CheckCircle2, XCircle, RefreshCw, Building2, Users, ImageIcon, ArrowRight, BarChart3, Loader2 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDashboardStats } from "@/hooks/useDashboard";
@@ -14,6 +15,7 @@ import { formatDistanceToNow } from "date-fns";
 import { nb } from "date-fns/locale";
 import Link from "next/link";
 import { getCategoryIcon } from "@/lib/category-icons";
+import { downloadSalesReport } from "@/lib/api/reports";
 
 function StatCardSkeleton() {
   return (
@@ -56,10 +58,33 @@ export default function Dashboard() {
   const { statusCounts, isLoading: employeesLoading } = useEmployees();
   const { assets, isLoading: assetsLoading } = useAssets({ is_global: true });
 
+  const [salesReportLoading, setSalesReportLoading] = useState(false);
+  const [salesReportError, setSalesReportError] = useState<string | null>(null);
+
   const handleUploadSuccess = () => {
     refetchStats();
     refetchTemplates();
     refetchInventory();
+  };
+
+  const handleDownloadSalesReport = async () => {
+    setSalesReportLoading(true);
+    setSalesReportError(null);
+    try {
+      const blob = await downloadSalesReport({ department_id: 1120 });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `formidlingsrapport_1120_${new Date().getFullYear()}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      setSalesReportError(err instanceof Error ? err.message : "Kunne ikke laste ned rapporten.");
+    } finally {
+      setSalesReportLoading(false);
+    }
   };
 
   const formatDate = (dateString: string | null) => {
@@ -142,7 +167,7 @@ export default function Dashboard() {
         </div>
 
         {/* Company Hub Quick Access */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {/* Offices Card */}
           <Link 
             href="/offices" 
@@ -210,6 +235,32 @@ export default function Dashboard() {
               </p>
             )}
           </Link>
+
+          {/* Sales Report Card */}
+          <button
+            type="button"
+            onClick={handleDownloadSalesReport}
+            disabled={salesReportLoading}
+            className="group text-left bg-white rounded-lg p-6 border border-[#E5E5E5] shadow-card ring-1 ring-black/[0.03] hover:border-[#BCAB8A] hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-slow disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 rounded-lg bg-[#E9E7DC] group-hover:bg-[#BCAB8A]/20 transition-colors duration-normal">
+                <BarChart3 className="h-6 w-6 text-[#272630]" />
+              </div>
+              {salesReportLoading ? (
+                <Loader2 className="h-5 w-5 text-[#272630]/50 animate-spin" />
+              ) : (
+                <Download className="h-5 w-5 text-[#272630]/30 group-hover:text-[#BCAB8A] transition-colors duration-normal" />
+              )}
+            </div>
+            <h3 className="text-lg font-semibold text-[#272630] mb-1 font-serif">Formidlingsrapport</h3>
+            <p className="text-[#272630]/60 text-sm">
+              Last ned Excel (vederlag + andre inntekter)
+            </p>
+            {salesReportError && (
+              <p className="mt-2 text-sm text-red-600">{salesReportError}</p>
+            )}
+          </button>
         </div>
 
         {/* Vitec Inventory Sync Status */}
