@@ -53,6 +53,11 @@
             margin-top: 10px;
         }
 
+        #vitecTemplate .greeting-pair:last-child .separator,
+        #vitecTemplate .greeting-list:last-child .separator {
+            display: none;
+        }
+
         #vitecTemplate h1 {
             text-align: left;
             font-size: 13pt;
@@ -82,7 +87,7 @@
 				<div class="avoid-page-break intro-section">
 					<h1>Informasjon frem mot overtakelse og oppgj&oslash;r</h1>
 
-					<p>Hei,</p>
+					<p>Hei<span vitec-if="Model.selgere.Count == 0">,</span><span vitec-if="Model.selgere.Count == 1"> [[selger.fornavn]],</span><span vitec-if="Model.selgere.Count == 2"><span vitec-foreach="selger in Model.selgere"><span class="greeting-pair">[[*selger.fornavn]]<span class="separator"> og </span></span></span>,</span><span vitec-if="Model.selgere.Count &gt; 2"><span vitec-foreach="selger in Model.selgere"><span class="greeting-list">[[*selger.fornavn]]<span class="separator">, </span></span></span>,</span></p>
 
 					<p>Frem til overtakelse er det mye som skal skje, s&aring; her kommer en oppsummering om neste steg i prosessen.</p>
 				</div>
@@ -132,6 +137,11 @@
 				<div class="avoid-page-break closing">
 					<p>Takk for at du valgte Proaktiv! Vi h&aring;per du er forn&oslash;yd med jobben vi har gjort.</p>
 				</div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="100">
+				<div vitec-template="resource: Avsender">&nbsp;</div>
 			</td>
 		</tr>
 	</tbody>
