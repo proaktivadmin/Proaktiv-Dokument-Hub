@@ -434,7 +434,6 @@ export default function ReportsPage() {
                       <BrokerRow
                         key={broker.broker_id}
                         broker={broker}
-                        sumLabel={sumLabel}
                         expanded={expandedBrokers.has(broker.broker_id)}
                         expandedProperties={expandedProperties}
                         onToggleBroker={() => toggleBroker(broker.broker_id)}
@@ -470,14 +469,12 @@ export default function ReportsPage() {
 
 function BrokerRow({
   broker,
-  sumLabel,
   expanded,
   expandedProperties,
   onToggleBroker,
   onToggleProperty,
 }: {
   broker: SalesReportBroker;
-  sumLabel: string;
   expanded: boolean;
   expandedProperties: Set<string>;
   onToggleBroker: () => void;

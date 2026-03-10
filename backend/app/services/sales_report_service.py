@@ -97,10 +97,7 @@ def _extract_display_value(obj: object) -> str:
     if isinstance(obj, str):
         return obj.strip()
     if isinstance(obj, dict):
-        return (
-            str(obj.get("name") or obj.get("key") or obj.get("value") or obj.get("displayName") or "")
-            .strip()
-        )
+        return str(obj.get("name") or obj.get("key") or obj.get("value") or obj.get("displayName") or "").strip()
     return str(obj).strip()
 
 
@@ -115,9 +112,7 @@ def _build_estate_metadata(est: dict) -> dict[str, str]:
         or est.get("grunntype")
     )
     assign_type = _extract_display_value(
-        est.get("assignmentType")
-        or est.get("assignment_type")
-        or est.get("oppdragstype")
+        est.get("assignmentType") or est.get("assignment_type") or est.get("oppdragstype")
     )
     return {"property_type": prop_type or "—", "assignment_type": assign_type or "—"}
 
