@@ -33,6 +33,14 @@ async def get_sales_report(
         excel_bytes = await service.build_report(department_id=department_id, year=year)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
+    except HTTPException as e:
+        if e.status_code == 403:
+            raise HTTPException(
+                status_code=503,
+                detail="Vitec Hub Accounting API er ikke tilgjengelig for denne installasjonen. "
+                "Kontakt Vitec for å be om tilgang til Accounting/Estates og Accounting/Transactions.",
+            ) from e
+        raise
 
     y = year or datetime.now().year
     filename = f"formidlingsrapport_{department_id}_{y}.xlsx"

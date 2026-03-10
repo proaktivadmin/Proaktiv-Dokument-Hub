@@ -21,21 +21,26 @@ export async function downloadSalesReport(params?: SalesReportParams): Promise<B
   if (params?.department_id) searchParams.set("department_id", String(params.department_id));
 
   const url = `/reports/sales-report${searchParams.toString() ? `?${searchParams}` : ""}`;
-  const response = await apiClient.get(url, {
-    responseType: "blob",
-  });
+  try {
+    const response = await apiClient.get(url, {
+      responseType: "blob",
+      validateStatus: (status) => status === 200,
+    });
 
-  if (response.status !== 200) {
-    const text = await (response.data as Blob).text();
+    return response.data as Blob;
+  } catch (err) {
+    const axiosErr = err as { response?: { data?: Blob | string; status?: number } };
+    const data = axiosErr.response?.data;
     let detail = "Kunne ikke laste ned rapporten.";
-    try {
-      const json = JSON.parse(text);
-      detail = json.detail ?? detail;
-    } catch {
-      // ignore
+    if (data) {
+      try {
+        const text = typeof data === "string" ? data : await (data as Blob).text();
+        const json = JSON.parse(text) as { detail?: string };
+        if (json.detail) detail = json.detail;
+      } catch {
+        // ignore
+      }
     }
     throw new Error(detail);
   }
-
-  return response.data as Blob;
 }
