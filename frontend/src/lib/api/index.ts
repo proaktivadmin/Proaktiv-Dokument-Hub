@@ -25,8 +25,17 @@ export { syncApi } from "./sync";
 export { vitecApi } from "./vitec";
 
 // Reports
-export { downloadSalesReport } from "./reports";
-export type { SalesReportParams } from "./reports";
+export {
+  downloadSalesReport,
+  fetchSalesReportData,
+} from "./reports";
+export type {
+  SalesReportParams,
+  SalesReportData,
+  SalesReportBroker,
+  SalesReportProperty,
+  SalesReportTransaction,
+} from "./reports";
 
 // Entra ID Sync
 export { entraSyncApi } from "./entra-sync";

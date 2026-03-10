@@ -17,6 +17,31 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/reports", tags=["Reports"])
 
 
+@router.get("/sales-report/data")
+async def get_sales_report_data(
+    year: int | None = Query(None, description="Report year (default: current year)"),
+    department_id: int = Query(1120, description="Vitec department ID"),
+    include_vat: bool = Query(False, description="Include VAT in revenue sums"),
+):
+    """
+    Get sales report data as JSON for dashboard display.
+    """
+    try:
+        service = SalesReportService()
+        data = await service.get_report_data(department_id=department_id, year=year, include_vat=include_vat)
+        return data
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+    except HTTPException as e:
+        if e.status_code == 403:
+            raise HTTPException(
+                status_code=503,
+                detail="Vitec Hub Accounting API er ikke tilgjengelig for denne installasjonen. "
+                "Kontakt Vitec for å be om tilgang til Accounting/Estates og Accounting/Transactions.",
+            ) from e
+        raise
+
+
 @router.get("/sales-report")
 async def get_sales_report(
     year: int | None = Query(None, description="Report year (default: current year)"),
@@ -31,9 +56,7 @@ async def get_sales_report(
     """
     try:
         service = SalesReportService()
-        excel_bytes = await service.build_report(
-            department_id=department_id, year=year, include_vat=include_vat
-        )
+        excel_bytes = await service.build_report(department_id=department_id, year=year, include_vat=include_vat)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
     except HTTPException as e:

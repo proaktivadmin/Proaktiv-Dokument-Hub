@@ -12,6 +12,57 @@ export interface SalesReportParams {
   include_vat?: boolean;
 }
 
+export interface SalesReportTransaction {
+  posting_date: string;
+  account: string;
+  description: string;
+  amount: number;
+}
+
+export interface SalesReportProperty {
+  address: string;
+  estate_id: string;
+  total: number;
+  transactions: SalesReportTransaction[];
+}
+
+export interface SalesReportBroker {
+  broker_id: string;
+  name: string;
+  sale_count: number;
+  total: number;
+  properties: SalesReportProperty[];
+}
+
+export interface SalesReportData {
+  year: number;
+  department_id: number;
+  from_date: string;
+  to_date: string;
+  from_date_display: string;
+  to_date_display: string;
+  include_vat: boolean;
+  brokers: SalesReportBroker[];
+  total_sales: number;
+  total_revenue: number;
+}
+
+/**
+ * Fetch sales report data as JSON for dashboard display.
+ */
+export async function fetchSalesReportData(
+  params?: SalesReportParams
+): Promise<SalesReportData> {
+  const searchParams = new URLSearchParams();
+  if (params?.year) searchParams.set("year", String(params.year));
+  if (params?.department_id) searchParams.set("department_id", String(params.department_id));
+  if (params?.include_vat) searchParams.set("include_vat", "true");
+
+  const url = `/reports/sales-report/data${searchParams.toString() ? `?${searchParams}` : ""}`;
+  const response = await apiClient.get<SalesReportData>(url);
+  return response.data;
+}
+
 /**
  * Download sales report as Excel file.
  * Returns blob for file download.

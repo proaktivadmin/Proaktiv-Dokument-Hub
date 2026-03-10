@@ -87,15 +87,46 @@ class SalesReportService:
     ) -> bytes:
         """
         Build Excel sales report for brokers who sold properties this year.
-
-        Args:
-            department_id: Vitec department ID (default 1120)
-            year: Report year (default: current year)
-            include_vat: If True, add vatAmount to revenue sums
-
-        Returns:
-            Excel file bytes
         """
+        result = await self._fetch_report_data(department_id=department_id, year=year, include_vat=include_vat)
+        report_data, broker_map, brokers_with_sales, broker_estates, estate_address, _ = result
+        y = report_data["year"]
+        from_date = report_data["from_date"]
+        to_date = report_data["to_date"]
+
+        return self._build_excel(
+            year=y,
+            department_id=department_id,
+            from_date=from_date,
+            to_date=to_date,
+            broker_map=broker_map,
+            brokers_with_sales=brokers_with_sales,
+            broker_estates=broker_estates,
+            estate_address=estate_address,
+            include_vat=include_vat,
+        )
+
+    async def get_report_data(
+        self,
+        *,
+        department_id: int = DEFAULT_DEPARTMENT_ID,
+        year: int | None = None,
+        include_vat: bool = False,
+    ) -> dict:
+        """
+        Fetch and return sales report data as structured dict for JSON API.
+        """
+        result = await self._fetch_report_data(department_id=department_id, year=year, include_vat=include_vat)
+        return result[0]
+
+    async def _fetch_report_data(
+        self,
+        *,
+        department_id: int = DEFAULT_DEPARTMENT_ID,
+        year: int | None = None,
+        include_vat: bool = False,
+    ) -> tuple:
+        """Fetch report data and return (report_data_dict, broker_map, ...) for Excel or JSON."""
         if not self._hub.is_configured:
             raise ValueError("Vitec Hub credentials are not configured.")
 
@@ -108,7 +139,7 @@ class SalesReportService:
         to_date = datetime.now().strftime("%Y-%m-%dT23:59:59")
         changed_after = f"{y}-01-01T00:00:00"
 
-        # 1. Fetch employees for broker ID -> name mapping
+        # 1. Fetch employees
         employees = await self._hub.get_employees(installation_id)
         broker_map: dict[str, str] = {}
         for emp in employees or []:
@@ -117,7 +148,7 @@ class SalesReportService:
             if eid and name:
                 broker_map[str(eid).strip()] = str(name).strip()
 
-        # 2. Fetch accounting estates for address mapping
+        # 2. Fetch accounting estates
         estates = await self._hub.get_accounting_estates(
             installation_id,
             department_id=department_id,
@@ -145,7 +176,7 @@ class SalesReportService:
                 if bid:
                     brokers_with_sales.add(str(bid).strip())
 
-        # 3. Fetch all accounting transactions
+        # 3. Fetch transactions
         transactions = await self._hub.get_accounting_transactions(
             installation_id,
             from_date=from_date,
@@ -154,8 +185,7 @@ class SalesReportService:
             ledger_type=1,
         )
 
-        # 4. Build broker -> estate -> transactions structure
-        # broker_data[broker_id][estate_id] = [txn, txn, ...]
+        # 4. Build broker_estates
         broker_estates: dict[str, dict[str, list[dict]]] = {}
         for txn in transactions or []:
             account = _normalize_account(txn.get("account"))
@@ -176,18 +206,64 @@ class SalesReportService:
         if not brokers_with_sales and broker_estates:
             brokers_with_sales = set(broker_estates.keys())
 
-        # 5. Build Excel with expandable detail
-        return self._build_excel(
-            year=y,
-            department_id=department_id,
-            from_date=from_date,
-            to_date=to_date,
-            broker_map=broker_map,
-            brokers_with_sales=brokers_with_sales,
-            broker_estates=broker_estates,
-            estate_address=estate_address,
-            include_vat=include_vat,
-        )
+        # 5. Build report data dict
+        report_data = {
+            "year": y,
+            "department_id": department_id,
+            "from_date": from_date,
+            "to_date": to_date,
+            "from_date_display": _format_date_iso(from_date) or from_date[:10],
+            "to_date_display": _format_date_iso(to_date) or to_date[:10],
+            "include_vat": include_vat,
+            "brokers": [],
+        }
+
+        for broker_id in sorted(brokers_with_sales):
+            name = broker_map.get(broker_id, broker_id)
+            estates_data = broker_estates.get(broker_id, {})
+            sale_count = len(estates_data)
+            total = 0.0
+            properties: list[dict] = []
+            for estate_id, txns in sorted(estates_data.items(), key=lambda x: estate_address.get(x[0], x[0])):
+                addr = estate_address.get(estate_id, estate_id)
+                prop_total = 0.0
+                txns_data: list[dict] = []
+                for txn in txns:
+                    amt = float(txn.get("amount") or 0)
+                    if include_vat:
+                        amt += float(txn.get("vatAmount") or 0)
+                    prop_total += amt
+                    total += amt
+                    txns_data.append(
+                        {
+                            "posting_date": _format_date_iso(txn.get("postingDate")),
+                            "account": txn.get("account"),
+                            "description": (txn.get("description") or "")[:80],
+                            "amount": round(amt, 2),
+                        }
+                    )
+                properties.append(
+                    {
+                        "address": addr,
+                        "estate_id": estate_id,
+                        "total": round(prop_total, 2),
+                        "transactions": txns_data,
+                    }
+                )
+            report_data["brokers"].append(
+                {
+                    "broker_id": broker_id,
+                    "name": name,
+                    "sale_count": sale_count,
+                    "total": round(total, 2),
+                    "properties": properties,
+                }
+            )
+
+        report_data["total_sales"] = sum(b["sale_count"] for b in report_data["brokers"])
+        report_data["total_revenue"] = round(sum(b["total"] for b in report_data["brokers"]), 2)
+
+        return report_data, broker_map, brokers_with_sales, broker_estates, estate_address, include_vat
 
     def _build_excel(
         self,
