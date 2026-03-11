@@ -174,21 +174,15 @@ def _vitec_if_property_type(prop_type: str) -> str:
     }
     for char, esc in replacements.items():
         escaped = escaped.replace(char, esc)
-    return f'oppdrag.oppdragstype.key == &quot;{escaped}&quot;'
+    return f"oppdrag.oppdragstype.key == &quot;{escaped}&quot;"
 
 
-def _build_candidate_group(
-    base_title: str, group_templates: list[Template]
-) -> MergeCandidateGroup:
+def _build_candidate_group(base_title: str, group_templates: list[Template]) -> MergeCandidateGroup:
     """Build a MergeCandidateGroup from a list of templates with shared purpose."""
     primary = group_templates[0]
     candidates: list[MergeCandidate] = []
     for t in group_templates:
-        sim = (
-            1.0
-            if t.id == primary.id
-            else _content_similarity(primary.content or "", t.content or "")
-        )
+        sim = 1.0 if t.id == primary.id else _content_similarity(primary.content or "", t.content or "")
         candidates.append(
             MergeCandidate(
                 template_id=t.id,
@@ -235,10 +229,7 @@ class TemplateDedupService:
         )
         templates = list(result.scalars().all())
 
-        eligible = [
-            t for t in templates
-            if not _is_no_touch(t.title, getattr(t, "origin", None))
-        ]
+        eligible = [t for t in templates if not _is_no_touch(t.title, getattr(t, "origin", None))]
 
         # Pass 1: group by exact base title (property type suffix stripping)
         base_groups: dict[str, list[Template]] = {}
@@ -291,9 +282,7 @@ class TemplateDedupService:
     @staticmethod
     async def analyze_group(db: AsyncSession, template_ids: list[UUID]) -> MergeAnalysis:
         """Deep-compare a group of templates to identify shared vs divergent content."""
-        result = await db.execute(
-            select(Template).where(Template.id.in_([str(tid) for tid in template_ids]))
-        )
+        result = await db.execute(select(Template).where(Template.id.in_([str(tid) for tid in template_ids])))
         templates = list(result.scalars().all())
 
         if len(templates) < 2:
@@ -317,9 +306,7 @@ class TemplateDedupService:
             else:
                 match_t = next((t for t in templates if t.id == c.template_id), None)
                 if match_t:
-                    c.similarity_score = round(
-                        _content_similarity(primary.content or "", match_t.content or ""), 3
-                    )
+                    c.similarity_score = round(_content_similarity(primary.content or "", match_t.content or ""), 3)
 
         # Extract sections per template
         all_sections: dict[UUID, list[dict]] = {}
@@ -419,13 +406,9 @@ class TemplateDedupService:
         )
 
     @staticmethod
-    async def preview_merge(
-        db: AsyncSession, template_ids: list[UUID], primary_id: UUID
-    ) -> MergePreview:
+    async def preview_merge(db: AsyncSession, template_ids: list[UUID], primary_id: UUID) -> MergePreview:
         """Generate a preview of the merged template using vitec-if logic."""
-        result = await db.execute(
-            select(Template).where(Template.id.in_([str(tid) for tid in template_ids]))
-        )
+        result = await db.execute(select(Template).where(Template.id.in_([str(tid) for tid in template_ids])))
         templates = list(result.scalars().all())
 
         primary = next((t for t in templates if t.id == primary_id), None)
@@ -446,9 +429,7 @@ class TemplateDedupService:
         warnings: list[str] = []
 
         primary_prop = _extract_property_type(primary.title)
-        other_props: dict[UUID, str | None] = {
-            t.id: _extract_property_type(t.title) for t in others
-        }
+        other_props: dict[UUID, str | None] = {t.id: _extract_property_type(t.title) for t in others}
 
         for idx, p_sec in enumerate(primary_sections):
             # Check if all others have the same content at this position
@@ -464,24 +445,18 @@ class TemplateDedupService:
                 # Divergent section — wrap each variant in vitec-if
                 if primary_prop:
                     condition = _vitec_if_property_type(primary_prop)
-                    merged_parts.append(
-                        f'<div vitec-if="{condition}">\n{p_sec["content"]}\n</div>'
-                    )
+                    merged_parts.append(f'<div vitec-if="{condition}">\n{p_sec["content"]}\n</div>')
                     conditions_added += 1
                 else:
                     merged_parts.append(p_sec["content"])
-                    warnings.append(
-                        f"Primærmal mangler eiendomstype — seksjon {idx} ikke betinget"
-                    )
+                    warnings.append(f"Primærmal mangler eiendomstype — seksjon {idx} ikke betinget")
 
                 for t in others:
                     o_secs = other_sections_map.get(t.id, [])
                     prop = other_props.get(t.id)
                     if idx < len(o_secs) and prop:
                         condition = _vitec_if_property_type(prop)
-                        merged_parts.append(
-                            f'<div vitec-if="{condition}">\n{o_secs[idx]["content"]}\n</div>'
-                        )
+                        merged_parts.append(f'<div vitec-if="{condition}">\n{o_secs[idx]["content"]}\n</div>')
                         conditions_added += 1
                     elif idx < len(o_secs):
                         warnings.append(
@@ -496,9 +471,7 @@ class TemplateDedupService:
                 prop = other_props.get(t.id)
                 if prop:
                     condition = _vitec_if_property_type(prop)
-                    merged_parts.append(
-                        f'<div vitec-if="{condition}">\n{o_secs[idx]["content"]}\n</div>'
-                    )
+                    merged_parts.append(f'<div vitec-if="{condition}">\n{o_secs[idx]["content"]}\n</div>')
                     conditions_added += 1
 
         merged_html = "\n".join(merged_parts)
@@ -527,9 +500,7 @@ class TemplateDedupService:
         Apply the merge: update primary template with merged content,
         archive all others.
         """
-        result = await db.execute(
-            select(Template).where(Template.id.in_([str(tid) for tid in template_ids]))
-        )
+        result = await db.execute(select(Template).where(Template.id.in_([str(tid) for tid in template_ids])))
         templates = list(result.scalars().all())
 
         primary = next((t for t in templates if t.id == primary_id), None)

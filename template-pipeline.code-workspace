@@ -1,0 +1,60 @@
+{
+	"folders": [
+		{
+			"name": "📄 Pipeline Scripts",
+			"path": "scripts"
+		},
+		{
+			"name": "📋 Planning — Template Suite",
+			"path": ".planning/phases/11-template-suite"
+		},
+		{
+			"name": "📐 Vitec HTML Ruleset",
+			"path": ".planning/vitec-html-ruleset"
+		},
+		{
+			"name": "🤖 Agent Skill",
+			"path": ".agents/skills/vitec-template-builder"
+		},
+		{
+			"name": "📚 Reference Docs",
+			"path": "docs"
+		},
+		{
+			"name": "⚙️ Backend Services",
+			"path": "backend/app/services"
+		}
+	],
+	"settings": {
+		"editor.wordWrap": "on",
+		"editor.rulers": [120],
+		"files.exclude": {
+			"**/__pycache__": true,
+			"**/*.pyc": true
+		},
+		"search.exclude": {
+			"**/node_modules": true,
+			"**/.venv": true,
+			"**/converted_html": true
+		},
+		"editor.formatOnSave": true,
+		"[python]": {
+			"editor.defaultFormatter": "ms-python.black-formatter"
+		},
+		"[html]": {
+			"editor.defaultFormatter": "vscode.html-language-features"
+		},
+		"cursor.includeFilesInContext": [
+			".planning/phases/11-template-suite/AGENT-2B-PIPELINE-DESIGN.md",
+			".agents/skills/vitec-template-builder/SKILL.md"
+		]
+	},
+	"extensions": {
+		"recommendations": [
+			"ms-python.python",
+			"ms-python.black-formatter",
+			"ms-python.pylint",
+			"vscode.html-language-features"
+		]
+	}
+}

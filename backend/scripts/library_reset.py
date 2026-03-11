@@ -51,9 +51,7 @@ async def run_reset(confirm: bool) -> None:
 
     async with async_session() as db:
         # Load all templates with their tags
-        result = await db.execute(
-            select(Template).options(selectinload(Template.tags))
-        )
+        result = await db.execute(select(Template).options(selectinload(Template.tags)))
         templates = result.scalars().all()
 
         stats = {

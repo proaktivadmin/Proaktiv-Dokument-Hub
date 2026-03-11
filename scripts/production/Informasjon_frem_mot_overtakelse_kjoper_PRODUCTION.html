@@ -1,0 +1,146 @@
+<div id="vitecTemplate"><span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">#vitecTemplate {
+            font-size: 9pt;
+            line-height: 1.45;
+            max-width: 760px;
+        }
+
+        #vitecTemplate table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+            #vitecTemplate table td {
+                font-size: 9pt;
+                padding: 0;
+                margin: 0;
+                vertical-align: top;
+            }
+
+        #vitecTemplate p {
+            margin: 0;
+            padding: 2px 0;
+        }
+
+        #vitecTemplate .section p + p {
+            margin-top: 6px;
+        }
+
+        #vitecTemplate .avoid-page-break {
+            page-break-inside: avoid;
+        }
+
+        #vitecTemplate .section {
+            margin-top: 14px;
+        }
+
+        #vitecTemplate .section-tight {
+            margin-top: 2px !important;
+        }
+
+        #vitecTemplate .intro-section {
+            margin-top: 0;
+        }
+
+        #vitecTemplate .closing {
+            margin-top: 14px;
+        }
+
+        #vitecTemplate .closing-tight {
+            margin-top: 4px !important;
+        }
+
+        #vitecTemplate .sender-resource {
+            padding-top: 0 !important;
+        }
+
+        #vitecTemplate .greeting-pair:last-child .separator,
+        #vitecTemplate .greeting-list:last-child .separator {
+            display: none;
+        }
+
+        #vitecTemplate h1 {
+            text-align: left;
+            font-size: 13pt;
+            margin: 0 0 8px 0;
+            padding: 0;
+            line-height: 1.2;
+        }
+
+        #vitecTemplate h2 {
+            font-size: 10.5pt;
+            margin: 0 0 4px 0;
+            padding: 0;
+            line-height: 1.25;
+        }
+
+        #vitecTemplate .section-tight h2 {
+            margin: 0 !important;
+        }
+
+        #vitecTemplate .section-tight p {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        #vitecTemplate .section-tight p + p {
+            margin-top: 0 !important;
+        }
+
+        #vitecTemplate .final-line {
+            margin-top: 2px !important;
+        }</style>
+<table>
+	<tbody>
+		<tr>
+			<td colspan="100">
+				<div class="avoid-page-break intro-section">
+					<h1>Informasjon frem mot overtakelse</h1>
+
+					<p>Hei<span vitec-if="Model.kjopere.Count == 0">,</span><span vitec-if="Model.kjopere.Count == 1"> [[kjoper.fornavn]],</span><span vitec-if="Model.kjopere.Count == 2"><span vitec-foreach="kjoper in Model.kjopere"><span class="greeting-pair">[[*kjoper.fornavn]]<span class="separator"> og </span></span></span>,</span><span vitec-if="Model.kjopere.Count &gt; 2"><span vitec-foreach="kjoper in Model.kjopere"><span class="greeting-list">[[*kjoper.fornavn]]<span class="separator">, </span></span></span>,</span></p>
+
+					<p>Vedlagt ligger signert kj&oslash;pekontrakt. Det er viktig at du leser dette n&oslash;ye for &aring; sikre en smidig overtakelse.</p>
+				</div>
+
+				<div class="avoid-page-break section">
+					<h2>Viktige oppgaver</h2>
+
+					<p><strong>Oppgj&oslash;rsskjema:</strong><br />
+					M&aring; returneres snarest hvis det ikke allerede er gjort.</p>
+
+					<p><strong>Finansiering:</strong><br />
+					Send kopi av kj&oslash;pekontrakten til din bank/r&aring;dgiver med en gang for &aring; unng&aring; eventuelle forsinkelser. Vi anbefaler at innbetaling til v&aring;r konto er p&aring; plass 2 dager f&oslash;r overtakelsen.</p>
+
+					<p><strong>Innbetaling:</strong><br />
+					Hele oppgj&oslash;ret skal betales til klientkonto oppgitt i kontrakten. Vi gir aldri betalingsinstrukser p&aring; e-post som avviker fra kontrakten (pga svindelfare).</p>
+
+					<p><strong>Forsikring:</strong><br />
+					Du m&aring; selv tegne hus/innboforsikring som trer i kraft fra og med overtakelsesdatoen.</p>
+				</div>
+
+				<div class="avoid-page-break section">
+					<h2>Overtakelse</h2>
+
+					<p>Overtakelsen blir avholdt <strong>[[kontrakt.overtagelse.dato]] kl. [[kontrakt.overtagelse.klokkeslett]]</strong> og sammen med selger gjennomg&aring;r dere boligen og fyller ut og signerer overtakelsesprotokollen dere f&aring;r tilsendt pr. SMS.</p>
+				</div>
+
+				<div class="avoid-page-break section section-tight">
+					<h2>Tinglysing og oppgj&oslash;r</h2>
+
+					<p>N&aring;r vi har mottatt signert protokoll, sendes skj&oslash;tet til tinglysing. N&aring;r tinglysing er bekreftet, utbetaler vi til selger.</p>
+
+					<p>Det kan ta inntil 3 m&aring;neder f&oslash;r selgers gamle l&aring;n er slettet fra grunnboken. Dette er normal saksgang.</p>
+
+					<p class="final-line">Gratulerer med ny bolig!</p>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="100">
+				<div class="sender-resource" vitec-template="resource: Avsender">&nbsp;</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>

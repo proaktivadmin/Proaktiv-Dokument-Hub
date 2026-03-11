@@ -562,9 +562,7 @@ async def import_vitec_export(
                     continue
 
                 if content.startswith("PK") or "\x00" in content:
-                    logger.warning(
-                        f"[{idx}/{len(templates)}] Skipping binary/DOCX content: {file_name} ({title})"
-                    )
+                    logger.warning(f"[{idx}/{len(templates)}] Skipping binary/DOCX content: {file_name} ({title})")
                     stats = stats.add(skipped=1)
                     continue
 

@@ -68,9 +68,7 @@ class TemplateWorkflowService:
         logger.info("Template %s submitted for review", template_id)
         return template
 
-    async def approve_and_publish(
-        self, db: AsyncSession, template_id: UUID, reviewer: str
-    ) -> Template:
+    async def approve_and_publish(self, db: AsyncSession, template_id: UUID, reviewer: str) -> Template:
         """Move in_review → published. Sets published_version, reviewed_at, reviewed_by."""
         template = await self._get_template(db, template_id)
         self._validate_transition(template.workflow_status, "published")
@@ -165,13 +163,15 @@ class TemplateWorkflowService:
             notes = v.change_notes or ""
             if notes.startswith("workflow:"):
                 parts = notes.split("|", 3)
-                events.append({
-                    "timestamp": v.created_at.isoformat() if v.created_at else None,
-                    "from_status": parts[1] if len(parts) > 1 else "",
-                    "to_status": parts[2] if len(parts) > 2 else "",
-                    "actor": v.created_by,
-                    "notes": parts[3] if len(parts) > 3 else None,
-                })
+                events.append(
+                    {
+                        "timestamp": v.created_at.isoformat() if v.created_at else None,
+                        "from_status": parts[1] if len(parts) > 1 else "",
+                        "to_status": parts[2] if len(parts) > 2 else "",
+                        "actor": v.created_by,
+                        "notes": parts[3] if len(parts) > 3 else None,
+                    }
+                )
         return events
 
     @staticmethod

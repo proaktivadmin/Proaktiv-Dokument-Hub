@@ -69,7 +69,11 @@ def _element_path(tag: Tag) -> str:
         if css_classes and isinstance(css_classes, list):
             parts.append(f"{name}.{'.'.join(css_classes[:2])}")
         else:
-            siblings = [s for s in (current.previous_siblings if current.parent else []) if isinstance(s, Tag) and s.name == name]
+            siblings = [
+                s
+                for s in (current.previous_siblings if current.parent else [])
+                if isinstance(s, Tag) and s.name == name
+            ]
             idx = len(siblings) + 1
             parts.append(f"{name}:nth({idx})" if idx > 1 else name)
         current = current.parent if current.parent and isinstance(current.parent, Tag) else None
@@ -182,61 +186,73 @@ class TemplateComparisonService:
         stored_fields = _get_merge_fields(stored_html)
         updated_fields = _get_merge_fields(updated_html)
         for field in sorted(stored_fields - updated_fields):
-            changes.append(StructuralChange(
-                category="merge_fields",
-                element_path="merge_field",
-                description=f"Flettekode fjernet: {field}",
-                before=field,
-                after=None,
-            ))
+            changes.append(
+                StructuralChange(
+                    category="merge_fields",
+                    element_path="merge_field",
+                    description=f"Flettekode fjernet: {field}",
+                    before=field,
+                    after=None,
+                )
+            )
         for field in sorted(updated_fields - stored_fields):
-            changes.append(StructuralChange(
-                category="merge_fields",
-                element_path="merge_field",
-                description=f"Ny flettekode lagt til: {field}",
-                before=None,
-                after=field,
-            ))
+            changes.append(
+                StructuralChange(
+                    category="merge_fields",
+                    element_path="merge_field",
+                    description=f"Ny flettekode lagt til: {field}",
+                    before=None,
+                    after=field,
+                )
+            )
 
         # 2. Compare vitec-if conditions
         stored_conds = _get_vitec_conditions(stored_html)
         updated_conds = _get_vitec_conditions(updated_html)
         for cond in sorted(stored_conds - updated_conds):
-            changes.append(StructuralChange(
-                category="logic",
-                element_path="vitec-if",
-                description=f"Betingelse fjernet: {_truncate(cond, 120)}",
-                before=cond,
-                after=None,
-            ))
+            changes.append(
+                StructuralChange(
+                    category="logic",
+                    element_path="vitec-if",
+                    description=f"Betingelse fjernet: {_truncate(cond, 120)}",
+                    before=cond,
+                    after=None,
+                )
+            )
         for cond in sorted(updated_conds - stored_conds):
-            changes.append(StructuralChange(
-                category="logic",
-                element_path="vitec-if",
-                description=f"Ny betingelse lagt til: {_truncate(cond, 120)}",
-                before=None,
-                after=cond,
-            ))
+            changes.append(
+                StructuralChange(
+                    category="logic",
+                    element_path="vitec-if",
+                    description=f"Ny betingelse lagt til: {_truncate(cond, 120)}",
+                    before=None,
+                    after=cond,
+                )
+            )
 
         # 3. Compare vitec-foreach loops
         stored_loops = _get_vitec_loops(stored_html)
         updated_loops = _get_vitec_loops(updated_html)
         for loop in sorted(stored_loops - updated_loops):
-            changes.append(StructuralChange(
-                category="logic",
-                element_path="vitec-foreach",
-                description=f"Løkke fjernet: {_truncate(loop, 120)}",
-                before=loop,
-                after=None,
-            ))
+            changes.append(
+                StructuralChange(
+                    category="logic",
+                    element_path="vitec-foreach",
+                    description=f"Løkke fjernet: {_truncate(loop, 120)}",
+                    before=loop,
+                    after=None,
+                )
+            )
         for loop in sorted(updated_loops - stored_loops):
-            changes.append(StructuralChange(
-                category="logic",
-                element_path="vitec-foreach",
-                description=f"Ny løkke lagt til: {_truncate(loop, 120)}",
-                before=None,
-                after=loop,
-            ))
+            changes.append(
+                StructuralChange(
+                    category="logic",
+                    element_path="vitec-foreach",
+                    description=f"Ny løkke lagt til: {_truncate(loop, 120)}",
+                    before=None,
+                    after=loop,
+                )
+            )
 
         # 4. Compare tag structure
         stored_tags = _get_tag_structure(stored_soup)
@@ -256,13 +272,15 @@ class TemplateComparisonService:
                 if old_count != new_count:
                     diff = new_count - old_count
                     verb = "lagt til" if diff > 0 else "fjernet"
-                    changes.append(StructuralChange(
-                        category="structural",
-                        element_path=f"<{tag_name}>",
-                        description=f"{abs(diff)} <{tag_name}>-element(er) {verb}",
-                        before=f"{old_count} stk",
-                        after=f"{new_count} stk",
-                    ))
+                    changes.append(
+                        StructuralChange(
+                            category="structural",
+                            element_path=f"<{tag_name}>",
+                            description=f"{abs(diff)} <{tag_name}>-element(er) {verb}",
+                            before=f"{old_count} stk",
+                            after=f"{new_count} stk",
+                        )
+                    )
 
         # 5. Compare text content blocks
         stored_texts = _get_text_blocks(stored_soup)
@@ -274,25 +292,29 @@ class TemplateComparisonService:
             if old_text != new_text:
                 if MERGE_FIELD_RE.search(old_text) or MERGE_FIELD_RE.search(new_text):
                     continue
-                changes.append(StructuralChange(
-                    category="content",
-                    element_path=path,
-                    description=f"Tekstinnhold endret i {path.split(' > ')[-1] if ' > ' in path else path}",
-                    before=_truncate(old_text),
-                    after=_truncate(new_text),
-                ))
+                changes.append(
+                    StructuralChange(
+                        category="content",
+                        element_path=path,
+                        description=f"Tekstinnhold endret i {path.split(' > ')[-1] if ' > ' in path else path}",
+                        before=_truncate(old_text),
+                        after=_truncate(new_text),
+                    )
+                )
 
         # 6. Compare style blocks
         stored_styles = _get_style_blocks(stored_soup)
         updated_styles = _get_style_blocks(updated_soup)
         if stored_styles != updated_styles:
-            changes.append(StructuralChange(
-                category="cosmetic",
-                element_path="<style>",
-                description=f"CSS-stilblokker endret ({len(stored_styles)} → {len(updated_styles)} blokk(er))",
-                before=_truncate("\n".join(stored_styles)),
-                after=_truncate("\n".join(updated_styles)),
-            ))
+            changes.append(
+                StructuralChange(
+                    category="cosmetic",
+                    element_path="<style>",
+                    description=f"CSS-stilblokker endret ({len(stored_styles)} → {len(updated_styles)} blokk(er))",
+                    before=_truncate("\n".join(stored_styles)),
+                    after=_truncate("\n".join(updated_styles)),
+                )
+            )
 
         # 7. Compare vitec-specific attributes on key elements
         stored_attrs = _get_attributes_map(stored_soup)
@@ -308,34 +330,40 @@ class TemplateComparisonService:
 
                 if vitec_keys:
                     for k in vitec_keys:
-                        changes.append(StructuralChange(
-                            category="logic" if k in ("vitec-if", "vitec-foreach") else "structural",
-                            element_path=path,
-                            description=f"Attributt «{k}» endret på {path.split(' > ')[-1]}",
-                            before=old_a.get(k),
-                            after=new_a.get(k),
-                        ))
+                        changes.append(
+                            StructuralChange(
+                                category="logic" if k in ("vitec-if", "vitec-foreach") else "structural",
+                                element_path=path,
+                                description=f"Attributt «{k}» endret på {path.split(' > ')[-1]}",
+                                before=old_a.get(k),
+                                after=new_a.get(k),
+                            )
+                        )
                 elif style_keys:
-                    changes.append(StructuralChange(
-                        category="cosmetic",
-                        element_path=path,
-                        description=f"Inline-stil endret på {path.split(' > ')[-1]}",
-                        before=_truncate(old_a.get("style", "")),
-                        after=_truncate(new_a.get("style", "")),
-                    ))
+                    changes.append(
+                        StructuralChange(
+                            category="cosmetic",
+                            element_path=path,
+                            description=f"Inline-stil endret på {path.split(' > ')[-1]}",
+                            before=_truncate(old_a.get("style", "")),
+                            after=_truncate(new_a.get("style", "")),
+                        )
+                    )
 
         # 8. Detect whitespace-only differences if no other changes found
         if not changes:
             stored_norm = re.sub(r"\s+", " ", stored_html).strip()
             updated_norm = re.sub(r"\s+", " ", updated_html).strip()
             if stored_norm != updated_norm:
-                changes.append(StructuralChange(
-                    category="cosmetic",
-                    element_path="document",
-                    description="Endringer i mellomrom/formatering (ingen strukturelle endringer)",
-                    before=None,
-                    after=None,
-                ))
+                changes.append(
+                    StructuralChange(
+                        category="cosmetic",
+                        element_path="document",
+                        description="Endringer i mellomrom/formatering (ingen strukturelle endringer)",
+                        before=None,
+                        after=None,
+                    )
+                )
 
         return changes
 
@@ -379,23 +407,27 @@ class TemplateComparisonService:
 
         breaking_changes = [c for c in changes if c.category == "breaking"]
         for bc in breaking_changes:
-            conflicts.append(Conflict(
-                section=bc.element_path,
-                our_change="Mulig tilpasning i denne seksjonen",
-                vitec_change=bc.description,
-                severity="high",
-            ))
+            conflicts.append(
+                Conflict(
+                    section=bc.element_path,
+                    our_change="Mulig tilpasning i denne seksjonen",
+                    vitec_change=bc.description,
+                    severity="high",
+                )
+            )
 
         content_changes = [c for c in changes if c.category == "content"]
         logic_changes = [c for c in changes if c.category == "logic"]
 
         if content_changes and logic_changes:
-            conflicts.append(Conflict(
-                section="Flere seksjoner",
-                our_change="Innholdsendringer kan overlappe med tilpasninger",
-                vitec_change=f"{len(content_changes)} innholdsendring(er) og {len(logic_changes)} logikkendring(er)",
-                severity="medium",
-            ))
+            conflicts.append(
+                Conflict(
+                    section="Flere seksjoner",
+                    our_change="Innholdsendringer kan overlappe med tilpasninger",
+                    vitec_change=f"{len(content_changes)} innholdsendring(er) og {len(logic_changes)} logikkendring(er)",
+                    severity="medium",
+                )
+            )
 
         return conflicts
 

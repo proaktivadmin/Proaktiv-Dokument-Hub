@@ -21,47 +21,29 @@ def upgrade() -> None:
     # Using raw SQL with ADD COLUMN IF NOT EXISTS for safety.
     conn = op.get_bind()
 
-    conn.execute(sa.text(
-        "ALTER TABLE templates ADD COLUMN IF NOT EXISTS workflow_status VARCHAR(20) NOT NULL DEFAULT 'draft'"
-    ))
-    conn.execute(sa.text(
-        "ALTER TABLE templates ADD COLUMN IF NOT EXISTS reviewed_at TIMESTAMPTZ"
-    ))
-    conn.execute(sa.text(
-        "ALTER TABLE templates ADD COLUMN IF NOT EXISTS reviewed_by VARCHAR(100)"
-    ))
-    conn.execute(sa.text(
-        "ALTER TABLE templates ADD COLUMN IF NOT EXISTS published_version INTEGER"
-    ))
-    conn.execute(sa.text(
-        "ALTER TABLE templates ADD COLUMN IF NOT EXISTS is_archived_legacy BOOLEAN NOT NULL DEFAULT false"
-    ))
-    conn.execute(sa.text(
-        "ALTER TABLE templates ADD COLUMN IF NOT EXISTS origin VARCHAR(30)"
-    ))
-    conn.execute(sa.text(
-        "ALTER TABLE templates ADD COLUMN IF NOT EXISTS vitec_source_hash VARCHAR(64)"
-    ))
-    conn.execute(sa.text(
-        "ALTER TABLE templates ADD COLUMN IF NOT EXISTS ckeditor_validated BOOLEAN NOT NULL DEFAULT false"
-    ))
-    conn.execute(sa.text(
-        "ALTER TABLE templates ADD COLUMN IF NOT EXISTS ckeditor_validated_at TIMESTAMPTZ"
-    ))
-    conn.execute(sa.text(
-        "ALTER TABLE templates ADD COLUMN IF NOT EXISTS property_types JSONB"
-    ))
+    conn.execute(
+        sa.text("ALTER TABLE templates ADD COLUMN IF NOT EXISTS workflow_status VARCHAR(20) NOT NULL DEFAULT 'draft'")
+    )
+    conn.execute(sa.text("ALTER TABLE templates ADD COLUMN IF NOT EXISTS reviewed_at TIMESTAMPTZ"))
+    conn.execute(sa.text("ALTER TABLE templates ADD COLUMN IF NOT EXISTS reviewed_by VARCHAR(100)"))
+    conn.execute(sa.text("ALTER TABLE templates ADD COLUMN IF NOT EXISTS published_version INTEGER"))
+    conn.execute(
+        sa.text("ALTER TABLE templates ADD COLUMN IF NOT EXISTS is_archived_legacy BOOLEAN NOT NULL DEFAULT false")
+    )
+    conn.execute(sa.text("ALTER TABLE templates ADD COLUMN IF NOT EXISTS origin VARCHAR(30)"))
+    conn.execute(sa.text("ALTER TABLE templates ADD COLUMN IF NOT EXISTS vitec_source_hash VARCHAR(64)"))
+    conn.execute(
+        sa.text("ALTER TABLE templates ADD COLUMN IF NOT EXISTS ckeditor_validated BOOLEAN NOT NULL DEFAULT false")
+    )
+    conn.execute(sa.text("ALTER TABLE templates ADD COLUMN IF NOT EXISTS ckeditor_validated_at TIMESTAMPTZ"))
+    conn.execute(sa.text("ALTER TABLE templates ADD COLUMN IF NOT EXISTS property_types JSONB"))
 
-    conn.execute(sa.text(
-        "CREATE INDEX IF NOT EXISTS idx_templates_workflow_status ON templates (workflow_status)"
-    ))
-    conn.execute(sa.text(
-        "CREATE INDEX IF NOT EXISTS idx_templates_origin ON templates (origin)"
-    ))
+    conn.execute(sa.text("CREATE INDEX IF NOT EXISTS idx_templates_workflow_status ON templates (workflow_status)"))
+    conn.execute(sa.text("CREATE INDEX IF NOT EXISTS idx_templates_origin ON templates (origin)"))
 
-    conn.execute(sa.text(
-        "UPDATE templates SET workflow_status = status WHERE workflow_status = 'draft' AND status != 'draft'"
-    ))
+    conn.execute(
+        sa.text("UPDATE templates SET workflow_status = status WHERE workflow_status = 'draft' AND status != 'draft'")
+    )
 
 
 def downgrade() -> None:

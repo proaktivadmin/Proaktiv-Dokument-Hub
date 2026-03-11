@@ -72,6 +72,23 @@ function TemplateTableSkeleton() {
 
 type ViewMode = "table" | "shelf";
 
+type OriginKey = "vitec" | "kundemal" | "unknown";
+
+const getOriginKey = (template: Template): OriginKey => {
+  const tagNames = (template.tags ?? [])
+    .map((tag) => tag.name.trim().toLowerCase())
+    .filter(Boolean);
+  if (tagNames.some((name) => name.includes("kundemal"))) return "kundemal";
+  if (tagNames.some((name) => name.includes("vitec"))) return "vitec";
+  return "unknown";
+};
+
+const originGroupOrder: { key: OriginKey; label: string }[] = [
+  { key: "vitec", label: "Vitec Next" },
+  { key: "kundemal", label: "Kundemal" },
+  { key: "unknown", label: "Ukjent" },
+];
+
 function TemplatesPageContent() {
   const searchParams = useSearchParams();
   const categoryFromUrl = searchParams.get("category");
@@ -256,12 +273,6 @@ function TemplatesPageContent() {
     { value: "archived", label: "Arkivert" },
   ];
 
-  type OriginKey = "vitec" | "kundemal" | "unknown";
-  const originGroupOrder: { key: OriginKey; label: string }[] = [
-    { key: "vitec", label: "Vitec Next" },
-    { key: "kundemal", label: "Kundemal" },
-    { key: "unknown", label: "Ukjent" },
-  ];
 
   const getOriginKey = useCallback((template: Template): OriginKey => {
     const tagNames = (template.tags ?? [])

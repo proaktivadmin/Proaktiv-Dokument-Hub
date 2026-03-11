@@ -9,6 +9,13 @@ export default defineConfig([
   // TypeScript rules
   ...nextTs,
 
+  // Override specific rules
+  {
+    rules: {
+      "@next/next/no-img-element": "off",
+    },
+  },
+
   // Global ignores
   globalIgnores([
     ".next/**",

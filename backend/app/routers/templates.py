@@ -244,9 +244,7 @@ async def dedup_execute(
     user: dict = Depends(get_current_user),
 ):
     """Apply the merge: update primary template, archive the rest."""
-    result = await TemplateDedupService.execute_merge(
-        db, body.template_ids, body.primary_id, body.merged_html
-    )
+    result = await TemplateDedupService.execute_merge(db, body.template_ids, body.primary_id, body.merged_html)
 
     await AuditService.log(
         db,
@@ -420,11 +418,12 @@ async def convert_document(
 
     file_ext = file.filename.rsplit(".", 1)[-1].lower() if "." in file.filename else ""
     from app.services.word_conversion_service import SUPPORTED_EXTENSIONS
+
     if file_ext not in SUPPORTED_EXTENSIONS:
         raise HTTPException(
             status_code=400,
             detail=f"Supported formats: {', '.join('.' + e for e in sorted(SUPPORTED_EXTENSIONS))}. "
-                   f"Received: .{file_ext or '(no extension)'}",
+            f"Received: .{file_ext or '(no extension)'}",
         )
 
     file_bytes = await file.read()

@@ -167,33 +167,35 @@ class WordConversionService:
         Maps Word paragraph/character styles to semantic HTML elements that
         are safe inside CKEditor 4 and compatible with the Vitec Stilark CSS.
         """
-        return "\n".join([
-            # Paragraph styles → semantic elements
-            "p[style-name='Heading 1'] => h1:fresh",
-            "p[style-name='Heading 2'] => h2:fresh",
-            "p[style-name='Heading 3'] => h3:fresh",
-            "p[style-name='Heading 4'] => h4:fresh",
-            "p[style-name='Heading 5'] => h5:fresh",
-            "p[style-name='Title'] => h1:fresh",
-            "p[style-name='Subtitle'] => h2:fresh",
-            "p[style-name='Normal'] => p:fresh",
-            "p[style-name='Body Text'] => p:fresh",
-            "p[style-name='List Paragraph'] => p:fresh",
-            # Character styles → inline elements
-            "r[style-name='Strong'] => strong",
-            "r[style-name='Emphasis'] => em",
-            # Bold/italic runs → semantic tags (Vitec uses <strong>/<em>)
-            "b => strong",
-            "i => em",
-            "u => u",
-            # Small/footnote
-            "p[style-name='Footnote Text'] => p > small",
-            # Table of contents — flatten to paragraph
-            "p[style-name='TOC Heading'] => h2:fresh",
-            "p[style-name='toc 1'] => p:fresh",
-            "p[style-name='toc 2'] => p:fresh",
-            "p[style-name='toc 3'] => p:fresh",
-        ])
+        return "\n".join(
+            [
+                # Paragraph styles → semantic elements
+                "p[style-name='Heading 1'] => h1:fresh",
+                "p[style-name='Heading 2'] => h2:fresh",
+                "p[style-name='Heading 3'] => h3:fresh",
+                "p[style-name='Heading 4'] => h4:fresh",
+                "p[style-name='Heading 5'] => h5:fresh",
+                "p[style-name='Title'] => h1:fresh",
+                "p[style-name='Subtitle'] => h2:fresh",
+                "p[style-name='Normal'] => p:fresh",
+                "p[style-name='Body Text'] => p:fresh",
+                "p[style-name='List Paragraph'] => p:fresh",
+                # Character styles → inline elements
+                "r[style-name='Strong'] => strong",
+                "r[style-name='Emphasis'] => em",
+                # Bold/italic runs → semantic tags (Vitec uses <strong>/<em>)
+                "b => strong",
+                "i => em",
+                "u => u",
+                # Small/footnote
+                "p[style-name='Footnote Text'] => p > small",
+                # Table of contents — flatten to paragraph
+                "p[style-name='TOC Heading'] => h2:fresh",
+                "p[style-name='toc 1'] => p:fresh",
+                "p[style-name='toc 2'] => p:fresh",
+                "p[style-name='toc 3'] => p:fresh",
+            ]
+        )
 
     # ------------------------------------------------------------------
     # Post-processing
@@ -258,10 +260,7 @@ class WordConversionService:
 
         for table in soup.find_all("table"):
             # Ensure rows are inside <tbody> (not direct children of <table>)
-            direct_trs = [
-                child for child in table.children
-                if isinstance(child, Tag) and child.name == "tr"
-            ]
+            direct_trs = [child for child in table.children if isinstance(child, Tag) and child.name == "tr"]
             if direct_trs:
                 tbody = soup.new_tag("tbody")
                 for tr in direct_trs:
@@ -308,8 +307,14 @@ class WordConversionService:
     def _strip_appearance_styles(self, soup: BeautifulSoup) -> None:
         """Remove non-structural inline styles that the Stilark handles."""
         strip_props = {
-            "font-family", "font-size", "color", "background-color",
-            "background", "font-weight", "font-style", "line-height",
+            "font-family",
+            "font-size",
+            "color",
+            "background-color",
+            "background",
+            "font-weight",
+            "font-style",
+            "line-height",
             "font-variant-ligatures",
         }
         for el in soup.find_all(style=True):
@@ -347,11 +352,13 @@ class WordConversionService:
 
         # A. Template Shell
         wrapper = soup.find(id=WRAPPER_ID)
-        items.append(ValidationItem(
-            rule="A1: vitecTemplate wrapper present",
-            passed=wrapper is not None,
-            detail="<div id='vitecTemplate'> found" if wrapper else "Missing #vitecTemplate wrapper",
-        ))
+        items.append(
+            ValidationItem(
+                rule="A1: vitecTemplate wrapper present",
+                passed=wrapper is not None,
+                detail="<div id='vitecTemplate'> found" if wrapper else "Missing #vitecTemplate wrapper",
+            )
+        )
 
         has_class = False
         if wrapper and isinstance(wrapper, Tag):
@@ -359,56 +366,63 @@ class WordConversionService:
             if isinstance(classes, str):
                 classes = classes.split()
             has_class = WRAPPER_CLASS in classes
-        items.append(ValidationItem(
-            rule="A1: proaktiv-theme class on wrapper",
-            passed=has_class,
-            detail=f"class='{WRAPPER_CLASS}' present" if has_class else f"Missing '{WRAPPER_CLASS}' class",
-        ))
+        items.append(
+            ValidationItem(
+                rule="A1: proaktiv-theme class on wrapper",
+                passed=has_class,
+                detail=f"class='{WRAPPER_CLASS}' present" if has_class else f"Missing '{WRAPPER_CLASS}' class",
+            )
+        )
 
         stilark_ref = soup.find(attrs={"vitec-template": VITEC_STILARK_RESOURCE})
-        items.append(ValidationItem(
-            rule="A2: Stilark resource reference present",
-            passed=stilark_ref is not None,
-            detail="Stilark <span> found" if stilark_ref else "Missing Stilark resource reference",
-        ))
+        items.append(
+            ValidationItem(
+                rule="A2: Stilark resource reference present",
+                passed=stilark_ref is not None,
+                detail="Stilark <span> found" if stilark_ref else "Missing Stilark resource reference",
+            )
+        )
 
         stilark_has_nbsp = False
         if stilark_ref:
             content = stilark_ref.decode_contents()
             stilark_has_nbsp = "\xa0" in content or "&nbsp;" in content
-        items.append(ValidationItem(
-            rule="A3: Stilark span contains &nbsp;",
-            passed=stilark_has_nbsp,
-            detail="Contains &nbsp;" if stilark_has_nbsp else "Stilark span is empty or missing &nbsp;",
-        ))
+        items.append(
+            ValidationItem(
+                rule="A3: Stilark span contains &nbsp;",
+                passed=stilark_has_nbsp,
+                detail="Contains &nbsp;" if stilark_has_nbsp else "Stilark span is empty or missing &nbsp;",
+            )
+        )
 
         # B. Table Structure
         tables = soup.find_all("table")
         all_trs_wrapped = True
         for table in tables:
-            direct_trs = [
-                c for c in table.children
-                if isinstance(c, Tag) and c.name == "tr"
-            ]
+            direct_trs = [c for c in table.children if isinstance(c, Tag) and c.name == "tr"]
             if direct_trs:
                 all_trs_wrapped = False
                 break
-        items.append(ValidationItem(
-            rule="B3: All <tr> inside <tbody>/<thead>/<tfoot>",
-            passed=all_trs_wrapped,
-            detail="All rows properly wrapped" if all_trs_wrapped else "Found <tr> directly inside <table>",
-        ))
+        items.append(
+            ValidationItem(
+                rule="B3: All <tr> inside <tbody>/<thead>/<tfoot>",
+                passed=all_trs_wrapped,
+                detail="All rows properly wrapped" if all_trs_wrapped else "Found <tr> directly inside <table>",
+            )
+        )
 
         no_empty_tables = True
         for table in tables:
             if not table.find("tr"):
                 no_empty_tables = False
                 break
-        items.append(ValidationItem(
-            rule="B6: No empty tables",
-            passed=no_empty_tables or len(tables) == 0,
-            detail="No empty tables found" if no_empty_tables else "Found table(s) with no rows",
-        ))
+        items.append(
+            ValidationItem(
+                rule="B6: No empty tables",
+                passed=no_empty_tables or len(tables) == 0,
+                detail="No empty tables found" if no_empty_tables else "Found table(s) with no rows",
+            )
+        )
 
         # C. Inline Styles
         has_font_family = False
@@ -419,16 +433,20 @@ class WordConversionService:
                 has_font_family = True
             if "font-size" in style:
                 has_font_size = True
-        items.append(ValidationItem(
-            rule="C1: No font-family in inline styles",
-            passed=not has_font_family,
-            detail="Clean" if not has_font_family else "Found inline font-family (Stilark handles this)",
-        ))
-        items.append(ValidationItem(
-            rule="C2: No font-size in inline styles",
-            passed=not has_font_size,
-            detail="Clean" if not has_font_size else "Found inline font-size (may be intentional override)",
-        ))
+        items.append(
+            ValidationItem(
+                rule="C1: No font-family in inline styles",
+                passed=not has_font_family,
+                detail="Clean" if not has_font_family else "Found inline font-family (Stilark handles this)",
+            )
+        )
+        items.append(
+            ValidationItem(
+                rule="C2: No font-size in inline styles",
+                passed=not has_font_size,
+                detail="Clean" if not has_font_size else "Found inline font-size (may be intentional override)",
+            )
+        )
 
         # D. Merge Fields
         merge_fields = MERGE_FIELD_PATTERN.findall(html)
@@ -437,26 +455,32 @@ class WordConversionService:
             if field_path != field_path.strip():
                 no_spaces = False
                 break
-        items.append(ValidationItem(
-            rule="D5: No spaces inside merge field brackets",
-            passed=no_spaces,
-            detail="All merge fields properly formatted" if no_spaces else "Found spaces inside [[ ]]",
-        ))
+        items.append(
+            ValidationItem(
+                rule="D5: No spaces inside merge field brackets",
+                passed=no_spaces,
+                detail="All merge fields properly formatted" if no_spaces else "Found spaces inside [[ ]]",
+            )
+        )
 
         # I. Text and Formatting
         has_font_tags = len(soup.find_all("font")) > 0
-        items.append(ValidationItem(
-            rule="I1: No <font> tags",
-            passed=not has_font_tags,
-            detail="No <font> tags" if not has_font_tags else "Found deprecated <font> tag(s)",
-        ))
+        items.append(
+            ValidationItem(
+                rule="I1: No <font> tags",
+                passed=not has_font_tags,
+                detail="No <font> tags" if not has_font_tags else "Found deprecated <font> tag(s)",
+            )
+        )
 
         has_center_tags = len(soup.find_all("center")) > 0
-        items.append(ValidationItem(
-            rule="I2: No <center> tags",
-            passed=not has_center_tags,
-            detail="No <center> tags" if not has_center_tags else "Found deprecated <center> tag(s)",
-        ))
+        items.append(
+            ValidationItem(
+                rule="I2: No <center> tags",
+                passed=not has_center_tags,
+                detail="No <center> tags" if not has_center_tags else "Found deprecated <center> tag(s)",
+            )
+        )
 
         # K. Final Validation
         has_event_handlers = False
@@ -465,18 +489,22 @@ class WordConversionService:
             if soup.find(attrs={attr: True}):
                 has_event_handlers = True
                 break
-        items.append(ValidationItem(
-            rule="K2: No JavaScript event handlers",
-            passed=not has_event_handlers,
-            detail="No event handlers found" if not has_event_handlers else "Found prohibited event handler(s)",
-        ))
+        items.append(
+            ValidationItem(
+                rule="K2: No JavaScript event handlers",
+                passed=not has_event_handlers,
+                detail="No event handlers found" if not has_event_handlers else "Found prohibited event handler(s)",
+            )
+        )
 
         has_ext_stylesheets = len(soup.find_all("link", rel="stylesheet")) > 0
-        items.append(ValidationItem(
-            rule="K3: No external stylesheet links",
-            passed=not has_ext_stylesheets,
-            detail="No external stylesheets" if not has_ext_stylesheets else "Found external <link> stylesheet(s)",
-        ))
+        items.append(
+            ValidationItem(
+                rule="K3: No external stylesheet links",
+                passed=not has_ext_stylesheets,
+                detail="No external stylesheets" if not has_ext_stylesheets else "Found external <link> stylesheet(s)",
+            )
+        )
 
         # Well-formed HTML check (basic)
         html_str = str(soup)
@@ -489,11 +517,13 @@ class WordConversionService:
                 well_formed = False
                 detail = f"Mismatched <{tag_name}>: {opens} opens vs {close_count} closes"
                 break
-        items.append(ValidationItem(
-            rule="K1: HTML is well-formed",
-            passed=well_formed,
-            detail=detail,
-        ))
+        items.append(
+            ValidationItem(
+                rule="K1: HTML is well-formed",
+                passed=well_formed,
+                detail=detail,
+            )
+        )
 
         return items
 
