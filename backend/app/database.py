@@ -196,6 +196,8 @@ async def init_db() -> None:
         office,
         office_territory,
         postal_code,
+        report_budget,
+        report_subscription,
         sync_session,
         tag,
         template,

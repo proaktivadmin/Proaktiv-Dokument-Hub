@@ -23,6 +23,8 @@ from app.models.notification import Notification
 from app.models.office import Office
 from app.models.office_territory import OfficeTerritory
 from app.models.postal_code import PostalCode
+from app.models.report_budget import ReportBudget
+from app.models.report_subscription import ReportSubscription
 from app.models.signature_override import SignatureOverride
 from app.models.sync_session import SyncSession
 from app.models.tag import Tag
@@ -65,6 +67,9 @@ __all__ = [
     "FirecrawlScrape",
     # V3.9.4 Signature Overrides
     "SignatureOverride",
+    # Reports
+    "ReportBudget",
+    "ReportSubscription",
     # Sync review sessions
     "SyncSession",
 ]

@@ -8,8 +8,11 @@ statuses 40-48 (sold/completed), Hovedbokskonti for vederlag and andre inntekter
 
 from __future__ import annotations
 
+import asyncio
 import io
 import logging
+import re
+from collections import defaultdict
 from datetime import datetime
 
 from app.config import settings
@@ -117,6 +120,23 @@ def _build_estate_metadata(est: dict) -> dict[str, str]:
     return {"property_type": prop_type or "—", "assignment_type": assign_type or "—"}
 
 
+def _infer_broker_role(employee: dict) -> str:
+    """Infer performer category from employee fields."""
+    role_blob = " ".join(
+        [
+            str(employee.get("title") or ""),
+            str(employee.get("jobTitle") or ""),
+            str(employee.get("employeeType") or ""),
+            str(employee.get("role") or ""),
+        ]
+    ).lower()
+    if "fullmektig" in role_blob:
+        return "eiendomsmeglerfullmektig"
+    if "eiendomsmegler" in role_blob or re.search(r"\bmegler\b", role_blob):
+        return "eiendomsmegler"
+    return "unknown"
+
+
 class SalesReportService:
     """Build sales report from Vitec Hub Accounting API."""
 
@@ -180,6 +200,245 @@ class SalesReportService:
             include_vat=include_vat,
         )
         return result[0]
+
+    async def get_franchise_report_data(
+        self,
+        *,
+        year: int | None = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
+        include_vat: bool = False,
+        department_ids: list[int] | None = None,
+    ) -> dict:
+        """
+        Fetch franchise report data across departments.
+        """
+        installation_id = settings.VITEC_INSTALLATION_ID
+        if not installation_id:
+            raise ValueError("VITEC_INSTALLATION_ID is not configured.")
+
+        if department_ids:
+            selected_departments = list(dict.fromkeys(department_ids))
+        else:
+            departments_raw = await self._hub.get_departments(installation_id)
+            selected_departments = []
+            for dep in departments_raw or []:
+                dep_id = dep.get("departmentId") or dep.get("id")
+                dep_name = str(dep.get("name") or "").lower()
+                if dep_id is None:
+                    continue
+                if "oppgjør" in dep_name or "pacta" in dep_name:
+                    continue
+                try:
+                    selected_departments.append(int(dep_id))
+                except (TypeError, ValueError):
+                    continue
+
+        selected_departments = list(dict.fromkeys(selected_departments))
+        if not selected_departments:
+            return {
+                "year": year or datetime.now().year,
+                "from_date": from_date,
+                "to_date": to_date,
+                "include_vat": include_vat,
+                "departments": [],
+                "summary": {
+                    "total_sales": 0,
+                    "total_revenue": 0.0,
+                    "department_count": 0,
+                },
+            }
+
+        tasks = [
+            self.get_report_data(
+                department_id=dep_id,
+                year=year,
+                from_date=from_date,
+                to_date=to_date,
+                include_vat=include_vat,
+            )
+            for dep_id in selected_departments
+        ]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+
+        departments: list[dict] = []
+        total_sales = 0
+        total_revenue = 0.0
+
+        for dep_id, result in zip(selected_departments, results, strict=False):
+            if isinstance(result, Exception):
+                logger.warning("Skipping franchise department %s: %s", dep_id, result)
+                continue
+            dep_revenue = float(result.get("total_revenue") or 0.0)
+            dep_sales = int(result.get("total_sales") or 0)
+            total_sales += dep_sales
+            total_revenue += dep_revenue
+            departments.append(
+                {
+                    "department_id": dep_id,
+                    "department_name": f"Avdeling {dep_id}",
+                    "total_sales": dep_sales,
+                    "total_revenue": round(dep_revenue, 2),
+                    "brokers": result.get("brokers", []),
+                }
+            )
+
+        for dep in departments:
+            dep_total = float(dep["total_revenue"])
+            dep["revenue_share_percent"] = round((dep_total / total_revenue * 100.0), 2) if total_revenue > 0 else 0.0
+
+        departments.sort(key=lambda d: d["total_revenue"], reverse=True)
+        first = departments[0] if departments else {}
+        return {
+            "year": first.get("year", year or datetime.now().year),
+            "from_date": first.get("from_date", from_date),
+            "to_date": first.get("to_date", to_date),
+            "from_date_display": first.get("from_date_display"),
+            "to_date_display": first.get("to_date_display"),
+            "include_vat": include_vat,
+            "departments": departments,
+            "summary": {
+                "total_sales": total_sales,
+                "total_revenue": round(total_revenue, 2),
+                "department_count": len(departments),
+            },
+        }
+
+    async def get_best_performers_data(
+        self,
+        *,
+        year: int | None = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
+        include_vat: bool = False,
+        department_ids: list[int] | None = None,
+        top_n: int = 5,
+    ) -> dict:
+        """
+        Build best-performers leaderboard by role and department.
+        """
+        franchise = await self.get_franchise_report_data(
+            year=year,
+            from_date=from_date,
+            to_date=to_date,
+            include_vat=include_vat,
+            department_ids=department_ids,
+        )
+
+        installation_id = settings.VITEC_INSTALLATION_ID
+        employees = await self._hub.get_employees(installation_id) if installation_id else []
+        role_by_broker: dict[str, str] = {}
+        for emp in employees or []:
+            eid = str(emp.get("employeeId") or "").strip()
+            if not eid:
+                continue
+            role_by_broker[eid] = _infer_broker_role(emp)
+
+        brokers_agg: dict[str, dict] = defaultdict(
+            lambda: {"broker_id": "", "name": "", "role": "unknown", "total_revenue": 0.0, "total_sales": 0}
+        )
+        for dep in franchise.get("departments", []):
+            for broker in dep.get("brokers", []):
+                bid = str(broker.get("broker_id") or "").strip()
+                if not bid:
+                    continue
+                row = brokers_agg[bid]
+                row["broker_id"] = bid
+                row["name"] = broker.get("name") or bid
+                row["role"] = role_by_broker.get(bid, "unknown")
+                row["total_revenue"] += float(broker.get("total") or 0.0)
+                row["total_sales"] += int(broker.get("sale_count") or 0)
+
+        def _sort_rows(rows: list[dict]) -> list[dict]:
+            return sorted(rows, key=lambda r: (-float(r["total_revenue"]), str(r["name"]).lower()))
+
+        rows = [r | {"total_revenue": round(float(r["total_revenue"]), 2)} for r in brokers_agg.values()]
+        eiendomsmegler = _sort_rows([r for r in rows if r["role"] == "eiendomsmegler"])[:top_n]
+        fullmektig = _sort_rows([r for r in rows if r["role"] == "eiendomsmeglerfullmektig"])[:top_n]
+        unknown = _sort_rows([r for r in rows if r["role"] == "unknown"])[:top_n]
+        departments = [
+            {
+                "department_id": d["department_id"],
+                "department_name": d["department_name"],
+                "total_revenue": d["total_revenue"],
+                "total_sales": d["total_sales"],
+            }
+            for d in sorted(
+                franchise.get("departments", []),
+                key=lambda d: (-float(d.get("total_revenue") or 0.0), str(d.get("department_name", ""))),
+            )[:top_n]
+        ]
+
+        return {
+            "from_date": franchise.get("from_date"),
+            "to_date": franchise.get("to_date"),
+            "from_date_display": franchise.get("from_date_display"),
+            "to_date_display": franchise.get("to_date_display"),
+            "include_vat": include_vat,
+            "top_n": top_n,
+            "eiendomsmegler": eiendomsmegler,
+            "eiendomsmeglerfullmektig": fullmektig,
+            "unknown": unknown,
+            "departments": departments,
+        }
+
+    async def build_best_performers_report(
+        self,
+        *,
+        year: int | None = None,
+        from_date: str | None = None,
+        to_date: str | None = None,
+        include_vat: bool = False,
+        department_ids: list[int] | None = None,
+        top_n: int = 5,
+    ) -> bytes:
+        """
+        Generate Excel workbook for best performers leaderboard.
+        """
+        import openpyxl
+        from openpyxl.styles import Font
+
+        data = await self.get_best_performers_data(
+            year=year,
+            from_date=from_date,
+            to_date=to_date,
+            include_vat=include_vat,
+            department_ids=department_ids,
+            top_n=top_n,
+        )
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "Best performers"
+        ws.append(["Best performers"])
+        ws["A1"].font = Font(bold=True, size=14)
+        ws.append([f"Periode: {data.get('from_date_display', '')} - {data.get('to_date_display', '')}"])
+        ws.append([])
+
+        def add_section(title: str, rows: list[dict], name_key: str = "name") -> None:
+            ws.append([title])
+            ws.cell(row=ws.max_row, column=1).font = Font(bold=True)
+            ws.append(["Navn", "Antall salg", "Omsetning (kr)"])
+            ws.cell(row=ws.max_row, column=1).font = Font(bold=True)
+            ws.cell(row=ws.max_row, column=2).font = Font(bold=True)
+            ws.cell(row=ws.max_row, column=3).font = Font(bold=True)
+            for row in rows:
+                ws.append(
+                    [row.get(name_key, "—"), int(row.get("total_sales", 0)), float(row.get("total_revenue", 0.0))]
+                )
+            ws.append([])
+
+        add_section("Eiendomsmegler", data.get("eiendomsmegler", []))
+        add_section("Eiendomsmeglerfullmektig", data.get("eiendomsmeglerfullmektig", []))
+        if data.get("unknown"):
+            add_section("Ukjent rolle", data.get("unknown", []))
+        add_section("Avdelinger", data.get("departments", []), name_key="department_name")
+
+        ws.column_dimensions["A"].width = 36
+        ws.column_dimensions["B"].width = 14
+        ws.column_dimensions["C"].width = 20
+        buf = io.BytesIO()
+        wb.save(buf)
+        return buf.getvalue()
 
     async def _fetch_report_data(
         self,
