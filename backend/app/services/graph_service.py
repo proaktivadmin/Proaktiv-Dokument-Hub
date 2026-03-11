@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import logging
 import os
+from base64 import b64encode
 from urllib.parse import quote
 
 import httpx
@@ -73,24 +74,47 @@ class GraphService:
         recipient_email: str,
         subject: str,
         html_body: str,
+        *,
+        recipient_emails: list[str] | None = None,
+        attachments: list[dict[str, str]] | None = None,
     ) -> bool:
         """Send an email using Microsoft Graph."""
         token = await GraphService.get_access_token()
         if not token:
             return False
 
-        if not sender_email or not recipient_email:
+        recipients = recipient_emails or [recipient_email]
+        recipients = [r for r in recipients if r]
+        if not sender_email or not recipients:
             logger.error("Sender or recipient email missing; cannot send mail.")
             return False
 
         sender_encoded = quote(sender_email)
         send_url = GraphService.SEND_MAIL_URL.format(sender=sender_encoded)
 
+        attachment_payload: list[dict] = []
+        for attachment in attachments or []:
+            filename = attachment.get("filename", "attachment.bin")
+            content_type = attachment.get("content_type", "application/octet-stream")
+            content_bytes = attachment.get("content_bytes")
+            if not content_bytes:
+                continue
+            encoded = b64encode(content_bytes.encode("utf-8") if isinstance(content_bytes, str) else content_bytes)
+            attachment_payload.append(
+                {
+                    "@odata.type": "#microsoft.graph.fileAttachment",
+                    "name": filename,
+                    "contentType": content_type,
+                    "contentBytes": encoded.decode("ascii"),
+                }
+            )
+
         payload = {
             "message": {
                 "subject": subject,
                 "body": {"contentType": "HTML", "content": html_body},
-                "toRecipients": [{"emailAddress": {"address": recipient_email}}],
+                "toRecipients": [{"emailAddress": {"address": email}} for email in recipients],
+                "attachments": attachment_payload,
             },
             "saveToSentItems": True,
         }
@@ -115,5 +139,5 @@ class GraphService:
             logger.error("Graph sendMail request failed: %s", exc)
             return False
 
-        logger.info("Signature notification email sent to %s", recipient_email)
+        logger.info("Graph email sent to %s recipient(s)", len(recipients))
         return True

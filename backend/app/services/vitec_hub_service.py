@@ -151,3 +151,72 @@ class VitecHubService:
             f"{installation_id}/Departments/{department_id}/Picture",
             accept="image/*",
         )
+
+    async def get_accounting_estates(
+        self,
+        installation_id: str,
+        *,
+        department_id: int | None = None,
+        changed_after: str | None = None,
+    ) -> list[dict[str, Any]]:
+        """
+        Fetch estates relevant for accounting (oppdrag with sold/settlement status).
+
+        Args:
+            installation_id: Vitec installation ID
+            department_id: Filter by department (e.g. 1120)
+            changed_after: ISO datetime - only estates changed after this time
+
+        Returns:
+            List of AccountingEstateObject with brokersIdWithRoles, sold date, etc.
+        """
+        params: list[str] = []
+        if department_id is not None:
+            params.append(f"departmentId={department_id}")
+        if changed_after:
+            params.append(f"changedAfter={changed_after}")
+        query = "&".join(params)
+        path = f"{installation_id}/Accounting/Estates"
+        if query:
+            path = f"{path}?{query}"
+        data = await self._request("GET", path)
+        return list(data) if isinstance(data, list) else []
+
+    async def get_accounting_transactions(
+        self,
+        installation_id: str,
+        from_date: str,
+        to_date: str,
+        *,
+        department_id: int | None = None,
+        account_number: str | None = None,
+        assignment_number: str | None = None,
+        ledger_type: int = 1,
+    ) -> list[dict[str, Any]]:
+        """
+        Fetch booked accounting transactions (bokførte transaksjoner).
+
+        Args:
+            installation_id: Vitec installation ID
+            from_date: Start date (ISO format)
+            to_date: End date (ISO format)
+            department_id: Filter by department (e.g. 1120)
+            account_number: Filter by 4-digit hovedbokskonti
+            assignment_number: Filter by oppdragsnummer
+            ledger_type: 1=General (Hovedbok), 2=Customer, 3=Supplier
+
+        Returns:
+            List of AccountingTransaction with account, amount, estateId, userId
+        """
+        params = [f"fromDate={from_date}", f"toDate={to_date}", f"ledgerType={ledger_type}"]
+        if department_id is not None:
+            params.append(f"departmentId={department_id}")
+        if account_number:
+            params.append(f"accountNumber={account_number}")
+        if assignment_number:
+            params.append(f"assignmentNumber={assignment_number}")
+        path = f"{installation_id}/Accounting/Transactions?{'&'.join(params)}"
+        data = await self._request("GET", path)
+        if isinstance(data, dict) and "transactions" in data:
+            return list(data.get("transactions") or [])
+        return []

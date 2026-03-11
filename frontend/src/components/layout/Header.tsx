@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Upload, FileText, FolderTree, LayoutDashboard, Sparkles, Code2, HardDrive, LogOut,
-  Building2, Users, Image, ChevronDown, FileCode, Plus, Map, RefreshCcw, Palette, ClipboardList
+  Building2, Users, Image, ChevronDown, FileCode, Plus, Map, RefreshCcw, Palette, ClipboardList, BarChart3
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -89,6 +89,7 @@ export function Header({ onUploadSuccess }: HeaderProps) {
 
   // Tools dropdown items
   const toolsItems = [
+    { href: "/reports", label: "Formidlingsrapport", icon: BarChart3 },
     { href: "/tools/office-overview", label: "Kontor-oversikt", icon: ClipboardList },
     { href: "/sanitizer", label: "Sanitizer", icon: Sparkles },
     { href: "/sync", label: "Synkronisering", icon: RefreshCcw },
@@ -98,7 +99,7 @@ export function Header({ onUploadSuccess }: HeaderProps) {
 
   const isRessurserActive = ["/templates", "/categories", "/assets", "/storage"].some(p => pathname.startsWith(p));
   const isSelskapActive = ["/offices", "/employees", "/territories", "/mottakere"].some(p => pathname.startsWith(p));
-  const isToolsActive = ["/sanitizer", "/sync", "/portal", "/tools"].some(p => pathname.startsWith(p));
+  const isToolsActive = ["/sanitizer", "/sync", "/portal", "/tools", "/reports"].some(p => pathname.startsWith(p));
 
   return (
     <>
