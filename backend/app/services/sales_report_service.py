@@ -422,7 +422,9 @@ class SalesReportService:
             ws.cell(row=ws.max_row, column=2).font = Font(bold=True)
             ws.cell(row=ws.max_row, column=3).font = Font(bold=True)
             for row in rows:
-                ws.append([row.get(name_key, "—"), int(row.get("total_sales", 0)), float(row.get("total_revenue", 0.0))])
+                ws.append(
+                    [row.get(name_key, "—"), int(row.get("total_sales", 0)), float(row.get("total_revenue", 0.0))]
+                )
             ws.append([])
 
         add_section("Eiendomsmegler", data.get("eiendomsmegler", []))

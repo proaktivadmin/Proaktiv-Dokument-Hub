@@ -79,7 +79,9 @@ class ReportSubscriptionService:
         return item
 
     @staticmethod
-    async def update(db: AsyncSession, subscription_id: str, payload: ReportSubscriptionUpdate) -> ReportSubscription | None:
+    async def update(
+        db: AsyncSession, subscription_id: str, payload: ReportSubscriptionUpdate
+    ) -> ReportSubscription | None:
         item = await db.get(ReportSubscription, subscription_id)
         if not item:
             return None
