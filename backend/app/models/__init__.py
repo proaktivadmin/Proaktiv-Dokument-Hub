@@ -23,7 +23,14 @@ from app.models.notification import Notification
 from app.models.office import Office
 from app.models.office_territory import OfficeTerritory
 from app.models.postal_code import PostalCode
+from app.models.report_access_log import ReportAccessLog
 from app.models.report_budget import ReportBudget
+from app.models.report_sales_cache import (
+    ReportSalesCacheState,
+    ReportSalesEstateCache,
+    ReportSalesSyncEvent,
+    ReportSalesTransactionCache,
+)
 from app.models.report_subscription import ReportSubscription
 from app.models.signature_override import SignatureOverride
 from app.models.sync_session import SyncSession
@@ -68,7 +75,12 @@ __all__ = [
     # V3.9.4 Signature Overrides
     "SignatureOverride",
     # Reports
+    "ReportAccessLog",
     "ReportBudget",
+    "ReportSalesEstateCache",
+    "ReportSalesTransactionCache",
+    "ReportSalesCacheState",
+    "ReportSalesSyncEvent",
     "ReportSubscription",
     # Sync review sessions
     "SyncSession",

@@ -26,10 +26,29 @@ export { vitecApi } from "./vitec";
 
 // Reports
 export {
+  buildReportCacheEventsStreamUrl,
+  createReportSubscription,
+  deleteReportSubscription,
+  downloadBestPerformers,
   downloadSalesReport,
+  fetchBestPerformers,
+  fetchFranchiseReportData,
   fetchSalesReportData,
+  getBudgetComparison,
+  listReportBudgets,
+  listReportCacheEvents,
+  listReportSubscriptions,
+  testReportSubscription,
+  updateReportSubscription,
+  upsertReportBudget,
 } from "./reports";
 export type {
+  BestPerformersData,
+  BudgetComparisonData,
+  FranchiseReportData,
+  ReportBudget,
+  ReportSalesSyncEvent,
+  ReportSubscription,
   SalesReportParams,
   SalesReportData,
   SalesReportBroker,

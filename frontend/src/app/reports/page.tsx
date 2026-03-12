@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { Header } from "@/components/layout/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -53,10 +53,13 @@ import {
   type FranchiseReportData,
   type ReportSubscription,
   type PerformerRow,
+  type ReportSalesSyncEvent,
+  type ReportScopeMetadata,
   type SalesReportData,
   type SalesReportBroker,
   type SalesReportProperty,
 } from "@/lib/api/reports";
+import { useReportCacheEvents } from "@/hooks/use-report-cache-events";
 import { officesApi } from "@/lib/api/offices";
 import type { OfficeWithStats } from "@/types/v3";
 
@@ -130,6 +133,10 @@ export default function ReportsPage() {
   const [subscriptionReportType, setSubscriptionReportType] = useState<"best_performers" | "franchise_summary">(
     "best_performers"
   );
+  const [liveUpdatesEnabled, setLiveUpdatesEnabled] = useState(true);
+  const [pendingSyncEvents, setPendingSyncEvents] = useState(0);
+  const [lastSyncEventAt, setLastSyncEventAt] = useState<Date | null>(null);
+  const suppressLiveEventsUntilRef = useRef<number>(0);
 
   const loadOffices = useCallback(async () => {
     try {
@@ -173,6 +180,7 @@ export default function ReportsPage() {
         setData(null);
         setExpandedDepartments(new Set());
       }
+      setPendingSyncEvents(0);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Kunne ikke laste rapporten.");
       setData(null);
@@ -181,6 +189,21 @@ export default function ReportsPage() {
       setLoading(false);
     }
   }, [mode, year, departmentId, fromDate, toDate, includeVat]);
+
+  const onCacheEvent = useCallback((event: ReportSalesSyncEvent) => {
+    const now = Date.now();
+    if (now < suppressLiveEventsUntilRef.current) return;
+    const changedRows = Number(event.estates_upserted || 0) + Number(event.transactions_upserted || 0);
+    if (changedRows <= 0) return;
+    setPendingSyncEvents((prev) => Math.min(prev + 1, 99));
+    setLastSyncEventAt(new Date());
+  }, []);
+
+  const { isConnected: liveUpdatesConnected } = useReportCacheEvents({
+    enabled: liveUpdatesEnabled,
+    departmentId: mode === "department" ? departmentId : undefined,
+    onEvent: onCacheEvent,
+  });
 
   const handleDownload = async () => {
     setDownloadLoading(true);
@@ -373,6 +396,17 @@ export default function ReportsPage() {
     await deleteReportSubscription(id);
     await loadSubscriptions();
   };
+
+  const refreshAllFromLive = useCallback(async () => {
+    suppressLiveEventsUntilRef.current = Date.now() + 8000;
+    await Promise.all([
+      loadReport(),
+      loadBestPerformers(),
+      loadSubscriptions(),
+      mode === "department" ? loadBudget() : Promise.resolve(),
+    ]);
+    setPendingSyncEvents(0);
+  }, [loadBestPerformers, loadBudget, loadReport, loadSubscriptions, mode]);
 
   useEffect(() => {
     loadOffices();
@@ -618,6 +652,34 @@ export default function ReportsPage() {
                 Last ned Excel
               </Button>
             </div>
+            <div className="rounded-md border border-[#E5E5E5] bg-[#F5F5F0]/50 p-3 flex flex-wrap items-center gap-3">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="live-updates"
+                  checked={liveUpdatesEnabled}
+                  onCheckedChange={(checked) => setLiveUpdatesEnabled(checked === true)}
+                />
+                <Label htmlFor="live-updates" className="cursor-pointer">
+                  Live dataoppdateringer
+                </Label>
+              </div>
+              <span className="text-xs text-[#272630]/60">
+                Status: {liveUpdatesEnabled ? (liveUpdatesConnected ? "Tilkoblet" : "Kobler til...") : "Av"}
+              </span>
+              <span className="text-xs text-[#272630]/60">
+                Nye cache-events: <strong>{pendingSyncEvents}</strong>
+                {lastSyncEventAt ? ` · Sist: ${lastSyncEventAt.toLocaleTimeString("nb-NO")}` : ""}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={refreshAllFromLive}
+                disabled={loading || bestLoading || budgetLoading || subLoading}
+                className="ml-auto"
+              >
+                Oppdater fra live data
+              </Button>
+            </div>
             {error && (
               <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-700">
                 <AlertCircle className="h-4 w-4 shrink-0" />
@@ -631,12 +693,16 @@ export default function ReportsPage() {
         {data && mode === "department" && (
           <Card className="border border-[#E5E5E5] shadow-card">
             <CardHeader>
-              <CardTitle className="font-serif">
-                Periode: {data.from_date_display} – {data.to_date_display}
-              </CardTitle>
+              <div className="flex items-center gap-3">
+                <CardTitle className="font-serif">
+                  Periode: {data.from_date_display} – {data.to_date_display}
+                </CardTitle>
+                <DataConfidenceBadge scope={data.scope} />
+              </div>
               <CardDescription>
                 {data.total_sales} salg totalt · {sumLabel}: {data.total_revenue.toLocaleString("nb-NO")} kr
               </CardDescription>
+              <ScopePanel scope={data.scope} />
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
@@ -1012,6 +1078,112 @@ function BrokerRow({
           />
         ))}
     </>
+  );
+}
+
+function DataConfidenceBadge({ scope }: { scope: ReportScopeMetadata | undefined }) {
+  if (!scope?.last_synced_at) return null;
+
+  const syncAge = Date.now() - new Date(scope.last_synced_at).getTime();
+  const minutes = syncAge / 60_000;
+  const hasWarnings = (scope.validation_warnings_count ?? 0) > 0;
+
+  let label: string;
+  let color: string;
+  if (minutes < 15 && !hasWarnings) {
+    label = "Fersk";
+    color = "bg-emerald-100 text-emerald-800";
+  } else if (minutes < 120) {
+    label = hasWarnings ? "Delvis" : "Fersk";
+    color = hasWarnings ? "bg-amber-100 text-amber-800" : "bg-emerald-100 text-emerald-800";
+  } else {
+    label = "Foreldet";
+    color = "bg-red-100 text-red-800";
+  }
+
+  return (
+    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${color}`}>
+      {label}
+    </span>
+  );
+}
+
+function ScopePanel({ scope }: { scope: ReportScopeMetadata | undefined }) {
+  const [open, setOpen] = useState(false);
+  if (!scope) return null;
+
+  return (
+    <div className="rounded-md border border-[#E5E5E5] bg-[#F5F5F0]/50 mt-4">
+      <button
+        className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-left hover:bg-[#E9E7DC]/30"
+        onClick={() => setOpen(!open)}
+      >
+        <span className="font-medium text-[#272630]">Datagrunnlag</span>
+        <span className="flex items-center gap-2">
+          <DataConfidenceBadge scope={scope} />
+          {open ? (
+            <ChevronDown className="h-4 w-4 text-[#272630]/50" />
+          ) : (
+            <ChevronRight className="h-4 w-4 text-[#272630]/50" />
+          )}
+        </span>
+      </button>
+      {open && (
+        <div className="px-4 pb-3 space-y-3 border-t border-[#E5E5E5] text-sm text-[#272630]/80">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 pt-3">
+            <div>
+              <div className="text-xs uppercase tracking-wide text-[#272630]/50 mb-1">MVA-håndtering</div>
+              <div>{scope.vat_handling === "included" ? "Inkludert" : "Ekskludert"}</div>
+            </div>
+            <div>
+              <div className="text-xs uppercase tracking-wide text-[#272630]/50 mb-1">Eiendomsstatus</div>
+              <div>{scope.estate_statuses}</div>
+            </div>
+            <div>
+              <div className="text-xs uppercase tracking-wide text-[#272630]/50 mb-1">Meglere</div>
+              <div>Kun meglere med salg i perioden</div>
+            </div>
+          </div>
+
+          <div>
+            <div className="text-xs uppercase tracking-wide text-[#272630]/50 mb-1">Datakilder</div>
+            <div className="space-y-1">
+              {scope.data_sources.map((ds) => (
+                <div key={ds.name} className="flex items-center justify-between text-sm">
+                  <span>{ds.label} ({ds.coverage})</span>
+                  <span className="text-[#272630]/50">{ds.row_count} transaksjoner</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <div className="text-xs uppercase tracking-wide text-[#272630]/50 mb-1">Konti inkludert</div>
+            <div className="flex flex-wrap gap-1">
+              {Object.entries(scope.account_categories).map(([category, accounts]) => (
+                <span key={category} className="text-xs">
+                  <strong className="capitalize">{category === "vederlag" ? "Vederlag" : "Andre inntekter"}:</strong>{" "}
+                  {accounts.join(", ")}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {scope.last_synced_at && (
+            <div className="text-xs text-[#272630]/50">
+              Sist synkronisert: {new Date(scope.last_synced_at).toLocaleString("nb-NO")}
+              {scope.validation_warnings_count > 0 && (
+                <span className="text-amber-600 ml-2">
+                  {scope.validation_warnings_count} valideringsadvarsel(er)
+                </span>
+              )}
+            </div>
+          )}
+
+          <div className="text-xs text-[#272630]/50 italic">{scope.data_freshness_note}</div>
+        </div>
+      )}
+    </div>
   );
 }
 

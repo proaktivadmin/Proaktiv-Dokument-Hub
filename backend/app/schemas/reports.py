@@ -99,3 +99,41 @@ class ReportSubscriptionResponse(BaseModel):
     class Config:
         from_attributes = True
         populate_by_name = True
+
+
+class ReportDataSourceInfo(BaseModel):
+    name: str
+    label: str
+    coverage: str
+    row_count: int = 0
+
+
+class ReportScopeMetadata(BaseModel):
+    accounts_included: list[str]
+    account_categories: dict[str, list[str]]
+    estate_statuses: str = "40-48 (solgt/overtatt)"
+    vat_handling: str
+    date_range: dict[str, str]
+    department_filter: int | None = None
+    last_synced_at: str | None = None
+    data_sources: list[ReportDataSourceInfo]
+    brokers_filter: str = "only brokers with sales in period"
+    data_freshness_note: str = "Current month re-synced on every load; past months cached"
+    validation_warnings_count: int = 0
+
+
+class ReportSalesSyncEventResponse(BaseModel):
+    id: int
+    installation_id: str
+    department_id: int
+    event_type: str
+    from_date: str
+    to_date: str
+    estates_upserted: int
+    transactions_upserted: int
+    payload: dict = Field(default_factory=dict, alias="payload_json")
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+        populate_by_name = True

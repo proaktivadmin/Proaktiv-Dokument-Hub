@@ -4,21 +4,56 @@ Sales Report Service
 Exports broker revenue (vederlag + andre inntekter) for sold properties
 via Vitec Hub API. Matches scope: Proaktiv Eiendomsmegling AS (1120),
 statuses 40-48 (sold/completed), Hovedbokskonti for vederlag and andre inntekter.
+
+Timezone policy
+---------------
+All report periods use **Europe/Oslo** for business semantics (month
+boundaries, fiscal year cutoffs).  Timestamps stored in PostgreSQL are
+**UTC with timezone** (``DateTime(timezone=True)``).  Conversion happens at
+the boundary: user inputs are interpreted as Oslo dates, the service
+converts to UTC for storage and queries, and display values convert back.
+
+Multi-source architecture
+-------------------------
+Cache tables carry a ``data_source`` discriminator so historical imports
+and future KPI sources coexist with live Vitec Next data.  Current values:
+``vitec_next`` (live API sync) and ``legacy_import`` (deferred).
 """
 
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import io
 import logging
 import re
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
+from typing import Any
+from zoneinfo import ZoneInfo
+
+from sqlalchemy import and_, func as sa_func, select, text
 
 from app.config import settings
+from app.database import async_session_factory
+from app.models.office import Office
+from app.models.report_sales_cache import (
+    DATA_SOURCE_VITEC_NEXT,
+    ReportSalesCacheState,
+    ReportSalesEstateCache,
+    ReportSalesSyncEvent,
+    ReportSalesTransactionCache,
+)
 from app.services.vitec_hub_service import VitecHubService
 
 logger = logging.getLogger(__name__)
+
+try:
+    REPORT_TIMEZONE = ZoneInfo("Europe/Oslo")
+except KeyError:
+    from datetime import timezone as _tz
+    REPORT_TIMEZONE = _tz(timedelta(hours=1))  # CET fallback when tzdata is missing
+    logger.debug("tzdata package not installed; using fixed UTC+1 fallback for REPORT_TIMEZONE")
 
 # Hovedbokskonti for vederlag (remuneration) - from HOVEDBOKSKONTI UI
 VEDERLAG_ACCOUNTS = {
@@ -55,6 +90,59 @@ REVENUE_ACCOUNTS = VEDERLAG_ACCOUNTS | ANDRE_INNTEKTER_ACCOUNTS
 
 # Default department: Proaktiv Eiendomsmegling AS
 DEFAULT_DEPARTMENT_ID = 1120
+
+SYNC_SOURCES: dict[str, dict[str, Any]] = {
+    "vitec_next": {
+        "label": "Vitec Next",
+        "data_source": DATA_SOURCE_VITEC_NEXT,
+        "accounts": REVENUE_ACCOUNTS,
+        "account_categories": {
+            "vederlag": sorted(VEDERLAG_ACCOUNTS),
+            "andre_inntekter": sorted(ANDRE_INNTEKTER_ACCOUNTS),
+        },
+        "coverage_start": "2026-02",
+    },
+}
+
+
+def _parse_iso_datetime(value: str | None) -> datetime | None:
+    if not value:
+        return None
+    try:
+        dt = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+        if dt.tzinfo is None:
+            return dt.replace(tzinfo=datetime.UTC)
+        return dt
+    except (ValueError, TypeError):
+        return None
+
+
+def _month_key(year: int, month: int) -> str:
+    return f"{year:04d}-{month:02d}"
+
+
+def _iter_months(from_dt: datetime, to_dt: datetime) -> list[tuple[int, int]]:
+    start = datetime(from_dt.year, from_dt.month, 1, tzinfo=from_dt.tzinfo or datetime.UTC)
+    end = datetime(to_dt.year, to_dt.month, 1, tzinfo=to_dt.tzinfo or datetime.UTC)
+    out: list[tuple[int, int]] = []
+    cursor = start
+    while cursor <= end:
+        out.append((cursor.year, cursor.month))
+        if cursor.month == 12:
+            cursor = cursor.replace(year=cursor.year + 1, month=1)
+        else:
+            cursor = cursor.replace(month=cursor.month + 1)
+    return out
+
+
+def _month_bounds(year: int, month: int) -> tuple[datetime, datetime]:
+    start = datetime(year, month, 1, 0, 0, 0, tzinfo=datetime.UTC)
+    if month == 12:
+        next_month = datetime(year + 1, 1, 1, tzinfo=datetime.UTC)
+    else:
+        next_month = datetime(year, month + 1, 1, tzinfo=datetime.UTC)
+    end = next_month - timedelta(seconds=1)
+    return start, end
 
 
 def _normalize_account(account: str | None) -> str:
@@ -261,6 +349,9 @@ class SalesReportService:
         ]
         results = await asyncio.gather(*tasks, return_exceptions=True)
 
+        # Resolve department IDs to office names
+        dept_name_map = await self._resolve_department_names(selected_departments)
+
         departments: list[dict] = []
         total_sales = 0
         total_revenue = 0.0
@@ -276,7 +367,7 @@ class SalesReportService:
             departments.append(
                 {
                     "department_id": dep_id,
-                    "department_name": f"Avdeling {dep_id}",
+                    "department_name": dept_name_map.get(dep_id, f"Avdeling {dep_id}"),
                     "total_sales": dep_sales,
                     "total_revenue": round(dep_revenue, 2),
                     "brokers": result.get("brokers", []),
@@ -382,6 +473,24 @@ class SalesReportService:
             "departments": departments,
         }
 
+    async def list_cache_events(
+        self,
+        *,
+        department_id: int | None = None,
+        since_id: int | None = None,
+        limit: int = 100,
+    ) -> list[ReportSalesSyncEvent]:
+        installation_id = settings.VITEC_INSTALLATION_ID or ""
+        async with async_session_factory() as db:
+            stmt = select(ReportSalesSyncEvent).where(ReportSalesSyncEvent.installation_id == installation_id)
+            if department_id is not None:
+                stmt = stmt.where(ReportSalesSyncEvent.department_id == department_id)
+            if since_id is not None:
+                stmt = stmt.where(ReportSalesSyncEvent.id > since_id)
+            stmt = stmt.order_by(ReportSalesSyncEvent.id.desc()).limit(max(1, min(limit, 500)))
+            rows = list((await db.execute(stmt)).scalars().all())
+            return list(reversed(rows))
+
     async def build_best_performers_report(
         self,
         *,
@@ -466,9 +575,13 @@ class SalesReportService:
             to_date = to_date if "T" in to_date else f"{to_date}T23:59:59"
         else:
             to_date = datetime.now().strftime("%Y-%m-%dT23:59:59")
-        changed_after = from_date[:10] + "T00:00:00"
 
-        # 1. Fetch employees
+        from_dt = _parse_iso_datetime(from_date)
+        to_dt = _parse_iso_datetime(to_date)
+        if from_dt is None or to_dt is None:
+            raise ValueError("Invalid from_date/to_date format.")
+
+        # 1) Employee names are lightweight and can stay live.
         employees = await self._hub.get_employees(installation_id)
         broker_map: dict[str, str] = {}
         for emp in employees or []:
@@ -477,13 +590,62 @@ class SalesReportService:
             if eid and name:
                 broker_map[str(eid).strip()] = str(name).strip()
 
-        # 2. Fetch accounting estates
+        # 2) Sync missing/new data into local cache and build report from cached rows.
+        async with async_session_factory() as db:
+            try:
+                sync_result = await self._sync_sales_cache(
+                    db=db,
+                    installation_id=installation_id,
+                    department_id=department_id,
+                    from_dt=from_dt,
+                    to_dt=to_dt,
+                )
+                report_tuple = await self._build_report_tuple_from_cache(
+                    db=db,
+                    installation_id=installation_id,
+                    department_id=department_id,
+                    year=y,
+                    from_date=from_date,
+                    to_date=to_date,
+                    from_dt=from_dt,
+                    to_dt=to_dt,
+                    include_vat=include_vat,
+                    broker_map=broker_map,
+                    sync_metadata=sync_result,
+                )
+                await db.commit()
+                return report_tuple
+            except Exception as cache_err:
+                await db.rollback()
+                logger.warning("Sales cache sync fallback to live fetch: %s", cache_err)
+                return await self._fetch_report_data_live(
+                    installation_id=installation_id,
+                    department_id=department_id,
+                    year=y,
+                    from_date=from_date,
+                    to_date=to_date,
+                    include_vat=include_vat,
+                    broker_map=broker_map,
+                )
+
+    async def _fetch_report_data_live(
+        self,
+        *,
+        installation_id: str,
+        department_id: int,
+        year: int,
+        from_date: str,
+        to_date: str,
+        include_vat: bool,
+        broker_map: dict[str, str],
+    ) -> tuple:
+        """Fallback path that fetches live data directly from Vitec."""
+        changed_after = from_date[:10] + "T00:00:00"
         estates = await self._hub.get_accounting_estates(
             installation_id,
             department_id=department_id,
             changed_after=changed_after,
         )
-
         estate_address: dict[str, str] = {}
         estate_metadata: dict[str, dict[str, str]] = {}
         brokers_with_sales: set[str] = set()
@@ -493,21 +655,14 @@ class SalesReportService:
             if eid:
                 estate_address[eid] = addr or "(ukjent adresse)"
                 estate_metadata[eid] = _build_estate_metadata(est)
-            sold = est.get("sold")
-            if not sold:
-                continue
-            try:
-                sold_dt = datetime.fromisoformat(sold.replace("Z", "+00:00"))
-                if sold_dt.year != y:
-                    continue
-            except (ValueError, TypeError):
+            sold_dt = _parse_iso_datetime(est.get("sold"))
+            if sold_dt is None or sold_dt.year != year:
                 continue
             for b in est.get("brokersIdWithRoles") or []:
                 bid = b.get("employeeId")
                 if bid:
                     brokers_with_sales.add(str(bid).strip())
 
-        # 3. Fetch transactions
         transactions = await self._hub.get_accounting_transactions(
             installation_id,
             from_date=from_date,
@@ -515,8 +670,6 @@ class SalesReportService:
             department_id=department_id,
             ledger_type=1,
         )
-
-        # 4. Build broker_estates
         broker_estates: dict[str, dict[str, list[dict]]] = {}
         for txn in transactions or []:
             account = _normalize_account(txn.get("account"))
@@ -528,18 +681,365 @@ class SalesReportService:
             if brokers_with_sales and user_id not in brokers_with_sales:
                 continue
             estate_id = str(txn.get("estateId") or "").strip() or "(ukjent)"
-            if user_id not in broker_estates:
-                broker_estates[user_id] = {}
-            if estate_id not in broker_estates[user_id]:
-                broker_estates[user_id][estate_id] = []
-            broker_estates[user_id][estate_id].append(txn)
+            broker_estates.setdefault(user_id, {}).setdefault(estate_id, []).append(txn)
 
         if not brokers_with_sales and broker_estates:
             brokers_with_sales = set(broker_estates.keys())
 
-        # 5. Build report data dict
+        report_data = self._build_report_data_dict(
+            year=year,
+            department_id=department_id,
+            from_date=from_date,
+            to_date=to_date,
+            include_vat=include_vat,
+            broker_map=broker_map,
+            brokers_with_sales=brokers_with_sales,
+            broker_estates=broker_estates,
+            estate_address=estate_address,
+            estate_metadata=estate_metadata,
+        )
+        return report_data, broker_map, brokers_with_sales, broker_estates, estate_address, estate_metadata, include_vat
+
+    async def _sync_sales_cache(
+        self,
+        *,
+        db,
+        installation_id: str,
+        department_id: int,
+        from_dt: datetime,
+        to_dt: datetime,
+    ) -> dict[str, Any]:
+        # Advisory lock prevents concurrent syncs for the same department.
+        lock_key = hash(f"{installation_id}:{department_id}") & 0x7FFFFFFF
+        await db.execute(text(f"SELECT pg_advisory_xact_lock({lock_key})"))
+
+        state_key = f"{installation_id}:{department_id}"
+        state = await db.get(ReportSalesCacheState, state_key)
+        if state is None:
+            state = ReportSalesCacheState(
+                state_key=state_key,
+                installation_id=installation_id,
+                department_id=department_id,
+                month_sync_json={},
+            )
+            db.add(state)
+            await db.flush()
+
+        estates_upserted = 0
+        transactions_upserted = 0
+        skipped: dict[str, int] = {"future_date": 0, "orphan": 0}
+        warnings_count = 0
+        now_utc = datetime.now(datetime.UTC)
+        tomorrow = now_utc + timedelta(days=1)
+
+        # Estates: incremental by changedAfter cursor (+24h overlap).
+        changed_after_dt = state.last_estates_sync_at - timedelta(days=1) if state.last_estates_sync_at else from_dt
+        changed_after = changed_after_dt.astimezone(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%S")
+        estates = await self._hub.get_accounting_estates(
+            installation_id,
+            department_id=department_id,
+            changed_after=changed_after,
+        )
+        for est in estates or []:
+            estate_id = str(est.get("estateId") or "").strip()
+            if not estate_id:
+                continue
+            estate_key = f"{installation_id}:{estate_id}"
+            row = await db.get(ReportSalesEstateCache, estate_key)
+            metadata = _build_estate_metadata(est)
+            sold_dt = _parse_iso_datetime(est.get("sold"))
+            payload_brokers = est.get("brokersIdWithRoles") or []
+            if row is None:
+                row = ReportSalesEstateCache(
+                    estate_key=estate_key,
+                    installation_id=installation_id,
+                    department_id=department_id,
+                    estate_id=estate_id,
+                    data_source=DATA_SOURCE_VITEC_NEXT,
+                    sold_at=sold_dt,
+                    address=_build_estate_address(est) or "(ukjent adresse)",
+                    property_type=metadata["property_type"],
+                    assignment_type=metadata["assignment_type"],
+                    brokers_json=payload_brokers,
+                )
+                db.add(row)
+                estates_upserted += 1
+            else:
+                row.department_id = department_id
+                row.data_source = DATA_SOURCE_VITEC_NEXT
+                row.sold_at = sold_dt
+                row.address = _build_estate_address(est) or "(ukjent adresse)"
+                row.property_type = metadata["property_type"]
+                row.assignment_type = metadata["assignment_type"]
+                row.brokers_json = payload_brokers
+                estates_upserted += 1
+
+        # Transactions: sync unsynced months, always refresh current month.
+        current_month_key = _month_key(now_utc.year, now_utc.month)
+        month_sync = dict(state.month_sync_json or {})
+        months = _iter_months(from_dt, to_dt)
+        for year, month in months:
+            mk = _month_key(year, month)
+            should_fetch = mk not in month_sync or mk == current_month_key
+            if not should_fetch:
+                continue
+
+            month_start, month_end = _month_bounds(year, month)
+            txns = await self._hub.get_accounting_transactions(
+                installation_id,
+                from_date=month_start.strftime("%Y-%m-%dT%H:%M:%S"),
+                to_date=month_end.strftime("%Y-%m-%dT%H:%M:%S"),
+                department_id=department_id,
+                ledger_type=1,
+            )
+            for txn in txns or []:
+                posting_dt = _parse_iso_datetime(txn.get("postingDate"))
+
+                # Validation: reject future-dated transactions
+                if posting_dt and posting_dt > tomorrow:
+                    skipped["future_date"] += 1
+                    continue
+
+                # Validation: skip orphan records with no estate AND no user
+                user_id = str(txn.get("userId") or "").strip()
+                estate_id_raw = str(txn.get("estateId") or "").strip()
+                if not user_id and not estate_id_raw:
+                    skipped["orphan"] += 1
+                    continue
+
+                # Anomaly warning: unusually large amounts
+                amt = abs(float(txn.get("amount") or 0))
+                if amt > 5_000_000:
+                    warnings_count += 1
+                    logger.warning(
+                        "Large transaction amount %.2f for dept %s estate %s",
+                        amt, department_id, estate_id_raw,
+                    )
+
+                tx_key = self._transaction_cache_key(installation_id=installation_id, txn=txn)
+                row = await db.get(ReportSalesTransactionCache, tx_key)
+                if row is None:
+                    row = ReportSalesTransactionCache(
+                        transaction_key=tx_key,
+                        installation_id=installation_id,
+                        department_id=department_id,
+                        data_source=DATA_SOURCE_VITEC_NEXT,
+                        posting_date=posting_dt,
+                        account=str(txn.get("account") or "").strip(),
+                        user_id=user_id,
+                        estate_id=estate_id_raw,
+                        amount=float(txn.get("amount") or 0),
+                        vat_amount=float(txn.get("vatAmount") or 0),
+                        description=str(txn.get("description") or ""),
+                    )
+                    db.add(row)
+                    transactions_upserted += 1
+                else:
+                    row.department_id = department_id
+                    row.data_source = DATA_SOURCE_VITEC_NEXT
+                    row.posting_date = posting_dt
+                    row.account = str(txn.get("account") or "").strip()
+                    row.user_id = user_id
+                    row.estate_id = estate_id_raw
+                    row.amount = float(txn.get("amount") or 0)
+                    row.vat_amount = float(txn.get("vatAmount") or 0)
+                    row.description = str(txn.get("description") or "")
+                    transactions_upserted += 1
+            month_sync[mk] = now_utc.isoformat()
+
+        state.month_sync_json = month_sync
+        state.last_estates_sync_at = now_utc
+        event = ReportSalesSyncEvent(
+            installation_id=installation_id,
+            department_id=department_id,
+            event_type="cache_sync",
+            from_date=from_dt.strftime("%Y-%m-%dT%H:%M:%S"),
+            to_date=to_dt.strftime("%Y-%m-%dT%H:%M:%S"),
+            estates_upserted=estates_upserted,
+            transactions_upserted=transactions_upserted,
+            payload_json={
+                "months_scanned": len(months),
+                "current_month_refresh": current_month_key,
+                "rows_ingested": estates_upserted + transactions_upserted,
+                "rows_skipped": skipped,
+                "validation_warnings_count": warnings_count,
+            },
+        )
+        db.add(event)
+        return {
+            "estates_upserted": estates_upserted,
+            "transactions_upserted": transactions_upserted,
+            "last_synced_at": now_utc.isoformat(),
+            "validation_warnings_count": warnings_count,
+        }
+
+    async def _build_report_tuple_from_cache(
+        self,
+        *,
+        db,
+        installation_id: str,
+        department_id: int,
+        year: int,
+        from_date: str,
+        to_date: str,
+        from_dt: datetime,
+        to_dt: datetime,
+        include_vat: bool,
+        broker_map: dict[str, str],
+        sync_metadata: dict[str, Any] | None = None,
+    ) -> tuple:
+        estates_stmt = select(ReportSalesEstateCache).where(
+            and_(
+                ReportSalesEstateCache.installation_id == installation_id,
+                ReportSalesEstateCache.department_id == department_id,
+            )
+        )
+        estates = list((await db.execute(estates_stmt)).scalars().all())
+
+        estate_address: dict[str, str] = {}
+        estate_metadata: dict[str, dict[str, str]] = {}
+        brokers_with_sales: set[str] = set()
+        for est in estates:
+            eid = str(est.estate_id or "").strip()
+            if not eid:
+                continue
+            estate_address[eid] = est.address or "(ukjent adresse)"
+            estate_metadata[eid] = {
+                "property_type": est.property_type or "—",
+                "assignment_type": est.assignment_type or "—",
+            }
+            sold_dt = est.sold_at
+            if sold_dt is None or sold_dt.year != year:
+                continue
+            for b in est.brokers_json or []:
+                bid = str((b or {}).get("employeeId") or "").strip()
+                if bid:
+                    brokers_with_sales.add(bid)
+
+        tx_stmt = select(ReportSalesTransactionCache).where(
+            and_(
+                ReportSalesTransactionCache.installation_id == installation_id,
+                ReportSalesTransactionCache.department_id == department_id,
+                ReportSalesTransactionCache.posting_date.is_not(None),
+                ReportSalesTransactionCache.posting_date >= from_dt,
+                ReportSalesTransactionCache.posting_date <= to_dt,
+            )
+        )
+        tx_rows = list((await db.execute(tx_stmt)).scalars().all())
+
+        broker_estates: dict[str, dict[str, list[dict[str, Any]]]] = {}
+        for txn in tx_rows:
+            account = _normalize_account(txn.account)
+            if account not in REVENUE_ACCOUNTS:
+                continue
+            user_id = str(txn.user_id or "").strip()
+            if not user_id:
+                continue
+            if brokers_with_sales and user_id not in brokers_with_sales:
+                continue
+            estate_id = str(txn.estate_id or "").strip() or "(ukjent)"
+            txn_payload = {
+                "account": txn.account,
+                "userId": user_id,
+                "estateId": estate_id,
+                "amount": txn.amount,
+                "vatAmount": txn.vat_amount,
+                "description": txn.description,
+                "postingDate": txn.posting_date.isoformat() if txn.posting_date else None,
+            }
+            broker_estates.setdefault(user_id, {}).setdefault(estate_id, []).append(txn_payload)
+
+        if not brokers_with_sales and broker_estates:
+            brokers_with_sales = set(broker_estates.keys())
+
+        # Count rows by data source for scope metadata
+        source_counts: dict[str, int] = {}
+        src_stmt = (
+            select(
+                ReportSalesTransactionCache.data_source,
+                sa_func.count().label("cnt"),
+            )
+            .where(
+                and_(
+                    ReportSalesTransactionCache.installation_id == installation_id,
+                    ReportSalesTransactionCache.department_id == department_id,
+                    ReportSalesTransactionCache.posting_date.is_not(None),
+                    ReportSalesTransactionCache.posting_date >= from_dt,
+                    ReportSalesTransactionCache.posting_date <= to_dt,
+                )
+            )
+            .group_by(ReportSalesTransactionCache.data_source)
+        )
+        for row in (await db.execute(src_stmt)).all():
+            source_counts[row[0]] = row[1]
+
+        report_data = self._build_report_data_dict(
+            year=year,
+            department_id=department_id,
+            from_date=from_date,
+            to_date=to_date,
+            include_vat=include_vat,
+            broker_map=broker_map,
+            brokers_with_sales=brokers_with_sales,
+            broker_estates=broker_estates,
+            estate_address=estate_address,
+            estate_metadata=estate_metadata,
+            sync_metadata=sync_metadata,
+            source_counts=source_counts,
+        )
+
+        return report_data, broker_map, brokers_with_sales, broker_estates, estate_address, estate_metadata, include_vat
+
+    @staticmethod
+    async def _resolve_department_names(department_ids: list[int]) -> dict[int, str]:
+        """Map Vitec department IDs to office names from the offices table."""
+        if not department_ids:
+            return {}
+        try:
+            async with async_session_factory() as db:
+                stmt = select(Office.vitec_department_id, Office.name).where(
+                    Office.vitec_department_id.in_(department_ids),
+                )
+                rows = (await db.execute(stmt)).all()
+                return {int(r[0]): r[1] for r in rows if r[0] is not None}
+        except Exception:
+            logger.debug("Could not resolve department names", exc_info=True)
+            return {}
+
+    @staticmethod
+    def _transaction_cache_key(*, installation_id: str, txn: dict) -> str:
+        raw = "|".join(
+            [
+                installation_id,
+                str(txn.get("postingDate") or ""),
+                str(txn.get("account") or ""),
+                str(txn.get("userId") or ""),
+                str(txn.get("estateId") or ""),
+                str(txn.get("amount") or ""),
+                str(txn.get("vatAmount") or ""),
+                str(txn.get("description") or ""),
+            ]
+        )
+        return hashlib.sha1(raw.encode("utf-8")).hexdigest()
+
+    def _build_report_data_dict(
+        self,
+        *,
+        year: int,
+        department_id: int,
+        from_date: str,
+        to_date: str,
+        include_vat: bool,
+        broker_map: dict[str, str],
+        brokers_with_sales: set[str],
+        broker_estates: dict[str, dict[str, list[dict]]],
+        estate_address: dict[str, str],
+        estate_metadata: dict[str, dict[str, str]],
+        sync_metadata: dict[str, Any] | None = None,
+        source_counts: dict[str, int] | None = None,
+    ) -> dict:
         report_data = {
-            "year": y,
+            "year": year,
             "department_id": department_id,
             "from_date": from_date,
             "to_date": to_date,
@@ -596,12 +1096,38 @@ class SalesReportService:
                 }
             )
 
-        # Exclude brokers with 0 sales (oppgjørsansvarlig from Aktiv Oppgjør / Pacta Oppgjør)
         report_data["brokers"] = [b for b in report_data["brokers"] if b["sale_count"] > 0]
         report_data["total_sales"] = sum(b["sale_count"] for b in report_data["brokers"])
         report_data["total_revenue"] = round(sum(b["total"] for b in report_data["brokers"]), 2)
 
-        return report_data, broker_map, brokers_with_sales, broker_estates, estate_address, estate_metadata, include_vat
+        data_sources = []
+        sc = source_counts or {}
+        for src_name, src_cfg in SYNC_SOURCES.items():
+            data_sources.append({
+                "name": src_name,
+                "label": src_cfg["label"],
+                "coverage": f"{src_cfg['coverage_start']} - present",
+                "row_count": sc.get(src_name, 0),
+            })
+
+        report_data["scope"] = {
+            "accounts_included": sorted(REVENUE_ACCOUNTS),
+            "account_categories": {
+                "vederlag": sorted(VEDERLAG_ACCOUNTS),
+                "andre_inntekter": sorted(ANDRE_INNTEKTER_ACCOUNTS),
+            },
+            "estate_statuses": "40-48 (solgt/overtatt)",
+            "vat_handling": "included" if include_vat else "excluded",
+            "date_range": {"from": from_date, "to": to_date},
+            "department_filter": department_id,
+            "last_synced_at": (sync_metadata or {}).get("last_synced_at"),
+            "data_sources": data_sources,
+            "brokers_filter": "only brokers with sales in period",
+            "data_freshness_note": "Current month re-synced on every load; past months cached",
+            "validation_warnings_count": (sync_metadata or {}).get("validation_warnings_count", 0),
+        }
+
+        return report_data
 
     def _build_excel(
         self,
