@@ -1081,10 +1081,20 @@ function BrokerRow({
   );
 }
 
+function useCurrentTime(intervalMs = 60_000) {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), intervalMs);
+    return () => clearInterval(id);
+  }, [intervalMs]);
+  return now;
+}
+
 function DataConfidenceBadge({ scope }: { scope: ReportScopeMetadata | undefined }) {
+  const now = useCurrentTime();
   if (!scope?.last_synced_at) return null;
 
-  const syncAge = Date.now() - new Date(scope.last_synced_at).getTime();
+  const syncAge = now - new Date(scope.last_synced_at).getTime();
   const minutes = syncAge / 60_000;
   const hasWarnings = (scope.validation_warnings_count ?? 0) > 0;
 

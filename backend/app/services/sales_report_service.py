@@ -32,7 +32,8 @@ from datetime import datetime, timedelta
 from typing import Any
 from zoneinfo import ZoneInfo
 
-from sqlalchemy import and_, func as sa_func, select, text
+from sqlalchemy import and_, select, text
+from sqlalchemy import func as sa_func
 
 from app.config import settings
 from app.database import async_session_factory
