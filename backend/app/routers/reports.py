@@ -38,10 +38,20 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/reports", tags=["Reports"])
 
-_SAFE_PARAM_KEYS = frozenset({
-    "year", "department_id", "from_date", "to_date", "include_vat",
-    "department_ids", "top_n", "since_id", "limit", "active_only",
-})
+_SAFE_PARAM_KEYS = frozenset(
+    {
+        "year",
+        "department_id",
+        "from_date",
+        "to_date",
+        "include_vat",
+        "department_ids",
+        "top_n",
+        "since_id",
+        "limit",
+        "active_only",
+    }
+)
 
 
 async def _write_audit_log_safe(
@@ -69,6 +79,7 @@ async def _write_audit_log_inner(
         if token:
             try:
                 from app.config import settings
+
                 payload = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
                 email = payload.get("sub") or "anonymous"
             except Exception:
@@ -81,13 +92,15 @@ async def _write_audit_log_inner(
         ip = request.client.host if request.client else None
 
         async with async_session_factory() as db:
-            db.add(ReportAccessLog(
-                user_email=email,
-                endpoint=request.url.path,
-                action=action,
-                params_json=params,
-                ip_address=ip,
-            ))
+            db.add(
+                ReportAccessLog(
+                    user_email=email,
+                    endpoint=request.url.path,
+                    action=action,
+                    params_json=params,
+                    ip_address=ip,
+                )
+            )
             await db.commit()
     except Exception:
         logger.debug("Failed to write report access log", exc_info=True)
@@ -393,7 +406,9 @@ async def test_send_subscription(
     recipient: str | None = Query(None, description="Optional single test recipient"),
     db: AsyncSession = Depends(get_db),
 ):
-    await _write_audit_log_safe(request, action="subscription_send", extra_params={"subscription_id": str(subscription_id)})
+    await _write_audit_log_safe(
+        request, action="subscription_send", extra_params={"subscription_id": str(subscription_id)}
+    )
     item = await db.get(ReportSubscription, str(subscription_id))
     if not item:
         raise HTTPException(status_code=404, detail="Subscription not found")
