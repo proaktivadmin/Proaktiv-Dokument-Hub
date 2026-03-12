@@ -32,7 +32,10 @@ class ReportSalesEstateCache(Base):
     department_id: Mapped[int] = mapped_column(Integer, nullable=False)
     estate_id: Mapped[str] = mapped_column(String(64), nullable=False)
     data_source: Mapped[str] = mapped_column(
-        String(30), nullable=False, default=DATA_SOURCE_VITEC_NEXT, server_default=DATA_SOURCE_VITEC_NEXT,
+        String(30),
+        nullable=False,
+        default=DATA_SOURCE_VITEC_NEXT,
+        server_default=DATA_SOURCE_VITEC_NEXT,
     )
     sold_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     address: Mapped[str] = mapped_column(Text, nullable=False, default="")
@@ -63,7 +66,10 @@ class ReportSalesTransactionCache(Base):
     installation_id: Mapped[str] = mapped_column(String(50), nullable=False)
     department_id: Mapped[int] = mapped_column(Integer, nullable=False)
     data_source: Mapped[str] = mapped_column(
-        String(30), nullable=False, default=DATA_SOURCE_VITEC_NEXT, server_default=DATA_SOURCE_VITEC_NEXT,
+        String(30),
+        nullable=False,
+        default=DATA_SOURCE_VITEC_NEXT,
+        server_default=DATA_SOURCE_VITEC_NEXT,
     )
     posting_date: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     account: Mapped[str] = mapped_column(String(16), nullable=False, default="")

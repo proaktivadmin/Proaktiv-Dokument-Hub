@@ -53,6 +53,7 @@ try:
     REPORT_TIMEZONE = ZoneInfo("Europe/Oslo")
 except KeyError:
     from datetime import timezone as _tz
+
     REPORT_TIMEZONE = _tz(timedelta(hours=1))  # CET fallback when tzdata is missing
     logger.debug("tzdata package not installed; using fixed UTC+1 fallback for REPORT_TIMEZONE")
 
@@ -813,7 +814,9 @@ class SalesReportService:
                     warnings_count += 1
                     logger.warning(
                         "Large transaction amount %.2f for dept %s estate %s",
-                        amt, department_id, estate_id_raw,
+                        amt,
+                        department_id,
+                        estate_id_raw,
                     )
 
                 tx_key = self._transaction_cache_key(installation_id=installation_id, txn=txn)
@@ -1103,12 +1106,14 @@ class SalesReportService:
         data_sources = []
         sc = source_counts or {}
         for src_name, src_cfg in SYNC_SOURCES.items():
-            data_sources.append({
-                "name": src_name,
-                "label": src_cfg["label"],
-                "coverage": f"{src_cfg['coverage_start']} - present",
-                "row_count": sc.get(src_name, 0),
-            })
+            data_sources.append(
+                {
+                    "name": src_name,
+                    "label": src_cfg["label"],
+                    "coverage": f"{src_cfg['coverage_start']} - present",
+                    "row_count": sc.get(src_name, 0),
+                }
+            )
 
         report_data["scope"] = {
             "accounts_included": sorted(REVENUE_ACCOUNTS),
