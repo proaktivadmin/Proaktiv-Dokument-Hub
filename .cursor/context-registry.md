@@ -31,7 +31,12 @@ Canonical context map for agents and commands in this repository.
   - `.agents/skills/vitec-template-builder/SKILL.md`
   - `.agents/skills/vitec-template-builder/LESSONS.md`
   - `.agents/skills/vitec-template-builder/PATTERNS.md`
+  - `.agents/skills/vitec-mcp/SKILL.md`
   - `.agents/skills/markdown-converter/SKILL.md`
+- Vitec MCP data and integration context:
+  - `mcp/vitec-next/README.md`
+  - `mcp/vitec-next/data/flettekoder.json`
+  - `mcp/vitec-next/data/reference_data.json`
 - Multi-agent methodology:
   - `.planning/codebase/AGENT-PIPELINE.md`
 - Efficiency and release controls:

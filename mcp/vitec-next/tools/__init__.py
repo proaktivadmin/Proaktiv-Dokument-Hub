@@ -1,0 +1,2 @@
+"""Vitec Next MCP tools."""
+

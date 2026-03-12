@@ -38,6 +38,27 @@ export interface SalesReportBroker {
   properties: SalesReportProperty[];
 }
 
+export interface ReportDataSourceInfo {
+  name: string;
+  label: string;
+  coverage: string;
+  row_count: number;
+}
+
+export interface ReportScopeMetadata {
+  accounts_included: string[];
+  account_categories: Record<string, string[]>;
+  estate_statuses: string;
+  vat_handling: string;
+  date_range: { from: string; to: string };
+  department_filter: number | null;
+  last_synced_at: string | null;
+  data_sources: ReportDataSourceInfo[];
+  brokers_filter: string;
+  data_freshness_note: string;
+  validation_warnings_count: number;
+}
+
 export interface SalesReportData {
   year: number;
   department_id: number;
@@ -49,6 +70,7 @@ export interface SalesReportData {
   brokers: SalesReportBroker[];
   total_sales: number;
   total_revenue: number;
+  scope?: ReportScopeMetadata;
 }
 
 export interface FranchiseDepartment {
@@ -147,6 +169,19 @@ export interface ReportSubscription {
   last_error: string | null;
   created_at: string;
   updated_at: string;
+}
+
+export interface ReportSalesSyncEvent {
+  id: number;
+  installation_id: string;
+  department_id: number;
+  event_type: string;
+  from_date: string;
+  to_date: string;
+  estates_upserted: number;
+  transactions_upserted: number;
+  payload: Record<string, unknown>;
+  created_at: string;
 }
 
 /**
@@ -301,4 +336,35 @@ export async function testReportSubscription(id: string, recipient?: string): Pr
   const searchParams = new URLSearchParams();
   if (recipient) searchParams.set("recipient", recipient);
   await apiClient.post(`/reports/subscriptions/${id}/test-send${searchParams.toString() ? `?${searchParams}` : ""}`);
+}
+
+
+export async function listReportCacheEvents(params?: {
+  department_id?: number;
+  since_id?: number;
+  limit?: number;
+}): Promise<ReportSalesSyncEvent[]> {
+  const searchParams = new URLSearchParams();
+  if (params?.department_id) searchParams.set("department_id", String(params.department_id));
+  if (params?.since_id) searchParams.set("since_id", String(params.since_id));
+  if (params?.limit) searchParams.set("limit", String(params.limit));
+  const response = await apiClient.get<ReportSalesSyncEvent[]>(
+    `/reports/cache-events${searchParams.toString() ? `?${searchParams}` : ""}`
+  );
+  return response.data;
+}
+
+export function buildReportCacheEventsStreamUrl(params?: {
+  department_id?: number;
+  since_id?: number;
+  poll_interval_seconds?: number;
+  max_seconds?: number;
+}): string {
+  const searchParams = new URLSearchParams();
+  if (params?.department_id) searchParams.set("department_id", String(params.department_id));
+  if (params?.since_id) searchParams.set("since_id", String(params.since_id));
+  if (params?.poll_interval_seconds) searchParams.set("poll_interval_seconds", String(params.poll_interval_seconds));
+  if (params?.max_seconds) searchParams.set("max_seconds", String(params.max_seconds));
+  const suffix = searchParams.toString() ? `?${searchParams}` : "";
+  return `/api/reports/cache-events/stream${suffix}`;
 }
