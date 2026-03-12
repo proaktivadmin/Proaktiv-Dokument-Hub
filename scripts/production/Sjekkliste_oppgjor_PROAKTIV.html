@@ -1,0 +1,791 @@
+<div class="proaktiv-theme" id="vitecTemplate">
+<span vitec-template="resource:Vitec Stilark">&nbsp;</span>
+<style type="text/css">
+#vitecTemplate {
+  counter-reset: section;
+  color: #272630;
+}
+
+#vitecTemplate .avoid-page-break {
+  page-break-inside: avoid;
+}
+
+/* ===== TITLE ===== */
+#vitecTemplate .checklist-title {
+  text-align: center;
+  font-size: 15pt;
+  font-weight: bold;
+  color: #272630;
+  margin: 0 0 14px 0;
+  padding: 0;
+}
+
+/* ===== HEADER TABLE ===== */
+#vitecTemplate .header-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  margin-bottom: 14px;
+}
+
+#vitecTemplate .header-table td {
+  padding: 5px 8px;
+  vertical-align: top;
+  color: #272630;
+  font-size: 10pt;
+}
+
+#vitecTemplate .lbl {
+  background: #E9E7DC;
+  font-weight: bold;
+  border: 1px solid #BDB8AD;
+}
+
+#vitecTemplate .val {
+  border: 1px solid #BDB8AD;
+}
+
+/* ===== MAIN CHECKLIST TABLE ===== */
+#vitecTemplate .cl {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+#vitecTemplate .cl th {
+  background: #E9E7DC;
+  font-weight: bold;
+  font-size: 10pt;
+  color: #272630;
+  padding: 5px 8px;
+  text-align: left;
+  border: 1px solid #BDB8AD;
+}
+
+#vitecTemplate .cl td {
+  padding: 4px 8px;
+  vertical-align: middle;
+  color: #272630;
+  font-size: 10pt;
+  border: 1px solid #BDB8AD;
+}
+
+#vitecTemplate .cl td.ck {
+  text-align: center;
+  padding: 4px 2px;
+}
+
+/* Section header rows */
+#vitecTemplate .cl tr.grp td {
+  background: #F5F5F0;
+  font-weight: bold;
+  font-size: 10pt;
+  border-top: 2px solid #BDB8AD;
+  padding: 6px 8px;
+}
+
+/* "Sakens karakter" divider row */
+#vitecTemplate .cl tr.divider td {
+  background: #E9E7DC;
+  font-weight: bold;
+  font-size: 10pt;
+  border-top: 2px solid #9A9895;
+}
+
+/* Spacer row */
+#vitecTemplate .cl tr.spacer td {
+  border: none;
+  padding: 0;
+  background: transparent;
+  height: 12px;
+}
+
+/* ===== :has() INTERACTIVE FEATURES (Web editor) ===== */
+
+/* Individual row: grey out entire row when N/A is checked */
+#vitecTemplate .cl tr:has(td.n .btn.active) td {
+  color: #bbb !important;
+  background: #f5f5f0 !important;
+}
+#vitecTemplate .cl tr:has(td.n .btn.active) td:first-child {
+  text-decoration: line-through;
+}
+
+/* Group cascade: grey ALL rows when group header N/A is active */
+#vitecTemplate .cl tbody:has(tr.grp td.n .btn.active) tr td {
+  color: #bbb !important;
+  background: #f5f5f0 !important;
+}
+#vitecTemplate .cl tbody:has(tr.grp td.n .btn.active) tr td:first-child {
+  text-decoration: line-through;
+}
+
+/* Group cascade: dim individual toggles in child rows */
+#vitecTemplate .cl tbody:has(tr.grp td.n .btn.active) tr:not(.grp) td.v .btn,
+#vitecTemplate .cl tbody:has(tr.grp td.n .btn.active) tr:not(.grp) td.n .btn,
+#vitecTemplate .cl tbody:has(tr.grp td.n .btn.active) tr:not(.grp) td.a .btn {
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+/* Mutual exclusion: Vedlagt checked → dim N/A */
+#vitecTemplate .cl tr:has(td.v .btn.active) td.n .btn {
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+/* Mutual exclusion: N/A checked → dim Vedlagt and Avvik */
+#vitecTemplate .cl tr:has(td.n .btn.active) td.v .btn {
+  opacity: 0.15;
+  pointer-events: none;
+}
+#vitecTemplate .cl tr:has(td.n .btn.active) td.a .btn {
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+/* Mutual exclusion: Avvik checked → dim N/A (Vedlagt + Avvik allowed) */
+#vitecTemplate .cl tr:has(td.a .btn.active) td.n .btn {
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+/* Avvik row highlighting */
+#vitecTemplate .cl tr:has(td.a .btn.active) td:first-child {
+  border-left: 3px solid #D97706;
+}
+
+/* ===== N/A TOGGLE STYLING ===== */
+.svg-toggle.na-mark {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:%239A9895;' height='496' width='496' x='9.1' y='9.1'/><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'/></svg>");
+}
+.svg-toggle.na-mark.active,
+.btn.active > .svg-toggle.na-mark {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:%239A9895;' height='496' width='496' x='9.1' y='9.1'/><rect style='fill:%23E9E7DC;' height='400' width='400' x='57.1' y='60.6'/><rect style='fill:%239A9895;' height='50' width='280' x='117' y='231'/></svg>");
+  box-shadow: none !important;
+}
+
+.na-label { display: none; font-size: 8pt; color: #9A9895; font-weight: bold; }
+.btn.active .na-label { display: inline; }
+
+/* ===== AVVIK TOGGLE STYLING ===== */
+.svg-toggle.avvik-mark {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:%23D97706;' height='496' width='496' x='9.1' y='9.1'/><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'/></svg>");
+}
+.svg-toggle.avvik-mark.active,
+.btn.active > .svg-toggle.avvik-mark {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:%23D97706;' height='496' width='496' x='9.1' y='9.1'/><rect style='fill:%23FEF3C7;' height='400' width='400' x='57.1' y='60.6'/><rect style='fill:%23D97706;' x='230' y='120' width='52' height='200' rx='8'/><circle style='fill:%23D97706;' cx='256' cy='390' r='28'/></svg>");
+  box-shadow: none !important;
+}
+
+.avvik-label { display: none; font-size: 7pt; color: #D97706; font-weight: bold; }
+.btn.active .avvik-label { display: inline; }
+
+/* ===== CHECKBOX TOGGLE ===== */
+label.btn {
+  display: inline;
+  text-transform: none;
+  white-space: normal;
+  padding: 0;
+  vertical-align: baseline;
+  outline: none;
+  font-size: inherit;
+}
+label.btn:active,
+label.btn.active {
+  box-shadow: none;
+  outline: none;
+}
+.svg-toggle {
+  display: inline-block !important;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  vertical-align: middle;
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none !important;
+  cursor: pointer;
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+  background-position: center center;
+}
+.svg-toggle.checkbox {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:%23272630;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect></svg>");
+}
+.svg-toggle.checkbox.active,
+.btn.active > .svg-toggle.checkbox {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect style='fill:%23272630;' height='496' width='496' x='9.1' y='9.1'></rect><rect style='fill:white;' height='400' width='400' x='57.1' y='60.6'></rect><path style='fill:%23272630;' d='M396.1,189.9L223.5,361.1c-4.7,4.7-12.3,4.6-17-0.1l-90.8-91.5c-4.7-4.7-4.6-12.3,0.1-17l22.7-22.5c4.7-4.7,12.3-4.6,17,0.1 l59.8,60.3l141.4-140.2c4.7-4.7,12.3-4.6,17,0.1l22.5,22.7C400.9,177.7,400.8,185.3,396.1,189.9L396.1,189.9z'></path></svg>");
+  box-shadow: none !important;
+}
+#vitecTemplate [data-toggle="buttons"] input {
+  display: none;
+}
+
+/* ===== SIGNATURE — hidden until Godkjent is checked ===== */
+.sig-reveal { display: none; }
+.btn.active .sig-reveal { display: block; margin-top: 4px; }
+
+#vitecTemplate .sig-img {
+  max-height: 2.5cm;
+  max-width: 6cm;
+}
+
+/* ===== NB TEXT ===== */
+#vitecTemplate .nb {
+  font-size: 9pt;
+  color: #272630;
+  margin: 10px 0 4px 0;
+}
+
+/* ===== NOTES BOX ===== */
+#vitecTemplate .notes-box {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+}
+
+#vitecTemplate .notes-box td {
+  border: 1px solid #BDB8AD;
+  padding: 6px 8px;
+  vertical-align: top;
+  color: #272630;
+  font-size: 10pt;
+}
+
+/* ===== AVVIK SUMMARY TABLE ===== */
+#vitecTemplate .avvik-summary {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+#vitecTemplate .avvik-summary th {
+  background: #FEF3C7;
+  font-weight: bold;
+  font-size: 10pt;
+  color: #92400E;
+  padding: 5px 8px;
+  text-align: left;
+  border: 1px solid #D97706;
+}
+
+#vitecTemplate .avvik-summary td {
+  padding: 4px 8px;
+  vertical-align: top;
+  color: #272630;
+  font-size: 10pt;
+  border: 1px solid #BDB8AD;
+}
+
+#vitecTemplate .avvik-summary td.num {
+  text-align: center;
+  font-weight: bold;
+  color: #D97706;
+  width: 30px;
+}
+
+#vitecTemplate .avvik-header {
+  font-size: 11pt;
+  font-weight: bold;
+  color: #92400E;
+  margin: 16px 0 4px 0;
+  padding: 4px 0;
+  border-bottom: 2px solid #D97706;
+}
+
+/* ===== FOOTER TABLE ===== */
+#vitecTemplate .ft {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  margin-top: 6px;
+}
+
+#vitecTemplate .ft td {
+  padding: 6px 8px;
+  vertical-align: middle;
+  color: #272630;
+  font-size: 9pt;
+  border: 1px solid #BDB8AD;
+}
+
+#vitecTemplate .ft .lbl {
+  font-size: 9pt;
+}
+</style>
+
+<!-- ============================================================ -->
+<!-- DYNAMIC TITLE                                                 -->
+<!-- ============================================================ -->
+<p class="checklist-title">Meglers sjekkliste for
+  <span vitec-if="Model.eiendom.eieform == &quot;Aksje&quot;">aksjeleilighet</span>
+  <span vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">andel i borettslag</span>
+  <span vitec-if="Model.eiendom.eieform != &quot;Aksje&quot; &amp;&amp; Model.eiendom.eieform != &quot;Andel&quot;">fast eiendom / eierseksjoner</span>
+</p>
+
+<!-- ============================================================ -->
+<!-- HEADER                                                        -->
+<!-- ============================================================ -->
+<table class="header-table">
+<tbody>
+<tr>
+  <td colspan="25" class="lbl">Oppdragsnummer</td>
+  <td colspan="25" class="val">[[oppdrag.nr]]</td>
+  <td colspan="25" class="lbl">Overtagelsesdato</td>
+  <td colspan="25" class="val">[[kontrakt.overtagelse.dato]]</td>
+</tr>
+<tr>
+  <td colspan="25" class="lbl">Eiendom</td>
+  <td colspan="50" class="val">[[eiendom.gatenavnognr]], [[eiendom.postnr]] [[eiendom.poststed]]</td>
+  <td colspan="25" class="val" style="text-align:right;">[[eiendom.eieform]]</td>
+</tr>
+</tbody>
+</table>
+
+<!-- ============================================================ -->
+<!-- MAIN CHECKLIST TABLE — 4 columns: Dok 62 / Vedlagt 12 / N/A 12 / Avvik 14 -->
+<!-- ============================================================ -->
+<table class="cl">
+<thead>
+<tr>
+  <th colspan="62">Dokumenter som m&aring; f&oslash;lge oppgj&oslash;rsmappen</th>
+  <th colspan="12" style="text-align:center;">Vedlagt</th>
+  <th colspan="12" style="text-align:center;">N/A</th>
+  <th colspan="14" style="text-align:center; color:#D97706;">Avvik</th>
+</tr>
+</thead>
+<tbody>
+
+<!-- Grunnboksutskrift — variant per eieform -->
+<tr vitec-if="Model.eiendom.eieform == &quot;Aksje&quot;">
+  <td colspan="62">Grunnboksutskrift eiendommen</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+<tr vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">
+  <td colspan="62">Grunnboksutskrift andel og eiendom</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+<tr vitec-if="Model.eiendom.eieform != &quot;Aksje&quot; &amp;&amp; Model.eiendom.eieform != &quot;Andel&quot;">
+  <td colspan="62">Grunnboksutskrift</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+
+<!-- Meglerbrev — kun Aksje og Andel -->
+<tr vitec-if="Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Andel&quot;">
+  <td colspan="62">Meglerbrev / opplysningsbrev fra forretningsf&oslash;rer</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+
+<!-- Kjøpekontrakt — alltid -->
+<tr>
+  <td colspan="62">Kj&oslash;pekontrakt</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+
+<!-- Skjøte — kun fast eiendom / eierseksjon -->
+<tr vitec-if="Model.eiendom.eieform != &quot;Aksje&quot; &amp;&amp; Model.eiendom.eieform != &quot;Andel&quot;">
+  <td colspan="62">Skj&oslash;te signert</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+
+<!-- Legitimasjon — alltid -->
+<tr>
+  <td colspan="62">Partene er legitimert BankID eller bekreftet kopi av ID</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+
+<!-- Selgers oppgjørsskjema — alltid -->
+<tr>
+  <td colspan="62">Selgers oppgj&oslash;rsskjema &ndash; Sammendrag</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+
+<!-- Restgjeld — alltid -->
+<tr>
+  <td colspan="62">Restgjeldsoppgave(r)</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+
+<!-- Kjøpers oppgjørsskjema — alltid -->
+<tr>
+  <td colspan="62">Kj&oslash;pers oppgj&oslash;rsskjema &ndash; Sammendrag</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+
+<!-- Aksjebevis — kun Aksje -->
+<tr vitec-if="Model.eiendom.eieform == &quot;Aksje&quot;">
+  <td colspan="62">Aksjebevis</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+
+<!-- Pantesperre — kun Aksje -->
+<tr vitec-if="Model.eiendom.eieform == &quot;Aksje&quot;">
+  <td colspan="62">Bekreftelse p&aring; notert pantesperre fra forretningsf&oslash;rer</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+
+<!-- Overføring hjemmel BRL — kun Andel -->
+<tr vitec-if="Model.eiendom.eieform == &quot;Andel&quot;">
+  <td colspan="62">Overf&oslash;ring av hjemmel til andel borettslag er innhentet og signert</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+
+<!-- Sikring tinglyst — alt unntatt Aksje -->
+<tr vitec-if="Model.eiendom.eieform != &quot;Aksje&quot;">
+  <td colspan="62">Sikring er tinglyst</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+
+<!-- Infoland — kun fast eiendom / eierseksjon -->
+<tr vitec-if="Model.eiendom.eieform != &quot;Aksje&quot; &amp;&amp; Model.eiendom.eieform != &quot;Andel&quot;">
+  <td colspan="62">Rapport fra infoland vedr. komm.avgifter / evt. privat renovasjon</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+
+<!-- Forkjøpsrett — kun Aksje og Andel -->
+<tr vitec-if="Model.eiendom.eieform == &quot;Aksje&quot; || Model.eiendom.eieform == &quot;Andel&quot;">
+  <td colspan="62">Avklaring av evt. forkj&oslash;psrett og styregodkjennelse</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+
+<!-- Risikoklassifisering — alltid -->
+<tr>
+  <td colspan="62">Risikoklassifiseringsskjema Oppdragsinng&aring;else</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+<tr>
+  <td colspan="62">Risikoklassifiseringsskjema Fornyet vurdering</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+
+</tbody>
+
+<!-- ============================================================ -->
+<!-- SPACER + SAKENS KARAKTER                                      -->
+<!-- ============================================================ -->
+<tbody>
+<tr class="spacer"><td colspan="100"></td></tr>
+<tr class="divider">
+  <td colspan="62"><strong>Dokumenter pga. sakens karakter</strong></td>
+  <td colspan="12" style="text-align:center;"><strong>Vedlagt</strong></td>
+  <td colspan="12" style="text-align:center;"><strong>N/A</strong></td>
+  <td colspan="14" style="text-align:center; color:#D97706;"><strong>Avvik</strong></td>
+</tr>
+</tbody>
+
+<!-- Forsikring -->
+<tbody>
+<tr class="grp">
+  <td colspan="62">Hvis forsikring</td>
+  <td colspan="12" class="ck v"></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a"></td>
+</tr>
+<tr>
+  <td colspan="62">Skal selger ha boligselgerforsikring &nbsp;&nbsp; JA / NEI</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+<tr>
+  <td colspan="62">Skal kj&oslash;per ha boligkj&oslash;perforsikring &nbsp;&nbsp; JA / NEI</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+</tbody>
+
+<!-- Overbeheftet -->
+<tbody>
+<tr class="grp">
+  <td colspan="62">Hvis overbeheftet</td>
+  <td colspan="12" class="ck v"></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a"></td>
+</tr>
+<tr>
+  <td colspan="62">Svarbrev fra kreditorer med pantefrafall</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+</tbody>
+
+<!-- Dødsbo -->
+<tbody>
+<tr class="grp">
+  <td colspan="62">Hvis d&oslash;dsbo</td>
+  <td colspan="12" class="ck v"></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a"></td>
+</tr>
+<tr>
+  <td colspan="62">Skifte/uskifteattest i original/bekreftet kopi (event. testament om dette er nevnt i skifteattesten)</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+<tr>
+  <td colspan="62">Eventuelle fullmakter fra arvinger i original</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+<tr>
+  <td colspan="62">Bekreftet kopi av legitimasjon m/fnr. for alle arvinger</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+</tbody>
+
+<!-- Konsesjonsfrihet — kun fast eiendom -->
+<tbody vitec-if="Model.eiendom.eieform != &quot;Aksje&quot; &amp;&amp; Model.eiendom.eieform != &quot;Andel&quot;">
+<tr class="grp">
+  <td colspan="62">Hvis egenerklæring konsesjonsfrihet / konsesjonsplikt</td>
+  <td colspan="12" class="ck v"></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a"></td>
+</tr>
+<tr>
+  <td colspan="62">Bekreftelse p&aring; matrikkelfoering vedlagt</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+</tbody>
+
+<!-- Selveierleilighet — kun Eierseksjon / Sameie -->
+<tbody vitec-if="Model.eiendom.eieform == &quot;Eierseksjon&quot; || Model.eiendom.eieform == &quot;Sameie&quot;">
+<tr class="grp">
+  <td colspan="62">Hvis selveierleilighet</td>
+  <td colspan="12" class="ck v"></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a"></td>
+</tr>
+<tr>
+  <td colspan="62">Kopi av opplysningsbrev fra forretningsf&oslash;rer</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+<tr>
+  <td colspan="62">Kopi av eierskiftemelding til forr.f&oslash;rer / event. styregodkj.</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+</tbody>
+
+<!-- Servitutter — alt unntatt Aksje -->
+<tbody vitec-if="Model.eiendom.eieform != &quot;Aksje&quot;">
+<tr class="grp">
+  <td colspan="62">Hvis servitutter / heftelser som skal slettes</td>
+  <td colspan="12" class="ck v"></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a"></td>
+</tr>
+<tr>
+  <td colspan="62">Bekreftelse for sletting av boretter, servitutter, forkj.rett o.l.</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+</tbody>
+
+<!-- Festet tomt — kun fast eiendom -->
+<tbody vitec-if="Model.eiendom.eieform != &quot;Aksje&quot; &amp;&amp; Model.eiendom.eieform != &quot;Andel&quot;">
+<tr class="grp">
+  <td colspan="62">Hvis festet tomt p&aring; eiendommen</td>
+  <td colspan="12" class="ck v"></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a"></td>
+</tr>
+<tr>
+  <td colspan="62">Informasjon fra bortfester</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+<tr>
+  <td colspan="62">Grunneiers samtykke i overdragelse p&aring; skj&oslash;te</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+</tbody>
+
+<!-- Fullmakter — alltid -->
+<tbody>
+<tr class="grp">
+  <td colspan="62">Hvis fullmakter som m&aring; hensyntas i oppgj&oslash;ret</td>
+  <td colspan="12" class="ck v"></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a"></td>
+</tr>
+<tr>
+  <td colspan="62">Andre n&oslash;dvendige fullmakter</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck n" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle na-mark"></span><span class="na-label"> N/A</span></label></td>
+  <td colspan="14" class="ck a" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle avvik-mark"></span><span class="avvik-label"> Avvik</span></label></td>
+</tr>
+</tbody>
+
+</table>
+
+<!-- ============================================================ -->
+<!-- KONTROLLPUNKTER — separate table                              -->
+<!-- ============================================================ -->
+<table class="cl" style="margin-top: 0; border-top: none;">
+<thead>
+<tr>
+  <th colspan="62">Kontrollpunkter</th>
+  <th colspan="12" style="text-align:center;">Utf&oslash;rt</th>
+  <th colspan="12"></th>
+  <th colspan="14"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td colspan="62">Meglers regnskap er kontrollert og bokf&oslash;rt</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck"></td>
+  <td colspan="14" class="ck"></td>
+</tr>
+<tr>
+  <td colspan="62">Korrekt overtagelse er registrert i NEXT</td>
+  <td colspan="12" class="ck v" data-toggle="buttons"><label class="btn"><input type="checkbox" autocomplete="off" /><span class="svg-toggle checkbox"></span></label></td>
+  <td colspan="12" class="ck"></td>
+  <td colspan="14" class="ck"></td>
+</tr>
+</tbody>
+</table>
+
+<!-- ============================================================ -->
+<!-- NB OG FRITEKST                                                -->
+<!-- ============================================================ -->
+<p class="nb"><strong>NB!</strong> Megler gj&oslash;res oppmerksom p&aring; at oppgj&oslash;rsavdelingen ikke leser gjennom kontrakten fra punkt til punkt.<br />
+Hvis det er elementer, enten i kontrakt eller &oslash;vrige dokumenter, som spesielt p&aring;virker oppgj&oslash;ret m&aring; dette anf&oslash;res her:</p>
+
+<table class="notes-box">
+<tbody>
+<tr>
+  <td colspan="100"><span class="insert">&nbsp;</span></td>
+</tr>
+</tbody>
+</table>
+
+<!-- ============================================================ -->
+<!-- AVVIK OPPSUMMERING                                             -->
+<!-- ============================================================ -->
+<p class="avvik-header">Oppsummering av avvik</p>
+
+<table class="avvik-summary">
+<thead>
+<tr>
+  <th colspan="5" style="text-align:center;">#</th>
+  <th colspan="35">Punkt</th>
+  <th colspan="60">Begrunnelse for avvik</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td colspan="5" class="num">1</td>
+  <td colspan="35"><span class="insert">&nbsp;</span></td>
+  <td colspan="60"><span class="insert">&nbsp;</span></td>
+</tr>
+<tr>
+  <td colspan="5" class="num">2</td>
+  <td colspan="35"><span class="insert">&nbsp;</span></td>
+  <td colspan="60"><span class="insert">&nbsp;</span></td>
+</tr>
+<tr>
+  <td colspan="5" class="num">3</td>
+  <td colspan="35"><span class="insert">&nbsp;</span></td>
+  <td colspan="60"><span class="insert">&nbsp;</span></td>
+</tr>
+<tr>
+  <td colspan="5" class="num">4</td>
+  <td colspan="35"><span class="insert">&nbsp;</span></td>
+  <td colspan="60"><span class="insert">&nbsp;</span></td>
+</tr>
+<tr>
+  <td colspan="5" class="num">5</td>
+  <td colspan="35"><span class="insert">&nbsp;</span></td>
+  <td colspan="60"><span class="insert">&nbsp;</span></td>
+</tr>
+</tbody>
+</table>
+
+<!-- ============================================================ -->
+<!-- FOOTER: INFO + SIGNATUR + GODKJENNING                         -->
+<!-- ============================================================ -->
+<table class="ft avoid-page-break">
+<tbody>
+<tr>
+  <td colspan="15" class="lbl">Dato oversendt</td>
+  <td colspan="18">[[dagensdato]]</td>
+  <td colspan="15" class="lbl">Opprettet av</td>
+  <td colspan="18">[[avsender.navn]]</td>
+  <td colspan="15" class="lbl">Ansvarlig megler</td>
+  <td colspan="19">[[ansvarligmegler.navn]]</td>
+</tr>
+<tr>
+  <td colspan="15" class="lbl">Signatur megler</td>
+  <td colspan="18"><img alt="Signatur megler" src="[[megler1.signatur]]" class="sig-img" /></td>
+  <td colspan="15" class="lbl">Godkjent av<br />ansvarlig megler</td>
+  <td colspan="52" data-toggle="buttons">
+    <label class="btn">
+      <input type="checkbox" autocomplete="off" />
+      <span class="svg-toggle checkbox"></span> Godkjenn
+      <span class="sig-reveal">
+        <img alt="Signatur ansvarlig megler" src="[[ansvarligmegler.signatur]]" class="sig-img" />
+      </span>
+    </label>
+  </td>
+</tr>
+</tbody>
+</table>
+
+</div>
