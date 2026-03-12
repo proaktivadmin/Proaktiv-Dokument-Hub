@@ -338,6 +338,7 @@ export async function testReportSubscription(id: string, recipient?: string): Pr
   await apiClient.post(`/reports/subscriptions/${id}/test-send${searchParams.toString() ? `?${searchParams}` : ""}`);
 }
 
+
 export async function listReportCacheEvents(params?: {
   department_id?: number;
   since_id?: number;

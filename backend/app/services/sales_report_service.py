@@ -349,7 +349,6 @@ class SalesReportService:
         ]
         results = await asyncio.gather(*tasks, return_exceptions=True)
 
-        # Resolve department IDs to office names
         dept_name_map = await self._resolve_department_names(selected_departments)
 
         departments: list[dict] = []
