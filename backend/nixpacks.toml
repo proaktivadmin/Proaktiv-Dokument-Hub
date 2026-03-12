@@ -2,7 +2,7 @@
 # This file tells Railway how to build and run the Python app
 
 [phases.setup]
-nixPkgs = ["python311", "postgresql"]
+nixPkgs = ["python312", "postgresql"]
 
 [phases.install]
 cmds = ["pip install -r requirements.txt"]
