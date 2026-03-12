@@ -1,0 +1,16 @@
+[project]
+name = "vitec-next-mcp"
+version = "0.1.0"
+description = "Vitec Next MCP server exposing reference resources"
+requires-python = ">=3.11"
+dependencies = [
+    "mcp",
+    "beautifulsoup4",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+package = false
