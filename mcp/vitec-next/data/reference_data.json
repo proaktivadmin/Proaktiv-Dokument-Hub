@@ -1,0 +1,1323 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "parsed_at": "2026-03-12T22:05:08.140892+00:00",
+    "source_file": ".cursor/vitec-reference.md",
+    "stats": {
+      "dokumentkategorier": 97,
+      "objektstyper": 24,
+      "oppdragskategorier": 17,
+      "faser": 7,
+      "dokumentmaler": 36,
+      "standardmaler": 12,
+      "layout_partials": 9
+    }
+  },
+  "dokumentkategorier": [
+    {
+      "ID": 0,
+      "Navn": "Annet",
+      "Dokumentmapper": "Proaktiv"
+    },
+    {
+      "ID": 1,
+      "Navn": "Egenerklæring boligselgerforsikring",
+      "Dokumentmapper": "Oppdragsavtale, Salgsforberedelser"
+    },
+    {
+      "ID": 2,
+      "Navn": "Aksjeeierbok",
+      "Dokumentmapper": "Oppdragsavtale"
+    },
+    {
+      "ID": 3,
+      "Navn": "Annonseutkast",
+      "Dokumentmapper": "Salgsmateriell"
+    },
+    {
+      "ID": 5,
+      "Navn": "Forretningsførerinfo",
+      "Dokumentmapper": "Salgsforberedelser"
+    },
+    {
+      "ID": 6,
+      "Navn": "Budskjema",
+      "Dokumentmapper": ""
+    },
+    {
+      "ID": 7,
+      "Navn": "Diverse",
+      "Dokumentmapper": ""
+    },
+    {
+      "ID": 9,
+      "Navn": "Eiendomsprofil",
+      "Dokumentmapper": "Salgsforberedelser"
+    },
+    {
+      "ID": 10,
+      "Navn": "Takst",
+      "Dokumentmapper": "Salgsforberedelser"
+    },
+    {
+      "ID": 11,
+      "Navn": "Energiattest",
+      "Dokumentmapper": "Salgsforberedelser"
+    },
+    {
+      "ID": 12,
+      "Navn": "E-post inn",
+      "Dokumentmapper": "E-post"
+    },
+    {
+      "ID": 13,
+      "Navn": "E-post ut",
+      "Dokumentmapper": "E-post"
+    },
+    {
+      "ID": 14,
+      "Navn": "Etakst",
+      "Dokumentmapper": ""
+    },
+    {
+      "ID": 15,
+      "Navn": "Faktura",
+      "Dokumentmapper": "Oppgjørsmappe"
+    },
+    {
+      "ID": 16,
+      "Navn": "Ferdigattest",
+      "Dokumentmapper": "Salgsforberedelser"
+    },
+    {
+      "ID": 17,
+      "Navn": "Festekontrakt",
+      "Dokumentmapper": "Salgsforberedelser, Oppgjørsmappe"
+    },
+    {
+      "ID": 18,
+      "Navn": "Firmaattest",
+      "Dokumentmapper": "Oppdragsavtale"
+    },
+    {
+      "ID": 19,
+      "Navn": "Finansieringsinformasjon",
+      "Dokumentmapper": "Kontrakt, Oppgjørsmappe"
+    },
+    {
+      "ID": 20,
+      "Navn": "Forkjøpsrettinformasjon",
+      "Dokumentmapper": "Salgsforberedelser, Oppgjørsmappe"
+    },
+    {
+      "ID": 21,
+      "Navn": "Fornyelse av oppdrag",
+      "Dokumentmapper": "Oppdragsavtale"
+    },
+    {
+      "ID": 22,
+      "Navn": "Fullmakt selger",
+      "Dokumentmapper": "Oppdragsavtale, Kontrakt, Oppgjørsmappe"
+    },
+    {
+      "ID": 23,
+      "Navn": "Garantidokument",
+      "Dokumentmapper": "Kontrakt, Oppgjørsmappe"
+    },
+    {
+      "ID": 24,
+      "Navn": "Grunnboksutskrift",
+      "Dokumentmapper": "Salgsforberedelser, Oppgjørsmappe"
+    },
+    {
+      "ID": 25,
+      "Navn": "Grunneierinformasjon",
+      "Dokumentmapper": "Salgsforberedelser, Oppgjørsmappe"
+    },
+    {
+      "ID": 26,
+      "Navn": "Hjemmelserklæring",
+      "Dokumentmapper": "Kontrakt, Oppgjørsmappe"
+    },
+    {
+      "ID": 27,
+      "Navn": "Kontrakt",
+      "Dokumentmapper": "Kontrakt, Oppgjørsmappe"
+    },
+    {
+      "ID": 28,
+      "Navn": "Kommunalinformasjon",
+      "Dokumentmapper": "Salgsforberedelser, Oppgjørsmappe"
+    },
+    {
+      "ID": 29,
+      "Navn": "Konsesjonsskjema",
+      "Dokumentmapper": "Kontrakt, Oppgjørsmappe"
+    },
+    {
+      "ID": 31,
+      "Navn": "Formuesverdi",
+      "Dokumentmapper": "Salgsforberedelser"
+    },
+    {
+      "ID": 32,
+      "Navn": "Oppdragsavtale",
+      "Dokumentmapper": "Oppdragsavtale, Oppgjørsmappe"
+    },
+    {
+      "ID": 33,
+      "Navn": "Oppgjørsdokument selger",
+      "Dokumentmapper": "Kontrakt, Oppgjørsmappe"
+    },
+    {
+      "ID": 34,
+      "Navn": "Oppgjørsskjema",
+      "Dokumentmapper": "Kontrakt, Oppgjørsmappe"
+    },
+    {
+      "ID": 35,
+      "Navn": "Overtakelsesprotokoll",
+      "Dokumentmapper": "Kontrakt, Oppgjørsmappe"
+    },
+    {
+      "ID": 36,
+      "Navn": "Panteattest løsøreregisteret",
+      "Dokumentmapper": "Oppgjørsmappe"
+    },
+    {
+      "ID": 37,
+      "Navn": "Pantedokument, sikring",
+      "Dokumentmapper": "Oppgjørsmappe"
+    },
+    {
+      "ID": 38,
+      "Navn": "Pantefrafall",
+      "Dokumentmapper": "Salgsforberedelser, Oppgjørsmappe"
+    },
+    {
+      "ID": 39,
+      "Navn": "Pantesperre",
+      "Dokumentmapper": "Oppgjørsmappe"
+    },
+    {
+      "ID": 40,
+      "Navn": "Plan, kart og regulering",
+      "Dokumentmapper": "Salgsforberedelser"
+    },
+    {
+      "ID": 41,
+      "Navn": "Plantegning",
+      "Dokumentmapper": "Salgsforberedelser"
+    },
+    {
+      "ID": 42,
+      "Navn": "Restgjeldsoppgave",
+      "Dokumentmapper": "Salgsforberedelser, Oppgjørsmappe"
+    },
+    {
+      "ID": 43,
+      "Navn": "Salgsoppgave",
+      "Dokumentmapper": "Salgsforberedelser, Salgsmateriell, Oppgjørsmappe"
+    },
+    {
+      "ID": 44,
+      "Navn": "Salgsoppgavearkiv",
+      "Dokumentmapper": "Salgsforberedelser, Salgsmateriell"
+    },
+    {
+      "ID": 45,
+      "Navn": "Seksjoneringsbegjeering",
+      "Dokumentmapper": "Oppgjørsmappe"
+    },
+    {
+      "ID": 46,
+      "Navn": "Servitutt/Erklæring",
+      "Dokumentmapper": "Salgsforberedelser, Oppgjørsmappe"
+    },
+    {
+      "ID": 47,
+      "Navn": "Skjøte/hjemmelsoverf.",
+      "Dokumentmapper": "Salgsforberedelser, Kontrakt, Oppgjørsmappe"
+    },
+    {
+      "ID": 48,
+      "Navn": "Styregodkjennelse",
+      "Dokumentmapper": "Kontrakt, Oppgjørsmappe"
+    },
+    {
+      "ID": 49,
+      "Navn": "Illustrasjon/tegning",
+      "Dokumentmapper": "Salgsforberedelser, Salgsmateriell"
+    },
+    {
+      "ID": 50,
+      "Navn": "Tilleggsavtale",
+      "Dokumentmapper": "Kontrakt, Oppgjørsmappe"
+    },
+    {
+      "ID": 51,
+      "Navn": "Transporterklæring",
+      "Dokumentmapper": "Oppgjørsmappe"
+    },
+    {
+      "ID": 52,
+      "Navn": "Vedtekter",
+      "Dokumentmapper": "Salgsforberedelser"
+    },
+    {
+      "ID": 53,
+      "Navn": "Visningsliste",
+      "Dokumentmapper": "Salgsmateriell"
+    },
+    {
+      "ID": 54,
+      "Navn": "Fullmakt kjøper",
+      "Dokumentmapper": ""
+    },
+    {
+      "ID": 55,
+      "Navn": "Oppgjørsdokument kjøper",
+      "Dokumentmapper": "Oppgjørsmappe"
+    },
+    {
+      "ID": 56,
+      "Navn": "Eiendomsvurdering",
+      "Dokumentmapper": "Oppdragsavtale"
+    },
+    {
+      "ID": 57,
+      "Navn": "Akseptbrev kjøper",
+      "Dokumentmapper": "Salgsforberedelser, Salgsmateriell"
+    },
+    {
+      "ID": 58,
+      "Navn": "Akseptbrev selger",
+      "Dokumentmapper": "Salgsforberedelser, Salgsmateriell"
+    },
+    {
+      "ID": 59,
+      "Navn": "Leieavtale",
+      "Dokumentmapper": "Oppgjørsmappe"
+    },
+    {
+      "ID": 60,
+      "Navn": "Forsikring selger",
+      "Dokumentmapper": "Oppgjørsmappe"
+    },
+    {
+      "ID": 61,
+      "Navn": "Forsikring kjøper",
+      "Dokumentmapper": "Oppgjørsmappe"
+    },
+    {
+      "ID": 62,
+      "Navn": "Prisliste",
+      "Dokumentmapper": "Salgsforberedelser, Salgsmateriell"
+    },
+    {
+      "ID": 63,
+      "Navn": "Erklæring",
+      "Dokumentmapper": "Salgsforberedelser, Kontrakt, Oppgjørsmappe"
+    },
+    {
+      "ID": 64,
+      "Navn": "Følgebrev",
+      "Dokumentmapper": "Salgsforberedelser"
+    },
+    {
+      "ID": 65,
+      "Navn": "Oppgjørsoppstilling selger",
+      "Dokumentmapper": "Kontrakt, Oppgjørsmappe"
+    },
+    {
+      "ID": 66,
+      "Navn": "Oppgjørsoppstilling kjøper",
+      "Dokumentmapper": "Kontrakt, Oppgjørsmappe"
+    },
+    {
+      "ID": 67,
+      "Navn": "Pro & Contra - skjema",
+      "Dokumentmapper": "Kontrakt, Oppgjørsmappe"
+    },
+    {
+      "ID": 69,
+      "Navn": "Regnskapsinformasjon",
+      "Dokumentmapper": "Salgsforberedelser, Oppgjørsmappe"
+    },
+    {
+      "ID": 70,
+      "Navn": "Rekvisisjon",
+      "Dokumentmapper": "Salgsforberedelser"
+    },
+    {
+      "ID": 71,
+      "Navn": "Tilbud",
+      "Dokumentmapper": "Salgsforberedelser"
+    },
+    {
+      "ID": 72,
+      "Navn": "Renterapport",
+      "Dokumentmapper": "Oppgjørsmappe"
+    },
+    {
+      "ID": 73,
+      "Navn": "Pantedokument kjøper",
+      "Dokumentmapper": "Oppgjørsmappe"
+    },
+    {
+      "ID": 74,
+      "Navn": "Forutsetningsbrev bank",
+      "Dokumentmapper": "Oppgjørsmappe"
+    },
+    {
+      "ID": 75,
+      "Navn": "Kontraktsvedlegg",
+      "Dokumentmapper": "Kontrakt"
+    },
+    {
+      "ID": 76,
+      "Navn": "Salgsoppgavevedlegg",
+      "Dokumentmapper": "Salgsforberedelser, Salgsmateriell"
+    },
+    {
+      "ID": 77,
+      "Navn": "Hvitvaskingsdokument",
+      "Dokumentmapper": "Oppdragsavtale, Kontrakt"
+    },
+    {
+      "ID": 78,
+      "Navn": "Selskapsdokument",
+      "Dokumentmapper": "Oppdragsavtale"
+    },
+    {
+      "ID": 79,
+      "Navn": "Aksjedokument",
+      "Dokumentmapper": "Oppdragsavtale"
+    },
+    {
+      "ID": 80,
+      "Navn": "Testament og ektepakt ved dødsboskifte",
+      "Dokumentmapper": ""
+    },
+    {
+      "ID": 81,
+      "Navn": "Gjensidig testament",
+      "Dokumentmapper": ""
+    },
+    {
+      "ID": 82,
+      "Navn": "Skifteattest, uskifteattest og bostyrerattest ved døds...",
+      "Dokumentmapper": ""
+    },
+    {
+      "ID": 83,
+      "Navn": "Skiftefullmakt",
+      "Dokumentmapper": ""
+    },
+    {
+      "ID": 84,
+      "Navn": "Begrunnelse for dokumentavgift",
+      "Dokumentmapper": ""
+    },
+    {
+      "ID": 85,
+      "Navn": "Budjournal",
+      "Dokumentmapper": ""
+    },
+    {
+      "ID": 86,
+      "Navn": "Budvedlegg",
+      "Dokumentmapper": ""
+    },
+    {
+      "ID": 88,
+      "Navn": "Bekreftet grunnboksutskrift",
+      "Dokumentmapper": ""
+    },
+    {
+      "ID": 89,
+      "Navn": "Samtykke fra bortfester",
+      "Dokumentmapper": ""
+    },
+    {
+      "ID": 90,
+      "Navn": "Samtykke fra rettighetshaver til urådighet",
+      "Dokumentmapper": ""
+    },
+    {
+      "ID": 91,
+      "Navn": "Husordensregler",
+      "Dokumentmapper": ""
+    },
+    {
+      "ID": 92,
+      "Navn": "Byggetegninger",
+      "Dokumentmapper": ""
+    },
+    {
+      "ID": 93,
+      "Navn": "Leveransebeskrivelser",
+      "Dokumentmapper": ""
+    },
+    {
+      "ID": 94,
+      "Navn": "Oppgjørsskjema selger",
+      "Dokumentmapper": ""
+    },
+    {
+      "ID": 95,
+      "Navn": "Oppgjørsskjema kjøper",
+      "Dokumentmapper": ""
+    },
+    {
+      "ID": 96,
+      "Navn": "Tilstandsrapport arkiv",
+      "Dokumentmapper": ""
+    },
+    {
+      "ID": 97,
+      "Navn": "Signert kjøpekontrakt",
+      "Dokumentmapper": ""
+    },
+    {
+      "ID": 98,
+      "Navn": "Meglers verdivurdering",
+      "Dokumentmapper": ""
+    },
+    {
+      "ID": 99,
+      "Navn": "Befaringsrapport",
+      "Dokumentmapper": ""
+    },
+    {
+      "ID": 100,
+      "Navn": "Salgsoppgave korrektur",
+      "Dokumentmapper": ""
+    },
+    {
+      "ID": 101,
+      "Navn": "Midlertidig brukstillatelse",
+      "Dokumentmapper": ""
+    }
+  ],
+  "objektstyper": [
+    {
+      "ID": 1,
+      "Navn": "Enebolig",
+      "Grunntype": "bolig",
+      "Type": "vanlig",
+      "Eieform": "eiet"
+    },
+    {
+      "ID": 2,
+      "Navn": "Tomannsbolig",
+      "Grunntype": "bolig",
+      "Type": "vanlig",
+      "Eieform": "eiet"
+    },
+    {
+      "ID": 3,
+      "Navn": "Rekkehus",
+      "Grunntype": "bolig",
+      "Type": "vanlig",
+      "Eieform": "eiet"
+    },
+    {
+      "ID": 4,
+      "Navn": "Eierseksjon",
+      "Grunntype": "bolig",
+      "Type": "vanlig",
+      "Eieform": "eierleilighet/seksjon"
+    },
+    {
+      "ID": 5,
+      "Navn": "Andelsleilighet",
+      "Grunntype": "bolig",
+      "Type": "borettslag/andel",
+      "Eieform": "andel"
+    },
+    {
+      "ID": 6,
+      "Navn": "Aksjeleilighet",
+      "Grunntype": "bolig",
+      "Type": "borettslag/andel",
+      "Eieform": "aksje"
+    },
+    {
+      "ID": 7,
+      "Navn": "Fritidseiendom",
+      "Grunntype": "fritid",
+      "Type": "vanlig",
+      "Eieform": "-"
+    },
+    {
+      "ID": 8,
+      "Navn": "Tomt",
+      "Grunntype": "tomt",
+      "Type": "vanlig",
+      "Eieform": "-"
+    },
+    {
+      "ID": 9,
+      "Navn": "Kontor",
+      "Grunntype": "næring",
+      "Type": "næringseiendom",
+      "Eieform": "eiet"
+    },
+    {
+      "ID": 10,
+      "Navn": "Bygård",
+      "Grunntype": "næring",
+      "Type": "næringseiendom",
+      "Eieform": "eiet"
+    },
+    {
+      "ID": 11,
+      "Navn": "Kombinasjonslokale",
+      "Grunntype": "næring",
+      "Type": "næringseiendom",
+      "Eieform": "eiet"
+    },
+    {
+      "ID": 12,
+      "Navn": "Garasje",
+      "Grunntype": "næring",
+      "Type": "næringseiendom",
+      "Eieform": "eiet"
+    },
+    {
+      "ID": 13,
+      "Navn": "Lager",
+      "Grunntype": "næring",
+      "Type": "næringseiendom",
+      "Eieform": "eiet"
+    },
+    {
+      "ID": 14,
+      "Navn": "Hotell",
+      "Grunntype": "næring",
+      "Type": "næringseiendom",
+      "Eieform": "eiet"
+    },
+    {
+      "ID": 15,
+      "Navn": "Industri",
+      "Grunntype": "næring",
+      "Type": "næringseiendom",
+      "Eieform": "eiet"
+    },
+    {
+      "ID": 16,
+      "Navn": "Forretning/butikk",
+      "Grunntype": "næring",
+      "Type": "næringseiendom",
+      "Eieform": "eiet"
+    },
+    {
+      "ID": 17,
+      "Navn": "Landbruk",
+      "Grunntype": "næring",
+      "Type": "næringseiendom",
+      "Eieform": "eiet"
+    },
+    {
+      "ID": 18,
+      "Navn": "Småbruk",
+      "Grunntype": "næring",
+      "Type": "næringseiendom",
+      "Eieform": "eiet"
+    },
+    {
+      "ID": 19,
+      "Navn": "Kjøpesenter",
+      "Grunntype": "næring",
+      "Type": "næringseiendom",
+      "Eieform": "eiet"
+    },
+    {
+      "ID": 20,
+      "Navn": "Serveringslokale/kantine",
+      "Grunntype": "næring",
+      "Type": "næringseiendom",
+      "Eieform": "eiet"
+    },
+    {
+      "ID": 21,
+      "Navn": "Verksted",
+      "Grunntype": "næring",
+      "Type": "næringseiendom",
+      "Eieform": "eiet"
+    },
+    {
+      "ID": 22,
+      "Navn": "Undervisning/arrangement",
+      "Grunntype": "næring",
+      "Type": "næringseiendom",
+      "Eieform": "eiet"
+    },
+    {
+      "ID": 23,
+      "Navn": "Obligasjonsleilighet",
+      "Grunntype": "bolig",
+      "Type": "vanlig",
+      "Eieform": "obligasjon"
+    },
+    {
+      "ID": 24,
+      "Navn": "Næringstomt",
+      "Grunntype": "tomt",
+      "Type": "næringseiendom",
+      "Eieform": "eiet"
+    }
+  ],
+  "oppdragskategorier": [
+    {
+      "ID": 1,
+      "Navn": "Salg (Bolig, Fritid, Tomt)",
+      "Reservert for": "Salg",
+      "Gruppe": "Salg (Bolig, Fritid, Tomt)"
+    },
+    {
+      "ID": 3,
+      "Navn": "E-takst",
+      "Reservert for": "Verdivurdering",
+      "Gruppe": "Verdivurdering (Bolig, Fritid, Tomt)"
+    },
+    {
+      "ID": 4,
+      "Navn": "Oppgjørsoppdrag (Bolig, Fritid, Tomt)",
+      "Reservert for": "Oppgjørsoppdrag",
+      "Gruppe": "Oppgjørsoppdrag (Bolig, Fritid, Tomt)"
+    },
+    {
+      "ID": 5,
+      "Navn": "Tvangssalg (Bolig, fritid, tomt)",
+      "Reservert for": "Tvangssalg",
+      "Gruppe": "Tvangssalg (Bolig, Fritid, Tomt)"
+    },
+    {
+      "ID": 6,
+      "Navn": "Utleie Arealobjekt (Næringseiendom)",
+      "Reservert for": "-",
+      "Gruppe": "Utleie Arealobjekt (Næringseiendom)"
+    },
+    {
+      "ID": 7,
+      "Navn": "Salg (Nybygg/prosjekt)",
+      "Reservert for": "-",
+      "Gruppe": "Salg (Nybygg)"
+    },
+    {
+      "ID": 8,
+      "Navn": "Salg (Næringseiendom)",
+      "Reservert for": "-",
+      "Gruppe": "Salg (Næringseiendom)"
+    },
+    {
+      "ID": 9,
+      "Navn": "Utleie (Næringseiendom)",
+      "Reservert for": "-",
+      "Gruppe": "Utleie (Næringseiendom)"
+    },
+    {
+      "ID": 10,
+      "Navn": "Renteoppdrag",
+      "Reservert for": "-",
+      "Gruppe": "Administrativt"
+    },
+    {
+      "ID": 11,
+      "Navn": "Salg (Bolig, Fritid, Tomt)",
+      "Reservert for": "-",
+      "Gruppe": "Salg (Bolig, Fritid, Tomt)"
+    },
+    {
+      "ID": 12,
+      "Navn": "Internkontroll",
+      "Reservert for": "-",
+      "Gruppe": "Administrativt"
+    },
+    {
+      "ID": 15,
+      "Navn": "Verdivurdering (Næringseiendom)",
+      "Reservert for": "-",
+      "Gruppe": "Verdivurdering (Næringseiendom)"
+    },
+    {
+      "ID": 16,
+      "Navn": "Kontraktposisjon Forbruker (Nybygg)",
+      "Reservert for": "-",
+      "Gruppe": "Kontraktposisjon Forbruker (Nybygg)"
+    },
+    {
+      "ID": 17,
+      "Navn": "Kontraktposisjon Profesjonell (Nybygg)",
+      "Reservert for": "-",
+      "Gruppe": "Kontraktposisjon Profesjonell (Nybygg)"
+    },
+    {
+      "ID": 18,
+      "Navn": "Konsulent-/honoraroppdrag (Næringseiendom)",
+      "Reservert for": "-",
+      "Gruppe": "Konsulent-/honoraroppdrag (Næringseiendom)"
+    },
+    {
+      "ID": 19,
+      "Navn": "Tvangssalg (Næringseiendom)",
+      "Reservert for": "-",
+      "Gruppe": "Tvangssalg (Næringseiendom)"
+    },
+    {
+      "ID": 20,
+      "Navn": "Salg (Næringseiendom AS)",
+      "Reservert for": "-",
+      "Gruppe": "Salg (Næringseiendom)"
+    }
+  ],
+  "faser": [
+    {
+      "Mappe": "Oppdragsavtale",
+      "Beskrivelse": "Dokumenter ved oppdragsinngåelse"
+    },
+    {
+      "Mappe": "Salgsforberedelser",
+      "Beskrivelse": "Forberedende dokumenter før salg"
+    },
+    {
+      "Mappe": "Salgsmateriell",
+      "Beskrivelse": "Markedsføringsmateriell"
+    },
+    {
+      "Mappe": "Kontrakt",
+      "Beskrivelse": "Kontraktsdokumenter"
+    },
+    {
+      "Mappe": "Oppgjørsmappe",
+      "Beskrivelse": "Dokumenter til oppgjør"
+    },
+    {
+      "Mappe": "E-post",
+      "Beskrivelse": "E-postkommunikasjon"
+    },
+    {
+      "Mappe": "Proaktiv",
+      "Beskrivelse": "Proaktiv-spesifikke dokumenter"
+    }
+  ],
+  "maltyper": {
+    "dokumentmaler": [
+      {
+        "Malnavn": "Aksept av oppdrag (Bolig/Standard)",
+        "Type": "Objekt/Kontakt",
+        "Fase": "-",
+        "Kategori": "Annet"
+      },
+      {
+        "Malnavn": "Akseptbrev kjøper digital kontraktsmøte",
+        "Type": "Objekt/Kontakt",
+        "Fase": "Kontrakt",
+        "Kategori": "Akseptbrev kjøper"
+      },
+      {
+        "Malnavn": "Akseptbrev selger digital kontraktssignering",
+        "Type": "Objekt/Kontakt",
+        "Fase": "Kontrakt",
+        "Kategori": "Akseptbrev selger"
+      },
+      {
+        "Malnavn": "BROKER SMS - Melding til leads før budstart",
+        "Type": "Objekt/Kontakt",
+        "Fase": "-",
+        "Kategori": "Annet"
+      },
+      {
+        "Malnavn": "Budskjema",
+        "Type": "Objekt/Kontakt",
+        "Fase": "Til salgs",
+        "Kategori": "Budskjema"
+      },
+      {
+        "Malnavn": "E-signeringsforespørsel e-post",
+        "Type": "System",
+        "Fase": "-",
+        "Kategori": "Annet"
+      },
+      {
+        "Malnavn": "E-signeringsforespørsel SMS",
+        "Type": "System",
+        "Fase": "-",
+        "Kategori": "Annet"
+      },
+      {
+        "Malnavn": "Eierskiftemelding forretningsfører",
+        "Type": "Objekt/Kontakt",
+        "Fase": "Kontrakt",
+        "Kategori": "Forretningsførerinfo"
+      },
+      {
+        "Malnavn": "Følgebrev tinglysing",
+        "Type": "Objekt/Kontakt",
+        "Fase": "Oppgjør",
+        "Kategori": "Følgebrev"
+      },
+      {
+        "Malnavn": "Hjemmelserklæring",
+        "Type": "Objekt/Kontakt",
+        "Fase": "3 faser",
+        "Kategori": "Hjemmelserklæring"
+      },
+      {
+        "Malnavn": "Innfrielsesbrev",
+        "Type": "Objekt/Kontakt",
+        "Fase": "Oppgjør",
+        "Kategori": "Oppgjørsdokument sel..."
+      },
+      {
+        "Malnavn": "Kjøpekontrakt AS-IS",
+        "Type": "Objekt/Kontakt",
+        "Fase": "Kontrakt",
+        "Kategori": "Kontrakt"
+      },
+      {
+        "Malnavn": "Kjøpekontrakt FORBRUKER",
+        "Type": "Objekt/Kontakt",
+        "Fase": "Kontrakt",
+        "Kategori": "Kontrakt"
+      },
+      {
+        "Malnavn": "Klargjøringsbrev oppgjør kjøper",
+        "Type": "Objekt/Kontakt",
+        "Fase": "Oppgjør",
+        "Kategori": "Oppgjørsdokument kjø..."
+      },
+      {
+        "Malnavn": "Klargjøringsbrev oppgjør selger",
+        "Type": "Objekt/Kontakt",
+        "Fase": "Oppgjør",
+        "Kategori": "Oppgjørsdokument sel..."
+      },
+      {
+        "Malnavn": "Oppdragsavtale",
+        "Type": "Objekt/Kontakt",
+        "Fase": "Innsalg",
+        "Kategori": "Oppdragsavtale"
+      },
+      {
+        "Malnavn": "Oppgjørsbrev kjøper",
+        "Type": "System",
+        "Fase": "-",
+        "Kategori": "Annet"
+      },
+      {
+        "Malnavn": "Oppgjørsbrev selger",
+        "Type": "System",
+        "Fase": "-",
+        "Kategori": "Annet"
+      },
+      {
+        "Malnavn": "Oppgjørsoppstilling Kjøper",
+        "Type": "Objekt/Kontakt",
+        "Fase": "Oppgjør",
+        "Kategori": "Oppgjørsoppstilling kjø..."
+      },
+      {
+        "Malnavn": "Oppgjørsoppstilling Selger",
+        "Type": "Objekt/Kontakt",
+        "Fase": "Oppgjør",
+        "Kategori": "Oppgjørsoppstilling sel..."
+      },
+      {
+        "Malnavn": "Oppgjørsskjema kjøper",
+        "Type": "Objekt/Kontakt",
+        "Fase": "Kontrakt",
+        "Kategori": "Oppgjørsskjema"
+      },
+      {
+        "Malnavn": "Oppgjørsskjema selger",
+        "Type": "Objekt/Kontakt",
+        "Fase": "Kontrakt",
+        "Kategori": "Oppgjørsskjema"
+      },
+      {
+        "Malnavn": "Overtakelsesprotokoll",
+        "Type": "Objekt/Kontakt",
+        "Fase": "2 faser",
+        "Kategori": "Overtakelsesprotokoll"
+      },
+      {
+        "Malnavn": "Pantedokument (sikring)",
+        "Type": "Objekt/Kontakt",
+        "Fase": "4 faser",
+        "Kategori": "Pantedokument, sikring"
+      },
+      {
+        "Malnavn": "Pantefrafall",
+        "Type": "Objekt/Kontakt",
+        "Fase": "-",
+        "Kategori": "Pantefrafall"
+      },
+      {
+        "Malnavn": "Pro-Contra skjema",
+        "Type": "Objekt/Kontakt",
+        "Fase": "Kontrakt",
+        "Kategori": "Oppgjørsskjema"
+      },
+      {
+        "Malnavn": "Rekvisisjon restgjeld",
+        "Type": "Objekt/Kontakt",
+        "Fase": "2 faser",
+        "Kategori": "Rekvisisjon"
+      },
+      {
+        "Malnavn": "Risikoklassifisering - Oppdragsinngåelse",
+        "Type": "Objekt/Kontakt",
+        "Fase": "-",
+        "Kategori": "Annet"
+      },
+      {
+        "Malnavn": "Salgsmelding til forretningsfører",
+        "Type": "Objekt/Kontakt",
+        "Fase": "-",
+        "Kategori": "Annet"
+      },
+      {
+        "Malnavn": "Skjøte",
+        "Type": "Objekt/Kontakt",
+        "Fase": "Kontrakt",
+        "Kategori": "Skjøte/hjemmelsoverf."
+      },
+      {
+        "Malnavn": "SMS - Fullt oppgjør innbetalt",
+        "Type": "Objekt/Kontakt",
+        "Fase": "-",
+        "Kategori": "Annet"
+      },
+      {
+        "Malnavn": "SMS - Oppgjør utbetalt - selger",
+        "Type": "Objekt/Kontakt",
+        "Fase": "-",
+        "Kategori": "Annet"
+      },
+      {
+        "Malnavn": "Tilbudsbrev",
+        "Type": "Objekt/Kontakt",
+        "Fase": "Innsalg",
+        "Kategori": "Annet"
+      },
+      {
+        "Malnavn": "Transporterklæring",
+        "Type": "Objekt/Kontakt",
+        "Fase": "Oppgjør",
+        "Kategori": "Transporterklæring"
+      },
+      {
+        "Malnavn": "Vitec Bunntekst",
+        "Type": "System",
+        "Fase": "-",
+        "Kategori": "Annet"
+      },
+      {
+        "Malnavn": "Vitec Topptekst",
+        "Type": "System",
+        "Fase": "-",
+        "Kategori": "Annet"
+      }
+    ],
+    "dokumentmaler_metadata": {
+      "mal_typer": [
+        {
+          "Type": "Objekt/Kontakt",
+          "Beskrivelse": "Standard dokumentmal"
+        },
+        {
+          "Type": "System",
+          "Beskrivelse": "Systemmaler (bunntekster, signaturer)"
+        },
+        {
+          "Type": "Word",
+          "Beskrivelse": "Word-dokumenter"
+        }
+      ],
+      "faser": [
+        {
+          "Fase": "Innsalg",
+          "Beskrivelse": "Før oppdrag signert"
+        },
+        {
+          "Fase": "Til salgs",
+          "Beskrivelse": "Aktiv markedsføring"
+        },
+        {
+          "Fase": "Klargjøring",
+          "Beskrivelse": "Før kontraktsmøte"
+        },
+        {
+          "Fase": "Kontrakt",
+          "Beskrivelse": "Kontraktsfasen"
+        },
+        {
+          "Fase": "Oppgjør",
+          "Beskrivelse": "Oppgjørsfasen"
+        },
+        {
+          "Fase": "2 faser",
+          "Beskrivelse": "Brukes i 2 faser"
+        },
+        {
+          "Fase": "3 faser",
+          "Beskrivelse": "Brukes i 3 faser"
+        },
+        {
+          "Fase": "4 faser",
+          "Beskrivelse": "Brukes i 4 faser"
+        }
+      ],
+      "mottaker_typer": [
+        {
+          "Mottaker": "Systemstandard - Selger",
+          "Beskrivelse": "Standard til selger"
+        },
+        {
+          "Mottaker": "Systemstandard - Kjøper",
+          "Beskrivelse": "Standard til kjøper"
+        },
+        {
+          "Mottaker": "Systemstandard - Forr...",
+          "Beskrivelse": "Standard til forretningsfører"
+        },
+        {
+          "Mottaker": "Systemstandard - Pan...",
+          "Beskrivelse": "Standard til panthaver"
+        },
+        {
+          "Mottaker": "Systemstandard - Gru...",
+          "Beskrivelse": "Standard til grunneier"
+        },
+        {
+          "Mottaker": "Systemstandard - Sak...",
+          "Beskrivelse": "Standard til saksøkte"
+        },
+        {
+          "Mottaker": "Egne/kundetilpasset",
+          "Beskrivelse": "Tilpassede maler"
+        },
+        {
+          "Mottaker": "Kommunale - Kommune",
+          "Beskrivelse": "Kommunale dokumenter"
+        },
+        {
+          "Mottaker": "Kommunale - Tinglysing",
+          "Beskrivelse": "Tinglysningsdokumenter"
+        },
+        {
+          "Mottaker": "Kommunale - Brann",
+          "Beskrivelse": "Brannvesen"
+        },
+        {
+          "Mottaker": "Kommunale - E-verk",
+          "Beskrivelse": "E-verk"
+        }
+      ]
+    },
+    "standardmaler": {
+      "Signaturer og Topp/Bunntekst": [
+        {
+          "Funksjon": "E-postsignatur",
+          "Standardmal": "E-post signatur"
+        },
+        {
+          "Funksjon": "SMS-signatur",
+          "Standardmal": "SMS-signatur"
+        },
+        {
+          "Funksjon": "Topptekst",
+          "Standardmal": "Vitec Topptekst"
+        },
+        {
+          "Funksjon": "Bunntekst",
+          "Standardmal": "Vitec Bunntekst"
+        }
+      ],
+      "Standard funksjonsmaler": [
+        {
+          "Funksjon": "Saldoforespørsel",
+          "Standardmal": "Saldoforespørsel"
+        },
+        {
+          "Funksjon": "Saldoforespørsel Tvangssalg",
+          "Standardmal": "Saldoforespørsel (Tvangssalg)"
+        },
+        {
+          "Funksjon": "Anmodning pantefrafall",
+          "Standardmal": "Anmodning pantefrafall"
+        },
+        {
+          "Funksjon": "Innhent restgjeld",
+          "Standardmal": "Restgjeldsforespørsel ved oppgjør"
+        },
+        {
+          "Funksjon": "Innhent restgjeld Tvangssalg",
+          "Standardmal": "Restgjeldsforespørsel ved oppgjør Tvangssalg"
+        }
+      ],
+      "Følgebrev / Oppgjørsoppstilling": [
+        {
+          "Funksjon": "Oppgjørsoppstilling selger",
+          "Standardmal": "Oppgjørsbrev selger"
+        },
+        {
+          "Funksjon": "Oppgjørsoppstilling kjøper",
+          "Standardmal": "Oppgjørsbrev kjøper"
+        },
+        {
+          "Funksjon": "Prosjektoppgjørsoppstilling selger",
+          "Standardmal": "(Velg mal)"
+        }
+      ]
+    }
+  },
+  "stilark": {
+    "nokkelegenskaper": [
+      {
+        "Egenskap": "Font",
+        "Verdi": "Open Sans (Google Fonts)"
+      },
+      {
+        "Egenskap": "Font weights",
+        "Verdi": "300 (light), 400 (regular), 700 (bold)"
+      },
+      {
+        "Egenskap": "Base font size",
+        "Verdi": "10pt"
+      },
+      {
+        "Egenskap": "Line height",
+        "Verdi": "normal"
+      },
+      {
+        "Egenskap": "Font ligatures",
+        "Verdi": "none"
+      }
+    ],
+    "viktige_regler": [
+      "Alle templates wrappet i `#vitecTemplate`",
+      "Bruk alltid `font-family: 'Open sans', sans-serif`",
+      "Standard paragraf margin: `1em 0`",
+      "Tabeller: `border-collapse: collapse`, `vertical-align: top`",
+      "Ikke bruk ligatures (`font-variant-ligatures: none`)"
+    ],
+    "code_blocks": [
+      "<span vitec-template=\"resource:Vitec Stilark\">&nbsp;</span>"
+    ]
+  },
+  "layout_partials": [
+    {
+      "name": "Vitec Bunntekst (Standard Footer)",
+      "merge_fields": [
+        "meglerkontor.adresse",
+        "meglerkontor.besoksadresse",
+        "meglerkontor.besokspostnr",
+        "meglerkontor.besokspoststed",
+        "meglerkontor.epost",
+        "meglerkontor.juridisknavn",
+        "meglerkontor.orgnr",
+        "meglerkontor.postnr",
+        "meglerkontor.poststed",
+        "meglerkontor.tlf"
+      ],
+      "code_blocks": [
+        "<span vitec-template=\"resource:Vitec Stilark\">&nbsp;</span>",
+        "<div id=\"vitecTemplate\">\n  <span vitec-template=\"resource:Vitec Stilark\">&nbsp;</span>\n  <table cellspacing=\"0\" style=\"border-collapse:collapse; table-layout:fixed; width:21cm\">\n    <tbody>\n      <tr>\n        <td colspan=\"30\" style=\"padding-left:1cm\">\n          <small>[[meglerkontor.juridisknavn]]</small>\n        </td>\n        <td colspan=\"40\" style=\"text-align:center\">\n          <small>[[meglerkontor.adresse]], [[meglerkontor.postnr]] [[meglerkontor.poststed]]</small>\n        </td>\n        <td colspan=\"30\" style=\"padding-right:1cm; text-align:right\">\n          <small>Tlf: [[meglerkontor.tlf]]</small>\n        </td>\n      </tr>\n      <tr>\n        <td colspan=\"30\" style=\"padding-left:1cm\">\n          <small>Org.nr: [[meglerkontor.orgnr]]</small>\n        </td>\n        <td colspan=\"40\" style=\"text-align:center\">\n          <small>Besøksadresse: [[meglerkontor.besoksadresse]], [[meglerkontor.besokspostnr]] [[meglerkontor.besokspoststed]]</small>\n        </td>\n        <td colspan=\"30\" style=\"padding-right:1cm; text-align:right\">\n          <small>[[meglerkontor.epost]]</small>\n        </td>\n      </tr>\n    </tbody>\n  </table>\n</div>"
+      ]
+    },
+    {
+      "name": "Vitec Bunntekst Fremleiekontrakt",
+      "merge_fields": [
+        "P",
+        "p"
+      ],
+      "code_blocks": [
+        "<div id=\"vitecTemplate\">\n  <span vitec-template=\"resource:Vitec Stilark\">&nbsp;</span>\n  <table style=\"height:1.5cm; table-layout:fixed; width:20cm\">\n    <tbody>\n      <tr>\n        <td style=\"font-size:8pt; padding:0.25cm 0.5cm 0.5cm 2cm; vertical-align:bottom\">\n          <div style=\"border-top:solid 1px #000000; text-align:center; width:3cm\">Utleier</div>\n        </td>\n        <td style=\"font-size:8pt; padding:0.25cm 0.5cm 0.5cm 2cm; vertical-align:bottom\">\n          <div style=\"border-top:solid 1px #000000; text-align:center; width:3cm\">Fremleier</div>\n        </td>\n        <td style=\"font-size:8pt; padding:0.25cm 0cm 0.5cm 0.5cm; text-align:right; vertical-align:bottom\">\n          <div style=\"border-top:solid 1px #000000; float:right; text-align:center; width:3cm\">Fremleietaker</div>\n        </td>\n        <td style=\"padding:0.5cm; text-align:center\">\n          <span style=\"font-size:8pt\">side [[p]] av [[P]]</span>\n        </td>\n      </tr>\n    </tbody>\n  </table>\n</div>",
+        "<div style=\"border-top:solid 1px #000000; text-align:center; width:3cm\">\n  Signatur-label\n</div>"
+      ]
+    },
+    {
+      "name": "Vitec Bunntekst Kontrakt",
+      "merge_fields": [
+        "P",
+        "p"
+      ],
+      "code_blocks": [
+        "<div id=\"vitecTemplate\">\n  <span vitec-template=\"resource:Vitec Stilark\">&nbsp;</span>\n  <table style=\"height:1.5cm; table-layout:fixed; width:20cm\">\n    <tbody>\n      <tr>\n        <td style=\"font-size:8pt; padding:0.25cm 0.5cm 0.5cm 2cm; vertical-align:bottom\">\n          <div style=\"border-top:solid 1px #000000; text-align:center; width:3cm\">\n            <span vitec-if=\"!Model.oppdrag.type.Contains(&quot;tleie&quot;)\">Selger</span>\n            <span vitec-if=\"Model.oppdrag.type.Contains(&quot;tleie&quot;)\">Utleier</span>\n          </div>\n        </td>\n        <td style=\"padding:0.5cm; text-align:center\">\n          <span style=\"font-size:8pt\">side [[p]] av [[P]]</span>\n        </td>\n        <td style=\"font-size:8pt; padding:0.25cm 1cm 0.5cm 0.5cm; text-align:right; vertical-align:bottom\">\n          <div style=\"border-top:solid 1px #000000; float:right; text-align:center; width:3cm\">\n            <span vitec-if=\"!Model.oppdrag.type.Contains(&quot;tleie&quot;)\">Kjøper</span>\n            <span vitec-if=\"Model.oppdrag.type.Contains(&quot;tleie&quot;)\">Leietaker</span>\n          </div>\n        </td>\n      </tr>\n    </tbody>\n  </table>\n</div>"
+      ]
+    },
+    {
+      "name": "Vitec Bunntekst Sidetall",
+      "merge_fields": [
+        "P",
+        "p"
+      ],
+      "code_blocks": [
+        "<style type=\"text/css\">\n@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap');\n\n#vitecTemplate table {\n    margin: 0;\n    padding: 0;\n    width: 100%;\n    height: 1.5cm;\n    border-collapse: collapse;\n    font-family: 'Open sans', sans-serif;\n    font-size: 8pt;\n    line-height: 10pt;\n    table-layout: fixed;\n}\n\n#vitecTemplate tr td {\n    vertical-align: middle;\n    text-align: center;\n    font-family: 'Open sans', sans-serif;\n    font-size: 8pt;\n    line-height: 9pt;\n}\n</style>\n\n<div id=\"vitecTemplate\">\n  <table>\n    <tbody>\n      <tr>\n        <td>[[p]] av [[P]]</td>\n      </tr>\n    </tbody>\n  </table>\n</div>"
+      ]
+    },
+    {
+      "name": "Vitec Bunntekst Sikring (Pantedokument)",
+      "merge_fields": [
+        "P",
+        "p"
+      ],
+      "code_blocks": [
+        "<style type=\"text/css\">\n#vitecTemplate td[data-label] {\n    padding: 16px 2px 4px 3px;\n    position: relative;\n}\n\n#vitecTemplate td[data-label]:before {\n    content: attr(data-label);\n    text-align: left;\n    color: #333;\n    font-size: 7pt;\n    line-height: 8pt;\n    text-transform: uppercase;\n    display: block;\n    position: absolute;\n    top: 1px;\n}\n\n#vitecTemplate tr th,\n#vitecTemplate tr td {\n    vertical-align: middle;\n    border: solid 1px #000;\n    font-family: 'Open sans', sans-serif;\n    font-size: 8pt;\n    line-height: 9pt;\n}\n\n#vitecTemplate td.no-border {\n    border: none;\n}\n</style>\n\n<div id=\"vitecTemplate\" style=\"padding-left:1cm; padding-right:1cm\">\n  <table>\n    <tbody>\n      <tr>\n        <td colspan=\"25\" data-label=\"Dato\">&nbsp;</td>\n        <td colspan=\"75\" data-label=\"Pantsetters underskrift\">&nbsp;</td>\n      </tr>\n      <tr contenteditable=\"false\">\n        <td class=\"no-border\" colspan=\"20\">\n          <small>Statens kartverk - rev 01/19</small>\n        </td>\n        <td class=\"no-border\" colspan=\"60\" style=\"text-align:center\">\n          <small>Pantedokument - Panterett i \n            <span vitec-if=\"Model.eiendom.eieform != &quot;Andel&quot;\">fast eiendom</span>\n            <span vitec-if=\"Model.eiendom.eieform == &quot;Andel&quot;\">andel i borettslag</span>\n          </small>\n        </td>\n        <td class=\"no-border\" colspan=\"20\" style=\"text-align:right\">\n          <small>Side [[p]] av [[P]]</small>\n        </td>\n      </tr>\n    </tbody>\n  </table>\n</div>",
+        "<td data-label=\"Feltlabel\">&nbsp;</td>"
+      ]
+    },
+    {
+      "name": "Vitec Bunntekst Skjøte",
+      "merge_fields": [
+        "P",
+        "p"
+      ],
+      "code_blocks": [
+        "<div id=\"vitecTemplate\" style=\"padding-left:0.5cm; padding-right:0.5cm\">\n  <table>\n    <tbody>\n      <tr>\n        <td colspan=\"25\" data-label=\"Dato\">&nbsp;</td>\n        <td colspan=\"75\" data-label=\"Utstederens underskrift\">&nbsp;</td>\n      </tr>\n      <tr contenteditable=\"false\">\n        <td class=\"no-border\" colspan=\"20\"><small>GA-5400 B</small></td>\n        <td class=\"no-border\" colspan=\"60\" style=\"text-align:center\"><small>Skjøte</small></td>\n        <td class=\"no-border\" colspan=\"20\" style=\"text-align:right\"><small>Side [[p]] av [[P]]</small></td>\n      </tr>\n    </tbody>\n  </table>\n</div>"
+      ]
+    },
+    {
+      "name": "Vitec Topptekst (Standard Header)",
+      "merge_fields": [
+        "meglerkontor.firmalogourl",
+        "meglerkontor.kjedenavn"
+      ],
+      "code_blocks": [
+        "<div id=\"vitecTemplate\">\n  <span vitec-template=\"resource:Vitec Stilark\">&nbsp;</span>\n  <table style=\"width:21cm\">\n    <tbody>\n      <tr>\n        <td style=\"padding:1cm\">\n          <strong><small>[[meglerkontor.kjedenavn]]</small></strong>\n        </td>\n        <td style=\"padding:1cm; text-align:right\">\n          <img src=\"[[meglerkontor.firmalogourl]]\" style=\"max-height:1.5cm; max-width:6cm\" />\n        </td>\n      </tr>\n    </tbody>\n  </table>\n</div>"
+      ]
+    },
+    {
+      "name": "E-post signatur",
+      "merge_fields": [
+        "avsender.epost",
+        "avsender.meglerkontor.besoksadresse",
+        "avsender.meglerkontor.navn",
+        "avsender.meglerkontor.postnr",
+        "avsender.meglerkontor.poststed",
+        "avsender.mobiltlf",
+        "avsender.navn",
+        "avsender.tittel"
+      ],
+      "code_blocks": [
+        "<div>\n  <span style=\"font-family:calibri,sans-serif; font-size:11pt\">&nbsp;</span><br />\n  <span style=\"font-family:calibri,sans-serif; font-size:11pt\">&nbsp;</span><br />\n  <span style=\"font-family:calibri,sans-serif; font-size:11pt\">&nbsp;</span><br />\n  <span style=\"font-family:calibri,sans-serif; font-size:11pt\">Med vennlig hilsen</span><br />\n  <span style=\"font-family:calibri,sans-serif; font-size:11pt\">[[avsender.navn]]</span><br />\n  <span style=\"font-family:calibri,sans-serif; font-size:11pt\">&nbsp;</span><br />\n  <span style=\"font-family:calibri,sans-serif; font-size:11pt\">[[avsender.tittel]]</span><br />\n  <span style=\"font-family:calibri,sans-serif; font-size:11pt\">[[avsender.meglerkontor.navn]]</span><br />\n  <span style=\"font-family:calibri,sans-serif; font-size:11pt\">Mobil: [[avsender.mobiltlf]], e-post: [[avsender.epost]]</span><br />\n  <span style=\"font-family:calibri,sans-serif; font-size:11pt\">Besøksadresse: [[avsender.meglerkontor.besoksadresse]], [[avsender.meglerkontor.postnr]] [[avsender.meglerkontor.poststed]]</span>\n</div>"
+      ]
+    },
+    {
+      "name": "SMS-signatur",
+      "merge_fields": [
+        "avsender.meglerkontor.navn",
+        "avsender.navn",
+        "avsender.tittel"
+      ],
+      "code_blocks": [
+        "<div>Vennlig hilsen</div>\n<div>[[avsender.navn]]</div>\n<div>&nbsp;</div>\n<div>[[avsender.tittel]]</div>\n<div>[[avsender.meglerkontor.navn]]</div>"
+      ]
+    }
+  ]
+}
