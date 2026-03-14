@@ -139,21 +139,21 @@ export default function Dashboard() {
                 <p className="text-4xl font-serif font-bold mt-2">{stats?.total ?? 0}</p>
               </div>
 
-              <div className="bg-card rounded-lg p-6 border border-border shadow-card ring-1 ring-black/[0.03] dark:ring-white/[0.06] hover:shadow-medium transition-shadow duration-normal">
+              <div className="bg-card rounded-lg p-6 border border-border shadow-card ring-1 ring-black/3 dark:ring-white/6 hover:shadow-medium transition-shadow duration-normal">
                 <p className="text-muted-foreground text-sm font-sans">Publisert</p>
                 <p className="text-4xl font-serif font-bold text-foreground mt-2">
                   {stats?.published ?? 0}
                 </p>
               </div>
 
-              <div className="bg-card rounded-lg p-6 border border-border shadow-card ring-1 ring-black/[0.03] dark:ring-white/[0.06] hover:shadow-medium transition-shadow duration-normal">
+              <div className="bg-card rounded-lg p-6 border border-border shadow-card ring-1 ring-black/3 dark:ring-white/6 hover:shadow-medium transition-shadow duration-normal">
                 <p className="text-muted-foreground text-sm font-sans">Utkast</p>
                 <p className="text-4xl font-serif font-bold text-foreground mt-2">
                   {stats?.draft ?? 0}
                 </p>
               </div>
 
-              <div className="bg-card rounded-lg p-6 border border-border shadow-card ring-1 ring-black/[0.03] dark:ring-white/[0.06] hover:shadow-medium transition-shadow duration-normal">
+              <div className="bg-card rounded-lg p-6 border border-border shadow-card ring-1 ring-black/3 dark:ring-white/6 hover:shadow-medium transition-shadow duration-normal">
                 <div className="flex items-center gap-2 text-muted-foreground text-sm font-sans">
                   <Download className="h-4 w-4 text-muted-foreground" />
                   Nedlastinger (30d)
@@ -171,7 +171,7 @@ export default function Dashboard() {
           {/* Offices Card */}
           <Link 
             href="/offices" 
-            className="group bg-card rounded-lg p-6 border border-border shadow-card ring-1 ring-black/[0.03] dark:ring-white/[0.06] hover:border-accent hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-slow"
+            className="group bg-card rounded-lg p-6 border border-border shadow-card ring-1 ring-black/3 dark:ring-white/6 hover:border-accent hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-slow"
           >
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 rounded-lg bg-secondary group-hover:bg-accent/20 transition-colors duration-normal">
@@ -192,7 +192,7 @@ export default function Dashboard() {
           {/* Employees Card */}
           <Link 
             href="/employees" 
-            className="group bg-card rounded-lg p-6 border border-border shadow-card ring-1 ring-black/[0.03] dark:ring-white/[0.06] hover:border-accent hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-slow"
+            className="group bg-card rounded-lg p-6 border border-border shadow-card ring-1 ring-black/3 dark:ring-white/6 hover:border-accent hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-slow"
           >
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 rounded-lg bg-secondary group-hover:bg-accent/20 transition-colors duration-normal">
@@ -218,7 +218,7 @@ export default function Dashboard() {
           {/* Assets Card */}
           <Link 
             href="/assets" 
-            className="group bg-card rounded-lg p-6 border border-border shadow-card ring-1 ring-black/[0.03] dark:ring-white/[0.06] hover:border-accent hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-slow"
+            className="group bg-card rounded-lg p-6 border border-border shadow-card ring-1 ring-black/3 dark:ring-white/6 hover:border-accent hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-slow"
           >
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 rounded-lg bg-secondary group-hover:bg-accent/20 transition-colors duration-normal">
@@ -241,7 +241,7 @@ export default function Dashboard() {
             type="button"
             onClick={handleDownloadSalesReport}
             disabled={salesReportLoading}
-            className="group text-left bg-card rounded-lg p-6 border border-border shadow-card ring-1 ring-black/[0.03] dark:ring-white/[0.06] hover:border-accent hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-slow disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+            className="group text-left bg-card rounded-lg p-6 border border-border shadow-card ring-1 ring-black/3 dark:ring-white/6 hover:border-accent hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-slow disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:translate-y-0"
           >
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 rounded-lg bg-secondary group-hover:bg-accent/20 transition-colors duration-normal">
