@@ -68,6 +68,16 @@ Recent decisions affecting current work:
 
 None.
 
+### Reports (Rapporter)
+
+**Status:** Complete. Page at `/reports` with department/franchise modes, best performers, budget comparison, and email subscriptions.
+
+- Franchise report: all departments, expandable brokers and properties
+- Best performers: eiendomsmegler vs eiendomsmeglerfullmektig, weekly/monthly presets
+- Budgets: per-month targets, actual vs budget comparison
+- Subscriptions: CRUD, test-send, scheduled delivery via GitHub Actions (Fridays 07:00 UTC)
+- One-time setup: add `REPORTS_SCHEDULER_TOKEN` to GitHub secrets and Railway
+
 ## Session Continuity
 
 Last session: 2026-02-22
@@ -328,6 +338,7 @@ Files modified:
 | `.planning/STATE.md`                  | This file - current status     |
 | `.planning/PROJECT.md`                | Requirements and context       |
 | `.planning/ROADMAP.md`                | Phase breakdown                |
+| `.planning/phases/reports-enhancements/PLAN.md` | Reports feature plan (complete) |
 | `.planning/codebase/DESIGN-SYSTEM.md` | **Frontend design guidelines** |
 | `.planning/codebase/STACK.md`         | Technology stack details       |
 
@@ -337,6 +348,7 @@ Files modified:
 
 | Version | Date       | Key Changes                                                |
 | ------- | ---------- | ---------------------------------------------------------- |
+| V4.2    | 2026-03-14 | Reports suite complete: franchise, budgets, best performers, subscriptions, scheduler |
 | V4.1    | 2026-02-22 | 9 production templates, subagent pipeline, file restructure |
 | V4.0    | 2026-02-22 | Phase 11 Template Suite foundation, notifications page, CSP fix |
 | V3.9.4  | 2026-02-02 | Signature self-service editing, setup instructions, photo link |
@@ -384,6 +396,7 @@ Needs a content-fetch pass to backfill HTML bodies before library reset.
 - **WebDAV Employee Photos** — replace base64 with hosted photos
 - **Signature Email Deployment** — Send-SignatureEmails.ps1
 - **Notifications Page Polish** — approval workflow, batch actions
+- **Reports scheduler:** Add `REPORTS_SCHEDULER_TOKEN` to GitHub secrets + Railway (see `.planning/phases/reports-enhancements/PLAN.md`)
 
 ---
 

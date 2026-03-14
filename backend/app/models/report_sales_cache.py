@@ -41,6 +41,7 @@ class ReportSalesEstateCache(Base):
     address: Mapped[str] = mapped_column(Text, nullable=False, default="")
     property_type: Mapped[str] = mapped_column(String(100), nullable=False, default="—")
     assignment_type: Mapped[str] = mapped_column(String(100), nullable=False, default="—")
+    assignment_number: Mapped[str | None] = mapped_column(String(64), nullable=True)
     brokers_json: Mapped[list[dict]] = mapped_column("brokers", JSONType, nullable=False, default=list)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),

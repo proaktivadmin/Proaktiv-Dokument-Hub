@@ -1,26 +1,30 @@
-# Deploy latest code to Proxmox homelab at 192.168.77.127
-# Run from project root. Requires SSH access to homelab.
+# Deploy latest code to Proxmox homelab
+# Docker runs on homelab only — no Docker required on this PC.
+# SSH to Proxmox host (192.168.77.10), run pct exec in LXC 203.
+# App URL after deploy: http://192.168.77.127:3000
 
 param(
-    [string]$Branch = "feat/dark-mode-toggle"
+    [string]$Branch = "main",
+    [switch]$NoBuild  # Skip frontend build (faster, use only for backend-only changes)
 )
 
-$HOMELAB_HOST = "192.168.77.127"
+$PROXMOX_HOST = "192.168.77.10"
+$LXC_ID = "203"
 $REPO_DIR = "/root/Proaktiv-Dokument-Hub"
+$APP_URL = "http://192.168.77.127:3000"
 
-$sshCmd = "cd $REPO_DIR && git fetch origin && git checkout $Branch && git pull origin $Branch && docker compose restart frontend"
+# Full deploy: fetch, force-checkout (discard local changes), reset to remote, build, up
+$buildStep = if ($NoBuild) { "docker compose up -d" } else { "docker compose build frontend && docker compose up -d" }
+$innerCmd = "cd $REPO_DIR && git fetch origin && git checkout -f $Branch && git reset --hard origin/$Branch && $buildStep"
+$sshCmd = "pct exec $LXC_ID -- bash -c '$innerCmd'"
 
-Write-Host "Deploying branch '$Branch' to $HOMELAB_HOST..." -ForegroundColor Cyan
-Write-Host "If SSH fails, run this manually on the homelab:" -ForegroundColor Yellow
-Write-Host "  $sshCmd" -ForegroundColor Gray
-Write-Host ""
+Write-Host "Deploying branch '$Branch' to homelab (Proxmox $PROXMOX_HOST, LXC $LXC_ID)..." -ForegroundColor Cyan
+if ($NoBuild) { Write-Host "Skipping frontend build (-NoBuild)" -ForegroundColor Yellow }
 
-ssh "root@$HOMELAB_HOST" $sshCmd
+ssh "root@$PROXMOX_HOST" $sshCmd
 if ($LASTEXITCODE -eq 0) {
-    Write-Host "Done. Frontend: http://${HOMELAB_HOST}:3000" -ForegroundColor Green
+    Write-Host "Done. Frontend: $APP_URL" -ForegroundColor Green
 } else {
-    Write-Host "SSH failed (password/key required). Run manually on homelab:" -ForegroundColor Red
-    Write-Host "  ssh root@$HOMELAB_HOST" -ForegroundColor Gray
-    Write-Host "  $sshCmd" -ForegroundColor Gray
+    Write-Host "SSH failed. Ensure key-based auth: ssh root@$PROXMOX_HOST" -ForegroundColor Red
     exit 1
 }

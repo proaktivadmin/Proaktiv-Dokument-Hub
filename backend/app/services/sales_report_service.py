@@ -165,6 +165,13 @@ def _format_date_iso(iso_str: str | None) -> str:
         return str(iso_str)
 
 
+def _looks_like_uuid(s: str) -> bool:
+    """True if string looks like a UUID (e.g. estate_id fallback)."""
+    if not s or len(s) < 30:
+        return False
+    return bool(re.match(r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", s.strip()))
+
+
 def _build_estate_address(est: dict) -> str:
     """Build display address from estate object (Vitec may use address, streetAddress, etc.)."""
     addr = str(est.get("address") or "").strip()
@@ -195,7 +202,7 @@ def _extract_display_value(obj: object) -> str:
 
 
 def _build_estate_metadata(est: dict) -> dict[str, str]:
-    """Extract property type and assignment type from estate (Vitec field names may vary)."""
+    """Extract property type, assignment type, and oppdragsnummer from estate (Vitec field names may vary)."""
     prop_type = _extract_display_value(
         est.get("propertyType")
         or est.get("property_type")
@@ -207,7 +214,17 @@ def _build_estate_metadata(est: dict) -> dict[str, str]:
     assign_type = _extract_display_value(
         est.get("assignmentType") or est.get("assignment_type") or est.get("oppdragstype")
     )
-    return {"property_type": prop_type or "—", "assignment_type": assign_type or "—"}
+    oppdrag = _extract_display_value(
+        est.get("assignmentNumber")
+        or est.get("assignment_number")
+        or est.get("oppdragsnummer")
+        or est.get("oppdragsnr")
+    )
+    return {
+        "property_type": prop_type or "—",
+        "assignment_type": assign_type or "—",
+        "assignment_number": oppdrag or "",
+    }
 
 
 def _infer_broker_role(employee: dict) -> str:
@@ -533,7 +550,11 @@ class SalesReportService:
             ws.cell(row=ws.max_row, column=3).font = Font(bold=True)
             for row in rows:
                 ws.append(
-                    [row.get(name_key, "—"), int(row.get("total_sales", 0)), float(row.get("total_revenue", 0.0))]
+                    [
+                        row.get(name_key, "—"),
+                        int(row.get("total_sales", 0)),
+                        round(float(row.get("total_revenue", 0.0)), 0),
+                    ]
                 )
             ws.append([])
 
@@ -750,6 +771,7 @@ class SalesReportService:
             metadata = _build_estate_metadata(est)
             sold_dt = _parse_iso_datetime(est.get("sold"))
             payload_brokers = est.get("brokersIdWithRoles") or []
+            oppdrag = metadata.get("assignment_number") or None
             if row is None:
                 row = ReportSalesEstateCache(
                     estate_key=estate_key,
@@ -761,6 +783,7 @@ class SalesReportService:
                     address=_build_estate_address(est) or "(ukjent adresse)",
                     property_type=metadata["property_type"],
                     assignment_type=metadata["assignment_type"],
+                    assignment_number=oppdrag,
                     brokers_json=payload_brokers,
                 )
                 db.add(row)
@@ -772,6 +795,7 @@ class SalesReportService:
                 row.address = _build_estate_address(est) or "(ukjent adresse)"
                 row.property_type = metadata["property_type"]
                 row.assignment_type = metadata["assignment_type"]
+                row.assignment_number = oppdrag
                 row.brokers_json = payload_brokers
                 estates_upserted += 1
 
@@ -910,6 +934,7 @@ class SalesReportService:
             estate_metadata[eid] = {
                 "property_type": est.property_type or "—",
                 "assignment_type": est.assignment_type or "—",
+                "assignment_number": est.assignment_number or "",
             }
             sold_dt = est.sold_at
             if sold_dt is None or sold_dt.year != year:
@@ -1052,6 +1077,14 @@ class SalesReportService:
             "brokers": [],
         }
 
+        def _display_address(eid: str, addr: str, meta: dict[str, str]) -> str:
+            """Show address or 'Adresse ukjent' + oppdragsnummer, never raw estate_id (UUID)."""
+            oppdrag = meta.get("assignment_number") or ""
+            if addr and not _looks_like_uuid(addr):
+                return f"{addr} ({oppdrag})" if oppdrag else addr
+            suffix = f" ({oppdrag})" if oppdrag else ""
+            return f"Adresse ukjent{suffix}" if suffix else "Adresse ukjent"
+
         for broker_id in sorted(brokers_with_sales):
             name = broker_map.get(broker_id, broker_id)
             estates_data = broker_estates.get(broker_id, {})
@@ -1059,8 +1092,12 @@ class SalesReportService:
             total = 0.0
             properties: list[dict] = []
             for estate_id, txns in sorted(estates_data.items(), key=lambda x: estate_address.get(x[0], x[0])):
-                addr = estate_address.get(estate_id, estate_id)
-                meta = estate_metadata.get(estate_id, {"property_type": "—", "assignment_type": "—"})
+                raw_addr = estate_address.get(estate_id, estate_id)
+                meta = estate_metadata.get(
+                    estate_id,
+                    {"property_type": "—", "assignment_type": "—", "assignment_number": ""},
+                )
+                addr = _display_address(estate_id, raw_addr, meta)
                 prop_total = 0.0
                 txns_data: list[dict] = []
                 for txn in txns:
@@ -1083,6 +1120,7 @@ class SalesReportService:
                     {
                         "address": addr,
                         "estate_id": estate_id,
+                        "assignment_number": meta.get("assignment_number") or "",
                         "property_type": meta["property_type"],
                         "assignment_type": meta["assignment_type"],
                         "total": round(prop_total, 2),
@@ -1158,7 +1196,7 @@ class SalesReportService:
 
         from_display = _format_date_iso(from_date) or from_date[:10]
         to_display = _format_date_iso(to_date) or to_date[:10]
-        sum_label = "Sum vederlag + andre inntekter (kr)" + (" inkl. mva" if include_vat else " exkl. mva")
+        sum_label = "Sum vederlag + andre inntekter (kr)" + (" inkl. mva." if include_vat else " eksl. mva.")
 
         # Header
         ws.append(["Formidlingsrapport - Vederlag og andre inntekter"])
@@ -1195,14 +1233,23 @@ class SalesReportService:
                     )
 
             # Broker summary row (level 0) - no property/assignment type at broker level
-            ws.append([name, sale_count, "", "", round(total, 2)])
+            ws.append([name, sale_count, "", "", round(total, 0)])
             broker_row = row
             row += 1
 
             # Property and transaction detail (grouped)
             for estate_id, txns in sorted(estates.items(), key=lambda x: estate_address.get(x[0], x[0])):
-                addr = estate_address.get(estate_id, estate_id)
-                meta = estate_metadata.get(estate_id, {"property_type": "—", "assignment_type": "—"})
+                raw_addr = estate_address.get(estate_id, estate_id)
+                meta = estate_metadata.get(
+                    estate_id,
+                    {"property_type": "—", "assignment_type": "—", "assignment_number": ""},
+                )
+                oppdrag = meta.get("assignment_number") or ""
+                if raw_addr and not _looks_like_uuid(raw_addr):
+                    addr = f"{raw_addr} ({oppdrag})" if oppdrag else raw_addr
+                else:
+                    suffix = f" ({oppdrag})" if oppdrag else ""
+                    addr = f"Adresse ukjent{suffix}" if suffix else "Adresse ukjent"
                 # Property row (level 1)
                 ws.append([f"  {addr}", "", meta["property_type"], meta["assignment_type"], ""])
                 ws.cell(row=row, column=1).font = Font(italic=True)
@@ -1219,7 +1266,7 @@ class SalesReportService:
                     post_date = _format_date_iso(txn.get("postingDate"))
                     acc = txn.get("account") or ""
                     desc = (txn.get("description") or "")[:40]
-                    ws.append([f"    {post_date} | Konto {acc} | {desc}", "", "", "", round(amt, 2)])
+                    ws.append([f"    {post_date} | Konto {acc} | {desc}", "", "", "", round(amt, 0)])
                     row += 1
 
                 # Group property + its transactions
@@ -1239,7 +1286,7 @@ class SalesReportService:
             for b in brokers_sorted
         )
         total_sales = sum(len(broker_estates.get(b, {})) for b in brokers_sorted)
-        ws.append(["Sum", total_sales, "", "", round(total_revenue, 2)])
+        ws.append(["Sum", total_sales, "", "", round(total_revenue, 0)])
         total_row = row
         for col in range(1, 6):
             ws.cell(row=total_row, column=col).font = Font(bold=True)

@@ -85,7 +85,7 @@ export function StorageBrowser({ onStatusChange }: StorageBrowserProps) {
 
   useEffect(() => {
     loadDirectory(currentPath);
-  }, []);
+  }, [currentPath, loadDirectory]);
 
   // Check connection status only once on mount
   useEffect(() => {

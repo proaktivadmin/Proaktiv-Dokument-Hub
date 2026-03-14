@@ -43,16 +43,7 @@ export function useTemplates(params: UseTemplatesParams = {}): UseTemplatesRetur
     } finally {
       setIsLoading(false);
     }
-  }, [
-    params.status,
-    params.search,
-    params.category_id,
-    params.receiver,
-    params.page,
-    params.per_page,
-    params.sort_by,
-    params.sort_order,
-  ]);
+  }, [params]);
 
   useEffect(() => {
     fetchTemplates();

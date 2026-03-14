@@ -76,6 +76,8 @@ class Settings(BaseSettings):
     VITEC_HUB_BASE_URL: str = ""
     VITEC_HUB_PRODUCT_LOGIN: str = ""
     VITEC_HUB_ACCESS_KEY: str = ""
+    # Rate limit: max Vitec Hub requests per second (API limit ~600/sec; we stay well below)
+    VITEC_RATE_LIMIT_REQUESTS_PER_SECOND: int = 50
 
     # WebDAV Network Storage
     WEBDAV_URL: str = ""

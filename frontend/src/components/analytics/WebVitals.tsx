@@ -25,12 +25,8 @@ export function WebVitals() {
   useReportWebVitals((metric) => {
     // Log to console in development for debugging
     if (process.env.NODE_ENV === 'development') {
-      console.log(`[Web Vital] ${metric.name}:`, {
-        value: metric.value,
-        rating: metric.rating, // 'good', 'needs-improvement', or 'poor'
-        delta: metric.delta,
-        id: metric.id,
-      });
+      const val = typeof metric.value === 'number' ? metric.value.toFixed(2) : String(metric.value);
+      console.log(`[Web Vital] ${metric.name}: ${val} (${metric.rating})`);
     }
 
     // Send to analytics endpoint (optional - Vercel collects automatically)

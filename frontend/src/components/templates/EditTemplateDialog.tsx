@@ -136,7 +136,7 @@ export function EditTemplateDialog({
       setSettingsDirty(false);
       setSettingsDraft({ ...DEFAULT_TEMPLATE_SETTINGS, ...initialSettings });
     }
-  }, [template, open, reset]);
+  }, [template, open, reset, initialSettings]);
 
   useEffect(() => {
     if (open) {

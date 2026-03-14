@@ -8,6 +8,8 @@ alwaysApply: false
 
 # Database Migration Rules
 
+**Preferred workflow:** See `docs/database-access-workflow.md` — Postgres MCP for reads, `run_sql.py` for writes.
+
 ## ⚠️ CRITICAL: Railway Migration Issue
 
 **Railway's internal networking is unreliable.** Alembic migrations run during deployment often:
@@ -51,14 +53,14 @@ This causes **500 errors** with messages like:
    ```
 
 4. **If migration didn't persist, apply manually:**
-   Create a temporary Python script to add columns directly:
-   ```python
-   from sqlalchemy import create_engine, text
-   engine = create_engine(DATABASE_URL)
-   with engine.connect() as conn:
-       conn.execute(text("ALTER TABLE x ADD COLUMN IF NOT EXISTS y TYPE"))
-       conn.execute(text("UPDATE alembic_version SET version_num = 'NEW_VERSION'"))
-       conn.commit()
+   Use `scripts/run_sql.py` from Cursor's terminal (no Railway deploy needed):
+   ```powershell
+   cd backend
+   railway run python scripts/run_sql.py "ALTER TABLE x ADD COLUMN IF NOT EXISTS y TEXT; UPDATE alembic_version SET version_num = 'NEW_VERSION'"
+   ```
+   Or with `$env:DATABASE_URL` set to the public URL:
+   ```powershell
+   python scripts/run_sql.py "ALTER TABLE x ADD COLUMN IF NOT EXISTS y TEXT"
    ```
 
 ### Environment Variable Note

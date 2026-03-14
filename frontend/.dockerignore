@@ -1,0 +1,12 @@
+# Dependencies and build artifacts (rebuilt in container)
+node_modules
+.next
+.git
+*.md
+
+# Dev and test
+.env*.local
+.vercel
+coverage
+*.log
+npm-debug.log*

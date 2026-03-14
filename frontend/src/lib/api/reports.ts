@@ -24,6 +24,7 @@ export interface SalesReportTransaction {
 export interface SalesReportProperty {
   address: string;
   estate_id: string;
+  assignment_number?: string;
   property_type: string;
   assignment_type: string;
   total: number;
@@ -221,8 +222,31 @@ export async function downloadSalesReport(params?: SalesReportParams): Promise<B
       validateStatus: (status) => status === 200,
     });
 
-    return response.data as Blob;
+    const blob = response.data as Blob;
+    if (!blob || blob.size === 0) {
+      throw new Error("Tom fil mottatt fra serveren.");
+    }
+    // xlsx files are ZIP archives (magic bytes PK)
+    const header = await blob.slice(0, 4).arrayBuffer();
+    const bytes = new Uint8Array(header);
+    if (bytes[0] !== 0x50 || bytes[1] !== 0x4b) {
+      const preview = await blob.slice(0, 200).text();
+      if (preview.trim().startsWith("{") || preview.trim().startsWith("<")) {
+        let msg = "Server returnerte feil i stedet for Excel-fil.";
+        try {
+          const json = JSON.parse(preview) as { detail?: string };
+          if (json.detail) msg = json.detail;
+        } catch {
+          /* ignore */
+        }
+        throw new Error(msg);
+      }
+    }
+    return blob;
   } catch (err) {
+    if (err instanceof Error && !(err as { response?: unknown }).response) {
+      throw err;
+    }
     const axiosErr = err as { response?: { data?: Blob | string; status?: number } };
     const data = axiosErr.response?.data;
     let detail = "Kunne ikke laste ned rapporten.";
@@ -232,7 +256,7 @@ export async function downloadSalesReport(params?: SalesReportParams): Promise<B
         const json = JSON.parse(text) as { detail?: string };
         if (json.detail) detail = json.detail;
       } catch {
-        // ignore
+        /* ignore */
       }
     }
     throw new Error(detail);

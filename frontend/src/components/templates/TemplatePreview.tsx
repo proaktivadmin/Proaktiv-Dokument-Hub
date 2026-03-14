@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Maximize2, Minimize2, Code, Eye, Loader2, FlaskConical, FlaskConicalOff, FileText, Scissors } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -97,7 +97,7 @@ export function TemplatePreview({
    * Uses an external stylesheet for full Vitec/Proaktiv styling
    * Automatically wraps content in #vitecTemplate for consistent centering
    */
-  const buildPreviewDocument = (): string => {
+  const buildPreviewDocument = useCallback((): string => {
     const processedContent = highlightMergeFields ? applyMergeFieldHighlights(content) : content;
     const pageBreakClass = showPageBreaks ? "show-page-breaks" : "";
 
@@ -152,7 +152,7 @@ export function TemplatePreview({
   ${wrappedContent}
 </body>
 </html>`;
-  };
+  }, [content, highlightMergeFields, headerHtml, footerHtml, signatureHtml, showPageBreaks, title, stylesheetHref]);
 
   // Update iframe content when content changes or page break mode toggles
   useEffect(() => {
@@ -164,7 +164,7 @@ export function TemplatePreview({
         doc.close();
       }
     }
-  }, [content, showSource, showPageBreaks]);
+  }, [content, showSource, buildPreviewDocument]);
 
   const toggleFullscreen = () => {
     setIsFullscreen(!isFullscreen);

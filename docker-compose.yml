@@ -1,3 +1,7 @@
+# Docker runs on homelab (Proxmox LXC) only — not on this PC.
+# Deploy: .\scripts\deploy-homelab.ps1
+# App: http://192.168.77.127:3000
+
 services:
   # PostgreSQL Database
   db:
@@ -26,9 +30,12 @@ services:
     ports:
       - "8000:8000"
     env_file:
-      - ./backend/.env
+      - ./backend/.env.docker
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/dokument_hub
+      # Use DATABASE_URL from .env.docker (Railway) for real data. For local db only, override with:
+      # - DATABASE_URL=postgresql://postgres:postgres@db:5432/dokument_hub
+      # APP_USERS_JSON: set in docker-compose to avoid $ parsing in env_file
+      - APP_USERS_JSON=[{"email":"froyland@proaktiv.no","password_hash":"$$2b$$12$$jKvACt5Ld5qIU9UioNYgXezut42FNcBBtDgQx6XFJX47kzy6Ch8FK"}]
       - LOG_LEVEL=DEBUG
       - DEBUG=true
       - DB_HOST=db
@@ -44,26 +51,47 @@ services:
         condition: service_healthy
     command: ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"]
 
-  # Next.js Frontend
+  # Next.js Frontend (production build — identical to Vercel for parity testing)
+  # Use `docker compose up` for production-parity; use `docker compose --profile dev up` for hot reload
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-      target: deps
+      args:
+        BACKEND_URL: http://backend:8000
     container_name: dokument-hub-frontend
     ports:
       - "3000:3000"
     environment:
       - BACKEND_URL=http://backend:8000
-      - NEXT_PUBLIC_API_URL=
+      - NODE_ENV=production
+    depends_on:
+      - backend
+
+  # Dev frontend (hot reload) — use only when you need fast iteration
+  # Run: docker compose --profile dev up frontend-dev
+  frontend-dev:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: deps
+    container_name: dokument-hub-frontend-dev
+    ports:
+      - "3001:3000"
+    environment:
+      - BACKEND_URL=http://backend:8000
       - NODE_ENV=development
     volumes:
       - ./frontend:/app
-      - /app/node_modules
-      - /app/.next
+      - frontend_node_modules:/app/node_modules
+      - frontend_next:/app/.next
     depends_on:
       - backend
     command: npm run dev
+    profiles:
+      - dev
 
 volumes:
   postgres_data:
+  frontend_node_modules:
+  frontend_next:

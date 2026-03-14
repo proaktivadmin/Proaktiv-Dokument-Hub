@@ -19,6 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 5: Vercel Migration** - Move frontend to Vercel (completed via manual deployment)
 - [x] **Phase 6: Entra ID Signature Sync** - Implementation complete, ready for testing
 - [ ] **Phase 7: Office Enhancements** - Region grouping, office merge, SalesScreen integration
+- [x] **Reports (Formidlingsrapport)** - Franchise, budgets, best performers, email subscriptions
 - [x] **V3.6: Design System Enhancement** - Comprehensive UI polish with design tokens
 
 ## Phase Details
@@ -178,6 +179,21 @@ Plans:
 - [ ] 07-07: SalesScreen frontend components
 - [ ] 07-08: SalesScreen integration with onboarding
 
+### Reports (Formidlingsrapport) ✅ COMPLETE
+**Goal**: CEO/management sales reports with franchise view, budgets, best performers, and scheduled email delivery
+**Depends on**: Vitec Hub API (Accounting/Estates, Accounting/Transactions)
+**Completed**: 2026-03-14
+
+**What was delivered:**
+- Franchise report: all departments, expandable brokers and properties
+- Best performers: eiendomsmegler vs eiendomsmeglerfullmektig, weekly/monthly presets, Excel export
+- Budgets: per-month targets, actual vs budget comparison
+- Subscriptions: CRUD, test-send, scheduled delivery via GitHub Actions
+- Page: `/reports` with tabs for Formidlingsrapport, Best performers, Budsjett, Abonnementer
+- Plan: `.planning/phases/reports-enhancements/PLAN.md`
+
+**Setup:** Add `REPORTS_SCHEDULER_TOKEN` to GitHub secrets and Railway for scheduled delivery.
+
 ### V3.6: Design System Enhancement ✅ COMPLETE
 **Goal**: Comprehensive UI polish with brand-aligned design tokens
 **Depends on**: Nothing (independent)
@@ -271,7 +287,8 @@ Phases execute in numeric order, with V3.x versions as incremental feature relea
 | 11. Template Suite | 9 templates + pipeline | In Progress | - |
 | V4.0 Infra & UX | Complete | Complete | 2026-02-22 |
 | V4.1 Template Sprint | Complete | Complete | 2026-02-22 |
+| Reports | Complete | Complete | 2026-03-14 |
 
 ---
 *Roadmap created: 2026-01-20*
-*Last updated: 2026-02-22 (V4.1 template builder sprint + subagent pipeline)*
+*Last updated: 2026-03-14 (Reports suite complete, scheduler workflow)*

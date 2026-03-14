@@ -127,7 +127,7 @@ interface TemplateSettingsPanelProps {
 }
 
 export function TemplateSettingsPanel({
-  templateId: _templateId,
+  templateId: _templateId, // eslint-disable-line @typescript-eslint/no-unused-vars -- Reserved for future use
   initialSettings,
   onSave,
   isSaving: isSavingProp = false,

@@ -28,7 +28,7 @@ Proaktiv-Dokument-Hub/
 ├── docs/                 # Feature documentation
 ├── library/              # Template library files
 ├── _legacy_v1/           # Archived v1 code (not in use)
-├── docker-compose.yml    # Local development stack
+├── docker-compose.yml    # Homelab stack (Proxmox LXC)
 ├── CLAUDE.md             # Project instructions for AI
 └── README.md             # Project documentation
 ```
@@ -105,7 +105,7 @@ Proaktiv-Dokument-Hub/
 **Configuration:**
 - `backend/app/config.py`: Backend settings (Pydantic)
 - `frontend/src/lib/api/config.ts`: API client configuration
-- `docker-compose.yml`: Local development services
+- `docker-compose.yml`: Homelab services (Proxmox LXC)
 - `backend/alembic/alembic.ini`: Migration settings
 
 **Core Business Logic:**

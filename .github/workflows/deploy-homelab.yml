@@ -11,13 +11,13 @@ name: Deploy to Homelab
 
 on:
   push:
-    branches: [feat/dark-mode-toggle, main]
+    branches: [reports-enhancements, main]
   workflow_dispatch:
     inputs:
       branch:
         description: 'Branch to deploy'
         required: true
-        default: 'feat/dark-mode-toggle'
+        default: 'reports-enhancements'
 
 jobs:
   deploy:
@@ -34,7 +34,13 @@ jobs:
             echo "::warning::HOMELAB_SSH_KEY not set — skipping deploy. Add SSH key to repo secrets."
             exit 0
           fi
-          if ! echo "$BRANCH" | grep -qE '^[a-zA-Z0-9/_.-]+$'; then
+          # GitHub-hosted runners cannot reach private IPs (192.168.x, 10.x, 172.16-31.x)
+          if [[ "$SSH_HOST" =~ ^192\.168\. ]] || [[ "$SSH_HOST" =~ ^10\. ]] || [[ "$SSH_HOST" =~ ^172\.(1[6-9]|2[0-9]|3[0-1])\. ]]; then
+            echo "::warning::SSH_HOST ($SSH_HOST) is a private IP. GitHub runners cannot reach it. Use scripts/deploy-homelab.ps1 from your PC or a self-hosted runner."
+            exit 0
+          fi
+          # Validate branch name to prevent shell injection (alphanumeric, /, -, _, .)
+          if [[ ! "$BRANCH" =~ ^[a-zA-Z0-9/_.-]+$ ]]; then
             echo "::error::Invalid branch name (contains unsafe characters)"
             exit 1
           fi

@@ -26,7 +26,9 @@ alwaysApply: true
 
 ## Commit/Deploy Hygiene
 
-- Use `/commit-safe` for scoped commits.
+- **Commit to homelab** (features, UI, refactors): Use `/commit-to-homelab`. Branch → push → deploy homelab → agent QA → merge to main. Read `docs/homelab-qa-workflow.md`.
+- **Commit to production** (hotfixes, typos, urgent): Use `/commit-to-production`. Direct commit to main.
+- Use `/commit-safe` for scoped commits within either flow.
 - Use `/deploy-gates` before any deploy recommendation.
 
 ## Goal

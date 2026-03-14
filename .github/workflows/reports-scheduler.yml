@@ -1,0 +1,44 @@
+# Reports subscription scheduler
+#
+# Calls POST /api/reports/subscriptions/run-due to send due report emails
+# (best performers, franchise summary) to configured recipients.
+#
+# Setup:
+# 1. Add REPORTS_SCHEDULER_TOKEN to GitHub repo secrets (Settings → Secrets)
+# 2. Set REPORTS_SCHEDULER_TOKEN on Railway backend to the same value
+# 3. Optional: Set vars.REPORTS_BACKEND_URL to override backend URL
+#
+# Schedule: Fridays 07:00 UTC (~08:00 Oslo winter, ~09:00 Oslo summer)
+
+name: Reports Scheduler
+
+on:
+  schedule:
+    # Friday 07:00 UTC
+    - cron: "0 7 * * 5"
+  workflow_dispatch:
+
+jobs:
+  run-due:
+    name: Run due report subscriptions
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    steps:
+      - name: Trigger report delivery
+        run: |
+          BACKEND_URL="${REPORTS_BACKEND_URL:-https://proaktiv-admin.up.railway.app}"
+          if [ -z "${{ secrets.REPORTS_SCHEDULER_TOKEN }}" ]; then
+            echo "::warning::REPORTS_SCHEDULER_TOKEN not set — skipping (no subscriptions will run)"
+            exit 0
+          fi
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            -H "X-Scheduler-Token: ${{ secrets.REPORTS_SCHEDULER_TOKEN }}" \
+            "${BACKEND_URL}/api/reports/subscriptions/run-due")
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+          echo "Response ($http_code): $body"
+          if [ "$http_code" -ge 400 ]; then
+            echo "::error::Reports run-due failed with HTTP $http_code"
+            exit 1
+          fi
+        env:
+          REPORTS_BACKEND_URL: ${{ vars.REPORTS_BACKEND_URL }}

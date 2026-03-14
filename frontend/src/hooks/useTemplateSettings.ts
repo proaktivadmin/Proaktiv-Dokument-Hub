@@ -2,7 +2,7 @@
  * Hook for template settings management
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { templateSettingsApi } from '@/lib/api/template-settings';
 import type { UpdateTemplateSettingsResponse } from '@/types/v2';
 
@@ -18,7 +18,7 @@ export function useTemplateSettings(templateId: string | null): UseTemplateSetti
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchSettings = async () => {
+  const fetchSettings = useCallback(async () => {
     if (!templateId) return;
 
     setIsLoading(true);
@@ -32,11 +32,11 @@ export function useTemplateSettings(templateId: string | null): UseTemplateSetti
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [templateId]);
 
   useEffect(() => {
     fetchSettings();
-  }, [templateId]);
+  }, [fetchSettings]);
 
   return { settings, isLoading, error, refetch: fetchSettings };
 }

@@ -23,16 +23,7 @@ export function useEmployees(params?: EmployeeListParams) {
     } finally {
       setIsLoading(false);
     }
-  }, [
-    params?.office_id,
-    JSON.stringify(params?.status),
-    JSON.stringify(params?.employee_type),
-    params?.role,
-    params?.is_featured,
-    params?.search,
-    params?.skip,
-    params?.limit,
-  ]);
+  }, [params]);
 
 
   useEffect(() => {
