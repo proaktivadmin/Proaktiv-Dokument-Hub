@@ -78,7 +78,6 @@ export function renderVitecPreview(input: VitecRenderInput): VitecRenderOutput {
 
 function processForeachLoops(root: HTMLElement, input: VitecRenderInput, report: VitecRenderReport) {
   // Process in a loop until no foreach left (handles nested loops and loops inside clones)
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     const el = root.querySelector<HTMLElement>("[vitec-foreach]");
     if (!el) break;

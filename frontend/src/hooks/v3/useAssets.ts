@@ -23,7 +23,7 @@ export function useAssets(params?: AssetListParams) {
     } finally {
       setIsLoading(false);
     }
-  }, [params?.category, params?.office_id, params?.employee_id, params?.is_global, params?.skip, params?.limit]);
+  }, [params]);
 
   useEffect(() => {
     fetch();

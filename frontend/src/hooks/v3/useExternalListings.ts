@@ -23,7 +23,7 @@ export function useExternalListings(params?: ExternalListingListParams) {
     } finally {
       setIsLoading(false);
     }
-  }, [params?.office_id, params?.employee_id, params?.source, params?.status, params?.skip, params?.limit]);
+  }, [params]);
 
   useEffect(() => {
     fetch();

@@ -69,7 +69,6 @@ export function SignaturePhotoUpload({ employeeId, onUploaded }: SignaturePhotoU
 
       {preview ? (
         <div className="flex items-center gap-3">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={preview}
             alt="Forhåndsvisning"

@@ -23,7 +23,7 @@ export function useChecklistTemplates(params?: ChecklistTemplateListParams) {
     } finally {
       setIsLoading(false);
     }
-  }, [params?.type, params?.is_active]);
+  }, [params]);
 
   useEffect(() => {
     fetch();
@@ -63,7 +63,7 @@ export function useChecklistInstances(params?: ChecklistInstanceListParams) {
     } finally {
       setIsLoading(false);
     }
-  }, [params?.employee_id, params?.status, params?.skip, params?.limit]);
+  }, [params]);
 
   useEffect(() => {
     fetch();

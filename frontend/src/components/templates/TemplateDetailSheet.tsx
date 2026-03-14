@@ -138,7 +138,7 @@ export function TemplateDetailSheet({
     }
 
     loadPartials();
-  }, [open, backendSettings?.header_template_id, backendSettings?.footer_template_id]);
+  }, [open, backendSettings]);
 
   // Load content when dialog opens with an HTML template
   useEffect(() => {
@@ -180,7 +180,7 @@ export function TemplateDetailSheet({
     return () => {
       cancelled = true;
     };
-  }, [open, template?.id]);
+  }, [open, template]);
 
   const loadContent = async (templateId: string) => {
     setIsLoading(true);

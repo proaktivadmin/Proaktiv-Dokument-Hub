@@ -438,7 +438,6 @@ export default function ImageOptimizerPage() {
                       {/* Preview thumbnail */}
                       <div className="w-12 h-12 rounded overflow-hidden bg-muted shrink-0">
                         {image.previewUrl && (
-                          // eslint-disable-next-line @next/next/no-img-element
                           <img
                             src={image.previewUrl}
                             alt=""

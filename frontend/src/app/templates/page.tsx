@@ -74,15 +74,6 @@ type ViewMode = "table" | "shelf";
 
 type OriginKey = "vitec" | "kundemal" | "unknown";
 
-const getOriginKey = (template: Template): OriginKey => {
-  const tagNames = (template.tags ?? [])
-    .map((tag) => tag.name.trim().toLowerCase())
-    .filter(Boolean);
-  if (tagNames.some((name) => name.includes("kundemal"))) return "kundemal";
-  if (tagNames.some((name) => name.includes("vitec"))) return "vitec";
-  return "unknown";
-};
-
 const originGroupOrder: { key: OriginKey; label: string }[] = [
   { key: "vitec", label: "Vitec Next" },
   { key: "kundemal", label: "Kundemal" },

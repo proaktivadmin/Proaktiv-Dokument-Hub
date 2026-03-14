@@ -133,7 +133,7 @@ export function A4Frame({
         }
       });
     }
-  }, [content, headerHtml, footerHtml, margins, onElementClick]);
+  }, [content, headerHtml, footerHtml, marginTopPx, marginBottomPx, marginLeftPx, marginRightPx, onElementClick]);
 
   return (
     <div className="flex justify-center bg-slate-100 p-6 md:p-8 overflow-auto">
