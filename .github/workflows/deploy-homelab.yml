@@ -1,0 +1,43 @@
+# Deploy to Proxmox homelab at 192.168.77.127
+#
+# Setup (one-time):
+# 1. GitHub repo → Settings → Secrets and variables → Actions
+# 2. Add secret: HOMELAB_SSH_KEY (private key for root@192.168.77.127)
+# 3. Add secret: HOMELAB_SSH_HOST (default: 192.168.77.127)
+#
+# Trigger: push to feat/dark-mode-toggle, main, or workflow_dispatch
+
+name: Deploy to Homelab
+
+on:
+  push:
+    branches: [feat/dark-mode-toggle, main]
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to deploy'
+        required: true
+        default: 'feat/dark-mode-toggle'
+
+jobs:
+  deploy:
+    name: Deploy to homelab
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        env:
+          SSH_HOST: ${{ secrets.HOMELAB_SSH_HOST || '192.168.77.127' }}
+          SSH_KEY: ${{ secrets.HOMELAB_SSH_KEY }}
+          BRANCH: ${{ github.event.inputs.branch || github.ref_name }}
+        run: |
+          if [ -z "$SSH_KEY" ]; then
+            echo "::warning::HOMELAB_SSH_KEY not set — skipping deploy. Add SSH key to repo secrets."
+            exit 0
+          fi
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          ssh -o StrictHostKeyChecking=accept-new root@$SSH_HOST \
+            "cd /root/Proaktiv-Dokument-Hub && git fetch origin && git checkout $BRANCH && git pull origin $BRANCH && docker compose restart frontend"
+          echo "Deployed. Frontend: http://${SSH_HOST}:3000"
