@@ -1,12 +1,12 @@
 # Technology Stack
 
-**Analysis Date:** 2026-01-22
+**Analysis Date:** 2026-03-14
 
 ## Languages
 
 **Primary:**
 - TypeScript 5.9.3 - Frontend (Next.js, React components)
-- Python 3.11 - Backend (FastAPI)
+- Python 3.12 - Backend (FastAPI)
 
 **Secondary:**
 - SQL - Database queries and migrations (via SQLAlchemy/Alembic)
@@ -14,19 +14,19 @@
 ## Runtime
 
 **Frontend:**
-- Node.js 20 (Alpine in Docker)
+- Node.js 22 (Alpine in Docker, .nvmrc)
 - Package Manager: npm
 - Lockfile: `frontend/package-lock.json` (present)
 
 **Backend:**
-- Python 3.11 (slim in Docker)
+- Python 3.12 (slim in Docker)
 - Package Manager: pip
 - Requirements: `backend/requirements.txt`, `backend/requirements-dev.txt`
 
 ## Frameworks
 
 **Frontend Core:**
-- Next.js 16.1.4 - React framework with App Router
+- Next.js 16.1.6 - React framework with App Router
 - React 19.2.3 - UI library
 - React DOM 19.2.3 - DOM rendering
 
@@ -38,17 +38,17 @@
 - tailwindcss-animate 1.0.7 - Animation utilities
 
 **Backend Core:**
-- FastAPI 0.109.0 - Async Python web framework
-- Uvicorn 0.27.0 - ASGI server
-- Pydantic 2.5.3 - Data validation
-- Pydantic Settings 2.1.0 - Configuration management
+- FastAPI 0.135.1 - Async Python web framework
+- Uvicorn 0.41.0 - ASGI server
+- Pydantic 2.12.5 - Data validation
+- Pydantic Settings 2.13.1 - Configuration management
 
 **Database:**
 - SQLAlchemy 2.0.46 - ORM with async support
-- Asyncpg 0.29.0 - PostgreSQL async driver
+- Asyncpg 0.31.0 - PostgreSQL async driver
 - Psycopg2-binary 2.9.9 - PostgreSQL sync driver
 - Aiosqlite 0.19.0 - SQLite async driver (dev/fallback)
-- Alembic 1.13.1 - Database migrations
+- Alembic 1.18.4 - Database migrations
 
 **Testing & Linting:**
 - ESLint 9.39.2 - JavaScript/TypeScript linting
@@ -92,17 +92,17 @@
 - tailwind-merge 2.2.0
 
 **Backend Critical:**
-- httpx 0.26.0 - Async HTTP client
-- python-jose[cryptography] 3.3.0 - JWT handling
-- bcrypt 4.1.2 - Password hashing
-- python-multipart 0.0.6 - File uploads
-- beautifulsoup4 4.12.3 - HTML parsing
-- lxml 5.1.0 - XML/HTML processing
+- httpx 0.28.1 - Async HTTP client
+- python-jose[cryptography] 3.4.0 - JWT handling
+- bcrypt 4.3.0 - Password hashing
+- python-multipart 0.0.22 - File uploads
+- beautifulsoup4 4.14.3 - HTML parsing
+- lxml 5.4.0 - XML/HTML processing
 - firecrawl-py 4.11.1 - Web scraping
 
 **Utilities:**
 - python-dateutil 2.8.2 - Date utilities
-- sentry-sdk[fastapi] 2.0.0+ - Error tracking and monitoring
+- sentry-sdk[fastapi] 2.54.0 - Error tracking and monitoring
 
 ## Configuration
 
@@ -149,9 +149,9 @@
 
 **Development:**
 - Docker and Docker Compose
-- Node.js 20+ (if running frontend outside Docker)
-- Python 3.11+ (if running backend outside Docker)
-- PostgreSQL 15 (via Docker or external)
+- Node.js 22+ (if running frontend outside Docker)
+- Python 3.12+ (if running backend outside Docker)
+- PostgreSQL 17 (via Docker or external)
 
 **Production:**
 - Railway platform (current deployment)
@@ -159,7 +159,7 @@
 - Environment variables configured in Railway
 
 **Docker Services:**
-- `db` - PostgreSQL 15 Alpine (port 5432)
+- `db` - PostgreSQL 17 Alpine (port 5432)
 - `backend` - FastAPI on Uvicorn (port 8000)
 - `frontend` - Next.js (port 3000)
 
@@ -186,4 +186,4 @@
 
 ---
 
-*Stack analysis: 2026-01-22*
+*Stack analysis: 2026-03-14*
