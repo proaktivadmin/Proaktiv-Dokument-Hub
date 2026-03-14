@@ -7,7 +7,6 @@ param(
 
 $HOMELAB_HOST = "192.168.77.127"
 $REPO_DIR = "/root/Proaktiv-Dokument-Hub"
-
 $sshCmd = "cd $REPO_DIR && git fetch origin && git checkout $Branch && git pull origin $Branch && docker compose restart frontend"
 
 Write-Host "Deploying branch '$Branch' to $HOMELAB_HOST..." -ForegroundColor Cyan

@@ -11,13 +11,13 @@ name: Deploy to Homelab
 
 on:
   push:
-    branches: [feat/dark-mode-toggle, main]
+    branches: [reports-enhancements, main]
   workflow_dispatch:
     inputs:
       branch:
         description: 'Branch to deploy'
         required: true
-        default: 'feat/dark-mode-toggle'
+        default: 'reports-enhancements'
 
 jobs:
   deploy:
