@@ -1,8 +1,8 @@
 # Production-parity Dockerfile — runs same build as Vercel for identical behavior
 # See docker-compose.yml: frontend uses this for production build + start
 
-# Run `docker scout quickview` to check vulns; node:22-alpine = 22.22-alpine3.23
-FROM node:22-alpine AS deps
+# Run `docker scout quickview` to check vulns; node:24-alpine
+FROM node:24-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
@@ -16,7 +16,7 @@ ENV BACKEND_URL=${BACKEND_URL}
 ENV NODE_ENV=production
 RUN npm run build
 
-FROM node:22-alpine AS runner
+FROM node:24-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1

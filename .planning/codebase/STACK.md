@@ -14,7 +14,7 @@
 ## Runtime
 
 **Frontend:**
-- Node.js 22 (Alpine in Docker, .nvmrc)
+- Node.js 24 (Alpine in Docker, .nvmrc)
 - Package Manager: npm
 - Lockfile: `frontend/package-lock.json` (present)
 
