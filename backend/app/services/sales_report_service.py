@@ -1243,7 +1243,11 @@ class SalesReportService:
                 addr = (
                     raw_addr
                     if raw_addr and not _looks_like_uuid(raw_addr)
-                    else (f"Adresse ukjent ({meta.get('assignment_number')})" if meta.get("assignment_number") else "Adresse ukjent")
+                    else (
+                        f"Adresse ukjent ({meta.get('assignment_number')})"
+                        if meta.get("assignment_number")
+                        else "Adresse ukjent"
+                    )
                 )
                 # Property row (level 1)
                 ws.append([f"  {addr}", "", meta["property_type"], meta["assignment_type"], ""])
