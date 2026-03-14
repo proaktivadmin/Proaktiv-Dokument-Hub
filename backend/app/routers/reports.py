@@ -139,6 +139,9 @@ async def get_sales_report_data(
                 "Kontakt Vitec for å be om tilgang til Accounting/Estates og Accounting/Transactions.",
             ) from e
         raise
+    except Exception as exc:
+        logger.exception("get_sales_report_data failed: %s", exc)
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
 
 
 @router.get("/sales-report")

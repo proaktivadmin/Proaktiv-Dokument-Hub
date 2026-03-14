@@ -28,7 +28,7 @@ import io
 import logging
 import re
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any
 from zoneinfo import ZoneInfo
 
@@ -113,7 +113,7 @@ def _parse_iso_datetime(value: str | None) -> datetime | None:
     try:
         dt = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
         if dt.tzinfo is None:
-            return dt.replace(tzinfo=datetime.UTC)
+            return dt.replace(tzinfo=timezone.utc)
         return dt
     except (ValueError, TypeError):
         return None
@@ -124,8 +124,8 @@ def _month_key(year: int, month: int) -> str:
 
 
 def _iter_months(from_dt: datetime, to_dt: datetime) -> list[tuple[int, int]]:
-    start = datetime(from_dt.year, from_dt.month, 1, tzinfo=from_dt.tzinfo or datetime.UTC)
-    end = datetime(to_dt.year, to_dt.month, 1, tzinfo=to_dt.tzinfo or datetime.UTC)
+    start = datetime(from_dt.year, from_dt.month, 1, tzinfo=from_dt.tzinfo or timezone.utc)
+    end = datetime(to_dt.year, to_dt.month, 1, tzinfo=to_dt.tzinfo or timezone.utc)
     out: list[tuple[int, int]] = []
     cursor = start
     while cursor <= end:
@@ -138,11 +138,11 @@ def _iter_months(from_dt: datetime, to_dt: datetime) -> list[tuple[int, int]]:
 
 
 def _month_bounds(year: int, month: int) -> tuple[datetime, datetime]:
-    start = datetime(year, month, 1, 0, 0, 0, tzinfo=datetime.UTC)
+    start = datetime(year, month, 1, 0, 0, 0, tzinfo=timezone.utc)
     if month == 12:
-        next_month = datetime(year + 1, 1, 1, tzinfo=datetime.UTC)
+        next_month = datetime(year + 1, 1, 1, tzinfo=timezone.utc)
     else:
-        next_month = datetime(year, month + 1, 1, tzinfo=datetime.UTC)
+        next_month = datetime(year, month + 1, 1, tzinfo=timezone.utc)
     end = next_month - timedelta(seconds=1)
     return start, end
 
@@ -730,12 +730,12 @@ class SalesReportService:
         transactions_upserted = 0
         skipped: dict[str, int] = {"future_date": 0, "orphan": 0}
         warnings_count = 0
-        now_utc = datetime.now(datetime.UTC)
+        now_utc = datetime.now(timezone.utc)
         tomorrow = now_utc + timedelta(days=1)
 
         # Estates: incremental by changedAfter cursor (+24h overlap).
         changed_after_dt = state.last_estates_sync_at - timedelta(days=1) if state.last_estates_sync_at else from_dt
-        changed_after = changed_after_dt.astimezone(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%S")
+        changed_after = changed_after_dt.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S")
         estates = await self._hub.get_accounting_estates(
             installation_id,
             department_id=department_id,
