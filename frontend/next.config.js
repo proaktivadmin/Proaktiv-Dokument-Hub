@@ -107,8 +107,9 @@ const nextConfig = {
   // Transpile Leaflet which has issues with standard Next.js bundling
   transpilePackages: ['leaflet', 'react-leaflet'],
   
-  // Turbopack specific configuration for Leaflet
-  turbo: {
+  // Turbopack configuration (Next.js 16)
+  turbopack: {
+    root: __dirname,
     resolveAlias: {
       leaflet: 'leaflet/dist/leaflet-src.js',
     },

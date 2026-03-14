@@ -19,7 +19,7 @@ import { downloadSalesReport } from "@/lib/api/reports";
 
 function StatCardSkeleton() {
   return (
-    <div className="bg-white rounded-md p-6 border border-[#E5E5E5]">
+    <div className="bg-card rounded-md p-6 border border-border">
       <Skeleton className="h-4 w-24 mb-2" />
       <Skeleton className="h-10 w-16" />
     </div>
@@ -30,7 +30,7 @@ function TemplateListSkeleton() {
   return (
     <div className="space-y-3">
       {[1, 2, 3, 4, 5].map((i) => (
-        <div key={i} className="flex items-center gap-3 p-3 border border-[#E5E5E5] rounded-md">
+        <div key={i} className="flex items-center gap-3 p-3 border border-border rounded-md">
           <Skeleton className="h-10 w-10 rounded-md" />
           <div className="flex-1">
             <Skeleton className="h-4 w-48 mb-1" />
@@ -79,7 +79,7 @@ export default function Dashboard() {
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      setTimeout(() => URL.revokeObjectURL(url), 500);
     } catch (err) {
       setSalesReportError(err instanceof Error ? err.message : "Kunne ikke laste ned rapporten.");
     } finally {
@@ -114,9 +114,9 @@ export default function Dashboard() {
       <main className="container mx-auto px-6 py-8">
         {/* Error State */}
         {statsError && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
-            <AlertCircle className="h-5 w-5 text-red-600" />
-            <p className="text-red-800">{statsError}</p>
+          <div className="mb-6 p-4 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 rounded-lg flex items-center gap-3">
+            <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-300" />
+            <p className="text-red-800 dark:text-red-200">{statsError}</p>
           </div>
         )}
 
@@ -124,7 +124,7 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {statsLoading ? (
             <>
-              <div className="bg-[#272630] text-white rounded-md p-6 border border-[#E5E5E5]">
+              <div className="bg-primary text-primary-foreground rounded-md p-6 border border-border">
                 <Skeleton className="h-4 w-24 mb-2 bg-white/20" />
                 <Skeleton className="h-10 w-16 bg-white/20" />
               </div>
@@ -134,31 +134,31 @@ export default function Dashboard() {
             </>
           ) : (
             <>
-              <div className="bg-[#272630] text-white rounded-lg p-6 shadow-medium ring-1 ring-black/10">
-                <p className="text-white/70 text-sm font-sans">Totalt maler</p>
+              <div className="bg-primary text-primary-foreground rounded-lg p-6 shadow-medium ring-1 ring-black/10 dark:ring-white/10">
+                <p className="text-primary-foreground/70 text-sm font-sans">Totalt maler</p>
                 <p className="text-4xl font-serif font-bold mt-2">{stats?.total ?? 0}</p>
               </div>
 
-              <div className="bg-white rounded-lg p-6 border border-[#E5E5E5] shadow-card ring-1 ring-black/[0.03] hover:shadow-medium transition-shadow duration-normal">
-                <p className="text-[#272630]/60 text-sm font-sans">Publisert</p>
-                <p className="text-4xl font-serif font-bold text-[#272630] mt-2">
+              <div className="bg-card rounded-lg p-6 border border-border shadow-card ring-1 ring-black/[0.03] dark:ring-white/[0.06] hover:shadow-medium transition-shadow duration-normal">
+                <p className="text-muted-foreground text-sm font-sans">Publisert</p>
+                <p className="text-4xl font-serif font-bold text-foreground mt-2">
                   {stats?.published ?? 0}
                 </p>
               </div>
 
-              <div className="bg-white rounded-lg p-6 border border-[#E5E5E5] shadow-card ring-1 ring-black/[0.03] hover:shadow-medium transition-shadow duration-normal">
-                <p className="text-[#272630]/60 text-sm font-sans">Utkast</p>
-                <p className="text-4xl font-serif font-bold text-[#272630] mt-2">
+              <div className="bg-card rounded-lg p-6 border border-border shadow-card ring-1 ring-black/[0.03] dark:ring-white/[0.06] hover:shadow-medium transition-shadow duration-normal">
+                <p className="text-muted-foreground text-sm font-sans">Utkast</p>
+                <p className="text-4xl font-serif font-bold text-foreground mt-2">
                   {stats?.draft ?? 0}
                 </p>
               </div>
 
-              <div className="bg-white rounded-lg p-6 border border-[#E5E5E5] shadow-card ring-1 ring-black/[0.03] hover:shadow-medium transition-shadow duration-normal">
-                <div className="flex items-center gap-2 text-[#272630]/60 text-sm font-sans">
-                  <Download className="h-4 w-4 text-[#272630]/50" />
+              <div className="bg-card rounded-lg p-6 border border-border shadow-card ring-1 ring-black/[0.03] dark:ring-white/[0.06] hover:shadow-medium transition-shadow duration-normal">
+                <div className="flex items-center gap-2 text-muted-foreground text-sm font-sans">
+                  <Download className="h-4 w-4 text-muted-foreground" />
                   Nedlastinger (30d)
                 </div>
-                <p className="text-4xl font-serif font-bold text-[#272630] mt-2">
+                <p className="text-4xl font-serif font-bold text-foreground mt-2">
                   {stats?.downloads ?? 0}
                 </p>
               </div>
@@ -171,19 +171,19 @@ export default function Dashboard() {
           {/* Offices Card */}
           <Link 
             href="/offices" 
-            className="group bg-white rounded-lg p-6 border border-[#E5E5E5] shadow-card ring-1 ring-black/[0.03] hover:border-[#BCAB8A] hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-slow"
+            className="group bg-card rounded-lg p-6 border border-border shadow-card ring-1 ring-black/[0.03] dark:ring-white/[0.06] hover:border-accent hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-slow"
           >
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-lg bg-[#E9E7DC] group-hover:bg-[#BCAB8A]/20 transition-colors duration-normal">
-                <Building2 className="h-6 w-6 text-[#272630]" />
+              <div className="p-3 rounded-lg bg-secondary group-hover:bg-accent/20 transition-colors duration-normal">
+                <Building2 className="h-6 w-6 text-foreground" />
               </div>
-              <ArrowRight className="h-5 w-5 text-[#272630]/30 group-hover:text-[#BCAB8A] group-hover:translate-x-1 transition-all duration-normal" />
+              <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-accent group-hover:translate-x-1 transition-all duration-normal" />
             </div>
-            <h3 className="text-lg font-semibold text-[#272630] mb-1 font-serif">Kontorer</h3>
+            <h3 className="text-lg font-semibold text-foreground mb-1 font-serif">Kontorer</h3>
             {officesLoading ? (
               <Skeleton className="h-4 w-32" />
             ) : (
-              <p className="text-[#272630]/60 text-sm">
+              <p className="text-muted-foreground text-sm">
                 {offices.filter(o => o.is_active).length} aktive kontorer
               </p>
             )}
@@ -192,24 +192,24 @@ export default function Dashboard() {
           {/* Employees Card */}
           <Link 
             href="/employees" 
-            className="group bg-white rounded-lg p-6 border border-[#E5E5E5] shadow-card ring-1 ring-black/[0.03] hover:border-[#BCAB8A] hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-slow"
+            className="group bg-card rounded-lg p-6 border border-border shadow-card ring-1 ring-black/[0.03] dark:ring-white/[0.06] hover:border-accent hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-slow"
           >
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-lg bg-[#E9E7DC] group-hover:bg-[#BCAB8A]/20 transition-colors duration-normal">
-                <Users className="h-6 w-6 text-[#272630]" />
+              <div className="p-3 rounded-lg bg-secondary group-hover:bg-accent/20 transition-colors duration-normal">
+                <Users className="h-6 w-6 text-foreground" />
               </div>
-              <ArrowRight className="h-5 w-5 text-[#272630]/30 group-hover:text-[#BCAB8A] group-hover:translate-x-1 transition-all duration-normal" />
+              <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-accent group-hover:translate-x-1 transition-all duration-normal" />
             </div>
-            <h3 className="text-lg font-semibold text-[#272630] mb-1 font-serif">Ansatte</h3>
+            <h3 className="text-lg font-semibold text-foreground mb-1 font-serif">Ansatte</h3>
             {employeesLoading ? (
               <Skeleton className="h-4 w-32" />
             ) : (
-              <p className="text-[#272630]/60 text-sm">
+              <p className="text-muted-foreground text-sm">
                 {statusCounts.active} aktive, {statusCounts.onboarding} i onboarding
               </p>
             )}
             {!employeesLoading && statusCounts.offboarding > 0 && (
-              <div className="mt-3 px-2 py-1 bg-amber-50 border border-amber-200 rounded text-xs text-amber-700">
+              <div className="mt-3 px-2 py-1 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded text-xs text-amber-700 dark:text-amber-200">
                 {statusCounts.offboarding} i offboarding
               </div>
             )}
@@ -218,19 +218,19 @@ export default function Dashboard() {
           {/* Assets Card */}
           <Link 
             href="/assets" 
-            className="group bg-white rounded-lg p-6 border border-[#E5E5E5] shadow-card ring-1 ring-black/[0.03] hover:border-[#BCAB8A] hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-slow"
+            className="group bg-card rounded-lg p-6 border border-border shadow-card ring-1 ring-black/[0.03] dark:ring-white/[0.06] hover:border-accent hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-slow"
           >
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-lg bg-[#E9E7DC] group-hover:bg-[#BCAB8A]/20 transition-colors duration-normal">
-                <ImageIcon className="h-6 w-6 text-[#272630]" />
+              <div className="p-3 rounded-lg bg-secondary group-hover:bg-accent/20 transition-colors duration-normal">
+                <ImageIcon className="h-6 w-6 text-foreground" />
               </div>
-              <ArrowRight className="h-5 w-5 text-[#272630]/30 group-hover:text-[#BCAB8A] group-hover:translate-x-1 transition-all duration-normal" />
+              <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-accent group-hover:translate-x-1 transition-all duration-normal" />
             </div>
-            <h3 className="text-lg font-semibold text-[#272630] mb-1 font-serif">Filer</h3>
+            <h3 className="text-lg font-semibold text-foreground mb-1 font-serif">Filer</h3>
             {assetsLoading ? (
               <Skeleton className="h-4 w-32" />
             ) : (
-              <p className="text-[#272630]/60 text-sm">
+              <p className="text-muted-foreground text-sm">
                 {assets.length} globale filer
               </p>
             )}
@@ -241,39 +241,39 @@ export default function Dashboard() {
             type="button"
             onClick={handleDownloadSalesReport}
             disabled={salesReportLoading}
-            className="group text-left bg-white rounded-lg p-6 border border-[#E5E5E5] shadow-card ring-1 ring-black/[0.03] hover:border-[#BCAB8A] hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-slow disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+            className="group text-left bg-card rounded-lg p-6 border border-border shadow-card ring-1 ring-black/[0.03] dark:ring-white/[0.06] hover:border-accent hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-slow disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:translate-y-0"
           >
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-lg bg-[#E9E7DC] group-hover:bg-[#BCAB8A]/20 transition-colors duration-normal">
-                <BarChart3 className="h-6 w-6 text-[#272630]" />
+              <div className="p-3 rounded-lg bg-secondary group-hover:bg-accent/20 transition-colors duration-normal">
+                <BarChart3 className="h-6 w-6 text-foreground" />
               </div>
               {salesReportLoading ? (
-                <Loader2 className="h-5 w-5 text-[#272630]/50 animate-spin" />
+                <Loader2 className="h-5 w-5 text-muted-foreground animate-spin" />
               ) : (
-                <Download className="h-5 w-5 text-[#272630]/30 group-hover:text-[#BCAB8A] transition-colors duration-normal" />
+                <Download className="h-5 w-5 text-muted-foreground group-hover:text-accent transition-colors duration-normal" />
               )}
             </div>
-            <h3 className="text-lg font-semibold text-[#272630] mb-1 font-serif">Formidlingsrapport</h3>
-            <p className="text-[#272630]/60 text-sm">
+            <h3 className="text-lg font-semibold text-foreground mb-1 font-serif">Formidlingsrapport</h3>
+            <p className="text-muted-foreground text-sm">
               Last ned Excel (vederlag + andre inntekter)
             </p>
             {salesReportError && (
-              <p className="mt-2 text-sm text-red-600">{salesReportError}</p>
+              <p className="mt-2 text-sm text-red-600 dark:text-red-300">{salesReportError}</p>
             )}
           </button>
         </div>
 
         {/* Vitec Inventory Sync Status */}
-        <div className="bg-white rounded-md p-6 border border-[#E5E5E5] mb-8">
+        <div className="bg-card rounded-md p-6 border border-border mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-[#272630]">Vitec Malbibliotek Status</h3>
+            <h3 className="text-lg font-semibold text-foreground">Vitec Malbibliotek Status</h3>
             {inventoryData?.stats && (
               <span className={`px-3 py-1 rounded-full text-sm font-medium ${
                 inventoryData.stats.sync_percentage >= 80 
-                  ? 'bg-green-100 text-green-700'
+                  ? 'bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-300'
                   : inventoryData.stats.sync_percentage >= 50 
-                  ? 'bg-amber-100 text-amber-700'
-                  : 'bg-red-100 text-red-700'
+                  ? 'bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300'
+                  : 'bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300'
               }`}>
                 {inventoryData.stats.sync_percentage}% synkronisert
               </span>
@@ -283,16 +283,16 @@ export default function Dashboard() {
           {inventoryLoading ? (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="p-4 rounded-md bg-[#F5F5F0]">
+                <div key={i} className="p-4 rounded-md bg-muted">
                   <Skeleton className="h-4 w-20 mb-2" />
                   <Skeleton className="h-8 w-12" />
                 </div>
               ))}
             </div>
           ) : inventoryError ? (
-            <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-3">
-              <AlertCircle className="h-5 w-5 text-amber-600" />
-              <p className="text-amber-800 text-sm">
+            <div className="p-4 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-lg flex items-center gap-3">
+              <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+              <p className="text-amber-800 dark:text-amber-200 text-sm">
                 Kunne ikke laste inn inventar. Dette kan skyldes at Vitec-registeret ikke er sedet ennå.
               </p>
             </div>
@@ -300,56 +300,56 @@ export default function Dashboard() {
             <div className="space-y-6">
               {/* Stats Grid */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="p-4 rounded-md bg-[#F5F5F0] border border-[#E5E5E5]">
-                  <div className="flex items-center gap-2 text-[#272630]/70 mb-1">
-                    <CheckCircle2 className="h-4 w-4 text-[#272630]/60" />
+                <div className="p-4 rounded-md bg-muted border border-border">
+                  <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                    <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm font-medium">Synkronisert</span>
                   </div>
-                  <p className="text-2xl font-bold text-[#272630]">{inventoryData.stats.synced}</p>
+                  <p className="text-2xl font-bold text-foreground">{inventoryData.stats.synced}</p>
                 </div>
                 
-                <div className="p-4 rounded-md bg-[#F5F5F0] border border-[#E5E5E5]">
-                  <div className="flex items-center gap-2 text-[#272630]/70 mb-1">
-                    <XCircle className="h-4 w-4 text-[#272630]/60" />
+                <div className="p-4 rounded-md bg-muted border border-border">
+                  <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                    <XCircle className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm font-medium">Mangler</span>
                   </div>
-                  <p className="text-2xl font-bold text-[#272630]">{inventoryData.stats.missing}</p>
+                  <p className="text-2xl font-bold text-foreground">{inventoryData.stats.missing}</p>
                 </div>
                 
-                <div className="p-4 rounded-md bg-[#F5F5F0] border border-[#E5E5E5]">
-                  <div className="flex items-center gap-2 text-[#272630]/70 mb-1">
-                    <RefreshCw className="h-4 w-4 text-[#272630]/60" />
+                <div className="p-4 rounded-md bg-muted border border-border">
+                  <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                    <RefreshCw className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm font-medium">Modifisert</span>
                   </div>
-                  <p className="text-2xl font-bold text-[#272630]">{inventoryData.stats.modified}</p>
+                  <p className="text-2xl font-bold text-foreground">{inventoryData.stats.modified}</p>
                 </div>
                 
-                <div className="p-4 rounded-md bg-[#F5F5F0] border border-[#E5E5E5]">
-                  <div className="flex items-center gap-2 text-[#272630]/70 mb-1">
-                    <FileText className="h-4 w-4 text-[#272630]/60" />
+                <div className="p-4 rounded-md bg-muted border border-border">
+                  <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                    <FileText className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm font-medium">Kun lokal</span>
                   </div>
-                  <p className="text-2xl font-bold text-[#272630]">{inventoryData.stats.local_only}</p>
+                  <p className="text-2xl font-bold text-foreground">{inventoryData.stats.local_only}</p>
                 </div>
               </div>
 
               {/* Missing Templates List */}
               {inventoryData.missing_templates.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-medium text-[#272630]/60 mb-3">
+                  <h4 className="text-sm font-medium text-muted-foreground mb-3">
                     Maler som mangler ({inventoryData.stats.missing} totalt)
                   </h4>
                   <div className="space-y-2">
                     {inventoryData.missing_templates.map((template) => (
                       <div
                         key={template.id}
-                        className="flex items-center gap-3 p-3 bg-[#F5F5F0] rounded-md"
+                        className="flex items-center gap-3 p-3 bg-muted rounded-md"
                       >
                         <div className="flex-1 min-w-0">
-                          <p className="font-medium text-[#272630] truncate">
+                          <p className="font-medium text-foreground truncate">
                             {template.vitec_name}
                           </p>
-                          <div className="flex items-center gap-2 text-xs text-[#272630]/50">
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
                             {template.vitec_type && <span>{template.vitec_type}</span>}
                             {template.vitec_phase && (
                               <>
@@ -372,14 +372,14 @@ export default function Dashboard() {
               )}
 
               {/* Summary */}
-              <div className="flex items-center justify-between text-sm text-[#272630]/60 pt-4 border-t border-[#E5E5E5]">
+              <div className="flex items-center justify-between text-sm text-muted-foreground pt-4 border-t border-border">
                 <span>
                   Totalt: {inventoryData.stats.total_vitec_templates} Vitec-maler, 
                   {" "}{inventoryData.stats.total_local_templates} lokale maler
                 </span>
                 <Link
                   href="/templates"
-                  className="text-[#BCAB8A] hover:text-[#BCAB8A]/80 font-medium"
+                  className="text-accent hover:text-accent/80 font-medium"
                 >
                   Administrer maler →
                 </Link>
@@ -390,12 +390,12 @@ export default function Dashboard() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Recent Templates */}
-          <div className="lg:col-span-2 bg-white rounded-md p-6 border border-[#E5E5E5]">
+          <div className="lg:col-span-2 bg-card rounded-md p-6 border border-border">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-[#272630]">Nylig opplastet</h3>
+              <h3 className="text-lg font-semibold text-foreground">Nylig opplastet</h3>
               <Link
                 href="/templates"
-                className="text-sm text-[#BCAB8A] hover:text-[#BCAB8A]/80 font-medium"
+                className="text-sm text-accent hover:text-accent/80 font-medium"
               >
                 Se alle →
               </Link>
@@ -431,10 +431,10 @@ export default function Dashboard() {
                         <span
                           className={`px-2 py-0.5 rounded-full text-xs border ${
                             template.status === "published"
-                              ? "bg-[#E9E7DC] text-[#272630]/80 border-[#E5E5E5]"
+                              ? "bg-secondary text-foreground/80 border-border"
                               : template.status === "draft"
-                              ? "bg-[#F5F5F0] text-[#272630]/70 border-[#E5E5E5]"
-                              : "bg-white text-[#272630]/60 border-[#E5E5E5]"
+                              ? "bg-muted text-foreground/70 border-border"
+                              : "bg-card text-muted-foreground border-border"
                           }`}
                         >
                           {template.status === "published"
@@ -456,12 +456,12 @@ export default function Dashboard() {
           </div>
 
           {/* Categories */}
-          <div className="bg-white rounded-md p-6 border border-[#E5E5E5]">
+          <div className="bg-card rounded-md p-6 border border-border">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-[#272630]">Kategorier</h3>
+              <h3 className="text-lg font-semibold text-foreground">Kategorier</h3>
               <Link
                 href="/categories"
-                className="text-sm text-[#BCAB8A] hover:text-[#BCAB8A]/80 font-medium"
+                className="text-sm text-accent hover:text-accent/80 font-medium"
               >
                 Administrer →
               </Link>
@@ -470,13 +470,13 @@ export default function Dashboard() {
             {categoriesLoading ? (
               <div className="space-y-3">
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="p-3 rounded-md bg-[#F5F5F0]">
+                  <div key={i} className="p-3 rounded-md bg-muted">
                     <Skeleton className="h-4 w-24" />
                   </div>
                 ))}
               </div>
             ) : categories.length === 0 ? (
-              <div className="text-center py-6 text-[#272630]/50">
+              <div className="text-center py-6 text-muted-foreground">
                 <p>Ingen kategorier opprettet.</p>
               </div>
             ) : (
@@ -487,10 +487,10 @@ export default function Dashboard() {
                   <Link
                     key={category.id}
                     href={`/templates?category=${category.id}`}
-                    className="flex items-center gap-3 p-3 rounded-md bg-[#F5F5F0] hover:bg-[#E9E7DC] transition-colors"
+                    className="flex items-center gap-3 p-3 rounded-md bg-muted hover:bg-secondary transition-colors"
                   >
-                    <IconComponent className="h-5 w-5 text-[#272630]" />
-                    <span className="font-medium text-[#272630]">{category.name}</span>
+                    <IconComponent className="h-5 w-5 text-foreground" />
+                    <span className="font-medium text-foreground">{category.name}</span>
                   </Link>
                   );
                 })}
@@ -501,18 +501,18 @@ export default function Dashboard() {
 
         {/* Recent Activity from Dashboard Stats */}
         {!statsLoading && stats?.recent_uploads && stats.recent_uploads.length > 0 && (
-          <div className="mt-8 bg-white rounded-md p-6 border border-[#E5E5E5]">
-            <h3 className="text-lg font-semibold text-[#272630] mb-4">Nylig aktivitet</h3>
+          <div className="mt-8 bg-card rounded-md p-6 border border-border">
+            <h3 className="text-lg font-semibold text-foreground mb-4">Nylig aktivitet</h3>
             <div className="space-y-2">
               {stats.recent_uploads.map((upload) => (
                 <div
                   key={upload.id}
-                  className="flex items-center gap-3 text-sm text-[#272630]/60"
+                  className="flex items-center gap-3 text-sm text-muted-foreground"
                 >
-                  <div className="w-2 h-2 rounded-full bg-[#BCAB8A]" />
-                  <span className="font-medium text-[#272630]">{upload.title}</span>
-                  <span className="text-[#272630]/50">ble lastet opp</span>
-                  <span className="ml-auto text-[#272630]/50">
+                  <div className="w-2 h-2 rounded-full bg-accent" />
+                  <span className="font-medium text-foreground">{upload.title}</span>
+                  <span className="text-muted-foreground">ble lastet opp</span>
+                  <span className="ml-auto text-muted-foreground">
                     {formatDate(upload.created_at)}
                   </span>
                 </div>

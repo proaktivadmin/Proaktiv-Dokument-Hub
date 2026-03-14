@@ -5,7 +5,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Upload, FileText, FolderTree, LayoutDashboard, Sparkles, Code2, HardDrive, LogOut,
-  Building2, Users, Image, ChevronDown, FileCode, Plus, Map, RefreshCcw, Palette, ClipboardList, BarChart3
+  Building2, Users, Image, ChevronDown, FileCode, Plus, Map, RefreshCcw, Palette, ClipboardList, BarChart3,
+  Sun, Moon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,6 +18,14 @@ import {
 import { UploadTemplateDialog } from "@/components/templates/UploadTemplateDialog";
 import { NewTemplateDialog } from "@/components/templates/NewTemplateDialog";
 import { NotificationDropdown } from "@/components/notifications/NotificationDropdown";
+import { Switch } from "@/components/ui/switch";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useTheme } from "@/components/theme/ThemeContext";
 import { cn } from "@/lib/utils";
 import { authApi } from "@/lib/api/auth";
 
@@ -31,6 +40,7 @@ export function Header({ onUploadSuccess }: HeaderProps) {
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const pathname = usePathname();
   const router = useRouter();
+  const { isDark, setDark } = useTheme();
 
   // Scroll shadow effect
   useEffect(() => {
@@ -104,7 +114,7 @@ export function Header({ onUploadSuccess }: HeaderProps) {
   return (
     <>
       <header className={cn(
-        "border-b border-[#E5E5E5] bg-[#E9E7DC] sticky top-0 z-50 transition-shadow duration-normal",
+        "border-b border-border bg-secondary sticky top-0 z-50 transition-shadow duration-normal",
         isScrolled && "shadow-medium"
       )}>
         <div className="container mx-auto px-6 py-4">
@@ -129,8 +139,8 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                     className={cn(
                       "px-4 py-2 text-sm font-medium rounded-md transition-colors inline-flex items-center gap-2",
                       isActive
-                        ? "bg-white/60 text-[#272630]"
-                        : "text-[#272630]/70 hover:text-[#272630] hover:bg-white/40"
+                        ? "bg-card/60 text-foreground dark:bg-card/40"
+                        : "text-muted-foreground hover:text-foreground hover:bg-card/40 dark:hover:bg-card/30"
                     )}
                   >
                     <Icon className="h-4 w-4" />
@@ -146,8 +156,8 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                     className={cn(
                       "px-4 py-2 text-sm font-medium rounded-md transition-colors inline-flex items-center gap-2 group",
                       isRessurserActive
-                        ? "bg-white/60 text-[#272630]"
-                        : "text-[#272630]/70 hover:text-[#272630] hover:bg-white/40"
+                        ? "bg-card/60 text-foreground dark:bg-card/40"
+                        : "text-muted-foreground hover:text-foreground hover:bg-card/40 dark:hover:bg-card/30"
                     )}
                   >
                     <FolderTree className="h-4 w-4" />
@@ -155,7 +165,7 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                     <ChevronDown className="h-3 w-3 transition-transform duration-fast ease-standard group-data-[state=open]:rotate-180" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-48 bg-white">
+                <DropdownMenuContent align="start" className="w-48 bg-card">
                   {ressurserItems.map((item) => {
                     const Icon = item.icon;
                     return (
@@ -177,8 +187,8 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                     className={cn(
                       "px-4 py-2 text-sm font-medium rounded-md transition-colors inline-flex items-center gap-2 group",
                       isSelskapActive
-                        ? "bg-white/60 text-[#272630]"
-                        : "text-[#272630]/70 hover:text-[#272630] hover:bg-white/40"
+                        ? "bg-card/60 text-foreground dark:bg-card/40"
+                        : "text-muted-foreground hover:text-foreground hover:bg-card/40 dark:hover:bg-card/30"
                     )}
                   >
                     <Building2 className="h-4 w-4" />
@@ -186,7 +196,7 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                     <ChevronDown className="h-3 w-3 transition-transform duration-fast ease-standard group-data-[state=open]:rotate-180" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-48 bg-white">
+                <DropdownMenuContent align="start" className="w-48 bg-card">
                   {selskapItems.map((item) => {
                     const Icon = item.icon;
                     return (
@@ -208,8 +218,8 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                     className={cn(
                       "px-4 py-2 text-sm font-medium rounded-md transition-colors inline-flex items-center gap-2 group",
                       isToolsActive
-                        ? "bg-white/60 text-[#272630]"
-                        : "text-[#272630]/70 hover:text-[#272630] hover:bg-white/40"
+                        ? "bg-card/60 text-foreground dark:bg-card/40"
+                        : "text-muted-foreground hover:text-foreground hover:bg-card/40 dark:hover:bg-card/30"
                     )}
                   >
                     <Sparkles className="h-4 w-4" />
@@ -217,7 +227,7 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                     <ChevronDown className="h-3 w-3 transition-transform duration-fast ease-standard group-data-[state=open]:rotate-180" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-48 bg-white">
+                <DropdownMenuContent align="start" className="w-48 bg-card">
                   {toolsItems.map((item) => {
                     const Icon = item.icon;
                     return (
@@ -235,13 +245,13 @@ export function Header({ onUploadSuccess }: HeaderProps) {
               {/* New Template Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button className="ml-3 bg-[#272630] text-white hover:bg-[#272630]/90 rounded-md group">
+                  <Button className="ml-3 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md group">
                     <Plus className="h-4 w-4 mr-2" />
                     Ny mal
                     <ChevronDown className="h-3 w-3 ml-2 transition-transform duration-fast ease-standard group-data-[state=open]:rotate-180" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48 bg-white">
+                <DropdownMenuContent align="end" className="w-48 bg-card">
                   <DropdownMenuItem onClick={() => setUploadDialogOpen(true)}>
                     <Upload className="h-4 w-4 mr-2" />
                     Last opp fil
@@ -253,14 +263,34 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                 </DropdownMenuContent>
               </DropdownMenu>
 
+              {/* Dark mode toggle */}
+              <TooltipProvider delayDuration={300}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="ml-2 flex items-center gap-2">
+                      <Sun className="h-4 w-4 text-muted-foreground" />
+                      <Switch
+                        checked={isDark}
+                        onCheckedChange={setDark}
+                        aria-label="Mørk modus"
+                      />
+                      <Moon className="h-4 w-4 text-muted-foreground" />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom">
+                    <p>{isDark ? "Mørk modus" : "Lys modus"}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+
               {/* Notification Dropdown */}
               <NotificationDropdown className="ml-2" />
 
               {/* User + Logout */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="ml-2 flex items-center gap-2 px-3 py-1.5 rounded-md text-sm text-[#272630]/70 hover:text-[#272630] hover:bg-white/40 transition-colors">
-                    <div className="h-6 w-6 rounded-full bg-[#272630]/10 flex items-center justify-center text-xs font-semibold text-[#272630] uppercase">
+                  <button className="ml-2 flex items-center gap-2 px-3 py-1.5 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-card/40 transition-colors">
+                    <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center text-xs font-semibold text-foreground uppercase">
                       {userEmail ? userEmail[0] : "?"}
                     </div>
                     {userEmail && (
@@ -271,9 +301,9 @@ export function Header({ onUploadSuccess }: HeaderProps) {
                     <ChevronDown className="h-3 w-3" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-52 bg-white">
+                <DropdownMenuContent align="end" className="w-52 bg-card">
                   {userEmail && (
-                    <div className="px-3 py-2 text-xs text-slate-500 border-b border-slate-100">
+                    <div className="px-3 py-2 text-xs text-muted-foreground border-b border-border">
                       {userEmail}
                     </div>
                   )}

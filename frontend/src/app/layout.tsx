@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { Inter, Playfair_Display } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/components/auth/AuthProvider';
 import { WebVitals } from '@/components/analytics/WebVitals';
+import { ThemeProvider } from '@/components/theme/ThemeContext';
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -35,7 +37,11 @@ export default function RootLayout({
     <html lang="nb" className={`${inter.variable} ${playfair.variable}`}>
       <body className="min-h-screen bg-background font-sans antialiased">
         <WebVitals />
-        <AuthProvider>{children}</AuthProvider>
+        <Suspense fallback={<div className="min-h-screen bg-background" />}>
+          <ThemeProvider>
+            <AuthProvider>{children}</AuthProvider>
+          </ThemeProvider>
+        </Suspense>
       </body>
     </html>
   );
