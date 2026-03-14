@@ -97,6 +97,11 @@ function getMonthRange(year: number, monthIndex: number): { from: string; to: st
   };
 }
 
+/** Format revenue as whole number (no decimals) for sales dashboard. */
+function formatRevenue(n: number): string {
+  return Math.round(n).toLocaleString("nb-NO", { maximumFractionDigits: 0 });
+}
+
 export default function ReportsPage() {
   const [loading, setLoading] = useState(false);
   const [downloadLoading, setDownloadLoading] = useState(false);
@@ -117,6 +122,9 @@ export default function ReportsPage() {
   const [bestPerformers, setBestPerformers] = useState<BestPerformersData | null>(null);
   const [bestLoading, setBestLoading] = useState(false);
   const [bestDownloadLoading, setBestDownloadLoading] = useState(false);
+  const [bestFromDate, setBestFromDate] = useState<string | null>(null);
+  const [bestToDate, setBestToDate] = useState<string | null>(null);
+  const [bestScope, setBestScope] = useState<"week" | "month">("week");
 
   const [budgetComparison, setBudgetComparison] = useState<BudgetComparisonData | null>(null);
   const [budgetDraft, setBudgetDraft] = useState<Record<number, string>>({});
@@ -224,7 +232,8 @@ export default function ReportsPage() {
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      // Delay revoke so browser can start the download before blob is released
+      setTimeout(() => URL.revokeObjectURL(url), 500);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Kunne ikke laste ned rapporten.");
     } finally {
@@ -262,30 +271,36 @@ export default function ReportsPage() {
   const loadBestPerformers = useCallback(async () => {
     setBestLoading(true);
     setError(null);
+    const from = bestFromDate ?? fromDate;
+    const to = bestToDate ?? toDate;
     try {
       const result = await fetchBestPerformers({
         year,
-        from_date: fromDate ?? undefined,
-        to_date: toDate ?? undefined,
+        from_date: from ?? undefined,
+        to_date: to ?? undefined,
         include_vat: includeVat,
         top_n: 5,
       });
       setBestPerformers(result);
+      if (from) setBestFromDate(from);
+      if (to) setBestToDate(to);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Kunne ikke laste best performers.");
     } finally {
       setBestLoading(false);
     }
-  }, [year, fromDate, toDate, includeVat]);
+  }, [year, bestFromDate, bestToDate, fromDate, toDate, includeVat]);
 
   const handleBestPerformersDownload = async () => {
     setBestDownloadLoading(true);
     setError(null);
+    const from = bestFromDate ?? fromDate;
+    const to = bestToDate ?? toDate;
     try {
       const blob = await downloadBestPerformers({
         year,
-        from_date: fromDate ?? undefined,
-        to_date: toDate ?? undefined,
+        from_date: from ?? undefined,
+        to_date: to ?? undefined,
         include_vat: includeVat,
         top_n: 5,
       });
@@ -296,7 +311,7 @@ export default function ReportsPage() {
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      setTimeout(() => URL.revokeObjectURL(url), 500);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Kunne ikke laste ned best performers.");
     } finally {
@@ -415,24 +430,24 @@ export default function ReportsPage() {
     loadSubscriptions();
   }, [loadSubscriptions]);
 
-  const sumLabel = includeVat ? "Sum (inkl. mva)" : "Sum (exkl. mva)";
+  const sumLabel = includeVat ? "Sum (inkl. mva.)" : "Sum (eksl. mva.)";
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
 
       <main className="container mx-auto px-6 py-8">
-        <h1 className="text-2xl font-serif font-bold text-[#272630] mb-2">Rapporter</h1>
-        <p className="text-[#272630]/60 mb-8">
+        <h1 className="text-2xl font-serif font-bold text-foreground mb-2">Rapporter</h1>
+        <p className="text-muted-foreground mb-8">
           Inspiser og last ned Formidlingsrapport. Velg omfang og klikk Last inn for å vise data.
         </p>
 
         {/* Scope filters */}
-        <Card className="mb-8 border border-[#E5E5E5] shadow-card">
+        <Card className="mb-8 border-border shadow-card">
           <CardHeader>
             <div className="flex items-center gap-3">
-              <div className="p-3 rounded-lg bg-[#E9E7DC]">
-                <BarChart3 className="h-6 w-6 text-[#272630]" />
+              <div className="p-3 rounded-lg bg-secondary">
+                <BarChart3 className="h-6 w-6 text-foreground" />
               </div>
               <div>
                 <CardTitle className="font-serif">Formidlingsrapport</CardTitle>
@@ -523,7 +538,7 @@ export default function ReportsPage() {
             </div>
             <div className="flex flex-wrap items-center gap-4">
               <div className="flex items-center gap-2">
-                <span className="text-sm text-[#272630]/60">Måned:</span>
+                <span className="text-sm text-muted-foreground">Måned:</span>
                 <Select
                   value={(() => {
                     if (!fromDate || !toDate) return "all";
@@ -567,7 +582,7 @@ export default function ReportsPage() {
                 </Select>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-[#272630]/60">Uke:</span>
+                <span className="text-sm text-muted-foreground">Uke:</span>
                 <Select
                   value={(() => {
                     if (!fromDate || !toDate) return "none";
@@ -606,7 +621,7 @@ export default function ReportsPage() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="text-sm text-[#272630]/70 border-l border-[#E5E5E5] pl-4">
+              <div className="text-sm text-muted-foreground border-l border-border pl-4">
                 Nåværende uke: <strong>Uke {getISOWeek(new Date())}</strong> (
                 {getISOWeekYear(new Date())})
               </div>
@@ -625,7 +640,7 @@ export default function ReportsPage() {
               <Button
                 onClick={loadReport}
                 disabled={loading}
-                className="bg-[#272630] hover:bg-[#272630]/90 text-white"
+                className="bg-primary text-primary-foreground hover:bg-primary/90"
               >
                 {loading ? (
                   <>
@@ -652,7 +667,7 @@ export default function ReportsPage() {
                 Last ned Excel
               </Button>
             </div>
-            <div className="rounded-md border border-[#E5E5E5] bg-[#F5F5F0]/50 p-3 flex flex-wrap items-center gap-3">
+            <div className="rounded-md border border-border bg-muted/50 p-3 flex flex-wrap items-center gap-3">
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="live-updates"
@@ -663,12 +678,12 @@ export default function ReportsPage() {
                   Live dataoppdateringer
                 </Label>
               </div>
-              <span className="text-xs text-[#272630]/60">
+              <span className="text-xs text-muted-foreground">
                 Status: {liveUpdatesEnabled ? (liveUpdatesConnected ? "Tilkoblet" : "Kobler til...") : "Av"}
               </span>
-              <span className="text-xs text-[#272630]/60">
-                Nye cache-events: <strong>{pendingSyncEvents}</strong>
-                {lastSyncEventAt ? ` · Sist: ${lastSyncEventAt.toLocaleTimeString("nb-NO")}` : ""}
+              <span className="text-xs text-muted-foreground">
+                Nye data i Vitec: <strong>{pendingSyncEvents}</strong>
+                {lastSyncEventAt ? ` · Sist oppdatert: ${lastSyncEventAt.toLocaleTimeString("nb-NO")}` : ""}
               </span>
               <Button
                 variant="outline"
@@ -681,7 +696,7 @@ export default function ReportsPage() {
               </Button>
             </div>
             {error && (
-              <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-700">
+              <div className="p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 rounded-lg flex items-center gap-2 text-red-700 dark:text-red-300">
                 <AlertCircle className="h-4 w-4 shrink-0" />
                 <span className="text-sm">{error}</span>
               </div>
@@ -691,7 +706,7 @@ export default function ReportsPage() {
 
         {/* Visual dashboard */}
         {data && mode === "department" && (
-          <Card className="border border-[#E5E5E5] shadow-card">
+          <Card className="border border-border shadow-card">
             <CardHeader>
               <div className="flex items-center gap-3">
                 <CardTitle className="font-serif">
@@ -700,7 +715,7 @@ export default function ReportsPage() {
                 <DataConfidenceBadge scope={data.scope} />
               </div>
               <CardDescription>
-                {data.total_sales} salg totalt · {sumLabel}: {data.total_revenue.toLocaleString("nb-NO")} kr
+                {data.total_sales} salg totalt · {sumLabel}: {formatRevenue(data.total_revenue)} kr
               </CardDescription>
               <ScopePanel scope={data.scope} />
             </CardHeader>
@@ -708,13 +723,13 @@ export default function ReportsPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-[#E5E5E5]">
-                      <th className="text-left py-3 font-semibold text-[#272630] w-8" />
-                      <th className="text-left py-3 font-semibold text-[#272630]">Megler</th>
-                      <th className="text-right py-3 font-semibold text-[#272630]">Antall salg</th>
-                      <th className="text-left py-3 font-semibold text-[#272630]">Eiendomstype</th>
-                      <th className="text-left py-3 font-semibold text-[#272630]">Oppdragstype</th>
-                      <th className="text-right py-3 font-semibold text-[#272630]">{sumLabel} (kr)</th>
+                    <tr className="border-b border-border">
+                      <th className="text-left py-3 font-semibold text-foreground w-8" />
+                      <th className="text-left py-3 font-semibold text-foreground">Megler</th>
+                      <th className="text-right py-3 font-semibold text-foreground">Antall salg</th>
+                      <th className="text-left py-3 font-semibold text-foreground">Eiendomstype</th>
+                      <th className="text-left py-3 font-semibold text-foreground">Oppdragstype</th>
+                      <th className="text-right py-3 font-semibold text-foreground">{sumLabel} (kr)</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -728,14 +743,14 @@ export default function ReportsPage() {
                         onToggleProperty={toggleProperty}
                       />
                     ))}
-                    <tr className="border-t-2 border-[#272630] font-bold bg-[#E9E7DC]/30">
+                    <tr className="border-t-2 border-primary font-bold bg-secondary/30">
                       <td className="py-3" />
                       <td className="py-3">Sum</td>
                       <td className="py-3 text-right">{data.total_sales}</td>
                       <td className="py-3" />
                       <td className="py-3" />
                       <td className="py-3 text-right">
-                        {data.total_revenue.toLocaleString("nb-NO")}
+                        {formatRevenue(data.total_revenue)}
                       </td>
                     </tr>
                   </tbody>
@@ -746,12 +761,12 @@ export default function ReportsPage() {
         )}
 
         {franchiseData && mode === "franchise" && (
-          <Card className="border border-[#E5E5E5] shadow-card mb-8">
+          <Card className="border border-border shadow-card mb-8">
             <CardHeader>
               <CardTitle className="font-serif">Franchise sammendrag</CardTitle>
               <CardDescription>
                 {franchiseData.summary.department_count} avdelinger · {franchiseData.summary.total_sales} salg ·{" "}
-                {franchiseData.summary.total_revenue.toLocaleString("nb-NO")} kr
+                {formatRevenue(franchiseData.summary.total_revenue)} kr
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
@@ -767,15 +782,114 @@ export default function ReportsPage() {
           </Card>
         )}
 
-        <Card className="border border-[#E5E5E5] shadow-card mb-8">
+        <Card className="border border-border shadow-card mb-8">
           <CardHeader>
             <div className="flex items-center gap-2">
-              <Trophy className="h-5 w-5 text-[#BCAB8A]" />
+              <Trophy className="h-5 w-5 text-accent" />
               <CardTitle className="font-serif">Best performers</CardTitle>
             </div>
             <CardDescription>Ukentlig/månedlig toppliste for meglere og avdelinger.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
+            <div className="flex flex-wrap items-center gap-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">Periode:</span>
+                <Select
+                  value={bestScope}
+                  onValueChange={(v: "week" | "month") => {
+                    setBestScope(v);
+                    if (v === "week") {
+                      const { from, to } = getWeekRange(0);
+                      setBestFromDate(from);
+                      setBestToDate(to);
+                    } else {
+                      const now = new Date();
+                      setBestFromDate(format(new Date(now.getFullYear(), now.getMonth(), 1), "yyyy-MM-dd"));
+                      setBestToDate(format(new Date(now.getFullYear(), now.getMonth() + 1, 0), "yyyy-MM-dd"));
+                    }
+                  }}
+                >
+                  <SelectTrigger className="w-[120px]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="week">Uke</SelectItem>
+                    <SelectItem value="month">Måned</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {bestScope === "week" && (
+                <Select
+                  value={
+                    bestFromDate && bestToDate
+                      ? (() => {
+                          for (let n = 0; n < 8; n++) {
+                            const { from, to } = getWeekRange(n);
+                            if (from === bestFromDate && to === bestToDate) return String(n);
+                          }
+                          return "custom";
+                        })()
+                      : "0"
+                  }
+                  onValueChange={(v) => {
+                    const n = parseInt(v, 10);
+                    if (n >= 0 && n < 8) {
+                      const { from, to } = getWeekRange(n);
+                      setBestFromDate(from);
+                      setBestToDate(to);
+                    }
+                  }}
+                >
+                  <SelectTrigger className="w-[200px]">
+                    <SelectValue placeholder="Velg uke" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {[0, 1, 2, 3, 4, 5, 6, 7].map((n) => {
+                      const { from, to } = getWeekRange(n);
+                      const weekNum = n === 0 ? getISOWeek(new Date()) : getISOWeek(subWeeks(new Date(), n));
+                      return (
+                        <SelectItem key={n} value={String(n)}>
+                          {n === 0 ? "Denne uken" : `Uke ${weekNum}`} ({format(new Date(from), "d. MMM", { locale: nb })} – {format(new Date(to), "d. MMM", { locale: nb })})
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+              )}
+              {bestScope === "month" && (
+                <Select
+                  value={
+                    bestFromDate
+                      ? `${new Date(bestFromDate).getFullYear()}-${String(new Date(bestFromDate).getMonth() + 1).padStart(2, "0")}`
+                      : ""
+                  }
+                  onValueChange={(v) => {
+                    const [y, m] = v.split("-").map(Number);
+                    const start = new Date(y, m - 1, 1);
+                    const end = new Date(y, m, 0);
+                    setBestFromDate(format(start, "yyyy-MM-dd"));
+                    setBestToDate(format(end, "yyyy-MM-dd"));
+                  }}
+                >
+                  <SelectTrigger className="w-[140px]">
+                    <SelectValue placeholder="Velg måned" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {MONTHS_NB.map((name, i) => (
+                      <SelectItem
+                        key={name}
+                        value={`${year}-${String(i + 1).padStart(2, "0")}`}
+                      >
+                        {name} {year}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+              <span className="text-sm text-muted-foreground">
+                Omfang: {mode === "department" ? offices.find((o) => o.vitec_department_id === departmentId)?.name ?? `Avd. ${departmentId}` : "Hele franchisen"}
+              </span>
+            </div>
             <div className="flex gap-2">
               <Button variant="outline" onClick={loadBestPerformers} disabled={bestLoading}>
                 {bestLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <RefreshCw className="h-4 w-4 mr-2" />}
@@ -787,7 +901,12 @@ export default function ReportsPage() {
               </Button>
             </div>
             {bestPerformers && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <>
+                <div className="text-sm text-muted-foreground rounded-md bg-muted/50 px-3 py-2">
+                  Viser: <strong>{bestPerformers.from_date_display} – {bestPerformers.to_date_display}</strong>
+                  {includeVat ? " (inkl. mva)" : " (eksl. mva.)"}
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <LeaderboardCard title="Eiendomsmegler" rows={bestPerformers.eiendomsmegler} nameKey="name" />
                 <LeaderboardCard
                   title="Eiendomsmeglerfullmektig"
@@ -795,15 +914,16 @@ export default function ReportsPage() {
                   nameKey="name"
                 />
                 <LeaderboardCard title="Avdeling" rows={bestPerformers.departments} nameKey="department_name" />
-              </div>
+                </div>
+              </>
             )}
           </CardContent>
         </Card>
 
-        <Card className="border border-[#E5E5E5] shadow-card mb-8">
+        <Card className="border border-border shadow-card mb-8">
           <CardHeader>
             <div className="flex items-center gap-2">
-              <Target className="h-5 w-5 text-[#BCAB8A]" />
+              <Target className="h-5 w-5 text-accent" />
               <CardTitle className="font-serif">Budsjett vs faktisk</CardTitle>
             </div>
             <CardDescription>Månedlige budsjetter med YTD-status og prognose.</CardDescription>
@@ -815,15 +935,15 @@ export default function ReportsPage() {
             </Button>
             {budgetComparison && (
               <>
-                <div className="text-sm text-[#272630]/70">
+                <div className="text-sm text-muted-foreground">
                   Status: <strong>{budgetComparison.status}</strong> · YTD:{" "}
-                  {budgetComparison.ytd_actual.toLocaleString("nb-NO")} /{" "}
-                  {budgetComparison.ytd_budget.toLocaleString("nb-NO")} kr
+                  {formatRevenue(budgetComparison.ytd_actual)} /{" "}
+                  {formatRevenue(budgetComparison.ytd_budget)} kr
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b border-[#E5E5E5]">
+                      <tr className="border-b border-border">
                         <th className="text-left py-2">Måned</th>
                         <th className="text-right py-2">Faktisk</th>
                         <th className="text-right py-2">Budsjett</th>
@@ -834,9 +954,9 @@ export default function ReportsPage() {
                     </thead>
                     <tbody>
                       {budgetComparison.months.map((row) => (
-                        <tr key={row.month} className="border-b border-[#E5E5E5]/50">
+                        <tr key={row.month} className="border-b border-border/50">
                           <td className="py-2">{MONTHS_NB[row.month - 1]}</td>
-                          <td className="py-2 text-right">{row.actual.toLocaleString("nb-NO")}</td>
+                          <td className="py-2 text-right">{formatRevenue(row.actual)}</td>
                           <td className="py-2 text-right">
                             <Input
                               value={budgetDraft[row.month] ?? ""}
@@ -846,7 +966,7 @@ export default function ReportsPage() {
                               className="w-28 ml-auto"
                             />
                           </td>
-                          <td className="py-2 text-right">{row.variance.toLocaleString("nb-NO")}</td>
+                          <td className="py-2 text-right">{formatRevenue(row.variance)}</td>
                           <td className="py-2 text-right">{row.achieved_percent.toFixed(1)}%</td>
                           <td className="py-2 text-right">
                             <Button
@@ -872,10 +992,10 @@ export default function ReportsPage() {
           </CardContent>
         </Card>
 
-        <Card className="border border-[#E5E5E5] shadow-card">
+        <Card className="border border-border shadow-card">
           <CardHeader>
             <div className="flex items-center gap-2">
-              <Mail className="h-5 w-5 text-[#BCAB8A]" />
+              <Mail className="h-5 w-5 text-accent" />
               <CardTitle className="font-serif">Abonnementer</CardTitle>
             </div>
             <CardDescription>Planlagt e-postlevering av rapporter.</CardDescription>
@@ -923,11 +1043,11 @@ export default function ReportsPage() {
               {subscriptions.map((sub) => (
                 <div
                   key={sub.id}
-                  className="flex items-center justify-between rounded-md border border-[#E5E5E5] p-3"
+                  className="flex items-center justify-between rounded-md border border-border p-3"
                 >
                   <div className="text-sm">
                     <div className="font-medium">{sub.name}</div>
-                    <div className="text-[#272630]/60">
+                    <div className="text-muted-foreground">
                       {sub.report_type} · {sub.cadence} · Neste: {sub.next_run_at ?? "ikke satt"}
                     </div>
                   </div>
@@ -950,7 +1070,7 @@ export default function ReportsPage() {
         </Card>
 
         {!data && !franchiseData && !loading && !error && (
-          <p className="text-[#272630]/60 text-center py-12">
+          <p className="text-muted-foreground text-center py-12">
             Velg omfang og klikk &quot;Last inn rapport&quot; for å vise data.
           </p>
         )}
@@ -969,16 +1089,16 @@ function DepartmentRow({
   onToggle: () => void;
 }) {
   return (
-    <div className="border border-[#E5E5E5] rounded-md">
+    <div className="border border-border rounded-md">
       <button
-        className="w-full flex items-center justify-between px-3 py-2 hover:bg-[#F5F5F0]"
+        className="w-full flex items-center justify-between px-3 py-2 hover:bg-muted"
         onClick={onToggle}
       >
         <span className="font-medium">
           {department.department_name} · {department.total_sales} salg
         </span>
-        <span className="text-sm text-[#272630]/70">
-          {department.total_revenue.toLocaleString("nb-NO")} kr ({department.revenue_share_percent}%)
+        <span className="text-sm text-muted-foreground">
+          {formatRevenue(department.total_revenue)} kr ({department.revenue_share_percent}%)
         </span>
       </button>
       {expanded && (
@@ -987,7 +1107,7 @@ function DepartmentRow({
             <div key={b.broker_id} className="flex justify-between text-sm py-1 border-b last:border-b-0">
               <span>{b.name}</span>
               <span>
-                {b.sale_count} salg · {b.total.toLocaleString("nb-NO")} kr
+                {b.sale_count} salg · {formatRevenue(b.total)} kr
               </span>
             </div>
           ))}
@@ -1007,20 +1127,20 @@ function LeaderboardCard({
   nameKey: "name" | "department_name";
 }) {
   return (
-    <Card className="border border-[#E5E5E5]">
+    <Card className="border border-border">
       <CardHeader className="pb-2">
         <CardTitle className="text-base">{title}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-1">
         {rows.length === 0 ? (
-          <p className="text-sm text-[#272630]/60">Ingen data</p>
+          <p className="text-sm text-muted-foreground">Ingen data</p>
         ) : (
           rows.map((row, i) => (
             <div key={`${row[nameKey] ?? i}`} className="flex justify-between text-sm">
               <span>
                 {i + 1}. {String(row[nameKey] ?? "—")}
               </span>
-              <span>{Number(row.total_revenue ?? 0).toLocaleString("nb-NO")} kr</span>
+              <span>{formatRevenue(Number(row.total_revenue ?? 0))} kr</span>
             </div>
           ))
         )}
@@ -1047,16 +1167,16 @@ function BrokerRow({
   return (
     <>
       <tr
-        className="border-b border-[#E5E5E5] hover:bg-[#F5F5F0] cursor-pointer"
+        className="border-b border-border hover:bg-muted cursor-pointer"
         onClick={hasProperties ? onToggleBroker : undefined}
       >
         <td className="py-2">
           {hasProperties && (
             <span className="inline-block transition-transform duration-fast">
               {expanded ? (
-                <ChevronDown className="h-4 w-4 text-[#272630]/60" />
+                <ChevronDown className="h-4 w-4 text-muted-foreground" />
               ) : (
-                <ChevronRight className="h-4 w-4 text-[#272630]/60" />
+                <ChevronRight className="h-4 w-4 text-muted-foreground" />
               )}
             </span>
           )}
@@ -1065,7 +1185,7 @@ function BrokerRow({
         <td className="py-2 text-right">{broker.sale_count}</td>
         <td className="py-2" />
         <td className="py-2" />
-        <td className="py-2 text-right">{broker.total.toLocaleString("nb-NO")}</td>
+        <td className="py-2 text-right">{formatRevenue(broker.total)}</td>
       </tr>
       {expanded &&
         broker.properties.map((prop) => (
@@ -1123,52 +1243,52 @@ function ScopePanel({ scope }: { scope: ReportScopeMetadata | undefined }) {
   if (!scope) return null;
 
   return (
-    <div className="rounded-md border border-[#E5E5E5] bg-[#F5F5F0]/50 mt-4">
+    <div className="rounded-md border border-border bg-muted/50 mt-4">
       <button
-        className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-left hover:bg-[#E9E7DC]/30"
+        className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-left hover:bg-secondary/30"
         onClick={() => setOpen(!open)}
       >
-        <span className="font-medium text-[#272630]">Datagrunnlag</span>
+        <span className="font-medium text-foreground">Datagrunnlag</span>
         <span className="flex items-center gap-2">
           <DataConfidenceBadge scope={scope} />
           {open ? (
-            <ChevronDown className="h-4 w-4 text-[#272630]/50" />
+            <ChevronDown className="h-4 w-4 text-foreground/50" />
           ) : (
-            <ChevronRight className="h-4 w-4 text-[#272630]/50" />
+            <ChevronRight className="h-4 w-4 text-foreground/50" />
           )}
         </span>
       </button>
       {open && (
-        <div className="px-4 pb-3 space-y-3 border-t border-[#E5E5E5] text-sm text-[#272630]/80">
+        <div className="px-4 pb-3 space-y-3 border-t border-border text-sm text-foreground/80">
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 pt-3">
             <div>
-              <div className="text-xs uppercase tracking-wide text-[#272630]/50 mb-1">MVA-håndtering</div>
+              <div className="text-xs uppercase tracking-wide text-foreground/50 mb-1">MVA-håndtering</div>
               <div>{scope.vat_handling === "included" ? "Inkludert" : "Ekskludert"}</div>
             </div>
             <div>
-              <div className="text-xs uppercase tracking-wide text-[#272630]/50 mb-1">Eiendomsstatus</div>
+              <div className="text-xs uppercase tracking-wide text-foreground/50 mb-1">Eiendomsstatus</div>
               <div>{scope.estate_statuses}</div>
             </div>
             <div>
-              <div className="text-xs uppercase tracking-wide text-[#272630]/50 mb-1">Meglere</div>
+              <div className="text-xs uppercase tracking-wide text-foreground/50 mb-1">Meglere</div>
               <div>Kun meglere med salg i perioden</div>
             </div>
           </div>
 
           <div>
-            <div className="text-xs uppercase tracking-wide text-[#272630]/50 mb-1">Datakilder</div>
+            <div className="text-xs uppercase tracking-wide text-foreground/50 mb-1">Datakilder</div>
             <div className="space-y-1">
               {scope.data_sources.map((ds) => (
                 <div key={ds.name} className="flex items-center justify-between text-sm">
                   <span>{ds.label} ({ds.coverage})</span>
-                  <span className="text-[#272630]/50">{ds.row_count} transaksjoner</span>
+                  <span className="text-foreground/50">{ds.row_count} transaksjoner</span>
                 </div>
               ))}
             </div>
           </div>
 
           <div>
-            <div className="text-xs uppercase tracking-wide text-[#272630]/50 mb-1">Konti inkludert</div>
+            <div className="text-xs uppercase tracking-wide text-foreground/50 mb-1">Konti inkludert</div>
             <div className="flex flex-wrap gap-1">
               {Object.entries(scope.account_categories).map(([category, accounts]) => (
                 <span key={category} className="text-xs">
@@ -1180,7 +1300,7 @@ function ScopePanel({ scope }: { scope: ReportScopeMetadata | undefined }) {
           </div>
 
           {scope.last_synced_at && (
-            <div className="text-xs text-[#272630]/50">
+            <div className="text-xs text-foreground/50">
               Sist synkronisert: {new Date(scope.last_synced_at).toLocaleString("nb-NO")}
               {scope.validation_warnings_count > 0 && (
                 <span className="text-amber-600 ml-2">
@@ -1190,7 +1310,7 @@ function ScopePanel({ scope }: { scope: ReportScopeMetadata | undefined }) {
             </div>
           )}
 
-          <div className="text-xs text-[#272630]/50 italic">{scope.data_freshness_note}</div>
+          <div className="text-xs text-foreground/50 italic">{scope.data_freshness_note}</div>
         </div>
       )}
     </div>
@@ -1213,34 +1333,34 @@ function PropertyRow({
   return (
     <>
       <tr
-        className="border-b border-[#E5E5E5]/50 bg-[#F5F5F0]/50 hover:bg-[#E9E7DC]/30 cursor-pointer"
+        className="border-b border-border/50 bg-muted/50 hover:bg-secondary/30 cursor-pointer"
         onClick={hasTransactions ? onToggle : undefined}
       >
         <td className="py-1.5 pl-8">
           {hasTransactions && (
             <span className="inline-block transition-transform duration-fast">
               {expanded ? (
-                <ChevronDown className="h-3.5 w-3.5 text-[#272630]/50" />
+                <ChevronDown className="h-3.5 w-3.5 text-foreground/50" />
               ) : (
-                <ChevronRight className="h-3.5 w-3.5 text-[#272630]/50" />
+                <ChevronRight className="h-3.5 w-3.5 text-foreground/50" />
               )}
             </span>
           )}
         </td>
-        <td className="py-1.5 italic text-[#272630]/80">{property.address}</td>
+        <td className="py-1.5 italic text-foreground/80">{property.address}</td>
         <td className="py-1.5 text-right">—</td>
-        <td className="py-1.5 text-[#272630]/70">{property.property_type}</td>
-        <td className="py-1.5 text-[#272630]/70">{property.assignment_type}</td>
-        <td className="py-1.5 text-right">{property.total.toLocaleString("nb-NO")}</td>
+        <td className="py-1.5 text-muted-foreground">{property.property_type}</td>
+        <td className="py-1.5 text-muted-foreground">{property.assignment_type}</td>
+        <td className="py-1.5 text-right">{formatRevenue(property.total)}</td>
       </tr>
           {expanded &&
         property.transactions.map((txn, i) => (
           <tr
             key={`${brokerId}-${property.estate_id}-${i}`}
-            className="border-b border-[#E5E5E5]/30 bg-white"
+            className="border-b border-border/30 bg-card"
           >
             <td className="py-1 pl-14" />
-            <td className="py-1 text-xs text-[#272630]/70">
+            <td className="py-1 text-xs text-muted-foreground">
               {txn.posting_date} · Konto {txn.account}
               {txn.description ? ` · ${txn.description}` : ""}
             </td>
@@ -1248,7 +1368,7 @@ function PropertyRow({
             <td className="py-1" />
             <td className="py-1" />
             <td className="py-1" />
-            <td className="py-1 text-right text-xs">{txn.amount.toLocaleString("nb-NO")}</td>
+            <td className="py-1 text-right text-xs">{formatRevenue(txn.amount)}</td>
           </tr>
         ))}
     </>

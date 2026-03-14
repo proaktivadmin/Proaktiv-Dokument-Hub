@@ -13,112 +13,62 @@ Plan for items 7–11 from the Formidlingsrapport feedback (March 2026).
 
 ---
 
-## Item 7: Franchise Report for CEO
+## Completed (Items 7–11)
 
-**Goal:** One report showing all departments with expandable sections per department and brokers.
+### Item 7: Franchise Report for CEO ✅
 
-**Scope:**
-- New view/mode: "Franchise" vs "Avdeling"
-- When "Franchise" is selected, fetch report data for all departments (or a configurable list)
-- UI: Accordion or nested table: Department → Brokers → Properties
-- Each department expandable; each broker expandable under department
+- Mode toggle: "Enkelt avdeling" | "Hele franchisen"
+- `GET /api/reports/sales-report/franchise` — fetch all departments
+- Accordion UI: Department → Brokers → Properties
 
-**Backend:**
-- New endpoint: `GET /api/reports/sales-report/franchise?year=&from_date=&to_date=&include_vat=`
-- Or extend existing `department_id` to accept `all` or a list
-- Fetch data per department; aggregate in service layer
+### Item 8: Franchise Summary ✅
 
-**Frontend:**
-- Toggle: "Enkelt avdeling" | "Hele franchisen"
-- When franchise: show department tree with expand/collapse
+- Summary card at top with totals
+- Department breakdown table (antall salg, revenue, % of total)
 
----
+### Item 9: Budgeting Feature ✅
 
-## Item 8: Franchise Summary
+- `report_budgets` table, CRUD via `/api/reports/budgets`
+- `GET /api/reports/budgets/comparison` — actual vs budget
+- Budget tab on reports page with per-month inputs
 
-**Goal:** Summary across all departments (total sales, total revenue, department breakdown).
+### Item 10: Best Performers ✅
 
-**Scope:**
-- Summary card/section at top of franchise report
-- Totals: sum of all departments
-- Table: department name, antall salg, sum revenue, % of total
+- `GET /api/reports/best-performers` — role split (eiendomsmegler vs eiendomsmeglerfullmektig)
+- Weekly/monthly presets, Excel export
+- "Best performers" card + "Last ned ukesrapport" button
 
-**Implementation:** Part of Item 7; add summary aggregation in service and display in UI.
+### Item 11: Automatic Report Delivery ✅
 
----
-
-## Item 9: Budgeting Feature
-
-**Goal:** CEO can set budget per month and track progress toward yearly budget.
-
-**Scope:**
-- New DB table: `report_budgets` (department_id, year, month, budget_amount, created_at)
-- UI: Budget input (per month or yearly) for each department
-- Dashboard: Compare actual vs budget for each month
-- Visual: "On track" / "Behind" indicator
-- Calculation: "If we continue at X% of budget, we will reach Y by year end"
-
-**Backend:**
-- `POST/GET/PUT /api/reports/budgets` – CRUD for budgets
-- `GET /api/reports/sales-report/data` already returns data; can add budget comparison in response or separate endpoint
-
-**Frontend:**
-- Budget settings page or section
-- Budget vs actual chart/table
-- Trend/projection indicator
+- `report_subscriptions` table, CRUD via `/api/reports/subscriptions`
+- `POST /api/reports/subscriptions/run-due` — sends due emails via Graph API
+- Abonnementer tab: add/remove, recipients, cadence (weekly/monthly)
+- **Scheduler:** GitHub Actions workflow `.github/workflows/reports-scheduler.yml` — Fridays 07:00 UTC
 
 ---
 
-## Item 10: Best Performers
+## Scheduler Setup (Item 11)
 
-**Goal:** Highlight best performers per week/month and provide a weekly report.
+The reports scheduler runs via GitHub Actions. To enable:
 
-**Scope:**
-- Categories: best eiendomsmegler, best eiendomsmeglerfullmektig, best department
-- Time period: week or month
-- Report: "Best performers" section, easy to collect before each Friday
+1. **GitHub:** Add secret `REPORTS_SCHEDULER_TOKEN` (Settings → Secrets and variables → Actions)
+2. **Railway:** Set `REPORTS_SCHEDULER_TOKEN` on the backend service (must match)
+3. **Optional:** Set variable `REPORTS_BACKEND_URL` to override backend URL (default: `https://proaktiv-admin.up.railway.app`)
 
-**Implementation:**
-- Reuse `sales-report/data` with `from_date`/`to_date` for week/month
-- Add ranking logic: sort brokers by revenue, take top N
-- Role: eiendomsmegler vs eiendomsmeglerfullmektig from Vitec API (Employees or job title)
-- New endpoint or extend existing: `GET /api/reports/best-performers?from_date=&to_date=&scope=week|month`
-
-**Frontend:**
-- "Best performers" card/section
-- "Last ned ukesrapport" (download weekly report) button
+Manual run: Actions → Reports Scheduler → Run workflow
 
 ---
 
-## Item 11: Automatic Report Delivery by Email
+## Dependencies (resolved)
 
-**Goal:** Schedule report delivery to selected recipients.
-
-**Scope:**
-- DB: `report_subscriptions` (user_email, report_type, schedule, department_ids, created_at)
-- Schedule: weekly (e.g. Friday 08:00), monthly (e.g. 1st of month)
-- Recipients: configurable list of emails
-- Backend job: cron/scheduler that runs report, builds Excel/PDF, sends email
-
-**Implementation:**
-- Use existing GraphService for sending emails (if available) or SMTP
-- Scheduler: APScheduler, Celery, or Railway cron
-- UI: "Abonnementer" – add/remove subscriptions, schedule, recipients
+- Vitec Hub API: employee roles used for best performers
+- Email: GraphService (Microsoft Graph API)
+- Scheduler: GitHub Actions (`.github/workflows/reports-scheduler.yml`)
 
 ---
 
-## Suggested Order
+## Future Enhancements (2026-03-14 feedback)
 
-1. **Item 7** – Franchise report (foundation)
-2. **Item 8** – Franchise summary (part of 7)
-3. **Item 10** – Best performers (reuses existing data)
-4. **Item 9** – Budgeting (new DB + UI)
-5. **Item 11** – Email delivery (new infra + scheduling)
-
----
-
-## Dependencies
-
-- Vitec Hub API: employee roles (eiendomsmegler vs eiendomsmeglerfullmektig) for Item 10
-- Email service: Graph API or SMTP for Item 11
-- Scheduler: Railway cron or external (e.g. GitHub Actions)
+- **Budget persistence:** Store monthly actuals so past months don't require re-fetch from Vitec each time. Would need `report_monthly_actuals` table and sync logic.
+- **Best performers broker pictures:** Add employee avatars to leaderboard cards.
+- **Best performers expandable rows:** Show property-level detail per broker (like main report).
