@@ -66,7 +66,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       const params = new URLSearchParams(searchParams?.toString() ?? "");
       params.set("dark", dark ? "1" : "0");
       const query = params.toString();
-      router.push(query ? `${pathname}?${query}` : pathname);
+      router.replace(query ? `${pathname}?${query}` : pathname);
     },
     [pathname, router, searchParams, applyToDom]
   );

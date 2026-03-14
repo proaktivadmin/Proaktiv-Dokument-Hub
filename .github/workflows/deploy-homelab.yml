@@ -34,10 +34,14 @@ jobs:
             echo "::warning::HOMELAB_SSH_KEY not set — skipping deploy. Add SSH key to repo secrets."
             exit 0
           fi
+          if ! echo "$BRANCH" | grep -qE '^[a-zA-Z0-9/_.-]+$'; then
+            echo "::error::Invalid branch name (contains unsafe characters)"
+            exit 1
+          fi
           mkdir -p ~/.ssh
           echo "$SSH_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
           ssh -o StrictHostKeyChecking=accept-new root@$SSH_HOST \
-            "cd /root/Proaktiv-Dokument-Hub && git fetch origin && git checkout $BRANCH && git pull origin $BRANCH && docker compose restart frontend"
+            "cd /root/Proaktiv-Dokument-Hub && git fetch origin && git checkout '$BRANCH' && git pull origin '$BRANCH' && docker compose restart frontend"
           echo "Deployed. Frontend: http://${SSH_HOST}:3000"

@@ -1,12 +1,12 @@
 # Deploy latest code to Proxmox homelab at 192.168.77.127
 # Run from project root. Requires SSH access to homelab.
 
-$HOMELAB_HOST = "192.168.77.127"
-$REPO_DIR = "/root/Proaktiv-Dokument-Hub"
-
 param(
     [string]$Branch = "feat/dark-mode-toggle"
 )
+
+$HOMELAB_HOST = "192.168.77.127"
+$REPO_DIR = "/root/Proaktiv-Dokument-Hub"
 
 $sshCmd = "cd $REPO_DIR && git fetch origin && git checkout $Branch && git pull origin $Branch && docker compose restart frontend"
 
