@@ -550,7 +550,11 @@ class SalesReportService:
             ws.cell(row=ws.max_row, column=3).font = Font(bold=True)
             for row in rows:
                 ws.append(
-                    [row.get(name_key, "—"), int(row.get("total_sales", 0)), float(row.get("total_revenue", 0.0))]
+                    [
+                        row.get(name_key, "—"),
+                        int(row.get("total_sales", 0)),
+                        round(float(row.get("total_revenue", 0.0)), 0),
+                    ]
                 )
             ws.append([])
 
@@ -1192,7 +1196,7 @@ class SalesReportService:
 
         from_display = _format_date_iso(from_date) or from_date[:10]
         to_display = _format_date_iso(to_date) or to_date[:10]
-        sum_label = "Sum vederlag + andre inntekter (kr)" + (" inkl. mva" if include_vat else " exkl. mva")
+        sum_label = "Sum vederlag + andre inntekter (kr)" + (" inkl. mva." if include_vat else " eksl. mva.")
 
         # Header
         ws.append(["Formidlingsrapport - Vederlag og andre inntekter"])
@@ -1229,7 +1233,7 @@ class SalesReportService:
                     )
 
             # Broker summary row (level 0) - no property/assignment type at broker level
-            ws.append([name, sale_count, "", "", round(total, 2)])
+            ws.append([name, sale_count, "", "", round(total, 0)])
             broker_row = row
             row += 1
 
@@ -1262,7 +1266,7 @@ class SalesReportService:
                     post_date = _format_date_iso(txn.get("postingDate"))
                     acc = txn.get("account") or ""
                     desc = (txn.get("description") or "")[:40]
-                    ws.append([f"    {post_date} | Konto {acc} | {desc}", "", "", "", round(amt, 2)])
+                    ws.append([f"    {post_date} | Konto {acc} | {desc}", "", "", "", round(amt, 0)])
                     row += 1
 
                 # Group property + its transactions
@@ -1282,7 +1286,7 @@ class SalesReportService:
             for b in brokers_sorted
         )
         total_sales = sum(len(broker_estates.get(b, {})) for b in brokers_sorted)
-        ws.append(["Sum", total_sales, "", "", round(total_revenue, 2)])
+        ws.append(["Sum", total_sales, "", "", round(total_revenue, 0)])
         total_row = row
         for col in range(1, 6):
             ws.cell(row=total_row, column=col).font = Font(bold=True)
