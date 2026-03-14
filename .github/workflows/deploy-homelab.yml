@@ -1,0 +1,47 @@
+# Deploy to Proxmox homelab at 192.168.77.127
+#
+# NOTE: 192.168.77.127 is a private LAN IP. GitHub-hosted runners cannot reach it.
+# Use scripts/deploy-homelab.ps1 from your PC (same network), or deploy via
+# Proxmox LXC console (see docs/proxmox-deployment.md).
+#
+# If you add a self-hosted runner on the homelab, set runs-on: [self-hosted, homelab]
+# and add HOMELAB_SSH_KEY secret for local SSH.
+
+name: Deploy to Homelab
+
+on:
+  push:
+    branches: [feat/dark-mode-toggle, main]
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to deploy'
+        required: true
+        default: 'feat/dark-mode-toggle'
+
+jobs:
+  deploy:
+    name: Deploy to homelab
+    runs-on: ubuntu-latest  # Change to [self-hosted, homelab] if runner on LAN
+    steps:
+      - name: Deploy via SSH
+        env:
+          SSH_HOST: ${{ secrets.HOMELAB_SSH_HOST || '192.168.77.127' }}
+          SSH_KEY: ${{ secrets.HOMELAB_SSH_KEY }}
+          BRANCH: ${{ github.event.inputs.branch || github.ref_name }}
+        run: |
+          if [ -z "$SSH_KEY" ]; then
+            echo "::warning::HOMELAB_SSH_KEY not set — skipping deploy. Add SSH key to repo secrets."
+            exit 0
+          fi
+          if ! echo "$BRANCH" | grep -qE '^[a-zA-Z0-9/_.-]+$'; then
+            echo "::error::Invalid branch name (contains unsafe characters)"
+            exit 1
+          fi
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          ssh -o StrictHostKeyChecking=accept-new root@$SSH_HOST \
+            "cd /root/Proaktiv-Dokument-Hub && git fetch origin && git checkout '$BRANCH' && git pull origin '$BRANCH' && docker compose restart frontend"
+          echo "Deployed. Frontend: http://${SSH_HOST}:3000"
