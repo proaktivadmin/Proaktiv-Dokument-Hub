@@ -31,11 +31,11 @@ def main() -> None:
     url = os.environ.get("DATABASE_URL") or os.environ.get("DATABASE_PUBLIC_URL")
     if not url:
         print("ERROR: Set DATABASE_URL or DATABASE_PUBLIC_URL", file=sys.stderr)
-        print("  Use: railway run python scripts/run_sql.py \"SQL\"", file=sys.stderr)
+        print('  Use: railway run python scripts/run_sql.py "SQL"', file=sys.stderr)
         sys.exit(1)
 
     if len(sys.argv) < 2:
-        print("Usage: run_sql.py \"SQL statement(s)\"", file=sys.stderr)
+        print('Usage: run_sql.py "SQL statement(s)"', file=sys.stderr)
         sys.exit(1)
 
     sql = sys.argv[1].strip()
