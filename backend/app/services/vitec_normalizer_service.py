@@ -115,7 +115,9 @@ class VitecNormalizerService:
     def _remove_proaktiv_classes(self, soup: BeautifulSoup, report: dict[str, int | bool]) -> None:
         for element in soup.find_all(class_=True):
             class_list = element.get("class", [])
-            if isinstance(class_list, str):
+            if class_list is None:
+                class_list = []
+            elif isinstance(class_list, str):
                 class_list = class_list.split()
 
             original_len = len(class_list)
