@@ -1,11 +1,11 @@
 # Deploy to Proxmox homelab at 192.168.77.127
 #
-# Setup (one-time):
-# 1. GitHub repo → Settings → Secrets and variables → Actions
-# 2. Add secret: HOMELAB_SSH_KEY (private key for root@192.168.77.127)
-# 3. Add secret: HOMELAB_SSH_HOST (default: 192.168.77.127)
+# NOTE: 192.168.77.127 is a private LAN IP. GitHub-hosted runners cannot reach it.
+# Use scripts/deploy-homelab.ps1 from your PC (same network), or deploy via
+# Proxmox LXC console (see docs/proxmox-deployment.md).
 #
-# Trigger: push to feat/dark-mode-toggle, main, or workflow_dispatch
+# If you add a self-hosted runner on the homelab, set runs-on: [self-hosted, homelab]
+# and add HOMELAB_SSH_KEY secret for local SSH.
 
 name: Deploy to Homelab
 
@@ -22,7 +22,7 @@ on:
 jobs:
   deploy:
     name: Deploy to homelab
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Change to [self-hosted, homelab] if runner on LAN
     steps:
       - name: Deploy via SSH
         env:
