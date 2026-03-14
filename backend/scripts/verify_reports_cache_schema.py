@@ -62,9 +62,7 @@ async def verify():
         print("\nTables:")
         for table in REQUIRED_TABLES:
             result = await db.execute(
-                text(
-                    "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = :t)"
-                ),
+                text("SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = :t)"),
                 {"t": table},
             )
             exists = result.scalar()
