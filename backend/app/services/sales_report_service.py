@@ -1240,15 +1240,12 @@ class SalesReportService:
                     estate_id,
                     {"property_type": "—", "assignment_type": "—", "assignment_number": ""},
                 )
-                addr = (
-                    raw_addr
-                    if raw_addr and not _looks_like_uuid(raw_addr)
-                    else (
-                        f"Adresse ukjent ({meta.get('assignment_number')})"
-                        if meta.get("assignment_number")
-                        else "Adresse ukjent"
-                    )
-                )
+                oppdrag = meta.get("assignment_number") or ""
+                if raw_addr and not _looks_like_uuid(raw_addr):
+                    addr = f"{raw_addr} ({oppdrag})" if oppdrag else raw_addr
+                else:
+                    suffix = f" ({oppdrag})" if oppdrag else ""
+                    addr = f"Adresse ukjent{suffix}" if suffix else "Adresse ukjent"
                 # Property row (level 1)
                 ws.append([f"  {addr}", "", meta["property_type"], meta["assignment_type"], ""])
                 ws.cell(row=row, column=1).font = Font(italic=True)

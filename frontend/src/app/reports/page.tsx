@@ -904,7 +904,7 @@ export default function ReportsPage() {
               <>
                 <div className="text-sm text-muted-foreground rounded-md bg-muted/50 px-3 py-2">
                   Viser: <strong>{bestPerformers.from_date_display} – {bestPerformers.to_date_display}</strong>
-                  {includeVat ? " (inkl. mva)" : " (eksl. mva.)"}
+                  {includeVat ? " (inkl. mva.)" : " (eksl. mva.)"}
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <LeaderboardCard title="Eiendomsmegler" rows={bestPerformers.eiendomsmegler} nameKey="name" />
