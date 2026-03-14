@@ -11,6 +11,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# Silence Node.js 20 deprecation warnings (actions will use Node 24)
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   lint-frontend:
     name: Lint Frontend
@@ -122,6 +126,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
+          # vars.NEXT_PUBLIC_API_URL — "Context access might be invalid" is a known extension false positive
           NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL || 'http://localhost:8000' }}
 
   test-backend:

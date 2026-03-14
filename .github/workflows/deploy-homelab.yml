@@ -26,6 +26,7 @@ jobs:
     steps:
       - name: Deploy via SSH
         env:
+          # secrets.* — "Context access might be invalid" is a known extension false positive
           SSH_HOST: ${{ secrets.HOMELAB_SSH_HOST || '192.168.77.127' }}
           SSH_KEY: ${{ secrets.HOMELAB_SSH_KEY }}
           BRANCH: ${{ github.event.inputs.branch || github.ref_name }}

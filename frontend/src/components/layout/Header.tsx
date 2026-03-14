@@ -114,7 +114,7 @@ export function Header({ onUploadSuccess }: HeaderProps) {
   return (
     <>
       <header className={cn(
-        "border-b border-border bg-secondary sticky top-0 z-[100] transition-shadow duration-normal",
+        "border-b border-border bg-secondary sticky top-0 z-100 transition-shadow duration-normal",
         isScrolled && "shadow-medium"
       )}>
         <div className="container mx-auto px-6 py-4">
