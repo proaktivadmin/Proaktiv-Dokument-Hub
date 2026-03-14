@@ -11,9 +11,15 @@ Deploy Proaktiv Dokument Hub to your Proxmox server at `192.168.77.10`.
 
 ---
 
-## Quick Deploy (Manual — Proxmox Console)
+## Quick Deploy
 
-When SSH is not configured, deploy via the Proxmox web console:
+**Via SSH (from your PC, same LAN):**
+```powershell
+.\scripts\deploy-homelab.ps1
+```
+Requires SSH key auth to `root@192.168.77.10` (Proxmox host). Uses `pct exec 203` to run in LXC. Builds production frontend and starts all services.
+
+**Manual — Proxmox Console** (when SSH not configured):
 
 1. Open **Proxmox**: https://192.168.77.10:8006
 2. **LXC 203** (dokument-hub) → **Console**
@@ -21,10 +27,12 @@ When SSH is not configured, deploy via the Proxmox web console:
 4. Run:
 
 ```bash
-cd /root/Proaktiv-Dokument-Hub && git fetch origin && git checkout feat/dark-mode-toggle && git pull origin feat/dark-mode-toggle && docker compose restart frontend
+cd /root/Proaktiv-Dokument-Hub && git fetch origin && git pull origin main && docker compose build frontend && docker compose up -d
 ```
 
 5. Open http://192.168.77.127:3000
+
+**Note:** Docker runs on the homelab only. No Docker required on your PC.
 
 ---
 

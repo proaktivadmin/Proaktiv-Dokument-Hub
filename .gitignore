@@ -20,6 +20,10 @@ dist/
 .env.test.local
 .env.production.local
 
+# QA / automation credentials (never commit)
+**/qa-credentials.json
+backend/.env.docker
+
 # IDEs
 .idea/
 

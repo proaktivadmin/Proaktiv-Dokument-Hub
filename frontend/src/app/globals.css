@@ -1,3 +1,4 @@
+@config "../../tailwind.config.ts";
 @import "tailwindcss";
 
 @layer base {
@@ -55,27 +56,31 @@
     --ring-strong: 38 28% 64%;
   }
 
+  /* Dark mode (night) - navy-based, not black */
   .dark {
-    --background: 240 10% 9%;
-    --foreground: 40 20% 98%;
-    --card: 240 10% 12%;
-    --card-foreground: 40 20% 98%;
-    --popover: 240 10% 12%;
-    --popover-foreground: 40 20% 98%;
-    --secondary: 240 8% 18%;
-    --secondary-foreground: 40 20% 98%;
-    --muted: 240 8% 15%;
-    --muted-foreground: 40 15% 65%;
+    --background: 245 15% 11%;
+    --foreground: 43 22% 92%;
+    --card: 245 10% 15%;
+    --card-foreground: 43 22% 92%;
+    --popover: 245 10% 15%;
+    --popover-foreground: 43 22% 92%;
+    --primary: 245 8% 17%;
+    --primary-foreground: 43 22% 95%;
+    --secondary: 245 12% 18%;
+    --secondary-foreground: 43 22% 90%;
+    --muted: 245 12% 16%;
+    --muted-foreground: 43 22% 70%;
     --accent: 38 28% 64%;
-    --accent-foreground: 240 10% 9%;
-    --border: 240 8% 20%;
-    --input: 240 8% 20%;
+    --accent-foreground: 43 22% 95%;
+    --border: 245 10% 22%;
+    --input: 245 10% 22%;
     --ring: 38 28% 64%;
-    --shadow-soft: 0 2px 8px -2px rgba(0, 0, 0, 0.3);
-    --shadow-medium: 0 4px 16px -4px rgba(0, 0, 0, 0.4);
-    --shadow-elevated: 0 8px 24px -6px rgba(0, 0, 0, 0.5);
-    --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.15);
-    --shadow-card-hover: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
+    --shadow-soft: 0 2px 8px -2px rgba(0, 0, 0, 0.2);
+    --shadow-medium: 0 4px 16px -4px rgba(0, 0, 0, 0.25);
+    --shadow-elevated: 0 8px 24px -6px rgba(0, 0, 0, 0.3);
+    --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.1);
+    --shadow-card-hover: 0 10px 30px -10px rgba(0, 0, 0, 0.35);
+    --shadow-glow: 0 0 20px -5px rgba(188, 171, 138, 0.35);
   }
 }
 

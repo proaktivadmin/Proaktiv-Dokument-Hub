@@ -40,18 +40,18 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-slate-50 to-slate-100">
+    <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="w-full max-w-md p-8">
-        <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-8">
+        <div className="bg-card rounded-xl shadow-lg border border-border p-8">
           <div className="flex flex-col items-center gap-2 mb-2">
             <img
               src="https://proaktiv.no/assets/logos/logo.svg"
               alt="Proaktiv"
               className="h-8 w-auto"
             />
-            <span className="font-serif text-2xl text-slate-500">Admin</span>
+            <span className="font-serif text-2xl text-muted-foreground">Admin</span>
           </div>
-          <p className="text-sm text-center text-slate-500 mb-6">
+          <p className="text-sm text-center text-muted-foreground mb-6">
             Logg inn med din arbeids-e-post
           </p>
 
@@ -59,7 +59,7 @@ function LoginForm() {
             <div className="space-y-2">
               <Label htmlFor="email">E-post</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="email"
                   type="email"
@@ -77,7 +77,7 @@ function LoginForm() {
             <div className="space-y-2">
               <Label htmlFor="password">Passord</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="password"
                   type="password"
@@ -92,7 +92,7 @@ function LoginForm() {
             </div>
 
             {error && (
-              <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-3 rounded-lg">
+              <div className="flex items-center gap-2 text-sm text-red-600 dark:text-red-300 bg-red-50 dark:bg-red-950/40 p-3 rounded-lg">
                 <AlertCircle className="h-4 w-4 shrink-0" />
                 <span>{error}</span>
               </div>
@@ -115,7 +115,7 @@ function LoginForm() {
           </form>
         </div>
 
-        <p className="text-xs text-center text-slate-400 mt-6">
+        <p className="text-xs text-center text-muted-foreground mt-6">
           Proaktiv Admin · Kun for intern bruk
         </p>
       </div>
@@ -127,7 +127,7 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-slate-50 to-slate-100">
+        <div className="min-h-screen flex items-center justify-center bg-background">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       }

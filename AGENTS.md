@@ -10,9 +10,10 @@ Read this file first, then pull in the docs that match the task:
 
 1. Read `.planning/STATE.md` and the relevant phase plan in `.planning/phases/` for active context.
 2. For frontend work, read `.planning/codebase/DESIGN-SYSTEM.md` before editing UI.
-3. For database work, read `.cursor/rules/database-migrations.mdc` before creating or applying migrations.
+3. For database work, read `docs/database-access-workflow.md` and `.cursor/rules/database-migrations.mdc`. Use Postgres MCP for reads, `run_sql.py` for writes — not Docker/Alembic deploy.
 4. For Vitec template or merge-field work, read `.cursor/vitec-reference.md` and the relevant docs in `docs/`.
 5. If business logic seems unclear or missing, inspect `_legacy_v1` before inventing new behavior.
+6. For Node.js errors or UI issues, see `docs/troubleshooting-node-ui.md`.
 
 ## Core repo rules
 
@@ -64,14 +65,18 @@ Read this file first, then pull in the docs that match the task:
 
 ## Database migration rules
 
-Railway migrations are not reliable enough to trust during deploy. After creating a migration:
+Use the workflow in `docs/database-access-workflow.md`:
 
-1. Apply it locally.
-2. Apply it manually to Railway using the public database URL.
-3. Verify the current migration revision explicitly.
-4. If Railway still misses the schema change, add a one-off repair script with safe `ALTER TABLE ... ADD COLUMN IF NOT EXISTS` logic.
+- **Reads:** Postgres MCP (`query` tool)
+- **Writes / schema fixes:** `backend/scripts/run_sql.py` from Cursor terminal (e.g. `railway run python scripts/run_sql.py "SQL"`)
 
-Do not merge DB changes without handling the manual Railway migration path.
+Railway migrations during deploy are unreliable. After creating a migration:
+
+1. Apply locally with `alembic upgrade head`.
+2. Apply to Railway via `run_sql.py` or manual `alembic upgrade head` with public `DATABASE_URL`.
+3. If migration didn't persist, use `run_sql.py` to apply the SQL and update `alembic_version`.
+
+Do not rely on Alembic running during Railway deployment.
 
 ## Key directories
 
@@ -87,13 +92,32 @@ Do not merge DB changes without handling the manual Railway migration path.
 
 ## Cursor Cloud specific instructions
 
-- Start local development with `docker compose up -d`.
-- Backend health check: `curl http://localhost:8000/api/health`
-- Frontend dev URL: `http://localhost:3000`
+- **Docker runs on homelab only** (Proxmox LXC 203). No Docker on this PC.
+- Start homelab stack: `.\scripts\deploy-homelab.ps1` (SSH to 192.168.77.10)
+- Backend health: `curl http://192.168.77.127:8000/api/health`
+- Frontend: http://192.168.77.127:3000
 - For frontend changes, run targeted checks from `frontend/` such as `npm run test:run`, `npm run lint`, or a focused build/test command relevant to the change.
 - For backend changes, run targeted checks from `backend/` such as `pytest` on the relevant test module plus any needed lint/type checks.
 - Prefer targeted tests over full-suite runs unless the task truly spans the whole app.
 - If you start local services for testing, leave them running when you are done unless the task requires cleanup.
+
+## Commit workflow
+
+When the user says "commit to homelab" or wants to test before production:
+
+- Use `/commit-to-homelab`. Read `docs/homelab-qa-workflow.md` and `docs/qa-checklist-three-gates.md`. Execute the full sequence: branch → push → deploy homelab → three-gate QA (including console, logs, visual browser inspection) → merge to main only if all gates pass.
+
+When the user says "commit to production" or "direct to main" (hotfixes, typos):
+
+- Use `/commit-to-production`. Direct commit and push to main.
+
+## Agent mentoring
+
+The user is new to the code-building pipeline. Agents should:
+
+- **Ask or suggest** at decision points (merge now vs. wait, batch vs. single deploy). See "Decision Points" in `docs/qa-checklist-three-gates.md`.
+- **Explain briefly** why steps matter (e.g. rebasing, three gates).
+- **Coach** toward best practices: clean, structured, professional workflow.
 
 ## Agent workflow
 

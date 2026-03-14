@@ -22,7 +22,9 @@ Canonical context map for agents and commands in this repository.
    - Auto-applied quick reference for design system constraints.
 9. `.cursor/rules/database-migrations.mdc`
    - Auto-applied migration safety rules.
-10. `.cursor/rules/agent-efficiency.mdc`
+10. `docs/database-access-workflow.md`
+   - **Preferred** database workflow: Postgres MCP for reads, `run_sql.py` for writes. Use instead of Docker/Alembic deploy.
+11. `.cursor/rules/agent-efficiency.mdc`
    - Always-applied token efficiency and execution gate rules.
 
 ## Domain-Specific Context
@@ -44,6 +46,15 @@ Canonical context map for agents and commands in this repository.
   - `.cursor/commands/deploy-gates.md`
   - `.cursor/commands/token-audit.md`
   - `.cursor/commands/commit-safe.md`
+  - `.cursor/commands/commit-to-homelab.md` — Branch → homelab QA → merge (features, UI)
+  - `.cursor/commands/commit-to-production.md` — Direct main (hotfixes only)
+- Homelab QA workflow (canonical):
+  - `docs/homelab-qa-workflow.md`
+  - `docs/qa-checklist-three-gates.md` — Gate 1 (pre-commit), Gate 2 (homelab + console/logs/visual), Gate 3 (production readiness), decision points, agent mentoring
+- Bugbot (PR reviews):
+  - `.cursor/BUGBOT.md` — Project-wide rules
+  - `backend/.cursor/BUGBOT.md`, `frontend/.cursor/BUGBOT.md` — Domain-specific
+  - `docs/bugbot-setup.md` — Dashboard setup checklist
 
 ## Deprecated or Missing References
 

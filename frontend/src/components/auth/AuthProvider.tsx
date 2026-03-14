@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { authApi } from "@/lib/api/auth";
 import { Loader2 } from "lucide-react";
 
@@ -23,7 +23,6 @@ function isPublicRoute(pathname: string): boolean {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const router = useRouter();
   const pathname = usePathname();
   const [isChecking, setIsChecking] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -49,18 +48,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
         if (status.authenticated) {
           setIsAuthenticated(true);
         } else {
-          router.replace("/login");
+          const target = pathname ? `/login?returnTo=${encodeURIComponent(pathname)}` : "/login";
+          window.location.replace(target);
         }
       } catch {
-        // On error, redirect to login
-        router.replace("/login");
+        // On error, redirect to login (use window.location for reliable navigation)
+        const target = pathname ? `/login?returnTo=${encodeURIComponent(pathname)}` : "/login";
+        window.location.replace(target);
       } finally {
         setIsChecking(false);
       }
     };
 
     checkAuth();
-  }, [pathname, router]);
+  }, [pathname]);
 
   // Show loading spinner while checking auth
   if (isChecking && !isPublicRoute(pathname)) {
@@ -84,6 +85,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return <>{children}</>;
   }
 
-  // Still checking or redirecting - show nothing
-  return null;
+  // Redirecting to login - show feedback instead of blank
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="flex flex-col items-center gap-4">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="text-sm text-muted-foreground">Omdirigerer til innlogging...</p>
+      </div>
+    </div>
+  );
 }

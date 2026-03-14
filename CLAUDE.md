@@ -149,6 +149,7 @@ frontend/
 │   │   ├── storage/ # WebDAV browser page
 │   │   ├── portal/  # Portal skins preview page
 │   │   ├── notifications/ # Dedicated notification history page
+│   │   ├── reports/ # Rapporter (formidlingsrapport, best performers, budsjett, abonnementer)
 │   │   ├── templates/[id]/edit/ # Full template editor page
 │   │   ├── templates/dedup/ # Deduplication dashboard
 │   │   └── signature/[id]/ # Public signature copy page
@@ -226,21 +227,24 @@ skins/                    # Vitec portal skin packages
 - **Colors**: Navy `#272630`, Bronze `#BCAB8A`, Beige `#E9E7DC`
 - Rule file: `.cursor/rules/frontend-design.mdc` (auto-applies to frontend files)
 
+### Database Access (Preferred Workflow)
+
+**⚠️ Use the direct database workflow instead of relying on Alembic during Railway deploy.**
+
+| Task | Tool |
+|------|------|
+| **Read** (inspect schema, queries) | Postgres MCP (`query` tool, server `user-postgres`) |
+| **Write** (schema changes, fixes) | `backend/scripts/run_sql.py` — run from Cursor terminal |
+
+**Full instructions:** `docs/database-access-workflow.md`
+
 ### Database Migrations (CRITICAL)
 
 **⚠️ Railway migrations are UNRELIABLE. Read `.cursor/rules/database-migrations.mdc` before any DB work!**
 
-Railway's internal networking causes Alembic migrations to fail silently during deployment. After creating ANY migration:
-
 1. **Apply locally:** `cd backend && alembic upgrade head`
-2. **Apply to Railway manually:**
-   ```powershell
-   $env:DATABASE_URL = "postgresql://postgres:PASSWORD@shuttle.proxy.rlwy.net:51557/railway"
-   cd backend
-   python -m alembic upgrade head
-   ```
-3. **Verify:** `python -m alembic current` should show `YOUR_VERSION (head)`
-4. **If it didn't persist:** Create a Python script to add columns with `ALTER TABLE ... ADD COLUMN IF NOT EXISTS`
+2. **Apply to Railway:** Use `run_sql.py` or manual `alembic upgrade head` with public `DATABASE_URL` (see `docs/database-access-workflow.md`)
+3. **If migration didn't persist:** `railway run python scripts/run_sql.py "ALTER TABLE ...; UPDATE alembic_version ..."`
 
 **Symptoms of failed migration:** `UndefinedColumnError`, `MissingGreenlet`, 500 errors on previously working endpoints.
 
@@ -549,7 +553,7 @@ Before adding or editing any file in `.cursor/agents/`:
 
 | Command               | Purpose                             |
 | --------------------- | ----------------------------------- |
-| `/start-dev`          | Start Docker environment            |
+| `/start-dev`          | Deploy to homelab (SSH + docker compose) |
 | `/architect`          | Run Systems Architect               |
 | `/frontend-architect` | Run Frontend Architect              |
 | `/builder`            | Run Builder                         |
@@ -567,6 +571,8 @@ Before adding or editing any file in `.cursor/agents/`:
 | `/verify-gates`       | Run spec/backend/frontend/QA verification gates |
 | `/markdown-convert`   | Convert source files to Markdown for analysis |
 | `/commit-safe`        | Create scoped commits with explicit path list |
+| `/commit-to-homelab`  | Branch → homelab deploy → QA → merge to main (features, UI) |
+| `/commit-to-production` | Direct commit to main (hotfixes, typos only) |
 | `/deploy-gates`       | Run go/no-go deployment gate checklist |
 | `/token-audit`        | Generate efficiency audit report from git snapshot |
 
@@ -604,20 +610,22 @@ Push to `main` triggers GitHub Actions:
 
 ## Environment
 
-### Local Development
+### Homelab Development (Docker on Proxmox only)
 
-```bash
-# Start development
-docker compose up -d
+Docker runs on the homelab (Proxmox LXC 203), not on this PC.
+
+```powershell
+# Deploy to homelab
+.\scripts\deploy-homelab.ps1
 
 # Backend health
-curl http://localhost:8000/api/health
+curl http://192.168.77.127:8000/api/health
 
 # Frontend
-http://localhost:3000
+http://192.168.77.127:3000
 
-# Database
-docker compose exec db psql -U postgres -d dokument_hub
+# Database (SSH into homelab first)
+ssh root@192.168.77.10 "pct exec 203 -- docker compose exec db psql -U postgres -d dokument_hub"
 ```
 
 ### Production

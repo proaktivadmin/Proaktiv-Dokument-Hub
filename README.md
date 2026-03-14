@@ -88,32 +88,31 @@ A modern document template management system for Norwegian real estate brokers, 
 
 ### Prerequisites
 
-- Docker & Docker Compose
-- Node.js 18+ (for local development)
-- Python 3.11+ (for local development)
+- **Homelab:** Docker & Docker Compose on Proxmox LXC (192.168.77.127)
+- **This PC:** Node.js 18+ and Python 3.11+ for lint/tests (Docker not required)
 
-### Start Development Environment
+### Start Development Environment (Homelab)
 
-```bash
+```powershell
 # Clone the repository
 git clone https://github.com/proaktivadmin/Proaktiv-Dokument-Hub.git
 cd Proaktiv-Dokument-Hub
 
-# Start all services
-docker compose up -d
+# Deploy to homelab (SSH to Proxmox, builds and starts)
+.\scripts\deploy-homelab.ps1
 
 # Access the application
-open http://localhost:3000
+# http://192.168.77.127:3000
 ```
 
 ### Health Checks
 
 ```bash
-# Backend API
-curl http://localhost:8000/api/health
+# Backend API (homelab)
+curl http://192.168.77.127:8000/api/health
 
-# Frontend
-curl http://localhost:3000
+# Frontend (homelab)
+curl http://192.168.77.127:3000
 ```
 
 ### Production URLs

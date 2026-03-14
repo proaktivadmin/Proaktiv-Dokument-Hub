@@ -1,3 +1,4 @@
+const path = require("path");
 const { withSentryConfig } = require("@sentry/nextjs");
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -107,9 +108,9 @@ const nextConfig = {
   // Transpile Leaflet which has issues with standard Next.js bundling
   transpilePackages: ['leaflet', 'react-leaflet'],
   
-  // Turbopack configuration (Next.js 16)
+  // Turbopack configuration (Next.js 16) — explicit root silences lockfile warning
   turbopack: {
-    root: __dirname,
+    root: path.resolve(__dirname),
     resolveAlias: {
       leaflet: 'leaflet/dist/leaflet-src.js',
     },

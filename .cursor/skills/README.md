@@ -33,10 +33,10 @@ Agents are instructed to check this directory when encountering complex tasks in
 # Check CI status
 gh run list --repo proaktivadmin/Proaktiv-Dokument-Hub --limit 3
 
-# Run local tests
+# Run tests (on this PC)
 cd frontend && npm run test:run
 cd backend && pytest
 
-# Start local dev
-docker compose up -d
+# Deploy to homelab
+.\scripts\deploy-homelab.ps1
 ```

@@ -2,11 +2,14 @@
 Vitec Hub Service
 
 Handles authenticated requests to the Vitec Megler Hub API.
+Rate-limited to stay well below Vitec's ~600 req/sec limit.
 """
 
 from __future__ import annotations
 
+import asyncio
 import logging
+import time
 from typing import Any
 
 import httpx
@@ -15,6 +18,17 @@ from fastapi import HTTPException
 from app.config import settings
 
 logger = logging.getLogger(__name__)
+
+# Shared rate limiter: min delay between requests (sec)
+_vitec_rate_lock: asyncio.Lock | None = None
+_vitec_last_request_at: float = 0.0
+
+
+def _get_vitec_rate_lock() -> asyncio.Lock:
+    global _vitec_rate_lock
+    if _vitec_rate_lock is None:
+        _vitec_rate_lock = asyncio.Lock()
+    return _vitec_rate_lock
 
 
 class VitecHubService:
@@ -53,6 +67,18 @@ class VitecHubService:
                 status_code=500,
                 detail="Vitec Hub credentials are not configured.",
             )
+
+        # Rate limit: stay well below Vitec's ~600 req/sec
+        global _vitec_last_request_at
+        rps = max(1, min(settings.VITEC_RATE_LIMIT_REQUESTS_PER_SECOND, 200))
+        min_interval = 1.0 / rps
+        lock = _get_vitec_rate_lock()
+        async with lock:
+            now = time.monotonic()
+            elapsed = now - _vitec_last_request_at
+            if elapsed < min_interval:
+                await asyncio.sleep(min_interval - elapsed)
+            _vitec_last_request_at = time.monotonic()
 
         url = f"{self._base_url}/{path.lstrip('/')}"
         try:

@@ -118,6 +118,21 @@ export function createApiClient(): AxiosInstance {
     
     return config;
   });
+
+  // Add response interceptor to surface backend error details (e.g. 502 from Vitec Hub)
+  api.interceptors.response.use(
+    (res) => res,
+    (err) => {
+      const detail = err.response?.data?.detail;
+      if (detail && typeof detail === "string") {
+        return Promise.reject(new Error(detail));
+      }
+      if (detail && typeof detail === "object" && "msg" in detail) {
+        return Promise.reject(new Error(String((detail as { msg: unknown }).msg)));
+      }
+      return Promise.reject(err);
+    }
+  );
   
   return api;
 }
