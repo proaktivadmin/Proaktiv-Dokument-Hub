@@ -20,7 +20,6 @@ from sqlalchemy import text
 
 from app.database import async_session_factory
 
-
 REQUIRED_TABLES = [
     "report_sales_sync_events",
     "report_sales_estate_cache",
@@ -53,8 +52,8 @@ async def verify():
             print(f"Alembic version: {version}")
             if version != "20260312_0002":
                 print(
-                    f"  WARNING: Expected 20260312_0002 (reports cache + data_source). "
-                    f"Run: python -m alembic upgrade head"
+                    "  WARNING: Expected 20260312_0002 (reports cache + data_source). "
+                    "Run: python -m alembic upgrade head"
                 )
         except Exception as e:
             print(f"Alembic version: ERROR - {e}")
@@ -72,7 +71,7 @@ async def verify():
             status = "OK" if exists else "MISSING"
             print(f"  {table}: {status}")
             if not exists:
-                print(f"    -> Migration 20260312_0001 may not be applied")
+                print("    -> Migration 20260312_0001 may not be applied")
 
         # 3. Required columns
         print("\nRequired columns:")
@@ -89,7 +88,7 @@ async def verify():
                 status = "OK" if exists else "MISSING"
                 print(f"  {table}.{col}: {status}")
                 if not exists and table.endswith("_cache") and col == "data_source":
-                    print(f"    -> Migration 20260312_0002 may not be applied")
+                    print("    -> Migration 20260312_0002 may not be applied")
 
         # 4. Row count for sync_events (informational)
         try:
