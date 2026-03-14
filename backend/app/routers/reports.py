@@ -271,8 +271,16 @@ async def list_cache_events(
     since_id: int | None = Query(None, ge=1),
     limit: int = Query(100, ge=1, le=500),
 ):
-    service = SalesReportService()
-    return await service.list_cache_events(department_id=department_id, since_id=since_id, limit=limit)
+    try:
+        service = SalesReportService()
+        return await service.list_cache_events(department_id=department_id, since_id=since_id, limit=limit)
+    except Exception as exc:
+        logger.exception("list_cache_events failed: %s", exc)
+        hint = (
+            "Ensure migrations 20260312_0001 and 20260312_0002 are applied to the database. "
+            "See .cursor/rules/database-migrations.mdc for manual Railway migration steps."
+        )
+        raise HTTPException(status_code=500, detail=f"{exc!s}. {hint}") from exc
 
 
 @router.get("/cache-events/stream")
@@ -287,29 +295,34 @@ async def stream_cache_events(
     async def event_stream():
         current_since = since_id
         started = datetime.now(timezone.utc)  # noqa: UP017
-        while (datetime.now(timezone.utc) - started).total_seconds() < max_seconds:  # noqa: UP017
-            events = await service.list_cache_events(
-                department_id=department_id,
-                since_id=current_since,
-                limit=200,
-            )
-            for event in events:
-                current_since = max(current_since or 0, int(event.id))
-                payload = {
-                    "id": event.id,
-                    "installation_id": event.installation_id,
-                    "department_id": event.department_id,
-                    "event_type": event.event_type,
-                    "from_date": event.from_date,
-                    "to_date": event.to_date,
-                    "estates_upserted": event.estates_upserted,
-                    "transactions_upserted": event.transactions_upserted,
-                    "payload": event.payload_json or {},
-                    "created_at": event.created_at.isoformat() if event.created_at else None,
-                }
-                yield f"id: {event.id}\nevent: {event.event_type}\ndata: {json.dumps(payload)}\n\n"
-            yield ": keepalive\n\n"
-            await asyncio.sleep(poll_interval_seconds)
+        try:
+            while (datetime.now(timezone.utc) - started).total_seconds() < max_seconds:  # noqa: UP017
+                events = await service.list_cache_events(
+                    department_id=department_id,
+                    since_id=current_since,
+                    limit=200,
+                )
+                for event in events:
+                    current_since = max(current_since or 0, int(event.id))
+                    payload = {
+                        "id": event.id,
+                        "installation_id": event.installation_id,
+                        "department_id": event.department_id,
+                        "event_type": event.event_type,
+                        "from_date": event.from_date,
+                        "to_date": event.to_date,
+                        "estates_upserted": event.estates_upserted,
+                        "transactions_upserted": event.transactions_upserted,
+                        "payload": event.payload_json or {},
+                        "created_at": event.created_at.isoformat() if event.created_at else None,
+                    }
+                    yield f"id: {event.id}\nevent: {event.event_type}\ndata: {json.dumps(payload)}\n\n"
+                yield ": keepalive\n\n"
+                await asyncio.sleep(poll_interval_seconds)
+        except Exception as exc:
+            logger.exception("stream_cache_events failed: %s", exc)
+            yield f"event: error\ndata: {json.dumps({'error': str(exc), 'hint': 'Ensure migrations 20260312_0001 and 20260312_0002 are applied.'})}\n\n"
+            raise
 
     return StreamingResponse(
         event_stream(),
