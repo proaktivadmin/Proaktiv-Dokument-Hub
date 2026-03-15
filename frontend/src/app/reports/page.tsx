@@ -931,7 +931,7 @@ export default function ReportsPage() {
           <CardContent className="space-y-4">
             <Button variant="outline" onClick={loadBudget} disabled={budgetLoading}>
               {budgetLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <RefreshCw className="h-4 w-4 mr-2" />}
-              Last budsjett
+              Last inn budsjett
             </Button>
             {budgetComparison && (
               <>
@@ -1222,13 +1222,15 @@ function DataConfidenceBadge({ scope }: { scope: ReportScopeMetadata | undefined
   let color: string;
   if (minutes < 15 && !hasWarnings) {
     label = "Fersk";
-    color = "bg-emerald-100 text-emerald-800";
+    color = "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300";
   } else if (minutes < 120) {
     label = hasWarnings ? "Delvis" : "Fersk";
-    color = hasWarnings ? "bg-amber-100 text-amber-800" : "bg-emerald-100 text-emerald-800";
+    color = hasWarnings
+      ? "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300"
+      : "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300";
   } else {
     label = "Foreldet";
-    color = "bg-red-100 text-red-800";
+    color = "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300";
   }
 
   return (
@@ -1263,7 +1265,7 @@ function ScopePanel({ scope }: { scope: ReportScopeMetadata | undefined }) {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 pt-3">
             <div>
               <div className="text-xs uppercase tracking-wide text-foreground/50 mb-1">MVA-håndtering</div>
-              <div>{scope.vat_handling === "included" ? "Inkludert" : "Ekskludert"}</div>
+              <div>{scope.vat_handling === "included" ? "Inkludert" : "Eksl."}</div>
             </div>
             <div>
               <div className="text-xs uppercase tracking-wide text-foreground/50 mb-1">Eiendomsstatus</div>
@@ -1347,7 +1349,11 @@ function PropertyRow({
             </span>
           )}
         </td>
-        <td className="py-1.5 italic text-foreground/80">{property.address}</td>
+        <td className="py-1.5 italic text-foreground/80">
+          {property.address || (property.assignment_number
+            ? `Adresse ukjent (${property.assignment_number})`
+            : "Adresse ukjent")}
+        </td>
         <td className="py-1.5 text-right">—</td>
         <td className="py-1.5 text-muted-foreground">{property.property_type}</td>
         <td className="py-1.5 text-muted-foreground">{property.assignment_type}</td>
