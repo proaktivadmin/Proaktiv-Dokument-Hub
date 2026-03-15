@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
 import { Header } from "@/components/layout/Header";
@@ -16,8 +16,10 @@ import {
 
 import { useEmployees } from "@/hooks/v3/useEmployees";
 import { useOffices } from "@/hooks/v3/useOffices";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { employeesApi } from "@/lib/api/employees";
+import { employeesApi, type EmployeeListParams } from "@/lib/api/employees";
 import { officesApi } from "@/lib/api/offices";
 import { entraSyncApi } from "@/lib/api/entra-sync";
 import { vitecApi } from "@/lib/api/vitec";
@@ -45,15 +47,24 @@ export default function EmployeesPage() {
   const { toast } = useToast();
   const showInactive = statusFilters.includes("inactive");
   const allStatuses: EmployeeStatus[] = ["active", "onboarding", "offboarding", "inactive"];
-  const { offices, isLoading: officesLoading, refetch: refetchOffices } = useOffices(
-    showInactive ? undefined : { is_active: true }
+
+  const officeParams = useMemo(
+    () => (showInactive ? undefined : { is_active: true }),
+    [showInactive]
   );
-  const { employees, statusCounts, isLoading: employeesLoading, refetch: refetchEmployees } = useEmployees({
-    office_id: selectedOfficeId || undefined,
-    status: statusFilters.length > 0 ? statusFilters : undefined,
-    employee_type: showExternalDevelopers ? ["external", "system"] : ["internal"],
-    role: selectedRole || undefined,
-  });
+  const { offices, isLoading: officesLoading, error: officesError, refetch: refetchOffices } = useOffices(officeParams);
+
+  const employeeParams = useMemo<EmployeeListParams>(
+    () => ({
+      office_id: selectedOfficeId || undefined,
+      status: statusFilters.length > 0 ? statusFilters : undefined,
+      employee_type: showExternalDevelopers ? ["external", "system"] : ["internal"],
+      role: selectedRole || undefined,
+    }),
+    [selectedOfficeId, statusFilters, showExternalDevelopers, selectedRole]
+  );
+  const { employees, statusCounts, isLoading: employeesLoading, error: employeesError, refetch: refetchEmployees } =
+    useEmployees(employeeParams);
   const [isSyncing, setIsSyncing] = useState(false);
   const [isEntraImporting, setIsEntraImporting] = useState(false);
 
@@ -212,6 +223,17 @@ export default function EmployeesPage() {
             Oversikt over alle ansatte på tvers av kontorer
           </p>
         </div>
+
+        {(officesError || employeesError) && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              {officesError && employeesError
+                ? `Kontorer: ${officesError}. Ansatte: ${employeesError}`
+                : officesError ?? employeesError}
+            </AlertDescription>
+          </Alert>
+        )}
 
         {/* Main content with sidebar */}
         <div className="flex gap-6">

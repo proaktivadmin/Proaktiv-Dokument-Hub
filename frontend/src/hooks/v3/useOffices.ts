@@ -1,20 +1,28 @@
 "use client";
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { officesApi, type OfficeListParams } from '@/lib/api/offices';
 import type { OfficeWithStats } from '@/types/v3';
+
+function paramsKey(p?: OfficeListParams): string {
+  if (!p) return '';
+  return JSON.stringify(p);
+}
 
 export function useOffices(params?: OfficeListParams) {
   const [offices, setOffices] = useState<OfficeWithStats[]>([]);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const paramsRef = useRef(params);
+  paramsRef.current = params;
+  const key = paramsKey(params);
 
   const fetch = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await officesApi.list(params);
+      const data = await officesApi.list(paramsRef.current);
       setOffices(data.items);
       setTotal(data.total);
     } catch (err) {
@@ -23,11 +31,11 @@ export function useOffices(params?: OfficeListParams) {
     } finally {
       setIsLoading(false);
     }
-  }, [params]);
+  }, []);
 
   useEffect(() => {
     fetch();
-  }, [fetch]);
+  }, [fetch, key]);
 
   // Group by city for filtering
   const cities = Array.from(new Set(offices.map(o => o.city).filter(Boolean))) as string[];
