@@ -24,6 +24,9 @@ import {
   ChevronRight,
   ChevronDown,
   RefreshCw,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
@@ -53,6 +56,7 @@ import {
   type FranchiseReportData,
   type ReportSubscription,
   type PerformerRow,
+  type PerformerProperty,
   type ReportSalesSyncEvent,
   type ReportScopeMetadata,
   type SalesReportData,
@@ -62,6 +66,8 @@ import {
 import { useReportCacheEvents } from "@/hooks/use-report-cache-events";
 import { officesApi } from "@/lib/api/offices";
 import type { OfficeWithStats } from "@/types/v3";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { resolveAvatarUrl } from "@/lib/api/config";
 
 const MONTHS_NB = [
   "Januar",
@@ -102,6 +108,54 @@ function formatRevenue(n: number): string {
   return Math.round(n).toLocaleString("nb-NO", { maximumFractionDigits: 0 });
 }
 
+/** Avatar URL for broker (Vitec employee ID). Uses proxy endpoint. */
+function brokerAvatarUrl(brokerId: string | undefined, size = 40): string | undefined {
+  if (!brokerId) return undefined;
+  return resolveAvatarUrl(`/api/vitec/employees/${brokerId}/picture`, size);
+}
+
+/** Aggregate unique non-empty values from properties, joined by ", " */
+function aggregatePropertyValues(
+  properties: { property_type?: string; assignment_type?: string }[],
+  key: "property_type" | "assignment_type"
+): string {
+  const values = [...new Set(properties.map((p) => p[key]).filter(Boolean))];
+  return values.length > 0 ? values.join(", ") : "—";
+}
+
+/** Initials from name, e.g. "Alexander Bergheim" -> "AB" */
+function initials(name: string | undefined): string {
+  if (!name || !name.trim()) return "?";
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function BrokerAvatar({
+  brokerId,
+  name,
+  size = 40,
+  className,
+}: {
+  brokerId: string | undefined;
+  name: string | undefined;
+  size?: number;
+  className?: string;
+}) {
+  const src = brokerAvatarUrl(brokerId, size);
+  return (
+    <Avatar
+      className={`shrink-0 transition-transform duration-fast ease-standard hover:scale-105 ${className ?? ""}`}
+      style={{ width: size, height: size }}
+    >
+      <AvatarImage src={src} alt={name ?? ""} />
+      <AvatarFallback className="text-xs font-medium bg-muted text-muted-foreground">
+        {initials(name)}
+      </AvatarFallback>
+    </Avatar>
+  );
+}
+
 export default function ReportsPage() {
   const [loading, setLoading] = useState(false);
   const [downloadLoading, setDownloadLoading] = useState(false);
@@ -118,6 +172,10 @@ export default function ReportsPage() {
   const [expandedBrokers, setExpandedBrokers] = useState<Set<string>>(new Set());
   const [expandedProperties, setExpandedProperties] = useState<Set<string>>(new Set());
   const [expandedDepartments, setExpandedDepartments] = useState<Set<number>>(new Set());
+  const [reportSort, setReportSort] = useState<{
+    column: "name" | "sale_count" | "total";
+    direction: "asc" | "desc";
+  } | null>(null);
 
   const [bestPerformers, setBestPerformers] = useState<BestPerformersData | null>(null);
   const [bestLoading, setBestLoading] = useState(false);
@@ -705,7 +763,22 @@ export default function ReportsPage() {
         </Card>
 
         {/* Visual dashboard */}
-        {data && mode === "department" && (
+        {data && mode === "department" && (() => {
+          const sortedBrokers = [...data.brokers];
+          if (reportSort) {
+            sortedBrokers.sort((a, b) => {
+              let cmp = 0;
+              if (reportSort.column === "name") {
+                cmp = (a.name ?? "").localeCompare(b.name ?? "", "nb");
+              } else if (reportSort.column === "sale_count") {
+                cmp = a.sale_count - b.sale_count;
+              } else {
+                cmp = a.total - b.total;
+              }
+              return reportSort.direction === "asc" ? cmp : -cmp;
+            });
+          }
+          return (
           <Card className="border border-border shadow-card">
             <CardHeader>
               <div className="flex items-center gap-3">
@@ -725,15 +798,38 @@ export default function ReportsPage() {
                   <thead>
                     <tr className="border-b border-border">
                       <th className="text-left py-3 font-semibold text-foreground w-8" />
-                      <th className="text-left py-3 font-semibold text-foreground">Megler</th>
-                      <th className="text-right py-3 font-semibold text-foreground">Antall salg</th>
-                      <th className="text-left py-3 font-semibold text-foreground">Eiendomstype</th>
-                      <th className="text-left py-3 font-semibold text-foreground">Oppdragstype</th>
-                      <th className="text-right py-3 font-semibold text-foreground">{sumLabel} (kr)</th>
+                      <th className="text-left py-3 font-semibold text-foreground pl-2 min-w-[10rem]">
+                        <SortableHeader
+                          label="Megler"
+                          column="name"
+                          currentSort={reportSort}
+                          onSort={(col, dir) => setReportSort({ column: col, direction: dir })}
+                        />
+                      </th>
+                      <th className="text-right py-3 font-semibold text-foreground pr-4 min-w-[5.5rem]">
+                        <SortableHeader
+                          label="Antall salg"
+                          column="sale_count"
+                          currentSort={reportSort}
+                          onSort={(col, dir) => setReportSort({ column: col, direction: dir })}
+                          align="right"
+                        />
+                      </th>
+                      <th className="text-left py-3 font-semibold text-foreground pl-4 min-w-[6rem]">Eiendomstype</th>
+                      <th className="text-left py-3 font-semibold text-foreground pl-4 min-w-[6rem]">Oppdragstype</th>
+                      <th className="text-right py-3 font-semibold text-foreground pl-4 min-w-[6rem]">
+                        <SortableHeader
+                          label={`${sumLabel} (kr)`}
+                          column="total"
+                          currentSort={reportSort}
+                          onSort={(col, dir) => setReportSort({ column: col, direction: dir })}
+                          align="right"
+                        />
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
-                    {data.brokers.map((broker) => (
+                    {sortedBrokers.map((broker) => (
                       <BrokerRow
                         key={broker.broker_id}
                         broker={broker}
@@ -745,11 +841,11 @@ export default function ReportsPage() {
                     ))}
                     <tr className="border-t-2 border-primary font-bold bg-secondary/30">
                       <td className="py-3" />
-                      <td className="py-3">Sum</td>
-                      <td className="py-3 text-right">{data.total_sales}</td>
-                      <td className="py-3" />
-                      <td className="py-3" />
-                      <td className="py-3 text-right">
+                      <td className="py-3 pl-2">Sum</td>
+                      <td className="py-3 text-right pr-4">{data.total_sales}</td>
+                      <td className="py-3 pl-4" />
+                      <td className="py-3 pl-4" />
+                      <td className="py-3 text-right pl-4">
                         {formatRevenue(data.total_revenue)}
                       </td>
                     </tr>
@@ -758,7 +854,8 @@ export default function ReportsPage() {
               </div>
             </CardContent>
           </Card>
-        )}
+          );
+        })()}
 
         {franchiseData && mode === "franchise" && (
           <Card className="border border-border shadow-card mb-8">
@@ -906,14 +1003,23 @@ export default function ReportsPage() {
                   Viser: <strong>{bestPerformers.from_date_display} – {bestPerformers.to_date_display}</strong>
                   {includeVat ? " (inkl. mva.)" : " (eksl. mva.)"}
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <LeaderboardCard title="Eiendomsmegler" rows={bestPerformers.eiendomsmegler} nameKey="name" />
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <LeaderboardCard
+                  title="Eiendomsmegler"
+                  rows={bestPerformers.eiendomsmegler}
+                  nameKey="name"
+                />
                 <LeaderboardCard
                   title="Eiendomsmeglerfullmektig"
                   rows={bestPerformers.eiendomsmeglerfullmektig}
                   nameKey="name"
                 />
-                <LeaderboardCard title="Avdeling" rows={bestPerformers.departments} nameKey="department_name" />
+                <LeaderboardCard
+                  title="Avdeling"
+                  rows={bestPerformers.departments}
+                  nameKey="department_name"
+                  isDepartmentMode
+                />
                 </div>
               </>
             )}
@@ -931,7 +1037,7 @@ export default function ReportsPage() {
           <CardContent className="space-y-4">
             <Button variant="outline" onClick={loadBudget} disabled={budgetLoading}>
               {budgetLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <RefreshCw className="h-4 w-4 mr-2" />}
-              Last budsjett
+              Last inn budsjett
             </Button>
             {budgetComparison && (
               <>
@@ -1079,6 +1185,47 @@ export default function ReportsPage() {
   );
 }
 
+function SortableHeader({
+  label,
+  column,
+  currentSort,
+  onSort,
+  align = "left",
+}: {
+  label: string;
+  column: "name" | "sale_count" | "total";
+  currentSort: { column: string; direction: "asc" | "desc" } | null;
+  onSort: (column: "name" | "sale_count" | "total", direction: "asc" | "desc") => void;
+  align?: "left" | "right";
+}) {
+  const isActive = currentSort?.column === column;
+  const handleClick = () => {
+    if (isActive && currentSort?.direction === "asc") {
+      onSort(column, "desc");
+    } else {
+      onSort(column, "asc");
+    }
+  };
+  return (
+    <button
+      type="button"
+      onClick={handleClick}
+      className={`inline-flex items-center gap-1 hover:text-foreground transition-colors w-full ${align === "right" ? "justify-end" : "justify-start"}`}
+    >
+      <span>{label}</span>
+      {isActive ? (
+        currentSort?.direction === "asc" ? (
+          <ArrowUp className="h-3.5 w-3.5 text-accent" />
+        ) : (
+          <ArrowDown className="h-3.5 w-3.5 text-accent" />
+        )
+      ) : (
+        <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground opacity-60" />
+      )}
+    </button>
+  );
+}
+
 function DepartmentRow({
   department,
   expanded,
@@ -1121,31 +1268,219 @@ function LeaderboardCard({
   title,
   rows,
   nameKey,
+  isDepartmentMode = false,
 }: {
   title: string;
   rows: PerformerRow[];
   nameKey: "name" | "department_name";
+  includeVat?: boolean;
+  isDepartmentMode?: boolean;
 }) {
+  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
+  const [expandedBrokers, setExpandedBrokers] = useState<Set<string>>(new Set());
+  const [expandedProperties, setExpandedProperties] = useState<Set<string>>(new Set());
+
+  const toggleRow = (key: string) => {
+    setExpandedRows((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  };
+  const toggleBroker = (key: string) => {
+    setExpandedBrokers((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  };
+  const toggleProperty = (key: string) => {
+    setExpandedProperties((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  };
+
+  const getRowKey = (row: PerformerRow, i: number) =>
+    isDepartmentMode ? `dept-${row.department_id ?? i}` : `broker-${row.broker_id ?? row.name ?? i}`;
+  const hasExpandableContent = (row: PerformerRow) =>
+    isDepartmentMode ? (row.brokers?.length ?? 0) > 0 : (row.properties?.length ?? 0) > 0;
+
   return (
-    <Card className="border border-border">
+    <Card className="border border-border min-w-0 min-h-[18rem]">
       <CardHeader className="pb-2">
         <CardTitle className="text-base">{title}</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-1">
+      <CardContent className="space-y-0">
         {rows.length === 0 ? (
-          <p className="text-sm text-muted-foreground">Ingen data</p>
+          <p className="text-sm text-muted-foreground py-2">Ingen data</p>
         ) : (
-          rows.map((row, i) => (
-            <div key={`${row[nameKey] ?? i}`} className="flex justify-between text-sm">
-              <span>
-                {i + 1}. {String(row[nameKey] ?? "—")}
-              </span>
-              <span>{formatRevenue(Number(row.total_revenue ?? 0))} kr</span>
-            </div>
-          ))
+          <div className="space-y-0.5">
+            {rows.map((row, i) => {
+              const rowKey = getRowKey(row, i);
+              const expanded = expandedRows.has(rowKey);
+              const hasContent = hasExpandableContent(row);
+
+              return (
+                <div key={rowKey} className="rounded-md border border-border/50 overflow-hidden">
+                    <button
+                    type="button"
+                    className="w-full flex items-center justify-between gap-2 px-3 py-2.5 text-left hover:bg-muted/50 transition-colors"
+                    onClick={() => hasContent && toggleRow(rowKey)}
+                  >
+                    <span className="flex items-center gap-2 min-w-0">
+                      {hasContent && (
+                        <span className="shrink-0 text-muted-foreground">
+                          {expanded ? (
+                            <ChevronDown className="h-4 w-4" />
+                          ) : (
+                            <ChevronRight className="h-4 w-4" />
+                          )}
+                        </span>
+                      )}
+                      {!isDepartmentMode && row.broker_id && (
+                        <BrokerAvatar brokerId={row.broker_id} name={String(row[nameKey])} size={36} />
+                      )}
+                      <span className="font-medium truncate">
+                        {i + 1}. {String(row[nameKey] ?? "—")}
+                      </span>
+                    </span>
+                    <span className="shrink-0 text-sm text-muted-foreground">
+                      {formatRevenue(Number(row.total_revenue ?? row.total ?? 0))} kr
+                    </span>
+                  </button>
+
+                  {expanded && hasContent && (
+                    <div className="border-t border-border/50 bg-muted/30 px-3 py-2 space-y-2">
+                      {isDepartmentMode && row.brokers ? (
+                        row.brokers.map((broker) => {
+                          const brokerKey = `${rowKey}-${broker.broker_id ?? broker.name}`;
+                          const brokerExpanded = expandedBrokers.has(brokerKey);
+                          const brokerHasProps = (broker.properties?.length ?? 0) > 0;
+
+                          return (
+                            <div key={brokerKey} className="rounded border border-border/40 bg-card">
+                              <button
+                                type="button"
+                                className="w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-muted/30"
+                                onClick={() => brokerHasProps && toggleBroker(brokerKey)}
+                              >
+                                <span className="flex items-center gap-2">
+                                  {brokerHasProps && (
+                                    <span className="text-muted-foreground">
+                                      {brokerExpanded ? (
+                                        <ChevronDown className="h-3.5 w-3.5" />
+                                      ) : (
+                                        <ChevronRight className="h-3.5 w-3.5" />
+                                      )}
+                                    </span>
+                                  )}
+                                  <BrokerAvatar brokerId={broker.broker_id} name={broker.name} size={32} />
+                                  <span>{broker.name}</span>
+                                </span>
+                                <span className="text-muted-foreground">
+                                  {formatRevenue(Number(broker.total ?? broker.total_revenue ?? 0))} kr
+                                </span>
+                              </button>
+                              {brokerExpanded && broker.properties && (
+                                <PerformerPropertiesList
+                                  properties={broker.properties}
+                                  expandedProperties={expandedProperties}
+                                  onToggleProperty={toggleProperty}
+                                  parentKey={brokerKey}
+                                />
+                              )}
+                            </div>
+                          );
+                        })
+                      ) : (
+                        row.properties && (
+                          <PerformerPropertiesList
+                            properties={row.properties}
+                            expandedProperties={expandedProperties}
+                            onToggleProperty={toggleProperty}
+                            parentKey={rowKey}
+                          />
+                        )
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         )}
       </CardContent>
     </Card>
+  );
+}
+
+function PerformerPropertiesList({
+  properties,
+  expandedProperties,
+  onToggleProperty,
+  parentKey,
+}: {
+  properties: PerformerProperty[];
+  expandedProperties: Set<string>;
+  onToggleProperty: (key: string) => void;
+  parentKey: string;
+}) {
+  return (
+    <div className="space-y-1 pl-2 border-l-2 border-border/40">
+      {properties.map((prop) => {
+        const propKey = `${parentKey}-${prop.estate_id}`;
+        const expanded = expandedProperties.has(propKey);
+        const hasTxns = (prop.transactions?.length ?? 0) > 0;
+
+        return (
+          <div key={propKey} className="text-sm">
+            <button
+              type="button"
+              className="w-full flex items-center justify-between px-2 py-1.5 hover:bg-muted/30 rounded text-left"
+              onClick={() => hasTxns && onToggleProperty(propKey)}
+            >
+              <span className="flex items-center gap-2 min-w-0">
+                {hasTxns && (
+                  <span className="shrink-0 text-muted-foreground">
+                    {expanded ? (
+                      <ChevronDown className="h-3 w-3" />
+                    ) : (
+                      <ChevronRight className="h-3 w-3" />
+                    )}
+                  </span>
+                )}
+                <span className="truncate italic text-foreground/90">
+                  {prop.address || (prop.assignment_number
+                    ? `Adresse ukjent (${prop.assignment_number})`
+                    : "Adresse ukjent")}
+                </span>
+              </span>
+              <span className="shrink-0 text-muted-foreground ml-2">
+                {formatRevenue(prop.total)} kr
+              </span>
+            </button>
+            {expanded && hasTxns && prop.transactions && (
+              <div className="pl-4 py-1 space-y-0.5 text-xs text-muted-foreground border-l border-border/30 ml-2">
+                {prop.transactions.map((txn, ti) => (
+                  <div key={ti} className="flex justify-between gap-2">
+                    <span>
+                      {txn.posting_date} · Konto {txn.account}
+                      {txn.description ? ` · ${txn.description}` : ""}
+                    </span>
+                    <span>{formatRevenue(txn.amount)} kr</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
   );
 }
 
@@ -1181,11 +1516,20 @@ function BrokerRow({
             </span>
           )}
         </td>
-        <td className="py-2 font-medium">{broker.name}</td>
-        <td className="py-2 text-right">{broker.sale_count}</td>
-        <td className="py-2" />
-        <td className="py-2" />
-        <td className="py-2 text-right">{formatRevenue(broker.total)}</td>
+        <td className="py-2 pl-2">
+          <div className="flex items-center gap-2">
+            <BrokerAvatar brokerId={broker.broker_id} name={broker.name} size={32} />
+            <span className="font-medium">{broker.name}</span>
+          </div>
+        </td>
+        <td className="py-2 text-right pr-4">{broker.sale_count}</td>
+        <td className="py-2 pl-4 text-muted-foreground">
+          {aggregatePropertyValues(broker.properties, "property_type")}
+        </td>
+        <td className="py-2 pl-4 text-muted-foreground">
+          {aggregatePropertyValues(broker.properties, "assignment_type")}
+        </td>
+        <td className="py-2 text-right pl-4">{formatRevenue(broker.total)}</td>
       </tr>
       {expanded &&
         broker.properties.map((prop) => (
@@ -1222,13 +1566,15 @@ function DataConfidenceBadge({ scope }: { scope: ReportScopeMetadata | undefined
   let color: string;
   if (minutes < 15 && !hasWarnings) {
     label = "Fersk";
-    color = "bg-emerald-100 text-emerald-800";
+    color = "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300";
   } else if (minutes < 120) {
     label = hasWarnings ? "Delvis" : "Fersk";
-    color = hasWarnings ? "bg-amber-100 text-amber-800" : "bg-emerald-100 text-emerald-800";
+    color = hasWarnings
+      ? "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300"
+      : "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300";
   } else {
     label = "Foreldet";
-    color = "bg-red-100 text-red-800";
+    color = "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300";
   }
 
   return (
@@ -1263,7 +1609,7 @@ function ScopePanel({ scope }: { scope: ReportScopeMetadata | undefined }) {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 pt-3">
             <div>
               <div className="text-xs uppercase tracking-wide text-foreground/50 mb-1">MVA-håndtering</div>
-              <div>{scope.vat_handling === "included" ? "Inkludert" : "Ekskludert"}</div>
+              <div>{scope.vat_handling === "included" ? "Inkludert" : "Eksl."}</div>
             </div>
             <div>
               <div className="text-xs uppercase tracking-wide text-foreground/50 mb-1">Eiendomsstatus</div>
@@ -1347,11 +1693,15 @@ function PropertyRow({
             </span>
           )}
         </td>
-        <td className="py-1.5 italic text-foreground/80">{property.address}</td>
-        <td className="py-1.5 text-right">—</td>
-        <td className="py-1.5 text-muted-foreground">{property.property_type}</td>
-        <td className="py-1.5 text-muted-foreground">{property.assignment_type}</td>
-        <td className="py-1.5 text-right">{formatRevenue(property.total)}</td>
+        <td className="py-1.5 italic text-foreground/80 pl-2">
+          {property.address || (property.assignment_number
+            ? `Adresse ukjent (${property.assignment_number})`
+            : "Adresse ukjent")}
+        </td>
+        <td className="py-1.5 text-right pr-4">—</td>
+        <td className="py-1.5 text-muted-foreground pl-4">{property.property_type}</td>
+        <td className="py-1.5 text-muted-foreground pl-4">{property.assignment_type}</td>
+        <td className="py-1.5 text-right pl-4">{formatRevenue(property.total)}</td>
       </tr>
           {expanded &&
         property.transactions.map((txn, i) => (
@@ -1360,15 +1710,14 @@ function PropertyRow({
             className="border-b border-border/30 bg-card"
           >
             <td className="py-1 pl-14" />
-            <td className="py-1 text-xs text-muted-foreground">
+            <td className="py-1 text-xs text-muted-foreground pl-2">
               {txn.posting_date} · Konto {txn.account}
               {txn.description ? ` · ${txn.description}` : ""}
             </td>
-            <td className="py-1" />
-            <td className="py-1" />
-            <td className="py-1" />
-            <td className="py-1" />
-            <td className="py-1 text-right text-xs">{formatRevenue(txn.amount)}</td>
+            <td className="py-1 pr-4" />
+            <td className="py-1 pl-4" />
+            <td className="py-1 pl-4" />
+            <td className="py-1 text-right text-xs pl-4">{formatRevenue(txn.amount)}</td>
           </tr>
         ))}
     </>

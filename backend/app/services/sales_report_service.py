@@ -90,6 +90,39 @@ ANDRE_INNTEKTER_ACCOUNTS = {
 
 REVENUE_ACCOUNTS = VEDERLAG_ACCOUNTS | ANDRE_INNTEKTER_ACCOUNTS
 
+# Revenue scope presets for UI
+REVENUE_SCOPE_VEDERLAG = "vederlag"
+REVENUE_SCOPE_VEDERLAG_ANDRE = "vederlag_andre"
+
+
+def _resolve_accounts_filter(
+    revenue_scope: str | None = None,
+    accounts_included: list[str] | None = None,
+) -> set[str]:
+    """
+    Resolve which accounts to include in the report.
+    - If accounts_included is provided (non-empty), use exactly those (validated against REVENUE_ACCOUNTS).
+    - Else if revenue_scope is 'vederlag', use VEDERLAG_ACCOUNTS.
+    - Else use REVENUE_ACCOUNTS (vederlag + andre inntekter).
+    """
+    if accounts_included:
+        allowed = {a.strip() for a in accounts_included if a and str(a).strip()}
+        return allowed & REVENUE_ACCOUNTS
+    if revenue_scope == REVENUE_SCOPE_VEDERLAG:
+        return VEDERLAG_ACCOUNTS.copy()
+    return REVENUE_ACCOUNTS.copy()
+
+
+def _build_accounts_with_labels() -> list[dict[str, str]]:
+    """Build list of {account, label, category} for UI dropdown."""
+    out: list[dict[str, str]] = []
+    for acc in sorted(VEDERLAG_ACCOUNTS):
+        out.append({"account": acc, "label": f"Konto {acc} (Vederlag)", "category": "vederlag"})
+    for acc in sorted(ANDRE_INNTEKTER_ACCOUNTS):
+        out.append({"account": acc, "label": f"Konto {acc} (Andre inntekter)", "category": "andre_inntekter"})
+    return out
+
+
 # Default department: Proaktiv Eiendomsmegling AS
 DEFAULT_DEPARTMENT_ID = 1120
 
@@ -172,14 +205,42 @@ def _looks_like_uuid(s: str) -> bool:
     return bool(re.match(r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", s.strip()))
 
 
+def _needs_address_enrichment(addr: str) -> bool:
+    """True if address is missing and we should fetch estate details by ID."""
+    if not addr or not addr.strip():
+        return True
+    s = addr.strip().lower()
+    if s in ("(ukjent adresse)", "adresse ukjent", "ukjent"):
+        return True
+    if _looks_like_uuid(addr):
+        return True
+    return False
+
+
 def _build_estate_address(est: dict) -> str:
-    """Build display address from estate object (Vitec may use address, streetAddress, etc.)."""
-    addr = str(est.get("address") or "").strip()
-    if addr:
-        return addr
-    street = str(est.get("streetAddress") or est.get("street_address") or "").strip()
-    postal = str(est.get("postalCode") or est.get("zipCode") or est.get("postal_code") or "").strip()
-    city = str(est.get("city") or est.get("visitCity") or "").strip()
+    """Build display address from estate object (Vitec Next field names may vary)."""
+    # Direct full address
+    addr = est.get("address") or est.get("adresse") or est.get("postalAddress")
+    if isinstance(addr, str) and addr.strip():
+        return addr.strip()
+    if isinstance(addr, dict):
+        full = addr.get("adresse") or addr.get("address") or addr.get("streetAddress")
+        if isinstance(full, str) and full.strip():
+            return full.strip()
+
+    # Build from components (Vitec: gatenavnognr, postnr, poststed)
+    street = str(
+        est.get("streetAddress") or est.get("street_address") or est.get("gatenavnognr") or est.get("gatenavn") or ""
+    ).strip()
+    postal = str(
+        est.get("postalCode")
+        or est.get("zipCode")
+        or est.get("postal_code")
+        or est.get("postnr")
+        or est.get("postCode")
+        or ""
+    ).strip()
+    city = str(est.get("city") or est.get("visitCity") or est.get("poststed") or est.get("postalCity") or "").strip()
     parts = [p for p in [street, f"{postal} {city}".strip()] if p]
     return ", ".join(parts) if parts else ""
 
@@ -258,6 +319,8 @@ class SalesReportService:
         from_date: str | None = None,
         to_date: str | None = None,
         include_vat: bool = False,
+        revenue_scope: str | None = None,
+        accounts_included: list[str] | None = None,
     ) -> bytes:
         """
         Build Excel sales report for brokers who sold properties this year.
@@ -268,6 +331,8 @@ class SalesReportService:
             from_date=from_date,
             to_date=to_date,
             include_vat=include_vat,
+            revenue_scope=revenue_scope,
+            accounts_included=accounts_included,
         )
         report_data, broker_map, brokers_with_sales, broker_estates, estate_address, estate_metadata, _ = result
         y = report_data["year"]
@@ -295,6 +360,8 @@ class SalesReportService:
         from_date: str | None = None,
         to_date: str | None = None,
         include_vat: bool = False,
+        revenue_scope: str | None = None,
+        accounts_included: list[str] | None = None,
     ) -> dict:
         """
         Fetch and return sales report data as structured dict for JSON API.
@@ -305,6 +372,8 @@ class SalesReportService:
             from_date=from_date,
             to_date=to_date,
             include_vat=include_vat,
+            revenue_scope=revenue_scope,
+            accounts_included=accounts_included,
         )
         return result[0]
 
@@ -316,6 +385,8 @@ class SalesReportService:
         to_date: str | None = None,
         include_vat: bool = False,
         department_ids: list[int] | None = None,
+        revenue_scope: str | None = None,
+        accounts_included: list[str] | None = None,
     ) -> dict:
         """
         Fetch franchise report data across departments.
@@ -363,6 +434,8 @@ class SalesReportService:
                 from_date=from_date,
                 to_date=to_date,
                 include_vat=include_vat,
+                revenue_scope=revenue_scope,
+                accounts_included=accounts_included,
             )
             for dep_id in selected_departments
         ]
@@ -422,6 +495,8 @@ class SalesReportService:
         include_vat: bool = False,
         department_ids: list[int] | None = None,
         top_n: int = 5,
+        revenue_scope: str | None = None,
+        accounts_included: list[str] | None = None,
     ) -> dict:
         """
         Build best-performers leaderboard by role and department.
@@ -432,6 +507,8 @@ class SalesReportService:
             to_date=to_date,
             include_vat=include_vat,
             department_ids=department_ids,
+            revenue_scope=revenue_scope,
+            accounts_included=accounts_included,
         )
 
         installation_id = settings.VITEC_INSTALLATION_ID
@@ -444,7 +521,14 @@ class SalesReportService:
             role_by_broker[eid] = _infer_broker_role(emp)
 
         brokers_agg: dict[str, dict] = defaultdict(
-            lambda: {"broker_id": "", "name": "", "role": "unknown", "total_revenue": 0.0, "total_sales": 0}
+            lambda: {
+                "broker_id": "",
+                "name": "",
+                "role": "unknown",
+                "total_revenue": 0.0,
+                "total_sales": 0,
+                "properties_by_estate": {},
+            }
         )
         for dep in franchise.get("departments", []):
             for broker in dep.get("brokers", []):
@@ -457,25 +541,47 @@ class SalesReportService:
                 row["role"] = role_by_broker.get(bid, "unknown")
                 row["total_revenue"] += float(broker.get("total") or 0.0)
                 row["total_sales"] += int(broker.get("sale_count") or 0)
+                for prop in broker.get("properties") or []:
+                    eid = str(prop.get("estate_id") or "").strip()
+                    if not eid:
+                        continue
+                    if eid not in row["properties_by_estate"]:
+                        row["properties_by_estate"][eid] = prop
 
         def _sort_rows(rows: list[dict]) -> list[dict]:
             return sorted(rows, key=lambda r: (-float(r["total_revenue"]), str(r["name"]).lower()))
 
-        rows = [r | {"total_revenue": round(float(r["total_revenue"]), 2)} for r in brokers_agg.values()]
+        def _row_with_properties(r: dict) -> dict:
+            props = sorted(
+                r["properties_by_estate"].values(),
+                key=lambda p: (str(p.get("address") or ""), str(p.get("estate_id") or "")),
+            )
+            return {
+                "broker_id": r["broker_id"],
+                "name": r["name"],
+                "role": r["role"],
+                "total_revenue": round(float(r["total_revenue"]), 2),
+                "total_sales": r["total_sales"],
+                "properties": props,
+            }
+
+        rows = [_row_with_properties(r) for r in brokers_agg.values()]
         eiendomsmegler = _sort_rows([r for r in rows if r["role"] == "eiendomsmegler"])[:top_n]
         fullmektig = _sort_rows([r for r in rows if r["role"] == "eiendomsmeglerfullmektig"])[:top_n]
         unknown = _sort_rows([r for r in rows if r["role"] == "unknown"])[:top_n]
+        dept_list = sorted(
+            franchise.get("departments", []),
+            key=lambda d: (-float(d.get("total_revenue") or 0.0), str(d.get("department_name", ""))),
+        )[:top_n]
         departments = [
             {
                 "department_id": d["department_id"],
                 "department_name": d["department_name"],
                 "total_revenue": d["total_revenue"],
                 "total_sales": d["total_sales"],
+                "brokers": d.get("brokers", []),
             }
-            for d in sorted(
-                franchise.get("departments", []),
-                key=lambda d: (-float(d.get("total_revenue") or 0.0), str(d.get("department_name", ""))),
-            )[:top_n]
+            for d in dept_list
         ]
 
         return {
@@ -518,6 +624,8 @@ class SalesReportService:
         include_vat: bool = False,
         department_ids: list[int] | None = None,
         top_n: int = 5,
+        revenue_scope: str | None = None,
+        accounts_included: list[str] | None = None,
     ) -> bytes:
         """
         Generate Excel workbook for best performers leaderboard.
@@ -532,6 +640,8 @@ class SalesReportService:
             include_vat=include_vat,
             department_ids=department_ids,
             top_n=top_n,
+            revenue_scope=revenue_scope,
+            accounts_included=accounts_included,
         )
         wb = openpyxl.Workbook()
         ws = wb.active
@@ -579,8 +689,11 @@ class SalesReportService:
         from_date: str | None = None,
         to_date: str | None = None,
         include_vat: bool = False,
+        revenue_scope: str | None = None,
+        accounts_included: list[str] | None = None,
     ) -> tuple:
         """Fetch report data and return (report_data_dict, broker_map, ...) for Excel or JSON."""
+        accounts_filter = _resolve_accounts_filter(revenue_scope, accounts_included)
         if not self._hub.is_configured:
             raise ValueError("Vitec Hub credentials are not configured.")
 
@@ -634,6 +747,7 @@ class SalesReportService:
                     include_vat=include_vat,
                     broker_map=broker_map,
                     sync_metadata=sync_result,
+                    accounts_filter=accounts_filter,
                 )
                 await db.commit()
                 return report_tuple
@@ -648,6 +762,7 @@ class SalesReportService:
                     to_date=to_date,
                     include_vat=include_vat,
                     broker_map=broker_map,
+                    accounts_filter=accounts_filter,
                 )
 
     async def _fetch_report_data_live(
@@ -660,6 +775,7 @@ class SalesReportService:
         to_date: str,
         include_vat: bool,
         broker_map: dict[str, str],
+        accounts_filter: set[str] | None = None,
     ) -> tuple:
         """Fallback path that fetches live data directly from Vitec."""
         changed_after = from_date[:10] + "T00:00:00"
@@ -692,10 +808,11 @@ class SalesReportService:
             department_id=department_id,
             ledger_type=1,
         )
+        accts = accounts_filter or REVENUE_ACCOUNTS
         broker_estates: dict[str, dict[str, list[dict]]] = {}
         for txn in transactions or []:
             account = _normalize_account(txn.get("account"))
-            if account not in REVENUE_ACCOUNTS:
+            if account not in accts:
                 continue
             user_id = str(txn.get("userId") or "").strip()
             if not user_id:
@@ -708,6 +825,13 @@ class SalesReportService:
         if not brokers_with_sales and broker_estates:
             brokers_with_sales = set(broker_estates.keys())
 
+        await self._enrich_estate_addresses(
+            installation_id=installation_id,
+            estate_address=estate_address,
+            estate_metadata=estate_metadata,
+            estate_ids=set(estate_address) | {eid for ests in broker_estates.values() for eid in ests},
+        )
+
         report_data = self._build_report_data_dict(
             year=year,
             department_id=department_id,
@@ -719,8 +843,49 @@ class SalesReportService:
             broker_estates=broker_estates,
             estate_address=estate_address,
             estate_metadata=estate_metadata,
+            accounts_filter=accts,
         )
         return report_data, broker_map, brokers_with_sales, broker_estates, estate_address, estate_metadata, include_vat
+
+    async def _enrich_estate_addresses(
+        self,
+        *,
+        installation_id: str,
+        estate_address: dict[str, str],
+        estate_metadata: dict[str, dict[str, str]],
+        estate_ids: set[str],
+    ) -> None:
+        """Fetch estate details by ID for estates with missing addresses. Mutates estate_address and estate_metadata."""
+        to_enrich = [
+            eid
+            for eid in estate_ids
+            if eid
+            and eid != "(ukjent)"
+            and _looks_like_uuid(eid)
+            and _needs_address_enrichment(estate_address.get(eid, ""))
+        ]
+        if not to_enrich:
+            return
+
+        sem = asyncio.Semaphore(5)
+
+        async def fetch_one(eid: str) -> tuple[str, dict[str, Any] | None]:
+            async with sem:
+                try:
+                    detail = await self._hub.get_accounting_estate_by_id(installation_id, eid)
+                    return (eid, detail)
+                except Exception:
+                    return (eid, None)
+
+        results = await asyncio.gather(*[fetch_one(eid) for eid in to_enrich])
+        for eid, detail in results:
+            if detail:
+                addr = _build_estate_address(detail)
+                if addr:
+                    estate_address[eid] = addr
+                    meta = _build_estate_metadata(detail)
+                    if meta:
+                        estate_metadata[eid] = meta
 
     async def _sync_sales_cache(
         self,
@@ -762,10 +927,12 @@ class SalesReportService:
             department_id=department_id,
             changed_after=changed_after,
         )
+        estate_ids_from_estates_api: set[str] = set()
         for est in estates or []:
             estate_id = str(est.get("estateId") or "").strip()
             if not estate_id:
                 continue
+            estate_ids_from_estates_api.add(estate_id)
             estate_key = f"{installation_id}:{estate_id}"
             row = await db.get(ReportSalesEstateCache, estate_key)
             metadata = _build_estate_metadata(est)
@@ -800,6 +967,8 @@ class SalesReportService:
                 estates_upserted += 1
 
         # Transactions: sync unsynced months, always refresh current month.
+        # Also collect estate_ids from transactions so we can ensure all are in estate cache.
+        estate_ids_from_transactions: set[str] = set()
         current_month_key = _month_key(now_utc.year, now_utc.month)
         month_sync = dict(state.month_sync_json or {})
         months = _iter_months(from_dt, to_dt)
@@ -831,6 +1000,8 @@ class SalesReportService:
                 if not user_id and not estate_id_raw:
                     skipped["orphan"] += 1
                     continue
+                if estate_id_raw and estate_id_raw != "(ukjent)" and _looks_like_uuid(estate_id_raw):
+                    estate_ids_from_transactions.add(estate_id_raw)
 
                 # Anomaly warning: unusually large amounts
                 amt = abs(float(txn.get("amount") or 0))
@@ -874,6 +1045,27 @@ class SalesReportService:
                     transactions_upserted += 1
             month_sync[mk] = now_utc.isoformat()
 
+        # Ensure all estate_ids from transactions are in estate cache (for features needing full coverage).
+        missing_estate_ids = estate_ids_from_transactions - estate_ids_from_estates_api
+        for estate_id in missing_estate_ids:
+            estate_key = f"{installation_id}:{estate_id}"
+            if await db.get(ReportSalesEstateCache, estate_key) is None:
+                row = ReportSalesEstateCache(
+                    estate_key=estate_key,
+                    installation_id=installation_id,
+                    department_id=department_id,
+                    estate_id=estate_id,
+                    data_source=DATA_SOURCE_VITEC_NEXT,
+                    sold_at=None,
+                    address="(ukjent adresse)",
+                    property_type="—",
+                    assignment_type="—",
+                    assignment_number=None,
+                    brokers_json=[],
+                )
+                db.add(row)
+                estates_upserted += 1
+
         state.month_sync_json = month_sync
         state.last_estates_sync_at = now_utc
         event = ReportSalesSyncEvent(
@@ -914,6 +1106,7 @@ class SalesReportService:
         include_vat: bool,
         broker_map: dict[str, str],
         sync_metadata: dict[str, Any] | None = None,
+        accounts_filter: set[str] | None = None,
     ) -> tuple:
         estates_stmt = select(ReportSalesEstateCache).where(
             and_(
@@ -955,10 +1148,11 @@ class SalesReportService:
         )
         tx_rows = list((await db.execute(tx_stmt)).scalars().all())
 
+        accts = accounts_filter or REVENUE_ACCOUNTS
         broker_estates: dict[str, dict[str, list[dict[str, Any]]]] = {}
         for txn in tx_rows:
             account = _normalize_account(txn.account)
-            if account not in REVENUE_ACCOUNTS:
+            if account not in accts:
                 continue
             user_id = str(txn.user_id or "").strip()
             if not user_id:
@@ -979,6 +1173,14 @@ class SalesReportService:
 
         if not brokers_with_sales and broker_estates:
             brokers_with_sales = set(broker_estates.keys())
+
+        all_estate_ids = set(estate_address) | {eid for ests in broker_estates.values() for eid in ests}
+        await self._enrich_estate_addresses(
+            installation_id=installation_id,
+            estate_address=estate_address,
+            estate_metadata=estate_metadata,
+            estate_ids=all_estate_ids,
+        )
 
         # Count rows by data source for scope metadata
         source_counts: dict[str, int] = {}
@@ -1014,6 +1216,7 @@ class SalesReportService:
             estate_metadata=estate_metadata,
             sync_metadata=sync_metadata,
             source_counts=source_counts,
+            accounts_filter=accts,
         )
 
         return report_data, broker_map, brokers_with_sales, broker_estates, estate_address, estate_metadata, include_vat
@@ -1065,6 +1268,7 @@ class SalesReportService:
         estate_metadata: dict[str, dict[str, str]],
         sync_metadata: dict[str, Any] | None = None,
         source_counts: dict[str, int] | None = None,
+        accounts_filter: set[str] | None = None,
     ) -> dict:
         report_data = {
             "year": year,
@@ -1153,8 +1357,11 @@ class SalesReportService:
                 }
             )
 
+        accts_used = accounts_filter or REVENUE_ACCOUNTS
+        all_labels = _build_accounts_with_labels()
         report_data["scope"] = {
-            "accounts_included": sorted(REVENUE_ACCOUNTS),
+            "accounts_included": sorted(accts_used),
+            "accounts_with_labels": all_labels,
             "account_categories": {
                 "vederlag": sorted(VEDERLAG_ACCOUNTS),
                 "andre_inntekter": sorted(ANDRE_INNTEKTER_ACCOUNTS),

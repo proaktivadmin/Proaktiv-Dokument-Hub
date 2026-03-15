@@ -98,13 +98,27 @@ export interface FranchiseReportData {
   departments: FranchiseDepartment[];
 }
 
+export interface PerformerProperty {
+  address: string;
+  estate_id: string;
+  assignment_number?: string;
+  property_type: string;
+  assignment_type: string;
+  total: number;
+  transactions: SalesReportTransaction[];
+}
+
 export interface PerformerRow {
   broker_id?: string;
   name?: string;
   department_id?: number;
   department_name?: string;
-  total_sales: number;
-  total_revenue: number;
+  total_sales?: number;
+  total_revenue?: number;
+  total?: number;
+  sale_count?: number;
+  properties?: PerformerProperty[];
+  brokers?: PerformerRow[];
 }
 
 export interface BestPerformersData {
