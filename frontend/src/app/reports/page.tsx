@@ -24,6 +24,9 @@ import {
   ChevronRight,
   ChevronDown,
   RefreshCw,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
@@ -119,6 +122,10 @@ export default function ReportsPage() {
   const [expandedBrokers, setExpandedBrokers] = useState<Set<string>>(new Set());
   const [expandedProperties, setExpandedProperties] = useState<Set<string>>(new Set());
   const [expandedDepartments, setExpandedDepartments] = useState<Set<number>>(new Set());
+  const [reportSort, setReportSort] = useState<{
+    column: "name" | "sale_count" | "total";
+    direction: "asc" | "desc";
+  } | null>(null);
 
   const [bestPerformers, setBestPerformers] = useState<BestPerformersData | null>(null);
   const [bestLoading, setBestLoading] = useState(false);
@@ -706,7 +713,22 @@ export default function ReportsPage() {
         </Card>
 
         {/* Visual dashboard */}
-        {data && mode === "department" && (
+        {data && mode === "department" && (() => {
+          const sortedBrokers = [...data.brokers];
+          if (reportSort) {
+            sortedBrokers.sort((a, b) => {
+              let cmp = 0;
+              if (reportSort.column === "name") {
+                cmp = (a.name ?? "").localeCompare(b.name ?? "", "nb");
+              } else if (reportSort.column === "sale_count") {
+                cmp = a.sale_count - b.sale_count;
+              } else {
+                cmp = a.total - b.total;
+              }
+              return reportSort.direction === "asc" ? cmp : -cmp;
+            });
+          }
+          return (
           <Card className="border border-border shadow-card">
             <CardHeader>
               <div className="flex items-center gap-3">
@@ -726,15 +748,38 @@ export default function ReportsPage() {
                   <thead>
                     <tr className="border-b border-border">
                       <th className="text-left py-3 font-semibold text-foreground w-8" />
-                      <th className="text-left py-3 font-semibold text-foreground pl-2 min-w-[10rem]">Megler</th>
-                      <th className="text-right py-3 font-semibold text-foreground pr-4 min-w-[5.5rem]">Antall salg</th>
+                      <th className="text-left py-3 font-semibold text-foreground pl-2 min-w-[10rem]">
+                        <SortableHeader
+                          label="Megler"
+                          column="name"
+                          currentSort={reportSort}
+                          onSort={(col, dir) => setReportSort({ column: col, direction: dir })}
+                        />
+                      </th>
+                      <th className="text-right py-3 font-semibold text-foreground pr-4 min-w-[5.5rem]">
+                        <SortableHeader
+                          label="Antall salg"
+                          column="sale_count"
+                          currentSort={reportSort}
+                          onSort={(col, dir) => setReportSort({ column: col, direction: dir })}
+                          align="right"
+                        />
+                      </th>
                       <th className="text-left py-3 font-semibold text-foreground pl-4 min-w-[6rem]">Eiendomstype</th>
                       <th className="text-left py-3 font-semibold text-foreground pl-4 min-w-[6rem]">Oppdragstype</th>
-                      <th className="text-right py-3 font-semibold text-foreground pl-4 min-w-[6rem]">{sumLabel} (kr)</th>
+                      <th className="text-right py-3 font-semibold text-foreground pl-4 min-w-[6rem]">
+                        <SortableHeader
+                          label={`${sumLabel} (kr)`}
+                          column="total"
+                          currentSort={reportSort}
+                          onSort={(col, dir) => setReportSort({ column: col, direction: dir })}
+                          align="right"
+                        />
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
-                    {data.brokers.map((broker) => (
+                    {sortedBrokers.map((broker) => (
                       <BrokerRow
                         key={broker.broker_id}
                         broker={broker}
@@ -759,7 +804,8 @@ export default function ReportsPage() {
               </div>
             </CardContent>
           </Card>
-        )}
+          );
+        })()}
 
         {franchiseData && mode === "franchise" && (
           <Card className="border border-border shadow-card mb-8">
@@ -1086,6 +1132,47 @@ export default function ReportsPage() {
         )}
       </main>
     </div>
+  );
+}
+
+function SortableHeader({
+  label,
+  column,
+  currentSort,
+  onSort,
+  align = "left",
+}: {
+  label: string;
+  column: "name" | "sale_count" | "total";
+  currentSort: { column: string; direction: "asc" | "desc" } | null;
+  onSort: (column: "name" | "sale_count" | "total", direction: "asc" | "desc") => void;
+  align?: "left" | "right";
+}) {
+  const isActive = currentSort?.column === column;
+  const handleClick = () => {
+    if (isActive && currentSort?.direction === "asc") {
+      onSort(column, "desc");
+    } else {
+      onSort(column, "asc");
+    }
+  };
+  return (
+    <button
+      type="button"
+      onClick={handleClick}
+      className={`inline-flex items-center gap-1 hover:text-foreground transition-colors w-full ${align === "right" ? "justify-end" : "justify-start"}`}
+    >
+      <span>{label}</span>
+      {isActive ? (
+        currentSort?.direction === "asc" ? (
+          <ArrowUp className="h-3.5 w-3.5 text-accent" />
+        ) : (
+          <ArrowDown className="h-3.5 w-3.5 text-accent" />
+        )
+      ) : (
+        <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground opacity-60" />
+      )}
+    </button>
   );
 }
 
