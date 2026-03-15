@@ -725,11 +725,11 @@ export default function ReportsPage() {
                   <thead>
                     <tr className="border-b border-border">
                       <th className="text-left py-3 font-semibold text-foreground w-8" />
-                      <th className="text-left py-3 font-semibold text-foreground">Megler</th>
-                      <th className="text-right py-3 font-semibold text-foreground">Antall salg</th>
-                      <th className="text-left py-3 font-semibold text-foreground">Eiendomstype</th>
-                      <th className="text-left py-3 font-semibold text-foreground">Oppdragstype</th>
-                      <th className="text-right py-3 font-semibold text-foreground">{sumLabel} (kr)</th>
+                      <th className="text-left py-3 font-semibold text-foreground pl-2 min-w-[10rem]">Megler</th>
+                      <th className="text-right py-3 font-semibold text-foreground pr-4 min-w-[5.5rem]">Antall salg</th>
+                      <th className="text-left py-3 font-semibold text-foreground pl-4 min-w-[6rem]">Eiendomstype</th>
+                      <th className="text-left py-3 font-semibold text-foreground pl-4 min-w-[6rem]">Oppdragstype</th>
+                      <th className="text-right py-3 font-semibold text-foreground pl-4 min-w-[6rem]">{sumLabel} (kr)</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -745,11 +745,11 @@ export default function ReportsPage() {
                     ))}
                     <tr className="border-t-2 border-primary font-bold bg-secondary/30">
                       <td className="py-3" />
-                      <td className="py-3">Sum</td>
-                      <td className="py-3 text-right">{data.total_sales}</td>
-                      <td className="py-3" />
-                      <td className="py-3" />
-                      <td className="py-3 text-right">
+                      <td className="py-3 pl-2">Sum</td>
+                      <td className="py-3 text-right pr-4">{data.total_sales}</td>
+                      <td className="py-3 pl-4" />
+                      <td className="py-3 pl-4" />
+                      <td className="py-3 text-right pl-4">
                         {formatRevenue(data.total_revenue)}
                       </td>
                     </tr>
@@ -1181,11 +1181,11 @@ function BrokerRow({
             </span>
           )}
         </td>
-        <td className="py-2 font-medium">{broker.name}</td>
-        <td className="py-2 text-right">{broker.sale_count}</td>
-        <td className="py-2" />
-        <td className="py-2" />
-        <td className="py-2 text-right">{formatRevenue(broker.total)}</td>
+        <td className="py-2 font-medium pl-2">{broker.name}</td>
+        <td className="py-2 text-right pr-4">{broker.sale_count}</td>
+        <td className="py-2 pl-4" />
+        <td className="py-2 pl-4" />
+        <td className="py-2 text-right pl-4">{formatRevenue(broker.total)}</td>
       </tr>
       {expanded &&
         broker.properties.map((prop) => (
@@ -1349,15 +1349,15 @@ function PropertyRow({
             </span>
           )}
         </td>
-        <td className="py-1.5 italic text-foreground/80">
+        <td className="py-1.5 italic text-foreground/80 pl-2">
           {property.address || (property.assignment_number
             ? `Adresse ukjent (${property.assignment_number})`
             : "Adresse ukjent")}
         </td>
-        <td className="py-1.5 text-right">—</td>
-        <td className="py-1.5 text-muted-foreground">{property.property_type}</td>
-        <td className="py-1.5 text-muted-foreground">{property.assignment_type}</td>
-        <td className="py-1.5 text-right">{formatRevenue(property.total)}</td>
+        <td className="py-1.5 text-right pr-4">—</td>
+        <td className="py-1.5 text-muted-foreground pl-4">{property.property_type}</td>
+        <td className="py-1.5 text-muted-foreground pl-4">{property.assignment_type}</td>
+        <td className="py-1.5 text-right pl-4">{formatRevenue(property.total)}</td>
       </tr>
           {expanded &&
         property.transactions.map((txn, i) => (
@@ -1366,15 +1366,14 @@ function PropertyRow({
             className="border-b border-border/30 bg-card"
           >
             <td className="py-1 pl-14" />
-            <td className="py-1 text-xs text-muted-foreground">
+            <td className="py-1 text-xs text-muted-foreground pl-2">
               {txn.posting_date} · Konto {txn.account}
               {txn.description ? ` · ${txn.description}` : ""}
             </td>
-            <td className="py-1" />
-            <td className="py-1" />
-            <td className="py-1" />
-            <td className="py-1" />
-            <td className="py-1 text-right text-xs">{formatRevenue(txn.amount)}</td>
+            <td className="py-1 pr-4" />
+            <td className="py-1 pl-4" />
+            <td className="py-1 pl-4" />
+            <td className="py-1 text-right text-xs pl-4">{formatRevenue(txn.amount)}</td>
           </tr>
         ))}
     </>
