@@ -1,20 +1,28 @@
 "use client";
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { employeesApi, type EmployeeListParams } from '@/lib/api/employees';
 import type { EmployeeWithOffice, EmployeeStatus } from '@/types/v3';
+
+function paramsKey(p?: EmployeeListParams): string {
+  if (!p) return '';
+  return JSON.stringify(p);
+}
 
 export function useEmployees(params?: EmployeeListParams) {
   const [employees, setEmployees] = useState<EmployeeWithOffice[]>([]);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const paramsRef = useRef(params);
+  paramsRef.current = params;
+  const key = paramsKey(params);
 
   const fetch = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await employeesApi.list(params);
+      const data = await employeesApi.list(paramsRef.current);
       setEmployees(data.items);
       setTotal(data.total);
     } catch (err) {
@@ -23,12 +31,11 @@ export function useEmployees(params?: EmployeeListParams) {
     } finally {
       setIsLoading(false);
     }
-  }, [params]);
-
+  }, []);
 
   useEffect(() => {
     fetch();
-  }, [fetch]);
+  }, [fetch, key]);
 
   // Group by status
   const byStatus = employees.reduce((acc, emp) => {

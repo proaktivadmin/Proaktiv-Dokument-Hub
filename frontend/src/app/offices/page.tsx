@@ -10,12 +10,15 @@ import { officesApi } from "@/lib/api/offices";
 import { entraSyncApi } from "@/lib/api/entra-sync";
 import { vitecApi } from "@/lib/api/vitec";
 import { useToast } from "@/hooks/use-toast";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 import type { OfficeWithStats } from "@/types/v3";
+
+const OFFICES_PARAMS = { include_sub: false } as const;
 
 export default function OfficesPage() {
   const router = useRouter();
-  // Exclude sub-offices from main list - they appear under their parent
-  const { offices, cities, isLoading, refetch } = useOffices({ include_sub: false });
+  const { offices, cities, isLoading, error, refetch } = useOffices(OFFICES_PARAMS);
   const { toast } = useToast();
   const [formOpen, setFormOpen] = useState(false);
   const [editingOffice, setEditingOffice] = useState<OfficeWithStats | null>(null);
@@ -140,6 +143,13 @@ export default function OfficesPage() {
           Administrer kontorer, ansatte og markedsområder
         </p>
       </div>
+
+      {error && (
+        <Alert variant="destructive" className="mb-4">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
 
       {/* Grid */}
       <OfficeGrid
