@@ -114,6 +114,15 @@ function brokerAvatarUrl(brokerId: string | undefined, size = 40): string | unde
   return resolveAvatarUrl(`/api/vitec/employees/${brokerId}/picture`, size);
 }
 
+/** Aggregate unique non-empty values from properties, joined by ", " */
+function aggregatePropertyValues(
+  properties: { property_type?: string; assignment_type?: string }[],
+  key: "property_type" | "assignment_type"
+): string {
+  const values = [...new Set(properties.map((p) => p[key]).filter(Boolean))];
+  return values.length > 0 ? values.join(", ") : "—";
+}
+
 /** Initials from name, e.g. "Alexander Bergheim" -> "AB" */
 function initials(name: string | undefined): string {
   if (!name || !name.trim()) return "?";
@@ -1514,8 +1523,12 @@ function BrokerRow({
           </div>
         </td>
         <td className="py-2 text-right pr-4">{broker.sale_count}</td>
-        <td className="py-2 pl-4" />
-        <td className="py-2 pl-4" />
+        <td className="py-2 pl-4 text-muted-foreground">
+          {aggregatePropertyValues(broker.properties, "property_type")}
+        </td>
+        <td className="py-2 pl-4 text-muted-foreground">
+          {aggregatePropertyValues(broker.properties, "assignment_type")}
+        </td>
         <td className="py-2 text-right pl-4">{formatRevenue(broker.total)}</td>
       </tr>
       {expanded &&
