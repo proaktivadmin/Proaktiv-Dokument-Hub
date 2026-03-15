@@ -66,6 +66,8 @@ import {
 import { useReportCacheEvents } from "@/hooks/use-report-cache-events";
 import { officesApi } from "@/lib/api/offices";
 import type { OfficeWithStats } from "@/types/v3";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { resolveAvatarUrl } from "@/lib/api/config";
 
 const MONTHS_NB = [
   "Januar",
@@ -104,6 +106,45 @@ function getMonthRange(year: number, monthIndex: number): { from: string; to: st
 /** Format revenue as whole number (no decimals) for sales dashboard. */
 function formatRevenue(n: number): string {
   return Math.round(n).toLocaleString("nb-NO", { maximumFractionDigits: 0 });
+}
+
+/** Avatar URL for broker (Vitec employee ID). Uses proxy endpoint. */
+function brokerAvatarUrl(brokerId: string | undefined, size = 40): string | undefined {
+  if (!brokerId) return undefined;
+  return resolveAvatarUrl(`/api/vitec/employees/${brokerId}/picture`, size);
+}
+
+/** Initials from name, e.g. "Alexander Bergheim" -> "AB" */
+function initials(name: string | undefined): string {
+  if (!name || !name.trim()) return "?";
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function BrokerAvatar({
+  brokerId,
+  name,
+  size = 40,
+  className,
+}: {
+  brokerId: string | undefined;
+  name: string | undefined;
+  size?: number;
+  className?: string;
+}) {
+  const src = brokerAvatarUrl(brokerId, size);
+  return (
+    <Avatar
+      className={`shrink-0 transition-transform duration-fast ease-standard hover:scale-105 ${className ?? ""}`}
+      style={{ width: size, height: size }}
+    >
+      <AvatarImage src={src} alt={name ?? ""} />
+      <AvatarFallback className="text-xs font-medium bg-muted text-muted-foreground">
+        {initials(name)}
+      </AvatarFallback>
+    </Avatar>
+  );
 }
 
 export default function ReportsPage() {
@@ -1277,7 +1318,7 @@ function LeaderboardCard({
 
               return (
                 <div key={rowKey} className="rounded-md border border-border/50 overflow-hidden">
-                  <button
+                    <button
                     type="button"
                     className="w-full flex items-center justify-between gap-2 px-3 py-2.5 text-left hover:bg-muted/50 transition-colors"
                     onClick={() => hasContent && toggleRow(rowKey)}
@@ -1291,6 +1332,9 @@ function LeaderboardCard({
                             <ChevronRight className="h-4 w-4" />
                           )}
                         </span>
+                      )}
+                      {!isDepartmentMode && row.broker_id && (
+                        <BrokerAvatar brokerId={row.broker_id} name={String(row[nameKey])} size={36} />
                       )}
                       <span className="font-medium truncate">
                         {i + 1}. {String(row[nameKey] ?? "—")}
@@ -1326,6 +1370,7 @@ function LeaderboardCard({
                                       )}
                                     </span>
                                   )}
+                                  <BrokerAvatar brokerId={broker.broker_id} name={broker.name} size={32} />
                                   <span>{broker.name}</span>
                                 </span>
                                 <span className="text-muted-foreground">
@@ -1462,7 +1507,12 @@ function BrokerRow({
             </span>
           )}
         </td>
-        <td className="py-2 font-medium pl-2">{broker.name}</td>
+        <td className="py-2 pl-2">
+          <div className="flex items-center gap-2">
+            <BrokerAvatar brokerId={broker.broker_id} name={broker.name} size={32} />
+            <span className="font-medium">{broker.name}</span>
+          </div>
+        </td>
         <td className="py-2 text-right pr-4">{broker.sale_count}</td>
         <td className="py-2 pl-4" />
         <td className="py-2 pl-4" />
