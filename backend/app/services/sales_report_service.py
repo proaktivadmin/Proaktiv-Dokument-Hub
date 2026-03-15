@@ -173,13 +173,35 @@ def _looks_like_uuid(s: str) -> bool:
 
 
 def _build_estate_address(est: dict) -> str:
-    """Build display address from estate object (Vitec may use address, streetAddress, etc.)."""
-    addr = str(est.get("address") or "").strip()
-    if addr:
-        return addr
-    street = str(est.get("streetAddress") or est.get("street_address") or "").strip()
-    postal = str(est.get("postalCode") or est.get("zipCode") or est.get("postal_code") or "").strip()
-    city = str(est.get("city") or est.get("visitCity") or "").strip()
+    """Build display address from estate object (Vitec Next field names may vary)."""
+    # Direct full address
+    addr = est.get("address") or est.get("adresse") or est.get("postalAddress")
+    if isinstance(addr, str) and addr.strip():
+        return addr.strip()
+    if isinstance(addr, dict):
+        full = addr.get("adresse") or addr.get("address") or addr.get("streetAddress")
+        if isinstance(full, str) and full.strip():
+            return full.strip()
+
+    # Build from components (Vitec: gatenavnognr, postnr, poststed)
+    street = str(
+        est.get("streetAddress")
+        or est.get("street_address")
+        or est.get("gatenavnognr")
+        or est.get("gatenavn")
+        or ""
+    ).strip()
+    postal = str(
+        est.get("postalCode")
+        or est.get("zipCode")
+        or est.get("postal_code")
+        or est.get("postnr")
+        or est.get("postCode")
+        or ""
+    ).strip()
+    city = str(
+        est.get("city") or est.get("visitCity") or est.get("poststed") or est.get("postalCity") or ""
+    ).strip()
     parts = [p for p in [street, f"{postal} {city}".strip()] if p]
     return ", ".join(parts) if parts else ""
 
