@@ -444,7 +444,14 @@ class SalesReportService:
             role_by_broker[eid] = _infer_broker_role(emp)
 
         brokers_agg: dict[str, dict] = defaultdict(
-            lambda: {"broker_id": "", "name": "", "role": "unknown", "total_revenue": 0.0, "total_sales": 0}
+            lambda: {
+                "broker_id": "",
+                "name": "",
+                "role": "unknown",
+                "total_revenue": 0.0,
+                "total_sales": 0,
+                "properties_by_estate": {},
+            }
         )
         for dep in franchise.get("departments", []):
             for broker in dep.get("brokers", []):
@@ -457,25 +464,47 @@ class SalesReportService:
                 row["role"] = role_by_broker.get(bid, "unknown")
                 row["total_revenue"] += float(broker.get("total") or 0.0)
                 row["total_sales"] += int(broker.get("sale_count") or 0)
+                for prop in broker.get("properties") or []:
+                    eid = str(prop.get("estate_id") or "").strip()
+                    if not eid:
+                        continue
+                    if eid not in row["properties_by_estate"]:
+                        row["properties_by_estate"][eid] = prop
 
         def _sort_rows(rows: list[dict]) -> list[dict]:
             return sorted(rows, key=lambda r: (-float(r["total_revenue"]), str(r["name"]).lower()))
 
-        rows = [r | {"total_revenue": round(float(r["total_revenue"]), 2)} for r in brokers_agg.values()]
+        def _row_with_properties(r: dict) -> dict:
+            props = sorted(
+                r["properties_by_estate"].values(),
+                key=lambda p: (str(p.get("address") or ""), str(p.get("estate_id") or "")),
+            )
+            return {
+                "broker_id": r["broker_id"],
+                "name": r["name"],
+                "role": r["role"],
+                "total_revenue": round(float(r["total_revenue"]), 2),
+                "total_sales": r["total_sales"],
+                "properties": props,
+            }
+
+        rows = [_row_with_properties(r) for r in brokers_agg.values()]
         eiendomsmegler = _sort_rows([r for r in rows if r["role"] == "eiendomsmegler"])[:top_n]
         fullmektig = _sort_rows([r for r in rows if r["role"] == "eiendomsmeglerfullmektig"])[:top_n]
         unknown = _sort_rows([r for r in rows if r["role"] == "unknown"])[:top_n]
+        dept_list = sorted(
+            franchise.get("departments", []),
+            key=lambda d: (-float(d.get("total_revenue") or 0.0), str(d.get("department_name", ""))),
+        )[:top_n]
         departments = [
             {
                 "department_id": d["department_id"],
                 "department_name": d["department_name"],
                 "total_revenue": d["total_revenue"],
                 "total_sales": d["total_sales"],
+                "brokers": d.get("brokers", []),
             }
-            for d in sorted(
-                franchise.get("departments", []),
-                key=lambda d: (-float(d.get("total_revenue") or 0.0), str(d.get("department_name", ""))),
-            )[:top_n]
+            for d in dept_list
         ]
 
         return {

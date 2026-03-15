@@ -53,6 +53,7 @@ import {
   type FranchiseReportData,
   type ReportSubscription,
   type PerformerRow,
+  type PerformerProperty,
   type ReportSalesSyncEvent,
   type ReportScopeMetadata,
   type SalesReportData,
@@ -906,14 +907,23 @@ export default function ReportsPage() {
                   Viser: <strong>{bestPerformers.from_date_display} – {bestPerformers.to_date_display}</strong>
                   {includeVat ? " (inkl. mva.)" : " (eksl. mva.)"}
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <LeaderboardCard title="Eiendomsmegler" rows={bestPerformers.eiendomsmegler} nameKey="name" />
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <LeaderboardCard
+                  title="Eiendomsmegler"
+                  rows={bestPerformers.eiendomsmegler}
+                  nameKey="name"
+                />
                 <LeaderboardCard
                   title="Eiendomsmeglerfullmektig"
                   rows={bestPerformers.eiendomsmeglerfullmektig}
                   nameKey="name"
                 />
-                <LeaderboardCard title="Avdeling" rows={bestPerformers.departments} nameKey="department_name" />
+                <LeaderboardCard
+                  title="Avdeling"
+                  rows={bestPerformers.departments}
+                  nameKey="department_name"
+                  isDepartmentMode
+                />
                 </div>
               </>
             )}
@@ -1121,31 +1131,215 @@ function LeaderboardCard({
   title,
   rows,
   nameKey,
+  isDepartmentMode = false,
 }: {
   title: string;
   rows: PerformerRow[];
   nameKey: "name" | "department_name";
+  includeVat?: boolean;
+  isDepartmentMode?: boolean;
 }) {
+  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
+  const [expandedBrokers, setExpandedBrokers] = useState<Set<string>>(new Set());
+  const [expandedProperties, setExpandedProperties] = useState<Set<string>>(new Set());
+
+  const toggleRow = (key: string) => {
+    setExpandedRows((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  };
+  const toggleBroker = (key: string) => {
+    setExpandedBrokers((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  };
+  const toggleProperty = (key: string) => {
+    setExpandedProperties((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  };
+
+  const getRowKey = (row: PerformerRow, i: number) =>
+    isDepartmentMode ? `dept-${row.department_id ?? i}` : `broker-${row.broker_id ?? row.name ?? i}`;
+  const hasExpandableContent = (row: PerformerRow) =>
+    isDepartmentMode ? (row.brokers?.length ?? 0) > 0 : (row.properties?.length ?? 0) > 0;
+
   return (
-    <Card className="border border-border">
+    <Card className="border border-border min-w-0 min-h-[18rem]">
       <CardHeader className="pb-2">
         <CardTitle className="text-base">{title}</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-1">
+      <CardContent className="space-y-0">
         {rows.length === 0 ? (
-          <p className="text-sm text-muted-foreground">Ingen data</p>
+          <p className="text-sm text-muted-foreground py-2">Ingen data</p>
         ) : (
-          rows.map((row, i) => (
-            <div key={`${row[nameKey] ?? i}`} className="flex justify-between text-sm">
-              <span>
-                {i + 1}. {String(row[nameKey] ?? "—")}
-              </span>
-              <span>{formatRevenue(Number(row.total_revenue ?? 0))} kr</span>
-            </div>
-          ))
+          <div className="space-y-0.5">
+            {rows.map((row, i) => {
+              const rowKey = getRowKey(row, i);
+              const expanded = expandedRows.has(rowKey);
+              const hasContent = hasExpandableContent(row);
+
+              return (
+                <div key={rowKey} className="rounded-md border border-border/50 overflow-hidden">
+                  <button
+                    type="button"
+                    className="w-full flex items-center justify-between gap-2 px-3 py-2.5 text-left hover:bg-muted/50 transition-colors"
+                    onClick={() => hasContent && toggleRow(rowKey)}
+                  >
+                    <span className="flex items-center gap-2 min-w-0">
+                      {hasContent && (
+                        <span className="shrink-0 text-muted-foreground">
+                          {expanded ? (
+                            <ChevronDown className="h-4 w-4" />
+                          ) : (
+                            <ChevronRight className="h-4 w-4" />
+                          )}
+                        </span>
+                      )}
+                      <span className="font-medium truncate">
+                        {i + 1}. {String(row[nameKey] ?? "—")}
+                      </span>
+                    </span>
+                    <span className="shrink-0 text-sm text-muted-foreground">
+                      {formatRevenue(Number(row.total_revenue ?? row.total ?? 0))} kr
+                    </span>
+                  </button>
+
+                  {expanded && hasContent && (
+                    <div className="border-t border-border/50 bg-muted/30 px-3 py-2 space-y-2">
+                      {isDepartmentMode && row.brokers ? (
+                        row.brokers.map((broker) => {
+                          const brokerKey = `${rowKey}-${broker.broker_id ?? broker.name}`;
+                          const brokerExpanded = expandedBrokers.has(brokerKey);
+                          const brokerHasProps = (broker.properties?.length ?? 0) > 0;
+
+                          return (
+                            <div key={brokerKey} className="rounded border border-border/40 bg-card">
+                              <button
+                                type="button"
+                                className="w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-muted/30"
+                                onClick={() => brokerHasProps && toggleBroker(brokerKey)}
+                              >
+                                <span className="flex items-center gap-2">
+                                  {brokerHasProps && (
+                                    <span className="text-muted-foreground">
+                                      {brokerExpanded ? (
+                                        <ChevronDown className="h-3.5 w-3.5" />
+                                      ) : (
+                                        <ChevronRight className="h-3.5 w-3.5" />
+                                      )}
+                                    </span>
+                                  )}
+                                  <span>{broker.name}</span>
+                                </span>
+                                <span className="text-muted-foreground">
+                                  {formatRevenue(Number(broker.total ?? broker.total_revenue ?? 0))} kr
+                                </span>
+                              </button>
+                              {brokerExpanded && broker.properties && (
+                                <PerformerPropertiesList
+                                  properties={broker.properties}
+                                  expandedProperties={expandedProperties}
+                                  onToggleProperty={toggleProperty}
+                                  parentKey={brokerKey}
+                                />
+                              )}
+                            </div>
+                          );
+                        })
+                      ) : (
+                        row.properties && (
+                          <PerformerPropertiesList
+                            properties={row.properties}
+                            expandedProperties={expandedProperties}
+                            onToggleProperty={toggleProperty}
+                            parentKey={rowKey}
+                          />
+                        )
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         )}
       </CardContent>
     </Card>
+  );
+}
+
+function PerformerPropertiesList({
+  properties,
+  expandedProperties,
+  onToggleProperty,
+  parentKey,
+}: {
+  properties: PerformerProperty[];
+  expandedProperties: Set<string>;
+  onToggleProperty: (key: string) => void;
+  parentKey: string;
+}) {
+  return (
+    <div className="space-y-1 pl-2 border-l-2 border-border/40">
+      {properties.map((prop) => {
+        const propKey = `${parentKey}-${prop.estate_id}`;
+        const expanded = expandedProperties.has(propKey);
+        const hasTxns = (prop.transactions?.length ?? 0) > 0;
+
+        return (
+          <div key={propKey} className="text-sm">
+            <button
+              type="button"
+              className="w-full flex items-center justify-between px-2 py-1.5 hover:bg-muted/30 rounded text-left"
+              onClick={() => hasTxns && onToggleProperty(propKey)}
+            >
+              <span className="flex items-center gap-2 min-w-0">
+                {hasTxns && (
+                  <span className="shrink-0 text-muted-foreground">
+                    {expanded ? (
+                      <ChevronDown className="h-3 w-3" />
+                    ) : (
+                      <ChevronRight className="h-3 w-3" />
+                    )}
+                  </span>
+                )}
+                <span className="truncate italic text-foreground/90">
+                  {prop.address || (prop.assignment_number
+                    ? `Adresse ukjent (${prop.assignment_number})`
+                    : "Adresse ukjent")}
+                </span>
+              </span>
+              <span className="shrink-0 text-muted-foreground ml-2">
+                {formatRevenue(prop.total)} kr
+              </span>
+            </button>
+            {expanded && hasTxns && prop.transactions && (
+              <div className="pl-4 py-1 space-y-0.5 text-xs text-muted-foreground border-l border-border/30 ml-2">
+                {prop.transactions.map((txn, ti) => (
+                  <div key={ti} className="flex justify-between gap-2">
+                    <span>
+                      {txn.posting_date} · Konto {txn.account}
+                      {txn.description ? ` · ${txn.description}` : ""}
+                    </span>
+                    <span>{formatRevenue(txn.amount)} kr</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
   );
 }
 
